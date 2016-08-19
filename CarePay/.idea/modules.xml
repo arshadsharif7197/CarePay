@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CarePay.iml" filepath="$PROJECT_DIR$/CarePay.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CarePayAndroid/CarePayAndroid.iml" filepath="$PROJECT_DIR$/CarePayAndroid/CarePayAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CarePayClover/CarePayClover.iml" filepath="$PROJECT_DIR$/CarePayClover/CarePayClover.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CarePayLibrary/CarePayLibrary.iml" filepath="$PROJECT_DIR$/CarePayLibrary/CarePayLibrary.iml" />
+    </modules>
+  </component>
+</project>
