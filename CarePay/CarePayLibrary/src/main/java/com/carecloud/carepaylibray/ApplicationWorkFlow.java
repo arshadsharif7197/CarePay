@@ -1,27 +1,34 @@
 package com.carecloud.carepaylibray;
 
 import com.carecloud.carepaylibray.models.ScreenModel;
-import com.carecloud.carepaylibray.models.WorkFlowModel;
+import com.carecloud.carepaylibray.models.WorkflowModel;
 
 /**
  * Created by Jahirul Bhuiyan on 8/23/2016.
  */
-public class ApplicationWorkFlow {
+public class ApplicationWorkflow {
 
-    private static ApplicationWorkFlow instance;
 
-    private WorkFlowModel workFlowModel;
+    private static ApplicationWorkflow instance;
 
-    private ApplicationWorkFlow() {
-        workFlowModel=new WorkFlowModel();
+    private WorkflowModel workFlowModel;
+
+    private ApplicationWorkflow() {
+        workFlowModel = new WorkflowModel();
     }
-    public static ApplicationWorkFlow Instance( ) {
-        if(instance == null) {
-            instance = new ApplicationWorkFlow();
+
+    public static ApplicationWorkflow Instance() {
+        if (instance == null) {
+            instance = new ApplicationWorkflow();
         }
         return instance;
     }
+
     public ScreenModel getSelectLanguageScreenModel() {
+        return workFlowModel.getSelectLanguageScreenModel();
+    }
+
+    public ScreenModel getSelectLanguageDataModel() {
         return workFlowModel.getSelectLanguageScreenModel();
     }
 
@@ -31,6 +38,34 @@ public class ApplicationWorkFlow {
 
     public ScreenModel getSignupScreenModel() {
         return workFlowModel.getSignupScreenModel();
+    }
+
+    public ScreenModel getResponsabScreenModel() {
+        return workFlowModel.getResponsabScreenModel();
+    }
+
+    public ScreenModel getDemographicsAddressScreenModel() {
+        return workFlowModel.getDemographicsAddressScreenModel();
+    }
+
+    public ScreenModel getDemographicsDetailsScreenModel() {
+        return workFlowModel.getDemographicsDetailsScreenModel();
+    }
+
+    public ScreenModel getDemographicDetailsEthicityScreenModel() {
+        return workFlowModel.getDemographicsDetailsEthnicityScreenModel();
+    }
+
+    public ScreenModel getScanDocumentsScreenModel() {
+        return workFlowModel.getScanDocumentsScreenModel();
+    }
+
+    public ScreenModel getInsuranceInfoScreenModel() {
+        return workFlowModel.getInsuranceInfoScreenModel();
+    }
+
+    public ScreenModel getNewProfileScreenModel() {
+        return workFlowModel.getNewProfileScreenModel();
     }
 
 }
