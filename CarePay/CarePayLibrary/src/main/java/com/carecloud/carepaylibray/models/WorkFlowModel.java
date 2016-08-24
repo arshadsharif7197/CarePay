@@ -22,11 +22,11 @@ public class WorkFlowModel {
 
 
     public ScreenModel getSelectLanguageScreenModel() {
-        selectLanguageScreenModel=new ScreenModel();
-        ArrayList<ScreenComponentModel> componentModels= new ArrayList<ScreenComponentModel>();
-        componentModels.add(new ScreenComponentModel("","choice",true));
-        componentModels.add(new ScreenComponentModel("...","button",false));
-        componentModels.add(new ScreenComponentModel("Continue","button",false));
+        selectLanguageScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
+        componentModels.add(new ScreenComponentModel("", "choice", true));
+        componentModels.add(new ScreenComponentModel("...", "button", false));
+        componentModels.add(new ScreenComponentModel("Continue", "button", false));
         selectLanguageScreenModel.setComponentModels(componentModels);
         return selectLanguageScreenModel;
     }
@@ -36,14 +36,14 @@ public class WorkFlowModel {
     }
 
     public ScreenModel getLoginScreenModel() {
-        loginScreenModel=new ScreenModel();
-        ArrayList<ScreenComponentModel> componentModels= new ArrayList<ScreenComponentModel>();
-        componentModels.add(new ScreenComponentModel("User Name","inputtext",true));
-        componentModels.add(new ScreenComponentModel("Password","password",true));
-        componentModels.add(new ScreenComponentModel("SIGN IN","button",false));
-        componentModels.add(new ScreenComponentModel("CREATE NEW ACCOUNT","button",false));
-        componentModels.add(new ScreenComponentModel("Change Language","text",false));
-        componentModels.add(new ScreenComponentModel("Forgot Password","text",false));
+        loginScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
+        componentModels.add(new ScreenComponentModel("User Name", "inputtext", true));
+        componentModels.add(new ScreenComponentModel("Password", "password", true));
+        componentModels.add(new ScreenComponentModel("SIGN IN", "button", false));
+        componentModels.add(new ScreenComponentModel("CREATE NEW ACCOUNT", "button", false));
+        componentModels.add(new ScreenComponentModel("Change Language", "text", false));
+        componentModels.add(new ScreenComponentModel("Forgot Password", "text", false));
         loginScreenModel.setComponentModels(componentModels);
         return loginScreenModel;
     }
@@ -53,14 +53,14 @@ public class WorkFlowModel {
     }
 
     public ScreenModel getSignupScreenModel() {
-        signupScreenModel=new ScreenModel();
-        ArrayList<ScreenComponentModel> componentModels= new ArrayList<ScreenComponentModel>();
-        componentModels.add(new ScreenComponentModel("Full Name","inputtext",true));
-        componentModels.add(new ScreenComponentModel("Email","email",true));
-        componentModels.add(new ScreenComponentModel("Create Password","password",true));
-        componentModels.add(new ScreenComponentModel("Repeat Password","Password",true));
-        componentModels.add(new ScreenComponentModel("SIGN UP","button",false));
-        componentModels.add(new ScreenComponentModel("Already Have an Account","text",false));
+        signupScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
+        componentModels.add(new ScreenComponentModel("Full Name", "inputtext", true));
+        componentModels.add(new ScreenComponentModel("Email", "email", true));
+        componentModels.add(new ScreenComponentModel("Create Password", "password", true));
+        componentModels.add(new ScreenComponentModel("Repeat Password", "Password", true));
+        componentModels.add(new ScreenComponentModel("SIGN UP", "button", false));
+        componentModels.add(new ScreenComponentModel("Already Have an Account", "text", false));
         signupScreenModel.setComponentModels(componentModels);
         return signupScreenModel;
     }
@@ -72,14 +72,14 @@ public class WorkFlowModel {
     public ScreenModel getResponsabScreenModel() {
         responsabScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
-        componentModels.add(new ScreenComponentModel("doctor", "text", true));
-        componentModels.add(new ScreenComponentModel("label_cost", "text", true));
-        componentModels.add(new ScreenComponentModel("cost", "text", true));
-        componentModels.add(new ScreenComponentModel("label_prev_balance", "text", true));
-        componentModels.add(new ScreenComponentModel("prev_balance", "text", true));
-        componentModels.add(new ScreenComponentModel("label_insurance_copay", "text", true));
-        componentModels.add(new ScreenComponentModel("insurance_copay", "text", true));
-        componentModels.add(new ScreenComponentModel("sign_and_pay", "buttom", true));
+        componentModels.add(new ScreenComponentModel("DR Michael Ross", "text", true));
+        componentModels.add(new ScreenComponentModel("Your cost today", "text", true));
+        componentModels.add(new ScreenComponentModel("$102.03", "text", true));
+        componentModels.add(new ScreenComponentModel("Previous balance", "text", true));
+        componentModels.add(new ScreenComponentModel("$29.00", "text", true));
+        componentModels.add(new ScreenComponentModel("Insurance CoPay", "text", true));
+        componentModels.add(new ScreenComponentModel("$73.03", "text", true));
+        componentModels.add(new ScreenComponentModel("Sign & Pay", "button", true));
         responsabScreenModel.setComponentModels(componentModels);
         return responsabScreenModel;
     }
