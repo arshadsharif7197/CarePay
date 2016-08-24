@@ -28,10 +28,6 @@ public class ApplicationWorkflow {
         return workFlowModel.getSelectLanguageScreenModel();
     }
 
-    public ScreenModel getSelectLanguageDataModel() {
-        return workFlowModel.getSelectLanguageScreenModel();
-    }
-
     public ScreenModel getLoginScreenModel() {
         return workFlowModel.getLoginScreenModel();
     }
@@ -56,8 +52,8 @@ public class ApplicationWorkflow {
         return workFlowModel.getDemographicsDetailsEthnicityScreenModel();
     }
 
-    public ScreenModel getScanDocumentsScreenModel() {
-        return workFlowModel.getScanDocumentsScreenModel();
+    public ScreenModel getDemographicsDocumentsScreenModel() {
+        return workFlowModel.getDemographicsDocumentsScreenModel();
     }
 
     public ScreenModel getInsuranceInfoScreenModel() {
@@ -68,4 +64,15 @@ public class ApplicationWorkflow {
         return workFlowModel.getNewProfileScreenModel();
     }
 
+    public ScreenModel getDemographicsMoreDetailsScreenModel() {
+        return workFlowModel.getDemographicsMoreDetailsScreenModel();
+    }
+
+    ;
+
+    public ScreenModel getDemographicsMoreDetailsUpdatesScreenModel() {
+        return workFlowModel.getDemographicsMoreDetailsUpdatesScreenModel();
+    }
+
+    ;
 }

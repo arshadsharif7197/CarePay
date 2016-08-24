@@ -14,7 +14,9 @@ public class WorkflowModel {
     private ScreenModel demographicsAddressScreenModel;
     private ScreenModel demographicsDetailsScreenModel;
     private ScreenModel demographicsDetailsEthnicityScreenModel;
-    private ScreenModel scanDocumentsScreenModel;
+    private ScreenModel demographicsDocumentsScreenModel;
+    private ScreenModel demographicsMoreDetailsScreenModel;
+    private ScreenModel demographicsMoreDetailsUpdatesScreenModel;
     private ScreenModel insuranceInfoScreenModel;
     private ScreenModel newProfileScreenModel;
 
@@ -136,17 +138,59 @@ public class WorkflowModel {
         this.demographicsDetailsEthnicityScreenModel = demographicsDetailsEthnicityScreenModel;
     }
 
-
-    public ScreenModel getScanDocumentsScreenModel() {
-        scanDocumentsScreenModel = new ScreenModel();
+    public ScreenModel getDemographicsDocumentsScreenModel() {
+        demographicsDocumentsScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
-        // todo add components when mock-up available
-        scanDocumentsScreenModel.setComponentModels(componentModels);
-        return scanDocumentsScreenModel;
+        componentModels.add(new ScreenComponentModel("logo", "text", true));
+        componentModels.add(new ScreenComponentModel("thumbnail_license", "imageview", true));
+        componentModels.add(new ScreenComponentModel("scan_license", "button", true));
+        componentModels.add(new ScreenComponentModel("license_number", "text", true));
+        componentModels.add(new ScreenComponentModel("label_license_state", "text", true));
+        componentModels.add(new ScreenComponentModel("select", "button", true));
+        componentModels.add(new ScreenComponentModel("label_have_insurance", "text", true));
+        componentModels.add(new ScreenComponentModel("have_insurance", "togglebutton", true));
+        componentModels.add(new ScreenComponentModel("next", "button", true));
+        componentModels.add(new ScreenComponentModel("thumbnail_insurance", "imageview", false));
+        componentModels.add(new ScreenComponentModel("scan_insurance", "button", false));
+        componentModels.add(new ScreenComponentModel("insurance_info_1", "text", false));
+        componentModels.add(new ScreenComponentModel("insurance_info_2", "text", false));
+        componentModels.add(new ScreenComponentModel("insurance_info_3", "text", false));
+        componentModels.add(new ScreenComponentModel("check_insurance", "button", false));
+        demographicsDocumentsScreenModel.setComponentModels(componentModels);
+        return demographicsDocumentsScreenModel;
     }
 
-    public void setScanDocumentsScreenModel(ScreenModel scanDocumentsScreen) {
-        this.scanDocumentsScreenModel = scanDocumentsScreen;
+    public void setDemographicsDocumentsScreenModel(ScreenModel demographicsDocumentsScreenModel) {
+        this.demographicsDocumentsScreenModel = demographicsDocumentsScreenModel;
+    }
+
+    public ScreenModel getDemographicsMoreDetailsScreenModel() {
+        demographicsMoreDetailsScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
+        componentModels.add(new ScreenComponentModel("logo", "text", true));
+        componentModels.add(new ScreenComponentModel("sub-logo", "text", true));
+        componentModels.add(new ScreenComponentModel("label_want_updates", "text", true));
+        componentModels.add(new ScreenComponentModel("want_updates", "togglebutton", true));
+        componentModels.add(new ScreenComponentModel("add", "button", true));
+        componentModels.add(new ScreenComponentModel("do_later", "button", true));
+        demographicsMoreDetailsScreenModel.setComponentModels(componentModels);
+        return demographicsMoreDetailsScreenModel;
+    }
+
+    public void setDemographicsMoreDetailsScreenModel(ScreenModel demographicsMoreDetailsScreenModel) {
+        this.demographicsMoreDetailsScreenModel = demographicsMoreDetailsScreenModel;
+    }
+
+    public ScreenModel getDemographicsMoreDetailsUpdatesScreenModel() {
+        demographicsMoreDetailsUpdatesScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
+        componentModels.add(new ScreenComponentModel("updates", "listview", true));
+        demographicsMoreDetailsUpdatesScreenModel.setComponentModels(componentModels);
+        return demographicsMoreDetailsUpdatesScreenModel;
+    }
+
+    public void setDemographicsMoreDetailsUpdatesScreenModel(ScreenModel demographicsMoreDetailsUpdatesScreenModel) {
+        this.demographicsMoreDetailsUpdatesScreenModel = demographicsMoreDetailsUpdatesScreenModel;
     }
 
     public ScreenModel getInsuranceInfoScreenModel() {
