@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.services.interfaces;
 
+import com.carecloud.carepaylibray.models.WorkflowModel;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 
