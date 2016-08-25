@@ -6,18 +6,18 @@ import com.carecloud.carepaylibray.models.WorkflowModel;
 /**
  * Created by Jahirul Bhuiyan on 8/24/2016.
  */
-public class ApplicationWorkFlow {
-    private static ApplicationWorkFlow instance;
+public class ApplicationWorkflow {
+    private static ApplicationWorkflow instance;
 
     private WorkflowModel workFlowModel;
 
-    private ApplicationWorkFlow() {
+    private ApplicationWorkflow() {
         workFlowModel = new WorkflowModel();
     }
 
-    public static ApplicationWorkFlow Instance() {
+    public static ApplicationWorkflow Instance() {
         if (instance == null) {
-            instance = new ApplicationWorkFlow();
+            instance = new ApplicationWorkflow();
         }
         return instance;
     }
