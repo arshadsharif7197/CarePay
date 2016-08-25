@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.carecloud.carepayandroid.R;
-import com.carecloud.carepaylibray.fragments.SelectLanguageFragment;
 import com.carecloud.carepaylibray.models.ScreenModel;
 
 public class LauncherActivity extends AppCompatActivity {
@@ -13,9 +12,5 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
-        SelectLanguageFragment fragment = new SelectLanguageFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment, "")
-                .commit();
     }
 }
