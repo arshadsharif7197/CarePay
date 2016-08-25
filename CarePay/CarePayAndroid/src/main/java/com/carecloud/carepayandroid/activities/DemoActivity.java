@@ -10,7 +10,7 @@ import com.carecloud.carepayandroid.R;
 import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 import com.carecloud.carepaylibray.fragments.SelectLanguageFragment;
 
-public class DemoActivity extends AppCompatActivity {
+public class DemoActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
