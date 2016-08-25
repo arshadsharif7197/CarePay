@@ -21,6 +21,7 @@ public class DemoActivity extends AppCompatActivity  {
         findViewById(R.id.sel_lang).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // dummy
             }
         });
 
