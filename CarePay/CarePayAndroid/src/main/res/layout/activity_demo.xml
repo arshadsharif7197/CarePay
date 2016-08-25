@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_vertical"
-    tools:context="com.carecloud.carepayandroid.DemoActivity"
+    tools:context=".activities.DemoActivity"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:padding="10dp">
 
 
 <LinearLayout
