@@ -18,6 +18,7 @@ public class WorkflowModel {
     private ScreenModel demographicsMoreDetailsUpdatesScreenModel;
     private ScreenModel insuranceInfoScreenModel;
     private ScreenModel newProfileScreenModel;
+    private ScreenModel detailsScreenModel;
 
 
     public ScreenModel getSelectLanguageScreenModel() {
@@ -216,4 +217,14 @@ public class WorkflowModel {
     public void setNewProfileScreenModel(ScreenModel newProfileScreenModel) {
         this.newProfileScreenModel = newProfileScreenModel;
     }
+
+    public ScreenModel getDetailsScreenModel() {
+        detailsScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
+        componentModels.add(new ScreenComponentModel("picture", "imageview", true));
+        componentModels.add(new ScreenComponentModel("Take Photo", "button", true));
+        detailsScreenModel.setComponentModels(componentModels);
+        return detailsScreenModel;
+    }
+
 }

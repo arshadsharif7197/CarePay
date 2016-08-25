@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.fragments;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ public class ResponsibilityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ResponsibilityLayoutRenderer renderer = new ResponsibilityLayoutRenderer(getActivity());
+        getActivity().setTitle("Responsibility"); // todo get title from component
         return renderer.createLayout();
     }
 
@@ -50,6 +52,10 @@ public class ResponsibilityFragment extends Fragment {
         }
 
         public View createLayout() {
+            Typeface typeGotham = Typeface.createFromAsset(mContext.getAssets(), "fonts/GothamRnd-Medium.otf");
+            Typeface typeProxima = Typeface.createFromAsset(mContext.getAssets(), "fonts/ProximaNova-Reg.otf");
+            Typeface typeProximaBold = Typeface.createFromAsset(mContext.getAssets(), "fonts/ProximaNova-Sbold.otf");
+
             // scroll view
             ScrollView mRoot = new ScrollView(mContext);
             mRoot.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
@@ -66,6 +72,7 @@ public class ResponsibilityFragment extends Fragment {
 
             // components
             // doctor
+
             TextView tvDoctor = new TextView(mContext);
             LinearLayout.LayoutParams tvDoctorLayoutParams
                     = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -83,7 +90,8 @@ public class ResponsibilityFragment extends Fragment {
                                                                                     ViewGroup.LayoutParams.WRAP_CONTENT);
             tvCostLabelLp.setMargins(10, 70, 10, 0);
             tvCostLabel.setLayoutParams(tvCostLabelLp);
-            tvCostLabel.setTextSize(20);
+            tvCostLabel.setTypeface(typeProxima);
+            tvCostLabel.setTextSize(25);
             mainLl.addView(tvCostLabel);
             mViews.add(tvCostLabel);
             mCompCount++;
@@ -94,7 +102,8 @@ public class ResponsibilityFragment extends Fragment {
                                                                                ViewGroup.LayoutParams.WRAP_CONTENT);
             tvCostLp.setMargins(10, 10, 10, 0);
             tvCost.setLayoutParams(tvCostLp);
-            tvCost.setTextSize(50);
+            tvCost.setTypeface(typeProxima);
+            tvCost.setTextSize(70);
             mainLl.addView(tvCost);
             mViews.add(tvCost);
             mCompCount++;

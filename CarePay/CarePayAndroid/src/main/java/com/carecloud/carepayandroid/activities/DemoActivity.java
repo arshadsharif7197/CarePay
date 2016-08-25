@@ -17,16 +17,17 @@ public class DemoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
+        setTitle("Screens Demo");
         findViewById(R.id.sel_lang).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchFragment(SelectLanguageFragment.class.getSimpleName());
             }
         });
 
         findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                launchFragment(SelectLanguageFragment.class.getSimpleName());
             }
         });
 
@@ -39,6 +40,8 @@ public class DemoActivity extends AppCompatActivity {
         findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(DemoActivity.this, DetailActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -27,6 +27,7 @@ public class SelectLanguageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        getActivity().setTitle("Sign In");
         LinearLayout ll=new LinearLayout(getActivity());
 
         ll.setOrientation(LinearLayout.HORIZONTAL);
