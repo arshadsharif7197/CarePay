@@ -5,7 +5,7 @@ import android.test.ApplicationTestCase;
 import android.view.View;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.ApplicationWorkFlow;
+import com.carecloud.carepaylibray.ApplicationWorkflow;
 import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 
@@ -24,7 +24,7 @@ public class ResponsibilityScreenRendererTest extends ApplicationTestCase<Applic
                 = new ResponsibilityFragment.ResponsibilityLayoutRenderer(getContext());
         renderer.createLayout();
         ArrayList<View> views = renderer.getViews();
-        ArrayList<ScreenComponentModel> componentModels = ApplicationWorkFlow.Instance()
+        ArrayList<ScreenComponentModel> componentModels = ApplicationWorkflow.Instance()
                 .getResponsabScreenModel().getComponentModels();
         int count = renderer.getCount();
 
@@ -36,7 +36,7 @@ public class ResponsibilityScreenRendererTest extends ApplicationTestCase<Applic
         ResponsibilityFragment.ResponsibilityLayoutRenderer renderer
                 = new ResponsibilityFragment.ResponsibilityLayoutRenderer(getContext());
         renderer.createLayout();
-        ArrayList<ScreenComponentModel> componentModels = ApplicationWorkFlow.Instance()
+        ArrayList<ScreenComponentModel> componentModels = ApplicationWorkflow.Instance()
                 .getResponsabScreenModel().getComponentModels();
         ArrayList<View> views = renderer.getViews();
         for(int i = 0; i < views.size(); i++) {

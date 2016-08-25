@@ -16,7 +16,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.ApplicationWorkFlow;
+import com.carecloud.carepaylibray.ApplicationWorkflow;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class ResponsibilityFragment extends Fragment {
 
         public ResponsibilityLayoutRenderer(Context context) {
             mContext = context;
-            mComponents = ApplicationWorkFlow.Instance().getResponsabScreenModel().getComponentModels();
+            mComponents = ApplicationWorkflow.Instance().getResponsabScreenModel().getComponentModels();
             mViews = new ArrayList<>();
         }
 
@@ -149,8 +149,6 @@ public class ResponsibilityFragment extends Fragment {
             mainLl.addView(btnPay);
             mViews.add(btnPay);
             mCompCount++;
-
-            assert (mCompCount == 8);
 
             mRoot.addView(mainLl);
 

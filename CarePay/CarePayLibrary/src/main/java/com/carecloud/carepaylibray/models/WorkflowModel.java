@@ -3,10 +3,9 @@ package com.carecloud.carepaylibray.models;
 import java.util.ArrayList;
 
 /**
- * Created by Jahirul Bhuiyan on 8/23/2016.
+ * Created by Jahirul Bhuiyan on 8/24/2016.
  */
-public class WorkFlowModel {
-
+public class WorkflowModel {
     private ScreenModel selectLanguageScreenModel;
     private ScreenModel loginScreenModel;
     private ScreenModel signupScreenModel;
@@ -83,6 +82,7 @@ public class WorkFlowModel {
         responsabScreenModel.setComponentModels(componentModels);
         return responsabScreenModel;
     }
+
 
     public void setResponsabScreenModel(ScreenModel responsabScreenModel) {
         this.responsabScreenModel = responsabScreenModel;
