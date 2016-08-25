@@ -4,7 +4,9 @@ import android.content.Context;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepaylibray.constants.ComponentTypeConstants;
 import com.carecloud.carepaylibray.customcomponents.InputText;
@@ -84,18 +86,28 @@ public class ScreenComponentModel {
             }case ComponentTypeConstants.IMAGE: {
                 ImageView imageView=new ImageView(context);
                 return imageView;
+            }default:{
+                TextView tv= new TextView(context);
+                tv.setText(Label);
+                return tv;
             }
         }
-        return null;
     }
 
-    private InputText generateInputView(Context context, int inputType){
-        InputText inputText=new InputText(context);
+    private EditText generateInputView(Context context, int inputType){
+        EditText inputText=new EditText(context);
+        inputText.setHint(Label);
+        inputText.setInputType(inputType);//);
+        if(isRequired){
+            inputText.setError("Please enter your value");
+        }
+
+        /*InputText inputText=new InputText(context);
         inputText.setHint(Label);
         inputText.changeInputType(inputType);//);
         if(isRequired){
             inputText.setError("Please enter your value");
-        }
+        }*/
         return inputText;
     }
 }
