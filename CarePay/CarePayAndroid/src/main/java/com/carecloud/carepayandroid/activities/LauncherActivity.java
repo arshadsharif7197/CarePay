@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.carecloud.carepayandroid.R;
-import com.carecloud.carepayandroid.responsibility.ResponsibilityFragment;
+import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 
 public class LauncherActivity extends AppCompatActivity {
 
