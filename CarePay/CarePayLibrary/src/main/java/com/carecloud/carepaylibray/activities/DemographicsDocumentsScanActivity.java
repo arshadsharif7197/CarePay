@@ -1,4 +1,4 @@
-package com.carecloud.carepayandroid.activities;
+package com.carecloud.carepaylibray.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,10 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toolbar;
 
-import com.carecloud.carepayandroid.R;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.ApplicationWorkflow;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 import com.carecloud.carepaylibray.models.ScreenModel;

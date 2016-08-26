@@ -157,8 +157,7 @@ public class WorkflowModel {
         componentModels.add(new ScreenComponentModel("Insurance Card Info1", "inputtext", false));
         componentModels.add(new ScreenComponentModel("Insurance Card Info 2", "inputtext", false));
         componentModels.add(new ScreenComponentModel("insurance Card Info 3", "inputtext", false));
-        componentModels.add(new ScreenComponentModel("next", "button", true));
-        demographicsDocumentsScreenModel.setComponentModels(componentModels);
+        componentModels.add(new ScreenComponentModel("next", "button", true));        demographicsDocumentsScreenModel.setComponentModels(componentModels);
         return demographicsDocumentsScreenModel;
     }
 

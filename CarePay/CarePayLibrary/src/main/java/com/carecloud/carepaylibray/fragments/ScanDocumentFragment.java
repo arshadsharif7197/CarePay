@@ -1,14 +1,17 @@
 package com.carecloud.carepaylibray.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -19,13 +22,20 @@ import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.ApplicationWorkflow;
+import com.carecloud.carepaylibray.activities.DemographicsDocumentsScanActivity;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 import com.carecloud.carepaylibray.models.ScreenModel;
+
+import java.util.ArrayList;
 
 /**
  * Created by sathish_valleru on 8/24/2016.
  */
 public class ScanDocumentFragment extends Fragment {
+
+    private ArrayList<View> mViewsToHide         = new ArrayList<>();
+    private boolean         mInsuranceViewHidden = false;
+    private Button mNext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,7 +58,8 @@ public class ScanDocumentFragment extends Fragment {
 
         ScreenModel screenModel = ApplicationWorkflow.Instance().getDemographicsDocumentsScreenModel();
 
-//        getActivity().setTitle(screenModel.getName());
+        getActivity().setTitle(screenModel.getName());
+        int index = 0;
         for (ScreenComponentModel componentModel : screenModel.getComponentModels()) {
             if (componentModel.getType().equals("image") || componentModel.getType().equals("ImageView")) {
                 ImageView mIVCard = new ImageView(getActivity());
@@ -201,6 +212,7 @@ public class ScanDocumentFragment extends Fragment {
                 inputText.setTextSize(17.0f);
                 inputText.setTextColor(ContextCompat.getColor(getActivity(), R.color.charcoal));
 
+
                 Switch switchView = new Switch(getActivity());
                 LinearLayout.LayoutParams switchViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 switchView.setLayoutParams(inputTextLayoutParams);
@@ -244,6 +256,7 @@ public class ScanDocumentFragment extends Fragment {
                 parent.addView(button);
             }
         }
+
         return scrollView;
     }
 }

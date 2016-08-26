@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DemographicsDocumentsScanActivity"
+            android:name="com.carecloud.carepaylibray.activities.DemographicsDocumentsScanActivity"
             android:parentActivityName=".activities.DemoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
