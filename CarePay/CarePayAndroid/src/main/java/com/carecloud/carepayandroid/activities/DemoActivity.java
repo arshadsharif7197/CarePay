@@ -27,7 +27,8 @@ public class DemoActivity extends AppCompatActivity  {
         findViewById(R.id.signin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchFragment(SelectLanguageFragment.class.getSimpleName());
+                Intent intent = new Intent(DemoActivity.this, SignInActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -60,13 +61,5 @@ public class DemoActivity extends AppCompatActivity  {
                 startActivity(intent);
             }
         });
-    }
-
-    private void launchFragment(String fragName) {
-        if(fragName != null && !fragName.equals("")) {
-            Intent intent = new Intent(this, LauncherActivity.class);
-            intent.putExtra("fragment", fragName);
-            startActivity(intent);
-        }
     }
 }
