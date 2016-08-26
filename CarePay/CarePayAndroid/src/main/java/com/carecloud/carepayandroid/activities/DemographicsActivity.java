@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.carecloud.carepayandroid.R;
+import com.carecloud.carepaylibray.fragments.ScanDocumentFragment;
 import com.carecloud.carepaylibray.fragments.demographics.AddressFragment;
 import com.carecloud.carepaylibray.fragments.demographics.DetailsFragment;
 import com.carecloud.carepaylibray.fragments.demographics.DocumentsFragment;
@@ -118,7 +119,8 @@ public class DemographicsActivity extends AppCompatActivity
                     DetailsFragment detailsFragment = DetailsFragment.newInstance(null);
                     return detailsFragment;
                 case 2:
-                    DocumentsFragment documentsFragment = DocumentsFragment.newInstance(null);
+//                    DocumentsFragment documentsFragment = DocumentsFragment.newInstance(null);
+                    ScanDocumentFragment documentsFragment = new ScanDocumentFragment();
                     return documentsFragment;
                 case 3:
                     MoreDetailsFragment moreDetailsFragment = MoreDetailsFragment.newInstance(null);

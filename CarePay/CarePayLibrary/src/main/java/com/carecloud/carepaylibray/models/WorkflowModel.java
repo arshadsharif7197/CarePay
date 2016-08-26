@@ -169,11 +169,12 @@ public class WorkflowModel {
         demographicsMoreDetailsScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
         componentModels.add(new ScreenComponentModel("logo", "ImageView", true));
-        componentModels.add(new ScreenComponentModel("sub-logo", "text", true));
-        componentModels.add(new ScreenComponentModel("label_want_updates", "text", true));
+        componentModels.add(new ScreenComponentModel("Got some time?", "text", true));
+        componentModels.add(new ScreenComponentModel("Share some of your health information now and save some precious time during your next appointment", "text", true));
+        componentModels.add(new ScreenComponentModel("Do you want to get updates?", "text", true));
         componentModels.add(new ScreenComponentModel("want_updates", "togglebutton", true));
-        componentModels.add(new ScreenComponentModel("add", "button", true));
-        componentModels.add(new ScreenComponentModel("do_later", "button", true));
+        componentModels.add(new ScreenComponentModel("Add MORE DETAILS", "button", true));
+        componentModels.add(new ScreenComponentModel("I'LL DO THIS LATER", "button", true));
         demographicsMoreDetailsScreenModel.setComponentModels(componentModels);
         return demographicsMoreDetailsScreenModel;
     }
@@ -193,7 +194,6 @@ public class WorkflowModel {
     public void setDemographicsMoreDetailsUpdatesScreenModel(ScreenModel demographicsMoreDetailsUpdatesScreenModel) {
         this.demographicsMoreDetailsUpdatesScreenModel = demographicsMoreDetailsUpdatesScreenModel;
     }
-
     public ScreenModel getInsuranceInfoScreenModel() {
         insuranceInfoScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();

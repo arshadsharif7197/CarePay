@@ -104,4 +104,3 @@ public class MoreDetailsFragment extends Fragment {
     }
 }
 
-
