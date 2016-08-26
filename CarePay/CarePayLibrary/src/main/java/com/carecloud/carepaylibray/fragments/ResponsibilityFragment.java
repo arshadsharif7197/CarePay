@@ -17,6 +17,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.ApplicationWorkflow;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 
@@ -52,9 +53,7 @@ public class ResponsibilityFragment extends Fragment {
         }
 
         public View createLayout() {
-            Typeface typeGotham = Typeface.createFromAsset(mContext.getAssets(), "fonts/GothamRnd-Medium.otf");
             Typeface typeProxima = Typeface.createFromAsset(mContext.getAssets(), "fonts/ProximaNova-Reg.otf");
-            Typeface typeProximaBold = Typeface.createFromAsset(mContext.getAssets(), "fonts/ProximaNova-Sbold.otf");
 
             // scroll view
             ScrollView mRoot = new ScrollView(mContext);
@@ -72,7 +71,6 @@ public class ResponsibilityFragment extends Fragment {
 
             // components
             // doctor
-
             TextView tvDoctor = new TextView(mContext);
             LinearLayout.LayoutParams tvDoctorLayoutParams
                     = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -150,11 +148,13 @@ public class ResponsibilityFragment extends Fragment {
 
             // sign and pay
             Button btnPay = new Button(mContext);
-            LinearLayout.LayoutParams btnPayLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams btnPayLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                                ViewGroup.LayoutParams.WRAP_CONTENT);
             btnPayLp.setMargins(0, 50, 0, 0);
             btnPay.setLayoutParams(btnPayLp);
             btnPay.setTextSize(20);
+            btnPay.setTypeface(typeProxima);
+            btnPay.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
             mainLl.addView(btnPay);
             mViews.add(btnPay);
             mCompCount++;

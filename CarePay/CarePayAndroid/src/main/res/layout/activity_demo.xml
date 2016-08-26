@@ -36,13 +36,13 @@
             android:id="@+id/demographics"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Demographics Details"/>
+            android:text="Demographics"/>
 
         <Button
             android:id="@+id/scan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Demographics Documents Scan"/>
+            android:text="Documents Scan"/>
 
         <Button
             android:id="@+id/resp"
