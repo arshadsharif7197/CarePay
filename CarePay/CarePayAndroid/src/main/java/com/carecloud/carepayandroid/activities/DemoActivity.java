@@ -35,6 +35,8 @@ public class DemoActivity extends AppCompatActivity  {
         findViewById(R.id.signup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(DemoActivity.this, SignUpActivity.class);
+                startActivity(intent);
             }
         });
 
