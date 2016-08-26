@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
 
-import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -22,30 +22,40 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.ApplicationWorkflow;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 import com.carecloud.carepaylibray.models.ScreenModel;
 
+/*import com.carecloud.carepaylibray.ApplicationWorkflow;
+import com.carecloud.carepaylibray.models.ScreenComponentModel;
+import com.carecloud.carepaylibray.models.ScreenModel;*/
 
 /**
  * Created by harish_revuri on 8/24/2016.
  */
-public class SignInFragment extends Fragment {
+public class SignInFragment extends android.support.v4.app.Fragment{
     private static final String LOG_TAG = SignInFragment.class.getSimpleName();
+    View view;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
+        LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        LinearLayout screenLayout  = (LinearLayout) mInflater.inflate(R.layout.fragment_signin, null, false);
+
         LinearLayout.LayoutParams matchWidthParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        LinearLayout parent = new LinearLayout(getActivity());
+        LinearLayout parent = (LinearLayout) screenLayout.findViewById(R.id.linearLayoutScreenContainer); // new LinearLayout(getActivity());
         parent.setLayoutParams(matchWidthParams);
         parent.setOrientation(LinearLayout.VERTICAL);
-        parent.setPadding(20, 20, 20, 20);
-        getActivity().setTitle("Sign In");
 
         LinearLayout.LayoutParams LayoutParamsview = new AppBarLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         ScreenModel screenModel = ApplicationWorkflow.Instance().getLoginScreenModel();
-        getActivity().setTitle(screenModel.getName());
+        getActivity().setTitle("Sign In");
+
+    //        getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 
         int index = 0;
         LinearLayout horizontalLayout=null;
@@ -56,9 +66,6 @@ public class SignInFragment extends Fragment {
         relative.setLayoutParams(matchWidthParams);
 //        horizontalLayout.setLayoutParams();
         for (ScreenComponentModel componentModel : screenModel.getComponentModels()) { // Calling component models dynamically
-
-
-
             if (componentModel.getType().equals("inputtext") || componentModel.getType().equals("password")) {
                 TextInputLayout emailTextInputLayout = new TextInputLayout(getActivity());
                 TextInputLayout passwordTextInputLayout = new TextInputLayout(getActivity());
@@ -67,16 +74,20 @@ public class SignInFragment extends Fragment {
                 EditText password = new EditText(getActivity());
 
 
-               // email.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams, LinearLayout.LayoutParams.WRAP_CONTENT));
-                email.setWidth((int) convertPixelsToDp(14.5f, getActivity()));
-                email.setHeight((int) convertPixelsToDp(14f, getActivity()));
+                email.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                //email.setWidth((int) convertPixelsToDp(14.5f, getActivity()));
+                //email.setHeight((int) convertPixelsToDp(14f, getActivity()));
 
                 emailTextInputLayout.setHint(componentModel.getLabel());
                 email.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
 
-                //email.setTextColor();
+
+                email.setTextColor(Color.parseColor("#1f9bde"));
                 password.setLayoutParams(matchWidthParams);
                 passwordTextInputLayout.setHint(componentModel.getLabel());
+                if (componentModel.getType().equals("password")){
+                    email.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
                 emailTextInputLayout.addView(email);
                 parent.addView(emailTextInputLayout, index, matchWidthParams);
                 Log.v(LOG_TAG, "added passwordTextInputLayout");
@@ -86,18 +97,22 @@ public class SignInFragment extends Fragment {
             } else if (componentModel.getType().equals("button")) {
                 GradientDrawable gradientDrawable = new GradientDrawable();
                 gradientDrawable.setCornerRadius(5);
-                gradientDrawable.setColor(Color.rgb(31,155,222));
+                gradientDrawable.setColor(Color.parseColor("#1f9bde"));
                 Button button = new Button(getActivity());
                 button.setLayoutParams(matchWidthParams);
-                button.setHeight((int) convertPixelsToDp(44, getActivity()));
-                button.setWidth((int) convertPixelsToDp(316f, getActivity()));
+                button.setText(componentModel.getLabel());
+                //button.setHeight((int) convertPixelsToDp(44, getActivity()));
+                //button.setWidth((int) convertPixelsToDp(316f, getActivity()));
                 button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
                 button.setBackground(gradientDrawable);
+
                 if(componentModel.getLabel().equals("SIGN IN"))
                 {
+                    button.setTextColor(Color.parseColor("#ffffff"));
                     button.setBackgroundColor(Color.rgb(31, 155, 222));
                 }
                 else {
+                    button.setTextColor(Color.parseColor("#1f9bde"));
                     button.setBackgroundColor(Color.WHITE);
                 }
                 button.setHint(componentModel.getLabel());
@@ -150,7 +165,7 @@ public class SignInFragment extends Fragment {
         }
         parent.addView(relative);
         parent.setGravity(Gravity.BOTTOM);
-        return parent;
+        return screenLayout;
     }
 
     public static float convertPixelsToDp(float px, Context context) {
