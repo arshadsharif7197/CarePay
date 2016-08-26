@@ -37,6 +37,14 @@
         </activity>
         <activity android:name=".activities.ResponsibilityActivity">
         </activity>
+
+        <activity
+            android:name=".activities.SelectLanguageActivity"
+            android:parentActivityName=".activities.DemoActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DemoActivity"/>
+        </activity>
     </application>
 
 </manifest>

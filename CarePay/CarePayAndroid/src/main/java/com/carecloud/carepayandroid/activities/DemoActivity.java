@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepayandroid.R;
-import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 import com.carecloud.carepaylibray.fragments.SelectLanguageFragment;
 
 public class DemoActivity extends AppCompatActivity  {
@@ -20,7 +19,8 @@ public class DemoActivity extends AppCompatActivity  {
         findViewById(R.id.sel_lang).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // dummy
+                Intent intent = new Intent(DemoActivity.this, SelectLanguageActivity.class);
+                startActivity(intent);
             }
         });
 
