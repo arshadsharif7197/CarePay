@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.fragments.demographics;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -63,6 +64,13 @@ public class AddressFragment  extends Fragment {
 //        LinearLayout.LayoutParams LayoutParamsview = new AppBarLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 
+        LinearLayout linearLayoutCityState=new LinearLayout(getContext());
+        linearLayoutCityState.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayoutCityState.setLayoutParams(matchWidthParams);
+        LinearLayout.LayoutParams paramsCityState=new AppBarLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        paramsCityState.weight=1;
+
+
         ScreenModel screenModel = ApplicationWorkflow.Instance().getDemographicsAddressScreenModel();
 
         int index = 0;
@@ -71,10 +79,17 @@ public class AddressFragment  extends Fragment {
 
                 ImageView image = new ImageView(getActivity());
                 image.setImageResource(R.drawable.icn_signup_illustration_step_1_address);
-               //  image.setLayoutParams(matchWidthParams);
+                //  image.setLayoutParams(matchWidthParams);
                 parent.addView(image,index,matchWidthParams);
 
-
+                index++;
+            }else if(componentModel.getType().equals("phonenumber")) {
+                TextInputLayout et12 = new TextInputLayout(getActivity());
+                EditText et1 = new EditText(getActivity());
+                et1.setHint(componentModel.getLabel());
+                et12.addView(et1);
+                parent.addView(et12);
+                index++;
             }
 
             else if(componentModel.getType().equals("button")){
@@ -83,6 +98,7 @@ public class AddressFragment  extends Fragment {
                 select.setText(componentModel.getLabel());
                 select.setLayoutParams(matchWidthParams);
                 parent.addView(select);
+                index++;
 
             }
             else if(componentModel.getType().equals("Inputtext")) {
@@ -90,7 +106,21 @@ public class AddressFragment  extends Fragment {
                 EditText et1 = new EditText(getActivity());
                 et1.setHint(componentModel.getLabel());
                 et12.addView(et1);
-                parent.addView(et12);
+
+
+
+                if(componentModel.getLabel().equals("CITY") ||componentModel.getLabel().equals("STATE")){
+                    et12.setLayoutParams(paramsCityState);
+                    linearLayoutCityState.addView(et12);
+                    if(componentModel.getLabel().equals("STATE")){
+                        parent.addView(linearLayoutCityState);
+                        index++;
+                    }
+                }else {
+
+                    parent.addView(et12);
+                    index++;
+                }
             }
             else if(componentModel.getType().equals("togglebutton")) {
                 ToggleButton toggle= new ToggleButton(getActivity());
@@ -105,9 +135,10 @@ public class AddressFragment  extends Fragment {
                 tv1.setText(componentModel.getLabel());
                 tv1.setGravity(Gravity.CENTER);
                 parent.addView(tv1);
+                index++;
             }
 
-            index++;
+
         }
         ViewGroup viewGroup = (ViewGroup) view;
         viewGroup.addView(parent);
@@ -118,16 +149,9 @@ public class AddressFragment  extends Fragment {
         @Override
         public void onClick(View v) {
             if(v.getTag().equals("next")){
-                ViewPagerItemSetter setter = (ViewPagerItemSetter) getActivity();
-                setter.setCurrentItem (1, true);
+//                ((DemographicsActivity)getActivity()).setCurrentItem (1, true);
             }
         }
-    };
 
-    /**
-     * Callback to set an item of the view pager
-     */
-    public interface ViewPagerItemSetter {
-        void setCurrentItem (int item, boolean smoothScroll);
-    }
+    };
 }

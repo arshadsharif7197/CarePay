@@ -18,8 +18,7 @@ import com.carecloud.carepaylibray.fragments.demographics.MoreDetailsFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class DemographicsActivity extends AppCompatActivity
-        implements AddressFragment.ViewPagerItemSetter {
+public class DemographicsActivity extends AppCompatActivity {
 
     private ViewPager       viewPager;
     private FunPagerAdapter funPagerAdapter;

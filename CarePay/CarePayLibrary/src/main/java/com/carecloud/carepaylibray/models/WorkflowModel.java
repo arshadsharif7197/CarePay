@@ -93,13 +93,13 @@ public class WorkflowModel {
         demographicsAddressScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
         componentModels.add(new ScreenComponentModel("logo", "ImageView", true));
-        componentModels.add(new ScreenComponentModel("phone", "phonenumber", true));
-        componentModels.add(new ScreenComponentModel("zip", "Inputtext", true));
-        componentModels.add(new ScreenComponentModel("address1", "Inputtext", true));
-        componentModels.add(new ScreenComponentModel("address2", "Inputtext", false));
-        componentModels.add(new ScreenComponentModel("city", "Inputtext", true));
-        componentModels.add(new ScreenComponentModel("state", "Inputtext", true));
-        componentModels.add(new ScreenComponentModel("next", "button", true));
+        componentModels.add(new ScreenComponentModel("PHONE NUMBER", "phonenumber", true));
+        componentModels.add(new ScreenComponentModel("ZIP CODE", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("ADDRESS1", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("ADDRESS2", "Inputtext", false));
+        componentModels.add(new ScreenComponentModel("CITY", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("STATE", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("NEXT", "button", true));
         demographicsAddressScreenModel.setComponentModels(componentModels);
         return demographicsAddressScreenModel;
     }
