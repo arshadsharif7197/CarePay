@@ -39,8 +39,8 @@ public class SignInFragment extends Fragment {
         LinearLayout parent = new LinearLayout(getActivity());
         parent.setLayoutParams(matchWidthParams);
         parent.setOrientation(LinearLayout.VERTICAL);
-        //parent.setPadding(20, 20, 0, 20);
-        //getActivity().setTitle("CarePayAndroid");
+        parent.setPadding(20, 20, 20, 20);
+        getActivity().setTitle("Sign In");
 
         LinearLayout.LayoutParams LayoutParamsview = new AppBarLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 

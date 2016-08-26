@@ -16,6 +16,7 @@ public class DemoActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_demo);
 
         setTitle("Screens Demo");
+
         findViewById(R.id.sel_lang).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

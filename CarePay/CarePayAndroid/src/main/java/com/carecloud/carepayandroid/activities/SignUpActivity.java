@@ -15,11 +15,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //Sets the Toolbar to act as the ActionBar for this Activity window.
-        // Make sure the toolbar exists in the activity and is not null
-        toolbar.setTitle("New Account");
-
         SignUpFragment signUpFragment = new SignUpFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.signup_frame_layout, signUpFragment).commit();

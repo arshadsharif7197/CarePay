@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#066699</color>
     <color name="colorAccent">#acacac</color>
     <color name="white">#ffffff</color>
-    <color name="Light_slate_gray">#78909C</color>
+    <color name="lightSlateGray">#78909C</color>
     <color name="Bright_cerulean">#1F9BDE</color>
 </resources>

@@ -120,7 +120,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                 if (mComponentModels.get(i).getLabel().equalsIgnoreCase("Continue")) {
                     confirmButton = new ImageButton(getActivity());
                     RelativeLayout.LayoutParams layout_params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            150);
+                            120);
 
                    layout_params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     layout_params.setMargins(30,15,30,15);
@@ -148,6 +148,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                 mRelativeLayout1.setBackground(getActivity().getResources().getDrawable(R.drawable.bg_signup_1_phone));
                 layout_params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 mRelativeLayout1.setLayoutParams(layout_params);
+
                 ImageView mImageView = new ImageView(getActivity());
                 RelativeLayout.LayoutParams layout_params1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 layout_params1.addRule(RelativeLayout.CENTER_VERTICAL);

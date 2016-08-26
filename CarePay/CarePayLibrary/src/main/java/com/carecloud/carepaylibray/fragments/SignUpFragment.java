@@ -30,20 +30,22 @@ import java.util.regex.Pattern;
  * Created by anil_kairamkonda on 8/24/2016.
  */
 public class SignUpFragment extends Fragment {
+
     private ScreenModel screenModel;
-    private TextView editText;
+    private TextView    editText;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         LinearLayout.LayoutParams matchWidthParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout parent = new LinearLayout(getActivity());
         parent.setLayoutParams(matchWidthParams);
         parent.setOrientation(LinearLayout.VERTICAL);
-        parent.setPadding(20, 20, 0, 20);
+        parent.setPadding(20, 20, 20, 20);
 
         screenModel = ApplicationWorkflow.Instance().getSignupScreenModel();
-        getActivity().setTitle(screenModel.getName());
+        getActivity().setTitle("New Account");
 
         int index = 0;
         for (final ScreenComponentModel componentModel : screenModel.getComponentModels()) {
@@ -59,7 +61,7 @@ public class SignUpFragment extends Fragment {
                 if (componentModel.getType().equals("password")) {
 
                     editText.setInputType(InputType.TYPE_CLASS_TEXT |
-                            InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                                  InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }
 
                 editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);

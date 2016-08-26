@@ -13,7 +13,6 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-
         if(savedInstanceState == null) {
 
             SignInFragment fragment = new SignInFragment();

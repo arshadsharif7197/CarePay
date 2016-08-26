@@ -24,8 +24,8 @@ public class WorkflowModel {
     public ScreenModel getSelectLanguageScreenModel() {
         selectLanguageScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
+        componentModels.add(new ScreenComponentModel("","imageview",true));
         componentModels.add(new ScreenComponentModel("", "choice", true));
-        componentModels.add(new ScreenComponentModel("...", "button", false));
         componentModels.add(new ScreenComponentModel("Continue", "button", false));
         selectLanguageScreenModel.setComponentModels(componentModels);
         return selectLanguageScreenModel;
@@ -55,12 +55,12 @@ public class WorkflowModel {
     public ScreenModel getSignupScreenModel() {
         signupScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
-        componentModels.add(new ScreenComponentModel("Full Name", "inputtext", true));
-        componentModels.add(new ScreenComponentModel("Email", "email", true));
-        componentModels.add(new ScreenComponentModel("Create Password", "password", true));
-        componentModels.add(new ScreenComponentModel("Repeat Password", "Password", true));
+        componentModels.add(new ScreenComponentModel("FULL NAME", "inputtext", true));
+        componentModels.add(new ScreenComponentModel("EMAIL", "email", true));
+        componentModels.add(new ScreenComponentModel("CREATE PASSWORD", "password", true));
+        componentModels.add(new ScreenComponentModel("REPEAT PASSWORD", "password", true));
         componentModels.add(new ScreenComponentModel("SIGN UP", "button", false));
-        componentModels.add(new ScreenComponentModel("Already Have an Account", "text", false));
+        componentModels.add(new ScreenComponentModel("Already Have an Account?", "text", false));
         signupScreenModel.setComponentModels(componentModels);
         return signupScreenModel;
     }

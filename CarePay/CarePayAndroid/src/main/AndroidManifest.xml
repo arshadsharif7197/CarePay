@@ -55,7 +55,13 @@
         </activity>
 
         <activity
-            android:name=".activities.SignUpActivity"/>
+            android:name=".activities.SignUpActivity"
+            android:parentActivityName=".activities.DemoActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DemoActivity"/>
+        </activity>
+
 
     </application>
 
