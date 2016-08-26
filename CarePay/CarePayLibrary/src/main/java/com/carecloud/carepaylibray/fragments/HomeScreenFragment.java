@@ -10,10 +10,10 @@ import android.view.ViewGroup;
  * Created by Jahirul Bhuiyan on 8/25/2016.
  */
 public class HomeScreenFragment extends Fragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override

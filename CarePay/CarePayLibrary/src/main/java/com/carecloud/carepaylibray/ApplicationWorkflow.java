@@ -72,4 +72,9 @@ public class ApplicationWorkflow {
         return workFlowModel.getDemographicsMoreDetailsUpdatesScreenModel();
     }
 
+    public ScreenModel getDetailsScreenModel(){
+        return workFlowModel.getDetailsScreenModel();
+    }
+
+
 }

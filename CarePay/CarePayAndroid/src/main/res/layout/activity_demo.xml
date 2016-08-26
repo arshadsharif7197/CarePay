@@ -2,49 +2,59 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:gravity="center_vertical"
-    tools:context=".activities.DemoActivity"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:padding="10dp">
+    android:gravity="center_vertical"
+    android:padding="10dp"
+    tools:context=".activities.DemoActivity">
 
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sel_lang"
-        android:text="Select Language"/>
+        android:orientation="vertical">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/login"
-        android:text="Login"/>
+        <Button
+            android:id="@+id/sel_lang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Language"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/demograph"
-        android:text="Demographics"/>
+        <Button
+            android:id="@+id/signin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign In"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scan"
-        android:text="Scan"/>
+        <Button
+            android:id="@+id/signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/resp"
-        android:text="Responsibility"/>
+        <Button
+            android:id="@+id/demographics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Demographics"/>
 
+        <Button
+            android:id="@+id/scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Documents Scan"/>
 
+        <Button
+            android:id="@+id/licence_insurance_scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scan License insurance"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/resp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Responsibility"/>
+
+    </LinearLayout>
 </RelativeLayout>

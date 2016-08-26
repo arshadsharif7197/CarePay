@@ -18,13 +18,14 @@ public class WorkflowModel {
     private ScreenModel demographicsMoreDetailsUpdatesScreenModel;
     private ScreenModel insuranceInfoScreenModel;
     private ScreenModel newProfileScreenModel;
+    private ScreenModel detailsScreenModel;
 
 
     public ScreenModel getSelectLanguageScreenModel() {
         selectLanguageScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
+        componentModels.add(new ScreenComponentModel("","imageview",true));
         componentModels.add(new ScreenComponentModel("", "choice", true));
-        componentModels.add(new ScreenComponentModel("...", "button", false));
         componentModels.add(new ScreenComponentModel("Continue", "button", false));
         selectLanguageScreenModel.setComponentModels(componentModels);
         return selectLanguageScreenModel;
@@ -54,12 +55,12 @@ public class WorkflowModel {
     public ScreenModel getSignupScreenModel() {
         signupScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
-        componentModels.add(new ScreenComponentModel("Full Name", "inputtext", true));
-        componentModels.add(new ScreenComponentModel("Email", "email", true));
-        componentModels.add(new ScreenComponentModel("Create Password", "password", true));
-        componentModels.add(new ScreenComponentModel("Repeat Password", "Password", true));
+        componentModels.add(new ScreenComponentModel("FULL NAME", "inputtext", true));
+        componentModels.add(new ScreenComponentModel("EMAIL", "email", true));
+        componentModels.add(new ScreenComponentModel("CREATE PASSWORD", "password", true));
+        componentModels.add(new ScreenComponentModel("REPEAT PASSWORD", "password", true));
         componentModels.add(new ScreenComponentModel("SIGN UP", "button", false));
-        componentModels.add(new ScreenComponentModel("Already Have an Account", "text", false));
+        componentModels.add(new ScreenComponentModel("Already Have an Account?", "text", false));
         signupScreenModel.setComponentModels(componentModels);
         return signupScreenModel;
     }
@@ -91,14 +92,14 @@ public class WorkflowModel {
     public ScreenModel getDemographicsAddressScreenModel() {
         demographicsAddressScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
-        componentModels.add(new ScreenComponentModel("logo", "text", true));
-        componentModels.add(new ScreenComponentModel("phone", "phonenumber", true));
-        componentModels.add(new ScreenComponentModel("zip", "text", true));
-        componentModels.add(new ScreenComponentModel("address1", "inputtext", true));
-        componentModels.add(new ScreenComponentModel("address2", "inputtext", false));
-        componentModels.add(new ScreenComponentModel("city", "inputtext", true));
-        componentModels.add(new ScreenComponentModel("state", "inputtext", true));
-        componentModels.add(new ScreenComponentModel("next", "button", true));
+        componentModels.add(new ScreenComponentModel("logo", "ImageView", true));
+        componentModels.add(new ScreenComponentModel("PHONE NUMBER", "phonenumber", true));
+        componentModels.add(new ScreenComponentModel("ZIP CODE", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("ADDRESS1", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("ADDRESS2", "Inputtext", false));
+        componentModels.add(new ScreenComponentModel("CITY", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("STATE", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("NEXT", "button", true));
         demographicsAddressScreenModel.setComponentModels(componentModels);
         return demographicsAddressScreenModel;
     }
@@ -109,16 +110,18 @@ public class WorkflowModel {
 
 
     public ScreenModel getDemographicsDetailsScreenModel() {
-        demographicsAddressScreenModel = new ScreenModel();
+        demographicsDetailsScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
-        componentModels.add(new ScreenComponentModel("logo", "text", true));
-        componentModels.add(new ScreenComponentModel("picture", "imageview", true));
+        componentModels.add(new ScreenComponentModel("logo", "ImageView", true));
+        componentModels.add(new ScreenComponentModel("picture", "Images", true));
+        componentModels.add(new ScreenComponentModel("Select or Take Photo", "button", true));
         componentModels.add(new ScreenComponentModel("label_race", "text", true));
         componentModels.add(new ScreenComponentModel("choose_race", "button", true));
-        componentModels.add(new ScreenComponentModel("label_ethinicity", "text", true));
+        componentModels.add(new ScreenComponentModel("label_ethnicity", "text", true));
         componentModels.add(new ScreenComponentModel("choose_ethnicity", "button", true));
         componentModels.add(new ScreenComponentModel("label_pref_lang", "text", true));
         componentModels.add(new ScreenComponentModel("pref_lang", "text", true));
+        demographicsDetailsScreenModel.setComponentModels(componentModels);
         return demographicsDetailsScreenModel;
     }
 
@@ -141,22 +144,20 @@ public class WorkflowModel {
     public ScreenModel getDemographicsDocumentsScreenModel() {
         demographicsDocumentsScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
-        componentModels.add(new ScreenComponentModel("logo", "text", true));
-        componentModels.add(new ScreenComponentModel("thumbnail_license", "imageview", true));
-        componentModels.add(new ScreenComponentModel("scan_license", "button", true));
-        componentModels.add(new ScreenComponentModel("license_number", "text", true));
-        componentModels.add(new ScreenComponentModel("label_license_state", "text", true));
-        componentModels.add(new ScreenComponentModel("select", "button", true));
-        componentModels.add(new ScreenComponentModel("label_have_insurance", "text", true));
-        componentModels.add(new ScreenComponentModel("have_insurance", "togglebutton", true));
-        componentModels.add(new ScreenComponentModel("next", "button", true));
+        componentModels.add(new ScreenComponentModel("logo", "image", true));
+        componentModels.add(new ScreenComponentModel("Documents, please", "heading", true));
+        componentModels.add(new ScreenComponentModel("The scan process is straight forward", "subHeading", true));
+        componentModels.add(new ScreenComponentModel("SCAN DRIVER’S LICENSE", "buttonWithImage", true));
+        componentModels.add(new ScreenComponentModel("Driver License Number", "titleText", true));
+        componentModels.add(new ScreenComponentModel("Driver License Sate", "selector", true));
+        componentModels.add(new ScreenComponentModel("DO You have insurance", "text", true));
+        componentModels.add(new ScreenComponentModel("Do You have health insurance?", "togglebutton", true));
         componentModels.add(new ScreenComponentModel("thumbnail_insurance", "imageview", false));
-        componentModels.add(new ScreenComponentModel("scan_insurance", "button", false));
-        componentModels.add(new ScreenComponentModel("insurance_info_1", "text", false));
-        componentModels.add(new ScreenComponentModel("insurance_info_2", "text", false));
-        componentModels.add(new ScreenComponentModel("insurance_info_3", "text", false));
-        componentModels.add(new ScreenComponentModel("check_insurance", "button", false));
-        demographicsDocumentsScreenModel.setComponentModels(componentModels);
+        componentModels.add(new ScreenComponentModel("SCAN INSURANCE CARD", "buttonWithImage", false));
+        componentModels.add(new ScreenComponentModel("Insurance Card Info1", "inputtext", false));
+        componentModels.add(new ScreenComponentModel("Insurance Card Info 2", "inputtext", false));
+        componentModels.add(new ScreenComponentModel("insurance Card Info 3", "inputtext", false));
+        componentModels.add(new ScreenComponentModel("next", "button", true));        demographicsDocumentsScreenModel.setComponentModels(componentModels);
         return demographicsDocumentsScreenModel;
     }
 
@@ -167,12 +168,13 @@ public class WorkflowModel {
     public ScreenModel getDemographicsMoreDetailsScreenModel() {
         demographicsMoreDetailsScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
-        componentModels.add(new ScreenComponentModel("logo", "text", true));
-        componentModels.add(new ScreenComponentModel("sub-logo", "text", true));
-        componentModels.add(new ScreenComponentModel("label_want_updates", "text", true));
+        componentModels.add(new ScreenComponentModel("logo", "ImageView", true));
+        componentModels.add(new ScreenComponentModel("Got some time?", "text", true));
+        componentModels.add(new ScreenComponentModel("Share some of your health information now and save some precious time during your next appointment", "text", true));
+        componentModels.add(new ScreenComponentModel("Do you want to get updates?", "text", true));
         componentModels.add(new ScreenComponentModel("want_updates", "togglebutton", true));
-        componentModels.add(new ScreenComponentModel("add", "button", true));
-        componentModels.add(new ScreenComponentModel("do_later", "button", true));
+        componentModels.add(new ScreenComponentModel("Add MORE DETAILS", "button", true));
+        componentModels.add(new ScreenComponentModel("I'LL DO THIS LATER", "button", true));
         demographicsMoreDetailsScreenModel.setComponentModels(componentModels);
         return demographicsMoreDetailsScreenModel;
     }
@@ -192,7 +194,6 @@ public class WorkflowModel {
     public void setDemographicsMoreDetailsUpdatesScreenModel(ScreenModel demographicsMoreDetailsUpdatesScreenModel) {
         this.demographicsMoreDetailsUpdatesScreenModel = demographicsMoreDetailsUpdatesScreenModel;
     }
-
     public ScreenModel getInsuranceInfoScreenModel() {
         insuranceInfoScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
@@ -216,4 +217,14 @@ public class WorkflowModel {
     public void setNewProfileScreenModel(ScreenModel newProfileScreenModel) {
         this.newProfileScreenModel = newProfileScreenModel;
     }
+
+    public ScreenModel getDetailsScreenModel() {
+        detailsScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
+        componentModels.add(new ScreenComponentModel("picture", "imageview", true));
+        componentModels.add(new ScreenComponentModel("Take Photo", "button", true));
+        detailsScreenModel.setComponentModels(componentModels);
+        return detailsScreenModel;
+    }
+
 }
