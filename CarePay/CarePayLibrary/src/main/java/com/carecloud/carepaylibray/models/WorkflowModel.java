@@ -110,7 +110,7 @@ public class WorkflowModel {
 
 
     public ScreenModel getDemographicsDetailsScreenModel() {
-        demographicsAddressScreenModel = new ScreenModel();
+        demographicsDetailsScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
         componentModels.add(new ScreenComponentModel("logo", "text", true));
         componentModels.add(new ScreenComponentModel("picture", "imageview", true));
@@ -120,6 +120,7 @@ public class WorkflowModel {
         componentModels.add(new ScreenComponentModel("choose_ethnicity", "button", true));
         componentModels.add(new ScreenComponentModel("label_pref_lang", "text", true));
         componentModels.add(new ScreenComponentModel("pref_lang", "text", true));
+        demographicsDetailsScreenModel.setComponentModels(componentModels);
         return demographicsDetailsScreenModel;
     }
 

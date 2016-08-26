@@ -37,9 +37,11 @@ public class DemoActivity extends AppCompatActivity  {
             }
         });
 
-        findViewById(R.id.demograph_details).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.demographics).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(DemoActivity.this, DemographicsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -58,7 +60,6 @@ public class DemoActivity extends AppCompatActivity  {
                 startActivity(intent);
             }
         });
-
     }
 
     private void launchFragment(String fragName) {

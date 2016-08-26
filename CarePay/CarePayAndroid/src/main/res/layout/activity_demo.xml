@@ -33,7 +33,7 @@
             android:text="Sign Up"/>
 
         <Button
-            android:id="@+id/demograph_details"
+            android:id="@+id/demographics"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Demographics Details"/>
