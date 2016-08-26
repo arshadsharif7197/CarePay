@@ -22,13 +22,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.LauncherActivity"
-            android:parentActivityName=".activities.DemoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DemoActivity"/>
-        </activity>
-        <activity
             android:name=".activities.DemographicsDocumentsScanActivity"
             android:parentActivityName=".activities.DemoActivity">
             <meta-data
@@ -62,12 +55,7 @@
         </activity>
 
         <activity
-            android:name=".activities.SignUpActivity"
-            android:parentActivityName=".activities.DemoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DemoActivity"/>
-        </activity>
+            android:name=".activities.SignUpActivity"/>
 
     </application>
 
