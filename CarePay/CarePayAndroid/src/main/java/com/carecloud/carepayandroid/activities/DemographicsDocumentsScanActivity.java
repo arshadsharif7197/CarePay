@@ -1,13 +1,11 @@
 package com.carecloud.carepayandroid.activities;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +24,6 @@ import com.carecloud.carepayandroid.R;
 import com.carecloud.carepaylibray.ApplicationWorkflow;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 import com.carecloud.carepaylibray.models.ScreenModel;
-import com.carecloud.carepaylibray.models.WorkflowModel;
 import com.carecloud.carepaylibray.util.Utility;
 
 import java.io.ByteArrayOutputStream;
@@ -34,7 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class DetailActivity extends AppCompatActivity {
+public class DemographicsDocumentsScanActivity extends AppCompatActivity {
 
     private LinearLayout mainLayout;
     private String userChoosenTask;
@@ -46,11 +44,13 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("Scan");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setActionBar(new Toolbar(this));
+            Toolbar toolbar = new Toolbar(this);
+            toolbar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100));
+            toolbar.setTitle("Scan Documents");
+            setActionBar(toolbar);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         mainLayout = new LinearLayout(this);
         mainLayout.setOrientation(LinearLayout.HORIZONTAL);
         ScreenModel detailScrenModel = ApplicationWorkflow.Instance().getDetailsScreenModel();
@@ -110,12 +110,12 @@ public class DetailActivity extends AppCompatActivity {
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(DemographicsDocumentsScanActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = Utility.checkPermission(DetailActivity.this);
+                boolean result = Utility.checkPermission(DemographicsDocumentsScanActivity.this);
 
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask = "Take Photo";

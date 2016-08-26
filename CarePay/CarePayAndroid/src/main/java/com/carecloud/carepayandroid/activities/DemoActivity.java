@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import com.carecloud.carepayandroid.R;
 import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
@@ -25,14 +24,20 @@ public class DemoActivity extends AppCompatActivity  {
             }
         });
 
-        findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.signin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 launchFragment(SelectLanguageFragment.class.getSimpleName());
             }
         });
 
-        findViewById(R.id.demograph).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.signup).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
+        findViewById(R.id.demograph_details).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
             }
@@ -41,7 +46,7 @@ public class DemoActivity extends AppCompatActivity  {
         findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DemoActivity.this, DetailActivity.class);
+                Intent intent = new Intent(DemoActivity.this, DemographicsDocumentsScanActivity.class);
                 startActivity(intent);
             }
         });
@@ -49,7 +54,8 @@ public class DemoActivity extends AppCompatActivity  {
         findViewById(R.id.resp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchFragment(ResponsibilityFragment.class.getSimpleName());
+                Intent intent = new Intent(DemoActivity.this, ResponsibilityActivity.class);
+                startActivity(intent);
             }
         });
 
