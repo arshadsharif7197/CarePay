@@ -45,6 +45,12 @@
             android:text="Documents Scan"/>
 
         <Button
+            android:id="@+id/licence_insurance_scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scan License insurance"/>
+
+        <Button
             android:id="@+id/resp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

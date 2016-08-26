@@ -57,6 +57,14 @@ public class DemoActivity extends AppCompatActivity  {
             }
         });
 
+        findViewById(R.id.licence_insurance_scan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DemoActivity.this, LicenseInsuranceScanActivity.class);
+                startActivity(intent);
+            }
+        });
+
         findViewById(R.id.resp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
