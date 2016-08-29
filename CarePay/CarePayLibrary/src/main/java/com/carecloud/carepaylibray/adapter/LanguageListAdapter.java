@@ -20,18 +20,15 @@ import java.util.List;
 
 
 public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapter.ViewHolder> {
-    Context mContext;
- //   LanguageListAdapter(param1,param2,Context mcontext){this.mcontext = mcontext}
+
    List<Option> mLanguageListOptions;
     private OnItemClickListener itemClickListener;
+    Context mContext;
 
-    public LanguageListAdapter(List<Option> mLanguageListOptions,
-                               OnItemClickListener itemClickListener, Context context) {
+    public LanguageListAdapter(List<Option> mLanguageListOptions, OnItemClickListener itemClickListener,Context mContext) {
         this.mLanguageListOptions = mLanguageListOptions;
         this.itemClickListener = itemClickListener;
-        this.mContext = context;
-
-
+        this.mContext = mContext;
     }
 
     @Override
@@ -50,18 +47,17 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             }
         }
         holder.mRadioButton.setChecked(mLanguage.isChecked());
+       // holder.mImageView.setImageResource(R.drawable.us);
         holder.mImageView.setImageResource(mContext.getResources().getIdentifier(mLanguage.getLabel(), "drawable", mContext.getPackageName()));
-
     }
     @Override
     public int getItemCount() {
         return mLanguageListOptions.size();
     }
 
-
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
-       ImageView mImageView;
+        ImageView mImageView;
         CardView mCardView;
         RadioButton mRadioButton;
 
