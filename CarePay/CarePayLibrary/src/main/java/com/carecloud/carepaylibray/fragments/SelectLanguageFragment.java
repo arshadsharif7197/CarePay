@@ -1,7 +1,5 @@
 package com.carecloud.carepaylibray.fragments;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +16,7 @@ import android.widget.RelativeLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.StringFunctions;
 import com.carecloud.carepaylibray.adapter.LanguageListAdapter;
-import com.carecloud.carepaylibray.models.Option;
+import com.carecloud.carepaylibray.models.OptionModel;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 import com.carecloud.carepaylibray.models.ScreenModel;
 import com.carecloud.carepaylibray.models.WorkflowModel;
@@ -37,7 +35,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     private String mParam2;
     private View preparedView;
     ImageButton confirmButton = null;
-    static List<Option> mOptionList;
+    static List<OptionModel> mOptionModelList;
     RecyclerView mListView;
     String language = null;
     int viewId ;
@@ -82,38 +80,38 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                 mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
                 mLayoutParams.setMargins(15, 50, 15, 15);
-                mOptionList = new ArrayList<>();
-                Option mOption;
-                mOption = new Option();
-                mOption.setValue("English");
-                mOption.setLabel("us");
-                mOption.setChecked(false);
-                mOptionList.add(mOption);
+                mOptionModelList = new ArrayList<>();
+                OptionModel mOptionModel;
+                mOptionModel = new OptionModel();
+                mOptionModel.setValue("English");
+                mOptionModel.setLabel("us");
+                mOptionModel.setChecked(false);
+                mOptionModelList.add(mOptionModel);
 
-                mOption = new Option();
-                mOption.setValue("Espanol");
-                mOption.setLabel("flag2");
-                mOption.setChecked(false);
-                mOptionList.add(mOption);
+                mOptionModel = new OptionModel();
+                mOptionModel.setValue("Espanol");
+                mOptionModel.setLabel("flag2");
+                mOptionModel.setChecked(false);
+                mOptionModelList.add(mOptionModel);
 
-                mOption = new Option();
-                mOption.setValue("French");
-                mOption.setLabel("flag3");
-                mOption.setChecked(false);
-                mOptionList.add(mOption);
+                mOptionModel = new OptionModel();
+                mOptionModel.setValue("French");
+                mOptionModel.setLabel("flag3");
+                mOptionModel.setChecked(false);
+                mOptionModelList.add(mOptionModel);
 
                 if (!StringFunctions.isNullOrEmpty(language)) {
-                    for (int j = 0; j < mOptionList.size(); j++) {
-                        Option mOptionData = mOptionList.get(j);
-                        if (mOptionData.getValue().equalsIgnoreCase(language)) {
-                            mOptionList.get(j).setChecked(true);
+                    for (int j = 0; j < mOptionModelList.size(); j++) {
+                        OptionModel mOptionModelData = mOptionModelList.get(j);
+                        if (mOptionModelData.getValue().equalsIgnoreCase(language)) {
+                            mOptionModelList.get(j).setChecked(true);
                         } else {
-                            mOptionList.get(j).setChecked(false);
+                            mOptionModelList.get(j).setChecked(false);
                         }
                     }
                 }
 
-                LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(mOptionList, this, getActivity());
+                LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(mOptionModelList, this, getActivity());
                 mListView.setAdapter(mLanguageListAdapter);
 
 
@@ -183,17 +181,17 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     }
 
     @Override
-    public void onItemClick(View view, int position, Option mLanguage) {
-        List<Option> newLanguageList = new ArrayList<>();
-        for (int i = 0; i < mOptionList.size(); i++) {
-            Option mOption = mOptionList.get(i);
-            if (mOption.getValue().equalsIgnoreCase(mLanguage.getValue())) {
-                mOption.setChecked(true);
+    public void onItemClick(View view, int position, OptionModel mLanguage) {
+        List<OptionModel> newLanguageList = new ArrayList<>();
+        for (int i = 0; i < mOptionModelList.size(); i++) {
+            OptionModel mOptionModel = mOptionModelList.get(i);
+            if (mOptionModel.getValue().equalsIgnoreCase(mLanguage.getValue())) {
+                mOptionModel.setChecked(true);
             } else {
-                mOption.setChecked(false);
+                mOptionModel.setChecked(false);
 
             }
-            newLanguageList.add(mOption);
+            newLanguageList.add(mOptionModel);
         }
         LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(newLanguageList, this, getActivity());
         mListView.setAdapter(mLanguageListAdapter);

@@ -3,9 +3,6 @@ package com.carecloud.carepaylibray.models;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Jahirul Bhuiyan on 8/24/2016.
- */
 public class WorkflowModel {
     private ScreenModel selectLanguageScreenModel;
     private ScreenModel loginScreenModel;
@@ -39,10 +36,13 @@ public class WorkflowModel {
     public ScreenModel getHomeScreenModel() {
         homeScreenModel=new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels= new ArrayList<ScreenComponentModel>();
+        componentModels.add(new ScreenComponentModel("How can we help?","textview",true));
         componentModels.add(new ScreenComponentModel("","gridview",true));
-        componentModels.add(new ScreenComponentModel("How We Can Help You ?","text",true));
         homeScreenModel.setComponentModels(componentModels);
         return homeScreenModel;
+    }
+    public void setHomeScreenModel(ScreenModel homeScreenModel) {
+        this.homeScreenModel=homeScreenModel;
     }
 
     public ScreenModel getLoginScreenModel() {
