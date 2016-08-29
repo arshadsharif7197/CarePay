@@ -11,11 +11,12 @@
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="0.5dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
         android:layout_marginTop="0.5dp"
         android:clickable="true"
         android:focusable="true"
+        card_view:cardCornerRadius="1dp"
         android:foreground="?android:attr/selectableItemBackground"
         card_view:cardElevation="4dp">
 
@@ -28,6 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"/>
 
             <TextView
@@ -38,7 +40,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/icon_image"
                 android:text="Welcome to android "
-                android:textColor="#607d8b"
+                android:textColor="@color/language_color"
                 android:textSize="17sp"
                 android:textStyle="bold"/>
 
@@ -48,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:buttonTint="#1f9bde"
+                android:buttonTint="@color/confirm_button"
                 android:clickable="false"
                 />
         </RelativeLayout>

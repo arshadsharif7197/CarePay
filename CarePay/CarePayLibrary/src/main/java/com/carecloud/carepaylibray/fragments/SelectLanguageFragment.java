@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     static List<Option> mOptionList;
     RecyclerView mListView;
     String language = null;
+    int viewId ;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_language, container, false);
         FrameLayout mFrameLayout = (FrameLayout) view.findViewById(R.id.frame_container);
+        viewId=this.getArguments().getInt("viewid");
         mFrameLayout.addView(prepareLayout());
         return view;
     }
@@ -120,23 +123,30 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                 if (mComponentModels.get(i).getLabel().equalsIgnoreCase("Continue")) {
                     confirmButton = new ImageButton(getActivity());
                     RelativeLayout.LayoutParams layout_params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            120);
+                            100);
 
-                   layout_params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    layout_params.setMargins(30,15,30,15);
+                    layout_params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    layout_params.setMargins(40,15,40,15);
 
 
                     confirmButton.setLayoutParams(layout_params);
-                    confirmButton.setBackgroundColor(Color.parseColor("#cfd8dc"));
+                    confirmButton.setBackgroundColor(getResources().getColor(R.color.uncheck_confirm_button));
                     confirmButton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                 //   confirmButton.
                     if (!StringFunctions.isNullOrEmpty(language)) {
-                        confirmButton.setBackgroundColor(Color.parseColor("#1f9bde"));
+                        confirmButton.setBackgroundColor(getResources().getColor(R.color.confirm_button));
                     } else {
                         confirmButton.setImageResource(R.drawable.icn_check_disabled);
 
                     }
                     confirmButton.setImageResource(R.drawable.icn_check_disabled);
-
+                    confirmButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            HomeScreenFragment mSelectLanguageFragment = new HomeScreenFragment();
+                            getFragmentManager().beginTransaction().replace(viewId, mSelectLanguageFragment).commit();
+                        }
+                    });
                     mRelativeLayout.addView(confirmButton, layout_params);
                 }
 
@@ -181,6 +191,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                 mOption.setChecked(true);
             } else {
                 mOption.setChecked(false);
+
             }
             newLanguageList.add(mOption);
         }
@@ -188,14 +199,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         mListView.setAdapter(mLanguageListAdapter);
         mLanguageListAdapter.notifyDataSetChanged();
         language = mLanguage.getValue();
-        confirmButton.setBackgroundColor(Color.parseColor("#1f9bde"));
-
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-            }
-        });
-
+        confirmButton.setBackgroundColor(getResources().getColor(R.color.confirm_button));
     }
+
 }

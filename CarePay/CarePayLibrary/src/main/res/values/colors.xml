@@ -11,4 +11,7 @@
     <color name="rich_electric_blue">#ff009bde</color>
     <color name="light_gray">#ff78909c</color>
     <color name="bright_cerulean">#ff1f9bde</color>
+    <color name="confirm_button">#1f9bde</color>
+    <color name="uncheck_confirm_button">#cfd8dc</color>
+    <color name="language_color">#607d8b</color>
 </resources>

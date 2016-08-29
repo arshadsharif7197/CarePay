@@ -19,6 +19,7 @@ public class WorkflowModel {
     private ScreenModel insuranceInfoScreenModel;
     private ScreenModel newProfileScreenModel;
     private ScreenModel detailsScreenModel;
+    private ScreenModel homeScreenModel;
 
 
     public ScreenModel getSelectLanguageScreenModel() {
@@ -33,6 +34,14 @@ public class WorkflowModel {
 
     public void setSelectLanguageScreenModel(ScreenModel selectLanguageScreenModel) {
         this.selectLanguageScreenModel = selectLanguageScreenModel;
+    }
+    public ScreenModel getHomeScreenModel() {
+        homeScreenModel=new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels= new ArrayList<ScreenComponentModel>();
+        componentModels.add(new ScreenComponentModel("","gridview",true));
+        componentModels.add(new ScreenComponentModel("How We Can Help You ?","text",true));
+        homeScreenModel.setComponentModels(componentModels);
+        return homeScreenModel;
     }
 
     public ScreenModel getLoginScreenModel() {
