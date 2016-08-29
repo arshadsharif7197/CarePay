@@ -94,14 +94,21 @@ public class DemographicsDocumentsScanActivity extends AppCompatActivity {
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals("Take Photo"))
-                        cameraIntent();
-                    else if (userChoosenTask.equals("Choose from Library"))
+                    if (userChoosenTask.equals("Choose from Library"))
                         galleryIntent();
                 } else {
                     //code for deny
                 }
                 break;
+
+            case Utility.MY_PERMISSIONS_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (userChoosenTask.equals("Take Photo"))
+                        cameraIntent();
+
+                } else {
+                    //code for deny
+                }
         }
     }
 
@@ -114,15 +121,17 @@ public class DemographicsDocumentsScanActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = Utility.checkPermission(DemographicsDocumentsScanActivity.this);
+
 
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask = "Take Photo";
+                    boolean result = Utility.checkPermissionCamera(DemographicsDocumentsScanActivity.this);
                     if (result)
                         cameraIntent();
 
                 } else if (items[item].equals("Choose from Library")) {
                     userChoosenTask = "Choose from Library";
+                    boolean result = Utility.checkPermission(DemographicsDocumentsScanActivity.this);
                     if (result)
                         galleryIntent();
 
