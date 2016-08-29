@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray;
 import com.carecloud.carepaylibray.models.ScreenModel;
 import com.carecloud.carepaylibray.models.WorkflowModel;
 
+import java.util.List;
+
 /**
  * Created by Jahirul Bhuiyan on 8/24/2016.
  */
@@ -48,6 +50,20 @@ public class ApplicationWorkflow {
 
     public ScreenModel getDemographicDetailsEthicityScreenModel() {
         return workFlowModel.getDemographicsDetailsEthnicityScreenModel();
+    }
+
+    public List<String> getRaceDataModel() {
+        return workFlowModel.getRaceList();
+    }
+    public List<String> getethincityDataModel() {
+        return workFlowModel.getEthincityList();
+    }
+
+    public List<String> getlanguageDataModel() {
+        return workFlowModel.getLanguageList();
+    }
+    public List<String> getUpdatesDataModel() {
+        return workFlowModel.getUpdateList();
     }
 
     public ScreenModel getDemographicsDocumentsScreenModel() {
