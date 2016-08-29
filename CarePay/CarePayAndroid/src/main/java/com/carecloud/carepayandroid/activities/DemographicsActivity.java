@@ -149,7 +149,7 @@ public class DemographicsActivity extends AppCompatActivity {
             return ICONS[index];
         }
 
-        @Override
+      /*  @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
 //                case 0:
@@ -161,7 +161,7 @@ public class DemographicsActivity extends AppCompatActivity {
 
                 default:
                     return "";
-            }
+            }*/
         }
     }
-}
+

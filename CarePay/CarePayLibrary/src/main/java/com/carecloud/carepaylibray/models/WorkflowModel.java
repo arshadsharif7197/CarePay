@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jahirul Bhuiyan on 8/24/2016.
@@ -102,12 +103,14 @@ public class WorkflowModel {
         demographicsAddressScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
         componentModels.add(new ScreenComponentModel("logo", "ImageView", true));
-        componentModels.add(new ScreenComponentModel("PHONE NUMBER", "phonenumber", true));
-        componentModels.add(new ScreenComponentModel("ZIP CODE", "Inputtext", true));
-        componentModels.add(new ScreenComponentModel("ADDRESS1", "Inputtext", true));
-        componentModels.add(new ScreenComponentModel("ADDRESS2", "Inputtext", false));
-        componentModels.add(new ScreenComponentModel("CITY", "Inputtext", true));
-        componentModels.add(new ScreenComponentModel("STATE", "Inputtext", true));
+        componentModels.add(new ScreenComponentModel("Let's get you set up!", "heading", true));
+        componentModels.add(new ScreenComponentModel("First, tell us your address & contact information", "subHeading", true));
+        componentModels.add(new ScreenComponentModel("PHONE NUMBER", "inputtext", true));
+        componentModels.add(new ScreenComponentModel("ZIP CODE", "inputtext", true));
+        componentModels.add(new ScreenComponentModel("ADDRESS1", "inputtext", true));
+        componentModels.add(new ScreenComponentModel("ADDRESS2", "inputtext", false));
+        componentModels.add(new ScreenComponentModel("CITY", "inputtext", true));
+        componentModels.add(new ScreenComponentModel("STATE", "inputtext", true));
         componentModels.add(new ScreenComponentModel("NEXT", "button", true));
         demographicsAddressScreenModel.setComponentModels(componentModels);
         return demographicsAddressScreenModel;
@@ -122,14 +125,14 @@ public class WorkflowModel {
         demographicsDetailsScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
         componentModels.add(new ScreenComponentModel("logo", "ImageView", true));
-        componentModels.add(new ScreenComponentModel("picture", "Images", true));
-        componentModels.add(new ScreenComponentModel("Select or Take Photo", "button", true));
-        componentModels.add(new ScreenComponentModel("label_race", "text", true));
-        componentModels.add(new ScreenComponentModel("choose_race", "button", true));
-        componentModels.add(new ScreenComponentModel("label_ethnicity", "text", true));
-        componentModels.add(new ScreenComponentModel("choose_ethnicity", "button", true));
+        componentModels.add(new ScreenComponentModel("Some details about you", "heading", true));
+        componentModels.add(new ScreenComponentModel("How about uploading your photo?", "subHeading", true));
+        componentModels.add(new ScreenComponentModel("Select or Take Photo", "buttonWithImage", true));
+        componentModels.add(new ScreenComponentModel("Race", "selector", true));
+        componentModels.add(new ScreenComponentModel("Ethnicity", "selector", true));
         componentModels.add(new ScreenComponentModel("label_pref_lang", "text", true));
-        componentModels.add(new ScreenComponentModel("pref_lang", "text", true));
+        componentModels.add(new ScreenComponentModel("Preferred Language", "selector", true));
+        componentModels.add(new ScreenComponentModel("NEXT", "button", true));
         demographicsDetailsScreenModel.setComponentModels(componentModels);
         return demographicsDetailsScreenModel;
     }
@@ -157,7 +160,7 @@ public class WorkflowModel {
         componentModels.add(new ScreenComponentModel("Documents, please", "heading", true));
         componentModels.add(new ScreenComponentModel("The scan process is straight forward", "subHeading", true));
         componentModels.add(new ScreenComponentModel("SCAN DRIVER’S LICENSE", "buttonWithImage", true));
-        componentModels.add(new ScreenComponentModel("Driver License Number", "titleText", true));
+        componentModels.add(new ScreenComponentModel("Driver License Number", "inputtext", true));
         componentModels.add(new ScreenComponentModel("Driver License Sate", "selector", true));
         componentModels.add(new ScreenComponentModel("DO You have insurance", "text", true));
         componentModels.add(new ScreenComponentModel("Do You have health insurance?", "togglebutton", true));
@@ -166,7 +169,8 @@ public class WorkflowModel {
         componentModels.add(new ScreenComponentModel("Insurance Card Info1", "inputtext", false));
         componentModels.add(new ScreenComponentModel("Insurance Card Info 2", "inputtext", false));
         componentModels.add(new ScreenComponentModel("insurance Card Info 3", "inputtext", false));
-        componentModels.add(new ScreenComponentModel("next", "button", true));        demographicsDocumentsScreenModel.setComponentModels(componentModels);
+        componentModels.add(new ScreenComponentModel("NEXT", "button", true));
+        demographicsDocumentsScreenModel.setComponentModels(componentModels);
         return demographicsDocumentsScreenModel;
     }
 
@@ -178,15 +182,59 @@ public class WorkflowModel {
         demographicsMoreDetailsScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
         componentModels.add(new ScreenComponentModel("logo", "ImageView", true));
-        componentModels.add(new ScreenComponentModel("Got some time?", "text", true));
-        componentModels.add(new ScreenComponentModel("Share some of your health information now and save some precious time during your next appointment", "text", true));
-        componentModels.add(new ScreenComponentModel("Do you want to get updates?", "text", true));
-        componentModels.add(new ScreenComponentModel("want_updates", "togglebutton", true));
-        componentModels.add(new ScreenComponentModel("Add MORE DETAILS", "button", true));
+        componentModels.add(new ScreenComponentModel("Got some time?", "heading", true));
+        componentModels.add(new ScreenComponentModel("Share some of your health information now and save some precious time during your next appointment", "subHeading", true));
+        componentModels.add(new ScreenComponentModel("Do you want to get updates?", "togglebutton", true));
+        componentModels.add(new ScreenComponentModel("ADD MORE DETAILS", "button", true));
         componentModels.add(new ScreenComponentModel("I'LL DO THIS LATER", "button", true));
         demographicsMoreDetailsScreenModel.setComponentModels(componentModels);
         return demographicsMoreDetailsScreenModel;
     }
+    public List<String> getRaceList(){
+        List<String> raceItems = new ArrayList<String>();
+        raceItems.add("American or Indian");
+        raceItems.add("Asian");
+        raceItems.add("Black or African American");
+        raceItems.add("Native Hawaiian");
+        raceItems.add("Other pacific Islander");
+        raceItems.add("White");
+        raceItems.add("Other");
+        raceItems.add("Decline to Answer");
+        return raceItems;
+    }
+
+
+    public List<String> getEthincityList(){
+        List<String> ethinicityItems = new ArrayList<String>();
+        ethinicityItems.add("Hispanic");
+        ethinicityItems.add("White Americans");
+        ethinicityItems.add("Asian Americans");
+        ethinicityItems.add("Native Hawaiian");
+        ethinicityItems.add("Other");
+        ethinicityItems.add("Decline to Answer");
+        return ethinicityItems;
+    }
+
+    public List<String> getLanguageList(){
+        List<String> languageItems = new ArrayList<String>();
+        languageItems.add("English");
+        languageItems.add("Spanish");
+        languageItems.add("Decline to Answer");
+        return languageItems;
+    }
+
+
+
+    public List<String> getUpdateList(){
+        List<String> raceItems = new ArrayList<String>();
+        raceItems.add("Mobile Notifications");
+        raceItems.add("Email Notifications");
+        raceItems.add("Newsletter");
+        raceItems.add("Monthly coupons");
+        raceItems.add("Marketing Material");
+        return raceItems;
+    }
+
 
     public void setDemographicsMoreDetailsScreenModel(ScreenModel demographicsMoreDetailsScreenModel) {
         this.demographicsMoreDetailsScreenModel = demographicsMoreDetailsScreenModel;
