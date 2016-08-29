@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.StringFunctions;
-import com.carecloud.carepaylibray.models.Option;
+import com.carecloud.carepaylibray.models.OptionModel;
 
 import java.util.List;
 
@@ -21,12 +21,12 @@ import java.util.List;
 
 public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapter.ViewHolder> {
 
-   List<Option> mLanguageListOptions;
+   List<OptionModel> mLanguageListOptionModels;
     private OnItemClickListener itemClickListener;
     Context mContext;
 
-    public LanguageListAdapter(List<Option> mLanguageListOptions, OnItemClickListener itemClickListener,Context mContext) {
-        this.mLanguageListOptions = mLanguageListOptions;
+    public LanguageListAdapter(List<OptionModel> mLanguageListOptionModels, OnItemClickListener itemClickListener, Context mContext) {
+        this.mLanguageListOptionModels = mLanguageListOptionModels;
         this.itemClickListener = itemClickListener;
         this.mContext = mContext;
     }
@@ -39,7 +39,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Option mLanguage = mLanguageListOptions.get(position);
+        OptionModel mLanguage = mLanguageListOptionModels.get(position);
         if(!StringFunctions.isNullOrEmpty(mLanguage.getValue())){
             holder.mTextView.setText(mLanguage.getValue());
             if(mLanguage.isChecked()){
@@ -52,7 +52,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     }
     @Override
     public int getItemCount() {
-        return mLanguageListOptions.size();
+        return mLanguageListOptionModels.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -75,7 +75,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
                 {
                     if(itemClickListener!=null)
                     {
-                        itemClickListener.onItemClick(view, getAdapterPosition(), mLanguageListOptions.get(getAdapterPosition()));
+                        itemClickListener.onItemClick(view, getAdapterPosition(), mLanguageListOptionModels.get(getAdapterPosition()));
                     }
                 }
             });
@@ -83,6 +83,6 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     }
     public interface OnItemClickListener
     {
-        void onItemClick(View view, int position, Option mLanguage);
+        void onItemClick(View view, int position, OptionModel mLanguage);
     }
 }
