@@ -52,16 +52,20 @@ public class ResponsibilityFragment extends Fragment {
         private ArrayList<ScreenComponentModel> mComponents;
         private Button                          mPayButton;
         private LinearLayout.LayoutParams matchParentLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                                                  ViewGroup.LayoutParams.MATCH_PARENT);
+                                                                                        ViewGroup.LayoutParams.MATCH_PARENT);
         private LinearLayout.LayoutParams wrapHeightLp  = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                                                  ViewGroup.LayoutParams.WRAP_CONTENT);
+                                                                                        ViewGroup.LayoutParams.WRAP_CONTENT);
         private LinearLayout.LayoutParams zeroWidthLp   = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-        private LinearLayout.LayoutParams zeroHeightLp   = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        private LinearLayout.LayoutParams zeroHeightLp  = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         private Typeface typeProxima;
         private Typeface typeGothamRounded;
+        private Typeface typeProximaSemiBold;
         private int      colorPrimary;
         private int      colorWhite;
-        private int      colorGrey;
+        private int      colorYellowGreen;
+        private int      colorGlitter;
+        private int      colorCharcoal;
+        private Typeface typeGothamRoundedBook;
 
 
         public ResponsibilityLayoutRenderer(AppCompatActivity context) {
@@ -69,11 +73,20 @@ public class ResponsibilityFragment extends Fragment {
             mComponents = ApplicationWorkflow.Instance().getResponsabScreenModel().getComponentModels();
             typeProxima = Typeface.createFromAsset(mActivity.getAssets(), "fonts/ProximaNova-Reg.otf");
             typeGothamRounded = Typeface.createFromAsset(mActivity.getAssets(), "fonts/GothamRnd-Medium.otf");
+            typeProximaSemiBold = Typeface.createFromAsset(mActivity.getAssets(), "fonts/Proxima_Nova_Semibold.otf");
+            typeGothamRoundedBook = Typeface.createFromAsset(mActivity.getAssets(), "fonts/Gotham-rounded-book.otf");
             colorPrimary = mActivity.getResources().getColor(R.color.colorPrimary);
-            colorWhite = ContextCompat.getColor(mActivity, R.color.white);
-            colorGrey = mActivity.getResources().getColor(R.color.light_gray);
+            colorWhite = mActivity.getResources().getColor(R.color.white);
+            colorYellowGreen = mActivity.getResources().getColor(R.color.yellowGreen);
+            colorGlitter = mActivity.getResources().getColor(R.color.glitter);
+            colorCharcoal = mActivity.getResources().getColor(R.color.charcoal);
         }
 
+        /**
+         * Creates the layout
+         *
+         * @return The view containing the layout
+         */
         public View createLayout() {
             ScrollView root = new ScrollView(mActivity);
             root.setLayoutParams(matchParentLp);
@@ -88,21 +101,21 @@ public class ResponsibilityFragment extends Fragment {
 
             // create total balance container
             LinearLayout.LayoutParams llTotalContainerLp = new LinearLayout.LayoutParams(zeroHeightLp);
-            llTotalContainerLp.weight = 4;
+            llTotalContainerLp.weight = 3;
             LinearLayout llTotalContainer = createVerticalLinearLayout(llTotalContainerLp);
-            llTotalContainer.setPadding(0, 20, 0, 60); // todo externalize
+            llTotalContainer.setPadding(0, 36, 0, 37); // todo externalize
             llTotalContainer.setBackgroundColor(colorPrimary);
 
             // create balance details container
             LinearLayout.LayoutParams llBalanceDetailsContainerLp = new LinearLayout.LayoutParams(zeroHeightLp);
-            llBalanceDetailsContainerLp.weight = 3;
+            llBalanceDetailsContainerLp.weight = 4;
             llBalanceDetailsContainerLp.setMargins(60, 120, 60, 120); // todo externalize
             LinearLayout llBalanceDetailsContainer = createVerticalLinearLayout(llBalanceDetailsContainerLp);
 
             // create 'other components' container
             LinearLayout.LayoutParams llOtherCompContainerLp = new LinearLayout.LayoutParams(zeroHeightLp);
             llOtherCompContainerLp.weight = 1;
-            llOtherCompContainerLp.setMargins(150, 20, 150, 10);  // todo externalize
+            llOtherCompContainerLp.setMargins(30, 20, 30, 10);  // todo externalize
             LinearLayout llOtherCompContainer = createVerticalLinearLayout(llOtherCompContainerLp);
 
             ScreenComponentModel currentCompModel; // holds the current layout component to be added
@@ -112,15 +125,7 @@ public class ResponsibilityFragment extends Fragment {
                 currentCompModel = mComponents.get(i);
                 if (i == 0 && currentCompModel.getType().equals("text")) {
                     // first label encountered; place it in the toolbar
-                    // todo replace with call to the custom component  factory
-                    TextView tvLabelTotal = new TextView(mActivity);
-                    tvLabelTotal.setLayoutParams(wrapHeightLp);
-                    tvLabelTotal.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tvLabelTotal.setTypeface(typeProxima);
-                    tvLabelTotal.setTextSize(20); // todo externalize
-                    tvLabelTotal.setTextColor(colorWhite);
-                    tvLabelTotal.setText(currentCompModel.getLabel());
-
+                    TextView tvLabelTotal = createTextView(wrapHeightLp, 21, colorGlitter, typeGothamRoundedBook, currentCompModel);
                     llTotalContainer.addView(tvLabelTotal);
 
                     // fetch the next; it should be a textValue
@@ -128,33 +133,28 @@ public class ResponsibilityFragment extends Fragment {
                     currentCompModel = mComponents.get(i);
                     if (currentCompModel.getType().equals("textValue")) {
                         // add it to the toolbar as well
-                        // todo replace with call to the component factory
-//                        TextView tvValueTotal = new TextView(mActivity);
-//                        tvValueTotal.setLayoutParams(wrapHeightLp);
-//                        tvValueTotal.setGravity(Gravity.CENTER_HORIZONTAL);
-//                        tvValueTotal.setTypeface(typeProxima);
-//                        tvValueTotal.setTextColor(colorWhite);
-//                        tvValueTotal.setTextSize(55); // todo externalize
-//                        tvValueTotal.setText(currentCompModel.getLabel());
-                        TextView tvValueTotal = createTextView(wrapHeightLp, 55, colorWhite, currentCompModel); // todo externalize fontSize
+                        TextView tvValueTotal = createTextView(wrapHeightLp, 73, colorWhite, typeGothamRounded, currentCompModel); // todo externalize fontSize
+                        llTotalContainer.setPadding(0, 16, 0, 0);
                         llTotalContainer.addView(tvValueTotal);
                         ++i;
                     }
                 } else if (currentCompModel.getType().equals("text")) {
                     // create a horizontal LinearLayout for (label, value)
                     LinearLayout detailLl = new LinearLayout(mActivity);
-                    detailLl.setWeightSum(2);
+                    detailLl.setWeightSum(4);
                     LinearLayout.LayoutParams detailLlLp = new LinearLayout.LayoutParams(wrapHeightLp);
-                    detailLlLp.setMargins(0, 20, 0, 20); // todo externalize
+                    detailLlLp.setMargins(0, 30, 0, 0); // todo externalize
                     detailLl.setLayoutParams(detailLlLp);
                     detailLl.setOrientation(LinearLayout.HORIZONTAL);
                     // following component go by pairs (label, value) in balance details container
                     // create the label view
                     // todo replace with call to the factory
                     LinearLayout.LayoutParams tvDetailLabelLp = new LinearLayout.LayoutParams(zeroWidthLp);
-                    tvDetailLabelLp.weight = 1;
+                    tvDetailLabelLp.weight = 3;
 
-                    TextView tvDetailLabel = createTextView(tvDetailLabelLp, -1, -1, currentCompModel); // todo get defaults
+                    TextView tvDetailLabel = createTextView(tvDetailLabelLp,
+                                                            17, colorCharcoal, typeProxima,
+                                                            currentCompModel); // todo get defaults
                     detailLl.addView(tvDetailLabel);
                     tvDetailLabel.setGravity(Gravity.START);
                     ++i;
@@ -164,7 +164,9 @@ public class ResponsibilityFragment extends Fragment {
                         // todo replace with call to the factory
                         LinearLayout.LayoutParams tvDetailValueLp = new LinearLayout.LayoutParams(zeroWidthLp);
                         tvDetailValueLp.weight = 1;
-                        TextView tvDetailValue = createTextView(tvDetailValueLp, -1, colorPrimary, currentCompModel);
+                        TextView tvDetailValue = createTextView(tvDetailValueLp,
+                                                                14, colorPrimary, typeProximaSemiBold,
+                                                                currentCompModel);
                         tvDetailValue.setGravity(Gravity.END);
                         detailLl.addView(tvDetailValue);
                         ++i;
@@ -172,12 +174,6 @@ public class ResponsibilityFragment extends Fragment {
                         // add the horizontal linear layout
                         // add (label, value) pair to details container
                         llBalanceDetailsContainer.addView(detailLl);
-                        // add separator
-                        View separator = new View(mActivity);
-                        separator.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                                             2));
-                        separator.setBackgroundColor(colorGrey);
-                        llBalanceDetailsContainer.addView(separator);
                     }
                 } else if (currentCompModel.getType().equals("button")) {
                     // add the button
@@ -209,24 +205,27 @@ public class ResponsibilityFragment extends Fragment {
          */
         private Button createButton(ScreenComponentModel currentCompModel) {
             Button payButton = new Button(mActivity);
-            payButton.setLayoutParams(wrapHeightLp);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(wrapHeightLp);
+            lp.setMargins(0, 0, 0, 27); // to externalize
+            payButton.setLayoutParams(lp);
             payButton.setTextColor(colorWhite);
-            payButton.setTypeface(typeProxima);
+            payButton.setTypeface(typeGothamRounded);
+            payButton.setTextSize(15);
             payButton.setText(currentCompModel.getLabel());
-            payButton.setBackgroundColor(colorPrimary);
+            payButton.setBackgroundColor(colorYellowGreen);
             return payButton;
         }
 
         /**
          * Create a linear layout container
+         *
          * @param lp The layout params
          * @return The container
          */
         private LinearLayout createVerticalLinearLayout(LinearLayout.LayoutParams lp) {
             LinearLayout llVertContainer = new LinearLayout(mActivity);
             llVertContainer.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams llBalDetContLp = new LinearLayout.LayoutParams(lp);
-            llVertContainer.setLayoutParams(llBalDetContLp);
+            llVertContainer.setLayoutParams(lp);
             return llVertContainer;
         }
 
@@ -238,23 +237,22 @@ public class ResponsibilityFragment extends Fragment {
          * @return The ext view
          */
         private TextView createTextView(ViewGroup.LayoutParams lp, float textSize, int color,
-                                        ScreenComponentModel currentCompModel) {
+                                        Typeface typeface, ScreenComponentModel currentCompModel) {
             TextView textView = new TextView(mActivity);
             textView.setLayoutParams(lp);
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
-            textView.setTypeface(typeProxima);
+            textView.setTypeface(typeface);
             if (textSize != -1) {
                 textView.setTextSize(textSize); // todo externalize
             }
-            if (color != -1) {
-                textView.setTextColor(color);
-            }
+            textView.setTextColor(color);
             textView.setText(currentCompModel.getLabel());
             return textView;
         }
 
         /**
          * Create the toolbar
+         *
          * @return the toolbar
          */
         private Toolbar createToolbar() {
