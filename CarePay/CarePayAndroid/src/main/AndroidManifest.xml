@@ -36,11 +36,8 @@
         </activity>
         <activity
             android:name=".activities.ResponsibilityActivity"
-            android:parentActivityName=".activities.DemoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DemoActivity"/>
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+
         <activity
             android:name=".activities.SelectLanguageActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
