@@ -14,4 +14,5 @@
     <color name="confirm_button">#1f9bde</color>
     <color name="uncheck_confirm_button">#cfd8dc</color>
     <color name="language_color">#607d8b</color>
+    <color name="slateGray">#607d8b</color>s
 </resources>
