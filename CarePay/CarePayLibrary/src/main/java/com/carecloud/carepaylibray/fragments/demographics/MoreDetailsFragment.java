@@ -1,11 +1,12 @@
 package com.carecloud.carepaylibray.fragments.demographics;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
@@ -18,13 +19,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.ApplicationWorkflow;
+import com.carecloud.carepaylibray.fragments.UpdatesDialogFragment;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 import com.carecloud.carepaylibray.models.ScreenModel;
 
@@ -107,7 +107,23 @@ public class MoreDetailsFragment extends Fragment {
 
             else if(componentModel.getType().equals("button")){
 
+
                 Button button =  new Button(getActivity());
+
+                Button select =  new Button(getActivity());
+                select.setText(componentModel.getLabel());
+                select.setLayoutParams(matchWidthParams);
+                parent.addView(select);
+                select.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FragmentManager fm = getFragmentManager();
+                        UpdatesDialogFragment dialogFragment = new UpdatesDialogFragment ();
+                        dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+                        dialogFragment.show(fm,"Updates Fragment");
+                    }
+                });
+
 
                 LinearLayout.LayoutParams childLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 childLayoutParams.setMargins(17, 14, 17, 14);
