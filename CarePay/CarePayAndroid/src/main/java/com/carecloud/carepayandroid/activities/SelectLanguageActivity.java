@@ -8,7 +8,7 @@ import com.carecloud.carepaylibray.fragments.SelectLanguageFragment;
 
 public class SelectLanguageActivity extends AppCompatActivity {
 
-    int viewId = R.id.container;;
+    int viewId = R.id.container;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +18,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 
             Bundle mBundle = new Bundle();
             mBundle.putInt("viewid",viewId);
-                    mSelectLanguageFragment.setArguments(mBundle);
+            mSelectLanguageFragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, mSelectLanguageFragment).commit();
         }
     }

@@ -34,12 +34,19 @@ import com.carecloud.carepaylibray.models.ScreenModel;*/
 /**
  * Created by harish_revuri on 8/24/2016.
  */
+
 public class SignInFragment extends android.support.v4.app.Fragment{
     private static final String LOG_TAG = SignInFragment.class.getSimpleName();
     View view;
+    int viewId;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewId=this.getArguments().getInt("viewid");
+    }
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
 
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -110,6 +117,17 @@ public class SignInFragment extends android.support.v4.app.Fragment{
                 {
                     button.setTextColor(Color.parseColor("#ffffff"));
                     button.setBackgroundColor(Color.rgb(31, 155, 222));
+
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            HomeScreenFragment mSelectLanguageFragment = new HomeScreenFragment();
+                            Bundle mBundle = new Bundle();
+                            mBundle.putInt("viewid",viewId);
+                            mSelectLanguageFragment.setArguments(mBundle);
+                            getFragmentManager().beginTransaction().addToBackStack("siginfragment").replace(viewId, mSelectLanguageFragment).commit();
+                        }
+                    });
                 }
                 else {
                     button.setTextColor(Color.parseColor("#1f9bde"));

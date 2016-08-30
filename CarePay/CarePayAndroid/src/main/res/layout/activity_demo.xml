@@ -21,6 +21,12 @@
             android:text="Select Language"/>
 
         <Button
+            android:id="@+id/home_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Home Screen"/>
+
+        <Button
             android:id="@+id/signin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
