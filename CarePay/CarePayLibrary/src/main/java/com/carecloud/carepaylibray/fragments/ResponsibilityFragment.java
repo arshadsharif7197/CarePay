@@ -92,25 +92,15 @@ public class ResponsibilityFragment extends Fragment {
             actionBar.setDisplayHomeAsUpEnabled(true);
 
             // create total balance container
-            LinearLayout llTotalContainer = new LinearLayout(mActivity);
-            llTotalContainer.setLayoutParams(wrapHeightLp);
-            llTotalContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout llTotalContainer = createVerticalLinearLayout(0, 0, 0, 0);
             llTotalContainer.setPadding(0, 20, 0, 60); // todo externalize
             llTotalContainer.setBackgroundColor(colorPrimary);
 
             // create balance details container
-            LinearLayout llBalanceDetailsContainer = new LinearLayout(mActivity);
-            llBalanceDetailsContainer.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams llBalDetContLp = new LinearLayout.LayoutParams(wrapHeightLp);
-            llBalDetContLp.setMargins(60, 120, 60, 120); // todo externalize
-            llBalanceDetailsContainer.setLayoutParams(llBalDetContLp);
+            LinearLayout llBalanceDetailsContainer = createVerticalLinearLayout(60, 120, 60, 120); // todo externalize
 
             // create 'other components' container
-            LinearLayout llOtherCompContainer = new LinearLayout(mActivity);
-            llOtherCompContainer.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams llOtherCompContLp = new LinearLayout.LayoutParams(wrapHeightLp);
-            llOtherCompContLp.setMargins(150, 20, 150, 10); // todo externalize
-            llOtherCompContainer.setLayoutParams(llOtherCompContLp);
+            LinearLayout llOtherCompContainer = createVerticalLinearLayout(150, 20, 150, 10);  // todo externalize
 
             ScreenComponentModel currentCompModel; // holds the current layout component to be added
             int componentsCount = mComponents.size();
@@ -127,6 +117,7 @@ public class ResponsibilityFragment extends Fragment {
                     tvLabelTotal.setTextSize(20); // todo externalize
                     tvLabelTotal.setTextColor(colorWhite);
                     tvLabelTotal.setText(currentCompModel.getLabel());
+
                     llTotalContainer.addView(tvLabelTotal);
 
                     // fetch the next; it should be a textValue
@@ -135,13 +126,14 @@ public class ResponsibilityFragment extends Fragment {
                     if (currentCompModel.getType().equals("textValue")) {
                         // add it to the toolbar as well
                         // todo replace with call to the component factory
-                        TextView tvValueTotal = new TextView(mActivity);
-                        tvValueTotal.setLayoutParams(wrapHeightLp);
-                        tvValueTotal.setGravity(Gravity.CENTER_HORIZONTAL);
-                        tvValueTotal.setTypeface(typeProxima);
-                        tvValueTotal.setTextColor(colorWhite);
-                        tvValueTotal.setTextSize(55); // todo externalize
-                        tvValueTotal.setText(currentCompModel.getLabel());
+//                        TextView tvValueTotal = new TextView(mActivity);
+//                        tvValueTotal.setLayoutParams(wrapHeightLp);
+//                        tvValueTotal.setGravity(Gravity.CENTER_HORIZONTAL);
+//                        tvValueTotal.setTypeface(typeProxima);
+//                        tvValueTotal.setTextColor(colorWhite);
+//                        tvValueTotal.setTextSize(55); // todo externalize
+//                        tvValueTotal.setText(currentCompModel.getLabel());
+                        TextView tvValueTotal = createTextView(wrapHeightLp, 55, colorWhite, currentCompModel); // todo externalize fontSize
                         llTotalContainer.addView(tvValueTotal);
                         ++i;
                     }
@@ -156,26 +148,20 @@ public class ResponsibilityFragment extends Fragment {
                     // following component go by pairs (label, value) in balance details container
                     // create the label view
                     // todo replace with call to the factory
-                    TextView tvDetailLabel = new TextView(mActivity);
                     LinearLayout.LayoutParams tvDetailLabelLp = new LinearLayout.LayoutParams(zeroWidthLp);
                     tvDetailLabelLp.weight = 1;
-                    tvDetailLabel.setLayoutParams(tvDetailLabelLp);
-                    tvDetailLabel.setTypeface(typeProxima);
-                    tvDetailLabel.setText(currentCompModel.getLabel());
-                    tvDetailLabel.setGravity(Gravity.START);
+
+                    TextView tvDetailLabel = createTextView(tvDetailLabelLp, -1, -1, currentCompModel); // todo get defaults
                     detailLl.addView(tvDetailLabel);
+                    tvDetailLabel.setGravity(Gravity.START);
                     ++i;
                     currentCompModel = mComponents.get(i);
                     if (currentCompModel.getType().equals("textValue")) {
                         // add the value view
                         // todo replace with call to the factory
-                        TextView tvDetailValue = new TextView(mActivity);
                         LinearLayout.LayoutParams tvDetailValueLp = new LinearLayout.LayoutParams(zeroWidthLp);
                         tvDetailValueLp.weight = 1;
-                        tvDetailValue.setLayoutParams(tvDetailValueLp);
-                        tvDetailValue.setTypeface(typeProxima);
-                        tvDetailValue.setTextColor(colorPrimary);
-                        tvDetailValue.setText(currentCompModel.getLabel());
+                        TextView tvDetailValue = createTextView(tvDetailValueLp, -1, colorPrimary, currentCompModel);
                         tvDetailValue.setGravity(Gravity.END);
                         detailLl.addView(tvDetailValue);
                         ++i;
@@ -212,6 +198,11 @@ public class ResponsibilityFragment extends Fragment {
             return root;
         }
 
+        /**
+         * Creates a button
+         * @param currentCompModel The screen model component to build from
+         * @return The button
+         */
         private Button createButton(ScreenComponentModel currentCompModel) {
             Button payButton = new Button(mActivity);
             payButton.setLayoutParams(wrapHeightLp);
@@ -220,6 +211,47 @@ public class ResponsibilityFragment extends Fragment {
             payButton.setText(currentCompModel.getLabel());
             payButton.setBackgroundColor(colorPrimary);
             return payButton;
+        }
+
+        /**
+         * Create a linear layout container
+         * @param margLeft Margin left
+         * @param margTop Margin top
+         * @param margRight Margin right
+         * @param margBottom MArgin bottom
+         * @return The container
+         */
+        private LinearLayout createVerticalLinearLayout(int margLeft, int margTop, int margRight, int margBottom) {
+            LinearLayout llVertContainer = new LinearLayout(mActivity);
+            llVertContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams llBalDetContLp = new LinearLayout.LayoutParams(wrapHeightLp);
+            llBalDetContLp.setMargins(margLeft, margTop, margRight, margBottom); // todo externalize
+            llVertContainer.setLayoutParams(llBalDetContLp);
+            return llVertContainer;
+        }
+
+        /**
+         *
+         * @param lp The layout params
+         * @param textSize The text size or -1 to use defaults
+         * @param color The color or -1 to use default
+         * @param currentCompModel The screen component model
+         * @return The ext view
+         */
+        private TextView createTextView(ViewGroup.LayoutParams lp, float textSize, int color,
+                                        ScreenComponentModel currentCompModel) {
+            TextView textView = new TextView(mActivity);
+            textView.setLayoutParams(lp);
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+            textView.setTypeface(typeProxima);
+            if(textSize != -1) {
+                textView.setTextSize(textSize); // todo externalize
+            }
+            if(color != -1) {
+                textView.setTextColor(color);
+            }
+            textView.setText(currentCompModel.getLabel());
+            return textView;
         }
     }
 }
