@@ -44,27 +44,28 @@ public class ResponsibilityFragment extends Fragment {
 
         private AppCompatActivity               mActivity;
         private ArrayList<ScreenComponentModel> mComponents;
-        private Button mPayButton;
+        private Button                          mPayButton;
+        private ViewGroup.LayoutParams matchParentLp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                                  ViewGroup.LayoutParams.MATCH_PARENT);
+        private ViewGroup.LayoutParams wrapHeightLp  = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                                  ViewGroup.LayoutParams.WRAP_CONTENT);
+        private ViewGroup.LayoutParams zeroWidthLp   = new ViewGroup.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        private Typeface typeProxima;
+        private int      colorPrimary;
+        private int      colorWhite;
+        private int      colorGrey;
+
 
         public ResponsibilityLayoutRenderer(AppCompatActivity context) {
             mActivity = context;
             mComponents = ApplicationWorkflow.Instance().getResponsabScreenModel().getComponentModels();
+            typeProxima = Typeface.createFromAsset(mActivity.getAssets(), "fonts/ProximaNova-Reg.otf");
+            colorPrimary = mActivity.getResources().getColor(R.color.colorPrimary);
+            colorWhite = ContextCompat.getColor(mActivity, R.color.white);
+            colorGrey = mActivity.getResources().getColor(R.color.light_gray);
         }
 
         public View createLayout() {
-            // typeface
-            Typeface typeProxima = Typeface.createFromAsset(mActivity.getAssets(), "fonts/ProximaNova-Reg.otf");
-
-            // create the root container
-            ViewGroup.LayoutParams matchParentLp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                                              ViewGroup.LayoutParams.MATCH_PARENT);
-            ViewGroup.LayoutParams wrapHeightLp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                                             ViewGroup.LayoutParams.WRAP_CONTENT);
-            ViewGroup.LayoutParams zeroWidthLp = new ViewGroup.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-            int colorPrimary = mActivity.getResources().getColor(R.color.colorPrimary);
-            int colorWhite = ContextCompat.getColor(mActivity, R.color.white);
-            int colorGrey = mActivity.getResources().getColor(R.color.light_gray);
-
 
             ScrollView root = new ScrollView(mActivity);
             root.setLayoutParams(matchParentLp);
@@ -90,7 +91,6 @@ public class ResponsibilityFragment extends Fragment {
             actionBar.setHomeAsUpIndicator(upArrow);
             actionBar.setDisplayHomeAsUpEnabled(true);
 
-
             // create total balance container
             LinearLayout llTotalContainer = new LinearLayout(mActivity);
             llTotalContainer.setLayoutParams(wrapHeightLp);
@@ -102,14 +102,14 @@ public class ResponsibilityFragment extends Fragment {
             LinearLayout llBalanceDetailsContainer = new LinearLayout(mActivity);
             llBalanceDetailsContainer.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams llBalDetContLp = new LinearLayout.LayoutParams(wrapHeightLp);
-            llBalDetContLp.setMargins(60, 100, 60, 100); // todo externalize
+            llBalDetContLp.setMargins(60, 120, 60, 120); // todo externalize
             llBalanceDetailsContainer.setLayoutParams(llBalDetContLp);
 
             // create 'other components' container
             LinearLayout llOtherCompContainer = new LinearLayout(mActivity);
             llOtherCompContainer.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams llOtherCompContLp = new LinearLayout.LayoutParams(wrapHeightLp);
-            llOtherCompContLp.setMargins(120, 20, 120, 10); // todo externalize
+            llOtherCompContLp.setMargins(150, 20, 150, 10); // todo externalize
             llOtherCompContainer.setLayoutParams(llOtherCompContLp);
 
             ScreenComponentModel currentCompModel; // holds the current layout component to be added
@@ -193,13 +193,8 @@ public class ResponsibilityFragment extends Fragment {
                 } else if (currentCompModel.getType().equals("button")) {
                     // add the button
                     // todo replace with call to the factory
-                    mPayButton = new Button(mActivity);
-                    mPayButton.setLayoutParams(wrapHeightLp);
-                    mPayButton.setTextColor(colorWhite);
-                    mPayButton.setTypeface(typeProxima);
-                    mPayButton.setText(currentCompModel.getLabel());
-                    mPayButton.setBackgroundColor(colorPrimary);
                     // add the button to 'other components' container
+                    mPayButton = createButton(currentCompModel);
                     llOtherCompContainer.addView(mPayButton);
                     ++i;
                 } else {
@@ -215,6 +210,16 @@ public class ResponsibilityFragment extends Fragment {
             root.addView(mainLl);
 
             return root;
+        }
+
+        private Button createButton(ScreenComponentModel currentCompModel) {
+            Button payButton = new Button(mActivity);
+            payButton.setLayoutParams(wrapHeightLp);
+            payButton.setTextColor(colorWhite);
+            payButton.setTypeface(typeProxima);
+            payButton.setText(currentCompModel.getLabel());
+            payButton.setBackgroundColor(colorPrimary);
+            return payButton;
         }
     }
 }
