@@ -82,8 +82,8 @@ public class WorkflowModel {
     public ScreenModel getResponsabScreenModel() {
         responsabScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
-        componentModels.add(new ScreenComponentModel("You Cost for Today's Visit", "text", true));
-        componentModels.add(new ScreenComponentModel("$120", "textValue", true));
+        componentModels.add(new ScreenComponentModel("Your Cost for Today's Visit", "text", true));
+        componentModels.add(new ScreenComponentModel("$120.00", "textValue", true));
         componentModels.add(new ScreenComponentModel("Amount for today's visit", "text", true));
         componentModels.add(new ScreenComponentModel("$29.00", "textValue", true));
         componentModels.add(new ScreenComponentModel("Previous Balance", "text", true));

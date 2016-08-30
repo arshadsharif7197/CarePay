@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,7 +34,6 @@ public class ResponsibilityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ResponsibilityLayoutRenderer renderer = new ResponsibilityLayoutRenderer((AppCompatActivity) getActivity());
-        getActivity().setTitle("Responsibility"); // todo get title from component
         return renderer.createLayout1();
     }
 
@@ -171,6 +171,9 @@ public class ResponsibilityFragment extends Fragment {
         }
 
         public View createLayout1() {
+            // typeface
+            Typeface typeProxima = Typeface.createFromAsset(mActivity.getAssets(), "fonts/ProximaNova-Reg.otf");
+
             // create the root container
             ViewGroup.LayoutParams matchParentLp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                                     ViewGroup.LayoutParams.MATCH_PARENT);
@@ -188,20 +191,45 @@ public class ResponsibilityFragment extends Fragment {
             // create the toolbar
             Toolbar toolbar = new Toolbar(mActivity);
             toolbar.setLayoutParams(wrapHeightLp);
+            toolbar.setTitle("");
             toolbar.setBackgroundColor(mActivity.getResources().getColor(R.color.colorPrimary));
             mActivity.setSupportActionBar(toolbar);
-            mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            // change the color of up button
+            // todo get assets
+//            Drawable upArrow = ContextCompat.getDrawable(mActivity, R.drawable.abc_ic_ab_back_material);
+//            if (upArrow != null) {
+//                Log.v("Renderer", "back arrow");
+//                upArrow.setColorFilter(ContextCompat.getColor(mActivity, R.color.white), PorterDuff.Mode.CLEAR);
+//            } else {
+//                Log.v("Renderer", "null back arrow");
+//            }
+            ActionBar actionBar = mActivity.getSupportActionBar();
+//            actionBar.setHomeAsUpIndicator(upArrow);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
 
             // create total balance container
-            LinearLayout totalContainerLl = new LinearLayout(mActivity);
-            totalContainerLl.setLayoutParams(wrapHeightLp);
-            totalContainerLl.setOrientation(LinearLayout.VERTICAL);
-            totalContainerLl.setBackgroundColor(mActivity.getResources().getColor(R.color.colorPrimary));
+            LinearLayout llTotalContainer = new LinearLayout(mActivity);
+            llTotalContainer.setLayoutParams(wrapHeightLp);
+            llTotalContainer.setOrientation(LinearLayout.VERTICAL);
+            llTotalContainer.setPadding(0, 20, 0, 60); // todo externalize
+            llTotalContainer.setBackgroundColor(mActivity.getResources().getColor(R.color.colorPrimary));
 
             // create balance details container
-            LinearLayout llBalanceDetails = new LinearLayout(mActivity);
-            llBalanceDetails.setOrientation(LinearLayout.VERTICAL);
-            llBalanceDetails.setLayoutParams(wrapHeightLp);
+            LinearLayout llBalanceDetailsContainer = new LinearLayout(mActivity);
+            llBalanceDetailsContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams llBalDetContLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                                     ViewGroup.LayoutParams.WRAP_CONTENT);
+            llBalDetContLp.setMargins(60, 100, 60,  100); // todo externalize
+            llBalanceDetailsContainer.setLayoutParams(llBalDetContLp);
+
+            // create 'other components' container
+            LinearLayout llOtherCompContainer = new LinearLayout(mActivity);
+            llOtherCompContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams llOtherCompContLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                                        ViewGroup.LayoutParams.WRAP_CONTENT);
+            llOtherCompContLp.setMargins(120, 20, 120, 10); // todo externalize
+            llOtherCompContainer.setLayoutParams(llOtherCompContLp);
 
             ScreenComponentModel currentCompModel; // holds the current layout component to be added
             int componentsCount = mComponents.size();
@@ -213,8 +241,13 @@ public class ResponsibilityFragment extends Fragment {
                     // todo replace with call to the custom component  factory
                     TextView tvLabelTotal = new TextView(mActivity);
                     tvLabelTotal.setLayoutParams(wrapHeightLp);
+                    tvLabelTotal.setGravity(Gravity.CENTER_HORIZONTAL);
+                    tvLabelTotal.setTypeface(typeProxima);
+                    tvLabelTotal.setTextSize(20); // todo externalize
+                    tvLabelTotal.setTextColor(mActivity.getResources().getColor(R.color.white));
                     tvLabelTotal.setText(currentCompModel.getLabel());
-                    totalContainerLl.addView(tvLabelTotal);
+                    llTotalContainer.addView(tvLabelTotal);
+
                     // fetch the next; it should be a textValue
                     ++i;
                     currentCompModel = mComponents.get(i);
@@ -223,20 +256,33 @@ public class ResponsibilityFragment extends Fragment {
                         // todo replace with call to the component factory
                         TextView tvValueTotal = new TextView(mActivity);
                         tvValueTotal.setLayoutParams(wrapHeightLp);
+                        tvValueTotal.setGravity(Gravity.CENTER_HORIZONTAL);
+                        tvValueTotal.setTypeface(typeProxima);
+                        tvValueTotal.setTextColor(mActivity.getResources().getColor(R.color.white));
+                        tvValueTotal.setTextSize(55); // todo externalize
                         tvValueTotal.setText(currentCompModel.getLabel());
-                        totalContainerLl.addView(tvValueTotal);
+                        llTotalContainer.addView(tvValueTotal);
                         ++i;
                     }
                 } else if(currentCompModel.getType().equals("text")) {
                     // create a horizontal LinearLayout for (label, value)
                     LinearLayout detailLl = new LinearLayout(mActivity);
-                    detailLl.setLayoutParams(wrapHeightLp);
+                    detailLl.setWeightSum(2);
+                    LinearLayout.LayoutParams detailLlLp = new LinearLayout.LayoutParams(wrapHeightLp);
+                    detailLlLp.setMargins(0, 20, 0, 20); // todo externalize
+                    detailLl.setLayoutParams(detailLlLp);
+                    detailLl.setOrientation(LinearLayout.HORIZONTAL);
                     // following component go by pairs (label, value) in balance details container
                     // create the label view
                     // todo replace with call to the factory
                     TextView tvDetailLabel = new TextView(mActivity);
-                    tvDetailLabel.setLayoutParams(wrapHeightLp);
+                    LinearLayout.LayoutParams tvDetailLabelLp = new LinearLayout.LayoutParams(0,
+                                                                                              ViewGroup.LayoutParams.WRAP_CONTENT);
+                    tvDetailLabelLp.weight = 1;
+                    tvDetailLabel.setLayoutParams(tvDetailLabelLp);
+                    tvDetailLabel.setTypeface(typeProxima);
                     tvDetailLabel.setText(currentCompModel.getLabel());
+                    tvDetailLabel.setGravity(Gravity.START);
                     detailLl.addView(tvDetailLabel);
                     ++i;
                     currentCompModel = mComponents.get(i);
@@ -244,34 +290,49 @@ public class ResponsibilityFragment extends Fragment {
                         // add the value view
                         // todo replace with call to the factory
                         TextView tvDetailValue = new TextView(mActivity);
-                        tvDetailValue.setLayoutParams(wrapHeightLp);
-                        tvDetailLabel.setText(currentCompModel.getLabel());
+                        LinearLayout.LayoutParams tvDetailValueLp = new LinearLayout.LayoutParams(0,
+                                                                                                  ViewGroup.LayoutParams.WRAP_CONTENT);
+                        tvDetailValueLp.weight = 1;
+                        tvDetailValue.setLayoutParams(tvDetailValueLp);
+                        tvDetailValue.setTypeface(typeProxima);
+                        tvDetailValue.setTextColor(mActivity.getResources().getColor(R.color.colorPrimary));
+                        tvDetailValue.setText(currentCompModel.getLabel());
+                        tvDetailValue.setGravity(Gravity.END);
                         detailLl.addView(tvDetailValue);
                         ++i;
 
                         // add the horizontal linear layout
                         // add (label, value) pair to details container
-                        llBalanceDetails.addView(detailLl);
+                        llBalanceDetailsContainer.addView(detailLl);
                         // add separator
-
+                        View separator = new View(mActivity);
+                        separator.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                             2));
+                        separator.setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+                        llBalanceDetailsContainer.addView(separator);
                     }
                 } else if(currentCompModel.getType().equals("button")){
                     // add the button
                     // todo replace with call to the factory
                     mPayButton = new Button(mActivity);
                     mPayButton.setLayoutParams(wrapHeightLp);
+                    mPayButton.setTextColor(mActivity.getResources().getColor(R.color.white));
+                    mPayButton.setTypeface(typeProxima);
                     mPayButton.setText(currentCompModel.getLabel());
+                    mPayButton.setBackgroundColor(mActivity.getResources().getColor(R.color.colorPrimary));
+                    // add the button to 'other components' container
+                    llOtherCompContainer.addView(mPayButton);
                     ++i;
                 } else {
-                    // all other components will be added directly to the main linear layout
+                    // all other components will be eventually added to the 'other components' container
                     ++i;
                 }
             }
             // add containers to the root
             mainLl.addView(toolbar);
-            mainLl.addView(totalContainerLl);
-            mainLl.addView(llBalanceDetails);
-            mainLl.addView(mPayButton);
+            mainLl.addView(llTotalContainer);
+            mainLl.addView(llBalanceDetailsContainer);
+            mainLl.addView(llOtherCompContainer);
             root.addView(mainLl);
 
             return root;
