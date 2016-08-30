@@ -1,11 +1,16 @@
 package com.carecloud.carepayandroid.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -26,8 +31,8 @@ public class DemographicsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demographics
-        );
+        setContentView(R.layout.activity_demographics);
+        isStoragePermissionGranted();
         funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(4);
@@ -135,6 +140,7 @@ public class DemographicsActivity extends AppCompatActivity {
 
         }
 
+
         /**
          * Returns the number of pages
          */
@@ -163,5 +169,25 @@ public class DemographicsActivity extends AppCompatActivity {
                     return "";
             }*/
         }
-    }
+
+
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ) {
+             //   Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+              //  Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+          //  Log.v(TAG, "Permission is granted");
+            return true;
+        }
+    }}
 

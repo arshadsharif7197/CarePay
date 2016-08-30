@@ -44,11 +44,6 @@ public class MoreDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle("MoreDetailsFragment");
-    }
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_address, container, false);
@@ -149,12 +144,12 @@ public class MoreDetailsFragment extends Fragment {
 
                 }}
             else if(componentModel.getType().equals("Inputtext")) {
-                TextInputLayout et12 = new TextInputLayout(getActivity());
-                EditText et1 = new EditText(getActivity());
-                et1.setLayoutParams(matchWidthParams);
-                et1.setHint(componentModel.getLabel());
-                et12.addView(et1);
-                parent.addView(et12);
+                TextInputLayout textInputLayout = new TextInputLayout(getActivity());
+                EditText editText = new EditText(getActivity());
+                editText.setLayoutParams(matchWidthParams);
+                editText.setHint(componentModel.getLabel());
+                textInputLayout.addView(editText);
+                parent.addView(textInputLayout);
             }
             else if(componentModel.getType().equals("togglebutton")) {
               /*  ToggleButton toggle= new ToggleButton(getActivity());
@@ -178,11 +173,11 @@ public class MoreDetailsFragment extends Fragment {
 
             }
             else if(componentModel.getType().equals("text")){
-                TextView tv1 = new TextView(getActivity());
-                tv1.setLayoutParams(matchWidthParams);
-                tv1.setText(componentModel.getLabel());
-                tv1.setGravity(Gravity.CENTER);
-                parent.addView(tv1);
+                TextView textView = new TextView(getActivity());
+                textView.setLayoutParams(matchWidthParams);
+                textView.setText(componentModel.getLabel());
+                textView.setGravity(Gravity.CENTER);
+                parent.addView(textView);
             }
 
             index++;
