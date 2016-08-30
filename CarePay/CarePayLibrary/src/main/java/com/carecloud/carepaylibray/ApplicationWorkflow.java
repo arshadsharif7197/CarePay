@@ -78,12 +78,6 @@ public class ApplicationWorkflow {
         return workFlowModel.getNewProfileScreenModel();
     }
 
-    public ScreenModel getUpdatesDialogScreenModel() {
-        return workFlowModel.getUpdatesDialogScreenModel();
-    }
-
-
-
     public ScreenModel getDemographicsMoreDetailsScreenModel() {
         return workFlowModel.getDemographicsMoreDetailsScreenModel();
     }

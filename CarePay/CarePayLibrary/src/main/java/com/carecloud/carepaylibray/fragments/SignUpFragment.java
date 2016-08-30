@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 /**
  * Created by anil_kairamkonda on 8/24/2016.
  */
-public class    SignUpFragment extends Fragment {
+public class SignUpFragment extends Fragment {
 
     private ScreenModel screenModel;
     private TextView    editText;

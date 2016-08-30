@@ -17,10 +17,7 @@ public class WorkflowModel {
     private ScreenModel insuranceInfoScreenModel;
     private ScreenModel newProfileScreenModel;
     private ScreenModel detailsScreenModel;
-
     private ScreenModel homeScreenModel;
-    private ScreenModel updatesDialogScreenModel;
-
 
 
     public ScreenModel getSelectLanguageScreenModel() {
@@ -285,23 +282,6 @@ public class WorkflowModel {
         componentModels.add(new ScreenComponentModel("Take Photo", "button", true));
         detailsScreenModel.setComponentModels(componentModels);
         return detailsScreenModel;
-    }
-
-
-    public ScreenModel getUpdatesDialogScreenModel() {
-        updatesDialogScreenModel = new ScreenModel();
-        ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
-        componentModels.add(new ScreenComponentModel("Select Updates", "text", true));
-        componentModels.add(new ScreenComponentModel("Mobile Notifications", "checkbox", true));
-        componentModels.add(new ScreenComponentModel("Email Notifications", "checkbox", true));
-        componentModels.add(new ScreenComponentModel("Newsletter", "checkbox", true));
-        componentModels.add(new ScreenComponentModel("Monthly Coupons", "checkbox", true));
-        componentModels.add(new ScreenComponentModel("Marketing Material", "checkbox", true));
-        componentModels.add(new ScreenComponentModel("CANCEL", "button", false));
-        componentModels.add(new ScreenComponentModel("SELECT", "button", false));
-
-        updatesDialogScreenModel.setComponentModels(componentModels);
-        return updatesDialogScreenModel;
     }
 
 }
