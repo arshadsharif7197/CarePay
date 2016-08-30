@@ -1,7 +1,9 @@
 package com.carecloud.carepaylibray.fragments;
 
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.graphics.Typeface;
@@ -9,13 +11,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -45,11 +51,12 @@ public class ResponsibilityFragment extends Fragment {
         private AppCompatActivity               mActivity;
         private ArrayList<ScreenComponentModel> mComponents;
         private Button                          mPayButton;
-        private ViewGroup.LayoutParams matchParentLp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        private LinearLayout.LayoutParams matchParentLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                                   ViewGroup.LayoutParams.MATCH_PARENT);
-        private ViewGroup.LayoutParams wrapHeightLp  = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        private LinearLayout.LayoutParams wrapHeightLp  = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                                   ViewGroup.LayoutParams.WRAP_CONTENT);
-        private ViewGroup.LayoutParams zeroWidthLp   = new ViewGroup.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        private LinearLayout.LayoutParams zeroWidthLp   = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        private LinearLayout.LayoutParams zeroHeightLp   = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         private Typeface typeProxima;
         private int      colorPrimary;
         private int      colorWhite;
@@ -66,41 +73,46 @@ public class ResponsibilityFragment extends Fragment {
         }
 
         public View createLayout() {
-
             ScrollView root = new ScrollView(mActivity);
             root.setLayoutParams(matchParentLp);
+            root.setFillViewport(true);
 
             // create the main linear layout (vertical)
-            LinearLayout mainLl = new LinearLayout(mActivity);
-            mainLl.setLayoutParams(matchParentLp);
-            mainLl.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout mainLl = createVerticalLinearLayout(matchParentLp);
+            mainLl.setWeightSum(9);
 
             // create the toolbar
             Toolbar toolbar = new Toolbar(mActivity);
-            toolbar.setLayoutParams(wrapHeightLp);
-            toolbar.setTitle("");
+            LinearLayout.LayoutParams toolbarLp = new LinearLayout.LayoutParams(zeroHeightLp);
+            toolbarLp.weight = 1;
+            toolbar.setLayoutParams(toolbarLp);
+            toolbar.setTitleTextColor(ContextCompat.getColor(mActivity, R.color.white));
+            toolbar.setTitle("Responsibility"); // todo get title from component
             toolbar.setBackgroundColor(colorPrimary);
-            mActivity.setSupportActionBar(toolbar);
-            // change the color of up button
-            // todo get assets
-            Drawable upArrow = ContextCompat.getDrawable(mActivity, R.drawable.abc_ic_ab_back_material);
-            if (upArrow != null) {
-                upArrow.setColorFilter(colorWhite, PorterDuff.Mode.CLEAR);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setElevation(10);
             }
-            ActionBar actionBar = mActivity.getSupportActionBar();
-            actionBar.setHomeAsUpIndicator(upArrow);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_back);
+            mActivity.setSupportActionBar(toolbar);
 
             // create total balance container
-            LinearLayout llTotalContainer = createVerticalLinearLayout(0, 0, 0, 0);
+            LinearLayout.LayoutParams llTotalContainerLp = new LinearLayout.LayoutParams(zeroHeightLp);
+            llTotalContainerLp.weight = 4;
+            LinearLayout llTotalContainer = createVerticalLinearLayout(llTotalContainerLp);
             llTotalContainer.setPadding(0, 20, 0, 60); // todo externalize
             llTotalContainer.setBackgroundColor(colorPrimary);
 
             // create balance details container
-            LinearLayout llBalanceDetailsContainer = createVerticalLinearLayout(60, 120, 60, 120); // todo externalize
+            LinearLayout.LayoutParams llBalanceDetailsContainerLp = new LinearLayout.LayoutParams(zeroHeightLp);
+            llBalanceDetailsContainerLp.weight = 3;
+            llBalanceDetailsContainerLp.setMargins(60, 120, 60, 120); // todo externalize
+            LinearLayout llBalanceDetailsContainer = createVerticalLinearLayout(llBalanceDetailsContainerLp);
 
             // create 'other components' container
-            LinearLayout llOtherCompContainer = createVerticalLinearLayout(150, 20, 150, 10);  // todo externalize
+            LinearLayout.LayoutParams llOtherCompContainerLp = new LinearLayout.LayoutParams(zeroHeightLp);
+            llOtherCompContainerLp.weight = 1;
+            llOtherCompContainerLp.setMargins(150, 20, 150, 10);  // todo externalize
+            LinearLayout llOtherCompContainer = createVerticalLinearLayout(llOtherCompContainerLp);
 
             ScreenComponentModel currentCompModel; // holds the current layout component to be added
             int componentsCount = mComponents.size();
@@ -200,6 +212,7 @@ public class ResponsibilityFragment extends Fragment {
 
         /**
          * Creates a button
+         *
          * @param currentCompModel The screen model component to build from
          * @return The button
          */
@@ -215,26 +228,21 @@ public class ResponsibilityFragment extends Fragment {
 
         /**
          * Create a linear layout container
-         * @param margLeft Margin left
-         * @param margTop Margin top
-         * @param margRight Margin right
-         * @param margBottom MArgin bottom
+         * @param lp The layout params
          * @return The container
          */
-        private LinearLayout createVerticalLinearLayout(int margLeft, int margTop, int margRight, int margBottom) {
+        private LinearLayout createVerticalLinearLayout(LinearLayout.LayoutParams lp) {
             LinearLayout llVertContainer = new LinearLayout(mActivity);
             llVertContainer.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams llBalDetContLp = new LinearLayout.LayoutParams(wrapHeightLp);
-            llBalDetContLp.setMargins(margLeft, margTop, margRight, margBottom); // todo externalize
+            LinearLayout.LayoutParams llBalDetContLp = new LinearLayout.LayoutParams(lp);
             llVertContainer.setLayoutParams(llBalDetContLp);
             return llVertContainer;
         }
 
         /**
-         *
-         * @param lp The layout params
-         * @param textSize The text size or -1 to use defaults
-         * @param color The color or -1 to use default
+         * @param lp               The layout params
+         * @param textSize         The text size or -1 to use defaults
+         * @param color            The color or -1 to use default
          * @param currentCompModel The screen component model
          * @return The ext view
          */
@@ -244,10 +252,10 @@ public class ResponsibilityFragment extends Fragment {
             textView.setLayoutParams(lp);
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
             textView.setTypeface(typeProxima);
-            if(textSize != -1) {
+            if (textSize != -1) {
                 textView.setTextSize(textSize); // todo externalize
             }
-            if(color != -1) {
+            if (color != -1) {
                 textView.setTextColor(color);
             }
             textView.setText(currentCompModel.getLabel());
