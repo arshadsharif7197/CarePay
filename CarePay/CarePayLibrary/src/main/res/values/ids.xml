@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="cameraImage" type="id">12324</item>
+    <item name="insuranceImage" type="id">89898</item>
+    <item name="placeholder" type="id">12</item>
+    <item name="driverLicenceButton" type="id">12789</item>
+    <item name="insuranceButton" type="id">1478909</item>
+</resources>

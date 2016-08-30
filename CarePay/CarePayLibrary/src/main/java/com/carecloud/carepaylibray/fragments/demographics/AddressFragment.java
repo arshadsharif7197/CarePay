@@ -8,6 +8,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -46,10 +47,14 @@ public class AddressFragment  extends Fragment {
         return fragment;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         getActivity().setTitle("Address");
+
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(null, 0);
         ScrollView scrollView = new ScrollView(getActivity());
         ViewGroup.LayoutParams scrollViewLayoutparams = new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -57,7 +62,7 @@ public class AddressFragment  extends Fragment {
 
         LinearLayout.LayoutParams matchWidthParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-         LinearLayout parent = new LinearLayout(getActivity());
+        LinearLayout parent = new LinearLayout(getActivity());
         parent.setLayoutParams(matchWidthParams);
         parent.setOrientation(LinearLayout.VERTICAL);
         parent.setPadding(17, 102, 17, 14);
@@ -95,6 +100,8 @@ public class AddressFragment  extends Fragment {
                 titleText.setText(componentModel.getLabel());
                 titleText.setGravity(Gravity.CENTER);
                 titleText.setTextSize(21.0f);
+                titleText.setFocusable(true);
+                titleText.setFocusableInTouchMode(true);
                 titleText.setTextColor(ContextCompat.getColor(getActivity(), R.color.charcoal));
                 parent.addView(titleText);
                 index++;
@@ -250,10 +257,14 @@ public class AddressFragment  extends Fragment {
                 LinearLayout.LayoutParams switchViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                 EditText editText = new EditText(getActivity());
-                if (componentModel.getLabel().equals("phonenumber")){
-
-                        editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-+()"));
-                    }
+                if (componentModel.getLabel().equals("PHONE NUMBER") ){
+                    editText.setInputType( InputType.TYPE_CLASS_PHONE);
+                }else if (componentModel.getLabel().equals("ADDRESS1") || componentModel.getLabel().equals("ADDRESS2")||
+                        componentModel.getLabel().equals("CITY") || componentModel.getLabel().equals("STATE")){
+                    editText.setInputType( InputType.TYPE_CLASS_TEXT);
+                }else if( componentModel.getLabel().equals("ZIP CODE")){
+                    editText.setInputType( InputType.TYPE_CLASS_NUMBER);
+                }
 
 
                 editText.setHint(componentModel.getLabel());
@@ -302,9 +313,9 @@ public class AddressFragment  extends Fragment {
                 index++;
             }
 
-            }
-            return scrollView;
         }
+        return scrollView;
+    }
 
 
 

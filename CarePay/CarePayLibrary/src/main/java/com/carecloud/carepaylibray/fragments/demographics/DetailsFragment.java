@@ -1,11 +1,20 @@
 package com.carecloud.carepaylibray.fragments.demographics;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +32,13 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.ApplicationWorkflow;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 import com.carecloud.carepaylibray.models.ScreenModel;
+import com.carecloud.carepaylibray.util.Utility;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +49,13 @@ public class DetailsFragment extends Fragment {
     List<String> raceData = new ArrayList<String>();
     List<String> ethnicityData = new ArrayList<String>();
     List<String> languageData = new ArrayList<String>();
-
+    LinearLayout parent;
+    ScrollView scrollView;
     String selectedRace =null;
 
-
+    private String userChoosenTask;
+    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    private ImageView iv;
     public static final DetailsFragment newInstance(Bundle bundle) {
         DetailsFragment fragment = new DetailsFragment();
         return fragment;
@@ -55,14 +73,14 @@ public class DetailsFragment extends Fragment {
         getActivity().setTitle("Scan Documents");
 
 
-        ScrollView scrollView = new ScrollView(getActivity());
+        scrollView = new ScrollView(getActivity());
         ViewGroup.LayoutParams scrollViewLayoutparams = new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         scrollView.setLayoutParams(scrollViewLayoutparams);
 
         LinearLayout.LayoutParams matchWidthParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        LinearLayout parent = new LinearLayout(getActivity());
+        parent = new LinearLayout(getActivity());
         parent.setLayoutParams(matchWidthParams);
         parent.setOrientation(LinearLayout.VERTICAL);
         parent.setPadding(20, 10, 20, 10);
@@ -118,12 +136,13 @@ public class DetailsFragment extends Fragment {
                 childLayoutParams.setMargins(0, 0, 0, 60);
                 childLayout.setLayoutParams(childLayoutParams);
                 childLayout.setOrientation(LinearLayout.HORIZONTAL);
+                childLayout.setTag(componentModel.getType());
                 childLayout.setPadding(0, 20, 0, 0);
-                ImageView camera = new ImageView(getActivity());
+                iv = new ImageView(getActivity());
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 20, 0);
-                camera.setLayoutParams(params);
-                camera.setImageResource(R.drawable.icn_placeholder_user_profile);
+                iv.setLayoutParams(params);
+                iv.setImageResource(R.drawable.icn_placeholder_user_profile);
 
                 Button button = new Button(getActivity());
                 LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
@@ -148,13 +167,14 @@ public class DetailsFragment extends Fragment {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        selectImage();
                         Toast.makeText(getActivity(), "ReScan", Toast.LENGTH_LONG).show();
                     }
 
                 });
 
                 //  button.setPadding(10,10,10,10);
-                childLayout.addView(camera);
+                childLayout.addView(iv);
                 childLayout.addView(button);
                 parent.addView(childLayout);
                 index++;
@@ -179,6 +199,7 @@ public class DetailsFragment extends Fragment {
                 childLayoutParams.setMargins(17, 20, 0, 17);
                 childLayout.setLayoutParams(childLayoutParams);
                 childLayout.setOrientation(LinearLayout.HORIZONTAL);
+                childLayout.setTag(componentModel.getType());
                 childLayout.setPadding(0, 20, 0, 0);
                 TextView inputText = new TextView(getActivity());
                 LinearLayout.LayoutParams inputTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -188,9 +209,8 @@ public class DetailsFragment extends Fragment {
                 inputTextLayoutParams.weight = 1.3f;
                 inputText.setText(componentModel.getLabel());
                 inputText.setTextSize(17.0f);
+                inputText.setTag("Select"+componentModel.getLabel());
                 inputText.setTextColor(ContextCompat.getColor(getActivity(), R.color.charcoal));
-
-
 
                 TextView selectText = new TextView(getActivity());
                 LinearLayout.LayoutParams selectTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -206,12 +226,8 @@ public class DetailsFragment extends Fragment {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-
                                 showAlertDialogWithListview( String.valueOf(((TextView) view).getTag()));
-
-
-                                Toast.makeText(getActivity(), "Select State", Toast.LENGTH_LONG).show();
-
+//                                Toast.makeText(getActivity(), "Select State", Toast.LENGTH_LONG).show();
                             }
                         }
 
@@ -290,15 +306,23 @@ public class DetailsFragment extends Fragment {
                 index++;
             }
 
-    }
+        }
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                int x = iv.getWidth() - iv.getPaddingLeft() - iv.getPaddingRight();
+                imgWidth = x == 0 ? imgWidth : x;
+                Log.e("ssssHandler imgWidth", imgWidth + "");
+            }
+        });
 
         return scrollView;
     }
 
+    private int imgWidth = 0;
 
 
-    public void showAlertDialogWithListview( String type )  {
-
+    public void showAlertDialogWithListview(final String type )  {
         if(type.equals("Race")){
             raceData=ApplicationWorkflow.Instance().getRaceDataModel();}
         else if(type.equals("Ethnicity")){
@@ -310,7 +334,7 @@ public class DetailsFragment extends Fragment {
         //Create sequence of items
         final CharSequence[] raceDataArray = raceData.toArray(new String[raceData.size()]);
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle("Race");
+        dialogBuilder.setTitle(type);
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -320,13 +344,173 @@ public class DetailsFragment extends Fragment {
         dialogBuilder.setItems(raceDataArray, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 selectedRace = raceDataArray[item].toString();  //Selected item in listview
-                Toast.makeText(getActivity(), selectedRace,Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), selectedRace,Toast.LENGTH_SHORT).show();
+
+                int count = parent.getChildCount();
+                View v = null;
+                for(int i=0; i<count; i++) {
+                    v = parent.getChildAt(i);
+                    if(v instanceof LinearLayout && v.getTag().equals("selector")){
+                        View innerView=null;
+                        int innerCount=((LinearLayout) v).getChildCount();
+                        for(int innerI=0;innerI<innerCount;innerI++){
+                            innerView = ((LinearLayout) v).getChildAt(innerI);
+                            if(innerView.getTag().equals(type) && innerView instanceof TextView){
+                                ((TextView) innerView).setText(selectedRace);
+                            }
+                        }
+                    }
+                }
             }
         });
         //Create alert dialog object via builder
         AlertDialog alertDialogObject = dialogBuilder.create();
         //Show the dialog
         alertDialogObject.show();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (userChoosenTask.equals("Choose from Library"))
+                        galleryIntent();
+                } else {
+                    //code for deny
+                }
+                break;
+
+            case Utility.MY_PERMISSIONS_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (userChoosenTask.equals("Take Photo"))
+                        cameraIntent();
+
+                } else {
+                    //code for deny
+                }
+        }
+    }
+
+    private void selectImage() {
+        final CharSequence[] items = {"Take Photo", "Choose from Library",
+                "Cancel"};
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask = "Take Photo";
+                    boolean result = Utility.checkPermissionCamera(getActivity());
+                    if (result)
+                        cameraIntent();
+
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask = "Choose from Library";
+                    boolean result = Utility.checkPermission(getActivity());
+                    if (result)
+                        galleryIntent();
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+    }
+
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.e("imgWidth",""+imgWidth);
+        Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
+        iv.setImageBitmap(roundBitmap);
+//        iv.setImageBitmap(thumbnail);
+    }
+
+
+    @SuppressWarnings("deprecation")
+    private void onSelectFromGalleryResult(Intent data) {
+
+//        Bitmap bm = null;
+//        if (data != null) {
+//            try {
+//                bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        iv.setImageBitmap(bm);
+        try {
+            Bitmap thumbnail = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+            File destination = new File(Environment.getExternalStorageDirectory(),
+                    System.currentTimeMillis() + ".jpg");
+
+            FileOutputStream fo;
+
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+
+            Log.e("imgWidth",""+imgWidth);
+            Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
+            iv.setImageBitmap(roundBitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 

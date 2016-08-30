@@ -163,12 +163,12 @@ public class WorkflowModel {
         componentModels.add(new ScreenComponentModel("The scan process is straight forward", "subHeading", true));
         componentModels.add(new ScreenComponentModel("SCAN DRIVER’S LICENSE", "buttonWithImage", true));
         componentModels.add(new ScreenComponentModel("Driver License Number", "inputtext", true));
-        componentModels.add(new ScreenComponentModel("Driver License Sate", "selector", true));
-        componentModels.add(new ScreenComponentModel("DO You have insurance", "text", true));
+        componentModels.add(new ScreenComponentModel("Driver License State", "selector", true));
+        componentModels.add(new ScreenComponentModel("Do You have insurance", "text", true));
         componentModels.add(new ScreenComponentModel("Do You have health insurance?", "togglebutton", true));
         componentModels.add(new ScreenComponentModel("thumbnail_insurance", "imageview", false));
         componentModels.add(new ScreenComponentModel("SCAN INSURANCE CARD", "buttonWithImage", false));
-        componentModels.add(new ScreenComponentModel("Insurance Card Info1", "inputtext", false));
+        componentModels.add(new ScreenComponentModel("Insurance Card Info 1", "inputtext", false));
         componentModels.add(new ScreenComponentModel("Insurance Card Info 2", "inputtext", false));
         componentModels.add(new ScreenComponentModel("insurance Card Info 3", "inputtext", false));
         componentModels.add(new ScreenComponentModel("NEXT", "button", true));
@@ -197,12 +197,20 @@ public class WorkflowModel {
         raceItems.add("American or Indian");
         raceItems.add("Asian");
         raceItems.add("Black or African American");
-        raceItems.add("Native Hawaiian");
-        raceItems.add("Other pacific Islander");
-        raceItems.add("White");
         raceItems.add("Other");
         raceItems.add("Decline to Answer");
         return raceItems;
+    }
+
+    public List<String> getStatesList(){
+        List<String> statesItems = new ArrayList<String>();
+        statesItems.add("AZ");
+        statesItems.add("FL");
+        statesItems.add("CA");
+        statesItems.add("GA");
+        statesItems.add("MO");
+
+        return statesItems;
     }
 
 
@@ -210,8 +218,6 @@ public class WorkflowModel {
         List<String> ethinicityItems = new ArrayList<String>();
         ethinicityItems.add("Hispanic");
         ethinicityItems.add("White Americans");
-        ethinicityItems.add("Asian Americans");
-        ethinicityItems.add("Native Hawaiian");
         ethinicityItems.add("Other");
         ethinicityItems.add("Decline to Answer");
         return ethinicityItems;

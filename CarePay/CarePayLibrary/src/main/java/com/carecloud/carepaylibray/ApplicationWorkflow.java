@@ -34,6 +34,10 @@ public class ApplicationWorkflow {
 
     public ScreenModel getSignupScreenModel() {
         return workFlowModel.getSignupScreenModel();
+
+    }
+    public List<String> getStatesDataModel() {
+        return workFlowModel.getStatesList();
     }
 
     public ScreenModel getResponsabScreenModel() {
