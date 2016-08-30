@@ -12,10 +12,10 @@
         card_view:cardElevation="20dp"
         card_view:cardCornerRadius="3dp"
         card_view:contentPadding="0dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
         >
 
         <RelativeLayout
@@ -26,7 +26,7 @@
                 android:id="@+id/home_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icn_placeholder_user_profile"
+                android:src="@drawable/icn_menu_checkin"
                 android:layout_centerHorizontal="true"
                 android:padding="5dp"
                 android:paddingTop="15dp"

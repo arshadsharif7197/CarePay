@@ -36,7 +36,10 @@ public class WorkflowModel {
     public ScreenModel getHomeScreenModel() {
         homeScreenModel=new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels= new ArrayList<ScreenComponentModel>();
-        componentModels.add(new ScreenComponentModel("How can we help?","textview",true));
+       // componentModels.add(new ScreenComponentModel("How can we help?","textview",true));
+        componentModels.add(new ScreenComponentModel("Profile Meter","textview",true));
+        componentModels.add(new ScreenComponentModel("Add Details","textview",true));
+        componentModels.add(new ScreenComponentModel("","progressbar",true));
         componentModels.add(new ScreenComponentModel("","gridview",true));
         homeScreenModel.setComponentModels(componentModels);
         return homeScreenModel;

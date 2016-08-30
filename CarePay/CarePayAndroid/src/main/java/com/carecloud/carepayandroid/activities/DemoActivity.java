@@ -25,6 +25,14 @@ public class DemoActivity extends AppCompatActivity  {
             }
         });
 
+        findViewById(R.id.home_screen).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DemoActivity.this,HomeScreenActivity.class);
+                startActivity(intent);
+            }
+        });
+
         findViewById(R.id.signin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

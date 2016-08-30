@@ -39,7 +39,6 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     RecyclerView mListView;
     String language = null;
     int viewId ;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -141,8 +140,11 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                     confirmButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            HomeScreenFragment mSelectLanguageFragment = new HomeScreenFragment();
-                            getFragmentManager().beginTransaction().replace(viewId, mSelectLanguageFragment).commit();
+                            SignInFragment mSelectLanguageFragment = new SignInFragment();
+                            Bundle mBundle = new Bundle();
+                            mBundle.putInt("viewid",viewId);
+                            mSelectLanguageFragment.setArguments(mBundle);
+                            getFragmentManager().beginTransaction().addToBackStack("languageFragment").replace(viewId, mSelectLanguageFragment).commit();
                         }
                     });
                     mRelativeLayout.addView(confirmButton, layout_params);
