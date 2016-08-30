@@ -58,6 +58,7 @@ public class ResponsibilityFragment extends Fragment {
         private LinearLayout.LayoutParams zeroWidthLp   = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         private LinearLayout.LayoutParams zeroHeightLp   = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         private Typeface typeProxima;
+        private Typeface typeGothamRounded;
         private int      colorPrimary;
         private int      colorWhite;
         private int      colorGrey;
@@ -67,6 +68,7 @@ public class ResponsibilityFragment extends Fragment {
             mActivity = context;
             mComponents = ApplicationWorkflow.Instance().getResponsabScreenModel().getComponentModels();
             typeProxima = Typeface.createFromAsset(mActivity.getAssets(), "fonts/ProximaNova-Reg.otf");
+            typeGothamRounded = Typeface.createFromAsset(mActivity.getAssets(), "fonts/GothamRnd-Medium.otf");
             colorPrimary = mActivity.getResources().getColor(R.color.colorPrimary);
             colorWhite = ContextCompat.getColor(mActivity, R.color.white);
             colorGrey = mActivity.getResources().getColor(R.color.light_gray);
@@ -82,18 +84,7 @@ public class ResponsibilityFragment extends Fragment {
             mainLl.setWeightSum(9);
 
             // create the toolbar
-            Toolbar toolbar = new Toolbar(mActivity);
-            LinearLayout.LayoutParams toolbarLp = new LinearLayout.LayoutParams(zeroHeightLp);
-            toolbarLp.weight = 1;
-            toolbar.setLayoutParams(toolbarLp);
-            toolbar.setTitleTextColor(ContextCompat.getColor(mActivity, R.color.white));
-            toolbar.setTitle("Responsibility"); // todo get title from component
-            toolbar.setBackgroundColor(colorPrimary);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                toolbar.setElevation(10);
-            }
-            toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_back);
-            mActivity.setSupportActionBar(toolbar);
+            Toolbar toolbar = createToolbar();
 
             // create total balance container
             LinearLayout.LayoutParams llTotalContainerLp = new LinearLayout.LayoutParams(zeroHeightLp);
@@ -260,6 +251,31 @@ public class ResponsibilityFragment extends Fragment {
             }
             textView.setText(currentCompModel.getLabel());
             return textView;
+        }
+
+        /**
+         * Create the toolbar
+         * @return the toolbar
+         */
+        private Toolbar createToolbar() {
+            Toolbar toolbar = new Toolbar(mActivity);
+            LinearLayout.LayoutParams toolbarLp = new LinearLayout.LayoutParams(zeroHeightLp);
+            toolbarLp.weight = 1;
+            toolbar.setLayoutParams(toolbarLp);
+            TextView tvToolbarTitle = new TextView(mActivity);
+            toolbar.setTitle("");
+            tvToolbarTitle.setText("Responsibility");  // todo get title from component
+            tvToolbarTitle.setTextColor(colorWhite);
+            tvToolbarTitle.setTextSize(20);
+            tvToolbarTitle.setTypeface(typeGothamRounded);
+            toolbar.addView(tvToolbarTitle);
+            toolbar.setBackgroundColor(colorPrimary);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setElevation(10); // todo externalize
+            }
+            toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_back);
+            mActivity.setSupportActionBar(toolbar);
+            return toolbar;
         }
     }
 }
