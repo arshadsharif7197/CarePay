@@ -1,27 +1,23 @@
 package com.carecloud.carepaylibray.fragments;
 
-import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -36,11 +32,23 @@ import java.util.ArrayList;
  */
 public class ResponsibilityFragment extends Fragment {
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ResponsibilityLayoutRenderer renderer = new ResponsibilityLayoutRenderer((AppCompatActivity) getActivity());
         return renderer.createLayout();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem item = menu.add("Test");
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     /**
@@ -260,18 +268,21 @@ public class ResponsibilityFragment extends Fragment {
             LinearLayout.LayoutParams toolbarLp = new LinearLayout.LayoutParams(zeroHeightLp);
             toolbarLp.weight = 1;
             toolbar.setLayoutParams(toolbarLp);
-            TextView tvToolbarTitle = new TextView(mActivity);
-            toolbar.setTitle("");
-            tvToolbarTitle.setText("Responsibility");  // todo get title from component
-            tvToolbarTitle.setTextColor(colorWhite);
-            tvToolbarTitle.setTextSize(20);
-            tvToolbarTitle.setTypeface(typeGothamRounded);
-            toolbar.addView(tvToolbarTitle);
+            toolbar.setTitleTextColor(colorWhite);
+            toolbar.setTitle("Responsibility");
+//            TextView tvToolbarTitle = new TextView(mActivity);
+//            tvToolbarTitle.setText("Responsibility");  // todo get title from component
+//            tvToolbarTitle.setTextColor(colorWhite);
+//            tvToolbarTitle.setTextSize(20);
+//            tvToolbarTitle.setTypeface(typeGothamRounded);
+//            toolbar.addView(tvToolbarTitle);
             toolbar.setBackgroundColor(colorPrimary);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 toolbar.setElevation(10); // todo externalize
             }
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_back);
+//            Drawable drawable = ContextCompat.getDrawable(mActivity, R.drawable.icn_patient_mode_nav_back);
+//            toolbar.setOverflowIcon(drawable);
             mActivity.setSupportActionBar(toolbar);
             return toolbar;
         }
