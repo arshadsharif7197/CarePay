@@ -85,14 +85,13 @@ public class WorkflowModel {
     public ScreenModel getResponsabScreenModel() {
         responsabScreenModel = new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
-        componentModels.add(new ScreenComponentModel("DR Michael Ross", "text", true));
-        componentModels.add(new ScreenComponentModel("Your cost today", "text", true));
-        componentModels.add(new ScreenComponentModel("$102.03", "text", true));
+        componentModels.add(new ScreenComponentModel("Amount for today's visit", "text", true));
+        componentModels.add(new ScreenComponentModel("$120.00", "textValue", true));
         componentModels.add(new ScreenComponentModel("Previous balance", "text", true));
-        componentModels.add(new ScreenComponentModel("$29.00", "text", true));
+        componentModels.add(new ScreenComponentModel("$29.00", "textValue", true));
         componentModels.add(new ScreenComponentModel("Insurance CoPay", "text", true));
-        componentModels.add(new ScreenComponentModel("$73.03", "text", true));
-        componentModels.add(new ScreenComponentModel("Sign & Pay", "button", true));
+        componentModels.add(new ScreenComponentModel("$79.00", "textValue", true));
+        componentModels.add(new ScreenComponentModel("GO TO PAYMENT PROCESS", "button", true));
         responsabScreenModel.setComponentModels(componentModels);
         return responsabScreenModel;
     }
