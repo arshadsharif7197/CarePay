@@ -36,7 +36,7 @@
         </activity>
         <activity
             android:name=".activities.ResponsibilityActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity
             android:name=".activities.SelectLanguageActivity"

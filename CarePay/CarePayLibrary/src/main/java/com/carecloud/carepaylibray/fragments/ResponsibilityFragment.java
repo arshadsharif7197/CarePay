@@ -269,7 +269,7 @@ public class ResponsibilityFragment extends Fragment {
             toolbarLp.weight = 1;
             toolbar.setLayoutParams(toolbarLp);
             toolbar.setTitleTextColor(colorWhite);
-            toolbar.setTitle("Responsibility");
+//            toolbar.setTitle("Responsibility");
 //            TextView tvToolbarTitle = new TextView(mActivity);
 //            tvToolbarTitle.setText("Responsibility");  // todo get title from component
 //            tvToolbarTitle.setTextColor(colorWhite);
@@ -284,6 +284,7 @@ public class ResponsibilityFragment extends Fragment {
 //            Drawable drawable = ContextCompat.getDrawable(mActivity, R.drawable.icn_patient_mode_nav_back);
 //            toolbar.setOverflowIcon(drawable);
             mActivity.setSupportActionBar(toolbar);
+            mActivity.getSupportActionBar().setTitle("Responsibility");
             return toolbar;
         }
     }
