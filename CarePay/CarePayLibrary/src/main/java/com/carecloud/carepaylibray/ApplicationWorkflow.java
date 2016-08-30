@@ -69,6 +69,9 @@ public class ApplicationWorkflow {
     public ScreenModel getDemographicsDocumentsScreenModel() {
         return workFlowModel.getDemographicsDocumentsScreenModel();
     }
+    public ScreenModel getUpdatesDialogScreenModel() {
+        return workFlowModel.getUpdatesDialogScreenModel();
+    }
 
     public ScreenModel getInsuranceInfoScreenModel() {
         return workFlowModel.getInsuranceInfoScreenModel();

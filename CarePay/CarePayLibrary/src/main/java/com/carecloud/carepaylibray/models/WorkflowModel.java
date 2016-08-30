@@ -18,7 +18,7 @@ public class WorkflowModel {
     private ScreenModel newProfileScreenModel;
     private ScreenModel detailsScreenModel;
     private ScreenModel homeScreenModel;
-
+    private ScreenModel updatesDialogScreenModel;
 
     public ScreenModel getSelectLanguageScreenModel() {
         selectLanguageScreenModel = new ScreenModel();
@@ -36,7 +36,10 @@ public class WorkflowModel {
     public ScreenModel getHomeScreenModel() {
         homeScreenModel=new ScreenModel();
         ArrayList<ScreenComponentModel> componentModels= new ArrayList<ScreenComponentModel>();
-        componentModels.add(new ScreenComponentModel("How can we help?","textview",true));
+       // componentModels.add(new ScreenComponentModel("How can we help?","textview",true));
+        componentModels.add(new ScreenComponentModel("Profile Meter","textview",true));
+        componentModels.add(new ScreenComponentModel("Add Details","textview",true));
+        componentModels.add(new ScreenComponentModel("","progressbar",true));
         componentModels.add(new ScreenComponentModel("","gridview",true));
         homeScreenModel.setComponentModels(componentModels);
         return homeScreenModel;
@@ -283,4 +286,20 @@ public class WorkflowModel {
         return detailsScreenModel;
     }
 
+
+    public ScreenModel getUpdatesDialogScreenModel() {
+        updatesDialogScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<ScreenComponentModel>();
+        componentModels.add(new ScreenComponentModel("Select Updates", "text", true));
+        componentModels.add(new ScreenComponentModel("Mobile Notifications", "checkbox", true));
+        componentModels.add(new ScreenComponentModel("Email Notifications", "checkbox", true));
+        componentModels.add(new ScreenComponentModel("Newsletter", "checkbox", true));
+        componentModels.add(new ScreenComponentModel("Monthly Coupons", "checkbox", true));
+        componentModels.add(new ScreenComponentModel("Marketing Material", "checkbox", true));
+        componentModels.add(new ScreenComponentModel("CANCEL", "button", false));
+        componentModels.add(new ScreenComponentModel("SELECT", "button", false));
+
+        updatesDialogScreenModel.setComponentModels(componentModels);
+        return updatesDialogScreenModel;
+    }
 }
