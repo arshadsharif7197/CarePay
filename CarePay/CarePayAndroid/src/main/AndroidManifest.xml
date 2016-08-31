@@ -71,6 +71,7 @@
             android:parentActivityName=".activities.DemoActivity"
           >
             </activity>
+        <activity android:name=".activities.SignatureActivity"></activity>
     </application>
 
 </manifest>
