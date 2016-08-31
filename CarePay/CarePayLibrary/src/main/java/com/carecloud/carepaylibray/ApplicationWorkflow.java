@@ -99,5 +99,9 @@ public class ApplicationWorkflow {
         return workFlowModel.getDetailsScreenModel();
     }
 
+    public ScreenModel getSignatureScreenModel(){
+        return workFlowModel.getSignatureScreenModel();
+    }
+
 
 }
