@@ -50,9 +50,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DemoActivity" />
         </activity>
-        <activity
-            android:name=".activities.SignInActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
+
         <activity
             android:name=".activities.SignUpActivity"
             android:parentActivityName=".activities.DemoActivity">
@@ -60,13 +58,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DemoActivity" />
         </activity>
-        <activity
-            android:name=".activities.LicenseInsuranceScanActivity"
-            android:parentActivityName=".activities.DemoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DemoActivity" />
-        </activity>
+
         <activity android:name=".activities.HomeScreenActivity"
             android:parentActivityName=".activities.DemoActivity"
           >

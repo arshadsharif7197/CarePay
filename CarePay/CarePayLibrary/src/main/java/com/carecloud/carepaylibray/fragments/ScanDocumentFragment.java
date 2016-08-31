@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.ApplicationWorkflow;
-import com.carecloud.carepaylibray.activities.DemographicsDocumentsScanActivity;
 import com.carecloud.carepaylibray.models.ScreenComponentModel;
 import com.carecloud.carepaylibray.models.ScreenModel;
 

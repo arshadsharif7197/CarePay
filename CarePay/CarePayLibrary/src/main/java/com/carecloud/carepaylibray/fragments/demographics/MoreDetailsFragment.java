@@ -104,20 +104,20 @@ public class MoreDetailsFragment extends Fragment {
 
                 Button button =  new Button(getActivity());
 
-                Button select =  new Button(getActivity());
-                              select.setText(componentModel.getLabel());
-                               select.setLayoutParams(matchWidthParams);
-                               parent.addView(select);
-                               select.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                       public void onClick(View view) {
-                                               FragmentManager fm = getFragmentManager();
-                                               UpdatesDialogFragment dialogFragment = new UpdatesDialogFragment ();
-                                            dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
-                                                dialogFragment.show(fm,"Updates Fragment");
-                                            }
-
-                                    });
+//                Button select =  new Button(getActivity());
+//                              select.setText(componentModel.getLabel());
+//                               select.setLayoutParams(matchWidthParams);
+//                               parent.addView(select);
+//                               select.setOnClickListener(new View.OnClickListener() {
+//                                        @Override
+//                                       public void onClick(View view) {
+//                                               FragmentManager fm = getFragmentManager();
+//                                               UpdatesDialogFragment dialogFragment = new UpdatesDialogFragment ();
+//                                            dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+//                                                dialogFragment.show(fm,"Updates Fragment");
+//                                            }
+//
+//                                    });
 
                 LinearLayout.LayoutParams childLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 childLayoutParams.setMargins(17, 14, 17, 14);

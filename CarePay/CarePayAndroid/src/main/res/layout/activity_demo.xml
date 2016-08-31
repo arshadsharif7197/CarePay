@@ -27,12 +27,6 @@
             android:text="Home Screen"/>
 
         <Button
-            android:id="@+id/signin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign In"/>
-
-        <Button
             android:id="@+id/signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,18 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Demographics"/>
-
-        <Button
-            android:id="@+id/scan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Documents Scan"/>
-
-        <Button
-            android:id="@+id/licence_insurance_scan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Scan License insurance"/>
 
         <Button
             android:id="@+id/resp"

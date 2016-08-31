@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepayandroid.R;
-import com.carecloud.carepaylibray.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.activities.DemographicsDocumentsScanActivity;
 
 public class DemoActivity extends AppCompatActivity  {
@@ -34,14 +33,6 @@ public class DemoActivity extends AppCompatActivity  {
             }
         });
 
-        findViewById(R.id.signin).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DemoActivity.this, SignInActivity.class);
-                startActivity(intent);
-            }
-        });
-
         findViewById(R.id.signup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,23 +48,6 @@ public class DemoActivity extends AppCompatActivity  {
                 startActivity(intent);
             }
         });
-
-        findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DemoActivity.this, DemographicsDocumentsScanActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        findViewById(R.id.licence_insurance_scan).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DemoActivity.this, LicenseInsuranceScanActivity.class);
-                startActivity(intent);
-            }
-        });
-
         findViewById(R.id.resp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
