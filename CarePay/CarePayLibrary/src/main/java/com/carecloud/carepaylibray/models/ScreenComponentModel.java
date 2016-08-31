@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibray.constants.ComponentTypeConstants;
+import com.carecloud.carepaylibray.customcomponents.ApplicationDefaultLabel;
+import com.carecloud.carepaylibray.customcomponents.ButtonBlueFill;
 import com.carecloud.carepaylibray.customcomponents.InputText;
 import com.google.gson.annotations.SerializedName;
 
@@ -80,14 +82,14 @@ public class ScreenComponentModel {
             }case ComponentTypeConstants.TEXT: {
                 return generateInputView(context,InputType.TYPE_CLASS_TEXT);
             }case ComponentTypeConstants.BUTTON: {
-                Button button=new Button(context);
+                ButtonBlueFill button=new ButtonBlueFill(context);
                 button.setText(Label);
                 return button;
             }case ComponentTypeConstants.IMAGE: {
                 ImageView imageView=new ImageView(context);
                 return imageView;
             }default:{
-                TextView tv= new TextView(context);
+                ApplicationDefaultLabel tv= new ApplicationDefaultLabel(context);
                 tv.setText(Label);
                 return tv;
             }
