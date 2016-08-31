@@ -33,12 +33,20 @@ public class SignUpFragment extends Fragment {
 
     private ScreenModel screenModel;
     private TextView    editText;
+    int viewId;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewId=this.getArguments().getInt("viewid");
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        LinearLayout.LayoutParams matchWidthParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams matchWidthParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         LinearLayout parent = new LinearLayout(getActivity());
         parent.setLayoutParams(matchWidthParams);
         parent.setOrientation(LinearLayout.VERTICAL);
@@ -54,7 +62,7 @@ public class SignUpFragment extends Fragment {
                 TextInputLayout fullNameTextInputLayout = new TextInputLayout(getActivity());
                 editText = new EditText(getActivity());
 
-                LinearLayout.LayoutParams signUpParentLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams signUpParentLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 signUpParentLayoutParams.setMargins(17, 268, 0, 0);
 
                 editText.setLayoutParams(signUpParentLayoutParams);
@@ -77,7 +85,7 @@ public class SignUpFragment extends Fragment {
 
             } else {
                 if (componentModel.getType().equals("button")) {
-                    LinearLayout.LayoutParams signUpButtonLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams signUpButtonLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     signUpButtonLayoutParams.setMargins(0, 86, 0, 0);
                     Button signUpButton = new Button(getActivity());
                     signUpButton.setLayoutParams(signUpButtonLayoutParams);
@@ -113,12 +121,15 @@ public class SignUpFragment extends Fragment {
                     alreadyAccountTextView.setTextColor(Color.parseColor("#1f9bde"));
 
                     RelativeLayout alreadyAccountLayout = new RelativeLayout(getActivity());
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                     params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     params.addRule(RelativeLayout.CENTER_HORIZONTAL);
                     alreadyAccountLayout.setGravity(Gravity.BOTTOM | Gravity.CENTER);
+
+                    params.setMargins(10,350,10,10);
+                    alreadyAccountLayout.setLayoutParams(params);
                     alreadyAccountLayout.addView(alreadyAccountTextView, params);
-                    parent.addView(alreadyAccountLayout, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                    parent.addView(alreadyAccountLayout, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
                 }
             }
         }

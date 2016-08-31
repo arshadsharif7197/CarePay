@@ -10,14 +10,16 @@
     <color name="rich_electric_blue">#ff009bde</color>
     <color name="light_gray">#ff78909c</color>
     <color name="bright_cerulean">#ff1f9bde</color>
-    <color name="confirm_button">#1f9bde</color>
     <color name="uncheck_confirm_button">#cfd8dc</color>
-    <color name="language_color">#607d8b</color>
     <color name="glitter">#ccebf9</color>
     <color name="yellowGreen">#FF7ED321</color>
     <color name="slateGray">#607d8b</color>
     <color name="valuetext_default_textcolor">#1F9BDE</color>
     <color name="textview_default_textcolor">#37474F</color>
     <color name="button_bright_cerulean">#1F9BDE</color>
+    <color name="gray">#ffb0bec5</color>
+    <color name="munsell">#ffeceff1</color>
+    <color name="blue_cerulian">#ff1f9bde</color>
+
 
 </resources>

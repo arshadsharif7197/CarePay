@@ -99,6 +99,18 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                 mOptionModel.setChecked(false);
                 mOptionModelList.add(mOptionModel);
 
+                mOptionModel = new OptionModel();
+                mOptionModel.setValue("Portugeus");
+                mOptionModel.setLabel("flag3");
+                mOptionModel.setChecked(false);
+                mOptionModelList.add(mOptionModel);
+
+                mOptionModel = new OptionModel();
+                mOptionModel.setValue("客家話");
+                mOptionModel.setLabel("flag3");
+                mOptionModel.setChecked(false);
+                mOptionModelList.add(mOptionModel);
+
                 if (!StringFunctions.isNullOrEmpty(language)) {
                     for (int j = 0; j < mOptionModelList.size(); j++) {
                         OptionModel mOptionModelData = mOptionModelList.get(j);
@@ -131,7 +143,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                     confirmButton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                  //   confirmButton.
                     if (!StringFunctions.isNullOrEmpty(language)) {
-                        confirmButton.setBackgroundColor(getResources().getColor(R.color.confirm_button));
+                        confirmButton.setBackgroundColor(getResources().getColor(R.color.button_bright_cerulean));
                     } else {
                         confirmButton.setImageResource(R.drawable.icn_check_disabled);
 
@@ -199,7 +211,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         mListView.setAdapter(mLanguageListAdapter);
         mLanguageListAdapter.notifyDataSetChanged();
         language = mLanguage.getValue();
-        confirmButton.setBackgroundColor(getResources().getColor(R.color.confirm_button));
+        confirmButton.setBackgroundColor(getResources().getColor(R.color.button_bright_cerulean));
     }
 
 }

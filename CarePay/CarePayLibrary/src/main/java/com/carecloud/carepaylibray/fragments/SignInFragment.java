@@ -121,17 +121,34 @@ public class SignInFragment extends android.support.v4.app.Fragment{
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            HomeScreenFragment mSelectLanguageFragment = new HomeScreenFragment();
+                            HomeScreenFragment mHomeScreenFragment = new HomeScreenFragment();
                             Bundle mBundle = new Bundle();
                             mBundle.putInt("viewid",viewId);
-                            mSelectLanguageFragment.setArguments(mBundle);
-                            getFragmentManager().beginTransaction().addToBackStack("siginfragment").replace(viewId, mSelectLanguageFragment).commit();
+                            mHomeScreenFragment.setArguments(mBundle);
+                            getFragmentManager().beginTransaction().addToBackStack("siginfragment").replace(viewId, mHomeScreenFragment).commit();
                         }
                     });
                 }
                 else {
                     button.setTextColor(Color.parseColor("#1f9bde"));
                     button.setBackgroundColor(Color.WHITE);
+                }
+
+                if(componentModel.getLabel().equals("CREATE NEW ACCOUNT"))
+                {
+                    button.setTextColor(Color.parseColor("#ffffff"));
+                    button.setBackgroundColor(Color.rgb(31, 155, 222));
+
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                          SignUpFragment mSignUpFragment = new SignUpFragment();
+                            Bundle mBundle = new Bundle();
+                            mBundle.putInt("viewid",viewId);
+                            mSignUpFragment.setArguments(mBundle);
+                            getFragmentManager().beginTransaction().addToBackStack("siginfragment").replace(viewId, mSignUpFragment).commit();
+                        }
+                    });
                 }
                 button.setHint(componentModel.getLabel());
                 parent.addView(button);

@@ -21,28 +21,15 @@
             android:text="Select Language"/>
 
         <Button
-            android:id="@+id/home_screen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Home Screen"/>
-
-        <Button
-            android:id="@+id/signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign Up"/>
-
-        <Button
-            android:id="@+id/demographics"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Demographics"/>
-
-        <Button
             android:id="@+id/resp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Responsibility"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_signature"
+            android:text="Signature"/>
 
     </LinearLayout>
 </RelativeLayout>

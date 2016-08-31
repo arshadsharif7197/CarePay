@@ -124,7 +124,7 @@ public class HomeScreenFragment extends Fragment implements HomeViewAdapter.OnIt
                     add_detail_text_view.setLayoutParams(layout_params3);
                     add_detail_text_view.setId(View.generateViewId());
                     layout_params3.setMargins(10, 10, 10, 5);
-                    add_detail_text_view.setTextColor(getResources().getColor(R.color.confirm_button));
+                    add_detail_text_view.setTextColor(getResources().getColor(R.color.colorPrimary));
                     mRelativeLayout.addView(add_detail_text_view, layout_params3);
                     add_detail_text_view.setOnClickListener(addDetailsListener);
 
