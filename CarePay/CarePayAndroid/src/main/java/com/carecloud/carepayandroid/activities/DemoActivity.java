@@ -25,33 +25,19 @@ public class DemoActivity extends AppCompatActivity  {
             }
         });
 
-        findViewById(R.id.home_screen).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DemoActivity.this,HomeScreenActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        findViewById(R.id.signup).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DemoActivity.this, SignUpActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        findViewById(R.id.demographics).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DemoActivity.this, DemographicsActivity.class);
-                startActivity(intent);
-            }
-        });
         findViewById(R.id.resp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DemoActivity.this, ResponsibilityActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.button_signature).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DemoActivity.this, SignatureActivity.class);
                 startActivity(intent);
             }
         });

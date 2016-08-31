@@ -73,7 +73,7 @@ public class ResponsibilityFragment extends Fragment {
         private int      colorGlitter;
         private int      colorCharcoal;
         private Typeface typeGothamRoundedBook;
-        private ArrayList<View> views;
+        private ArrayList<View> views = new ArrayList<>();
         private int viewsCount;
 
 
@@ -131,6 +131,7 @@ public class ResponsibilityFragment extends Fragment {
             int componentsCount = mComponents.size();
             int i = 0;
             viewsCount = 0;
+            views.clear();
             while (i < componentsCount) {
                 currentCompModel = mComponents.get(i);
                 if (i == 0 && currentCompModel.getType().equals("text")) {

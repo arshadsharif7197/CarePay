@@ -10,13 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="0.5dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginLeft="17dp"
         android:layout_marginRight="17dp"
-        android:layout_marginTop="0.5dp"
+        android:layout_marginTop="0dp"
         android:clickable="true"
         android:focusable="true"
-        card_view:cardCornerRadius="3dp"
         android:foreground="?android:attr/selectableItemBackground"
         card_view:cardElevation="4dp">
 
@@ -24,13 +23,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/icon_image"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"/>
+            <!--<ImageView-->
+                <!--android:id="@+id/icon_image"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_marginTop="5dp"/>-->
 
             <TextView
                 android:id="@+id/language_name"
@@ -38,11 +37,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/icon_image"
                 android:text="Welcome to android "
-                android:textColor="@color/language_color"
+                android:textColor="@color/slateGray"
                 android:textSize="17sp"
-                android:textStyle="bold"/>
+                />
 
             <RadioButton
                 android:id="@+id/radio_btn"
@@ -50,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:buttonTint="@color/confirm_button"
+                android:buttonTint="@color/button_bright_cerulean"
                 android:clickable="false"
                 />
         </RelativeLayout>

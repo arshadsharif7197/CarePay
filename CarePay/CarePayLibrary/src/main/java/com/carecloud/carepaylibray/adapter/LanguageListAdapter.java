@@ -43,12 +43,11 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
         if(!StringFunctions.isNullOrEmpty(mLanguage.getValue())){
             holder.mTextView.setText(mLanguage.getValue());
             if(mLanguage.isChecked()){
-                holder.mTextView.setTextColor(Color.parseColor("#1f9bde"));
+                holder.mTextView.setTextColor(R.color.colorPrimary);
             }
         }
         holder.mRadioButton.setChecked(mLanguage.isChecked());
-       // holder.mImageView.setImageResource(R.drawable.us);
-        holder.mImageView.setImageResource(mContext.getResources().getIdentifier(mLanguage.getLabel(), "drawable", mContext.getPackageName()));
+    //    holder.mImageView.setImageResource(mContext.getResources().getIdentifier(mLanguage.getLabel(), "drawable", mContext.getPackageName()));
     }
     @Override
     public int getItemCount() {
@@ -64,7 +63,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             mTextView = (TextView) itemView.findViewById(R.id.language_name);
-            mImageView = (ImageView) itemView.findViewById(R.id.icon_image);
+          //  mImageView = (ImageView) itemView.findViewById(R.id.icon_image);
             mCardView = (CardView) itemView.findViewById(R.id.cardView);
             mRadioButton = (RadioButton)itemView.findViewById(R.id.radio_btn);
 
