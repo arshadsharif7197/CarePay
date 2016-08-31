@@ -167,7 +167,7 @@ public class WorkflowModel {
         componentModels.add(new ScreenComponentModel("Do You have insurance", "text", true));
         componentModels.add(new ScreenComponentModel("Do You have health insurance?", "togglebutton", true));
         componentModels.add(new ScreenComponentModel("thumbnail_insurance", "imageview", false));
-        componentModels.add(new ScreenComponentModel("SCAN INSURANCE CARD", "buttonWithImage", false));
+        componentModels.add(new ScreenComponentModel("SCAN INSURANCE CARD", "scanButton", false));
         componentModels.add(new ScreenComponentModel("Insurance Card Info 1", "inputtext", false));
         componentModels.add(new ScreenComponentModel("Insurance Card Info 2", "inputtext", false));
         componentModels.add(new ScreenComponentModel("insurance Card Info 3", "inputtext", false));

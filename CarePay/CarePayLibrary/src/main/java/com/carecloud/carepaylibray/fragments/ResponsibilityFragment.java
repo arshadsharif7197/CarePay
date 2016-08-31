@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.fragments;
 
+import android.content.Context;
 import android.os.Build;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -63,21 +64,21 @@ public class ResponsibilityFragment extends Fragment {
                                                                                         ViewGroup.LayoutParams.WRAP_CONTENT);
         private LinearLayout.LayoutParams zeroWidthLp   = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         private LinearLayout.LayoutParams zeroHeightLp  = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-        private Typeface        typeProxima;
-        private Typeface        typeGothamRounded;
-        private Typeface        typeProximaSemiBold;
-        private int             colorPrimary;
-        private int             colorWhite;
-        private int             colorYellowGreen;
-        private int             colorGlitter;
-        private int             colorCharcoal;
-        private Typeface        typeGothamRoundedBook;
-        private ArrayList<View> views = new ArrayList<>();
-        private int             viewsCount;
+        private Typeface typeProxima;
+        private Typeface typeGothamRounded;
+        private Typeface typeProximaSemiBold;
+        private int      colorPrimary;
+        private int      colorWhite;
+        private int      colorYellowGreen;
+        private int      colorGlitter;
+        private int      colorCharcoal;
+        private Typeface typeGothamRoundedBook;
+        private ArrayList<View> views;
+        private int viewsCount;
 
 
-        public ResponsibilityLayoutRenderer(AppCompatActivity context) {
-            mActivity = context;
+        public ResponsibilityLayoutRenderer(Context context) {
+            mActivity = (AppCompatActivity) context;
             mComponents = ApplicationWorkflow.Instance().getResponsabScreenModel().getComponentModels();
             typeProxima = Typeface.createFromAsset(mActivity.getAssets(), "fonts/ProximaNova-Reg.otf");
             typeGothamRounded = Typeface.createFromAsset(mActivity.getAssets(), "fonts/GothamRnd-Medium.otf");

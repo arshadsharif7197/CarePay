@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -39,15 +40,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DocumentsFragment extends Fragment {
 
 
     private ImageView scanDriverLicenceImage;
     private ImageView scanInsuranceImage;
-    private int driversLicence = R.id.cameraImage;
+    private int driversLicense = R.id.cameraImage;
     private int insuranceImage = R.id.insuranceImage;
-    private int driveLicenceButton = R.id.driverLicenceButton;
+    List<String> statesData = new ArrayList<String>();
+    String selectedState=null;
+    private int driveLicenseButton = R.id.driverLicenceButton;
     private int insuranceButton = R.id.insuranceButton;
     private String userChosenTask;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
@@ -57,21 +62,21 @@ public class DocumentsFragment extends Fragment {
 
         ScrollView scrollView = new ScrollView(getActivity());
         ViewGroup.LayoutParams scrollViewLayoutparams = new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+                                                                                   ViewGroup.LayoutParams.WRAP_CONTENT);
         scrollView.setLayoutParams(scrollViewLayoutparams);
 
         LinearLayout.LayoutParams matchWidthParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                                                   LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout parent = new LinearLayout(getActivity());
         parent.setLayoutParams(matchWidthParams);
         parent.setOrientation(LinearLayout.VERTICAL);
-        //parent.setPadding(20, 10, 20, 10);
+        parent.setPadding(20, 10, 20, 10);
         scrollView.addView(parent);
 
 
         LinearLayout insuranceCardInfoTextLayout = new LinearLayout(getActivity());
         LinearLayout.LayoutParams insuranceCardInfoTextLayoutLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                                                                          LinearLayout.LayoutParams.WRAP_CONTENT);
         insuranceCardInfoTextLayout.setOrientation(LinearLayout.VERTICAL);
         insuranceCardInfoTextLayoutLayoutParams.setMargins(0, 0, 0, 60);
         insuranceCardInfoTextLayout.setLayoutParams(insuranceCardInfoTextLayoutLayoutParams);
@@ -81,6 +86,7 @@ public class DocumentsFragment extends Fragment {
 
 
         ScreenModel screenModel = ApplicationWorkflow.Instance().getDemographicsDocumentsScreenModel();
+        statesData =ApplicationWorkflow.Instance().getStatesDataModel();
 
         getActivity().setTitle(screenModel.getName());
         int index = 0;
@@ -125,9 +131,15 @@ public class DocumentsFragment extends Fragment {
                 LinearLayout childLayout = new LinearLayout(getActivity());
                 getChildLayout(childLayout);
                 ImageView iv =  getCamera();
-                iv.setId(driversLicence);
                 childLayout.addView(iv);
-                childLayout.addView(getButton(componentModel,driveLicenceButton));
+                if(componentModel.getLabel().equalsIgnoreCase("SCAN DRIVER’S LICENSE")){
+                    iv.setId(driversLicense);
+                    childLayout.addView(getButton(componentModel, driveLicenseButton));
+                }else if(componentModel.getLabel().equalsIgnoreCase("SCAN INSURANCE CARD")){
+                    iv.setId(insuranceImage);
+                    childLayout.addView(getButton(componentModel,insuranceButton ));
+                }
+
                 parent.addView(childLayout);
             }
             // Scan Insurance Card button and Imageview hide
@@ -142,6 +154,21 @@ public class DocumentsFragment extends Fragment {
                 parent.addView(scanInsuranceCardLayout);
             }
             // Driver's License Number
+            else if (componentModel.getType().equals("inputtext") && componentModel.getLabel().equals("Driver License Number")) {
+
+                EditText inputText = new EditText(getActivity());
+                LinearLayout.LayoutParams inputTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+                inputText.setLayoutParams(inputTextLayoutParams);
+                inputTextLayoutParams.setMargins(0, 0, 0, 60);
+                inputText.setHint(componentModel.getLabel());
+                inputTextLayoutParams.gravity = Gravity.LEFT;
+                // inputText.setText(componentModel.getLabel());
+                inputText.setTextSize(17.0f);
+                inputText.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray));
+
+                parent.addView(inputText);
+                index++;
+            }
 
             else if (componentModel.getType().equals("titleText")) {
                 TextView titleText = new TextView(getActivity());
@@ -159,10 +186,10 @@ public class DocumentsFragment extends Fragment {
 
             else if (componentModel.getType().equals("selector")) {
                 LinearLayout.LayoutParams childLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                                                            LinearLayout.LayoutParams.WRAP_CONTENT);
                 LinearLayout childLayout = new LinearLayout(getActivity());
                 childLayout.setWeightSum(2.0f);
-                childLayoutParams.setMargins(0, 0, 0, 60);
+                childLayoutParams.setMargins(10, 0, 0, 60);
                 childLayout.setLayoutParams(childLayoutParams);
                 childLayout.setOrientation(LinearLayout.HORIZONTAL);
                 childLayout.setPadding(0, 20, 0, 0);
@@ -186,12 +213,17 @@ public class DocumentsFragment extends Fragment {
                 selectText.setTextSize(14.0f);
                 selectText.setTextColor(ContextCompat.getColor(getActivity(), R.color.lightSlateGray));
                 selectText.setClickable(true);
-                selectText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(getActivity(), "Select State", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                selectText.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                showAlertDialogWithListview( String.valueOf(((TextView) view).getTag()));
+//                                Toast.makeText(getActivity(), "Select State", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                );
+
 
 
                 childLayout.addView(inputText);
@@ -203,7 +235,7 @@ public class DocumentsFragment extends Fragment {
             // Patient has Insurance yes or No
             else if (componentModel.getType().equals("togglebutton")) {
                 LinearLayout.LayoutParams childLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                                                            LinearLayout.LayoutParams.WRAP_CONTENT);
                 LinearLayout childLayout = new LinearLayout(getActivity());
                 //childLayout.setWeightSum(2.0f);
                 childLayoutParams.setMargins(0, 0, 0, 60);
@@ -250,7 +282,7 @@ public class DocumentsFragment extends Fragment {
             //Insurance Card Info show and hide
 
             else if (componentModel.getType().equals("inputtext")) {
-                TextView insuranceCardInfoText = new TextView(getActivity());
+                EditText insuranceCardInfoText = new EditText(getActivity());
                 LinearLayout.LayoutParams inputTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
                 inputTextLayoutParams.setMargins(20,0,0,0);
                 insuranceCardInfoText.setLayoutParams(inputTextLayoutParams);
@@ -315,7 +347,7 @@ public class DocumentsFragment extends Fragment {
 
     private void getChildLayout(LinearLayout childLayout) {
         LinearLayout.LayoutParams childLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                                                    LinearLayout.LayoutParams.WRAP_CONTENT);
         childLayoutParams.setMargins(0, 0, 0, 60);
         childLayout.setLayoutParams(childLayoutParams);
         childLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -345,7 +377,7 @@ public class DocumentsFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(view.getId() == driveLicenceButton){
+                if(view.getId() == driveLicenseButton){
                     PhotoDataUtil.getInstance().setDriveLicense(true);
                 }else{
                     PhotoDataUtil.getInstance().setDriveLicense(false);
@@ -437,7 +469,7 @@ public class DocumentsFragment extends Fragment {
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
         File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
+                                    System.currentTimeMillis() + ".jpg");
 
         FileOutputStream fo;
         String path;
@@ -529,8 +561,7 @@ public class DocumentsFragment extends Fragment {
         } else{
             if (photoImagePath != null) {
                 getBitmap(camera, photoImagePath);
-            } else {
-                camera.setImageResource(R.drawable.icn_camera);
+                //     } else {  camera.setImageResource(R.drawable.icn_camera);
             }
         }
     }
@@ -540,4 +571,38 @@ public class DocumentsFragment extends Fragment {
         camera.setImageBitmap(Bitmap.createScaledBitmap(photoBitmap, 120, 200, false));
     }
 
-}
+
+
+
+
+    public void showAlertDialogWithListview(final String type ) {
+
+
+        //Create sequence of items
+        final CharSequence[] stateDataArray = statesData.toArray(new String[statesData.size()]);
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle("State");
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialogBuilder.setItems(stateDataArray, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                selectedState =stateDataArray[item].toString();  //Selected item in listview
+//                Toast.makeText(getActivity(), selectedRace,Toast.LENGTH_SHORT).show();
+
+
+
+
+                // (selectText).setText(selectedState);
+            }
+
+
+        });
+        //Create alert dialog object via builder
+        AlertDialog alertDialogObject = dialogBuilder.create();
+        //Show the dialog
+        alertDialogObject.show();
+    }}

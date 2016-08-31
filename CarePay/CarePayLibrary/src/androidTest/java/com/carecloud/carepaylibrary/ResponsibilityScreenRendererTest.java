@@ -22,7 +22,7 @@ public class ResponsibilityScreenRendererTest extends ApplicationTestCase<Applic
 
     public void testCountOfViewsMatchesCountOfComponents() { // todo set up testing environ
         ResponsibilityFragment.ResponsibilityLayoutRenderer renderer
-                = new ResponsibilityFragment.ResponsibilityLayoutRenderer((AppCompatActivity) getContext());
+                = new ResponsibilityFragment.ResponsibilityLayoutRenderer(getContext());
         renderer.createLayout();
         ArrayList<View> views = renderer.getViews();
         ArrayList<ScreenComponentModel> componentModels = ApplicationWorkflow.Instance()

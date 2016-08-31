@@ -123,8 +123,8 @@ public class DemographicsActivity extends AppCompatActivity {
                     DetailsFragment detailsFragment = DetailsFragment.newInstance(null);
                     return detailsFragment;
                 case 2:
-//                    DocumentsFragment documentsFragment = DocumentsFragment.newInstance(null);
-                    ScanDocumentFragment documentsFragment = new ScanDocumentFragment();
+                    DocumentsFragment documentsFragment = new DocumentsFragment();
+//                    ScanDocumentFragment documentsFragment = new ScanDocumentFragment();
                     return documentsFragment;
                 case 3:
                     MoreDetailsFragment moreDetailsFragment = MoreDetailsFragment.newInstance(null);
