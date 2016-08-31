@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibrary;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatActivity;
 import android.test.ApplicationTestCase;
 import android.view.View;
 import android.widget.TextView;
@@ -19,9 +20,9 @@ public class ResponsibilityScreenRendererTest extends ApplicationTestCase<Applic
         super(Application.class);
     }
 
-    public void testCountOfViewsMatchesCountOfComponents() {
+    public void testCountOfViewsMatchesCountOfComponents() { // todo set up testing environ
         ResponsibilityFragment.ResponsibilityLayoutRenderer renderer
-                = new ResponsibilityFragment.ResponsibilityLayoutRenderer(getContext());
+                = new ResponsibilityFragment.ResponsibilityLayoutRenderer((AppCompatActivity) getContext());
         renderer.createLayout();
         ArrayList<View> views = renderer.getViews();
         ArrayList<ScreenComponentModel> componentModels = ApplicationWorkflow.Instance()
@@ -34,7 +35,7 @@ public class ResponsibilityScreenRendererTest extends ApplicationTestCase<Applic
 
     public void testLabelsInViewsMatchLabelsOfComponents() {
         ResponsibilityFragment.ResponsibilityLayoutRenderer renderer
-                = new ResponsibilityFragment.ResponsibilityLayoutRenderer(getContext());
+                = new ResponsibilityFragment.ResponsibilityLayoutRenderer((AppCompatActivity) getContext());
         renderer.createLayout();
         ArrayList<ScreenComponentModel> componentModels = ApplicationWorkflow.Instance()
                 .getResponsabScreenModel().getComponentModels();
@@ -49,7 +50,7 @@ public class ResponsibilityScreenRendererTest extends ApplicationTestCase<Applic
 
     public void testCostIsSumOfDetailedBalances() {
         ResponsibilityFragment.ResponsibilityLayoutRenderer renderer
-                = new ResponsibilityFragment.ResponsibilityLayoutRenderer(getContext());
+                = new ResponsibilityFragment.ResponsibilityLayoutRenderer((AppCompatActivity) getContext());
         renderer.createLayout();
         ArrayList<View> views = renderer.getViews();
         TextView costView = (TextView) views.get(2);
@@ -60,5 +61,4 @@ public class ResponsibilityScreenRendererTest extends ApplicationTestCase<Applic
         double copay = Double.parseDouble((copayView.getText().toString().substring(1)));
         assertEquals(cost, balance + copay);
     }
-
 }

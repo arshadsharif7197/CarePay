@@ -1,12 +1,10 @@
 package com.carecloud.carepaylibray.fragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -65,15 +63,17 @@ public class ResponsibilityFragment extends Fragment {
                                                                                         ViewGroup.LayoutParams.WRAP_CONTENT);
         private LinearLayout.LayoutParams zeroWidthLp   = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         private LinearLayout.LayoutParams zeroHeightLp  = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-        private Typeface typeProxima;
-        private Typeface typeGothamRounded;
-        private Typeface typeProximaSemiBold;
-        private int      colorPrimary;
-        private int      colorWhite;
-        private int      colorYellowGreen;
-        private int      colorGlitter;
-        private int      colorCharcoal;
-        private Typeface typeGothamRoundedBook;
+        private Typeface        typeProxima;
+        private Typeface        typeGothamRounded;
+        private Typeface        typeProximaSemiBold;
+        private int             colorPrimary;
+        private int             colorWhite;
+        private int             colorYellowGreen;
+        private int             colorGlitter;
+        private int             colorCharcoal;
+        private Typeface        typeGothamRoundedBook;
+        private ArrayList<View> views = new ArrayList<>();
+        private int             viewsCount;
 
 
         public ResponsibilityLayoutRenderer(AppCompatActivity context) {
@@ -129,12 +129,15 @@ public class ResponsibilityFragment extends Fragment {
             ScreenComponentModel currentCompModel; // holds the current layout component to be added
             int componentsCount = mComponents.size();
             int i = 0;
+            viewsCount = 0;
             while (i < componentsCount) {
                 currentCompModel = mComponents.get(i);
                 if (i == 0 && currentCompModel.getType().equals("text")) {
                     // first label encountered; place it in the toolbar
                     TextView tvLabelTotal = createTextView(wrapHeightLp, 21, colorGlitter, typeGothamRoundedBook, currentCompModel);
                     llTotalContainer.addView(tvLabelTotal);
+                    views.add(tvLabelTotal); // for tests
+                    ++viewsCount;
 
                     // fetch the next; it should be a textValue
                     ++i;
@@ -144,6 +147,8 @@ public class ResponsibilityFragment extends Fragment {
                         TextView tvValueTotal = createTextView(wrapHeightLp, 73, colorWhite, typeGothamRounded, currentCompModel); // todo externalize fontSize
                         llTotalContainer.setPadding(0, 16, 0, 0);
                         llTotalContainer.addView(tvValueTotal);
+                        views.add(tvValueTotal);
+                        ++viewsCount;
                         ++i;
                     }
                 } else if (currentCompModel.getType().equals("text")) {
@@ -163,8 +168,10 @@ public class ResponsibilityFragment extends Fragment {
                     TextView tvDetailLabel = createTextView(tvDetailLabelLp,
                                                             17, colorCharcoal, typeProxima,
                                                             currentCompModel); // todo get defaults
-                    detailLl.addView(tvDetailLabel);
                     tvDetailLabel.setGravity(Gravity.START);
+                    detailLl.addView(tvDetailLabel);
+                    views.add(tvDetailLabel);
+                    ++viewsCount;
                     ++i;
                     currentCompModel = mComponents.get(i);
                     if (currentCompModel.getType().equals("textValue")) {
@@ -177,6 +184,8 @@ public class ResponsibilityFragment extends Fragment {
                                                                 currentCompModel);
                         tvDetailValue.setGravity(Gravity.END);
                         detailLl.addView(tvDetailValue);
+                        views.add(tvDetailValue);
+                        ++viewsCount;
                         ++i;
 
                         // add the horizontal linear layout
@@ -189,9 +198,12 @@ public class ResponsibilityFragment extends Fragment {
                     // add the button to 'other components' container
                     mPayButton = createButton(currentCompModel);
                     llOtherCompContainer.addView(mPayButton);
+                    views.add(mPayButton);
+                    ++viewsCount;
                     ++i;
                 } else {
                     // all other components will be eventually added to the 'other components' container
+                    ++viewsCount;
                     ++i;
                 }
             }
@@ -286,6 +298,14 @@ public class ResponsibilityFragment extends Fragment {
             mActivity.setSupportActionBar(toolbar);
             mActivity.getSupportActionBar().setTitle("Responsibility");
             return toolbar;
+        }
+
+        public ArrayList<View> getViews() {
+            return views;
+        }
+
+        public int getCount() {
+            return viewsCount;
         }
     }
 }
