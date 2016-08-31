@@ -19,6 +19,7 @@ public class WorkflowModel {
     private ScreenModel detailsScreenModel;
     private ScreenModel homeScreenModel;
     private ScreenModel updatesDialogScreenModel;
+    private ScreenModel signatureScreenModel;
 
     public ScreenModel getSelectLanguageScreenModel() {
         selectLanguageScreenModel = new ScreenModel();
@@ -308,4 +309,20 @@ public class WorkflowModel {
         updatesDialogScreenModel.setComponentModels(componentModels);
         return updatesDialogScreenModel;
     }
+
+    public ScreenModel getSignatureScreenModel() {
+        signatureScreenModel = new ScreenModel();
+        ArrayList<ScreenComponentModel> componentModels = new ArrayList<>();
+        componentModels.add(new ScreenComponentModel("Sign HIPAA Confidentiality Agreement", "text", true));
+        componentModels.add(new ScreenComponentModel("Sign Consent for Medical Care", "text", true));
+        componentModels.add(new ScreenComponentModel("Make sure you’ve read the whole consent form and sign in the box below. If you're unable to sign, you can ask for a legal representative to sign for you.", "text", true));
+        componentModels.add(new ScreenComponentModel("I'm unable to sign", "switch", true));
+        componentModels.add(new ScreenComponentModel("PATIENT SIGNATURE", "text", true));
+        componentModels.add(new ScreenComponentModel("Legal Representative Signature", "text", true));
+        componentModels.add(new ScreenComponentModel("Signature", "signaturepad", true));
+        componentModels.add(new ScreenComponentModel("Yes, This is my signature", "button", true));
+        signatureScreenModel.setComponentModels(componentModels);
+        return signatureScreenModel;
+    }
+
 }

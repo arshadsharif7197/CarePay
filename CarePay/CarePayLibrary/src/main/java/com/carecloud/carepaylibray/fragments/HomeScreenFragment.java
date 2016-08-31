@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.adapter.HomeViewAdapter;
 import com.carecloud.carepaylibray.constants.ComponentTypeConstants;
 import com.carecloud.carepaylibray.models.OptionModel;
@@ -124,6 +126,8 @@ public class HomeScreenFragment extends Fragment implements HomeViewAdapter.OnIt
                     layout_params3.setMargins(10, 10, 10, 5);
                     add_detail_text_view.setTextColor(getResources().getColor(R.color.confirm_button));
                     mRelativeLayout.addView(add_detail_text_view, layout_params3);
+                    add_detail_text_view.setOnClickListener(addDetailsListener);
+
                 }
             } else if ((mComponentModels.get(i).getType()).equalsIgnoreCase("gridview")) {
                 mGridView = new RecyclerView(getActivity());
@@ -195,6 +199,14 @@ public class HomeScreenFragment extends Fragment implements HomeViewAdapter.OnIt
         }
         return mRelativeLayout;
     }
+    private View.OnClickListener addDetailsListener= new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(getContext(), DemographicsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    };
 
     @Override
     public void onItemClick(View view, int position, OptionModel mLanguage) {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepayandroid.R;
+import com.carecloud.carepaylibray.activities.DemographicsDocumentsScanActivity;
 
 public class DemoActivity extends AppCompatActivity  {
 
