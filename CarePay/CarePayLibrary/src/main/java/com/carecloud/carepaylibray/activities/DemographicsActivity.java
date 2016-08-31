@@ -16,6 +16,7 @@ import android.view.View;
 import com.carecloud.carepaylibray.fragments.ScanDocumentFragment;
 import com.carecloud.carepaylibray.fragments.demographics.AddressFragment;
 import com.carecloud.carepaylibray.fragments.demographics.DetailsFragment;
+import com.carecloud.carepaylibray.fragments.demographics.DocumentsFragment;
 import com.carecloud.carepaylibray.fragments.demographics.MoreDetailsFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
