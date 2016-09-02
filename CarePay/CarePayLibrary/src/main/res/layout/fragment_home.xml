@@ -5,14 +5,22 @@
               android:gravity="center"
               android:orientation="vertical">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SelectLanguageFragment"/>
+        android:text="Responsibility (Demo)"
+        android:id="@+id/home_button_resp"/>
 
     <Button
-        android:id="@+id/button_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"/>
+        android:text="Signature (Demo)"
+        android:id="@+id/home_button_signature"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Demographics (Demo)"
+        android:id="@+id/home_button_demogr"/>
+
 </LinearLayout>
