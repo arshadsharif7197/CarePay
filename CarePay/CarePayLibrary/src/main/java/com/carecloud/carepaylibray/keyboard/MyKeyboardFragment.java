@@ -42,6 +42,6 @@ public class MyKeyboardFragment extends Fragment {
 
     public void createKeyboard(int langId) {
         mLangId = langId;
-        mKeyboard = new MyKeyboard(getActivity(), view, mLangId, null);
+        mKeyboard = new MyKeyboard(getActivity(), view, mLangId);
     }
 }

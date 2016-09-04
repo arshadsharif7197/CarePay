@@ -18,23 +18,71 @@ import java.util.List;
 public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
 
     private static final String LOG_TAG = "MyKeyboard";
+
     private Keyboard     mKeyboard;
     private KeyboardView mKv;
-    private EditText     mTargetEdit;
+    //    private EditText     mTargetEdit;
     private Context      mContext;
     private boolean mCaps = false;
-    private TargetEditor   mTargetEditor;
-    private List<EditText> mEdits;
-    private int            mTargetEditIndex;
+    private TargetEditor mTargetEditor;
 
-    public MyKeyboard(Context context, KeyboardView keyView, int langId, List<EditText> editTexts) {
+    private List<EditText> mEdits;
+    private int            mTargetEditIndex; // TODO: 9/4/2016 remove
+
+    public MyKeyboard(Context context, KeyboardView keyView, int langId) {
         mContext = context;
         mKv = keyView;
         mKeyboard = new Keyboard(context, getKeyResource(langId));
         mKv.setKeyboard(mKeyboard);
         mKv.setOnKeyboardActionListener(this);
-        mTargetEditor = new TargetEditor();
-        mEdits = editTexts;
+        mTargetEditor = new TargetEditor(null);
+
+//        mEdits = editTexts; // TODO: 9/4/2016 remove
+    }
+
+    // TODO: 9/4/2016 replace with setTargetEdit
+    public void setTargetEditIndex(int index) {
+        mTargetEditIndex = index;
+        EditText targetEdit;
+        if(mTargetEditIndex != -1) {
+            targetEdit = mEdits.get(mTargetEditIndex);
+        } else {
+            targetEdit = null;
+        }
+        mTargetEditor.setEditTarget(targetEdit);
+    }
+
+    public void setEdits(List<EditText> edits) { // TODO: 9/4/2016 remove
+        this.mEdits = edits;
+    }
+
+    private void moveTargetToNextEdit() { // TODO: 9/4/2016 remove
+        EditText targetEdit = mTargetEditor.getTargetEdit();
+        targetEdit.setFocusableInTouchMode(true);
+        targetEdit.clearFocus();
+        targetEdit.setFocusableInTouchMode(false);
+        ++mTargetEditIndex;
+        if (mTargetEditIndex == mEdits.size()) {
+            mTargetEditIndex = -1;
+            mTargetEditor.setEditTarget(null);
+        } else {
+            targetEdit = mEdits.get(mTargetEditIndex);
+            targetEdit.setFocusableInTouchMode(true);
+            targetEdit.requestFocus();
+            targetEdit.setSelection(0, targetEdit.getText().length());
+            targetEdit.setFocusableInTouchMode(false);
+            mTargetEditor.setEditTarget(targetEdit);
+        }
+    }
+
+    /**
+     * Updates the reference to the edit text that the keyboard is used to
+     * @param edit The edit text
+     */
+    public void setTargetEdit(EditText edit) {
+        if(mTargetEditor != null) {
+            mTargetEditor.setEditTarget(edit);
+        }
     }
 
     /**
@@ -77,9 +125,8 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
             mKv.invalidateAllKeys();
         } else if (primaryCode == Keyboard.KEYCODE_DONE) {
             moveTargetToNextEdit();
-            if (mTargetEdit == null) {
+            if (mTargetEditor.getTargetEdit() == null) {
                 ((KeyboardHolder) mContext).toggleKeyboardVisible(false);
-//                ((AppCompatActivity)mContext).getWindow().getDecorView().getRootView().requestFocus();
             }
         } else { // all captured characters
             char code = (char) primaryCode;
@@ -134,58 +181,46 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
     public void swipeUp() {
     }
 
-    public void setTargetEditIndex(int index) {
-        if (index != -1) {
-            mTargetEditIndex = index;
-            mTargetEdit = mEdits.get(mTargetEditIndex);
-            mTargetEditor.initTargetEditBuffer();
-        } else {
-            mTargetEdit = null;
-        }
-    }
-
-    public void setEdits(List<EditText> edits) {
-        this.mEdits = edits;
-    }
-
-    private void moveTargetToNextEdit() {
-        mTargetEdit.setFocusableInTouchMode(true);
-        mTargetEdit.clearFocus();
-        mTargetEdit.setFocusableInTouchMode(false);
-        ++mTargetEditIndex;
-        if (mTargetEditIndex == mEdits.size()) {
-            mTargetEditIndex = -1;
-            mTargetEdit = null;
-        } else {
-            mTargetEdit = mEdits.get(mTargetEditIndex);
-            mTargetEdit.setFocusableInTouchMode(true);
-            mTargetEdit.requestFocus();
-            mTargetEdit.setSelection(0, mTargetEdit.getText().length());
-            mTargetEdit.setFocusableInTouchMode(false);
-            mTargetEditor.initTargetEditBuffer();
-        }
-    }
-
     /**
      *
      */
     private class TargetEditor {
 
+        private EditText      mTargetEdit;
         private StringBuilder mTargetEditBuffer;
 
-        public TargetEditor() {
+        public TargetEditor(EditText edit) {
+            mTargetEdit = edit;
             mTargetEditBuffer = new StringBuilder();
         }
 
-        public void initTargetEditBuffer() {
-            if (mTargetEdit != null) {
-                int lastIndex = mTargetEditBuffer.length();
-                String text = mTargetEdit.getText().toString();
-                mTargetEditBuffer.delete(0, lastIndex);
-                mTargetEditBuffer.append(text);
+        EditText getTargetEdit() {
+            return mTargetEdit;
+        }
+
+        void setEditTarget(EditText edit) {
+            mTargetEdit = edit;
+            if (edit != null) {
+                // trigger an update of the buffer
+                initTargetEditBuffer();
             }
         }
 
+        /**
+         * Init the edit buffer
+         */
+        public void initTargetEditBuffer() {
+            if (mTargetEdit != null) {
+                int lastIndex = mTargetEditBuffer.length();
+                mTargetEditBuffer.delete(0, lastIndex); // clear the old text in the buffer
+                String text = mTargetEdit.getText().toString();
+                mTargetEditBuffer.append(text); // set the new text
+            }
+        }
+
+        /**
+         * Deletes the last char or the selection
+         */
         public void delLastChar() {
             if (mTargetEdit == null) {
                 return;
@@ -201,6 +236,11 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
             }
         }
 
+        /**
+         * Add a char
+         *
+         * @param code The code of the char
+         */
         public void addChar(int code) {
             if (mTargetEdit == null) {
                 return;

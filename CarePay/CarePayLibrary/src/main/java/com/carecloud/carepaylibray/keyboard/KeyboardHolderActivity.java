@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by lsoco_user on 9/2/2016.
  * Activity that supports a custom keyboard
- * It has two fragments holders : one for content, one for keyboard
+ * It has two fragment holders : one for content, one for keyboard
  */
 public abstract class KeyboardHolderActivity extends AppCompatActivity implements KeyboardHolder {
 
