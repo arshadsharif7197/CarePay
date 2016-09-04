@@ -6,8 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 
 
@@ -29,10 +32,39 @@ public class SelectLanguageFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_select_language, container, false);
+
+        final RadioButton radioEng = (RadioButton) view.findViewById(R.id.radioButton_en);
+        final RadioButton radioEsp = (RadioButton) view.findViewById(R.id.radioButton_es);
+
+        radioEng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b) {
+                    radioEsp.setChecked(false);
+                    mActivity.setLangId(Constants.LANG_EN);
+                } else {
+                    radioEsp.setChecked(true);
+                    radioEng.setChecked(false);
+                }
+            }
+        });
+
+        radioEsp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b) {
+                    radioEng.setChecked(false);
+                    mActivity.setLangId(Constants.LANG_ES);
+                } else {
+                    radioEng.setChecked(true);
+                    radioEsp.setChecked(false);
+                }
+            }
+        });
+
         (view.findViewById(R.id.button_next)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 9/2/2016 go to next fragment (SignIN)
                 mActivity.replaceFragment(SignInFragment.class);
             }
         });

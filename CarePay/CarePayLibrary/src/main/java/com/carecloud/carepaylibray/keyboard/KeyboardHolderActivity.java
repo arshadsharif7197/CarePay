@@ -23,6 +23,13 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
     protected int             langId;
 
     /**
+     * Repalces a fragment in content holder
+     *
+     * @param fragClass
+     */
+    public abstract void replaceFragment(Class fragClass);
+
+    /**
      * Creates and add the fragment with contents
      */
     public abstract void placeInitContentFragment();
@@ -131,15 +138,6 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
         if (keyboardFragment != null) {
             keyboardFragment.createKeyboard(langId);
         }
-    }
-
-    /**
-     * Repalces a fragment in content holder
-     *
-     * @param fragClass
-     */
-    public void replaceFragment(Class fragClass) {
-
     }
 
     public MyKeyboard getKeyboard() {

@@ -6,12 +6,11 @@ import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.util.Log;
 import android.widget.EditText;
-
 import com.carecloud.carepaylibrary.R;
 
 
 /**
- * Custom keyboard
+ * Implements custom keyboard functionality
  */
 public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
 
