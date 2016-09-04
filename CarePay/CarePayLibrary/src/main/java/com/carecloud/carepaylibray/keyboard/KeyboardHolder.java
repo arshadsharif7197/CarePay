@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface KeyboardHolder {
     void toggleKeyboardVisible(boolean visible);
-    void bindKeyboardToEdits(List<EditText> edits, int langId);
+    void bindKeyboardToEdits(List<EditText> edits);
     boolean isKeyboardVisible();
     int getLangId();
     void setLangId(int id);

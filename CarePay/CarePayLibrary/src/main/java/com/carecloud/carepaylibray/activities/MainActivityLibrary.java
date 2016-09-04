@@ -13,6 +13,12 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 
 public class MainActivityLibrary extends KeyboardHolderActivity {
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public void placeInitContentFragment() {
         SelectLanguageFragment fragment = (SelectLanguageFragment) fm.findFragmentByTag("contents");
@@ -24,7 +30,7 @@ public class MainActivityLibrary extends KeyboardHolderActivity {
 
     @Override
     public int getLayoutRes() {
-        return R.layout.activity_main_activity_library;
+        return R.layout.activity_main_library;
     }
 
     @Override
@@ -35,11 +41,6 @@ public class MainActivityLibrary extends KeyboardHolderActivity {
     @Override
     public int getKeyboardHolderId() {
         return R.id.keyboard_holder;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     /**
@@ -61,7 +62,7 @@ public class MainActivityLibrary extends KeyboardHolderActivity {
         } else if (fragClass.equals(ResponsibilityFragment.class)) {
             fragment = new ResponsibilityFragment();
         } else {
-            // TODO: 9/2/2016 register more language fragments here
+            // TODO: 9/2/2016 register more fragments here if needed
         }
         fm.beginTransaction().replace(getContentsHolderId(), fragment, KB_CONTENT_TAG).addToBackStack(null).commit();
     }

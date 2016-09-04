@@ -23,6 +23,7 @@ public class MyKeyboardFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mLangId = ((KeyboardHolder)getActivity()).getLangId();
     }
 
     @Nullable
@@ -31,7 +32,7 @@ public class MyKeyboardFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = (KeyboardView) inflater.inflate(R.layout.keyboard, container, false);
-        mLangId = ((KeyboardHolder)getActivity()).getLangId();
+        createKeyboard(mLangId);
         return view;
     }
 
@@ -39,7 +40,7 @@ public class MyKeyboardFragment extends Fragment {
         return mKeyboard;
     }
 
-    public void setKeyboard(int langId) {
+    public void createKeyboard(int langId) {
         mLangId = langId;
         mKeyboard = new MyKeyboard(getActivity(), view, mLangId, null);
     }

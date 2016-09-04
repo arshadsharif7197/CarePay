@@ -27,7 +27,7 @@ public class KeyboardBinderHelper {
     public void bindEditsToKeyboard() {
         for (int i = 0; i < mEdits.size(); i++) {
             EditText ed = mEdits.get(i);
-            mWrappers.add(new EditTextWrapper(mActivity, ed, i, mKeyboard, ed.getText().toString()));
+            mWrappers.add(new EditTextWrapper(mActivity, ed, i, mKeyboard));
         }
     }
 }

@@ -79,7 +79,7 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
             moveTargetToNextEdit();
             if (mTargetEdit == null) {
                 ((KeyboardHolder) mContext).toggleKeyboardVisible(false);
-                ((AppCompatActivity)mContext).getWindow().getDecorView().getRootView().requestFocus();
+//                ((AppCompatActivity)mContext).getWindow().getDecorView().getRootView().requestFocus();
             }
         } else { // all captured characters
             char code = (char) primaryCode;
@@ -149,14 +149,19 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
     }
 
     private void moveTargetToNextEdit() {
+        mTargetEdit.setFocusableInTouchMode(true);
         mTargetEdit.clearFocus();
+        mTargetEdit.setFocusableInTouchMode(false);
         ++mTargetEditIndex;
         if (mTargetEditIndex == mEdits.size()) {
             mTargetEditIndex = -1;
             mTargetEdit = null;
         } else {
             mTargetEdit = mEdits.get(mTargetEditIndex);
+            mTargetEdit.setFocusableInTouchMode(true);
             mTargetEdit.requestFocus();
+            mTargetEdit.setSelection(0, mTargetEdit.getText().length());
+            mTargetEdit.setFocusableInTouchMode(false);
             mTargetEditor.initTargetEditBuffer();
         }
     }

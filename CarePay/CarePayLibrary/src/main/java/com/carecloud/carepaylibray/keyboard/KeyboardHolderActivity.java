@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.keyboard;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.EditText;
 
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public abstract class KeyboardHolderActivity extends AppCompatActivity implements KeyboardHolder {
 
+    private static final String LOG_TAG = KeyboardHolderActivity.class.getSimpleName();
     public static String KB_FRAG_TAG    = "keyboard";
     public static String KB_CONTENT_TAG = "content";
     protected FragmentManager fm;
@@ -90,11 +92,16 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity implement
     }
 
     @Override
-    public void bindKeyboardToEdits(List<EditText> edits, int langId) {
+    public void bindKeyboardToEdits(List<EditText> edits) {
         // bind the keyboard to the mEdits
-        (new KeyboardBinderHelper(this,
-                                  ((MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG)).getKeyboard(),
-                                  edits)).bindEditsToKeyboard();
+        MyKeyboard keyboard = ((MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG)).getKeyboard();
+        if(keyboard != null) {
+            (new KeyboardBinderHelper(this,
+                                      keyboard,
+                                      edits)).bindEditsToKeyboard();
+        } else {
+            Log.v(LOG_TAG, "keyboard null");
+        }
     }
 
     @Override
@@ -129,7 +136,7 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity implement
         this.langId = langId;
         MyKeyboardFragment keyboardFragment = (MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG);
         if (keyboardFragment != null) {
-            keyboardFragment.setKeyboard(langId);
+            keyboardFragment.createKeyboard(langId);
         }
     }
 

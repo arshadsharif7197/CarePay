@@ -106,8 +106,7 @@ public class SignatureActivity extends AppCompatActivity {
         params.setMargins(0, Utility.convertDpToPixel(10, SignatureActivity.this), 0, 0);
         descriptionTv.setPadding(Utility.convertDpToPixel(17, SignatureActivity.this),
                 Utility.convertDpToPixel(20, SignatureActivity.this),
-                Utility.convertDpToPixel(17, SignatureActivity.this)
-                , 0);
+                Utility.convertDpToPixel(17, SignatureActivity.this), 0);
         descriptionTv.setGravity(Gravity.LEFT);
         descriptionTv.setTextSize(textSize);
         descriptionTv.setTextColor(getResources().getColor(R.color.cadet_gray));
