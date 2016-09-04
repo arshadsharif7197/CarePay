@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+                intent.putExtra(KeyboardHolderActivity.KEY_LANG_ID, mActivity.getLangId());
                 startActivity(intent);
             }
         });

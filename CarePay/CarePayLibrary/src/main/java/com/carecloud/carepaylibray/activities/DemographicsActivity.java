@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import com.carecloud.carepaylibray.fragments.demographics.DemographicsAddressFra
 import com.carecloud.carepaylibray.fragments.demographics.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.fragments.demographics.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.fragments.demographics.DemographicsMoreDetailsFragment;
+import com.carecloud.carepaylibray.keyboard.Constants;
+import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -25,15 +28,45 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
  */
-public class DemographicsActivity extends AppCompatActivity {
+public class DemographicsActivity extends KeyboardHolderActivity {
 
     private ViewPager       viewPager;
     private FunPagerAdapter funPagerAdapter;
 
     @Override
+    public void replaceFragment(Class fragClass) {
+
+    }
+
+    @Override
+    public void placeInitContentFragment() {
+
+    }
+
+    @Override
+    public int getLayoutRes() {
+        return R.layout.activity_demographics1;
+    }
+
+    @Override
+    public int getContentsHolderId() {
+        return R.id.demogr_content_holder;
+    }
+
+    @Override
+    public int getKeyboardHolderId() {
+        return R.id.demogr_keyboard_holder;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demographics);
+
+        // set the language
+        Intent intent = getIntent();
+        if(intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
+            setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
+        }
 
         isStoragePermissionGranted();
 

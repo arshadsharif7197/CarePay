@@ -30,7 +30,7 @@ public class MainActivityLibrary extends KeyboardHolderActivity {
 
     @Override
     public int getLayoutRes() {
-        return R.layout.activity_main_library;
+        return R.layout.activity_keyboard_holder;
     }
 
     @Override

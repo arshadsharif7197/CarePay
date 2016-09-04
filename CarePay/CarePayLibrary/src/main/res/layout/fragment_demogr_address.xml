@@ -10,4 +10,16 @@
         android:layout_height="wrap_content"
         android:text="DemographicsAddressFragment"/>
 
+    <EditText
+        android:id="@+id/demogr_docs_street"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Street"/>
+
+    <EditText
+        android:id="@+id/demogr_docs_city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="City"/>
+
 </LinearLayout>

@@ -182,10 +182,8 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
             if (mTargetEdit == null) {
                 return;
             }
-
             int beginSel = mTargetEdit.getSelectionStart();
             int endSel = mTargetEdit.getSelectionEnd();
-
             int lastIndex = mTargetEdit.getText().length() - 1;
             if (lastIndex >= 0) {
                 if(endSel - beginSel <= 0) { // no selection
@@ -196,8 +194,6 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
                 }
                 // update edit
                 mTargetEdit.setText(mTargetEditBuffer.toString());
-                // set cursor position
-//                mTargetEdit.setSelection(lastIndex);
             }
         }
 
