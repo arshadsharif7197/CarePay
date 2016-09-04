@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -45,7 +44,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     @Override
     public int getLayoutRes() {
-        return R.layout.activity_demographics1;
+        return R.layout.activity_demographics;
     }
 
     @Override

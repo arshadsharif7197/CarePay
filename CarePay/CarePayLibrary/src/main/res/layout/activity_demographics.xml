@@ -1,25 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ll_for_vp"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/demogr_content_holder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <com.viewpagerindicator.TabPageIndicator
-            android:id="@+id/indicator"
-            android:paddingLeft="30dp"
-            android:paddingTop="30dp"
-            android:background="@color/white"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"/>
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white" />
-    </LinearLayout>
-</RelativeLayout>
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_for_vp"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.viewpagerindicator.TabPageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:paddingLeft="30dp"
+                    android:paddingTop="30dp"/>
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/demogr_keyboard_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+

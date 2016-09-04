@@ -194,6 +194,8 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
                 }
                 // update edit
                 mTargetEdit.setText(mTargetEditBuffer.toString());
+                // place the cursor at the end
+                mTargetEdit.setSelection(mTargetEditBuffer.length());
             }
         }
 
