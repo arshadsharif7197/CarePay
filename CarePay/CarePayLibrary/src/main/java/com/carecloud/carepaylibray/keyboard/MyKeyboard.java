@@ -73,7 +73,7 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
 
         if (primaryCode == Keyboard.KEYCODE_DELETE) {
             // delete last char
-            mTargetEditor.delLastChar();
+            mTargetEditor.deleteChar();
             Log.v(LOG_TAG, "del");
         } else if (primaryCode == Keyboard.KEYCODE_SHIFT) {
             mCaps = !mCaps;
@@ -178,18 +178,26 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
         /**
          * Deletes the last char or the selection
          */
-        public void delLastChar() {
+        public void deleteChar() {
             if (mTargetEdit == null) {
                 return;
             }
 
+            int beginSel = mTargetEdit.getSelectionStart();
+            int endSel = mTargetEdit.getSelectionEnd();
+
             int lastIndex = mTargetEdit.getText().length() - 1;
             if (lastIndex >= 0) {
-                mTargetEditBuffer.deleteCharAt(lastIndex);
+                if(endSel - beginSel <= 0) { // no selection
+                    mTargetEditBuffer.deleteCharAt(lastIndex); // just delete the last char
+                } else {
+                    // delete selection
+                    mTargetEditBuffer.replace(beginSel, endSel, "");
+                }
                 // update edit
                 mTargetEdit.setText(mTargetEditBuffer.toString());
                 // set cursor position
-                mTargetEdit.setSelection(lastIndex);
+//                mTargetEdit.setSelection(lastIndex);
             }
         }
 
