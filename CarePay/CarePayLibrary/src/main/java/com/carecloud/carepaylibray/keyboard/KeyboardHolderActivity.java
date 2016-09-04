@@ -14,7 +14,7 @@ import java.util.List;
  * Activity that supports a custom keyboard
  * It has two fragment holders : one for content, one for keyboard
  */
-public abstract class KeyboardHolderActivity extends AppCompatActivity implements KeyboardHolder {
+public abstract class KeyboardHolderActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = KeyboardHolderActivity.class.getSimpleName();
     public static String KB_FRAG_TAG    = "keyboard";
@@ -82,7 +82,6 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity implement
         }
     }
 
-    @Override
     public boolean isKeyboardVisible() {
         MyKeyboardFragment keyboardFragment = (MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG);
         if (keyboardFragment != null) {
@@ -91,20 +90,16 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity implement
         return false;
     }
 
-    @Override
     public void bindKeyboardToEdits(List<EditText> edits) {
         // bind the keyboard to the mEdits
         MyKeyboard keyboard = ((MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG)).getKeyboard();
         if(keyboard != null) {
-            (new KeyboardBinderHelper(this,
-                                      keyboard,
-                                      edits)).bindEditsToKeyboard();
+            (new KeyboardBinderHelper(this, edits)).bindEditsToKeyboard();
         } else {
             Log.v(LOG_TAG, "keyboard null");
         }
     }
 
-    @Override
     public void toggleKeyboardVisible(boolean visible) {
         MyKeyboardFragment keyboardFragment = (MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG);
         if (keyboardFragment != null) {
@@ -123,7 +118,6 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity implement
     /**
      * @return
      */
-    @Override
     public int getLangId() {
         return langId;
     }
@@ -131,7 +125,6 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity implement
     /**
      * @param langId
      */
-    @Override
     public void setLangId(int langId) {
         this.langId = langId;
         MyKeyboardFragment keyboardFragment = (MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG);
@@ -147,5 +140,13 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity implement
      */
     public void replaceFragment(Class fragClass) {
 
+    }
+
+    public MyKeyboard getKeyboard() {
+        MyKeyboardFragment kf = (MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG);
+        if(kf != null) {
+            return kf.getKeyboard();
+        }
+        return null;
     }
 }

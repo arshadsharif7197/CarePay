@@ -16,16 +16,12 @@ public class EditTextWrapper {
     private KeyboardHolderActivity mActivity;
     private EditText               mTargetEditText;
     private KeyboardBinderHelper   mKeyboardBinder;
-    private int                    mEditIndex; // TODO: 9/4/2016 get rid of
 
-    public EditTextWrapper(KeyboardHolderActivity activity, EditText editText,
-                           KeyboardBinderHelper keyboardBinderHelper,
-                           int editIndex) {
-        mActivity = activity;
+    public EditTextWrapper(KeyboardBinderHelper keyboardBinderHelper, EditText editText) {
+        mActivity = keyboardBinderHelper.getKeyboardHolderActivity();
         mTargetEditText = editText;
         mTargetEditText.setFocusableInTouchMode(false);
         mKeyboardBinder = keyboardBinderHelper;
-        mEditIndex = editIndex;
 
         mTargetEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -41,7 +37,7 @@ public class EditTextWrapper {
                     } else { // if selection, remove
                         mTargetEditText.setSelection(endSel, endSel);
                     }
-                    mKeyboardBinder.setCurrentlyActiveEditIndexInKeyb(mEditIndex);
+                    mKeyboardBinder.setEditAsCurrent(mTargetEditText);
                     mTargetEditText.setFocusableInTouchMode(true);
 
                     mActivity.toggleKeyboardVisible(true);
@@ -56,7 +52,8 @@ public class EditTextWrapper {
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
                     Log.v(LOG_TAG, "lostFocus()");
-                    mTargetEditText.setSelection(mTargetEditText.getText().length(), mTargetEditText.getText().length());
+                    int len = mTargetEditText.getText().length();
+                    mTargetEditText.setSelection(len, len);
                     mTargetEditText.setFocusableInTouchMode(false);
                 }
             }

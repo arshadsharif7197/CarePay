@@ -4,13 +4,11 @@ import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 
 import com.carecloud.carepaylibrary.R;
 
-import java.util.List;
 
 /**
  * Custom keyboard
@@ -21,58 +19,17 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
 
     private Keyboard     mKeyboard;
     private KeyboardView mKv;
-    //    private EditText     mTargetEdit;
-    private Context      mContext;
+    private KeyboardHolderActivity      mKeyboardHolderActivity;
     private boolean mCaps = false;
     private TargetEditor mTargetEditor;
 
-    private List<EditText> mEdits;
-    private int            mTargetEditIndex; // TODO: 9/4/2016 remove
-
-    public MyKeyboard(Context context, KeyboardView keyView, int langId) {
-        mContext = context;
+    public MyKeyboard(KeyboardHolderActivity activity, KeyboardView keyView, int langId) {
+        mKeyboardHolderActivity = activity;
         mKv = keyView;
-        mKeyboard = new Keyboard(context, getKeyResource(langId));
+        mKeyboard = new Keyboard(activity, getKeyResource(langId));
         mKv.setKeyboard(mKeyboard);
         mKv.setOnKeyboardActionListener(this);
         mTargetEditor = new TargetEditor(null);
-
-//        mEdits = editTexts; // TODO: 9/4/2016 remove
-    }
-
-    // TODO: 9/4/2016 replace with setTargetEdit
-    public void setTargetEditIndex(int index) {
-        mTargetEditIndex = index;
-        EditText targetEdit;
-        if(mTargetEditIndex != -1) {
-            targetEdit = mEdits.get(mTargetEditIndex);
-        } else {
-            targetEdit = null;
-        }
-        mTargetEditor.setEditTarget(targetEdit);
-    }
-
-    public void setEdits(List<EditText> edits) { // TODO: 9/4/2016 remove
-        this.mEdits = edits;
-    }
-
-    private void moveTargetToNextEdit() { // TODO: 9/4/2016 remove
-        EditText targetEdit = mTargetEditor.getTargetEdit();
-        targetEdit.setFocusableInTouchMode(true);
-        targetEdit.clearFocus();
-        targetEdit.setFocusableInTouchMode(false);
-        ++mTargetEditIndex;
-        if (mTargetEditIndex == mEdits.size()) {
-            mTargetEditIndex = -1;
-            mTargetEditor.setEditTarget(null);
-        } else {
-            targetEdit = mEdits.get(mTargetEditIndex);
-            targetEdit.setFocusableInTouchMode(true);
-            targetEdit.requestFocus();
-            targetEdit.setSelection(0, targetEdit.getText().length());
-            targetEdit.setFocusableInTouchMode(false);
-            mTargetEditor.setEditTarget(targetEdit);
-        }
     }
 
     /**
@@ -124,9 +81,10 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
             mKeyboard.setShifted(mCaps);
             mKv.invalidateAllKeys();
         } else if (primaryCode == Keyboard.KEYCODE_DONE) {
-            moveTargetToNextEdit();
+            EditText currentEdit = mTargetEditor.getTargetEdit();
+            ((EditTextTag)currentEdit.getTag()).getKeyboardBinder().moveToNextEditInSet(currentEdit);
             if (mTargetEditor.getTargetEdit() == null) {
-                ((KeyboardHolder) mContext).toggleKeyboardVisible(false);
+                mKeyboardHolderActivity.toggleKeyboardVisible(false);
             }
         } else { // all captured characters
             char code = (char) primaryCode;
@@ -142,7 +100,7 @@ public class MyKeyboard implements KeyboardView.OnKeyboardActionListener {
      * @param keyCode The code of the pressed key
      */
     private void playClick(int keyCode) {
-        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager am = (AudioManager) mKeyboardHolderActivity.getSystemService(Context.AUDIO_SERVICE);
         switch (keyCode) {
             case 32:
                 am.playSoundEffect(AudioManager.FX_KEYPRESS_SPACEBAR);

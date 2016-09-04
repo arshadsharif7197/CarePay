@@ -23,7 +23,7 @@ public class MyKeyboardFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLangId = ((KeyboardHolder)getActivity()).getLangId();
+        mLangId = ((KeyboardHolderActivity)getActivity()).getLangId();
     }
 
     @Nullable
@@ -42,6 +42,6 @@ public class MyKeyboardFragment extends Fragment {
 
     public void createKeyboard(int langId) {
         mLangId = langId;
-        mKeyboard = new MyKeyboard(getActivity(), view, mLangId);
+        mKeyboard = new MyKeyboard((KeyboardHolderActivity) getActivity(), view, mLangId);
     }
 }

@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,25 +9,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 
 
 /**
  * Created by lsoco_user on 9/2/2016.
+ * Sign up fragment
  */
-public class SignUpFragment extends Fragment {
+public class SignUpFragment extends GenericEditsFragment {
 
     private static final String LOG_TAG = SignUpFragment.class.getSimpleName();
-    private KeyboardHolderActivity mActivity;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity = (KeyboardHolderActivity)getActivity();
-    }
 
     @Nullable
     @Override
@@ -44,11 +34,7 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        List<EditText> edits = new ArrayList<>();
-        edits.add((EditText) view.findViewById(R.id.signup_name));
-
-        // bind the keyboard to the edits
-        mActivity.bindKeyboardToEdits(edits);
+        addEditForBindingWithKeyboard((EditText) view.findViewById(R.id.signup_name));
 
         return view;
     }
