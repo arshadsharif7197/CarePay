@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,32 +10,65 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.carecloud.carepaylibray.fragments.ScanDocumentFragment;
-import com.carecloud.carepaylibray.fragments.demographics.AddressFragment;
-import com.carecloud.carepaylibray.fragments.demographics.DetailsFragment;
-import com.carecloud.carepaylibray.fragments.demographics.DocumentsFragment;
-import com.carecloud.carepaylibray.fragments.demographics.MoreDetailsFragment;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.fragments.demographics.DemographicsAddressFragment;
+import com.carecloud.carepaylibray.fragments.demographics.DemographicsDetailsFragment;
+import com.carecloud.carepaylibray.fragments.demographics.DemographicsDocumentsFragment;
+import com.carecloud.carepaylibray.fragments.demographics.DemographicsMoreDetailsFragment;
+import com.carecloud.carepaylibray.keyboard.Constants;
+import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
-import com.carecloud.carepaylibrary.R;
+
 
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
  */
-public class DemographicsActivity extends AppCompatActivity {
+public class DemographicsActivity extends KeyboardHolderActivity {
 
-    private ViewPager viewPager;
+    private ViewPager       viewPager;
     private FunPagerAdapter funPagerAdapter;
+
+    @Override
+    public void replaceFragment(Class fragClass) {
+
+    }
+
+    @Override
+    public void placeInitContentFragment() {
+
+    }
+
+    @Override
+    public int getLayoutRes() {
+        return R.layout.activity_demographics;
+    }
+
+    @Override
+    public int getContentsHolderId() {
+        return R.id.demogr_content_holder;
+    }
+
+    @Override
+    public int getKeyboardHolderId() {
+        return R.id.demogr_keyboard_holder;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demographics);
+
+        // set the language
+        Intent intent = getIntent();
+        if(intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
+            setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
+        }
+
         isStoragePermissionGranted();
+
         funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(4);
@@ -47,12 +81,10 @@ public class DemographicsActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -85,7 +117,6 @@ public class DemographicsActivity extends AppCompatActivity {
         }
     }
 
-
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
     }
@@ -101,7 +132,6 @@ public class DemographicsActivity extends AppCompatActivity {
                 R.drawable.signup_step2_indicator,
                 R.drawable.signup_step3_indicator,
                 R.drawable.signup_step4_indicator
-
         };
 
         /**
@@ -119,29 +149,17 @@ public class DemographicsActivity extends AppCompatActivity {
 
             switch (position) {
                 case 0:
-                    AddressFragment addressFragment = AddressFragment.newInstance(null);
-                    return addressFragment;
+                    return new DemographicsAddressFragment();
                 case 1:
-                    DetailsFragment detailsFragment = DetailsFragment.newInstance(null);
-                    return detailsFragment;
+                    return new DemographicsDetailsFragment();
                 case 2:
-                    DocumentsFragment documentsFragment = new DocumentsFragment();
-//                    ScanDocumentFragment documentsFragment = new ScanDocumentFragment();
-                    return documentsFragment;
+                    return new DemographicsDocumentsFragment();
                 case 3:
-                    MoreDetailsFragment moreDetailsFragment = MoreDetailsFragment.newInstance(null);
-                    return moreDetailsFragment;
+                    return new DemographicsMoreDetailsFragment();
                 default:
-//        	  MyFragment myFragment = new MyFragment();
-//      		Bundle data = new Bundle();
-//      		data.putInt("current_page", position+1);
-//      		myFragment.setArguments(data);
-//      		return myFragment;
                     return null;
             }
-
         }
-
 
         /**
          * Returns the number of pages
@@ -157,34 +175,20 @@ public class DemographicsActivity extends AppCompatActivity {
             return ICONS[index];
         }
 
-      /*  @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-//                case 0:
-//                    return "Fun Poll/Quiz";
-//                case 1:
-//                    return "Rate your Day";
-//                case 2:
-//                    return "Suggetions";
-
-                default:
-                    return "";
-            }*/
     }
-
 
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                    checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                    checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 //   Log.v(TAG, "Permission is granted");
                 return true;
             } else {
                 //  Log.v(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation

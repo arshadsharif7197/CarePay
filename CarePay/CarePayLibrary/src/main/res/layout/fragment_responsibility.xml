@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="8">
+
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/blue_cerulian"-->
+            <!--android:elevation="7dp"-->
+            <!--android:id="@+id/respons_toolbar"-->
+            <!--android:layout_weight="1"/>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:background="@color/blue_cerulian"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Amount for today's visit"
+                android:gravity="center"
+                android:textSize="21.0sp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tv_respons_total"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="$120.00"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="53.0sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginRight="30.0dp"
+            android:layout_marginLeft="31.0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Previous balance"
+                    android:textSize="14.0sp"
+                    android:textColor="@color/slateGray"/>
+
+                <TextView
+                    android:id="@+id/tv_respons_prevbal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="$41.00"
+                    android:gravity="end"
+                    android:textColor="@color/blue_cerulian"
+                    android:textSize="14.0sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Insurance CoPay"
+                    android:textSize="14.0sp"
+                    android:textColor="@color/slateGray"/>
+
+                <TextView
+                    android:id="@+id/tv_respons_copay"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="$79.00"
+                    android:gravity="end"
+                    android:textSize="14.0sp"
+                    android:textColor="@color/blue_cerulian"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:background="@color/blue_cerulian"
+                android:text="select payment method"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="15.0sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
