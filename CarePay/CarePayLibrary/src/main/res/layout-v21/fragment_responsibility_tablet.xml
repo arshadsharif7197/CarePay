@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -12,22 +11,24 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/blue_cerulian"
+        android:elevation="8dp"
         android:gravity="center">
 
         <TextView
             android:id="@+id/respons_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
     </android.support.v7.widget.Toolbar>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
             android:weightSum="8">
@@ -41,13 +42,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/respons_total_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Amount for today's visit"
                     android:textColor="@color/white"
-                    android:textSize="21.0sp"
-                    android:id="@+id/respons_total_label"/>
+                    android:textSize="28.0sp"/>
 
                 <TextView
                     android:id="@+id/respons_total"
@@ -56,14 +57,14 @@
                     android:gravity="center"
                     android:text="$120.00"
                     android:textColor="@color/white"
-                    android:textSize="53.0sp"/>
+                    android:textSize="100.0sp"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="31.0dp"
-                android:layout_marginRight="30.0dp"
+                android:layout_marginLeft="100.0dp"
+                android:layout_marginRight="100.0dp"
                 android:layout_weight="4"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -76,13 +77,13 @@
                     android:weightSum="2">
 
                     <TextView
+                        android:id="@+id/respons_prev_balance_label"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Previous balance"
                         android:textColor="@color/slateGray"
-                        android:textSize="14.0sp"
-                        android:id="@+id/respons_prev_balance_label"/>
+                        android:textSize="17.0sp"/>
 
                     <TextView
                         android:id="@+id/respons_prev_balance"
@@ -102,13 +103,13 @@
                     android:weightSum="2">
 
                     <TextView
+                        android:id="@+id/respons_copay_label"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Insurance CoPay"
                         android:textColor="@color/slateGray"
-                        android:textSize="14.0sp"
-                        android:id="@+id/respons_copay_label"/>
+                        android:textSize="17.0sp"/>
 
                     <TextView
                         android:id="@+id/respons_copay"
@@ -130,19 +131,20 @@
                 android:orientation="vertical">
 
                 <Button
+                    android:id="@+id/respons_pay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="17dp"
-                    android:layout_marginLeft="17dp"
-                    android:layout_marginRight="17dp"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginRight="100dp"
                     android:background="@color/blue_cerulian"
                     android:text="select payment method"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="15.0sp"
-                    android:id="@+id/respons_pay"/>
+                    android:textSize="15.0sp"/>
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>
