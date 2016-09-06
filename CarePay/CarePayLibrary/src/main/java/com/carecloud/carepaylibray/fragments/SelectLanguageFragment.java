@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
  */
 public class SelectLanguageFragment extends Fragment{
 
+    private static final String LOG_TAG = SelectLanguageFragment.class.getSimpleName();
     private KeyboardHolderActivity mActivity;
 
     @Override
@@ -31,23 +33,26 @@ public class SelectLanguageFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Log.v(LOG_TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_select_language, container, false);
 
         final RadioButton radioEng = (RadioButton) view.findViewById(R.id.radioButton_en);
         final RadioButton radioEsp = (RadioButton) view.findViewById(R.id.radioButton_es);
 
-        radioEng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) {
-                    radioEsp.setChecked(false);
-                    mActivity.setLangId(Constants.LANG_EN);
-                } else {
-                    radioEsp.setChecked(true);
-                    radioEng.setChecked(false);
+        if(radioEng != null) {
+            radioEng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        radioEsp.setChecked(false);
+                        mActivity.setLangId(Constants.LANG_EN);
+                    } else {
+                        radioEsp.setChecked(true);
+                        radioEng.setChecked(false);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         radioEsp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

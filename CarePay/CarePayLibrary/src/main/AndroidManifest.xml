@@ -12,16 +12,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
-        <activity android:name="com.carecloud.carepaylibray.activities.MainActivityLibrary">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        </activity>
-
-
-        <activity android:name="com.carecloud.carepaylibray.activities.DemographicsActivity"/>
-        <activity android:name="com.carecloud.carepaylibray.activities.SignatureActivity"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.activities.MainActivityLibrary"
+            android:theme="@style/AppTheme"
+            android:configChanges="screenSize|orientation"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.activities.DemographicsActivity"
+            android:theme="@style/AppTheme"
+            android:configChanges="screenSize|orientation"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
+            android:theme="@style/AppTheme"/>
 
     </application>
 

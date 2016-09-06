@@ -1,24 +1,46 @@
 package com.carecloud.carepaylibrary;
 
-import android.app.Application;
-import android.support.v7.app.AppCompatActivity;
-import android.test.ApplicationTestCase;
-import android.view.View;
-import android.widget.TextView;
+import android.content.Intent;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
-import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
+import com.carecloud.carepaylibray.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.activities.MainActivityLibrary;
 
-import java.util.ArrayList;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Test the renderer for ResponsibilityScreen
  */
-public class ResponsibilityScreenRendererTest extends ApplicationTestCase<Application> {
+@RunWith(AndroidJUnit4.class)
+public class ResponsibilityScreenRendererTest {
 
-    public ResponsibilityScreenRendererTest() {
-        super(Application.class);
+    @Rule
+    public ActivityTestRule<DemographicsActivity> activity = new ActivityTestRule<>(DemographicsActivity.class,
+                                                                                    true,
+                                                                                    true);
+
+    @Before
+    public void doSmthBeforeTest() {
+        // place the fragment
     }
 
+    @Test
+    public void sample() {
+        assertThat(true, is(true));
+    }
+
+    @After
+    public void doSmthAfterTest() {
+        // nothing for now
+    }
 //
 //    public void testCountOfViewsMatchesCountOfComponents() { // todo set up testing environ
 //        ResponsibilityFragment.ResponsibilityLayoutRenderer renderer

@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.keyboard;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -87,6 +89,18 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
             toggleKeyboardVisible(false);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        Log.v(LOG_TAG, "onConfigChanged()");
+        super.onConfigurationChanged(newConfig);
+        // restart the contents fragment
+        Fragment contentsFragment = fm.findFragmentByTag(KB_CONTENT_TAG);
+        if(contentsFragment != null) {
+            fm.beginTransaction().detach(contentsFragment).commit();
+            fm.beginTransaction().attach(contentsFragment).commit();
         }
     }
 
