@@ -8,26 +8,18 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SignInFragment"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/signin_edit_name"
-        android:text="Name"/>
+        android:text="Sign up"/>
 
     <EditText
+        android:id="@+id/signup_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/signin_edit_password"
-        android:text="Password"/>
+        android:text="name"/>
+
     <Button
+        android:id="@+id/signup_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign In"
-        android:id="@+id/signin_submit"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create new account"
-        android:id="@+id/signin_new_account"/>
+        android:text="Submit"/>
+
 </LinearLayout>

@@ -9,6 +9,7 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -20,14 +21,41 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.support:design:24.2.0'
+
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+
     compile 'com.android.support:support-v4:24.2.0'
     compile 'com.android.support:cardview-v7:24.2.0'
     compile 'com.mcxiaoke.viewpagerindicator:library:2.4.1@aar'
+    compile 'com.github.gcacace:signature-pad:1.2.0'
+
+    // for testing
+    testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support:support-annotations:24.2.0'
+
+    //Provides AndroidJUnitRunner
+    androidTestCompile ('com.android.support.test:runner:0.4') {
+        exclude module: 'support-annotations'
+    }
+    // Provides JUnit 4 rules
+    androidTestCompile ('com.android.support.test:rules:0.4') {
+        exclude module: 'support-annotations'
+    }
+    // Builds and runs Espresso tests
+    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.1') {
+        exclude module: 'support-annotations'
+    }
+
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+        exclude module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
+
 }
