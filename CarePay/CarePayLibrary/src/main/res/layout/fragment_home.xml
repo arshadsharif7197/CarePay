@@ -5,29 +5,22 @@
               android:gravity="center"
               android:orientation="vertical">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SignInFragment"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/signin_edit_name"
-        android:text="Name"/>
+        android:text="Responsibility (Demo)"
+        android:id="@+id/home_button_resp"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/signin_edit_password"
-        android:text="Password"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign In"
-        android:id="@+id/signin_submit"/>
+        android:text="Signature (Demo)"
+        android:id="@+id/home_button_signature"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create new account"
-        android:id="@+id/signin_new_account"/>
+        android:text="Demographics (Demo)"
+        android:id="@+id/home_button_demogr"/>
+
 </LinearLayout>
