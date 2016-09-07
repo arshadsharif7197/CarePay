@@ -48,9 +48,6 @@ public class ResponsibilityFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
-        title.setTextSize(20);
-        title.setText(mActivity.getString(R.string.respons_title));
         setTypefaceFromAssets("fonts/GothamRnd-Medium.otf", title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(mActivity.getResources().getDrawable(R.drawable.icn_patient_mode_nav_back));
