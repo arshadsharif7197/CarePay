@@ -1,25 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center"
-              android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign up"/>
-
-    <EditText
-        android:id="@+id/signup_name"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/headerContainerLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="name"/>
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:padding="17dp"
 
-    <Button
-        android:id="@+id/signup_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"/>
+        android:orientation="vertical"
+        android:visibility="visible">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            >
+            <EditText
+                android:id="@+id/fullnameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="FULL NAME"
+                android:textColor="@color/blue_cerulian"
 
+                />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            >
+            <EditText
+                android:id="@+id/emailsignupEditText"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+                android:hint="EMAIL"
+                android:textColor="@color/blue_cerulian"/>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            >
+            <EditText
+                android:id="@+id/createPasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="CREATE PASSWORD"
+                android:textColor="@color/blue_cerulian"/>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            >
+            <EditText
+                android:id="@+id/repeatPasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="REPEAT PASSWORD"
+                android:textColor="@color/blue_cerulian"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="19dp">
+
+        <Button
+            android:id="@+id/signupButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SIGN UP"
+            android:background="@drawable/button_blue_fill_background"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/bottomContainerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/oldUserTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Already have an Account ?"
+                    android:textColor="@color/blue_cerulian"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"/>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>
