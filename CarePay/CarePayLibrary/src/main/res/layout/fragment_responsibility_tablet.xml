@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/respons_root">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/respons_toolbar"
@@ -46,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Amount for today's visit"
+                    android:text="@string/respons_total_label"
                     android:textColor="@color/white"
                     android:textSize="28.0sp"/>
 
@@ -81,7 +82,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Previous balance"
+                        android:text="@string/respons_previous_balance_label"
                         android:textColor="@color/slateGray"
                         android:textSize="17.0sp"/>
 
@@ -107,7 +108,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Insurance CoPay"
+                        android:text="@string/respons_copay_label"
                         android:textColor="@color/slateGray"
                         android:textSize="17.0sp"/>
 
@@ -138,7 +139,7 @@
                     android:layout_marginLeft="100dp"
                     android:layout_marginRight="100dp"
                     android:background="@color/blue_cerulian"
-                    android:text="select payment method"
+                    android:text="@string/respons_pay_label"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="15.0sp"/>

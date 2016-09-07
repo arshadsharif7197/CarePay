@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.fragments;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 
 /**
  * Created by lsoco_user on 9/2/2016.
+ * Responsibility screen
  */
 public class ResponsibilityFragment extends Fragment {
 
@@ -46,11 +48,11 @@ public class ResponsibilityFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText("Responsibility");
         title.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
+        title.setTextSize(20);
+        title.setText(mActivity.getString(R.string.respons_title));
         setTypefaceFromAssets("fonts/GothamRnd-Medium.otf", title);
         toolbar.setTitle("");
-//        toolbar.setTitleTextColor(ContextCompat.getColor(mActivity, R.color.white));
         toolbar.setNavigationIcon(mActivity.getResources().getDrawable(R.drawable.icn_patient_mode_nav_back));
         mActivity.setSupportActionBar(toolbar);
 
@@ -72,7 +74,7 @@ public class ResponsibilityFragment extends Fragment {
      * @return True is tablet; false otherwise
      */
     public boolean isTablet() {
-        int screenLayoutWidthSize = getActivity().getResources().getConfiguration().screenWidthDp;
+        int screenLayoutWidthSize = mActivity.getResources().getConfiguration().screenWidthDp;
         // detect smallest width size
         return  (screenLayoutWidthSize >= 600);
     }
@@ -82,4 +84,11 @@ public class ResponsibilityFragment extends Fragment {
         view.setTypeface(typeface);
     }
 
+    /**
+     * For tests
+     * @param activity The activity
+     */
+    public void setActivity(KeyboardHolderActivity activity) {
+        mActivity = activity;
+    }
 }
