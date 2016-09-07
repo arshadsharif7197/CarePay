@@ -10,7 +10,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/respons_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:background="@color/blue_cerulian"
         android:gravity="center">
 
@@ -55,7 +55,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="31.0dp"
+                android:layout_marginStart="@dimen/respons_detail_left_right_margin"
                 android:layout_marginEnd="30.0dp"
                 android:layout_weight="4"
                 android:gravity="center"
@@ -64,7 +64,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="@dimen/respons_detail_margin_bottom"
                     android:orientation="horizontal"
                     android:weightSum="2">
 

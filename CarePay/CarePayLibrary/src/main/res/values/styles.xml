@@ -65,19 +65,19 @@
         <attr name="outerShadowRadius" format="dimension"/>
     </declare-styleable>
 
-    <!-- Responsibility -->
+    <!-- Responsibility styles -->
     <style name="ResponsTotalLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/glitter</item>
-        <item name="android:textSize">21sp</item>
+        <item name="android:textSize">@dimen/respons_total_label_text_size</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="ResponsTotalStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">53dp</item>
+        <item name="android:textSize">@dimen/respons_total_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -86,19 +86,19 @@
 
     <style name="ResponsDetailLabelStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/charcoal</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">@dimen/respons_detail_label_text_size</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="ResponsDetailStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/bright_cerulean</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/respons_detail_text_size</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="ResponsButtonStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/respons_button_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -113,7 +113,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
         <item name="android:textStyle">normal</item>
     </style>
 
