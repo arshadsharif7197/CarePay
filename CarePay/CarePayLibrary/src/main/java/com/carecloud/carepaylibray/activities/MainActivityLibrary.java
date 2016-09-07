@@ -64,6 +64,6 @@ public class MainActivityLibrary extends KeyboardHolderActivity {
         } else {
             // TODO: 9/2/2016 register more fragments here if needed
         }
-        fm.beginTransaction().replace(getContentsHolderId(), fragment, KB_CONTENT_TAG).addToBackStack(null).commit();
+        fm.beginTransaction().replace(getContentsHolderId(), fragment, fragClass.getSimpleName()).addToBackStack(null).commit();
     }
 }
