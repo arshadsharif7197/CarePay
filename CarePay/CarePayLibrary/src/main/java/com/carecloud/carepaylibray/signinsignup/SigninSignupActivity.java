@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.signinsignup.fragments.activity;
+package com.carecloud.carepaylibray.signinsignup;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

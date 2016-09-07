@@ -75,7 +75,7 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        signinPageOptionsClickListner =(OnSigninPageOptionsClickListner) context;
+        signinPageOptionsClickListner =(OnSigninPageOptionsClickListner) getActivity();
     }
 
     private boolean isvalidData() {
@@ -105,7 +105,7 @@ public class SigninFragment extends android.support.v4.app.Fragment {
         return matcher.matches();
     }
 
-    public  interface OnSigninPageOptionsClickListner{
+    public interface OnSigninPageOptionsClickListner{
 
         public void onSigninButtonClick();
         public void onOptionClick(SignupFragment fragment, String fragmentTagName);
