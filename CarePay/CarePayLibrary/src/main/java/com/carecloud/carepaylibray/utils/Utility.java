@@ -7,6 +7,7 @@ package com.carecloud.carepaylibray.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,7 +17,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 public class Utility {
 
@@ -77,6 +80,14 @@ public class Utility {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return (int)px;
+    }
+
+    public static boolean isTablet(Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        float widthInInches = metrics.widthPixels / metrics.xdpi;
+        float heightInInches = metrics.heightPixels / metrics.ydpi;
+        double sizeInInches = Math.sqrt(Math.pow(widthInInches, 2) + Math.pow(heightInInches, 2));
+        return sizeInInches >= 6.5;
     }
 
 }

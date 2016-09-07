@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textViewStyle">@style/Widget.AppCompat.TextView</item>
     </style>
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
@@ -18,6 +19,11 @@
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="Widget.AppCompat.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">50sp</item>
+    </style>
+
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/colorAccent</item>
     </style>
@@ -25,7 +31,7 @@
     <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorAccent">@color/colorPrimary</item>
