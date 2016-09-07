@@ -49,4 +49,10 @@
         <item name="android:keyPreviewLayout">@layout/keyboard_preview</item>
     </style>
 
+
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/rich_electric_blue</item>
+        <item name="colorSwitchThumbNormal">@color/light_gray</item>
+        <item name="android:colorForeground">@color/uncheck_confirm_button</item>
+    </style>
 </resources>
