@@ -5,4 +5,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="demogr_docs_logo">Logo</string>
+    <string name="demogr_docs_logo_title">Documents, please</string>
+    <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
+    <string name="demogr_docs_scan_label">Scan</string>
+    <string name="demogr_license_scan_label">driver\'s license number</string>
 </resources>
