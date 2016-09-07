@@ -37,14 +37,7 @@ public class ResponsibilityFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view;
-        if(!isTablet()) {
-            Log.v(LOG_TAG, "onCreateView() phone");
-            view = inflater.inflate(R.layout.fragment_responsibility, container, false);
-        } else {
-            Log.v(LOG_TAG, "onCreateView() tablet");
-            view = inflater.inflate(R.layout.fragment_responsibility_tablet, container, false);
-        }
+        View view = inflater.inflate(R.layout.fragment_responsibility, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
