@@ -12,8 +12,10 @@
     <dimen name="respons_detail_text_size">14sp</dimen>
     <dimen name="respons_button_text_size">15sp</dimen>
     <dimen name="respons_toolbar_title_text_size">20sp</dimen>
-    <dimen name="respons_detail_margin_bottom">20dp</dimen>
+    <dimen name="respons_detail_margin_bottom">15dp</dimen>
     <dimen name="respons_detail_left_right_margin">30dp</dimen>
     <dimen name="respons_toolbar_elevation">7dp</dimen>
+    <dimen name="respons_button_margin_left_right">17dp</dimen>
+
 
 </resources>

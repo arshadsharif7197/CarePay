@@ -99,8 +99,8 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
         // restart the contents fragment
         Fragment contentsFragment = fm.findFragmentByTag(KB_CONTENT_TAG);
         if(contentsFragment != null) {
-            fm.beginTransaction().detach(contentsFragment).commit();
-            fm.beginTransaction().attach(contentsFragment).commit();
+//            fm.beginTransaction().detach(contentsFragment).commit();
+//            fm.beginTransaction().attach(contentsFragment).commit();
         }
     }
 
