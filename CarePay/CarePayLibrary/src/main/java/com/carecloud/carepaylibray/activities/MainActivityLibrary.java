@@ -7,9 +7,9 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.fragments.HomeFragment;
 import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 import com.carecloud.carepaylibray.fragments.SelectLanguageFragment;
-import com.carecloud.carepaylibray.fragments.SignInFragment;
-import com.carecloud.carepaylibray.fragments.SignUpFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
+import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
 
 public class MainActivityLibrary extends KeyboardHolderActivity {
 
@@ -53,10 +53,10 @@ public class MainActivityLibrary extends KeyboardHolderActivity {
         Fragment fragment = null;
         if (fragClass.equals(SelectLanguageFragment.class)) {
             fragment = new SelectLanguageFragment();
-        } else if (fragClass.equals(SignInFragment.class)) {
-            fragment = new SignInFragment();
-        } else if (fragClass.equals(SignUpFragment.class)) {
-            fragment = new SignUpFragment();
+        } else if (fragClass.equals(SigninFragment.class)) {
+            fragment = new SigninFragment();
+        } else if (fragClass.equals(SignupFragment.class)) {
+            fragment = new SignupFragment();
         } else if (fragClass.equals(HomeFragment.class)) {
             fragment = new HomeFragment();
         } else if (fragClass.equals(ResponsibilityFragment.class)) {
