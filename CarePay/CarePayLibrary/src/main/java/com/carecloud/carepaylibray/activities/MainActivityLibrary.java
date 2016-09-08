@@ -50,20 +50,24 @@ public class MainActivityLibrary extends KeyboardHolderActivity {
      */
     @Override
     public void replaceFragment(Class fragClass) {
-        Fragment fragment = null;
-        if (fragClass.equals(SelectLanguageFragment.class)) {
-            fragment = new SelectLanguageFragment();
-        } else if (fragClass.equals(SignInFragment.class)) {
-            fragment = new SignInFragment();
-        } else if (fragClass.equals(SignUpFragment.class)) {
-            fragment = new SignUpFragment();
-        } else if (fragClass.equals(HomeFragment.class)) {
-            fragment = new HomeFragment();
-        } else if (fragClass.equals(ResponsibilityFragment.class)) {
-            fragment = new ResponsibilityFragment();
-        } else {
-            // TODO: 9/2/2016 register more fragments here if needed
+        Fragment fragment = fm.findFragmentByTag(fragClass.getSimpleName());
+        if(fragment == null) {
+            if (fragClass.equals(SelectLanguageFragment.class)) {
+                fragment = new SelectLanguageFragment();
+            } else if (fragClass.equals(SignInFragment.class)) {
+                fragment = new SignInFragment();
+            } else if (fragClass.equals(SignUpFragment.class)) {
+                fragment = new SignUpFragment();
+            } else if (fragClass.equals(HomeFragment.class)) {
+                fragment = new HomeFragment();
+            } else if (fragClass.equals(ResponsibilityFragment.class)) {
+                fragment = new ResponsibilityFragment();
+            }
         }
-        fm.beginTransaction().replace(getContentsHolderId(), fragment, fragClass.getSimpleName()).addToBackStack(null).commit();
+        fm.beginTransaction().
+                replace(getContentsHolderId(), fragment, fragClass.getSimpleName())
+                .addToBackStack(null)
+                .commit();
+
     }
 }

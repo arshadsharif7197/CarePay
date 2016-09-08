@@ -18,7 +18,7 @@ import java.util.List;
  */
 public abstract class KeyboardHolderActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = KeyboardHolderActivity.class.getSimpleName();
+    public static final String LOG_TAG = KeyboardHolderActivity.class.getSimpleName();
     public static final String KEY_LANG_ID = "language";
     public static String KB_FRAG_TAG    = "keyboard";
     public static String KB_CONTENT_TAG = "content";
