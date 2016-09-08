@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.carecloud.carepaylibrary.R;
+
 public class HomeActivity extends AppCompatActivity {
 
     @Override
