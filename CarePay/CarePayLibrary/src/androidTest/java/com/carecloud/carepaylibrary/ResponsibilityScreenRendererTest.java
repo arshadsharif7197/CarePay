@@ -1,11 +1,9 @@
 package com.carecloud.carepaylibrary;
 
-import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.carecloud.carepaylibray.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.activities.MainActivityLibrary;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 
 import org.junit.After;
 import org.junit.Before;

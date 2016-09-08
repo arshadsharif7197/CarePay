@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/blue_cerulian"
+        android:elevation="8dp"
         android:gravity="center">
 
         <TextView
@@ -43,13 +44,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/respons_total_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/respons_total_label"
                     android:textColor="@color/white"
-                    android:textSize="21.0sp"
-                    android:id="@+id/respons_total_label"/>
+                    android:textSize="21.0sp"/>
 
                 <TextView
                     android:id="@+id/respons_total"
@@ -78,13 +79,13 @@
                     android:weightSum="2">
 
                     <TextView
+                        android:id="@+id/respons_prev_balance_label"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/respons_previous_balance_label"
                         android:textColor="@color/slateGray"
-                        android:textSize="14.0sp"
-                        android:id="@+id/respons_prev_balance_label"/>
+                        android:textSize="14.0sp"/>
 
                     <TextView
                         android:id="@+id/respons_prev_balance"
@@ -104,13 +105,13 @@
                     android:weightSum="2">
 
                     <TextView
+                        android:id="@+id/respons_copay_label"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/respons_copay_label"
                         android:textColor="@color/slateGray"
-                        android:textSize="14.0sp"
-                        android:id="@+id/respons_copay_label"/>
+                        android:textSize="14.0sp"/>
 
                     <TextView
                         android:id="@+id/respons_copay"
@@ -132,6 +133,7 @@
                 android:orientation="vertical">
 
                 <Button
+                    android:id="@+id/respons_pay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="17dp"
@@ -141,8 +143,7 @@
                     android:text="@string/respons_pay_label"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="15.0sp"
-                    android:id="@+id/respons_pay"/>
+                    android:textSize="15.0sp"/>
             </LinearLayout>
 
         </LinearLayout>

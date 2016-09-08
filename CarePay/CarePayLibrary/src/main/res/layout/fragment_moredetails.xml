@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="14dp"
+    android:paddingRight="14dp"
+    >
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icn_signup_illustration_step_4_more"
+        android:id="@+id/moreDetailsImageView"
+        android:paddingTop="30dp"
+        android:layout_gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/moreDetailsHeading"
+        android:text="Got some time?"
+        android:textSize="21.0dp"
+        android:textColor="@color/charcoal"
+        android:layout_gravity="center"
+        android:paddingTop="30dp"
+        android:layout_below="@+id/detailsImageView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/moreDetailsSubHeading"
+        android:textSize="16dp"
+        android:textColor="@color/cadet_gray"
+        android:text="Share some of your health information now and save some precious time during your next appointment"
+        android:gravity="center"
+        android:layout_below="@+id/detailsHeading"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        >
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+
+            android:text="Do you want to get Updates?"
+            android:layout_gravity="left"
+            android:layout_weight="1"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/updatesSwitch"
+            android:clickable="true"
+            android:textOn=""
+            android:textOff=""
+            android:theme="@style/MySwitch"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="80dp"
+        >
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add More Details"
+            android:layout_gravity="center"
+            android:background="@color/bright_cerulean"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I'LL  do this later"
+            android:layout_gravity="center"
+            android:background="@drawable/button_background"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

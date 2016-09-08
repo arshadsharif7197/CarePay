@@ -5,4 +5,57 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="respons_title">Responsibility</string>
+    <string name="respons_total_label">Amount for today\'s visit</string>
+    <string name="respons_previous_balance_label">Previous balance</string>
+    <string name="respons_copay_label">Insurance CoPay</string>
+    <string name="respons_pay_label">select payment method</string>
+
+    <string name="AL">AL</string>
+    <string name="FL">FL</string>
+
+    <string-array name="states">
+        <item>@string/AL</item>
+        <item>@string/FL</item>
+    </string-array>
+
+    <string name="American">American</string>
+    <string name="Hispanic">Hispanic</string>
+
+    <string-array name="Race">
+        <item>@string/American</item>
+        <item>@string/Hispanic</item>
+    </string-array>
+
+
+    <string name="English">English</string>
+    <string name="Spanish">Spanish</string>
+
+    <string-array name="Language">
+        <item>@string/English</item>
+        <item>@string/Spanish</item>
+    </string-array>
+
+
+    <string name="hispanic">Hispanic</string>
+    <string name="white_americans">White Americans</string>
+    <string name="other">Other</string>
+    <string name="decline_to_answer">Decline to Answer</string>
+
+    <string-array name="Ethnicity">
+        <item>@string/hispanic</item>
+        <item>@string/white_americans</item>
+        <item>@string/other</item>
+        <item>@string/decline_to_answer</item>
+    </string-array>
+
+    <string-array name="UpdatesMode">
+        <item>Mobile Notifications</item>
+        <item>Email Notifications</item>
+        <item>Newsletter</item>
+        <item>Monthly coupons</item>
+        <item>Marketing Material</item>
+    </string-array>
 </resources>
+
+
