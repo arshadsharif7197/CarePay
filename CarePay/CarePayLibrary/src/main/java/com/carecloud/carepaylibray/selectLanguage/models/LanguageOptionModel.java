@@ -1,5 +1,5 @@
 
-package com.carecloud.carepaylibray.select_language.language_model;
+package com.carecloud.carepaylibray.selectlanguage.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OptionModel {
+public class LanguageOptionModel {
 
     @SerializedName("languageId")
     @Expose
