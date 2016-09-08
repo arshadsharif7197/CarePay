@@ -21,7 +21,7 @@
 
     <style name="Widget.AppCompat.TextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/charcoal</item>
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">@dimen/textview_default_textsize</item>
     </style>
 
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
