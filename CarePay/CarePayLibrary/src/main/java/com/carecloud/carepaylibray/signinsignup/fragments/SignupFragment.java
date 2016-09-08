@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.HomeActivity;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
+import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +58,10 @@ public class SignupFragment extends Fragment {
             public void onClick(View view) {
                 if (isvalidData()) {
                     //TODO submit details to Server.
+
+
+                    Intent homescreenintent= new Intent(getActivity(), HomeScreenActivity.class);
+                    startActivity(homescreenintent);
                 } else {
                     Toast.makeText(getActivity(), "Please fill required fields.", Toast.LENGTH_LONG).show();
                 }

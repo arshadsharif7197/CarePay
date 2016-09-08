@@ -1,10 +1,12 @@
 package com.carecloud.carepaylibray.fragments;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +25,7 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 public class ResponsibilityFragment extends Fragment {
 
 //    private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
-    private KeyboardHolderActivity mActivity;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity = (KeyboardHolderActivity)getActivity();
-    }
+    AppCompatActivity mActivity;
 
     @Nullable
     @Override
@@ -40,8 +36,8 @@ public class ResponsibilityFragment extends Fragment {
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         setTypefaceFromAssets("fonts/gotham_rounded_medium.otf", title);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(mActivity, R.drawable.icn_patient_mode_nav_back));
-        mActivity.setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         // set the typefaces
         setTypefaceFromAssets("fonts/gotham_rounded_book.otf", (TextView) view.findViewById(R.id.respons_total_label));
@@ -56,7 +52,7 @@ public class ResponsibilityFragment extends Fragment {
     }
 
     private void setTypefaceFromAssets(String pathToFontInAssets, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(mActivity.getAssets(), pathToFontInAssets);
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), pathToFontInAssets);
         view.setTypeface(typeface);
     }
 
