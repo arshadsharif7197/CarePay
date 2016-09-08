@@ -23,9 +23,16 @@
         <activity
             android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
             android:theme="@style/AppTheme"/>
+
+
+        <activity
+            android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"
+            android:theme="@style/AppTheme"/>
+
         <activity android:name="com.carecloud.carepaylibray.signinsignup.fragments.activity.SigninSignupActivity"/>
         <activity android:name="com.carecloud.carepaylibray.activities.HomeActivity">
         </activity>
+
     </application>
 
 </manifest>

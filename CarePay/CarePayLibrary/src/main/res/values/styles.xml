@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:textViewStyle">@style/Widget.AppCompat.TextView</item>
+
     </style>
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
@@ -21,7 +21,7 @@
 
     <style name="Widget.AppCompat.TextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/charcoal</item>
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">@dimen/textview_default_textsize</item>
     </style>
 
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
