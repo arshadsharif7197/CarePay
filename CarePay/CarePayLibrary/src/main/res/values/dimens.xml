@@ -13,7 +13,6 @@
     <dimen name="language_body_margintop">26dp</dimen>
 
 
-
     <!-- Responsibility -->
     <dimen name="respons_total_label_text_size">21sp</dimen>
     <dimen name="respons_total_text_size">53dp</dimen>

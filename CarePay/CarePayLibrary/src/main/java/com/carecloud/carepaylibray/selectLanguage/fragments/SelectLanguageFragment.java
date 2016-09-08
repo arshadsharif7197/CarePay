@@ -13,10 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.fragments.HomeFragment;
+import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.selectlanguage.adapters.LanguageListAdapter;
 import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.StringFunctions;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
        languageConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), HomeFragment.class);
+                Intent intent = new Intent(getActivity(), SigninSignupActivity.class);
                 getActivity().startActivity(intent);
             }
         });
