@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.activities.HomeActivity;
+import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,10 +64,15 @@ public class SignupFragment extends Fragment{
             }
         });
 
-
         textViewAccountExist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //TODO Navigate screen to Login PAGE. (for now just relaunch LibraryMainActivity)
+                Intent intent = new Intent(getActivity(), HomeActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+
 
             }
         });
@@ -92,7 +100,6 @@ public class SignupFragment extends Fragment{
             isvalid = false;
         }
 
-
         return isvalid;
     }
 
@@ -104,6 +111,3 @@ public class SignupFragment extends Fragment{
         return matcher.matches();
     }
 }
-
-
-
