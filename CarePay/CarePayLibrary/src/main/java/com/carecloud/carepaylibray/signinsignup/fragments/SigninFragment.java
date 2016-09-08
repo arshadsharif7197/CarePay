@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,22 +21,17 @@ import java.util.regex.Pattern;
  */
 public class SigninFragment extends android.support.v4.app.Fragment {
 
-
-
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button signinButton;
     private Button signupButton;
     private OnSigninPageOptionsClickListner signinPageOptionsClickListner;
 
-
     @Nullable
-
+    @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
-
 
         emailEditText = (EditText)view.findViewById(R.id.emailEditText);
         passwordEditText = (EditText)view.findViewById(R.id.passwordEditText);
@@ -81,7 +75,6 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     private boolean isvalidData() {
         boolean isvalid = true;
 
-
         if(!isValidmail()){
             emailEditText.setError("Enter valid mail");
             isvalid = false;
@@ -90,8 +83,6 @@ public class SigninFragment extends android.support.v4.app.Fragment {
             passwordEditText.setError("Enter Password");
             isvalid = false;
         }
-
-
 
         return isvalid;
     }
@@ -106,11 +97,7 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     }
 
     public  interface OnSigninPageOptionsClickListner{
-
         public void onSigninButtonClick();
         public void onOptionClick(SignupFragment fragment, String fragmentTagName);
-
     }
-
 }
-
