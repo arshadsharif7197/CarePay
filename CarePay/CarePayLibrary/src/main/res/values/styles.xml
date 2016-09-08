@@ -55,4 +55,78 @@
         <item name="android:keyPreviewLayout">@layout/keyboard_preview</item>
     </style>
 
+
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/rich_electric_blue</item>
+        <item name="colorSwitchThumbNormal">@color/light_gray</item>
+        <item name="android:colorForeground">@color/uncheck_confirm_button</item>
+    </style>
+    <declare-styleable name="SympliTextView">
+        <attr name="fontPath" format="string"/>
+
+        <!-- Inner shadow settings. -->
+        <attr name="innerShadowColor" format="color"/>
+        <attr name="innerShadowDx" format="dimension"/>
+        <attr name="innerShadowDy" format="dimension"/>
+        <attr name="innerShadowRadius" format="dimension"/>
+
+        <!-- Outer shadow settings. -->
+        <attr name="outerShadowColor" format="color"/>
+        <attr name="outerShadowDx" format="dimension"/>
+        <attr name="outerShadowDy" format="dimension"/>
+        <attr name="outerShadowRadius" format="dimension"/>
+    </declare-styleable>
+
+    <!-- Responsibility styles -->
+    <style name="ResponsTotalLabelStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/glitter</item>
+        <item name="android:textSize">@dimen/respons_total_label_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ResponsTotalStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_total_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ResponsDetailLabelStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/respons_detail_label_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ResponsDetailStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">@dimen/respons_detail_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ResponsButtonStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_button_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">17dp</item>
+        <item name="android:layout_marginLeft">@dimen/respons_button_margin_left_right</item>
+        <item name="android:layout_marginRight">@dimen/respons_button_margin_left_right</item>
+        <item name="android:background">@color/yellowGreen</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="ResponsibilityToolbarTextStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>
