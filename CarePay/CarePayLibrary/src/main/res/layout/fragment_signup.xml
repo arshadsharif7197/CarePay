@@ -17,13 +17,39 @@
             android:layout_height="51dp"
             >
             <EditText
-                android:id="@+id/fullnameEditText"
+                android:id="@+id/firstNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="FULL NAME"
+                android:hint="First Name"
                 android:textColor="@color/blue_cerulian"
 
                 />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            >
+            <EditText
+                android:id="@+id/middleNameEditText"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+                android:hint="Middle Name"
+                android:textColor="@color/blue_cerulian"/>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            >
+            <EditText
+                android:id="@+id/lastNameEditText"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+                android:hint="Last Name"
+                android:textColor="@color/blue_cerulian"/>
 
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
@@ -35,7 +61,7 @@
                 android:layout_width="match_parent"
 
                 android:layout_height="match_parent"
-                android:hint="EMAIL"
+                android:hint="Email"
                 android:textColor="@color/blue_cerulian"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -47,7 +73,7 @@
                 android:id="@+id/createPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="CREATE PASSWORD"
+                android:hint="Create Password"
                 android:textColor="@color/blue_cerulian"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -59,7 +85,7 @@
                 android:id="@+id/repeatPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="REPEAT PASSWORD"
+                android:hint="Repeat Password"
                 android:textColor="@color/blue_cerulian"/>
 
         </android.support.design.widget.TextInputLayout>

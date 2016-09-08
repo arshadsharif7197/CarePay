@@ -25,7 +25,7 @@ public class SignupFragment extends Fragment{
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    private EditText editTextName;
+    private EditText editTextFirstName;
     private EditText editTextEmail;
     private EditText editTextPassword;
     private EditText editTextRepeatPassword;
@@ -35,7 +35,7 @@ public class SignupFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
-        editTextName = (EditText) view.findViewById(R.id.fullnameEditText);
+        editTextFirstName = (EditText) view.findViewById(R.id.firstNameEditText);
         editTextEmail = (EditText) view.findViewById(R.id.emailsignupEditText);
         editTextPassword = (EditText) view.findViewById(R.id.createPasswordEditText);
         editTextRepeatPassword = (EditText) view.findViewById(R.id.repeatPasswordEditText);
@@ -45,7 +45,7 @@ public class SignupFragment extends Fragment{
         textViewAccountExist = (TextView) view.findViewById(R.id.oldUserTextView);
 
         Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        editTextName.setTypeface(editTextFontFamily);
+        editTextFirstName.setTypeface(editTextFontFamily);
         editTextEmail.setTypeface(editTextFontFamily);
         editTextPassword.setTypeface(editTextFontFamily);
         editTextRepeatPassword.setTypeface(editTextFontFamily);
@@ -65,17 +65,18 @@ public class SignupFragment extends Fragment{
         textViewAccountExist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO Navigate screen to Login PAGE.
+
             }
         });
         return view;
     }
 
+
     private boolean isvalidData() {
         boolean isvalid = true;
 
-        if (editTextName.getText().toString().length() <= 0) {
-            editTextName.setError("Enter valid name");
+        if (editTextFirstName.getText().toString().length() <= 0) {
+            editTextFirstName.setError("Enter valid name");
             isvalid = false;
         }
 
