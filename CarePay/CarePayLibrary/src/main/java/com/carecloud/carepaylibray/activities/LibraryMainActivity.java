@@ -21,11 +21,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
 
     @Override
     public void placeInitContentFragment() {
-        SelectLanguageFragment fragment = (SelectLanguageFragment) fm.findFragmentByTag("contents");
-        if (fragment == null) {
-            fragment = new SelectLanguageFragment();
-        }
-        fm.beginTransaction().replace(getContentsHolderId(), fragment, KB_CONTENT_TAG).commit();
+        replaceFragment(SelectLanguageFragment.class);
     }
 
     @Override
