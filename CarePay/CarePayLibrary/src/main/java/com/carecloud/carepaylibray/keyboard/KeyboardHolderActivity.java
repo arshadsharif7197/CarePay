@@ -18,7 +18,7 @@ import java.util.List;
  */
 public abstract class KeyboardHolderActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = KeyboardHolderActivity.class.getSimpleName();
+    public static final String LOG_TAG = KeyboardHolderActivity.class.getSimpleName();
     public static final String KEY_LANG_ID = "language";
     public static String KB_FRAG_TAG    = "keyboard";
     public static String KB_CONTENT_TAG = "content";
@@ -99,8 +99,8 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
         // restart the contents fragment
         Fragment contentsFragment = fm.findFragmentByTag(KB_CONTENT_TAG);
         if(contentsFragment != null) {
-            fm.beginTransaction().detach(contentsFragment).commit();
-            fm.beginTransaction().attach(contentsFragment).commit();
+//            fm.beginTransaction().detach(contentsFragment).commit();
+//            fm.beginTransaction().attach(contentsFragment).commit();
         }
     }
 
