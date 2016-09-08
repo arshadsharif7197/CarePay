@@ -4,12 +4,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="14dp"
     android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/demogr_content_holder"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1">
 
         <RelativeLayout android:layout_width="match_parent"
@@ -17,6 +18,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_for_vp"
+                android:layout_above="@+id/nextButton"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -36,6 +38,18 @@
                     android:background="@color/white"/>
             </LinearLayout>
 
+
+
+            <Button
+                android:id="@+id/nextButton"
+
+                android:layout_width="326.0dp"
+                android:layout_height="46dp"
+                android:text="Next"
+                android:gravity="center"
+                android:background="@color/bright_cerulean"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
     </FrameLayout>
 
