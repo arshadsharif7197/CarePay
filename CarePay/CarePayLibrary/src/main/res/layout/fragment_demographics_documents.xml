@@ -50,7 +50,7 @@
                         android:src="@drawable/icn_camera"/>
 
                     <Button
-                        android:id="@+id/demogr_docs_scan_btn"
+                        android:id="@+id/demogr_docs_scan_license_btn"
                         style="@style/DemographicsDocsButtonStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -89,7 +89,7 @@
                         android:text="@string/demogr_docs_license_number_label"/>
 
                     <TextView
-                        android:text="fl"
+                        android:text="@string/demogr_tv_choose_label"
                         android:id="@+id/demogr_tv_state"
                         style="@style/DemographicsDocsClickableTextStyle"/>
 
@@ -122,7 +122,7 @@
                         android:src="@drawable/icn_camera"/>
 
                     <Button
-                        android:id="@+id/demogr_insurance_scan_btn"
+                        android:id="@+id/demogr_insurance_scan_insurance_btn"
                         style="@style/DemographicsDocsButtonStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -144,7 +144,7 @@
                         style="@style/DemographicsDocsLabelStyle"/>
 
                     <TextView
-                        android:text="Aetna"
+                        android:text="@string/demogr_tv_choose_label"
                         style="@style/DemographicsDocsClickableTextStyle"
                         android:id="@+id/demogr_docs_provider"
                         android:layout_width="wrap_content"/>
@@ -165,8 +165,9 @@
                         style="@style/DemographicsDocsLabelStyle"/>
 
                     <TextView
-                        android:text="Aetna Select"
+                        android:text="@string/demogr_docs_tv_chose_company"
                         android:id="@+id/demogr_docs_plan"
+                        android:textColor="@color/light_gray"
                         style="@style/DemographicsDocsClickableTextStyle"/>
 
                 </LinearLayout>
