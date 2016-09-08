@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 
-public class MainActivityAndroid extends AppCompatActivity {
+public class AndroidMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
