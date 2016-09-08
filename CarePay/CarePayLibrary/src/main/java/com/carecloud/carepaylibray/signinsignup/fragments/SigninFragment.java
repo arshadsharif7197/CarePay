@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        signinPageOptionsClickListner =(OnSigninPageOptionsClickListner) context;
+        signinPageOptionsClickListner = (OnSigninPageOptionsClickListner) getActivity();
     }
 
     private boolean isvalidData() {
@@ -96,7 +97,8 @@ public class SigninFragment extends android.support.v4.app.Fragment {
         return matcher.matches();
     }
 
-    public  interface OnSigninPageOptionsClickListner{
+    public  interface OnSigninPageOptionsClickListner {
+
         public void onSigninButtonClick();
         public void onOptionClick(SignupFragment fragment, String fragmentTagName);
     }

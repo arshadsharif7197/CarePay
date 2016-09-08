@@ -38,19 +38,19 @@ public class ResponsibilityFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        setTypefaceFromAssets("fonts/GothamRnd-Medium.otf", title);
+        setTypefaceFromAssets("fonts/gotham_rounded_medium.otf", title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(mActivity, R.drawable.icn_patient_mode_nav_back));
         mActivity.setSupportActionBar(toolbar);
 
         // set the typefaces
-        setTypefaceFromAssets("fonts/Gotham-rounded-book.otf", (TextView) view.findViewById(R.id.respons_total_label));
-        setTypefaceFromAssets("fonts/GothamRnd-Medium.otf", (TextView) view.findViewById(R.id.respons_total));
-        setTypefaceFromAssets("fonts/ProximaNova-Reg.otf", (TextView) view.findViewById(R.id.respons_prev_balance_label));
-        setTypefaceFromAssets("fonts/ProximaNova-Reg.otf", (TextView) view.findViewById(R.id.respons_copay_label));
-        setTypefaceFromAssets("fonts/Proxima_Nova_Semibold.otf", (TextView) view.findViewById(R.id.respons_prev_balance));
-        setTypefaceFromAssets("fonts/Proxima_Nova_Semibold.otf", (TextView) view.findViewById(R.id.respons_copay));
-        setTypefaceFromAssets("fonts/GothamRnd-Medium.otf", (Button) view.findViewById(R.id.respons_pay));
+        setTypefaceFromAssets("fonts/gotham_rounded_book.otf", (TextView) view.findViewById(R.id.respons_total_label));
+        setTypefaceFromAssets("fonts/gotham_rounded_medium.otf", (TextView) view.findViewById(R.id.respons_total));
+        setTypefaceFromAssets("fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.respons_prev_balance_label));
+        setTypefaceFromAssets("fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.respons_copay_label));
+        setTypefaceFromAssets("fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.respons_prev_balance));
+        setTypefaceFromAssets("fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.respons_copay));
+        setTypefaceFromAssets("fonts/gotham_rounded_medium.otf", (Button) view.findViewById(R.id.respons_pay));
 
         return view;
     }
