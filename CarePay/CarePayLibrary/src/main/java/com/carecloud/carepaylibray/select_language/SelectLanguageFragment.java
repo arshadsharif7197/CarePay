@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.select_language;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.home_screen.HomeFragment;
+
+import com.carecloud.carepaylibray.fragments.HomeFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.select_language.language_adapter.LanguageListAdapter;
 import com.carecloud.carepaylibray.select_language.language_model.OptionModel;
@@ -57,7 +58,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent= new Intent(getActivity(),HomeFragment.class);
+                Intent intent= new Intent(getActivity(),HomeFragment.class);
                 getActivity().startActivity(intent);
             }
         });
@@ -139,3 +140,4 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         confirmButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
     }
 }
+

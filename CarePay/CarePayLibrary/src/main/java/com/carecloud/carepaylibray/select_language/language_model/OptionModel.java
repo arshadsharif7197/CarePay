@@ -42,7 +42,7 @@ public class OptionModel {
     private boolean isChecked;
 
     /**
-     * 
+     *
      * @return
      *     The languageId
      */
@@ -51,7 +51,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @param languageId
      *     The languageId
      */
@@ -60,7 +60,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @return
      *     The label
      */
@@ -69,7 +69,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @param label
      *     The label
      */
@@ -78,7 +78,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @return
      *     The iconId
      */
@@ -87,7 +87,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @param iconId
      *     The iconId
      */
@@ -96,7 +96,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @return
      *     The value
      */
@@ -105,7 +105,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @param value
      *     The value
      */
@@ -114,7 +114,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @return
      *     The child
      */
@@ -123,7 +123,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @param child
      *     The child
      */
@@ -132,7 +132,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @return
      *     The isDefault
      */
@@ -141,7 +141,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @param isDefault
      *     The isDefault
      */
@@ -150,7 +150,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @return
      *     The skip
      */
@@ -159,7 +159,7 @@ public class OptionModel {
     }
 
     /**
-     * 
+     *
      * @param skip
      *     The skip
      */

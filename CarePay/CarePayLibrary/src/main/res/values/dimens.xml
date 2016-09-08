@@ -11,7 +11,8 @@
     <dimen name="language_button_leftright">17dp</dimen>
     <dimen name="language_button_topbottom">14dp</dimen>
     <dimen name="language_body_margintop">26dp</dimen>
-</resources>
+
+
 
     <!-- Responsibility -->
     <dimen name="respons_total_label_text_size">21sp</dimen>
@@ -27,3 +28,4 @@
 
 
 </resources>
+
