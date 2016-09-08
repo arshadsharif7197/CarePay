@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,7 @@ import android.widget.RadioButton;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
+import com.carecloud.carepaylibray.signinsignup.fragments.activity.SigninSignupActivity;
 
 
 /**
@@ -71,7 +72,10 @@ public class SelectLanguageFragment extends Fragment{
         (view.findViewById(R.id.button_next)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActivity.replaceFragment(SigninFragment.class);
+//                mActivity.replaceFragment(SigninFragment.class);
+                Intent intent = new Intent(mActivity, SigninSignupActivity.class);
+                mActivity.startActivity(intent);
+                mActivity.finish();
             }
         });
 
