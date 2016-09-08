@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.activities;
+package com.carecloud.carepaylibray.demographics.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -12,12 +12,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.fragments.demographics.DemographicsAddressFragment;
-import com.carecloud.carepaylibray.fragments.demographics.DemographicsDetailsFragment;
-import com.carecloud.carepaylibray.fragments.demographics.DemographicsDocumentsFragment;
-import com.carecloud.carepaylibray.fragments.demographics.DemographicsMoreDetailsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsAddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsDetailsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsDocumentsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.viewpagerindicator.IconPagerAdapter;
@@ -27,11 +28,11 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
  */
-public class DemographicsActivity extends KeyboardHolderActivity {
+public class DemographicsActivity extends KeyboardHolderActivity implements View.OnClickListener {
 
     private ViewPager       viewPager;
     private FunPagerAdapter funPagerAdapter;
-
+    Button nextButton;
     @Override
     public void replaceFragment(Class fragClass) {
 
@@ -96,20 +97,27 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         });
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
+
+        nextButton = (Button) findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(this);
     }
 
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
+                nextButton.setVisibility(View.VISIBLE);
                 setTitle("Address");
                 break;
             case 1:
+                nextButton.setVisibility(View.VISIBLE);
                 setTitle("Details");
                 break;
             case 2:
+                nextButton.setVisibility(View.VISIBLE);
                 setTitle("Documents");
                 break;
             case 3:
+                nextButton.setVisibility(View.GONE);
                 setTitle("More Details");
                 break;
             default:
@@ -119,6 +127,13 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view==nextButton){
+            setCurrentItem(viewPager.getCurrentItem()+1,true);
+        }
     }
 
     /**
@@ -187,8 +202,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             } else {
                 //  Log.v(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(this,
-                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
