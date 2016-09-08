@@ -1,51 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/language_card_height"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginTop="0dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardElevation="4dp">
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <!--<ImageView-->
-                <!--android:id="@+id/icon_image"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_marginBottom="5dp"-->
-                <!--android:layout_marginLeft="10dp"-->
-                <!--android:layout_marginTop="5dp"/>-->
 
             <TextView
                 android:id="@+id/language_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:text="Welcome to android "
+                android:layout_marginLeft="@dimen/language_text_left_margin"
+                android:text="Select Language"
+                style="@style/TextLabel"
                 android:textColor="@color/slateGray"
-                android:textSize="17sp"
+                android:textSize="@dimen/textview_default_textsize"
                 />
 
             <RadioButton
                 android:id="@+id/radio_btn"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/language_radiobutton"
+                android:layout_height="@dimen/language_radiobutton"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:buttonTint="@color/button_bright_cerulean"
