@@ -9,12 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.activities.MainActivityLibrary;
+import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,7 +35,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class ResponsibilityScreenTest {
 
     @Rule
-    public ActivityTestRule<MainActivityLibrary> activity = new ActivityTestRule<>(MainActivityLibrary.class,
+    public ActivityTestRule<LibraryMainActivity> activity = new ActivityTestRule<>(LibraryMainActivity.class,
                                                                                    true,
                                                                                    false);
 

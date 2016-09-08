@@ -1,10 +1,10 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +20,7 @@ import java.util.regex.Pattern;
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SigninFragment extends android.support.v4.app.Fragment {
-
-
+public class SigninFragment extends Fragment {
 
     private EditText emailEditText;
     private EditText passwordEditText;
@@ -30,14 +28,11 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     private Button signupButton;
     private OnSigninPageOptionsClickListner signinPageOptionsClickListner;
 
-
     @Nullable
-
+    @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
-
 
         emailEditText = (EditText)view.findViewById(R.id.emailEditText);
         passwordEditText = (EditText)view.findViewById(R.id.passwordEditText);
@@ -75,7 +70,7 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        signinPageOptionsClickListner =(OnSigninPageOptionsClickListner) context;
+        signinPageOptionsClickListner = (OnSigninPageOptionsClickListner) getActivity();
     }
 
     private boolean isvalidData() {
@@ -105,12 +100,11 @@ public class SigninFragment extends android.support.v4.app.Fragment {
         return matcher.matches();
     }
 
-    public  interface OnSigninPageOptionsClickListner{
+    public  interface OnSigninPageOptionsClickListner {
 
         public void onSigninButtonClick();
         public void onOptionClick(SignupFragment fragment, String fragmentTagName);
 
     }
-
 }
 

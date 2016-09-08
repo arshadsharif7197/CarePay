@@ -13,8 +13,8 @@ import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
  * Created by harish_revuri on 9/7/2016.
  */
 
-
-public class SigninSignupActivity extends AppCompatActivity implements SigninFragment.OnSigninPageOptionsClickListner{
+public class SigninSignupActivity extends AppCompatActivity
+        implements SigninFragment.OnSigninPageOptionsClickListner{
 
     private FragmentManager mFragmentManager;
 

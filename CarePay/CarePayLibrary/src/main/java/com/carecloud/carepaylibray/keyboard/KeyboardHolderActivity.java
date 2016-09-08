@@ -1,8 +1,6 @@
 package com.carecloud.carepaylibray.keyboard;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,10 +16,9 @@ import java.util.List;
  */
 public abstract class KeyboardHolderActivity extends AppCompatActivity {
 
-    public static final String LOG_TAG = KeyboardHolderActivity.class.getSimpleName();
+    public static final String LOG_TAG     = KeyboardHolderActivity.class.getSimpleName();
     public static final String KEY_LANG_ID = "language";
-    public static String KB_FRAG_TAG    = "keyboard";
-    public static String KB_CONTENT_TAG = "content";
+    public static       String KB_FRAG_TAG = "keyboard";
     protected FragmentManager fm;
     protected int             langId;
 
@@ -69,18 +66,22 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
         fm = getSupportFragmentManager();
 
         // add the keyboard
-        MyKeyboardFragment kbrdFrag = (MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG);
-        if (kbrdFrag == null) {
-            kbrdFrag = new MyKeyboardFragment();
-            // bind the edits from all fragments with edits here
+        MyKeyboardFragment kbrdFrag = null;
+        if (getKeyboardHolderId() != 0) { // add keyboard only if there a holder for it
+            kbrdFrag = (MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG);
+            if (kbrdFrag == null) {
+                kbrdFrag = new MyKeyboardFragment();
+                // bind the edits from all fragments with edits here
+            }
+            fm.beginTransaction().replace(getKeyboardHolderId(), kbrdFrag, KB_FRAG_TAG).commit();
         }
-        fm.beginTransaction().replace(getKeyboardHolderId(), kbrdFrag, KB_FRAG_TAG).commit();
-
         // abstract part
         placeInitContentFragment();
 
         // hide the keyboard
-        fm.beginTransaction().hide(kbrdFrag).commit();
+        if (kbrdFrag != null) {
+            fm.beginTransaction().hide(kbrdFrag).commit();
+        }
     }
 
     @Override
@@ -89,18 +90,6 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
             toggleKeyboardVisible(false);
         } else {
             super.onBackPressed();
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        Log.v(LOG_TAG, "onConfigChanged()");
-        super.onConfigurationChanged(newConfig);
-        // restart the contents fragment
-        Fragment contentsFragment = fm.findFragmentByTag(KB_CONTENT_TAG);
-        if(contentsFragment != null) {
-//            fm.beginTransaction().detach(contentsFragment).commit();
-//            fm.beginTransaction().attach(contentsFragment).commit();
         }
     }
 
@@ -115,7 +104,7 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
     public void bindKeyboardToEdits(List<EditText> edits) {
         // bind the keyboard to the mEdits
         MyKeyboard keyboard = ((MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG)).getKeyboard();
-        if(keyboard != null) {
+        if (keyboard != null) {
             (new KeyboardBinderHelper(this, edits)).bindEditsToKeyboard();
         } else {
             Log.v(LOG_TAG, "keyboard null");
@@ -157,7 +146,7 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
 
     public MyKeyboard getKeyboard() {
         MyKeyboardFragment kf = (MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG);
-        if(kf != null) {
+        if (kf != null) {
             return kf.getKeyboard();
         }
         return null;
