@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -23,9 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.MainActivityLibrary;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.carecloud.carepaylibray.activities.HomeActivity;
+import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,9 +40,6 @@ public class SigninFragment extends Fragment {
     private Button signupButton;
     private TextView changeLanguageTextView;
 
-    private TextInputLayout tilEmail;
-    private TextInputLayout tilPassword;
-
     private boolean isValidEmail;
     private boolean isValidPassword;
 
@@ -58,10 +53,6 @@ public class SigninFragment extends Fragment {
 
         emailEditText = (EditText)view.findViewById(R.id.emailEditText);
         passwordEditText = (EditText)view.findViewById(R.id.passwordEditText);
-
-        tilEmail = (TextInputLayout) view.findViewById(R.id.til_email);
-        tilPassword =(TextInputLayout) view.findViewById(R.id.til_password);
-
         signinButton = (Button)view.findViewById(R.id.SigninButton);
         signupButton = (Button)view.findViewById(R.id.SignUpButton);
         changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
@@ -70,7 +61,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getContext(), MainActivityLibrary.class);
+                Intent intent = new Intent(getContext(), LibraryMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 getActivity().finish();
@@ -113,9 +104,9 @@ public class SigninFragment extends Fragment {
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             if(!isValidmail()){
                 isValidEmail = false;
-                tilEmail.setError("Enter valid mail id.");
+                emailEditText.setError("Enter valid mail id.");
             }else{
-                tilEmail.setError(null);
+                passwordEditText.setError(null);
                 isValidEmail = true;
                 checkForSigninEnable();
             }
@@ -142,10 +133,10 @@ public class SigninFragment extends Fragment {
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             if(passwordEditText.getText().length()<=0){
                 isValidPassword=false;
-                tilPassword.setError("Enter password");
+                passwordEditText.setError("Enter password");
             }else{
                 isValidPassword=true;
-                tilPassword.setError(null);
+                passwordEditText.setError(null);
                 checkForSigninEnable();
             }
         }
@@ -167,10 +158,10 @@ public class SigninFragment extends Fragment {
                 public void onClick(View view) {
                     if(isvalidData()){
 
-//                        Intent intent = new Intent(getContext(), DemographicsActivity.class);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        startActivity(intent);
-//                        getActivity().finish();
+                        Intent intent = new Intent(getContext(), HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        getActivity().finish();
 
                     }else{
 
@@ -188,7 +179,9 @@ public class SigninFragment extends Fragment {
         super.onAttach(context);
 
 
+
         signinPageOptionsClickListner =(OnSigninPageOptionsClickListner) getActivity();
+
 
 
 
@@ -203,7 +196,7 @@ public class SigninFragment extends Fragment {
             isvalid = false;
         }
         if (passwordEditText.getText().toString().length() <= 0) {
-            tilPassword.setError("Enter Password");
+            passwordEditText.setError("Enter Password");
             isvalid = false;
         }
 

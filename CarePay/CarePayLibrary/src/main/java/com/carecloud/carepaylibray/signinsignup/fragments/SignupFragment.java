@@ -2,6 +2,9 @@ package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+
+import android.content.Context;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,36 +25,32 @@ import java.util.regex.Pattern;
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SignupFragment extends Fragment{
+public class SignupFragment extends Fragment {
+
 
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    private EditText editTextFirstName;
-    private EditText editTextEmail;
-    private EditText editTextPassword;
-    private EditText editTextRepeatPassword;
+    private EditText firstNameEditText;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private EditText repeatPasswordEditText;
     private Button btnSignup;
-    private TextView textViewAccountExist;
+    private TextView tvAccountExist;
+    private OnSignupPageOptionsClickListner onOptionClick;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
-        editTextFirstName = (EditText) view.findViewById(R.id.firstNameEditText);
-        editTextEmail = (EditText) view.findViewById(R.id.emailsignupEditText);
-        editTextPassword = (EditText) view.findViewById(R.id.createPasswordEditText);
-        editTextRepeatPassword = (EditText) view.findViewById(R.id.repeatPasswordEditText);
+        firstNameEditText = (EditText) view.findViewById(R.id.firstNameEditText);
+        emailEditText = (EditText) view.findViewById(R.id.emailsignupEditText);
+        passwordEditText = (EditText) view.findViewById(R.id.createPasswordEditText);
+        repeatPasswordEditText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
 
         btnSignup = (Button) view.findViewById(R.id.signupButton);
 
-        textViewAccountExist = (TextView) view.findViewById(R.id.oldUserTextView);
-
-        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        editTextFirstName.setTypeface(editTextFontFamily);
-        editTextEmail.setTypeface(editTextFontFamily);
-        editTextPassword.setTypeface(editTextFontFamily);
-        editTextRepeatPassword.setTypeface(editTextFontFamily);
+        tvAccountExist = (TextView) view.findViewById(R.id.oldUserTextView);
 
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,38 +63,41 @@ public class SignupFragment extends Fragment{
             }
         });
 
-        textViewAccountExist.setOnClickListener(new View.OnClickListener() {
+
+        tvAccountExist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //TODO Navigate screen to Login PAGE. (for now just relaunch LibraryMainActivity)
-                Intent intent = new Intent(getActivity(), HomeActivity.class);
-                getActivity().startActivity(intent);
-                getActivity().finish();
-
+                //TODO Navigate screen to Login PAGE.
+                onOptionClick.onSignupOptionClick(SignupFragment.this, "signup");
 
             }
         });
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        onOptionClick = (OnSignupPageOptionsClickListner) context;
+    }
 
     private boolean isvalidData() {
         boolean isvalid = true;
 
-        if (editTextFirstName.getText().toString().length() <= 0) {
-            editTextFirstName.setError("Enter valid name");
+        if (firstNameEditText.getText().toString().length() <= 0) {
+            firstNameEditText.setError("Enter valid name");
             isvalid = false;
         }
 
         if (!isValidmail()) {
-            editTextEmail.setError("Enter valid mail");
+            emailEditText.setError("Enter valid mail");
             isvalid = false;
         }
 
-        if (!editTextPassword.getText().toString().equalsIgnoreCase(editTextRepeatPassword.getText().toString())) {
-            editTextPassword.setText("");
-            editTextRepeatPassword.setText("");
+        if (!passwordEditText.getText().toString().equalsIgnoreCase(repeatPasswordEditText.getText().toString())) {
+            passwordEditText.setText("");
+            repeatPasswordEditText.setText("");
             Toast.makeText(getActivity(), "Password are not matched.", Toast.LENGTH_LONG).show();
             isvalid = false;
         }
@@ -104,10 +106,19 @@ public class SignupFragment extends Fragment{
     }
 
     private boolean isValidmail() {
-        String email = editTextEmail.getText().toString();
+        String email = emailEditText.getText().toString();
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+
+    public interface OnSignupPageOptionsClickListner {
+
+        public void onSignupButtonClick();
+
+        public void onSignupOptionClick(Fragment fragment, String fragmentTagName);
+
     }
 }
