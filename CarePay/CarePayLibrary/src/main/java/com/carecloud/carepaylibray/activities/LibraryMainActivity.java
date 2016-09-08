@@ -11,7 +11,7 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
 
-public class MainActivityLibrary extends KeyboardHolderActivity {
+public class LibraryMainActivity extends KeyboardHolderActivity {
 
 
     @Override
@@ -50,20 +50,24 @@ public class MainActivityLibrary extends KeyboardHolderActivity {
      */
     @Override
     public void replaceFragment(Class fragClass) {
-        Fragment fragment = null;
-        if (fragClass.equals(SelectLanguageFragment.class)) {
-            fragment = new SelectLanguageFragment();
-        } else if (fragClass.equals(SigninFragment.class)) {
-            fragment = new SigninFragment();
-        } else if (fragClass.equals(SignupFragment.class)) {
-            fragment = new SignupFragment();
-        } else if (fragClass.equals(HomeFragment.class)) {
-            fragment = new HomeFragment();
-        } else if (fragClass.equals(ResponsibilityFragment.class)) {
-            fragment = new ResponsibilityFragment();
-        } else {
-            // TODO: 9/2/2016 register more fragments here if needed
+        Fragment fragment = fm.findFragmentByTag(fragClass.getSimpleName());
+        if(fragment == null) {
+            if (fragClass.equals(SelectLanguageFragment.class)) {
+                fragment = new SelectLanguageFragment();
+            } else if (fragClass.equals(SigninFragment.class)) {
+                fragment = new SigninFragment();
+            } else if (fragClass.equals(SignupFragment.class)) {
+                fragment = new SignupFragment();
+            } else if (fragClass.equals(HomeFragment.class)) {
+                fragment = new HomeFragment();
+            } else if (fragClass.equals(ResponsibilityFragment.class)) {
+                fragment = new ResponsibilityFragment();
+            }
         }
-        fm.beginTransaction().replace(getContentsHolderId(), fragment, fragClass.getSimpleName()).addToBackStack(null).commit();
+        fm.beginTransaction().
+                replace(getContentsHolderId(), fragment, fragClass.getSimpleName())
+                .addToBackStack(null)
+                .commit();
+
     }
 }
