@@ -29,10 +29,10 @@ import java.util.List;
 public class SelectLanguageFragment extends Fragment implements LanguageListAdapter.OnItemClickListener {
 
     private static final String LOG_TAG = SelectLanguageFragment.class.getSimpleName();
-    RecyclerView LanguageListView;
+    RecyclerView languageListView;
     String language = null;
-    List<LanguageOptionModel> mLanguageOptionModelList;
-    ImageButton LanguageConfirmButton;
+    List<LanguageOptionModel> languageOptionModelList;
+    ImageButton languageConfirmButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,11 +53,11 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                              @Nullable Bundle savedInstanceState) {
         Log.v(LOG_TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_select_language, container, false);
-        LanguageListView = (RecyclerView) view.findViewById(R.id.languageRecyclerView);
-        LanguageListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        LanguageConfirmButton = (ImageButton) view.findViewById(R.id.languageConfirmButton);
-        LanguageConfirmButton.setEnabled(false);
-        LanguageConfirmButton.setOnClickListener(new View.OnClickListener() {
+        languageListView = (RecyclerView) view.findViewById(R.id.languageRecyclerView);
+        languageListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        languageConfirmButton = (ImageButton) view.findViewById(R.id.languageConfirmButton);
+        languageConfirmButton.setEnabled(false);
+        languageConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SigninSignupActivity.class);
@@ -74,45 +74,45 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
      */
     private void loadData() {
 
-        mLanguageOptionModelList = new ArrayList<>();
-        LanguageOptionModel mLanguageOptionModel;
-        mLanguageOptionModel = new LanguageOptionModel();
-        mLanguageOptionModel.setValue("English");
-        mLanguageOptionModel.setChecked(false);
-        mLanguageOptionModelList.add(mLanguageOptionModel);
+        languageOptionModelList = new ArrayList<>();
+        LanguageOptionModel languageOptionModel;
+        languageOptionModel = new LanguageOptionModel();
+        languageOptionModel.setValue("English");
+        languageOptionModel.setChecked(false);
+        languageOptionModelList.add(languageOptionModel);
 
-        mLanguageOptionModel = new LanguageOptionModel();
-        mLanguageOptionModel.setValue("Español");
-        mLanguageOptionModel.setChecked(false);
-        mLanguageOptionModelList.add(mLanguageOptionModel);
+        languageOptionModel = new LanguageOptionModel();
+        languageOptionModel.setValue("Español");
+        languageOptionModel.setChecked(false);
+        languageOptionModelList.add(languageOptionModel);
 
-        mLanguageOptionModel = new LanguageOptionModel();
-        mLanguageOptionModel.setValue("Français");
-        mLanguageOptionModel.setChecked(false);
-        mLanguageOptionModelList.add(mLanguageOptionModel);
+        languageOptionModel = new LanguageOptionModel();
+        languageOptionModel.setValue("Français");
+        languageOptionModel.setChecked(false);
+        languageOptionModelList.add(languageOptionModel);
 
-        mLanguageOptionModel = new LanguageOptionModel();
-        mLanguageOptionModel.setValue("Português");
-        mLanguageOptionModel.setChecked(false);
-        mLanguageOptionModelList.add(mLanguageOptionModel);
+        languageOptionModel = new LanguageOptionModel();
+        languageOptionModel.setValue("Português");
+        languageOptionModel.setChecked(false);
+        languageOptionModelList.add(languageOptionModel);
 
-        mLanguageOptionModel = new LanguageOptionModel();
-        mLanguageOptionModel.setValue("廣州話");
-        mLanguageOptionModel.setChecked(false);
-        mLanguageOptionModelList.add(mLanguageOptionModel);
+        languageOptionModel = new LanguageOptionModel();
+        languageOptionModel.setValue("廣州話");
+        languageOptionModel.setChecked(false);
+        languageOptionModelList.add(languageOptionModel);
 
         if (!StringFunctions.isNullOrEmpty(language)) {
-            for (int j = 0; j < mLanguageOptionModelList.size(); j++) {
-                LanguageOptionModel mLanguageOptionModelData = mLanguageOptionModelList.get(j);
+            for (int j = 0; j < languageOptionModelList.size(); j++) {
+                LanguageOptionModel mLanguageOptionModelData = languageOptionModelList.get(j);
                 if (mLanguageOptionModelData.getValue().equalsIgnoreCase(language)) {
-                    mLanguageOptionModelList.get(j).setChecked(true);
+                    languageOptionModelList.get(j).setChecked(true);
                 } else {
-                    mLanguageOptionModelList.get(j).setChecked(false);
+                    languageOptionModelList.get(j).setChecked(false);
                 }
             }
         }
-        LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(mLanguageOptionModelList, this, getActivity());
-        LanguageListView.setAdapter(mLanguageListAdapter);
+        LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(languageOptionModelList, this, getActivity());
+        languageListView.setAdapter(mLanguageListAdapter);
 
     }
 
@@ -132,8 +132,8 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     @Override
     public void onItemClick(View view, int position, LanguageOptionModel mLanguage) {
         List<LanguageOptionModel> newLanguageList = new ArrayList<>();
-        for (int i = 0; i < mLanguageOptionModelList.size(); i++) {
-            LanguageOptionModel mLanguageOptionModel = mLanguageOptionModelList.get(i);
+        for (int i = 0; i < languageOptionModelList.size(); i++) {
+            LanguageOptionModel mLanguageOptionModel = languageOptionModelList.get(i);
             if (mLanguageOptionModel.getValue().equalsIgnoreCase(mLanguage.getValue())) {
                 mLanguageOptionModel.setChecked(true);
             } else {
@@ -142,13 +142,11 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
             newLanguageList.add(mLanguageOptionModel);
         }
         LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(newLanguageList, this, getActivity());
-        LanguageListView.setAdapter(mLanguageListAdapter);
-
-
+        languageListView.setAdapter(mLanguageListAdapter);
         mLanguageListAdapter.notifyDataSetChanged();
         language = mLanguage.getValue();
-        LanguageConfirmButton.setEnabled(true);
-        LanguageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
+        languageConfirmButton.setEnabled(true);
+        languageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
     }
 }
 
