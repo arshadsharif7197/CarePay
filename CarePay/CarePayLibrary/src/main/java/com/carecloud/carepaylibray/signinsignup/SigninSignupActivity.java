@@ -36,6 +36,7 @@ public class SigninSignupActivity extends AppCompatActivity
             @Override
             public void onBackStackChanged() {
                 if(mFragmentManager.getBackStackEntryCount()==0) {
+                    mFragmentManager.popBackStack();
                     finish();
                 }
             }
