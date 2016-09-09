@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+
+
+        <TextView
+            android:id="@+id/detailsHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/demoVerifyHeading"
+            android:textColor="@color/charcoal"
+             />
+
+        <TextView
+            android:id="@+id/detailsSubHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detailsHeading"
+            android:layout_gravity="center"
+            android:text="@string/demoVerifySubHeading"
+
+            />
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/raceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Race"
+                android:textSize="21dp" />
+
+            <TextView
+                android:id="@+id/raceListTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/raceTextView"
+                android:gravity="right"
+                android:text="@string/chooseTextView"
+                android:textColor="@color/bright_cerulean"
+                android:textSize="21dp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/ethnicityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Ethnicity"
+                android:textSize="21dp" />
+
+            <TextView
+                android:id="@+id/ethnicityListTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/ethnicityTextView"
+                android:gravity="right"
+                android:text="@string/chooseTextView"
+                android:textColor="@color/bright_cerulean"
+                android:textSize="21dp" />
+
+        </RelativeLayout>
+
+    <Button
+        android:id="@+id/buttonAddDemographicInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Demographic Info"/>
+</LinearLayout>
