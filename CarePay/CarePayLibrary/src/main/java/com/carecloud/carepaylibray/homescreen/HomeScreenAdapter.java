@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.selectlanguage.LanguageOptionModel;
+import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
 
 import java.util.List;
 

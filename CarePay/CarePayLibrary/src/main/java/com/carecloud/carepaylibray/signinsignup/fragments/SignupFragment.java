@@ -21,11 +21,10 @@ import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
+import com.carecloud.carepaylibray.utils.Utility;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
 
 /**
  * Created by harish_revuri on 9/7/2016.
@@ -52,7 +51,7 @@ public class SignupFragment extends Fragment implements TextWatcher{
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.signup_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
-        setTypefaceFromAssets(getActivity(), "fonts/gotham_rounded_medium.otf", title);
+        Utility.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);

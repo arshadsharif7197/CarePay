@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SigninFragment extends Fragment {
+public class SigninFragment extends Fragment implements TextWatcher {
 
 
     private EditText emailEditText;
@@ -94,11 +94,6 @@ public class SigninFragment extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 getActivity().finish();
-                        Intent intent = new Intent(getContext(), HomeScreenActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        getActivity().finish();
-
             }
         });
 

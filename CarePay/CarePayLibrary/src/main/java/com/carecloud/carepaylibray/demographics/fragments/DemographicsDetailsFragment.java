@@ -39,10 +39,8 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
     int selectedArray;
     TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
     Button buttonChangeCurrentPhoto;
-    ImageView imageViewDetailsProfileImage;
-    private int imgWidth = 0;
-    private String userChosenTask;
-    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    ImageView imageViewDetailsImage;
+    private CameraScannerHelper cameraScannerHelper;
 
     @Nullable
     @Override
@@ -54,9 +52,9 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
-        mCameraScannerHelper = new CameraScannerHelper(getActivity());
-        mCameraScannerHelper.setImageViewDetailsProfileImage(imageViewDetailsImage);
-        mCameraScannerHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
+        cameraScannerHelper = new CameraScannerHelper(getActivity());
+        cameraScannerHelper.setImageViewDetailsProfileImage(imageViewDetailsImage);
+        cameraScannerHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
 
         return view;
     }
@@ -131,13 +129,13 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        String userChoosenTask = mCameraScannerHelper.getUserChoosenTask();
+        String userChoosenTask = cameraScannerHelper.getUserChoosenTask();
 
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[1].toString()))
-                        startActivityForResult(Intent.createChooser(mCameraScannerHelper.galleryIntent(),
+                        startActivityForResult(Intent.createChooser(cameraScannerHelper.galleryIntent(),
                                                                     CameraScannerHelper.CHOOSER_NAME),
                                                CameraScannerHelper.SELECT_FILE);
                 } else {
@@ -148,7 +146,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
             case Utility.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[0].toString()))
-                        startActivityForResult(mCameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                        startActivityForResult(cameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
                 } else {
                     //code for deny
                 }
@@ -161,9 +159,9 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == CameraScannerHelper.SELECT_FILE)
-                mCameraScannerHelper.onSelectFromGalleryResult(data);
+                cameraScannerHelper.onSelectFromGalleryResult(data);
             else if (requestCode == CameraScannerHelper.REQUEST_CAMERA)
-                mCameraScannerHelper.onCaptureImageResult(data);
+                cameraScannerHelper.onCaptureImageResult(data);
         }
     }
 
@@ -175,16 +173,16 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
                              @Override
                              public void onClick(DialogInterface dialog, int item) {
                                  if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[0])) {
-                                     mCameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[0].toString());
+                                     cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[0].toString());
                                      boolean result = Utility.checkPermissionCamera(getActivity());
                                      if (result) {
-                                         startActivityForResult(mCameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                                         startActivityForResult(cameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
                                      }
                                  } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[1])) {
-                                     mCameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[1].toString());
+                                     cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[1].toString());
                                      boolean result = Utility.checkPermission(getActivity());
                                      if (result) {
-                                         startActivityForResult(Intent.createChooser(mCameraScannerHelper.galleryIntent(),
+                                         startActivityForResult(Intent.createChooser(cameraScannerHelper.galleryIntent(),
                                                                                      CameraScannerHelper.CHOOSER_NAME),
                                                                 CameraScannerHelper.SELECT_FILE);
                                      }
