@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.homescreen.adapters;
+package com.carecloud.carepaylibray.homescreen;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
+import com.carecloud.carepaylibray.selectlanguage1.LanguageOptionModel;
 
 import java.util.List;
 

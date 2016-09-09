@@ -56,6 +56,19 @@
         <item>Monthly coupons</item>
         <item>Marketing Material</item>
     </string-array>
+    <string name="demogr_docs_logo">Logo</string>
+    <string name="demogr_docs_logo_title">Documents, please</string>
+    <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
+    <string name="demogr_docs_scan_label">Scan</string>
+    <string name="demogr_license_scan_label">driver\'s license number</string>
+    <string name="demogr_docs_license_number_label">Driver\'s License State</string>
+    <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
+    <string name="demogr_insurance_provider">Provider</string>
+    <string name="demogr_insurance_plan">Plan</string>
+    <string name="demogr_insurance_number_label">Insurance card number</string>
+    <string name="demogr_button_label">Next</string>
+    <string name="demogr_tv_choose_label">Choose</string>
+    <string name="demogr_docs_tv_chose_company">Choose company first</string>
 </resources>
 
 

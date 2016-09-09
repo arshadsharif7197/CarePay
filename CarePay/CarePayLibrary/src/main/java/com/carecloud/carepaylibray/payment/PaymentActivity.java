@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.activities;
+package com.carecloud.carepaylibray.payment;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
