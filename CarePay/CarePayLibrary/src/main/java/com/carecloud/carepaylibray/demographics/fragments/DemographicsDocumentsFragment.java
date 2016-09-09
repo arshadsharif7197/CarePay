@@ -132,7 +132,9 @@ public class DemographicsDocumentsFragment extends Fragment {
         });
         setTypefaces(view);
 
+
         return view;
+
     }
 
     private void scanAndShowIn(ImageView imLicense) {

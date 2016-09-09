@@ -35,16 +35,19 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
     String[] raceArray;
     String[] ethnicityArray;
     String[] preferredLanguageArray;
-    int      selectedArray;
+
+    int selectedArray;
     TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
     Button buttonChangeCurrentPhoto;
-    private ImageView imageViewDetailsImage;
-    private CameraScannerHelper mCameraScannerHelper;
+    ImageView imageViewDetailsProfileImage;
+    private int imgWidth = 0;
+    private String userChosenTask;
+    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_details, container, false);
+        view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
 
         initialiseUIFields();
         raceArray = getResources().getStringArray(R.array.Race);
@@ -69,7 +72,6 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         buttonChangeCurrentPhoto.setOnClickListener(this);
         imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
     }
-
 
     @Override
     public void onClick(View view) {

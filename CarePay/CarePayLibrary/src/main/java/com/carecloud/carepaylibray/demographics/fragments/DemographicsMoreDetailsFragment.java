@@ -9,7 +9,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
@@ -29,32 +28,25 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_moredetails, container, false);
+        view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
 
-        initialiseUIFields();
         getUpdateItemList = getResources().getStringArray(R.array.UpdatesMode);
         return view;
     }
 
-    private void initialiseUIFields() {
-
-        wantUpdateSwitch = (SwitchCompat) view.findViewById(R.id.updatesSwitch);
-        wantUpdateSwitch.setOnClickListener(this);
-        wantUpdateSwitch.setChecked(false);
-    }
 
     @Override
     public void onClick(View view) {
-        if(view==wantUpdateSwitch){
+        if (view == wantUpdateSwitch) {
             switchActionForWantUpdateSwitch(wantUpdateSwitch.isChecked());
         }
     }
 
     private void switchActionForWantUpdateSwitch(boolean checked) {
-        if (checked){
+        if (checked) {
             selectedUpdateItemList = new ArrayList<String>();
             showAlertDialog();
-        }else{
+        } else {
 
         }
     }
@@ -69,12 +61,12 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         builderDialog.setMultiChoiceItems(dialogList, is_checked,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton, boolean isChecked) {
-                        if(isChecked){
+                        if (isChecked) {
                             selectedUpdateItemList.add(getUpdateItemList[whichButton]);
-                        }else{
-                            String selectedLable=getUpdateItemList[whichButton];
-                            for(int index=0;index<selectedUpdateItemList.size();index++){
-                                if(selectedLable.equalsIgnoreCase(selectedUpdateItemList.get(index))){
+                        } else {
+                            String selectedLable = getUpdateItemList[whichButton];
+                            for (int index = 0; index < selectedUpdateItemList.size(); index++) {
+                                if (selectedLable.equalsIgnoreCase(selectedUpdateItemList.get(index))) {
                                     selectedUpdateItemList.remove(index);
                                 }
                             }
@@ -86,9 +78,9 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(selectedUpdateItemList.size()<=0)
+                        if (selectedUpdateItemList.size() <= 0)
                             wantUpdateSwitch.setChecked(false);
-                        Toast.makeText(getActivity(),selectedUpdateItemList.toString(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), selectedUpdateItemList.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -98,7 +90,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
                     public void onClick(DialogInterface dialog, int which) {
                         selectedUpdateItemList.clear();
                         wantUpdateSwitch.setChecked(false);
-                        Toast.makeText(getActivity(),""+selectedUpdateItemList.toString(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "" + selectedUpdateItemList.toString(), Toast.LENGTH_SHORT).show();
 
 
                     }

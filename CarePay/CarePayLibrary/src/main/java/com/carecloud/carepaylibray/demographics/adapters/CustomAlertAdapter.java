@@ -18,12 +18,13 @@ public class CustomAlertAdapter extends BaseAdapter {
     List<String> listarray = null;
     private LayoutInflater mInflater = null;
 
-    public CustomAlertAdapter(Activity activty, List<String> list)
-    {
-        this.ctx=activty;
+    public CustomAlertAdapter(Activity activty, List<String> list) {
+        this.ctx = activty;
         mInflater = activty.getLayoutInflater();
-        this.listarray=list;
+        this.listarray = list;
     }
+
+
 
     @Override
     public int getCount() {
@@ -44,17 +45,16 @@ public class CustomAlertAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup arg2) {
         final ViewHolder holder;
-        if (convertView == null ) {
+        if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.alert_list_row, null);
             holder.titlename = (TextView) convertView.findViewById(R.id.textviewName);
             convertView.setTag(holder);
-        }
-        else {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        String dataValue=listarray.get(position);
+        String dataValue = listarray.get(position);
         holder.titlename.setText(dataValue);
 
         return convertView;

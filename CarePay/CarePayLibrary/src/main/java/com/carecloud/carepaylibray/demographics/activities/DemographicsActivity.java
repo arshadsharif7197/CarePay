@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsDetailsFragment;
@@ -30,9 +29,10 @@ import com.viewpagerindicator.TabPageIndicator;
  */
 public class DemographicsActivity extends KeyboardHolderActivity implements View.OnClickListener {
 
-    private ViewPager       viewPager;
+    private ViewPager viewPager;
     private FunPagerAdapter funPagerAdapter;
     Button nextButton;
+
     @Override
     public void replaceFragment(Class fragClass, boolean addToBackStack) {
 
@@ -64,7 +64,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
         // set the language
         Intent intent = getIntent();
-        if(intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
+        if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
             setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
         }
 
@@ -98,7 +98,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
 
-        nextButton = (Button) findViewById(R.id.nextButton);
+        nextButton = (Button) findViewById(R.id.demographicsNextButton);
         nextButton.setOnClickListener(this);
     }
 
@@ -131,9 +131,11 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
     @Override
     public void onClick(View view) {
-        if(view==nextButton){
-            setCurrentItem(viewPager.getCurrentItem()+1,true);
+        if (view == nextButton) {
+            setCurrentItem(viewPager.getCurrentItem() + 1, true);
         }
+
+
     }
 
     /**
@@ -141,8 +143,8 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
      */
     class FunPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 
-        final         int   PAGE_COUNT = 4;
-        private final int[] ICONS      = new int[]{
+        final int PAGE_COUNT = 4;
+        private final int[] ICONS = new int[]{
                 R.drawable.signup_step1_indicator,
                 R.drawable.signup_step2_indicator,
                 R.drawable.signup_step3_indicator,
