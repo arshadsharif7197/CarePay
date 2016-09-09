@@ -13,7 +13,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.SignatureActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
-import com.carecloud.carepaylibray.selectlanguage.LanguageOptionModel;
+import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
 
 import java.util.ArrayList;
 import java.util.List;
