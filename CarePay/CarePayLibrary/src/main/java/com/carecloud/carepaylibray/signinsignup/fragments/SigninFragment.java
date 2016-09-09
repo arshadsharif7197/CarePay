@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SigninFragment extends Fragment {
+public class SigninFragment extends android.support.v4.app.Fragment {
 
 
     private EditText emailEditText;
@@ -190,7 +190,6 @@ public class SigninFragment extends Fragment {
     private boolean isvalidData() {
         boolean isvalid = true;
 
-
         if(!isValidmail()){
             emailEditText.setError("Enter valid mail");
             isvalid = false;
@@ -219,7 +218,5 @@ public class SigninFragment extends Fragment {
 
         public void onSigninButtonClick();
         public void onOptionClick(SignupFragment fragment, String fragmentTagName);
-
     }
 }
-

@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.homescreen;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +13,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.PaymentActivity;
 import com.carecloud.carepaylibray.activities.SignatureActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
-import com.carecloud.carepaylibray.homescreen.adapters.HomeScreenAdapter;
-import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
+import com.carecloud.carepaylibray.selectlanguage1.LanguageOptionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +22,8 @@ import java.util.List;
 /**
  * Created by lsoco_user on 9/2/2016.
  */
-public class HomeScreenActivity extends AppCompatActivity implements HomeScreenAdapter.OnItemClickListener {
+public class HomeScreenActivity extends AppCompatActivity
+        implements HomeScreenAdapter.OnItemClickListener {
     RecyclerView mGridView;
     List<LanguageOptionModel> mOptionModelList;
     TextView mProfileMeter;

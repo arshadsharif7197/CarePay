@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.selectlanguage.fragments;
+package com.carecloud.carepaylibray.selectlanguage;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.selectlanguage.adapters.LanguageListAdapter;
-import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.StringFunctions;
 
