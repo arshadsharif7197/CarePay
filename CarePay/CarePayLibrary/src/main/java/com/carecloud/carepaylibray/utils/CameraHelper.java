@@ -1,82 +1,91 @@
 package com.carecloud.carepaylibray.utils;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import android.graphics.Bitmap;
 
 /**
- * Created by Jahirul Bhuiyan on 9/6/2016.
+ * Created by RB-19 on 8/29/16.
  */
 public class CameraHelper {
 
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
-    public static final int MY_PERMISSIONS_CAMERA = 124;
+    private static CameraHelper ourInstance = new CameraHelper();
+    private String  photoImagePath;
+    private String  driversLicenceImagePath;
+    private Bitmap  insuranceBitmap;
+    private String  insuranceImagePath;
+    private boolean isFromGallery;
+    private Bitmap  driversLicenceBitmap;
+    private boolean isDriveLicense;
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static boolean checkPermission(final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-                    alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("External storage permission is necessary");
-                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                        }
-                    });
-                    AlertDialog alert = alertBuilder.create();
-                    alert.show();
-
-                } else {
-                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                }
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-        }
+    public static CameraHelper getInstance() {
+        return ourInstance;
     }
 
-    public static boolean checkPermissionCamera(final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.CAMERA)) {
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-                    alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Camera permission is necessary");
-                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                        }
-                    });
-                    AlertDialog alert = alertBuilder.create();
-                    alert.show();
+    public boolean isDriverLicense() {
+        return isDriverLicense();
+    }
 
-                } else {
-                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_CAMERA);
-                }
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-        }
+    private CameraHelper() {
+
+    }
+
+    public String getPhotoImagePath() {
+        return photoImagePath;
+    }
+
+    public void setPhotoImagePath(String photoImagePath) {
+        this.photoImagePath = photoImagePath;
+    }
+
+    public String getInsuranceImagePath() {
+        return insuranceImagePath;
+    }
+
+    public void setInsuranceImagePath(String insuranceImagePath) {
+        this.insuranceImagePath = insuranceImagePath;
+    }
+
+    public boolean isDriveLicense() {
+        return isDriveLicense;
+    }
+
+    public void setDriveLicense(boolean driveLicense) {
+        isDriveLicense = driveLicense;
+    }
+
+    public Bitmap getInsuranceBitmap() {
+        return insuranceBitmap;
+    }
+
+    public void setInsuranceBitmap(Bitmap insuranceBitmap) {
+        this.insuranceBitmap = insuranceBitmap;
+    }
+
+
+    public boolean isFromGallery() {
+        return isFromGallery;
+    }
+
+    public void setFromGallery(boolean fromGallery) {
+        isFromGallery = fromGallery;
+    }
+
+    public Bitmap getDriversLicenceBitmap() {
+        return driversLicenceBitmap;
+    }
+
+    public void setDriversLicenceBitmap(Bitmap driversLicenceBitmap) {
+        this.driversLicenceBitmap = driversLicenceBitmap;
+    }
+
+    public String getDriversLicenceImagePath() {
+        return driversLicenceImagePath;
+    }
+
+    public void setDriversLicenceImagePath(String driversLicenceImagePath) {
+        this.driversLicenceImagePath = driversLicenceImagePath;
     }
 }
+
+
+
+
