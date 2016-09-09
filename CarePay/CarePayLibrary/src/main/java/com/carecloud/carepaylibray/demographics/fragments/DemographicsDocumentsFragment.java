@@ -39,6 +39,8 @@ public class DemographicsDocumentsFragment extends Fragment {
         setTypefaceFromAssets(getActivity(), "fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.demogr_docs_plan));
         setTypefaceFromAssets(getActivity(), "fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.demogr_docs_provider));
 
+
         return view;
+
     }
 }
