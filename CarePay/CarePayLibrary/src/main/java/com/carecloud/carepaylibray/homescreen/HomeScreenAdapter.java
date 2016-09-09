@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.homescreen.adapters;
+package com.carecloud.carepaylibray.homescreen;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -51,11 +51,7 @@ public class HomeScreenAdapter extends RecyclerView.Adapter<HomeScreenAdapter.Vi
         int pxForReduce=dpToPx(400);
 
         int px=(displayMetrics.heightPixels-pxForReduce)/3;
-
         int dp = pxToDp(px);
-
-        //view.getLayoutParams().height=dp;
-
         return new ViewHolder(view);
     }
 

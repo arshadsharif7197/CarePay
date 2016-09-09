@@ -14,8 +14,7 @@
         android:supportsRtl="true">
         <activity
             android:name="com.carecloud.carepaylibray.activities.LibraryMainActivity"
-            android:configChanges="screenSize|orientation"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
             android:configChanges="screenSize|orientation"
