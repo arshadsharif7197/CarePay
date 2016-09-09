@@ -1,5 +1,5 @@
 
-package com.carecloud.carepaylibray.selectlanguage.models;
+package com.carecloud.carepaylibray.selectlanguage;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

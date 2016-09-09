@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +31,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Utility {
@@ -162,8 +164,17 @@ public class Utility {
         float heightInInches = metrics.heightPixels / metrics.ydpi;
         double sizeInInches = Math.sqrt(Math.pow(widthInInches, 2) + Math.pow(heightInInches, 2));
         return sizeInInches >= 6.5;
-
     }
 
+
+    /**
+     * Set the typeface of a textview as a font from assets
+     * @param pathToFontInAssets The path of the font in assets
+     * @param view The view
+     */
+    public static void setTypefaceFromAssets(Context context, String pathToFontInAssets, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), pathToFontInAssets);
+        view.setTypeface(typeface);
+    }
 }
 
