@@ -1,8 +1,13 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.utils.CameraScannerHelper;
+import com.carecloud.carepaylibray.utils.Utility;
+
 import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
@@ -36,15 +44,24 @@ public class DemographicsDocumentsFragment extends Fragment {
     private TextView tvState;
     private TextView tvPlan;
     private TextView tvProvider;
+    private CameraScannerHelper mCameraScannerHelper;
+    private CameraScannerHelper mLicenseScanHelper;
+    private CameraScannerHelper mInsuranceScanHelper;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
+        // ge the imageviews
         imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
         imInsurance = (ImageView) view.findViewById(R.id.demogr_insurance_image);
 
+        // create scan helpers
+        mLicenseScanHelper = new CameraScannerHelper(getActivity(), imLicense, 129); // TODO: 9/9/2016 use dimens
+        mInsuranceScanHelper = new CameraScannerHelper(getActivity(), imInsurance, 129); // TODO: 9/9/2016 use dimens
+
+        // add click listenter
         final Button btnScanLicense = (Button)view.findViewById(R.id.demogr_docs_scan_license_btn);
         btnScanLicense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +69,7 @@ public class DemographicsDocumentsFragment extends Fragment {
                 scanAndShowIn(imLicense);
                 Log.v(LOG_TAG, "scan license");
                 btnScanLicense.setText(R.string.demogr_docs_rescan);
+                selectImage(mLicenseScanHelper);
             }
         });
 
@@ -62,6 +80,7 @@ public class DemographicsDocumentsFragment extends Fragment {
                 scanAndShowIn(imInsurance);
                 Log.v(LOG_TAG, "scan insurance");
                 btnScanInsurance.setText(R.string.demogr_docs_rescan);
+                selectImage(mInsuranceScanHelper);
             }
         });
 
@@ -146,6 +165,74 @@ public class DemographicsDocumentsFragment extends Fragment {
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_tv_state));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_plan));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_provider));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        String userChoosenTask = mCameraScannerHelper.getUserChoosenTask();
+
+        switch (requestCode) {
+            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[1].toString()))
+                        startActivityForResult(Intent.createChooser(mCameraScannerHelper.galleryIntent(),
+                                                                    CameraScannerHelper.CHOOSER_NAME),
+                                               CameraScannerHelper.SELECT_FILE);
+                } else {
+                    //code for deny
+                }
+                break;
+
+            case Utility.MY_PERMISSIONS_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[0].toString()))
+                        startActivityForResult(mCameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                } else {
+                    //code for deny
+                }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CameraScannerHelper.SELECT_FILE)
+                mCameraScannerHelper.onSelectFromGalleryResult(data);
+            else if (requestCode == CameraScannerHelper.REQUEST_CAMERA)
+                mCameraScannerHelper.onCaptureImageResult(data);
+        }
+    }
+
+    public void selectImage(final CameraScannerHelper cameraScannerHelper) {
+        mCameraScannerHelper = cameraScannerHelper;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(CameraScannerHelper.chooseActionDlgTitle);
+        builder.setItems(CameraScannerHelper.chooseActionDlOptions,
+                         new DialogInterface.OnClickListener() {
+                             @Override
+                             public void onClick(DialogInterface dialog, int item) {
+                                 if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[0])) {
+                                     cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[0].toString());
+                                     boolean result = Utility.checkPermissionCamera(getActivity());
+                                     if (result) {
+                                         startActivityForResult(cameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                                     }
+                                 } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[1])) {
+                                     cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[1].toString());
+                                     boolean result = Utility.checkPermission(getActivity());
+                                     if (result) {
+                                         startActivityForResult(Intent.createChooser(cameraScannerHelper.galleryIntent(),
+                                                                                     CameraScannerHelper.CHOOSER_NAME),
+                                                                CameraScannerHelper.SELECT_FILE);
+                                     }
+                                 } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[2])) {
+                                     dialog.dismiss();
+                                 }
+                             }
+                         });
+        builder.show();
     }
 
 

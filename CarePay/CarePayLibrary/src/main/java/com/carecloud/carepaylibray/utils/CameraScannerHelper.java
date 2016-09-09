@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -34,6 +35,12 @@ public class CameraScannerHelper {
 
     public CameraScannerHelper(Activity activity) {
         mContext = activity;
+    }
+
+    public CameraScannerHelper(Activity activity, ImageView targetImageView, int imSize) {
+        mContext = activity;
+        imageViewDetailsProfileImage = targetImageView;
+        imgWidth = imSize;
     }
 
 
