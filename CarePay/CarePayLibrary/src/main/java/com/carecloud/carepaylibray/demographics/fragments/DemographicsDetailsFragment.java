@@ -46,10 +46,9 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
     int      selectedArray;
     TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
     Button    buttonChangeCurrentPhoto;
-    ImageView imageViewDetailsProfileImage;
-    private int imgWidth = 0;
-    private String userChoosenTask;
+    private ImageView imageViewDetailsImage;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    private CameraScannerHelper mCameraScannerHelper;
 
     @Nullable
     @Override
@@ -61,14 +60,27 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                int x = imageViewDetailsProfileImage.getWidth() - imageViewDetailsProfileImage.getPaddingLeft() - imageViewDetailsProfileImage.getPaddingRight();
-                imgWidth = x == 0 ? imgWidth : x;
-                Log.e("ssssHandler imgWidth", imgWidth + "");
-            }
-        });
+//        int x = imageViewDetailsImage.getWidth()
+//                - imageViewDetailsImage.getPaddingLeft()
+//                - imageViewDetailsImage.getPaddingRight();
+//        if(x == 0) {
+//            Log.e("onCreateView() x == ", "" + x);
+//        }
+//        int imgWidth = (x == 0 ? 129 : x);
+
+        mCameraScannerHelper = new CameraScannerHelper(getActivity());
+        mCameraScannerHelper.setImageViewDetailsProfileImage(imageViewDetailsImage);
+        mCameraScannerHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
+
+
+//        new Handler().post(new Runnable() {
+//            @Override
+//            public void run() {
+//                int x = imageViewDetailsProfileImage.getWidth() - imageViewDetailsProfileImage.getPaddingLeft() - imageViewDetailsProfileImage.getPaddingRight();
+//                imgWidth = x == 0 ? imgWidth : x;
+//                Log.e("ssssHandler imgWidth", imgWidth + "");
+//            }
+//        });
 
         return view;
     }
@@ -82,8 +94,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         preferredLanguageTextView.setOnClickListener(this);
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhoto);
         buttonChangeCurrentPhoto.setOnClickListener(this);
-
-        imageViewDetailsProfileImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
+        imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
     }
 
 
@@ -99,7 +110,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
             selectedArray = 3;
             showAlertDialogWithListview(preferredLanguageArray, "Select Preferred Language");
         } else if (view == buttonChangeCurrentPhoto) {
-            selectImage();
+            mCameraScannerHelper.selectImage();
         }
     }
 
@@ -146,11 +157,13 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        String userChoosenTask = mCameraScannerHelper.getUserChoosenTask();
+
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals("Choose from Library"))
-                        galleryIntent();
+                        mCameraScannerHelper.galleryIntent();
                 } else {
                     //code for deny
                 }
@@ -159,53 +172,12 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
             case Utility.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals("Take Photo"))
-                        cameraIntent();
+                        mCameraScannerHelper.cameraIntent();
 
                 } else {
                     //code for deny
                 }
         }
-    }
-
-    private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library",
-                "Cancel"};
-
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    boolean result = Utility.checkPermissionCamera(getActivity());
-                    if (result)
-                        cameraIntent();
-
-                } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask = "Choose from Library";
-                    boolean result = Utility.checkPermission(getActivity());
-                    if (result)
-                        galleryIntent();
-
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    private void galleryIntent() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
-    }
-
-    private void cameraIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     @Override
@@ -214,42 +186,93 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SELECT_FILE)
-                onSelectFromGalleryResult(data);
+                mCameraScannerHelper.onSelectFromGalleryResult(data);
             else if (requestCode == REQUEST_CAMERA)
-                onCaptureImageResult(data);
+                mCameraScannerHelper.onCaptureImageResult(data);
         }
     }
 
-    private void onCaptureImageResult(Intent data) {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+    /**
+     * Helper for scan with camera functionality
+     */
+    public class CameraScannerHelper {
+        private String userChoosenTask;
+        private ImageView imageViewDetailsProfileImage;
+        private int imgWidth;
+        private Activity mContext;
 
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                                    System.currentTimeMillis() + ".jpg");
-
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        public CameraScannerHelper(Activity activity) {
+            mContext = activity;
         }
-        Log.e("imgWidth", "" + imgWidth);
-        Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
-        imageViewDetailsProfileImage.setImageBitmap(roundBitmap);
-//        iv.setImageBitmap(thumbnail);
-    }
+
+        public int getImgWidth() {
+            return imgWidth;
+        }
+
+        public void setImgWidth(int imgWidth) {
+            this.imgWidth = imgWidth;
+        }
+
+        public ImageView getImageViewDetailsProfileImage() {
+            return imageViewDetailsProfileImage;
+        }
+
+        public void setImageViewDetailsProfileImage(ImageView imageViewDetailsProfileImage) {
+            this.imageViewDetailsProfileImage = imageViewDetailsProfileImage;
+        }
+
+        public String getUserChoosenTask() {
+            return userChoosenTask;
+        }
+
+        public void setUserChoosenTask(String userChoosenTask) {
+            this.userChoosenTask = userChoosenTask;
+        }
+
+        public void selectImage() {
+            final CharSequence[] items = {"Take Photo", "Choose from Library",
+                    "Cancel"};
+
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+            builder.setTitle("Add Photo!");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (items[item].equals("Take Photo")) {
+                        setUserChoosenTask("Take Photo");
+                        boolean result = Utility.checkPermissionCamera(mContext);
+                        if (result)
+                            cameraIntent();
+
+                    } else if (items[item].equals("Choose from Library")) {
+                        setUserChoosenTask("Choose from Library");
+                        boolean result = Utility.checkPermission(mContext);
+                        if (result)
+                            galleryIntent();
+
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+            builder.show();
+        }
+
+        public void galleryIntent() {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+        }
+
+        public void cameraIntent() {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, REQUEST_CAMERA);
+        }
 
 
-    @SuppressWarnings("deprecation")
-    private void onSelectFromGalleryResult(Intent data) {
-        try {
-            Bitmap thumbnail = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+        public void onCaptureImageResult(Intent data) {
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
@@ -257,19 +280,48 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
                                         System.currentTimeMillis() + ".jpg");
 
             FileOutputStream fo;
-
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-
+            try {
+                destination.createNewFile();
+                fo = new FileOutputStream(destination);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Log.e("imgWidth", "" + imgWidth);
             Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
             imageViewDetailsProfileImage.setImageBitmap(roundBitmap);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+//        iv.setImageBitmap(thumbnail);
+        }
+
+
+        @SuppressWarnings("deprecation")
+        public void onSelectFromGalleryResult(Intent data) {
+            try {
+                Bitmap thumbnail = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), data.getData());
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+                File destination = new File(Environment.getExternalStorageDirectory(),
+                                            System.currentTimeMillis() + ".jpg");
+
+                FileOutputStream fo;
+
+                destination.createNewFile();
+                fo = new FileOutputStream(destination);
+                fo.write(bytes.toByteArray());
+                fo.close();
+
+                Log.e("imgWidth", "" + imgWidth);
+                Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
+                imageViewDetailsProfileImage.setImageBitmap(roundBitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

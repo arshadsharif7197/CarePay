@@ -147,4 +147,6 @@ public class DemographicsDocumentsFragment extends Fragment {
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_plan));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_provider));
     }
+
+
 }
