@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.utils.CameraScannerHelper;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import java.io.ByteArrayOutputStream;
@@ -45,9 +46,8 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
     String[] preferredLanguageArray;
     int      selectedArray;
     TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
-    Button    buttonChangeCurrentPhoto;
+    Button buttonChangeCurrentPhoto;
     private ImageView imageViewDetailsImage;
-    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     private CameraScannerHelper mCameraScannerHelper;
 
     @Nullable
@@ -60,27 +60,9 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
-//        int x = imageViewDetailsImage.getWidth()
-//                - imageViewDetailsImage.getPaddingLeft()
-//                - imageViewDetailsImage.getPaddingRight();
-//        if(x == 0) {
-//            Log.e("onCreateView() x == ", "" + x);
-//        }
-//        int imgWidth = (x == 0 ? 129 : x);
-
         mCameraScannerHelper = new CameraScannerHelper(getActivity());
         mCameraScannerHelper.setImageViewDetailsProfileImage(imageViewDetailsImage);
         mCameraScannerHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
-
-
-//        new Handler().post(new Runnable() {
-//            @Override
-//            public void run() {
-//                int x = imageViewDetailsProfileImage.getWidth() - imageViewDetailsProfileImage.getPaddingLeft() - imageViewDetailsProfileImage.getPaddingRight();
-//                imgWidth = x == 0 ? imgWidth : x;
-//                Log.e("ssssHandler imgWidth", imgWidth + "");
-//            }
-//        });
 
         return view;
     }
@@ -110,10 +92,9 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
             selectedArray = 3;
             showAlertDialogWithListview(preferredLanguageArray, "Select Preferred Language");
         } else if (view == buttonChangeCurrentPhoto) {
-            mCameraScannerHelper.selectImage();
+            selectImage();
         }
     }
-
 
     private void showAlertDialogWithListview(final String[] raceArray, String title) {
         Log.e("raceArray==", raceArray.toString());
@@ -162,8 +143,10 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals("Choose from Library"))
-                        mCameraScannerHelper.galleryIntent();
+                    if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[1].toString()))
+                        startActivityForResult(Intent.createChooser(mCameraScannerHelper.galleryIntent(),
+                                                                    CameraScannerHelper.CHOOSER_NAME),
+                                               CameraScannerHelper.SELECT_FILE);
                 } else {
                     //code for deny
                 }
@@ -171,9 +154,8 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
             case Utility.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals("Take Photo"))
-                        mCameraScannerHelper.cameraIntent();
-
+                    if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[0].toString()))
+                        startActivityForResult(mCameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
                 } else {
                     //code for deny
                 }
@@ -185,143 +167,39 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_FILE)
+            if (requestCode == CameraScannerHelper.SELECT_FILE)
                 mCameraScannerHelper.onSelectFromGalleryResult(data);
-            else if (requestCode == REQUEST_CAMERA)
+            else if (requestCode == CameraScannerHelper.REQUEST_CAMERA)
                 mCameraScannerHelper.onCaptureImageResult(data);
         }
     }
 
-    /**
-     * Helper for scan with camera functionality
-     */
-    public class CameraScannerHelper {
-        private String userChoosenTask;
-        private ImageView imageViewDetailsProfileImage;
-        private int imgWidth;
-        private Activity mContext;
-
-        public CameraScannerHelper(Activity activity) {
-            mContext = activity;
-        }
-
-        public int getImgWidth() {
-            return imgWidth;
-        }
-
-        public void setImgWidth(int imgWidth) {
-            this.imgWidth = imgWidth;
-        }
-
-        public ImageView getImageViewDetailsProfileImage() {
-            return imageViewDetailsProfileImage;
-        }
-
-        public void setImageViewDetailsProfileImage(ImageView imageViewDetailsProfileImage) {
-            this.imageViewDetailsProfileImage = imageViewDetailsProfileImage;
-        }
-
-        public String getUserChoosenTask() {
-            return userChoosenTask;
-        }
-
-        public void setUserChoosenTask(String userChoosenTask) {
-            this.userChoosenTask = userChoosenTask;
-        }
-
-        public void selectImage() {
-            final CharSequence[] items = {"Take Photo", "Choose from Library",
-                    "Cancel"};
-
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
-            builder.setTitle("Add Photo!");
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int item) {
-                    if (items[item].equals("Take Photo")) {
-                        setUserChoosenTask("Take Photo");
-                        boolean result = Utility.checkPermissionCamera(mContext);
-                        if (result)
-                            cameraIntent();
-
-                    } else if (items[item].equals("Choose from Library")) {
-                        setUserChoosenTask("Choose from Library");
-                        boolean result = Utility.checkPermission(mContext);
-                        if (result)
-                            galleryIntent();
-
-                    } else if (items[item].equals("Cancel")) {
-                        dialog.dismiss();
-                    }
-                }
-            });
-            builder.show();
-        }
-
-        public void galleryIntent() {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
-        }
-
-        public void cameraIntent() {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent, REQUEST_CAMERA);
-        }
-
-
-        public void onCaptureImageResult(Intent data) {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-
-            File destination = new File(Environment.getExternalStorageDirectory(),
-                                        System.currentTimeMillis() + ".jpg");
-
-            FileOutputStream fo;
-            try {
-                destination.createNewFile();
-                fo = new FileOutputStream(destination);
-                fo.write(bytes.toByteArray());
-                fo.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Log.e("imgWidth", "" + imgWidth);
-            Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
-            imageViewDetailsProfileImage.setImageBitmap(roundBitmap);
-//        iv.setImageBitmap(thumbnail);
-        }
-
-
-        @SuppressWarnings("deprecation")
-        public void onSelectFromGalleryResult(Intent data) {
-            try {
-                Bitmap thumbnail = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), data.getData());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-
-                File destination = new File(Environment.getExternalStorageDirectory(),
-                                            System.currentTimeMillis() + ".jpg");
-
-                FileOutputStream fo;
-
-                destination.createNewFile();
-                fo = new FileOutputStream(destination);
-                fo.write(bytes.toByteArray());
-                fo.close();
-
-                Log.e("imgWidth", "" + imgWidth);
-                Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
-                imageViewDetailsProfileImage.setImageBitmap(roundBitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void selectImage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(CameraScannerHelper.chooseActionDlgTitle);
+        builder.setItems(CameraScannerHelper.chooseActionDlOptions,
+                         new DialogInterface.OnClickListener() {
+                             @Override
+                             public void onClick(DialogInterface dialog, int item) {
+                                 if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[0])) {
+                                     mCameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[0].toString());
+                                     boolean result = Utility.checkPermissionCamera(getActivity());
+                                     if (result) {
+                                         startActivityForResult(mCameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                                     }
+                                 } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[1])) {
+                                     mCameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[1].toString());
+                                     boolean result = Utility.checkPermission(getActivity());
+                                     if (result) {
+                                         startActivityForResult(Intent.createChooser(mCameraScannerHelper.galleryIntent(),
+                                                                                     CameraScannerHelper.CHOOSER_NAME),
+                                                                CameraScannerHelper.SELECT_FILE);
+                                     }
+                                 } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[2])) {
+                                     dialog.dismiss();
+                                 }
+                             }
+                         });
+        builder.show();
     }
 }
