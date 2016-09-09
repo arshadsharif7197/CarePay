@@ -30,7 +30,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
 
     private static final String LOG_TAG = SelectLanguageFragment.class.getSimpleName();
     RecyclerView languageListView;
-    String language = null;
+    String languageName = null;
     List<LanguageOptionModel> languageOptionModelList;
     ImageButton languageConfirmButton;
 
@@ -101,25 +101,25 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
 
-        if (!StringFunctions.isNullOrEmpty(language)) {
+        if (!StringFunctions.isNullOrEmpty(languageName)) {
             for (int j = 0; j < languageOptionModelList.size(); j++) {
-                LanguageOptionModel mLanguageOptionModelData = languageOptionModelList.get(j);
-                if (mLanguageOptionModelData.getValue().equalsIgnoreCase(language)) {
+                LanguageOptionModel languageOptionModelData = languageOptionModelList.get(j);
+                if (languageOptionModelData.getValue().equalsIgnoreCase(languageName)) {
                     languageOptionModelList.get(j).setChecked(true);
                 } else {
                     languageOptionModelList.get(j).setChecked(false);
                 }
             }
         }
-        LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(languageOptionModelList, this, getActivity());
-        languageListView.setAdapter(mLanguageListAdapter);
+        LanguageListAdapter languageListAdapter = new LanguageListAdapter(languageOptionModelList, this, getActivity());
+        languageListView.setAdapter(languageListAdapter);
 
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (!StringFunctions.isNullOrEmpty(language)) {
-            outState.putString("language", language);
+        if (!StringFunctions.isNullOrEmpty(languageName)) {
+            outState.putString("language", languageName);
         }
         super.onSaveInstanceState(outState);
     }
@@ -127,24 +127,24 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     /**
      * @param view
      * @param position  getting selected languauge position
-     * @param mLanguage
+     * @param language
      */
     @Override
-    public void onItemClick(View view, int position, LanguageOptionModel mLanguage) {
+    public void onItemClick(View view, int position, LanguageOptionModel language) {
         List<LanguageOptionModel> newLanguageList = new ArrayList<>();
         for (int i = 0; i < languageOptionModelList.size(); i++) {
-            LanguageOptionModel mLanguageOptionModel = languageOptionModelList.get(i);
-            if (mLanguageOptionModel.getValue().equalsIgnoreCase(mLanguage.getValue())) {
-                mLanguageOptionModel.setChecked(true);
+            LanguageOptionModel languageOptionModel = languageOptionModelList.get(i);
+            if (languageOptionModel.getValue().equalsIgnoreCase(language.getValue())) {
+                languageOptionModel.setChecked(true);
             } else {
-                mLanguageOptionModel.setChecked(false);
+                languageOptionModel.setChecked(false);
             }
-            newLanguageList.add(mLanguageOptionModel);
+            newLanguageList.add(languageOptionModel);
         }
-        LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(newLanguageList, this, getActivity());
-        languageListView.setAdapter(mLanguageListAdapter);
-        mLanguageListAdapter.notifyDataSetChanged();
-        language = mLanguage.getValue();
+        LanguageListAdapter languageListAdapter = new LanguageListAdapter(newLanguageList, this, getActivity());
+        languageListView.setAdapter(languageListAdapter);
+        languageListAdapter.notifyDataSetChanged();
+        languageName = language.getValue();
         languageConfirmButton.setEnabled(true);
         languageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
     }
