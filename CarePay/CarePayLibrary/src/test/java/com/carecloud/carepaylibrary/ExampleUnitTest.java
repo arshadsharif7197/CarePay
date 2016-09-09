@@ -1,8 +1,5 @@
 package com.carecloud.carepaylibrary;
 
-import com.carecloud.carepaylibray.activities.MainActivityLibrary;
-
-import org.junit.Rule;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

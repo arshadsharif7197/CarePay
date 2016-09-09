@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibrary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.LayoutInflater;
@@ -8,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.activities.MainActivityLibrary;
+import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 
@@ -25,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * Test the renderer for ResponsibilityScreen
@@ -33,12 +35,13 @@ import static org.hamcrest.Matchers.is;
 public class ResponsibilityScreenTest {
 
     @Rule
-    public ActivityTestRule<MainActivityLibrary> activity = new ActivityTestRule<>(MainActivityLibrary.class,
+    public ActivityTestRule<LibraryMainActivity> activity = new ActivityTestRule<>(LibraryMainActivity.class,
                                                                                    true,
-                                                                                   true);
+                                                                                   false);
 
     @Before
     public void setup() {
+        activity.launchActivity(new Intent());
         // place the fragment
         activity.getActivity().replaceFragment(ResponsibilityFragment.class);
     }
@@ -74,29 +77,26 @@ public class ResponsibilityScreenTest {
     public void totalIsSumOfPrevAndCopay() {
 
         KeyboardHolderActivity theActivity = activity.getActivity();
+
+        // inflate layout
         ViewGroup parent = (ViewGroup) theActivity.getWindow().getDecorView().getRootView();
-
-//        ResponsibilityFragment fragment = (ResponsibilityFragment) theActivity
-//                .getSupportFragmentManager()
-//                .findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
-
         ResponsibilityFragment fragment = new ResponsibilityFragment();
         LayoutInflater inflater = (LayoutInflater)theActivity.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         fragment.setActivity(theActivity);
-        View fragParent = fragment.onCreateView(inflater, parent, null);
 
-//        View fragParent = fragment.getView();
-//        assertThat(fragParent, is(not(null)));
+        // obtain the views
+        View fragParentView = fragment.onCreateView(inflater, parent, null);
+        assertThat("null frag view", fragParentView, is(notNullValue()));
 
-        TextView totalView = (TextView) fragParent.findViewById(R.id.respons_total);
-        TextView balanceView = (TextView) fragParent.findViewById(R.id.respons_prev_balance);
-        TextView copayView = (TextView) fragParent.findViewById(R.id.respons_copay);
+        TextView totalView = (TextView) fragParentView.findViewById(R.id.respons_total);
+        TextView balanceView = (TextView) fragParentView.findViewById(R.id.respons_prev_balance);
+        TextView copayView = (TextView) fragParentView.findViewById(R.id.respons_copay);
 
+        // test sum
         double cost = Double.parseDouble((totalView.getText().toString().substring(1)));
         double balance = Double.parseDouble((balanceView.getText().toString().substring(1)));
         double copay = Double.parseDouble((copayView.getText().toString().substring(1)));
-
         assertThat(cost, is(balance + copay));
     }
 
