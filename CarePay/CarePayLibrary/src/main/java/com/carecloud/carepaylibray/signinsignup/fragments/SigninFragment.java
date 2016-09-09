@@ -5,14 +5,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-
-import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.HomeActivity;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
+import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -148,7 +142,6 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     };
 
     private void checkForSigninEnable() {
-
         if(isValidEmail && isValidPassword){
             signinButton.setEnabled(true);
             signinButton.setBackground(getResources().getDrawable(R.drawable.agree_button_background));
@@ -158,13 +151,11 @@ public class SigninFragment extends android.support.v4.app.Fragment {
                 public void onClick(View view) {
                     if(isvalidData()){
 
-                        Intent intent = new Intent(getContext(), HomeActivity.class);
+                        Intent intent = new Intent(getContext(), HomeScreenActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         getActivity().finish();
-
                     }else{
-
                         Toast.makeText(getActivity(),"Please fill required fields.",Toast.LENGTH_LONG).show();
                     }
                 }
