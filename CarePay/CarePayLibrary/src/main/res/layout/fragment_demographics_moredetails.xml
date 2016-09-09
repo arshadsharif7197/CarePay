@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/circle_shape"
+        android:gravity="center"
+        android:text="@string/PlaceHolderIcon"
+        />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="2">
+
+
+
+    <TextView
+        android:id="@+id/moreDetailsHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/DemographicsFragmentsHeadingStyle"
+        android:text="@string/moreDetailsHeadingTextView" />
+
+    <TextView
+        android:id="@+id/moreDetailsSubHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/DemographicsFragmentsSubHeadingStyle"
+        android:text="@string/moreDetailsSubHeadingTextView"/>
+         </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="4">
+
+
+         <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+             android:paddingLeft="17dp"
+             android:paddingRight="17dp">
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/bright_cerulean"
+            android:text="@string/GoToCarePayButton" />
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
