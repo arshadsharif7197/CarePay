@@ -23,14 +23,14 @@ import java.util.List;
 
 public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapter.ViewHolder> {
 
-    List<LanguageOptionModel> mLanguageListLanguageOptionModels;
+    List<LanguageOptionModel> LanguageListLanguageOptionModels;
     private OnItemClickListener itemClickListener;
-    Context mContext;
+    Context Context;
 
     public LanguageListAdapter(List<LanguageOptionModel> mLanguageListLanguageOptionModels, OnItemClickListener itemClickListener, Context mContext) {
-        this.mLanguageListLanguageOptionModels = mLanguageListLanguageOptionModels;
+        this.LanguageListLanguageOptionModels = mLanguageListLanguageOptionModels;
         this.itemClickListener = itemClickListener;
-        this.mContext = mContext;
+        this.Context = mContext;
     }
 
     @Override
@@ -41,15 +41,15 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        LanguageOptionModel mLanguage = mLanguageListLanguageOptionModels.get(position);
+        LanguageOptionModel mLanguage = LanguageListLanguageOptionModels.get(position);
         if (!StringFunctions.isNullOrEmpty(mLanguage.getValue())) {
-            holder.mTextViewLanguageName.setText(mLanguage.getValue());
+            holder.TextViewLanguageName.setText(mLanguage.getValue());
             if (mLanguage.isChecked()) {
-                holder.mTextViewLanguageName.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-                Utility.setTypefaceFromAssets(mContext,"fonts/proximanova_semibold.otf",holder.mTextViewLanguageName);
+                holder.TextViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.colorPrimary));
+                Utility.setTypefaceFromAssets(Context,"fonts/proximanova_semibold.otf",holder.TextViewLanguageName);
             }
         }
-        holder.mRadioButtonLanguageSelect.setChecked(mLanguage.isChecked());
+        holder.RadioButtonLanguageSelect.setChecked(mLanguage.isChecked());
     }
 
     /**
@@ -57,25 +57,25 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
      */
     @Override
     public int getItemCount() {
-        return mLanguageListLanguageOptionModels.size();
+        return LanguageListLanguageOptionModels.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView mTextViewLanguageName;
-        CardView mCardView;
-        RadioButton mRadioButtonLanguageSelect;
+        TextView TextViewLanguageName;
+        CardView CardView;
+        RadioButton RadioButtonLanguageSelect;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mTextViewLanguageName = (TextView) itemView.findViewById(R.id.languagename);
-            mCardView = (CardView) itemView.findViewById(R.id.cardView);
-            mRadioButtonLanguageSelect = (RadioButton) itemView.findViewById(R.id.languageRadioButton);
-            Utility.setTypefaceFromAssets(mContext,"fonts/proximanova_regular.otf", mTextViewLanguageName);
-            mCardView.setOnClickListener(new View.OnClickListener() {
+            TextViewLanguageName = (TextView) itemView.findViewById(R.id.languagename);
+            CardView = (CardView) itemView.findViewById(R.id.cardView);
+            RadioButtonLanguageSelect = (RadioButton) itemView.findViewById(R.id.languageRadioButton);
+            Utility.setTypefaceFromAssets(Context,"fonts/proximanova_regular.otf", TextViewLanguageName);
+            CardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (itemClickListener != null) {
-                        itemClickListener.onItemClick(view, getAdapterPosition(), mLanguageListLanguageOptionModels.get(getAdapterPosition()));
+                        itemClickListener.onItemClick(view, getAdapterPosition(), LanguageListLanguageOptionModels.get(getAdapterPosition()));
                     }
                 }
             });
