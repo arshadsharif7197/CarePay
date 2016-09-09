@@ -10,10 +10,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.PaymentActivity;
 import com.carecloud.carepaylibray.activities.SignatureActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.selectlanguage1.LanguageOptionModel;
+import com.carecloud.carepaylibray.payment.PaymentActivity;
+import com.carecloud.carepaylibray.selectlanguage.LanguageOptionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +24,11 @@ import java.util.List;
  */
 public class HomeScreenActivity extends AppCompatActivity
         implements HomeScreenAdapter.OnItemClickListener {
-    RecyclerView mGridView;
+    RecyclerView              mGridView;
     List<LanguageOptionModel> mOptionModelList;
-    TextView mProfileMeter;
-    TextView mAddDetails;
-    ProgressBar mProgressBar;
+    TextView                  mProfileMeter;
+    TextView                  mAddDetails;
+    ProgressBar               mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
