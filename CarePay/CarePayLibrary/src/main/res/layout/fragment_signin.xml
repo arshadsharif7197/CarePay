@@ -40,6 +40,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/til_email"
                 >
 
                 <EditText
@@ -53,13 +54,13 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:id="@+id/til_password">
                 <EditText
                     android:id="@+id/passwordEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/blue_cerulian"
-                    android:inputType="textPassword"
                     android:hint="Password"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -145,6 +146,7 @@
                 android:layout_weight="0.5"
                 android:textColor="@color/blue_cerulian"
                 android:gravity="left"
+                android:id="@+id/changeLanguageText"
                 />
             <TextView
                 android:layout_width="wrap_content"

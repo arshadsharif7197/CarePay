@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.signinsignup.fragments.activity;
+package com.carecloud.carepaylibray.signinsignup;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +14,11 @@ import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
  */
 
 public class SigninSignupActivity extends AppCompatActivity
-        implements SigninFragment.OnSigninPageOptionsClickListner{
+
+
+
+        implements SigninFragment.OnSigninPageOptionsClickListner, SignupFragment.OnSignupPageOptionsClickListner{
+
 
     private FragmentManager mFragmentManager;
 
@@ -40,9 +44,10 @@ public class SigninSignupActivity extends AppCompatActivity
     }
 
     private void switchFragment(Fragment fragment, String tagName){
-
-        mFragmentManager.beginTransaction()
-                .replace(R.id.layoutSigninSignup, fragment).addToBackStack(tagName).commit();
+        if(tagName!=null) {
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.layoutSigninSignup, fragment).addToBackStack(tagName).commit();
+        }
     }
 
 
@@ -54,5 +59,16 @@ public class SigninSignupActivity extends AppCompatActivity
     @Override
     public void onOptionClick(SignupFragment fragment, String fragmentTagName) {
         switchFragment(fragment, fragmentTagName);
+    }
+
+    @Override
+    public void onSignupButtonClick() {
+
+    }
+
+    @Override
+    public void onSignupOptionClick(Fragment fragment, String fragmentTagName) {
+        mFragmentManager.beginTransaction().remove(fragment).commit();
+        mFragmentManager.popBackStack();
     }
 }

@@ -7,7 +7,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.fragments.HomeFragment;
 import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.select_language.SelectLanguageFragment;
+import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
 

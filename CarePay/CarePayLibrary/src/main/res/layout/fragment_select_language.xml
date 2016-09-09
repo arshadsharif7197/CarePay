@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@color/white">
+    app:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+
     <LinearLayout
         android:id="@+id/headerContainerLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
+        android:background="@drawable/bg_signup_1_phone"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible"
-        android:background="@drawable/bg_signup_1_phone">
+        android:visibility="visible">
 
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/logo_light"/>
+            android:src="@drawable/logo_light" />
         <!--Add header component-->
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/language_body_margintop"
         android:layout_weight="6"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/language_body_margintop"
-        >
+        android:orientation="horizontal">
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/mainContainerLayout"
             android:layout_width="0dp"
@@ -43,25 +46,26 @@
             android:layout_weight="2"
             android:gravity="center"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
+
                 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:context=".CardViewActivity"
-                    >
+                    tools:context=".CardViewActivity">
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/language_recycler_view"
+                        android:id="@+id/languageRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scrollbars="vertical"
-                        android:padding="17dp"/>
+                        android:padding="17dp"
+                        android:scrollbars="vertical" />
 
                 </RelativeLayout>
 
@@ -70,47 +74,51 @@
 
 
         </LinearLayout>
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/language_footer_margin_top"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/language_footer_margin_top">
+        android:orientation="horizontal">
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/bottomContainerLayout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
+            android:background="@color/Munsell"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/language_button_topbottom"
             android:paddingBottom="@dimen/language_button_topbottom"
-            android:paddingRight="@dimen/language_button_leftright"
             android:paddingLeft="@dimen/language_button_leftright"
-            android:background="@color/Munsell">
+            android:paddingRight="@dimen/language_button_leftright"
+            android:paddingTop="@dimen/language_button_topbottom">
 
 
             <ImageButton
+                android:id="@+id/languageConfirmButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/button_blue_fill_background"
-                android:id="@+id/confirm"
+                android:background="@color/Munsell"
                 android:src="@drawable/icn_check_disabled"
 
                 />
-            <!--Add bottom container components -->
         </LinearLayout>
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
