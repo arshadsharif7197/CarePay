@@ -1,10 +1,10 @@
-package com.carecloud.carepaylibray.fragments;
+package com.carecloud.carepaylibray.payment;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +14,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.utils.Utility;
-
 import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
-
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -25,13 +22,13 @@ import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
  */
 public class ResponsibilityFragment extends Fragment {
 
-//    private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
-    private KeyboardHolderActivity mActivity;
+    private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
+    AppCompatActivity mActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (KeyboardHolderActivity)getActivity();
+        mActivity = (AppCompatActivity) getActivity();
     }
 
     @Nullable
@@ -43,8 +40,8 @@ public class ResponsibilityFragment extends Fragment {
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         setTypefaceFromAssets(mActivity, "fonts/gotham_rounded_medium.otf", title);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(mActivity, R.drawable.icn_patient_mode_nav_back));
-        mActivity.setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         // set the typefaces
         setTypefaceFromAssets(mActivity, "fonts/gotham_rounded_book.otf", (TextView) view.findViewById(R.id.respons_total_label));
