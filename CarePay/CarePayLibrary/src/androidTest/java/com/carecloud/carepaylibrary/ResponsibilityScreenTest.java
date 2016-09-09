@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
 
 import org.junit.After;
 import org.junit.Before;

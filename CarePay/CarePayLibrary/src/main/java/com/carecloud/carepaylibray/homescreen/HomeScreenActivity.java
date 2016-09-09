@@ -24,11 +24,11 @@ import java.util.List;
  */
 public class HomeScreenActivity extends AppCompatActivity
         implements HomeScreenAdapter.OnItemClickListener {
-    RecyclerView mGridView;
+    RecyclerView              mGridView;
     List<LanguageOptionModel> mOptionModelList;
-    TextView mProfileMeter;
-    TextView mAddDetails;
-    ProgressBar mProgressBar;
+    TextView                  mProfileMeter;
+    TextView                  mAddDetails;
+    ProgressBar               mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
