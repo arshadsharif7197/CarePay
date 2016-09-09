@@ -14,7 +14,12 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+import com.carecloud.carepaylibray.utils.Utility;
+
+import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedBookTypeface;
+import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -38,25 +43,34 @@ public class ResponsibilityFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        setTypefaceFromAssets(mActivity, "fonts/gotham_rounded_medium.otf", title);
+        setGothamRoundedMediumTypeface(mActivity, title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        // set the typefaces
-        setTypefaceFromAssets(mActivity, "fonts/gotham_rounded_book.otf", (TextView) view.findViewById(R.id.respons_total_label));
-        setTypefaceFromAssets(mActivity, "fonts/gotham_rounded_medium.otf", (TextView) view.findViewById(R.id.respons_total));
-        setTypefaceFromAssets(mActivity, "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.respons_prev_balance_label));
-        setTypefaceFromAssets(mActivity, "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.respons_copay_label));
-        setTypefaceFromAssets(mActivity, "fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.respons_prev_balance));
-        setTypefaceFromAssets(mActivity, "fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.respons_copay));
-        setTypefaceFromAssets(mActivity, "fonts/gotham_rounded_medium.otf", (Button) view.findViewById(R.id.respons_pay));
+        setTypefaces(view);
 
         return view;
     }
 
     /**
+     * Helper to set the typefaces
+     * @param view The parent view
+     */
+    private void setTypefaces(View view) {
+        // set the typefaces
+        setGothamRoundedBookTypeface(mActivity, (TextView) view.findViewById(R.id.respons_total_label));
+        setGothamRoundedMediumTypeface(mActivity, (TextView) view.findViewById(R.id.respons_total));
+        setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance_label));
+        setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay_label));
+        setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
+        setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay));
+        setGothamRoundedMediumTypeface(mActivity, (Button) view.findViewById(R.id.respons_pay));
+    }
+
+    /**
      * For tests
+     *
      * @param activity The activity
      */
     public void setActivity(KeyboardHolderActivity activity) {

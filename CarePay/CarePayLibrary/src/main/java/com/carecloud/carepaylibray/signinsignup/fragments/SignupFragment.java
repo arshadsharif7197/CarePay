@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 
 import android.content.Context;
 
@@ -16,8 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.HomeActivity;
-import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
 
 import java.util.regex.Matcher;

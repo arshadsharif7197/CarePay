@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
 
 
 /**
@@ -23,22 +25,30 @@ public class DemographicsDocumentsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
-        setTypefaceFromAssets(getActivity(), "fonts/gotham_rounded_medium.otf", (TextView) view.findViewById(R.id.demogr_docs_header_title));
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.demogr_docs_header_subtitle));
-        setTypefaceFromAssets(getActivity(), "fonts/gotham_rounded_medium.otf", (TextView) view.findViewById(R.id.demogr_docs_scan_license_btn));
-        setTypefaceFromAssets(getActivity(), "fonts/gotham_rounded_medium.otf", (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_btn));
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.demogr_license_scan_label));
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.demogr_insurance_number_label));
-
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.demogr_license_state_label));
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.demogr_insurance_switch));
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.demogr_docs_provider));
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_regular.otf", (TextView) view.findViewById(R.id.demogr_docs_plan));
-
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.demogr_tv_state));
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.demogr_docs_plan));
-        setTypefaceFromAssets(getActivity(), "fonts/proximanova_semibold.otf", (TextView) view.findViewById(R.id.demogr_docs_provider));
-
+        setTypefaces(view);
         return view;
+    }
+
+    /**
+     * Helper to set the typeface to all textviews
+     *
+     * @param view The parent view
+     */
+    private void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_title));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_subtitle));
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_scan_license_btn));
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_btn));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_license_scan_label));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_number_label));
+
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_license_state_label));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_switch));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_provider));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_plan));
+
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_tv_state));
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_plan));
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_provider));
     }
 }

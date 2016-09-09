@@ -186,6 +186,7 @@
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
     </style>
 
+
     <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height </item>

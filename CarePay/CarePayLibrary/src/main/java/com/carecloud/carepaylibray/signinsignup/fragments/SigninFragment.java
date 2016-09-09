@@ -6,13 +6,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-
-import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.HomeActivity;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
+import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SigninFragment extends android.support.v4.app.Fragment {
+public class SigninFragment extends Fragment {
 
 
     private EditText emailEditText;
@@ -65,7 +61,6 @@ public class SigninFragment extends android.support.v4.app.Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 getActivity().finish();
-
             }
         });
 
@@ -158,7 +153,7 @@ public class SigninFragment extends android.support.v4.app.Fragment {
                 public void onClick(View view) {
                     if(isvalidData()){
 
-                        Intent intent = new Intent(getContext(), HomeActivity.class);
+                        Intent intent = new Intent(getContext(), HomeScreenActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         getActivity().finish();
@@ -211,11 +206,7 @@ public class SigninFragment extends android.support.v4.app.Fragment {
         return matcher.matches();
     }
 
-
     public interface OnSigninPageOptionsClickListner{
-
-
-
         public void onSigninButtonClick();
         public void onOptionClick(SignupFragment fragment, String fragmentTagName);
     }

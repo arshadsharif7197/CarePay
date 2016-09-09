@@ -34,7 +34,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
     private FunPagerAdapter funPagerAdapter;
     Button nextButton;
     @Override
-    public void replaceFragment(Class fragClass) {
+    public void replaceFragment(Class fragClass, boolean addToBackStack) {
 
     }
 

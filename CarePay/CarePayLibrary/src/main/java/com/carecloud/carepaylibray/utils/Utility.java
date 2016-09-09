@@ -166,15 +166,23 @@ public class Utility {
         return sizeInInches >= 6.5;
     }
 
+    public static void setGothamRoundedBookTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
+        view.setTypeface(typeface);
+    }
 
-    /**
-     * Set the typeface of a textview as a font from assets
-     * @param pathToFontInAssets The path of the font in assets
-     * @param view The view
-     */
-    public static void setTypefaceFromAssets(Context context, String pathToFontInAssets, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), pathToFontInAssets);
+    public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
+        view.setTypeface(typeface);
+    }
+
+    public static void setProximaNovaRegularTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_regular.otf");
+        view.setTypeface(typeface);
+    }
+
+    public static void setProximaNovaSemiboldTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
 }
-

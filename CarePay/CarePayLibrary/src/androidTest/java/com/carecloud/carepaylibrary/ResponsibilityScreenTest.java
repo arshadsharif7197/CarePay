@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
-import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
+import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 
 import org.junit.After;
@@ -43,7 +43,7 @@ public class ResponsibilityScreenTest {
     public void setup() {
         activity.launchActivity(new Intent());
         // place the fragment
-        activity.getActivity().replaceFragment(ResponsibilityFragment.class);
+        activity.getActivity().replaceFragment(ResponsibilityFragment.class, false);
     }
 
     @Test

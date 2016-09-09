@@ -10,10 +10,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.PaymentActivity;
+import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.activities.SignatureActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.selectlanguage1.LanguageOptionModel;
+import com.carecloud.carepaylibray.selectlanguage.LanguageOptionModel;
 
 import java.util.ArrayList;
 import java.util.List;
