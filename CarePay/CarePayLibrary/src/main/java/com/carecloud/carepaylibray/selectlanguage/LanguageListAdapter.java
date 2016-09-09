@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.selectlanguage.adapters;
+package com.carecloud.carepaylibray.selectlanguage;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -10,7 +10,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibray.utils.StringFunctions;
 
 import java.util.List;

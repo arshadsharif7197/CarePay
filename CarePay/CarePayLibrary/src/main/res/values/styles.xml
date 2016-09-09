@@ -61,6 +61,7 @@
         <item name="colorSwitchThumbNormal">@color/light_gray</item>
         <item name="android:colorForeground">@color/uncheck_confirm_button</item>
     </style>
+
     <declare-styleable name="SympliTextView">
         <attr name="fontPath" format="string"/>
 
@@ -127,6 +128,79 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- Documents -->
+
+    <style name="DemographicsDocsButtonStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/rich_electric_blue</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:background">@drawable/button_background</item>
+    </style>
+
+    <style name="DemographicsDocsHeaderTitleStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/demographics_docs_header_title_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsHeaderSubtitleStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsHeaderStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/payne_gray</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsLabelStyle" parent="android:Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height </item>
+        <item name="android:layout_marginTop">
+            @dimen/demographics_docs_image_button_container_margin_top
+        </item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="DemographicsDocsClickableTextStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
     </style>
 
 </resources>

@@ -4,10 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.fragments.HomeFragment;
-import com.carecloud.carepaylibray.fragments.ResponsibilityFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
+import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
+import com.carecloud.carepaylibray.selectlanguage.SelectLanguageFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
 
@@ -54,8 +53,6 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
                 fragment = new SigninFragment();
             } else if (fragClass.equals(SignupFragment.class)) {
                 fragment = new SignupFragment();
-            } else if (fragClass.equals(HomeFragment.class)) {
-                fragment = new HomeFragment();
             } else if (fragClass.equals(ResponsibilityFragment.class)) {
                 fragment = new ResponsibilityFragment();
             }
@@ -64,6 +61,5 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
                 replace(getContentsHolderId(), fragment, fragClass.getSimpleName())
                 .addToBackStack(null)
                 .commit();
-
     }
 }

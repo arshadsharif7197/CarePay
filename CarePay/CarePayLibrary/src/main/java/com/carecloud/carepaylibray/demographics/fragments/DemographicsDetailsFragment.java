@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.Utility;
@@ -38,17 +39,18 @@ import java.util.Arrays;
  */
 public class DemographicsDetailsFragment extends Fragment implements View.OnClickListener {
 
-    View view;
+    View     view;
     String[] raceArray;
     String[] ethnicityArray;
     String[] preferredLanguageArray;
-    int selectedArray;
-    TextView raceTextView,ethnicityTextView,preferredLanguageTextView;
-    Button buttonChangeCurrentPhoto;
+    int      selectedArray;
+    TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
+    Button    buttonChangeCurrentPhoto;
     ImageView imageViewDetailsProfileImage;
     private int imgWidth = 0;
     private String userChoosenTask;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -82,31 +84,29 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         buttonChangeCurrentPhoto.setOnClickListener(this);
 
         imageViewDetailsProfileImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
-
-
     }
 
 
     @Override
     public void onClick(View view) {
-        if (view==raceTextView){
-            selectedArray=1;
-            showAlertDialogWithListview(raceArray,"Select Race");
-        }else if(view==ethnicityTextView){
-            selectedArray=2;
-            showAlertDialogWithListview(ethnicityArray,"Select Ethnicity");
-        }else if(view==preferredLanguageTextView){
-            selectedArray=3;
-            showAlertDialogWithListview(preferredLanguageArray,"Select Preferred Language");
-        }else if(view==buttonChangeCurrentPhoto){
+        if (view == raceTextView) {
+            selectedArray = 1;
+            showAlertDialogWithListview(raceArray, "Select Race");
+        } else if (view == ethnicityTextView) {
+            selectedArray = 2;
+            showAlertDialogWithListview(ethnicityArray, "Select Ethnicity");
+        } else if (view == preferredLanguageTextView) {
+            selectedArray = 3;
+            showAlertDialogWithListview(preferredLanguageArray, "Select Preferred Language");
+        } else if (view == buttonChangeCurrentPhoto) {
             selectImage();
         }
     }
 
 
-    private void showAlertDialogWithListview(final String[] raceArray,String title) {
-        Log.e("raceArray==",raceArray.toString());
-        Log.e("raceArray 23==",Arrays.asList(raceArray).toString());
+    private void showAlertDialogWithListview(final String[] raceArray, String title) {
+        Log.e("raceArray==", raceArray.toString());
+        Log.e("raceArray 23==", Arrays.asList(raceArray).toString());
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
@@ -128,7 +128,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                switch (selectedArray){
+                switch (selectedArray) {
                     case 1:
                         raceTextView.setText(raceArray[position]);
                         break;
@@ -143,9 +143,6 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
             }
         });
     }
-
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -179,8 +176,6 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-
-
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask = "Take Photo";
                     boolean result = Utility.checkPermissionCamera(getActivity());
@@ -204,7 +199,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
     private void galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
     }
 
@@ -231,7 +226,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
         File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
+                                    System.currentTimeMillis() + ".jpg");
 
         FileOutputStream fo;
         try {
@@ -244,7 +239,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.e("imgWidth",""+imgWidth);
+        Log.e("imgWidth", "" + imgWidth);
         Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
         imageViewDetailsProfileImage.setImageBitmap(roundBitmap);
 //        iv.setImageBitmap(thumbnail);
@@ -253,24 +248,13 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
     @SuppressWarnings("deprecation")
     private void onSelectFromGalleryResult(Intent data) {
-
-//        Bitmap bm = null;
-//        if (data != null) {
-//            try {
-//                bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        iv.setImageBitmap(bm);
         try {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
             File destination = new File(Environment.getExternalStorageDirectory(),
-                    System.currentTimeMillis() + ".jpg");
+                                        System.currentTimeMillis() + ".jpg");
 
             FileOutputStream fo;
 
@@ -279,7 +263,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
             fo.write(bytes.toByteArray());
             fo.close();
 
-            Log.e("imgWidth",""+imgWidth);
+            Log.e("imgWidth", "" + imgWidth);
             Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
             imageViewDetailsProfileImage.setImageBitmap(roundBitmap);
         } catch (FileNotFoundException e) {
@@ -287,6 +271,5 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
