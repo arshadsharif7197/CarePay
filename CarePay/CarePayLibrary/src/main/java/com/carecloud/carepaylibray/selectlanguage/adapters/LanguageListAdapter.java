@@ -1,8 +1,6 @@
 package com.carecloud.carepaylibray.selectlanguage.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +17,9 @@ import com.carecloud.carepaylibray.utils.Utility;
 
 import java.util.List;
 
+/**
+ * Created Adapter and view holder for recycler view.
+ */
 
 public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapter.ViewHolder> {
 
@@ -46,12 +47,14 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             if (mLanguage.isChecked()) {
                 holder.mTextViewLanguageName.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 Utility.setTypefaceFromAssets(mContext,"fonts/proximanova_semibold.otf",holder.mTextViewLanguageName);
-               // holder.mRadioButton.setBackgroundColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
             }
         }
-        holder.mRadioButton.setChecked(mLanguage.isChecked());
+        holder.mRadioButtonLanguageSelect.setChecked(mLanguage.isChecked());
     }
 
+    /**
+     * @return  number of languages
+     */
     @Override
     public int getItemCount() {
         return mLanguageListLanguageOptionModels.size();
@@ -60,14 +63,14 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView mTextViewLanguageName;
         CardView mCardView;
-        RadioButton mRadioButton;
+        RadioButton mRadioButtonLanguageSelect;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mTextViewLanguageName = (TextView) itemView.findViewById(R.id.languagename);
             mCardView = (CardView) itemView.findViewById(R.id.cardView);
-            mRadioButton = (RadioButton) itemView.findViewById(R.id.languageRadioButton);
-          Utility.setTypefaceFromAssets(mContext,"fonts/proximanova_regular.otf", mTextViewLanguageName);
+            mRadioButtonLanguageSelect = (RadioButton) itemView.findViewById(R.id.languageRadioButton);
+            Utility.setTypefaceFromAssets(mContext,"fonts/proximanova_regular.otf", mTextViewLanguageName);
             mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

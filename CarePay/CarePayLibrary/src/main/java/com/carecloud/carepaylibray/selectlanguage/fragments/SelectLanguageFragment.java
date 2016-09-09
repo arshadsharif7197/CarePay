@@ -34,16 +34,14 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     List<LanguageOptionModel> mLanguageOptionModelList;
     ImageButton mLanguageConfirmButton;
 
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-
     /**
      * Creating view for language fragment
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -127,9 +125,8 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     }
 
     /**
-     *
      * @param view
-     * @param position getting selected languauge position
+     * @param position  getting selected languauge position
      * @param mLanguage
      */
     @Override
@@ -150,8 +147,8 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
 
         mLanguageListAdapter.notifyDataSetChanged();
         language = mLanguage.getValue();
-       mLanguageConfirmButton.setEnabled(true);
-       mLanguageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
+        mLanguageConfirmButton.setEnabled(true);
+        mLanguageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
     }
 }
 
