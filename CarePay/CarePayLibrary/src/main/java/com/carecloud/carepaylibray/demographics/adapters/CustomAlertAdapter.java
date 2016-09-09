@@ -14,17 +14,16 @@ import java.util.List;
 
 public class CustomAlertAdapter extends BaseAdapter {
 
-    Context ctx=null;
-    List<String> listarray=null;
-    private LayoutInflater mInflater=null;
+    Context ctx = null;
+    List<String> listarray = null;
+    private LayoutInflater mInflater = null;
+
     public CustomAlertAdapter(Activity activty, List<String> list)
     {
         this.ctx=activty;
         mInflater = activty.getLayoutInflater();
         this.listarray=list;
     }
-
-
 
     @Override
     public int getCount() {

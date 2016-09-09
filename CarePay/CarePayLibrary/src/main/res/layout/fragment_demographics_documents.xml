@@ -106,6 +106,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/demogr_docs_insurance_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="30dp"
@@ -146,7 +147,7 @@
                     <TextView
                         android:text="@string/demogr_tv_choose_label"
                         style="@style/DemographicsDocsClickableTextStyle"
-                        android:id="@+id/demogr_docs_provider"
+                        android:id="@+id/demogr_docs_plan"
                         android:layout_width="wrap_content"/>
 
                 </LinearLayout>
@@ -166,7 +167,7 @@
 
                     <TextView
                         android:text="@string/demogr_docs_tv_chose_company"
-                        android:id="@+id/demogr_docs_plan"
+                        android:id="@+id/demogr_docs_provider"
                         android:textColor="@color/light_gray"
                         style="@style/DemographicsDocsClickableTextStyle"/>
 
