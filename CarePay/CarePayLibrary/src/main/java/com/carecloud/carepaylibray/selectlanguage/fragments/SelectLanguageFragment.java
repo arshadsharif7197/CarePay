@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.selectlanguage;
+package com.carecloud.carepaylibray.selectlanguage.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.selectlanguage.adapters.LanguageListAdapter;
+import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.StringFunctions;
 
@@ -28,11 +29,11 @@ import java.util.List;
 public class SelectLanguageFragment extends Fragment implements LanguageListAdapter.OnItemClickListener {
 
     private static final String LOG_TAG = SelectLanguageFragment.class.getSimpleName();
-    private KeyboardHolderActivity mActivity;
     RecyclerView mListView;
     String language = null;
     List<LanguageOptionModel> mLanguageOptionModelList;
-    ImageButton languageConfirmButton;
+    ImageButton mLanguageConfirmButton;
+
 
 
     @Override
@@ -40,6 +41,14 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         super.onCreate(savedInstanceState);
     }
 
+
+    /**
+     * Creating view for language fragment
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -48,8 +57,9 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         View view = inflater.inflate(R.layout.fragment_select_language, container, false);
         mListView = (RecyclerView) view.findViewById(R.id.languageRecyclerView);
         mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        languageConfirmButton = (ImageButton) view.findViewById(R.id.languageConfirmButton);
-       languageConfirmButton.setOnClickListener(new View.OnClickListener() {
+        mLanguageConfirmButton = (ImageButton) view.findViewById(R.id.languageConfirmButton);
+        mLanguageConfirmButton.setEnabled(false);
+        mLanguageConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SigninSignupActivity.class);
@@ -79,7 +89,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         mLanguageOptionModelList.add(mLanguageOptionModel);
 
         mLanguageOptionModel = new LanguageOptionModel();
-        mLanguageOptionModel.setValue("français");
+        mLanguageOptionModel.setValue("Français");
         mLanguageOptionModel.setChecked(false);
         mLanguageOptionModelList.add(mLanguageOptionModel);
 
@@ -116,7 +126,12 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         super.onSaveInstanceState(outState);
     }
 
-
+    /**
+     *
+     * @param view
+     * @param position getting selected languauge position
+     * @param mLanguage
+     */
     @Override
     public void onItemClick(View view, int position, LanguageOptionModel mLanguage) {
         List<LanguageOptionModel> newLanguageList = new ArrayList<>();
@@ -131,9 +146,12 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         }
         LanguageListAdapter mLanguageListAdapter = new LanguageListAdapter(newLanguageList, this, getActivity());
         mListView.setAdapter(mLanguageListAdapter);
+
+
         mLanguageListAdapter.notifyDataSetChanged();
         language = mLanguage.getValue();
-       languageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
+       mLanguageConfirmButton.setEnabled(true);
+       mLanguageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
     }
 }
 
