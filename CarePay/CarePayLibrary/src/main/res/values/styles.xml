@@ -64,19 +64,19 @@
     </style>
 
     <declare-styleable name="SympliTextView">
-        <attr name="fontPath" format="string"/>
+        <attr name="fontPath" format="string" />
 
         <!-- Inner shadow settings. -->
-        <attr name="innerShadowColor" format="color"/>
-        <attr name="innerShadowDx" format="dimension"/>
-        <attr name="innerShadowDy" format="dimension"/>
-        <attr name="innerShadowRadius" format="dimension"/>
+        <attr name="innerShadowColor" format="color" />
+        <attr name="innerShadowDx" format="dimension" />
+        <attr name="innerShadowDy" format="dimension" />
+        <attr name="innerShadowRadius" format="dimension" />
 
         <!-- Outer shadow settings. -->
-        <attr name="outerShadowColor" format="color"/>
-        <attr name="outerShadowDx" format="dimension"/>
-        <attr name="outerShadowDy" format="dimension"/>
-        <attr name="outerShadowRadius" format="dimension"/>
+        <attr name="outerShadowColor" format="color" />
+        <attr name="outerShadowDx" format="dimension" />
+        <attr name="outerShadowDy" format="dimension" />
+        <attr name="outerShadowRadius" format="dimension" />
     </declare-styleable>
 
     <!-- Responsibility styles -->
@@ -130,6 +130,7 @@
         <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
         <item name="android:textStyle">normal</item>
     </style>
+
 
     <!-- Documents -->
 
@@ -203,5 +204,27 @@
         <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
     </style>
+
+    <style name="DemographicsFragmentsHeadingStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">21.0sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="DemographicsFragmentsSubHeadingStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">13.0sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="DemographicsFragmentsTextInputLayoutStyle." parent="android:Widget.EditText">
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">17.0sp</item>
+
+    </style>
+
+
 
 </resources>

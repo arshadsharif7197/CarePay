@@ -8,10 +8,11 @@ import android.graphics.Bitmap;
 public class CameraHelper {
 
     private static CameraHelper ourInstance = new CameraHelper();
-    private String  photoImagePath;
-    private String  driversLicenceImagePath;
-    private Bitmap  insuranceBitmap;
-    private String  insuranceImagePath;
+    private  String photoImagePath;
+    private String driversLicenceImagePath;
+    private Bitmap insuranceBitmap;
+    private String insuranceImagePath;
+
     private boolean isFromGallery;
     private Bitmap  driversLicenceBitmap;
     private boolean isDriveLicense;
