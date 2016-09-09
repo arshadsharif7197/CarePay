@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
+
     </style>
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
@@ -18,6 +19,11 @@
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="Widget.AppCompat.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/textview_default_textsize</item>
+    </style>
+
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/colorAccent</item>
     </style>
@@ -25,7 +31,7 @@
     <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorAccent">@color/colorPrimary</item>
@@ -35,12 +41,166 @@
     </style>
 
     <style name="Dialog.FullScreen" parent="Theme.AppCompat.Dialog">
-        +        <item name="android:paddingRight">40dp</item>
-        +         <item name="android:paddingBottom">40dp</item>
-        +         <item name="android:paddingLeft">40dp</item>
-        +         <item name="android:paddingTop">40dp</item>
-        +
-        +
-        +        <item name="android:windowBackground">@android:color/transparent</item>
-        +    </style>
+        <item name="android:paddingRight">40dp</item>
+        <item name="android:paddingBottom">40dp</item>
+        <item name="android:paddingLeft">40dp</item>
+        <item name="android:paddingTop">40dp</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="keyboard_1_style">
+        <!--<item name="android:keyBackground">@drawable/k1_selector</item>-->
+        <item name="android:keyTextColor">@android:color/white</item>
+        <item name="android:background">#808587</item>
+        <item name="android:keyPreviewLayout">@layout/keyboard_preview</item>
+    </style>
+
+
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/rich_electric_blue</item>
+        <item name="colorSwitchThumbNormal">@color/light_gray</item>
+        <item name="android:colorForeground">@color/uncheck_confirm_button</item>
+    </style>
+
+    <declare-styleable name="SympliTextView">
+        <attr name="fontPath" format="string"/>
+
+        <!-- Inner shadow settings. -->
+        <attr name="innerShadowColor" format="color"/>
+        <attr name="innerShadowDx" format="dimension"/>
+        <attr name="innerShadowDy" format="dimension"/>
+        <attr name="innerShadowRadius" format="dimension"/>
+
+        <!-- Outer shadow settings. -->
+        <attr name="outerShadowColor" format="color"/>
+        <attr name="outerShadowDx" format="dimension"/>
+        <attr name="outerShadowDy" format="dimension"/>
+        <attr name="outerShadowRadius" format="dimension"/>
+    </declare-styleable>
+
+    <!-- Responsibility styles -->
+    <style name="ResponsTotalLabelStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/glitter</item>
+        <item name="android:textSize">@dimen/respons_total_label_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ResponsTotalStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_total_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ResponsDetailLabelStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/respons_detail_label_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ResponsDetailStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">@dimen/respons_detail_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ResponsButtonStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_button_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">17dp</item>
+        <item name="android:layout_marginLeft">@dimen/respons_button_margin_left_right</item>
+        <item name="android:layout_marginRight">@dimen/respons_button_margin_left_right</item>
+        <item name="android:background">@color/yellowGreen</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="ResponsibilityToolbarTextStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- Documents -->
+
+    <style name="DemographicsDocsButtonStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/rich_electric_blue</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:background">@drawable/button_background</item>
+    </style>
+
+    <style name="DemographicsDocsHeaderTitleStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/demographics_docs_header_title_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsHeaderSubtitleStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsHeaderStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/payne_gray</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsLabelStyle" parent="android:Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
+    </style>
+
+    <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height </item>
+        <item name="android:layout_marginTop">
+            @dimen/demographics_docs_image_button_container_margin_top
+        </item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="DemographicsDocsClickableTextStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
+    </style>
+
 </resources>

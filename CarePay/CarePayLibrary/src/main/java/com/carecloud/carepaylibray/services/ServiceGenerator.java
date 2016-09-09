@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.services;
 import android.content.Context;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.ResponseConstants;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
