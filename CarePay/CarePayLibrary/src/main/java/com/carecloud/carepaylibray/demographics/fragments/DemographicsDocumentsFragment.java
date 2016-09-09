@@ -13,15 +13,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.CameraScannerHelper;
 import com.carecloud.carepaylibray.utils.Utility;
+
+import java.util.Arrays;
 
 import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
@@ -47,13 +52,16 @@ public class DemographicsDocumentsFragment extends Fragment {
     private CameraScannerHelper mCameraScannerHelper;
     private CameraScannerHelper mLicenseScanHelper;
     private CameraScannerHelper mInsuranceScanHelper;
+    private String[] plans = {"Plan1", "Plan2", "Plan3"};
+    private String[] providers = {"Provider1", "Provider2", "Provider3", "Provider4"};
+
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
-        // ge the imageviews
+        // get the imageviews
         imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
         imInsurance = (ImageView) view.findViewById(R.id.demogr_insurance_image);
 
@@ -61,7 +69,7 @@ public class DemographicsDocumentsFragment extends Fragment {
         mLicenseScanHelper = new CameraScannerHelper(getActivity(), imLicense, 129); // TODO: 9/9/2016 use dimens
         mInsuranceScanHelper = new CameraScannerHelper(getActivity(), imInsurance, 129); // TODO: 9/9/2016 use dimens
 
-        // add click listenter
+        // add click listener
         final Button btnScanLicense = (Button)view.findViewById(R.id.demogr_docs_scan_license_btn);
         btnScanLicense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +96,7 @@ public class DemographicsDocumentsFragment extends Fragment {
         tvState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectState();
+                showChooseDialog(states, "Select state", tvState);
             }
         });
 
@@ -96,7 +104,7 @@ public class DemographicsDocumentsFragment extends Fragment {
         tvPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                choosePlan();
+                showChooseDialog(plans, "Choose plan", tvPlan);
             }
         });
 
@@ -104,7 +112,7 @@ public class DemographicsDocumentsFragment extends Fragment {
         tvProvider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseProvider();
+                showChooseDialog(providers, "Choose provider", tvProvider);
             }
         });
 
@@ -125,19 +133,6 @@ public class DemographicsDocumentsFragment extends Fragment {
         setTypefaces(view);
 
         return view;
-    }
-
-    private void chooseProvider() {
-     Log.v(LOG_TAG, "choose provider");
-    }
-
-
-    private void choosePlan() {
-        Log.v(LOG_TAG, "choose plan");
-    }
-
-    private void selectState() {
-        Log.v(LOG_TAG, "select state");
     }
 
     private void scanAndShowIn(ImageView imLicense) {
@@ -235,5 +230,36 @@ public class DemographicsDocumentsFragment extends Fragment {
         builder.show();
     }
 
-
+    private void showChooseDialog(final String[] options, String title, final TextView selectionDestination) {
+        final String cancelLabel = "Cancel";
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog.setTitle(title);
+        // add cancel button
+        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        // create dialog layout
+        View customView = LayoutInflater.from(getActivity()).inflate(
+                R.layout.alert_list_layout, null, false);
+        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        // create the adapter
+        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(options));
+        listView.setAdapter(mAdapter);
+        // show the dialog
+        dialog.setView(customView);
+        final AlertDialog alert = dialog.create();
+        alert.show();
+        // set item click listener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String selectedOption = options[position];
+                selectionDestination.setText(selectedOption);
+                alert.dismiss();
+            }
+        });
+    }
 }
