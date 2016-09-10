@@ -25,21 +25,20 @@ import com.carecloud.carepaylibray.utils.Utility;
 
 import java.util.Arrays;
 
-
 /**
  * Created by lsoco_user on 9/2/2016.
+ * Implements demographics details screen
  */
 public class DemographicsDetailsFragment extends Fragment implements View.OnClickListener {
 
-    View     view;
-    String[] raceArray;
-    String[] ethnicityArray;
-    String[] preferredLanguageArray;
-
-    int selectedArray;
-    TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
-    Button buttonChangeCurrentPhoto;
-    ImageView imageViewDetailsImage;
+    private View     view;
+    private String[] raceArray;
+    private String[] ethnicityArray;
+    private String[] preferredLanguageArray;
+    private int selectedArray;
+    private TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
+    private Button buttonChangeCurrentPhoto;
+    private ImageView imageViewDetailsImage;
     private CameraScannerHelper cameraScannerHelper;
 
     @Nullable
@@ -159,9 +158,9 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == CameraScannerHelper.SELECT_FILE)
-                cameraScannerHelper.onSelectFromGalleryResult(data);
+                cameraScannerHelper.onSelectFromGalleryResult(data, CameraScannerHelper.ROUND_IMAGE);
             else if (requestCode == CameraScannerHelper.REQUEST_CAMERA)
-                cameraScannerHelper.onCaptureImageResult(data);
+                cameraScannerHelper.onCaptureImageResult(data, CameraScannerHelper.ROUND_IMAGE);
         }
     }
 

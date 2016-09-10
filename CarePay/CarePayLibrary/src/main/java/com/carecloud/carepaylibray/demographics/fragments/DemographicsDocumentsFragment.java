@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -44,8 +45,6 @@ public class DemographicsDocumentsFragment extends Fragment {
             "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
     private static final String LOG_TAG  = DemographicsDocumentsFragment.class.getSimpleName();
-    private ImageView imInsurance;
-    private ImageView imLicense;
     private TextView tvState;
     private TextView tvPlan;
     private TextView tvProvider;
@@ -62,19 +61,19 @@ public class DemographicsDocumentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
         // get the imageviews
-        imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
+        ImageView imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
+        ImageView imInsurance;
         imInsurance = (ImageView) view.findViewById(R.id.demogr_insurance_image);
 
         // create scan helpers
-        mLicenseScanHelper = new CameraScannerHelper(getActivity(), imLicense, 129); // TODO: 9/9/2016 use dimens
-        mInsuranceScanHelper = new CameraScannerHelper(getActivity(), imInsurance, 129); // TODO: 9/9/2016 use dimens
+        mLicenseScanHelper = new CameraScannerHelper(getActivity(), imLicense, 129, 90); // TODO: 9/9/2016 use dimens
+        mInsuranceScanHelper = new CameraScannerHelper(getActivity(), imInsurance, 129, 90); // TODO: 9/9/2016 use dimens
 
         // add click listener
         final Button btnScanLicense = (Button)view.findViewById(R.id.demogr_docs_scan_license_btn);
         btnScanLicense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scanAndShowIn(imLicense);
                 Log.v(LOG_TAG, "scan license");
                 btnScanLicense.setText(R.string.demogr_docs_rescan);
                 selectImage(mLicenseScanHelper);
@@ -85,7 +84,6 @@ public class DemographicsDocumentsFragment extends Fragment {
         btnScanInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scanAndShowIn(imInsurance);
                 Log.v(LOG_TAG, "scan insurance");
                 btnScanInsurance.setText(R.string.demogr_docs_rescan);
                 selectImage(mInsuranceScanHelper);
@@ -130,15 +128,10 @@ public class DemographicsDocumentsFragment extends Fragment {
                 }
             }
         });
+
         setTypefaces(view);
 
-
         return view;
-
-    }
-
-    private void scanAndShowIn(ImageView imLicense) {
-
     }
 
     /**
@@ -165,9 +158,10 @@ public class DemographicsDocumentsFragment extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         String userChoosenTask = mCameraScannerHelper.getUserChoosenTask();
-
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -177,6 +171,7 @@ public class DemographicsDocumentsFragment extends Fragment {
                                                CameraScannerHelper.SELECT_FILE);
                 } else {
                     //code for deny
+                    Log.v(LOG_TAG, "read external denied");
                 }
                 break;
 
@@ -186,6 +181,7 @@ public class DemographicsDocumentsFragment extends Fragment {
                         startActivityForResult(mCameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
                 } else {
                     //code for deny
+                    Log.v(LOG_TAG, "camera denied");
                 }
         }
     }
@@ -196,9 +192,9 @@ public class DemographicsDocumentsFragment extends Fragment {
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == CameraScannerHelper.SELECT_FILE)
-                mCameraScannerHelper.onSelectFromGalleryResult(data);
+                mCameraScannerHelper.onSelectFromGalleryResult(data, CameraScannerHelper.RECTANGULAR_IMAGE);
             else if (requestCode == CameraScannerHelper.REQUEST_CAMERA)
-                mCameraScannerHelper.onCaptureImageResult(data);
+                mCameraScannerHelper.onCaptureImageResult(data, CameraScannerHelper.RECTANGULAR_IMAGE);
         }
     }
 
@@ -232,6 +228,12 @@ public class DemographicsDocumentsFragment extends Fragment {
         builder.show();
     }
 
+    /**
+     * Creates a generic dialog that contains a list of choices
+     * @param options The choices
+     * @param title The dlg title
+     * @param selectionDestination The textview where the selected option will be displayed
+     */
     private void showChooseDialog(final String[] options, String title, final TextView selectionDestination) {
         final String cancelLabel = "Cancel";
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
@@ -243,9 +245,9 @@ public class DemographicsDocumentsFragment extends Fragment {
                 dialogInterface.dismiss();
             }
         });
+
         // create dialog layout
-        View customView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.alert_list_layout, null, false);
+        View customView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_list_layout, null, false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         // create the adapter
         CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(options));
