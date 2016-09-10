@@ -52,7 +52,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
         cameraScannerHelper = new CameraScannerHelper(getActivity());
-        cameraScannerHelper.setImageViewDetailsProfileImage(imageViewDetailsImage);
+        cameraScannerHelper.setImageViewTarget(imageViewDetailsImage);
         cameraScannerHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
 
         return view;

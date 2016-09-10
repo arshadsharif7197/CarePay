@@ -40,5 +40,7 @@
     <dimen name="demographics_docs_number_text_size" type="dimen" format="float">17.0sp</dimen>
     <dimen name="demographics_docs_clickable_text_size" type="dimen" format="float">14.0sp</dimen>
     <dimen name="demogr_docs_section_container_margin_top">30dp</dimen>
+    <dimen name="demogr_docs_thumbnail_width">100dp</dimen>
+    <dimen name="demogr_docs_thumbnail_height">60dp</dimen>
 </resources>
 

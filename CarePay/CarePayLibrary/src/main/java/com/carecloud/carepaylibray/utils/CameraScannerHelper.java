@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.ImageView;
+
+import com.carecloud.carepaylibrary.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,9 +37,9 @@ public class CameraScannerHelper {
             "Cancel"
     };
     public static final  String         chooseActionDlgTitle  = "Add Photo!";
-    private static final String         EXTRA_DOC_TYPE        = "doc_type";
+    private static final String         LOG_TAG               = CameraScannerHelper.class.getSimpleName();
     private String    userChoosenTask;
-    private ImageView imageViewDetailsProfileImage;
+    private ImageView imageViewTarget;
     private int       imgWidth;
     private int       imgHeight;
     private Activity  context;
@@ -45,11 +48,12 @@ public class CameraScannerHelper {
         context = activity;
     }
 
-    public CameraScannerHelper(Activity activity, ImageView targetImageView, int width, int height) {
+    public CameraScannerHelper(Activity activity, ImageView targetImageView) {
         context = activity;
-        imageViewDetailsProfileImage = targetImageView;
-        imgWidth = width;
-        imgHeight = height;
+        imageViewTarget = targetImageView;
+        imgWidth = (int) context.getResources().getDimension(R.dimen.demogr_docs_thumbnail_width);
+        imgHeight = (int) context.getResources().getDimension(R.dimen.demogr_docs_thumbnail_height);
+        Log.v(LOG_TAG, "ctor viewWidth=" + imageViewTarget.getWidth() + " viewHeight=" + imageViewTarget.getHeight());
     }
 
     public int getImgHeight() {
@@ -68,12 +72,12 @@ public class CameraScannerHelper {
         this.imgWidth = imgWidth;
     }
 
-    public ImageView getImageViewDetailsProfileImage() {
-        return imageViewDetailsProfileImage;
+    public ImageView getImageViewTarget() {
+        return imageViewTarget;
     }
 
-    public void setImageViewDetailsProfileImage(ImageView imageViewDetailsProfileImage) {
-        this.imageViewDetailsProfileImage = imageViewDetailsProfileImage;
+    public void setImageViewTarget(ImageView imageViewTarget) {
+        this.imageViewTarget = imageViewTarget;
     }
 
     public String getUserChoosenTask() {
@@ -84,6 +88,11 @@ public class CameraScannerHelper {
         this.userChoosenTask = userChoosenTask;
     }
 
+    /**
+     * Callback method to be used upon returning from Camera activity
+     * @param data The intent used to launch the Camera
+     * @param shape The intended shape of the captured image
+     */
     public void onCaptureImageResult(Intent data, int shape) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -105,6 +114,11 @@ public class CameraScannerHelper {
         setCapturedImageToTargetView(thumbnail, shape);
     }
 
+    /**
+     * Callback method to be used upon returning from Gallery activity
+     * @param data The intent used to launch the GAllery
+     * @param shape The intended shape of the captured image
+     */
     public void onSelectFromGalleryResult(Intent data, int shape) {
         try {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData());
@@ -126,6 +140,10 @@ public class CameraScannerHelper {
         }
     }
 
+    /**
+     * Creates an intent to launch the camera
+     * @return The intent
+     */
     public Intent galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -133,13 +151,23 @@ public class CameraScannerHelper {
         return intent;
     }
 
+    /**
+     * Creates an intent to launch Gallery
+     * @return The intent
+     */
     public Intent cameraIntent() {
         return new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     }
 
-    public static Bitmap getSquareCroppedBitmap(Bitmap bitmap, int width, int height) {
+    /**
+     * Builds a scaled square bitmap from another bitmap
+     * @param bitmap The original bitmap
+     * @param width The destination bitmap width
+     * @param height The destination heght
+     * @return The scaled bitmap
+     */
+    public Bitmap getSquareCroppedBitmap(Bitmap bitmap, int width, int height) {
         Bitmap finalBitmap;
-
         if (bitmap.getWidth() != width || bitmap.getHeight() != height) {
             finalBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
         } else {
@@ -158,7 +186,7 @@ public class CameraScannerHelper {
         paint.setFilterBitmap(true);
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(Color.parseColor("#BAB399"));
+        paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail));
         canvas.drawRect(rect, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(finalBitmap, rect, rect, paint);
@@ -166,7 +194,13 @@ public class CameraScannerHelper {
         return output;
     }
 
-    public static Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int radius) {
+    /**
+     * Builds a scaled round bitmap from another bitmap
+     * @param bitmap The original bitmap
+     * @param radius The destination bitmap radius
+     * @return The scaled bitmap
+     */
+    public Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int radius) {
         Bitmap finalBitmap;
 
         if (bitmap.getWidth() != radius || bitmap.getHeight() != radius) {
@@ -187,7 +221,7 @@ public class CameraScannerHelper {
         paint.setFilterBitmap(true);
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(Color.parseColor("#BAB399"));
+        paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail));
 
         canvas.drawCircle(finalBitmap.getWidth() / 2 + 0.7f,
                           finalBitmap.getHeight() / 2 + 0.7f,
@@ -200,16 +234,21 @@ public class CameraScannerHelper {
         return output;
     }
 
+    /**
+     * Set the a bitmap to the target image view
+     * @param thumbnail The bitmap
+     * @param shape The shape (CameraScannerHelper.ROUNDED or CameraScannerHelper.RECTANGULAR)
+     */
     private void setCapturedImageToTargetView(Bitmap thumbnail, int shape) {
-
         Bitmap bitmap = null;
         if (shape == ROUND_IMAGE) {
             bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true),
                                              imgWidth);
         } else if (shape == RECTANGULAR_IMAGE) {
             bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgHeight, true),
-                                            imgWidth, imgHeight);
+                                            imgWidth,
+                                            imgHeight);
         }
-        imageViewDetailsProfileImage.setImageBitmap(bitmap);
+        imageViewTarget.setImageBitmap(bitmap);
     }
 }

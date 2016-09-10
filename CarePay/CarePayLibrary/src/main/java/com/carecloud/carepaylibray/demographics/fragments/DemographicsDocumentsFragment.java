@@ -74,8 +74,11 @@ public class DemographicsDocumentsFragment extends Fragment {
         tvInsuranceNum = (TextView) view.findViewById(R.id.demogr_insurance_num);
 
         // create scan helpers
-        mLicenseScanHelper = new CameraScannerHelper(getActivity(), imLicense, 129, 90); // TODO: 9/9/2016 use dimens
-        mInsuranceScanHelper = new CameraScannerHelper(getActivity(), imInsurance, 129, 90); // TODO: 9/9/2016 use dimens
+        int thumbWidth = (int) getActivity().getResources().getDimension(R.dimen.demogr_docs_thumbnail_width);
+        int thumbHeight= (int) getActivity().getResources().getDimension(R.dimen.demogr_docs_thumbnail_height);
+        Log.v(LOG_TAG, "width=" + thumbWidth + " height="+thumbHeight);
+        mLicenseScanHelper = new CameraScannerHelper(getActivity(), imLicense);
+        mInsuranceScanHelper = new CameraScannerHelper(getActivity(), imInsurance);
 
         // add click listener
         btnScanLicense = (Button) view.findViewById(R.id.demogr_docs_scan_license_btn);
