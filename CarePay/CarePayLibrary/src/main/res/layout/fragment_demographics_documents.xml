@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout style="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+<LinearLayout android:id="@+id/demogr_docs_root"
+              style="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -34,14 +35,14 @@
             style="@style/DemographicsDocsHeaderStyle"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="@dimen/top_bottom_scroll_padding"
-            android:paddingBottom="@dimen/top_bottom_scroll_padding">
+            android:paddingBottom="@dimen/top_bottom_scroll_padding"
+            android:paddingTop="@dimen/top_bottom_scroll_padding">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/demographics_docs_section_margin_top">
+                android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+                android:orientation="vertical">
 
                 <LinearLayout
                     style="@style/DemographicsDocsImageButtonContainerStyle">
@@ -69,8 +70,8 @@
 
                     <TextView
                         android:id="@+id/demogr_license_scan_label"
-                        android:layout_weight="1"
                         style="@style/DemographicsDocsDocumentLabelStyle"
+                        android:layout_weight="1"
                         android:text="@string/demogr_license_scan_label"/>
 
                     <TextView
@@ -93,9 +94,9 @@
                         android:text="@string/demogr_docs_license_number_label"/>
 
                     <TextView
-                        android:text="@string/demogr_tv_choose_label"
                         android:id="@+id/demogr_tv_state"
-                        style="@style/DemographicsDocsClickableTextStyle"/>
+                        style="@style/DemographicsDocsClickableTextStyle"
+                        android:text="@string/demogr_tv_choose_label"/>
 
                 </LinearLayout>
 
@@ -143,16 +144,16 @@
 
                     <TextView
                         android:id="@+id/demogr_insurance_provider_label"
+                        style="@style/DemographicsDocsLabelStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:text="@string/demogr_insurance_provider"
-                        style="@style/DemographicsDocsLabelStyle"/>
+                        android:text="@string/demogr_insurance_provider"/>
 
                     <TextView
-                        android:text="@string/demogr_tv_choose_label"
-                        style="@style/DemographicsDocsClickableTextStyle"
                         android:id="@+id/demogr_docs_plan"
-                        android:layout_width="wrap_content"/>
+                        style="@style/DemographicsDocsClickableTextStyle"
+                        android:layout_width="wrap_content"
+                        android:text="@string/demogr_tv_choose_label"/>
 
                 </LinearLayout>
 
@@ -164,16 +165,16 @@
 
                     <TextView
                         android:id="@+id/demogr_insurance_plan_label"
+                        style="@style/DemographicsDocsLabelStyle"
                         android:layout_width="0dp"
-                        android:text="@string/demogr_insurance_plan"
                         android:layout_weight="1"
-                        style="@style/DemographicsDocsLabelStyle"/>
+                        android:text="@string/demogr_insurance_plan"/>
 
                     <TextView
-                        android:text="@string/demogr_docs_tv_chose_company"
                         android:id="@+id/demogr_docs_provider"
-                        android:textColor="@color/light_gray"
-                        style="@style/DemographicsDocsClickableTextStyle"/>
+                        style="@style/DemographicsDocsClickableTextStyle"
+                        android:text="@string/demogr_docs_tv_chose_company"
+                        android:textColor="@color/light_gray"/>
 
                 </LinearLayout>
 

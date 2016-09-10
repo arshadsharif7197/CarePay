@@ -211,4 +211,13 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
             return true;
         }
     }
+
+    /**
+     * Returns the fragment in the view pager at a certain index. Used in tests
+     * @param pos The index
+     * @return The fragments
+     */
+    public Fragment getFragmentAt(int pos) {
+        return ((FunPagerAdapter)viewPager.getAdapter()).getItem(pos);
+    }
 }
