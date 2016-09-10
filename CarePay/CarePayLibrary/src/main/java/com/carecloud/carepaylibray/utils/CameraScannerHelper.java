@@ -23,18 +23,18 @@ import java.io.IOException;
  */
 public class CameraScannerHelper {
 
-    public static final int            REQUEST_CAMERA        = 0;
-    public static final int            SELECT_FILE           = 1;
-    public static final int            ROUND_IMAGE           = 11;
-    public static final int            RECTANGULAR_IMAGE     = 22;
-    public static final String         CHOOSER_NAME          = "Select File";
-    public static final CharSequence[] chooseActionDlOptions = {
+    public static final  int            REQUEST_CAMERA        = 0;
+    public static final  int            SELECT_FILE           = 1;
+    public static final  int            ROUND_IMAGE           = 11;
+    public static final  int            RECTANGULAR_IMAGE     = 22;
+    public static final  String         CHOOSER_NAME          = "Select File";
+    public static final  CharSequence[] chooseActionDlOptions = {
             "Take Photo",
             "Choose from Library",
             "Cancel"
     };
-    public static final String         chooseActionDlgTitle  = "Add Photo!";
-
+    public static final  String         chooseActionDlgTitle  = "Add Photo!";
+    private static final String         EXTRA_DOC_TYPE        = "doc_type";
     private String    userChoosenTask;
     private ImageView imageViewDetailsProfileImage;
     private int       imgWidth;

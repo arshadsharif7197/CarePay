@@ -33,59 +33,69 @@ import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTy
 import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
 
-
 /**
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
 public class DemographicsDocumentsFragment extends Fragment {
 
-    private static final String[] states = new String[] {
+    private static final String   LOG_TAG   = DemographicsDocumentsFragment.class.getSimpleName();
+    public static final  int      LICENSE   = 0;
+    public static final  int      INSURANCE = 1;
+    private static final String[] states    = new String[]{
             "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
             "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
-    private static final String LOG_TAG  = DemographicsDocumentsFragment.class.getSimpleName();
-    private TextView tvState;
-    private TextView tvPlan;
-    private TextView tvProvider;
+    private static final String[] plans     = {"Plan1", "Plan2", "Plan3"};
+    private static final String[] providers = {"Provider1", "Provider2", "Provider3", "Provider4"};
     private CameraScannerHelper mCameraScannerHelper;
     private CameraScannerHelper mLicenseScanHelper;
     private CameraScannerHelper mInsuranceScanHelper;
-    private String[] plans = {"Plan1", "Plan2", "Plan3"};
-    private String[] providers = {"Provider1", "Provider2", "Provider3", "Provider4"};
-
+    private ImageView           imLicense;
+    private ImageView           imInsurance;
+    private TextView            tvLicenseNum;
+    private TextView            tvInsuranceNum;
+    private Button              btnScanInsurance;
+    private Button              btnScanLicense;
+    private TextView            tvState;
+    private TextView            tvPlan;
+    private TextView            tvProvider;
+    private int                 crtScannedDocFlag;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
+        Log.v(LOG_TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
         // get the imageviews
-        ImageView imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
-        ImageView imInsurance;
+        imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
         imInsurance = (ImageView) view.findViewById(R.id.demogr_insurance_image);
+        tvLicenseNum = (TextView) view.findViewById(R.id.demogr_docs_license_num);
+        tvInsuranceNum = (TextView) view.findViewById(R.id.demogr_insurance_num);
 
         // create scan helpers
         mLicenseScanHelper = new CameraScannerHelper(getActivity(), imLicense, 129, 90); // TODO: 9/9/2016 use dimens
         mInsuranceScanHelper = new CameraScannerHelper(getActivity(), imInsurance, 129, 90); // TODO: 9/9/2016 use dimens
 
         // add click listener
-        final Button btnScanLicense = (Button)view.findViewById(R.id.demogr_docs_scan_license_btn);
+        btnScanLicense = (Button) view.findViewById(R.id.demogr_docs_scan_license_btn);
         btnScanLicense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan license");
-                btnScanLicense.setText(R.string.demogr_docs_rescan);
+                crtScannedDocFlag = LICENSE;
                 selectImage(mLicenseScanHelper);
             }
         });
 
-        final Button btnScanInsurance = (Button)view.findViewById(R.id.demogr_insurance_scan_insurance_btn);
+        btnScanInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_btn);
         btnScanInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                btnScanInsurance.setText(R.string.demogr_docs_rescan);
+                crtScannedDocFlag = INSURANCE;
                 selectImage(mInsuranceScanHelper);
             }
         });
@@ -119,7 +129,7 @@ public class DemographicsDocumentsFragment extends Fragment {
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-                if(on) {
+                if (on) {
                     // show insurance section
                     llInsuranceSection.setVisibility(View.VISIBLE);
                 } else {
@@ -161,6 +171,7 @@ public class DemographicsDocumentsFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        Log.v(LOG_TAG, "onReauestPermissionsResult()");
         String userChoosenTask = mCameraScannerHelper.getUserChoosenTask();
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
@@ -188,31 +199,53 @@ public class DemographicsDocumentsFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v(LOG_TAG, "onActivityResult()");
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == CameraScannerHelper.SELECT_FILE)
+            if (requestCode == CameraScannerHelper.SELECT_FILE) {
                 mCameraScannerHelper.onSelectFromGalleryResult(data, CameraScannerHelper.RECTANGULAR_IMAGE);
-            else if (requestCode == CameraScannerHelper.REQUEST_CAMERA)
+            } else if (requestCode == CameraScannerHelper.REQUEST_CAMERA) {
                 mCameraScannerHelper.onCaptureImageResult(data, CameraScannerHelper.RECTANGULAR_IMAGE);
+            }
+            updateDocDetailAfterScan();
         }
     }
 
+    private void updateDocDetailAfterScan() { // TODO: 9/10/2016 turn into a callback when real scanning in place
+        // update the fields related to the last scanned doc
+        if (crtScannedDocFlag == LICENSE) { // license has been scanned
+            btnScanLicense.setText(R.string.demogr_docs_rescan);
+            tvLicenseNum.setText("123456789");
+            tvLicenseNum.setVisibility(View.VISIBLE);
+        } else { // insurance has been
+            btnScanInsurance.setText(R.string.demogr_docs_rescan);
+            tvInsuranceNum.setText("98765431");
+            tvInsuranceNum.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Starts Camera or Gallery to caprture/select an image
+     *
+     * @param cameraScannerHelper The camera helper used with a particular imageview
+     */
     public void selectImage(final CameraScannerHelper cameraScannerHelper) {
         mCameraScannerHelper = cameraScannerHelper;
+        // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(CameraScannerHelper.chooseActionDlgTitle);
         builder.setItems(CameraScannerHelper.chooseActionDlOptions,
                          new DialogInterface.OnClickListener() {
                              @Override
                              public void onClick(DialogInterface dialog, int item) {
-                                 if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[0])) {
+                                 if (item == 0) { // "Take picture" chosen
                                      cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[0].toString());
                                      boolean result = Utility.checkPermissionCamera(getActivity());
                                      if (result) {
                                          startActivityForResult(cameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
                                      }
-                                 } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[1])) {
+                                 } else if (item == 1) {  // "Select from Gallery" chosen
                                      cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[1].toString());
                                      boolean result = Utility.checkPermission(getActivity());
                                      if (result) {
@@ -220,7 +253,7 @@ public class DemographicsDocumentsFragment extends Fragment {
                                                                                      CameraScannerHelper.CHOOSER_NAME),
                                                                 CameraScannerHelper.SELECT_FILE);
                                      }
-                                 } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[2])) {
+                                 } else if (item == 3) { // "Cancel"
                                      dialog.dismiss();
                                  }
                              }
@@ -230,8 +263,9 @@ public class DemographicsDocumentsFragment extends Fragment {
 
     /**
      * Creates a generic dialog that contains a list of choices
-     * @param options The choices
-     * @param title The dlg title
+     *
+     * @param options              The choices
+     * @param title                The dlg title
      * @param selectionDestination The textview where the selected option will be displayed
      */
     private void showChooseDialog(final String[] options, String title, final TextView selectionDestination) {

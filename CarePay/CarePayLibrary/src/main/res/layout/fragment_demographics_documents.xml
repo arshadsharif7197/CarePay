@@ -72,7 +72,7 @@
                     <TextView
                         android:id="@+id/demogr_docs_license_num"
                         style="@style/DemographicsDocsNumberStyle"
-                        android:text="123245699"/>
+                        android:visibility="invisible"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -187,7 +187,7 @@
                     <TextView
                         android:id="@+id/demogr_insurance_num"
                         style="@style/DemographicsDocsNumberStyle"
-                        android:text="123245699"/>
+                        android:visibility="invisible"/>
                 </LinearLayout>
 
             </LinearLayout>
