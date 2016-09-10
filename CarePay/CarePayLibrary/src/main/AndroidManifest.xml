@@ -31,7 +31,12 @@
             android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"
             android:theme="@style/AppTheme"/>
 
-        <activity android:name="com.carecloud.carepaylibray.payment.PaymentActivity"/>
+        <activity android:name="com.carecloud.carepaylibray.payment.PaymentActivity"
+            android:parentActivityName="com.carecloud.carepaylibray.homescreen.HomeScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
+        </activity>
     </application>
 
 </manifest>

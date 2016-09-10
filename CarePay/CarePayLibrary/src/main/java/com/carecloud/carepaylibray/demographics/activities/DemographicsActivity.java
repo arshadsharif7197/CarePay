@@ -134,12 +134,10 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         if (view == nextButton) {
             setCurrentItem(viewPager.getCurrentItem() + 1, true);
         }
-
-
     }
 
     /**
-     * Adapter
+     * Adapter for the viewpager
      */
     class FunPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 

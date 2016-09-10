@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * Helper for scan with camera functionality
  */
-public class CameraScannerHelper {
+public class ImageCaptureHelper {
 
     public static final  int            REQUEST_CAMERA        = 0;
     public static final  int            SELECT_FILE           = 1;
@@ -37,18 +37,18 @@ public class CameraScannerHelper {
             "Cancel"
     };
     public static final  String         chooseActionDlgTitle  = "Add Photo!";
-    private static final String         LOG_TAG               = CameraScannerHelper.class.getSimpleName();
+    private static final String         LOG_TAG               = ImageCaptureHelper.class.getSimpleName();
     private String    userChoosenTask;
     private ImageView imageViewTarget;
     private int       imgWidth;
     private int       imgHeight;
     private Activity  context;
 
-    public CameraScannerHelper(Activity activity) {
+    public ImageCaptureHelper(Activity activity) {
         context = activity;
     }
 
-    public CameraScannerHelper(Activity activity, ImageView targetImageView) {
+    public ImageCaptureHelper(Activity activity, ImageView targetImageView) {
         context = activity;
         imageViewTarget = targetImageView;
         imgWidth = (int) context.getResources().getDimension(R.dimen.demogr_docs_thumbnail_width);
@@ -237,7 +237,7 @@ public class CameraScannerHelper {
     /**
      * Set the a bitmap to the target image view
      * @param thumbnail The bitmap
-     * @param shape The shape (CameraScannerHelper.ROUNDED or CameraScannerHelper.RECTANGULAR)
+     * @param shape The shape (ImageCaptureHelper.ROUNDED or ImageCaptureHelper.RECTANGULAR)
      */
     private void setCapturedImageToTargetView(Bitmap thumbnail, int shape) {
         Bitmap bitmap = null;

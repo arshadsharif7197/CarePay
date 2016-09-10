@@ -76,4 +76,6 @@ public class ResponsibilityFragment extends Fragment {
     public void setActivity(KeyboardHolderActivity activity) {
         mActivity = activity;
     }
+
+
 }

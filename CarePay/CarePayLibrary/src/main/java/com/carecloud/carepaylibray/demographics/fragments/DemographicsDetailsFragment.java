@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.utils.CameraScannerHelper;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import java.util.Arrays;
@@ -35,11 +35,11 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
     private String[] raceArray;
     private String[] ethnicityArray;
     private String[] preferredLanguageArray;
-    private int selectedArray;
+    private int      selectedArray;
     private TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
-    private Button buttonChangeCurrentPhoto;
-    private ImageView imageViewDetailsImage;
-    private CameraScannerHelper cameraScannerHelper;
+    private Button             buttonChangeCurrentPhoto;
+    private ImageView          imageViewDetailsImage;
+    private ImageCaptureHelper imageCaptureHelper;
 
     @Nullable
     @Override
@@ -51,9 +51,9 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
-        cameraScannerHelper = new CameraScannerHelper(getActivity());
-        cameraScannerHelper.setImageViewTarget(imageViewDetailsImage);
-        cameraScannerHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
+        imageCaptureHelper = new ImageCaptureHelper(getActivity());
+        imageCaptureHelper.setImageViewTarget(imageViewDetailsImage);
+        imageCaptureHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
 
         return view;
     }
@@ -128,15 +128,15 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        String userChoosenTask = cameraScannerHelper.getUserChoosenTask();
+        String userChoosenTask = imageCaptureHelper.getUserChoosenTask();
 
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[1].toString()))
-                        startActivityForResult(Intent.createChooser(cameraScannerHelper.galleryIntent(),
-                                                                    CameraScannerHelper.CHOOSER_NAME),
-                                               CameraScannerHelper.SELECT_FILE);
+                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
+                        startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
+                                                                    ImageCaptureHelper.CHOOSER_NAME),
+                                               ImageCaptureHelper.SELECT_FILE);
                 } else {
                     //code for deny
                 }
@@ -144,8 +144,8 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
             case Utility.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[0].toString()))
-                        startActivityForResult(cameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString()))
+                        startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
                 } else {
                     //code for deny
                 }
@@ -157,35 +157,35 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == CameraScannerHelper.SELECT_FILE)
-                cameraScannerHelper.onSelectFromGalleryResult(data, CameraScannerHelper.ROUND_IMAGE);
-            else if (requestCode == CameraScannerHelper.REQUEST_CAMERA)
-                cameraScannerHelper.onCaptureImageResult(data, CameraScannerHelper.ROUND_IMAGE);
+            if (requestCode == ImageCaptureHelper.SELECT_FILE)
+                imageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.ROUND_IMAGE);
+            else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA)
+                imageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.ROUND_IMAGE);
         }
     }
 
     public void selectImage() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(CameraScannerHelper.chooseActionDlgTitle);
-        builder.setItems(CameraScannerHelper.chooseActionDlOptions,
+        builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
+        builder.setItems(ImageCaptureHelper.chooseActionDlOptions,
                          new DialogInterface.OnClickListener() {
                              @Override
                              public void onClick(DialogInterface dialog, int item) {
-                                 if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[0])) {
-                                     cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[0].toString());
+                                 if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[0])) {
+                                     imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
                                      boolean result = Utility.checkPermissionCamera(getActivity());
                                      if (result) {
-                                         startActivityForResult(cameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                                         startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
                                      }
-                                 } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[1])) {
-                                     cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[1].toString());
+                                 } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[1])) {
+                                     imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
                                      boolean result = Utility.checkPermission(getActivity());
                                      if (result) {
-                                         startActivityForResult(Intent.createChooser(cameraScannerHelper.galleryIntent(),
-                                                                                     CameraScannerHelper.CHOOSER_NAME),
-                                                                CameraScannerHelper.SELECT_FILE);
+                                         startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
+                                                                                     ImageCaptureHelper.CHOOSER_NAME),
+                                                                ImageCaptureHelper.SELECT_FILE);
                                      }
-                                 } else if (CameraScannerHelper.chooseActionDlOptions[item].equals(CameraScannerHelper.chooseActionDlOptions[2])) {
+                                 } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[2])) {
                                      dialog.dismiss();
                                  }
                              }

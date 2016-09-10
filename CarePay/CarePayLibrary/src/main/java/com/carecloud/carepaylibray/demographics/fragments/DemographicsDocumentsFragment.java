@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.utils.CameraScannerHelper;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import java.util.Arrays;
@@ -48,17 +48,17 @@ public class DemographicsDocumentsFragment extends Fragment {
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
     private static final String[] plans     = {"Plan1", "Plan2", "Plan3"};
     private static final String[] providers = {"Provider1", "Provider2", "Provider3", "Provider4"};
-    private CameraScannerHelper mCameraScannerHelper;
-    private CameraScannerHelper mLicenseScanHelper;
-    private CameraScannerHelper mInsuranceScanHelper;
-    private TextView            tvLicenseNum;
-    private TextView            tvInsuranceNum;
-    private Button              btnScanInsurance;
-    private Button              btnScanLicense;
-    private TextView            tvState;
-    private TextView            tvPlan;
-    private TextView            tvProvider;
-    private int                 crtScannedDocFlag;
+    private ImageCaptureHelper mImageCaptureHelper;
+    private ImageCaptureHelper mLicenseScanHelper;
+    private ImageCaptureHelper mInsuranceScanHelper;
+    private TextView           tvLicenseNum;
+    private TextView           tvInsuranceNum;
+    private Button             btnScanInsurance;
+    private Button             btnScanLicense;
+    private TextView           tvState;
+    private TextView           tvPlan;
+    private TextView           tvProvider;
+    private int                crtScannedDocFlag;
 
     @Nullable
     @Override
@@ -77,8 +77,8 @@ public class DemographicsDocumentsFragment extends Fragment {
         int thumbWidth = (int) getActivity().getResources().getDimension(R.dimen.demogr_docs_thumbnail_width);
         int thumbHeight= (int) getActivity().getResources().getDimension(R.dimen.demogr_docs_thumbnail_height);
         Log.v(LOG_TAG, "width=" + thumbWidth + " height="+thumbHeight);
-        mLicenseScanHelper = new CameraScannerHelper(getActivity(), imLicense);
-        mInsuranceScanHelper = new CameraScannerHelper(getActivity(), imInsurance);
+        mLicenseScanHelper = new ImageCaptureHelper(getActivity(), imLicense);
+        mInsuranceScanHelper = new ImageCaptureHelper(getActivity(), imInsurance);
 
         // add click listener
         btnScanLicense = (Button) view.findViewById(R.id.demogr_docs_scan_license_btn);
@@ -174,14 +174,14 @@ public class DemographicsDocumentsFragment extends Fragment {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         Log.v(LOG_TAG, "onReauestPermissionsResult()");
-        String userChoosenTask = mCameraScannerHelper.getUserChoosenTask();
+        String userChoosenTask = mImageCaptureHelper.getUserChoosenTask();
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[1].toString()))
-                        startActivityForResult(Intent.createChooser(mCameraScannerHelper.galleryIntent(),
-                                                                    CameraScannerHelper.CHOOSER_NAME),
-                                               CameraScannerHelper.SELECT_FILE);
+                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
+                        startActivityForResult(Intent.createChooser(mImageCaptureHelper.galleryIntent(),
+                                                                    ImageCaptureHelper.CHOOSER_NAME),
+                                               ImageCaptureHelper.SELECT_FILE);
                 } else {
                     //code for deny
                     Log.v(LOG_TAG, "read external denied");
@@ -190,8 +190,8 @@ public class DemographicsDocumentsFragment extends Fragment {
 
             case Utility.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(CameraScannerHelper.chooseActionDlOptions[0].toString()))
-                        startActivityForResult(mCameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString()))
+                        startActivityForResult(mImageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
                 } else {
                     //code for deny
                     Log.v(LOG_TAG, "camera denied");
@@ -205,10 +205,10 @@ public class DemographicsDocumentsFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == CameraScannerHelper.SELECT_FILE) {
-                mCameraScannerHelper.onSelectFromGalleryResult(data, CameraScannerHelper.RECTANGULAR_IMAGE);
-            } else if (requestCode == CameraScannerHelper.REQUEST_CAMERA) {
-                mCameraScannerHelper.onCaptureImageResult(data, CameraScannerHelper.RECTANGULAR_IMAGE);
+            if (requestCode == ImageCaptureHelper.SELECT_FILE) {
+                mImageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+            } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
+                mImageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
             }
             updateDetailViewsAfterScan();
         }
@@ -236,30 +236,30 @@ public class DemographicsDocumentsFragment extends Fragment {
     /**
      * Starts Camera or Gallery to caprture/select an image
      *
-     * @param cameraScannerHelper The camera helper used with a particular imageview
+     * @param imageCaptureHelper The camera helper used with a particular imageview
      */
-    public void selectImage(final CameraScannerHelper cameraScannerHelper) {
-        mCameraScannerHelper = cameraScannerHelper;
+    public void selectImage(final ImageCaptureHelper imageCaptureHelper) {
+        mImageCaptureHelper = imageCaptureHelper;
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(CameraScannerHelper.chooseActionDlgTitle);
-        builder.setItems(CameraScannerHelper.chooseActionDlOptions,
+        builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
+        builder.setItems(ImageCaptureHelper.chooseActionDlOptions,
                          new DialogInterface.OnClickListener() {
                              @Override
                              public void onClick(DialogInterface dialog, int item) {
                                  if (item == 0) { // "Take picture" chosen
-                                     cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[0].toString());
+                                     imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
                                      boolean result = Utility.checkPermissionCamera(getActivity());
                                      if (result) {
-                                         startActivityForResult(cameraScannerHelper.cameraIntent(), CameraScannerHelper.REQUEST_CAMERA);
+                                         startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
                                      }
                                  } else if (item == 1) {  // "Select from Gallery" chosen
-                                     cameraScannerHelper.setUserChoosenTask(CameraScannerHelper.chooseActionDlOptions[1].toString());
+                                     imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
                                      boolean result = Utility.checkPermission(getActivity());
                                      if (result) {
-                                         startActivityForResult(Intent.createChooser(cameraScannerHelper.galleryIntent(),
-                                                                                     CameraScannerHelper.CHOOSER_NAME),
-                                                                CameraScannerHelper.SELECT_FILE);
+                                         startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
+                                                                                     ImageCaptureHelper.CHOOSER_NAME),
+                                                                ImageCaptureHelper.SELECT_FILE);
                                      }
                                  } else if (item == 3) { // "Cancel"
                                      dialog.dismiss();
