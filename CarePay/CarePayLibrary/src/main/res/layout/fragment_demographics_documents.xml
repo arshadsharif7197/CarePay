@@ -33,12 +33,15 @@
         <LinearLayout
             style="@style/DemographicsDocsHeaderStyle"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="@dimen/top_bottom_scroll_padding"
+            android:paddingBottom="@dimen/top_bottom_scroll_padding">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/demographics_docs_section_margin_top">
 
                 <LinearLayout
                     style="@style/DemographicsDocsImageButtonContainerStyle">
@@ -66,19 +69,20 @@
 
                     <TextView
                         android:id="@+id/demogr_license_scan_label"
+                        android:layout_weight="1"
                         style="@style/DemographicsDocsDocumentLabelStyle"
                         android:text="@string/demogr_license_scan_label"/>
 
                     <TextView
                         android:id="@+id/demogr_docs_license_num"
                         style="@style/DemographicsDocsNumberStyle"
-                        android:visibility="invisible"/>
+                        android:visibility="gone"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                     android:orientation="horizontal">
 
                     <TextView
@@ -109,7 +113,7 @@
                 android:id="@+id/demogr_docs_insurance_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="@dimen/demogr_docs_section_container_margin_top"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -134,7 +138,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                     android:orientation="horizontal">
 
                     <TextView
@@ -155,7 +159,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                     android:orientation="horizontal">
 
                     <TextView
@@ -176,7 +180,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                     android:orientation="vertical">
 
                     <TextView
@@ -187,7 +191,7 @@
                     <TextView
                         android:id="@+id/demogr_insurance_num"
                         style="@style/DemographicsDocsNumberStyle"
-                        android:visibility="invisible"/>
+                        android:visibility="gone"/>
                 </LinearLayout>
 
             </LinearLayout>

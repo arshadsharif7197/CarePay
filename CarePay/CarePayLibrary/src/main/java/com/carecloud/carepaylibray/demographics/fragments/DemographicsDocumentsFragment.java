@@ -51,8 +51,6 @@ public class DemographicsDocumentsFragment extends Fragment {
     private CameraScannerHelper mCameraScannerHelper;
     private CameraScannerHelper mLicenseScanHelper;
     private CameraScannerHelper mInsuranceScanHelper;
-    private ImageView           imLicense;
-    private ImageView           imInsurance;
     private TextView            tvLicenseNum;
     private TextView            tvInsuranceNum;
     private Button              btnScanInsurance;
@@ -70,8 +68,8 @@ public class DemographicsDocumentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
         // get the imageviews
-        imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
-        imInsurance = (ImageView) view.findViewById(R.id.demogr_insurance_image);
+        ImageView imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
+        ImageView imInsurance = (ImageView) view.findViewById(R.id.demogr_insurance_image);
         tvLicenseNum = (TextView) view.findViewById(R.id.demogr_docs_license_num);
         tvInsuranceNum = (TextView) view.findViewById(R.id.demogr_insurance_num);
 
@@ -138,6 +136,7 @@ public class DemographicsDocumentsFragment extends Fragment {
                 }
             }
         });
+        switchCompat.setChecked(false);
 
         setTypefaces(view);
 
@@ -208,20 +207,26 @@ public class DemographicsDocumentsFragment extends Fragment {
             } else if (requestCode == CameraScannerHelper.REQUEST_CAMERA) {
                 mCameraScannerHelper.onCaptureImageResult(data, CameraScannerHelper.RECTANGULAR_IMAGE);
             }
-            updateDocDetailAfterScan();
+            updateDetailViewsAfterScan();
         }
     }
 
-    private void updateDocDetailAfterScan() { // TODO: 9/10/2016 turn into a callback when real scanning in place
+    /**
+     * Updates the number the button label and the number textview accoring to doc scanned (license or insurance)
+     */
+    private void updateDetailViewsAfterScan() { // TODO: 9/10/2016 turn into a callback when real scanning in place
         // update the fields related to the last scanned doc
         if (crtScannedDocFlag == LICENSE) { // license has been scanned
             btnScanLicense.setText(R.string.demogr_docs_rescan);
             tvLicenseNum.setText("123456789");
             tvLicenseNum.setVisibility(View.VISIBLE);
+            tvState.setText(states[8]);
         } else { // insurance has been
             btnScanInsurance.setText(R.string.demogr_docs_rescan);
             tvInsuranceNum.setText("98765431");
             tvInsuranceNum.setVisibility(View.VISIBLE);
+            tvPlan.setText(plans[0]);
+            tvProvider.setText(providers[0]);
         }
     }
 

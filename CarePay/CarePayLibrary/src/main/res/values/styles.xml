@@ -160,10 +160,8 @@
 
     <style name="DemographicsDocsHeaderStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin
-        </item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
-        </item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin </item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin </item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -192,9 +190,6 @@
     <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height </item>
-        <item name="android:layout_marginTop">
-            @dimen/demographics_docs_image_button_container_margin_top
-        </item>
         <item name="android:orientation">horizontal</item>
     </style>
 
