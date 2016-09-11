@@ -43,18 +43,19 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
     String[] raceArray;
     String[] ethnicityArray;
     String[] preferredLanguageArray;
-    int      selectedArray;
+
+    int selectedArray;
     TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
-    Button    buttonChangeCurrentPhoto;
+    Button buttonChangeCurrentPhoto;
     ImageView imageViewDetailsProfileImage;
     private int imgWidth = 0;
-    private String userChoosenTask;
+    private String userChosenTask;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_details, container, false);
+        view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
 
         initialiseUIFields();
         raceArray = getResources().getStringArray(R.array.Race);
@@ -85,7 +86,6 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
         imageViewDetailsProfileImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -149,7 +149,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals("Choose from Library"))
+                    if (userChosenTask.equals("Choose from Library"))
                         galleryIntent();
                 } else {
                     //code for deny
@@ -158,7 +158,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
 
             case Utility.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals("Take Photo"))
+                    if (userChosenTask.equals("Take Photo"))
                         cameraIntent();
 
                 } else {
@@ -177,13 +177,13 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
+                    userChosenTask = "Take Photo";
                     boolean result = Utility.checkPermissionCamera(getActivity());
                     if (result)
                         cameraIntent();
 
                 } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask = "Choose from Library";
+                    userChosenTask = "Choose from Library";
                     boolean result = Utility.checkPermission(getActivity());
                     if (result)
                         galleryIntent();
@@ -242,12 +242,12 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         Log.e("imgWidth", "" + imgWidth);
         Bitmap roundBitmap = Utility.getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true), imgWidth);
         imageViewDetailsProfileImage.setImageBitmap(roundBitmap);
-//        iv.setImageBitmap(thumbnail);
     }
 
 
     @SuppressWarnings("deprecation")
     private void onSelectFromGalleryResult(Intent data) {
+
         try {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
