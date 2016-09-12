@@ -41,10 +41,10 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        LanguageOptionModel LanguageSelected = LanguageListLanguageOptionModels.get(position);
-        if (!StringFunctions.isNullOrEmpty(LanguageSelected.getValue())) {
-            holder.textViewLanguageName.setText(LanguageSelected.getValue());
-            if (LanguageSelected.isChecked()) {
+        LanguageOptionModel languageSelected = LanguageListLanguageOptionModels.get(position);
+        if (!StringFunctions.isNullOrEmpty(languageSelected.getValue())) {
+            holder.textViewLanguageName.setText(languageSelected.getValue());
+            if (languageSelected.isChecked()) {
                 holder.textViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.colorPrimary));
                 Utility.setProximaNovaSemiboldTypeface(Context, holder.textViewLanguageName);
                 holder.radioImageLanguageSelect.setImageResource(R.drawable.cell_radio_on);
@@ -85,6 +85,6 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, LanguageOptionModel LanguageSelected);
+        void onItemClick(View view, int position, LanguageOptionModel languageSelected);
     }
 }
