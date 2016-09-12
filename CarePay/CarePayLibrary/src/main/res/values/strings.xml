@@ -75,6 +75,7 @@
     <string name="demogr_button_label">Next</string>
     <string name="demogr_tv_choose_label">Choose</string>
     <string name="demogr_docs_tv_chose_company">Choose company first</string>
+    <string name="demogr_docs_rescan">Re-scan</string>
 
     <!-- Demographic Screens -->
 
@@ -117,7 +118,10 @@
     <string name="demoVerifyHeading">Demographic Information</string>
     <string name="demoVerifySubHeading">We didn\'t find any demographic info associated with your profile.Please fill in the fields below.</string>
 
+    <!--Appointments List Fragment-->
 
+    <string name="apt_day_today">TODAY</string>
+    <string name="apt_day_upcoming">UPCOMING</string>
 
 </resources>
 

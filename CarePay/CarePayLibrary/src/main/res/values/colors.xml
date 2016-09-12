@@ -21,7 +21,9 @@
     <color name="munsell">#ffeceff1</color>
     <color name="blue_cerulian">#ff1f9bde</color>
     <color name="payne_gray">#546E7A</color>
+    <color name="Matisse">#176D9C</color>
 
 
     <color name="Munsell">#eceff1</color>
+    <color name="paint_color_thumbnail">#BAB399</color>
 </resources>
