@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,12 +14,7 @@ import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
  * Created by harish_revuri on 9/7/2016.
  */
 
-public class SigninSignupActivity extends AppCompatActivity
-
-
-
-        implements SigninFragment.OnSigninPageOptionsClickListner, SignupFragment.OnSignupPageOptionsClickListner{
-
+public class SigninSignupActivity extends AppCompatActivity {
 
     private FragmentManager mFragmentManager;
 
@@ -51,25 +47,7 @@ public class SigninSignupActivity extends AppCompatActivity
         }
     }
 
-
-    @Override
-    public void onSigninButtonClick() {
-
-    }
-
-    @Override
-    public void onOptionClick(SignupFragment fragment, String fragmentTagName) {
-        switchFragment(fragment, fragmentTagName);
-    }
-
-    @Override
-    public void onSignupButtonClick() {
-
-    }
-
-    @Override
-    public void onSignupOptionClick(Fragment fragment, String fragmentTagName) {
-        mFragmentManager.beginTransaction().remove(fragment).commit();
-        mFragmentManager.popBackStack();
+    public FragmentManager getmFragmentManager() {
+        return mFragmentManager;
     }
 }
