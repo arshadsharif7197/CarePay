@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SigninFragment extends android.support.v4.app.Fragment {
+public class SigninFragment extends android.support.v4.app.Fragment implements TextWatcher {
 
 
     private EditText emailEditText;
@@ -34,8 +34,6 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     private Button signupButton;
     private TextView changeLanguageTextView;
 
-    private boolean isValidEmail;
-    private boolean isValidPassword;
 
     private OnSigninPageOptionsClickListner signinPageOptionsClickListner;
 
@@ -43,12 +41,47 @@ public class SigninFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
 
-        emailEditText = (EditText)view.findViewById(R.id.emailEditText);
-        passwordEditText = (EditText)view.findViewById(R.id.passwordEditText);
-        signinButton = (Button)view.findViewById(R.id.SigninButton);
-        signupButton = (Button)view.findViewById(R.id.SignUpButton);
+        emailEditText = (EditText) view.findViewById(R.id.emailEditText);
+        passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+
+        emailEditText.addTextChangedListener(this);
+        passwordEditText.addTextChangedListener(this);
+
+        signinButton = (Button) view.findViewById(R.id.SigninButton);
+
+        signinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!isValidEmail()) {
+                    emailEditText.setError("Enter valid mail");
+                    emailEditText.requestFocus();
+                    return;
+                }
+                if (passwordEditText.getText().toString().isEmpty()) {
+                    passwordEditText.setError("Enter Password");
+                    passwordEditText.requestFocus();
+                    return;
+                }
+                
+                Intent intent = new Intent(getContext(), HomeScreenActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        signupButton = (Button) view.findViewById(R.id.SignUpButton);
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signinPageOptionsClickListner.onOptionClick(new SignupFragment(), "signup");
+            }
+        });
+
         changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
 
         changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
@@ -63,137 +96,21 @@ public class SigninFragment extends android.support.v4.app.Fragment {
             }
         });
 
+        //TODO change to common use
         Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
         emailEditText.setTypeface(editTextFontFamily);
         passwordEditText.setTypeface(editTextFontFamily);
-
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signinPageOptionsClickListner.onOptionClick(new SignupFragment(),"signup");
-            }
-        });
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        emailEditText.setText("");
-        passwordEditText.setText("");
-        emailEditText.addTextChangedListener(emailTextWatcher);
-        passwordEditText.addTextChangedListener(passwordtextWatcher);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        emailEditText.removeTextChangedListener(emailTextWatcher);
-        passwordEditText.removeTextChangedListener(passwordtextWatcher);
-    }
-
-    TextWatcher emailTextWatcher =new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if(!isValidmail()){
-                isValidEmail = false;
-                emailEditText.setError("Enter valid mail id.");
-            }else{
-                passwordEditText.setError(null);
-                isValidEmail = true;
-                checkForSigninEnable();
-            }
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };
-
-    TextWatcher passwordtextWatcher=new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if(passwordEditText.getText().length()<=0){
-                isValidPassword=false;
-                passwordEditText.setError("Enter password");
-            }else{
-                isValidPassword=true;
-                passwordEditText.setError(null);
-                checkForSigninEnable();
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };
-
-    private void checkForSigninEnable() {
-        if(isValidEmail && isValidPassword){
-            signinButton.setEnabled(true);
-            signinButton.setBackground(getResources().getDrawable(R.drawable.agree_button_background));
-            signinButton.setTextColor(getResources().getColor(R.color.white));
-            signinButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(isvalidData()){
-
-                        Intent intent = new Intent(getContext(), HomeScreenActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }else{
-                        Toast.makeText(getActivity(),"Please fill required fields.",Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-        }else{
-            signinButton.setEnabled(false);
-        }
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-
-
-        signinPageOptionsClickListner =(OnSigninPageOptionsClickListner) getActivity();
-
-
-
-
+        signinPageOptionsClickListner = (OnSigninPageOptionsClickListner) getActivity();
     }
 
-    private boolean isvalidData() {
-        boolean isvalid = true;
-
-        if(!isValidmail()){
-            emailEditText.setError("Enter valid mail");
-            isvalid = false;
-        }
-        if (passwordEditText.getText().toString().length() <= 0) {
-            passwordEditText.setError("Enter Password");
-            isvalid = false;
-        }
-
-        return isvalid;
-    }
-
-    private boolean isValidmail() {
+    private boolean isValidEmail() {
 
         String email = emailEditText.getText().toString();
         Pattern pattern = Pattern.compile(SignupFragment.EMAIL_PATTERN);
@@ -202,12 +119,30 @@ public class SigninFragment extends android.support.v4.app.Fragment {
         return matcher.matches();
     }
 
-
-    public interface OnSigninPageOptionsClickListner{
-
+    public interface OnSigninPageOptionsClickListner {
 
 
         public void onSigninButtonClick();
+
         public void onOptionClick(SignupFragment fragment, String fragmentTagName);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        if (charSequence.toString().isEmpty()) {
+            signinButton.setEnabled(false);
+        } else {
+            signinButton.setEnabled(true);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }

@@ -61,7 +61,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/blue_cerulian"
-                    android:hint="Password"/>
+                    android:hint="Password"
+                    android:inputType="textPassword"/>
 
             </android.support.design.widget.TextInputLayout>
             <LinearLayout
@@ -77,9 +78,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="SIGN IN"
+                    android:enabled="false"
                     android:paddingBottom="0dp"
-                    android:background="@drawable/button_light_gray_background"
-                    android:textColor="@color/colorAccent"/>
+                    android:background="@drawable/signin_button_background"
+                    android:textColor="@color/white"/>
 
                 <Button
                     android:id="@+id/SignUpButton"

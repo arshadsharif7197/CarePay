@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CarePayLibrary</string>
     <string name="api_base_url">http://57e47f3d.ngrok.io</string>
-    <string name="select">select</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -14,17 +14,22 @@
     <string name="AL">AL</string>
     <string name="FL">FL</string>
 
-    <string-array name="states">
-        <item>@string/AL</item>
-        <item>@string/FL</item>
-    </string-array>
-
     <string name="American">American</string>
-    <string name="Hispanic">Hispanic</string>
+    <string name="Asian">Asian</string>
+    <string name="Black">Black</string>
+    <string name="Nativehawaiian">Native Hawaiian</string>
+    <string name="Pacific">Other Pacific islander</string>
+    <string name="White">White</string>
+    <string name="Other">Other</string>
+
 
     <string-array name="Race">
-        <item>@string/American</item>
-        <item>@string/Hispanic</item>
+        <item>@string/Asian</item>
+        <item>@string/Black</item>
+        <item>@string/Nativehawaiian</item>
+        <item>@string/Pacific</item>
+        <item>@string/White</item>
+        <item>@string/Other</item>
     </string-array>
 
 
@@ -38,7 +43,7 @@
 
 
     <string name="hispanic">Hispanic</string>
-    <string name="white_americans">White Americans</string>
+    <string name="white_americans">White</string>
     <string name="other">Other</string>
     <string name="decline_to_answer">Decline to Answer</string>
 
@@ -56,6 +61,7 @@
         <item>Monthly coupons</item>
         <item>Marketing Material</item>
     </string-array>
+
     <string name="demogr_docs_logo">Logo</string>
     <string name="demogr_docs_logo_title">Documents, please</string>
     <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
@@ -69,6 +75,50 @@
     <string name="demogr_button_label">Next</string>
     <string name="demogr_tv_choose_label">Choose</string>
     <string name="demogr_docs_tv_chose_company">Choose company first</string>
+
+    <!-- Demographic Screens -->
+
+    <!--Address Fragment-->
+
+    <string name="AddressHeadingTextView">Let\'s get you set up!</string>
+    <string name="AddressSubHeadingTextView">First, tell us your address \u0026 contact information</string>
+
+    <string name="PhoneNumberEditText">Phone Number</string>
+    <string name="ZipCodeEditText">Zip Code</string>
+    <string name="Address1EditText">Address 1</string>
+    <string name="Address2EditText">Address 2</string>
+    <string name="CityEditText">City</string>
+    <string name="StateEditText">State</string>
+
+
+
+    <!--Details Fragment-->
+
+    <string name="detailsHeadingTextView">Some details about you</string>
+    <string name="detailsSubHeadingTextView">How about uploading your photo?</string>
+
+    <string name="selectOrTakePhotoButton">SELECT OR TAKE PHOTO BUTTON</string>
+    <string name="raceLabel">Race</string>
+    <string name="ethnicityLabel">Ethnicity</string>
+    <string name="languageLabel">Preferred Language</string>
+    <string name="chooseTextView">Choose</string>
+
+
+
+
+    <!--MoreDetails Fragment-->
+
+    <string name="PlaceHolderIcon">PlaceHolder Icon</string>
+    <string name="moreDetailsHeadingTextView">You\'re all set!</string>
+    <string name="moreDetailsSubHeadingTextView">Maecenas faucibus mollis interdum. Sed posuere consectetur est at lobortis.</string>
+    <string name="GoToCarePayButton">Go To CarePay</string>
+
+
+    <string name="demoVerifyHeading">Demographic Information</string>
+    <string name="demoVerifySubHeading">We didn\'t find any demographic info associated with your profile.Please fill in the fields below.</string>
+
+
+
 </resources>
 
 
