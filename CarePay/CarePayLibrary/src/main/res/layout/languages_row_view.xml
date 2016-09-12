@@ -27,8 +27,8 @@
                 android:textColor="@color/slateGray"
                 android:textSize="@dimen/textview_default_textsize" />
 
-            <RadioButton
-                android:id="@+id/languageRadioButton"
+            <ImageView
+                android:id="@+id/languageRadioImage"
                 android:layout_width="@dimen/language_radiobutton"
                 android:layout_height="@dimen/language_radiobutton"
                 android:layout_alignParentRight="true"

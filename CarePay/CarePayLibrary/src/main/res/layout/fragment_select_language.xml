@@ -81,9 +81,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/language_footer_margin_top"
-        android:layout_weight="1.5"
+        android:layout_weight="1.25"
         android:orientation="horizontal"
-        android:background="@color/Munsell"
         android:gravity="center_vertical">
 
             <ImageButton
@@ -92,11 +91,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/Munsell"
                 android:src="@drawable/icn_check_disabled"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/language_button_topbottom"
-                android:layout_marginBottom="@dimen/language_button_topbottom"
-                android:layout_marginRight="@dimen/language_button_leftright"
-                android:layout_marginLeft="@dimen/language_button_leftright"/>
+                android:layout_gravity="center" />
 
     </LinearLayout>
 
