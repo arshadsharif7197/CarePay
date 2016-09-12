@@ -82,18 +82,18 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/language_footer_margin_top"
         android:layout_weight="1.25"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/languageConfirmButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/button_selector"
-                android:src="@drawable/icn_check_disabled"
-                android:layout_gravity="center" />
-
-    </LinearLayout>
-
+        <ImageButton
+            android:id="@+id/languageConfirmButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/button_selector"
+            android:src="@drawable/icn_check_disabled" />
 
     </LinearLayout>
+
+
+</LinearLayout>
