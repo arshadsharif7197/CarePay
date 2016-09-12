@@ -89,7 +89,7 @@
                 android:id="@+id/languageConfirmButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/Munsell"
+                android:background="@drawable/button_selector"
                 android:src="@drawable/icn_check_disabled"
                 android:layout_gravity="center" />
 
