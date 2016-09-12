@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -27,8 +27,8 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     private OnItemClickListener itemClickListener;
     Context Context;
 
-    public LanguageListAdapter(List<LanguageOptionModel> mLanguageListLanguageOptionModels, OnItemClickListener itemClickListener, Context mContext) {
-        this.LanguageListLanguageOptionModels = mLanguageListLanguageOptionModels;
+    public LanguageListAdapter(List<LanguageOptionModel> LanguageListLanguageOptionModels, OnItemClickListener itemClickListener, Context mContext) {
+        this.LanguageListLanguageOptionModels = LanguageListLanguageOptionModels;
         this.itemClickListener = itemClickListener;
         this.Context = mContext;
     }
@@ -41,15 +41,16 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        LanguageOptionModel mLanguage = LanguageListLanguageOptionModels.get(position);
-        if (!StringFunctions.isNullOrEmpty(mLanguage.getValue())) {
-            holder.textViewLanguageName.setText(mLanguage.getValue());
-            if (mLanguage.isChecked()) {
+        LanguageOptionModel LanguageSelected = LanguageListLanguageOptionModels.get(position);
+        if (!StringFunctions.isNullOrEmpty(LanguageSelected.getValue())) {
+            holder.textViewLanguageName.setText(LanguageSelected.getValue());
+            if (LanguageSelected.isChecked()) {
                 holder.textViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.colorPrimary));
                 Utility.setProximaNovaSemiboldTypeface(Context, holder.textViewLanguageName);
+                holder.radioImageLanguageSelect.setImageResource(R.drawable.cell_radio_on);
             }
         }
-        holder.radioButtonLanguageSelect.setChecked(mLanguage.isChecked());
+        holder.radioImageLanguageSelect.isSelected();
     }
 
     /**
@@ -63,13 +64,14 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewLanguageName;
         CardView cardView;
-        RadioButton radioButtonLanguageSelect;
+        ImageView radioImageLanguageSelect;
 
         public ViewHolder(View itemView) {
             super(itemView);
             textViewLanguageName = (TextView) itemView.findViewById(R.id.languageName);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
-            radioButtonLanguageSelect = (RadioButton) itemView.findViewById(R.id.languageRadioButton);
+            radioImageLanguageSelect = (ImageView) itemView.findViewById(R.id.languageRadioImage);
+            radioImageLanguageSelect.setImageResource(R.drawable.cell_radio_off);
             Utility.setProximaNovaRegularTypeface(Context, textViewLanguageName);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,6 +85,6 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, LanguageOptionModel mLanguage);
+        void onItemClick(View view, int position, LanguageOptionModel LanguageSelected);
     }
 }
