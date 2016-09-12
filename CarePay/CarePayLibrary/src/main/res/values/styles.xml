@@ -98,6 +98,13 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="AlertListTextView" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/respons_detail_label_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
     <style name="ResponsDetailLabelStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/respons_detail_label_text_size</item>
@@ -152,6 +159,7 @@
     </style>
 
     <style name="DemographicsDocsHeaderSubtitleStyle" parent="android:Widget.TextView">
+        <item name="android:gravity">center</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/cadet_gray</item>
@@ -160,8 +168,6 @@
 
     <style name="DemographicsDocsHeaderStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin </item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin </item>
         <item name="android:gravity">center</item>
     </style>
 

@@ -34,7 +34,11 @@ import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Utility {
+    private static final String PHONE_NUMBER_REGEX= "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})";
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int MY_PERMISSIONS_CAMERA                        = 124;
@@ -136,6 +140,20 @@ public class Utility {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
         view.setTypeface(typeface);
     }
+
+
+
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        Pattern pattern = Pattern.compile(PHONE_NUMBER_REGEX);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
+    public static void setTypefaceFromAssets(Context context, String pathToFontInAssets, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), pathToFontInAssets);
+        view.setTypeface(typeface);
+    }
+
 
     public static void setProximaNovaRegularTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_regular.otf");

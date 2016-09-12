@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginRight="17.0dp"
+    android:layout_marginLeft="17.0dp">
 
 
     <LinearLayout
@@ -11,17 +13,29 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/ReviewInsuranceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/health_Insurance_Information"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/reviewInsuranceSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/review_insurance_subHeading"
+            android:layout_gravity="center"/>
         <LinearLayout
             style="@style/DemographicsDocsImageButtonContainerStyle">
 
             <ImageView
-                android:id="@+id/demogr_insurance_image"
+                android:id="@+id/demogr_review_insurance_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icn_camera"/>
 
             <Button
-                android:id="@+id/demogr_insurance_scan_insurance_btn"
+                android:id="@+id/demogr_review_insurance_scan_insurance_btn"
                 style="@style/DemographicsDocsButtonStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -36,7 +50,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/demogr_insurance_provider_label"
+                android:id="@+id/demogr_review_insurance_provider_label"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="@string/demogr_insurance_provider"
@@ -45,7 +59,7 @@
             <TextView
                 android:text="@string/demogr_tv_choose_label"
                 style="@style/DemographicsDocsClickableTextStyle"
-                android:id="@+id/demogr_docs_provider"
+                android:id="@+id/demogr_review_docs_provider"
                 android:layout_width="wrap_content"/>
 
         </LinearLayout>
@@ -57,7 +71,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/demogr_insurance_plan_label"
+                android:id="@+id/demogr_review_insurance_plan_label"
                 android:layout_width="0dp"
                 android:text="@string/demogr_insurance_plan"
                 android:layout_weight="1"
@@ -65,7 +79,7 @@
 
             <TextView
                 android:text="@string/demogr_docs_tv_chose_company"
-                android:id="@+id/demogr_docs_plan"
+                android:id="@+id/demogr_review_docs_plan"
                 android:textColor="@color/light_gray"
                 style="@style/DemographicsDocsClickableTextStyle"/>
 
@@ -78,12 +92,12 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/demogr_insurance_number_label"
+                android:id="@+id/demogr_review_insurance_number_label"
                 style="@style/DemographicsDocsDocumentLabelStyle"
                 android:text="@string/demogr_insurance_number_label"/>
 
             <TextView
-                android:id="@+id/demogr_insurance_num"
+                android:id="@+id/demogr_review_insurance_num"
                 style="@style/DemographicsDocsNumberStyle"
                 android:text="123245699"/>
         </LinearLayout>
@@ -93,5 +107,14 @@
         android:id="@+id/buttonAddHealthInsuranceInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Health InsuranceInfo"/>
+        android:layout_marginTop="23dp"
+        android:text="@string/add_Health_InsuranceInfo"/>
+
+    <Button
+        android:id="@+id/buttonNoHealthInsuranceInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/nO_HAVE_HEALTH_INSURANCE_Button_Label"/>
+
+
 </LinearLayout>

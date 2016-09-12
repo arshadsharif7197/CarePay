@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +18,8 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/circle_shape"
         android:gravity="center"
+        android:id="@+id/placeHolderIconTextViewId"
+        android:layout_marginTop="34dp"
         android:text="@string/PlaceHolderIcon"
         />
     </LinearLayout>
@@ -25,7 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="2">
+        android:layout_weight="2"
+        android:layout_marginTop="23dp">
 
 
 
@@ -41,6 +45,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/DemographicsFragmentsSubHeadingStyle"
+        android:layout_marginTop="28dp"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
         android:text="@string/moreDetailsSubHeadingTextView"/>
          </LinearLayout>
 
@@ -49,7 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="4">
+        android:layout_weight="4"
+        android:layout_marginTop="43dp">
 
 
          <LinearLayout
@@ -64,7 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/bright_cerulean"
+            android:id="@+id/goToCarePayButton"
+            android:background="@drawable/button_blue"
             android:text="@string/GoToCarePayButton" />
 
     </LinearLayout>
