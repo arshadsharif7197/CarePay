@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SigninFragment extends android.support.v4.app.Fragment implements TextWatcher {
+public class SigninFragment extends Fragment implements TextWatcher {
 
 
     private EditText emailEditText;
@@ -66,7 +68,7 @@ public class SigninFragment extends android.support.v4.app.Fragment implements T
                     passwordEditText.requestFocus();
                     return;
                 }
-                
+
                 Intent intent = new Intent(getContext(), HomeScreenActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -92,7 +94,6 @@ public class SigninFragment extends android.support.v4.app.Fragment implements T
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 getActivity().finish();
-
             }
         });
 
@@ -119,9 +120,7 @@ public class SigninFragment extends android.support.v4.app.Fragment implements T
         return matcher.matches();
     }
 
-    public interface OnSigninPageOptionsClickListner {
-
-
+    public interface OnSigninPageOptionsClickListner{
         public void onSigninButtonClick();
 
         public void onOptionClick(SignupFragment fragment, String fragmentTagName);

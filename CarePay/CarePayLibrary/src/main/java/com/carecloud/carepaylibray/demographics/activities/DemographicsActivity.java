@@ -34,7 +34,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
     Button nextButton;
 
     @Override
-    public void replaceFragment(Class fragClass) {
+    public void replaceFragment(Class fragClass, boolean addToBackStack) {
 
     }
 
@@ -134,12 +134,10 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         if (view == nextButton) {
             setCurrentItem(viewPager.getCurrentItem() + 1, true);
         }
-
-
     }
 
     /**
-     * Adapter
+     * Adapter for the viewpager
      */
     class FunPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 
@@ -212,5 +210,14 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
             //  Log.v(TAG, "Permission is granted");
             return true;
         }
+    }
+
+    /**
+     * Returns the fragment in the view pager at a certain index. Used in tests
+     * @param pos The index
+     * @return The fragments
+     */
+    public Fragment getFragmentAt(int pos) {
+        return ((FunPagerAdapter)viewPager.getAdapter()).getItem(pos);
     }
 }

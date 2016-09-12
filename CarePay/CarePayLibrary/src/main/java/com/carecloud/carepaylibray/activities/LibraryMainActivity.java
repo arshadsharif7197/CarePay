@@ -2,10 +2,11 @@ package com.carecloud.carepaylibray.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
+import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
@@ -20,7 +21,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
 
     @Override
     public void placeInitContentFragment() {
-        replaceFragment(SelectLanguageFragment.class);
+        replaceFragment(SelectLanguageFragment.class, false);
     }
 
     @Override
@@ -44,9 +45,9 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
      * @param fragClass The class
      */
     @Override
-    public void replaceFragment(Class fragClass) {
+    public void replaceFragment(Class fragClass, boolean addToBackStack) {
         Fragment fragment = fm.findFragmentByTag(fragClass.getSimpleName());
-        if(fragment == null) {
+        if (fragment == null) {
             if (fragClass.equals(SelectLanguageFragment.class)) {
                 fragment = new SelectLanguageFragment();
             } else if (fragClass.equals(SigninFragment.class)) {
@@ -57,9 +58,12 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
                 fragment = new ResponsibilityFragment();
             }
         }
-        fm.beginTransaction().
-                replace(getContentsHolderId(), fragment, fragClass.getSimpleName())
-                .addToBackStack(null)
-                .commit();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(getContentsHolderId(), fragment, fragClass.getSimpleName());
+        if (addToBackStack) {
+            ft.addToBackStack(null);
+        }
+        ft.commit();
+
     }
 }
