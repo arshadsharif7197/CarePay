@@ -44,5 +44,12 @@
     <dimen name="demogr_docs_section_container_margin_top">30dp</dimen>
     <dimen name="demogr_docs_thumbnail_width">100dp</dimen>
     <dimen name="demogr_docs_thumbnail_height">60dp</dimen>
+    <!-- Appointments-->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="item_layout_height">85dp</dimen>
+    <dimen name="layout_margin">10dp</dimen>
+    <dimen name="textview_textsize">14sp</dimen>
+    <dimen name="textview_margin">5dp</dimen>
+    <dimen name="imageview_profile_ht_wdh">58dp</dimen>
 </resources>
 
