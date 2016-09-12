@@ -118,7 +118,10 @@
     <string name="demoVerifyHeading">Demographic Information</string>
     <string name="demoVerifySubHeading">We didn\'t find any demographic info associated with your profile.Please fill in the fields below.</string>
 
+    <!--Appointments List Fragment-->
 
+    <string name="apt_day_today">TODAY</string>
+    <string name="apt_day_upcoming">UPCOMING</string>
 
 </resources>
 
