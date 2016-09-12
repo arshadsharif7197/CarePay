@@ -15,7 +15,7 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.activities.LibraryMainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/AppTheme"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
