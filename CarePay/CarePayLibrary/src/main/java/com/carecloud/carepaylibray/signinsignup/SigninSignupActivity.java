@@ -14,6 +14,7 @@ import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
  * Created by harish_revuri on 9/7/2016.
  */
 
+
 public class SigninSignupActivity extends AppCompatActivity {
 
     private FragmentManager mFragmentManager;
@@ -24,14 +25,14 @@ public class SigninSignupActivity extends AppCompatActivity {
 
         mFragmentManager = getSupportFragmentManager();
 
-        if(savedInstanceState == null){
-            mFragmentManager.beginTransaction().add(R.id.layoutSigninSignup, new SigninFragment(),"signin").addToBackStack("signin").commit();
+        if (savedInstanceState == null) {
+            mFragmentManager.beginTransaction().add(R.id.layoutSigninSignup, new SigninFragment(), "signin").addToBackStack("signin").commit();
         }
 
         mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                if(mFragmentManager.getBackStackEntryCount()==0) {
+                if (mFragmentManager.getBackStackEntryCount() == 0) {
                     mFragmentManager.popBackStack();
                     finish();
                 }
@@ -40,8 +41,8 @@ public class SigninSignupActivity extends AppCompatActivity {
 
     }
 
-    private void switchFragment(Fragment fragment, String tagName){
-        if(tagName!=null) {
+    private void switchFragment(Fragment fragment, String tagName) {
+        if (tagName != null) {
             mFragmentManager.beginTransaction()
                     .replace(R.id.layoutSigninSignup, fragment).addToBackStack(tagName).commit();
         }
