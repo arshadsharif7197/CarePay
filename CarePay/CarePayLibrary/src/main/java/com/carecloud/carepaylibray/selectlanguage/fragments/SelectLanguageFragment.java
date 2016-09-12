@@ -55,6 +55,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         View view = inflater.inflate(R.layout.fragment_select_language, container, false);
         languageListView = (RecyclerView) view.findViewById(R.id.languageRecyclerView);
         languageListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         languageConfirmButton = (ImageButton) view.findViewById(R.id.languageConfirmButton);
         languageConfirmButton.setEnabled(false);
         languageConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +147,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageListAdapter.notifyDataSetChanged();
         languageName = language.getValue();
         languageConfirmButton.setEnabled(true);
-        languageConfirmButton.setBackgroundResource(R.drawable.button_selector);
+
     }
 }
 
