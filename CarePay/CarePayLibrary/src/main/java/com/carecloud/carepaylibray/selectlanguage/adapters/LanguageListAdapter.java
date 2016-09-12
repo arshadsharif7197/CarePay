@@ -48,6 +48,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
                 holder.textViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.colorPrimary));
                 Utility.setProximaNovaSemiboldTypeface(Context, holder.textViewLanguageName);
                 holder.radioImageLanguageSelect.setImageResource(R.drawable.cell_radio_on);
+              //  holder.cardView.setCardBackgroundColor(ContextCompat.getColor(Context, R.color.white));
             }
         }
         holder.radioImageLanguageSelect.isSelected();
@@ -70,6 +71,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             super(itemView);
             textViewLanguageName = (TextView) itemView.findViewById(R.id.languageName);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
+            textViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.slateGray));
             radioImageLanguageSelect = (ImageView) itemView.findViewById(R.id.languageRadioImage);
             radioImageLanguageSelect.setImageResource(R.drawable.cell_radio_off);
             Utility.setProximaNovaRegularTypeface(Context, textViewLanguageName);
