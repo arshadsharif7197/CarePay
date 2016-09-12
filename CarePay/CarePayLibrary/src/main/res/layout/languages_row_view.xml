@@ -15,7 +15,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/languageName"
@@ -23,6 +24,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/language_text_left_margin"
+                android:layout_marginTop="@dimen/language_row_margin"
+                android:layout_marginBottom="@dimen/language_row_margin"
                 android:text="Select Language"
                 android:textColor="@color/slateGray"
                 android:textSize="@dimen/textview_default_textsize" />
@@ -33,6 +36,9 @@
                 android:layout_height="@dimen/language_radiobutton"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/language_radio_image_rightmargin"
+                android:layout_marginTop="@dimen/language_row_margin"
+                android:layout_marginBottom="@dimen/language_row_margin"
                 android:buttonTint="@color/colorPrimary"
                 android:clickable="false" />
         </RelativeLayout>
