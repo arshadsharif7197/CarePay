@@ -37,65 +37,25 @@ import android.widget.Toast;
 public class Utility {
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
-    public static final int MY_PERMISSIONS_CAMERA = 124;
+    public static final int MY_PERMISSIONS_CAMERA                        = 124;
 
     private static final String SHARED_PREF_SEL_LANG_KEY = "sel_lang";
 
-    public static void saveSelectedLanguage(Activity activity, String selLang) {
-        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(SHARED_PREF_SEL_LANG_KEY, selLang);
-        editor.apply();
-    }
-
-    public String retrieveSelectedLanguage(Activity activity) {
-        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
-        return sharedPref.getString(SHARED_PREF_SEL_LANG_KEY, "English");
-    }
-    public static Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int radius) {
-        Bitmap finalBitmap;
-        if (bitmap.getWidth() != radius || bitmap.getHeight() != radius)
-            finalBitmap = Bitmap.createScaledBitmap(bitmap, radius, radius,
-                    false);
-        else
-            finalBitmap = bitmap;
-        Bitmap output = Bitmap.createBitmap(finalBitmap.getWidth(),
-                finalBitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, finalBitmap.getWidth(),
-                finalBitmap.getHeight());
-
-        paint.setAntiAlias(true);
-        paint.setFilterBitmap(true);
-        paint.setDither(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(Color.parseColor("#BAB399"));
-
-        canvas.drawCircle(
-                finalBitmap.getWidth() / 2 + 0.7f ,
-                finalBitmap.getHeight() / 2 + 0.7f,
-                finalBitmap.getWidth() / 2 + 0.1f,
-                paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(finalBitmap, rect, rect, paint);
-        return output;
-    }
-    public static int convertPxToDp(int px){
+    public static int convertPxToDp(int px) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        return  (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, px, displaymetrics );
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, displaymetrics);
     }
 
-    public static int convertDpToPx(Context context, float dps){
+    public static int convertDpToPx(Context context, float dps) {
         final float scale = context.getResources().getDisplayMetrics().density;
-        return  (int) (dps * scale + 0.5f);
+        return (int) (dps * scale + 0.5f);
     }
-    public static int convertDpToPixel(float dp, Context context){
+
+    public static int convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return (int)px;
+        float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return (int) px;
     }
 
 
@@ -156,7 +116,8 @@ public class Utility {
             }
         } else {
             return true;
-        }}
+        }
+    }
 
     public static boolean isTablet(Context context) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
@@ -166,15 +127,23 @@ public class Utility {
         return sizeInInches >= 6.5;
     }
 
+    public static void setGothamRoundedBookTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
+        view.setTypeface(typeface);
+    }
 
-    /**
-     * Set the typeface of a textview as a font from assets
-     * @param pathToFontInAssets The path of the font in assets
-     * @param view The view
-     */
-    public static void setTypefaceFromAssets(Context context, String pathToFontInAssets, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), pathToFontInAssets);
+    public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
+        view.setTypeface(typeface);
+    }
+
+    public static void setProximaNovaRegularTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_regular.otf");
+        view.setTypeface(typeface);
+    }
+
+    public static void setProximaNovaSemiboldTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
 }
-

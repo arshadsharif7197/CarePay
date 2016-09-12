@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    
+    <integer name="animation_transition_time_fast">300</integer>
+    
+    <integer name="animation_transition_time">500</integer>
+    
+    <integer name="animation_transition_time_slow">700</integer>
+
+
+</resources>        

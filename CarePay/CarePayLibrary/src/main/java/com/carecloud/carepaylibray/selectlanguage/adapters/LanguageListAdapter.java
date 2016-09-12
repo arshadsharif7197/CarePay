@@ -46,7 +46,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             holder.textViewLanguageName.setText(mLanguage.getValue());
             if (mLanguage.isChecked()) {
                 holder.textViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.colorPrimary));
-                Utility.setTypefaceFromAssets(Context, "fonts/proximanova_semibold.otf", holder.textViewLanguageName);
+                Utility.setProximaNovaSemiboldTypeface(Context, holder.textViewLanguageName);
             }
         }
         holder.radioButtonLanguageSelect.setChecked(mLanguage.isChecked());
@@ -70,7 +70,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             textViewLanguageName = (TextView) itemView.findViewById(R.id.languageName);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
             radioButtonLanguageSelect = (RadioButton) itemView.findViewById(R.id.languageRadioButton);
-            Utility.setTypefaceFromAssets(Context, "fonts/proximanova_regular.otf", textViewLanguageName);
+            Utility.setProximaNovaRegularTypeface(Context, textViewLanguageName);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -3,11 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <include layout="@layout/signup_toolbar"/>
+
     <LinearLayout
         android:id="@+id/headerContainerLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
+        android:layout_weight="7"
         android:padding="17dp"
 
         android:orientation="vertical"
@@ -46,7 +49,6 @@
             <EditText
                 android:id="@+id/lastNameEditText"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent"
                 android:hint="Last Name"
                 android:textColor="@color/blue_cerulian"/>
@@ -59,7 +61,6 @@
             <EditText
                 android:id="@+id/emailsignupEditText"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent"
                 android:hint="Email"
                 android:textColor="@color/blue_cerulian"/>
@@ -74,6 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Create Password"
+                android:inputType="textPassword"
                 android:textColor="@color/blue_cerulian"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -86,6 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Repeat Password"
+                android:inputType="textPassword"
                 android:textColor="@color/blue_cerulian"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -94,7 +97,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="19dp">
@@ -103,8 +106,9 @@
             android:id="@+id/signupButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="SIGN UP"
-            android:background="@drawable/button_blue_fill_background"
+            android:background="@drawable/signin_button_background"
             android:textColor="@color/white"/>
     </LinearLayout>
     <LinearLayout
