@@ -143,4 +143,7 @@
     <string name="select_state_error_messae">Select state from list only</string>
     <string name="add_medical_info">Add More</string>
 
+    <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
+    <string name="close">Close</string>
+
 </resources>
