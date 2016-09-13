@@ -106,6 +106,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             Button buttonAddIns = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
             buttonAddIns.setVisibility(View.VISIBLE);
         }
+        // enable next button
+        ((DemographicsActivity)getActivity()).enableNextButton(true);
     }
 
     public void setIndex(int index) {

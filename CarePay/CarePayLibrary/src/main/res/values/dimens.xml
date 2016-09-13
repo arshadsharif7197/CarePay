@@ -35,6 +35,7 @@
     <!-- Demographics Documents -->
     <dimen name="demographics_docs_button_text_size">13sp</dimen>
     <dimen name="demographics_docs_header_left_right_margin">17dp</dimen>
+    <dimen name="demographics_docs_header_top_margin">17dp</dimen>
     <dimen name="demographics_docs_section_margin_top">10dp</dimen>
     <dimen name="demographics_docs_image_button_container_height">60dp</dimen>
     <dimen name="demographics_docs_image_button_container_margin_top">30dp</dimen>
