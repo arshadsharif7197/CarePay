@@ -140,6 +140,7 @@
     <string name="minimum_char_in_city_error_messae">Enter minimum three letters in city</string>
     <string name="empty_state_error_messae">Enter state</string>
     <string name="select_state_error_messae">Select state from list only</string>
+    <string name="add_medical_info">Add Health Insurance Info</string>
 
 </resources>
 

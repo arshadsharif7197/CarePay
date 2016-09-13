@@ -20,10 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsAddressFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsDetailsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsDocumentsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsMoreDetailsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.myinterface.CallbackInterface;

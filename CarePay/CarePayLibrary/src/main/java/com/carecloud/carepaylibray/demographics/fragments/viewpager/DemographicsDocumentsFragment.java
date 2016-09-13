@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.fragments;
+package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -48,17 +48,21 @@ public class DemographicsDocumentsFragment extends Fragment {
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
     private static final String[] plans     = {"Plan1", "Plan2", "Plan3"};
     private static final String[] providers = {"Provider1", "Provider2", "Provider3", "Provider4"};
+
     private ImageCaptureHelper mImageCaptureHelper;
+    private int                crtScannedDocFlag;
+
     private ImageCaptureHelper mLicenseScanHelper;
-    private ImageCaptureHelper mInsuranceScanHelper;
     private TextView           tvLicenseNum;
-    private TextView           tvInsuranceNum;
-    private Button             btnScanInsurance;
     private Button             btnScanLicense;
+
+    // TODO: 9/13/2016 move to scan insurance fragment
+    private ImageCaptureHelper mInsuranceScanHelper;
+    private Button             btnScanInsurance;
+    private TextView           tvInsuranceNum;
     private TextView           tvState;
     private TextView           tvPlan;
     private TextView           tvProvider;
-    private int                crtScannedDocFlag;
 
     @Nullable
     @Override
@@ -71,14 +75,13 @@ public class DemographicsDocumentsFragment extends Fragment {
         ImageView imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
         ImageView imInsurance = (ImageView) view.findViewById(R.id.demogr_insurance_image);
         tvLicenseNum = (TextView) view.findViewById(R.id.demogr_docs_license_num);
-        tvInsuranceNum = (TextView) view.findViewById(R.id.demogr_insurance_num);
+        tvInsuranceNum = (TextView) view.findViewById(R.id.demogr_insurance_num); // TODO: 9/13/2016 insurance
 
         // create scan helpers
         int thumbWidth = (int) getActivity().getResources().getDimension(R.dimen.demogr_docs_thumbnail_width);
         int thumbHeight= (int) getActivity().getResources().getDimension(R.dimen.demogr_docs_thumbnail_height);
-        Log.v(LOG_TAG, "width=" + thumbWidth + " height="+thumbHeight);
         mLicenseScanHelper = new ImageCaptureHelper(getActivity(), imLicense);
-        mInsuranceScanHelper = new ImageCaptureHelper(getActivity(), imInsurance);
+        mInsuranceScanHelper = new ImageCaptureHelper(getActivity(), imInsurance); // TODO: 9/13/2016 insurance
 
         // add click listener
         btnScanLicense = (Button) view.findViewById(R.id.demogr_docs_scan_license_btn);
@@ -91,7 +94,7 @@ public class DemographicsDocumentsFragment extends Fragment {
             }
         });
 
-        btnScanInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_btn);
+        btnScanInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_btn); // TODO: 9/13/2016 insurance
         btnScanInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,7 +128,7 @@ public class DemographicsDocumentsFragment extends Fragment {
             }
         });
 
-        final LinearLayout llInsuranceSection = (LinearLayout) view.findViewById(R.id.demogr_docs_insurance_container);
+        final LinearLayout llInsuranceSection = (LinearLayout) view.findViewById(R.id.demogr_docs_insurance_container); // TODO: 9/13/2016 make a fragment transition
         SwitchCompat switchCompat = (SwitchCompat) view.findViewById(R.id.demogr_insurance_switch);
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
