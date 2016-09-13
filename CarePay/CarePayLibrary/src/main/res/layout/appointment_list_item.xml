@@ -64,7 +64,6 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:layout_gravity="center_vertical|right"
-            android:textColor="@color/yellowGreen"
             android:textSize="@dimen/button_textsize_medium"
             android:gravity="right|center_vertical"
             android:text="time"
