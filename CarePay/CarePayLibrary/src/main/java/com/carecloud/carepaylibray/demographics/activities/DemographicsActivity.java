@@ -102,7 +102,6 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
         isStoragePermissionGranted();
 
-
         funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(4);
@@ -170,22 +169,28 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
             Log.e("getCurrentItem()", "" + viewPager.getCurrentItem());
             callbackInterface.nextbuttonCallback(viewPager.getCurrentItem() + 1, true);
         }
-
     }
-
 
     public void setAdapterViewItemClickListener(CallbackInterface callbackInterface) {
         this.callbackInterface = callbackInterface;
     }
 
-    public void showAddHealthButton(boolean visible) {
-        if(!visible) {
+    /**
+     * Show/hides the button that adds more insurance cards
+     * @param isVisible Whether visible
+     */
+    public void showAddHealthButton(boolean isVisible) {
+        if(!isVisible) {
             addMoreButton.setVisibility(View.GONE);
         } else {
             addMoreButton.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * Enables disables 'Next' button
+     * @param enabled Whether enabled
+     */
     public void enableNextButton(boolean enabled) {
         if(!enabled) {
             nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
