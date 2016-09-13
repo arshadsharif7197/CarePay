@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/DemographicsDocsImageButtonContainerStyle">
+
+        <ImageView
+            android:id="@+id/demogr_license_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icn_camera"/>
+
+        <Button
+            android:id="@+id/demogr_docs_scan_license_btn"
+            style="@style/DemographicsDocsButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/demogr_docs_scan_label"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/demogr_license_scan_label"
+            style="@style/DemographicsDocsDocumentLabelStyle"
+            android:layout_weight="1"
+            android:text="@string/demogr_license_scan_label"/>
+
+        <TextView
+            android:id="@+id/demogr_docs_license_num"
+            style="@style/DemographicsDocsNumberStyle"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/demogr_license_state_label"
+            style="@style/DemographicsDocsLabelStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/demogr_docs_license_number_label"/>
+
+        <TextView
+            android:id="@+id/demogr_tv_state"
+            style="@style/DemographicsDocsClickableTextStyle"
+            android:text="@string/demogr_tv_choose_label"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -97,20 +97,6 @@ public class ImageCaptureHelper {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                                    System.currentTimeMillis() + ".jpg");
-
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         setCapturedImageToTargetView(thumbnail, shape);
     }
 
@@ -124,16 +110,6 @@ public class ImageCaptureHelper {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-
-            File destination = new File(Environment.getExternalStorageDirectory(),
-                                        System.currentTimeMillis() + ".jpg");
-            FileOutputStream fo;
-
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-
             setCapturedImageToTargetView(thumbnail, shape);
         } catch (IOException e) {
             e.printStackTrace();

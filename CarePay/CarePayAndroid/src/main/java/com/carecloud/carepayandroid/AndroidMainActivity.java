@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 
 public class AndroidMainActivity extends AppCompatActivity {
 
