@@ -65,6 +65,19 @@
               "cancel_appointment",
               "appointment_check-in"
             ]
+          },
+          {
+            "appointment_id": "1240",
+            "physician": {
+              "name": "Dr. Jon Thomson",
+              "type": "Gynaec"
+            },
+            "time": "09/19/16 5:12:28 PM UTC",
+            "qr_code_to_scan_at_office": "image_data",
+            "actions": [
+              "cancel_appointment",
+              "appointment_check-in"
+            ]
           }
 
         ]
