@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_appointments"
+            android:icon="@drawable/icn_drawer_appointments_selected"
+            android:title="Appointments" />
+        <item
+            android:id="@+id/nav_payments"
+            android:icon="@drawable/icn_drawer_payments_default"
+            android:title="Payments" />
+        <item
+            android:id="@+id/nav_purchase"
+            android:icon="@drawable/icn_drawer_purchase_default"
+            android:title="Purchase" />
+        <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/icn_drawer_notifications_default"
+            android:title="Notification" />
+    </group>
+    <item android:title="">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_settings"
+                    android:title="Settings" />
+                <item
+                    android:id="@+id/nav_logout"
+                    android:title="Logout" />
+            </group>
+        </menu>
+    </item>
+
+</menu>
