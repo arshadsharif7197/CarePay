@@ -111,6 +111,10 @@ public class DemographicsDocumentsFragment extends Fragment {
                     fm.beginTransaction().replace(insuranceFragId, fragment, insuranceTag)
                             .addToBackStack(null)
                             .commit();
+
+                    // scroll bottom
+                    fm.executePendingTransactions();
+                    ((ScrollView)view.findViewById(R.id.demographicsDocsScroll)).fullScroll(View.FOCUS_DOWN);
                 }
             }
         });
@@ -127,7 +131,6 @@ public class DemographicsDocumentsFragment extends Fragment {
         });
         // disable next button
         ((DemographicsActivity)getActivity()).enableNextButton(false);
-
 
         return view;
     }
