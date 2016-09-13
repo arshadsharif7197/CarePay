@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.utils.Utility;
 
 import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypefaceEdittext;
 
 
 /**
@@ -214,6 +215,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.addressHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.addressSubHeading));
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.zipCodeId));
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.addressEditTextId));
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.addressEditText2Id));
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.cityId));
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.autoTextCompleteStates));
 
         setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.demographicsNextButton));
 

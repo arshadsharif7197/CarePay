@@ -135,6 +135,8 @@ public class DemographicsDocumentsFragment extends Fragment {
             }
         });
 
+        showAddHealthButton(false);
+
         // disable next button
         enableNextButton(false);
 
