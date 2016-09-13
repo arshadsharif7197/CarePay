@@ -9,10 +9,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsDetailsFragment;
@@ -20,8 +26,11 @@ import com.carecloud.carepaylibray.demographics.fragments.DemographicsDocumentsF
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.myinterface.CallbackInterface;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
+
+import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
 
 
 /**
@@ -29,9 +38,14 @@ import com.viewpagerindicator.TabPageIndicator;
  */
 public class DemographicsActivity extends KeyboardHolderActivity implements View.OnClickListener {
 
+
+    TextView title;
+
+
     private ViewPager viewPager;
     private FunPagerAdapter funPagerAdapter;
     Button nextButton;
+    CallbackInterface callbackInterface;
 
     @Override
     public void replaceFragment(Class fragClass, boolean addToBackStack) {
@@ -62,6 +76,22 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
+        title = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
+        setTypefaceFromAssets(DemographicsActivity.this, "fonts/gotham_rounded_medium.otf", title);
+        toolbar.setTitle("");
+        title.setText("Address");
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
+
+        (DemographicsActivity.this).setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                backButtonClick();
+            }
+        });
+
         // set the language
         Intent intent = getIntent();
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
@@ -70,6 +100,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
         isStoragePermissionGranted();
 
+
         funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(4);
@@ -77,11 +108,11 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                setScreenTitle(position);
             }
 
             @Override
             public void onPageSelected(int position) {
+                setScreenTitle(position);
             }
 
             @Override
@@ -100,25 +131,27 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
         nextButton = (Button) findViewById(R.id.demographicsNextButton);
         nextButton.setOnClickListener(this);
+
+
     }
 
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
                 nextButton.setVisibility(View.VISIBLE);
-                setTitle("Address");
+                title.setText("Address");
                 break;
             case 1:
                 nextButton.setVisibility(View.VISIBLE);
-                setTitle("Details");
+                title.setText("Details");
                 break;
             case 2:
                 nextButton.setVisibility(View.VISIBLE);
-                setTitle("Documents");
+                title.setText("Documents");
                 break;
             case 3:
                 nextButton.setVisibility(View.GONE);
-                setTitle("More Details");
+                title.setText("More Details");
                 break;
             default:
                 break;
@@ -132,8 +165,15 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
     @Override
     public void onClick(View view) {
         if (view == nextButton) {
-            setCurrentItem(viewPager.getCurrentItem() + 1, true);
+            Log.e("getCurrentItem()", "" + viewPager.getCurrentItem());
+            callbackInterface.nextbuttonCallback(viewPager.getCurrentItem() + 1, true);
         }
+
+    }
+
+
+    public void setAdapterViewItemClickListener(CallbackInterface callbackInterface) {
+        this.callbackInterface = callbackInterface;
     }
 
     /**
@@ -214,10 +254,16 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
     /**
      * Returns the fragment in the view pager at a certain index. Used in tests
+     *
      * @param pos The index
      * @return The fragments
      */
     public Fragment getFragmentAt(int pos) {
-        return ((FunPagerAdapter)viewPager.getAdapter()).getItem(pos);
+        return ((FunPagerAdapter) viewPager.getAdapter()).getItem(pos);
     }
+
+    private void backButtonClick() {
+        Toast.makeText(DemographicsActivity.this, "backButtonClick", Toast.LENGTH_SHORT).show();
+    }
+
 }

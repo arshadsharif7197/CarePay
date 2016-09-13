@@ -2,25 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="@color/white"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginLeft="17.0dp"
+    android:layout_marginRight="17dp">
 
 
 
         <TextView
-            android:id="@+id/detailsHeading"
+            android:id="@+id/detailsReviewHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:text="@string/demoVerifyHeading"
             android:textColor="@color/charcoal"
              />
 
         <TextView
-            android:id="@+id/detailsSubHeading"
+            android:id="@+id/detailsReviewSubHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/detailsHeading"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:text="@string/demoVerifySubHeading"
 
             />
@@ -29,26 +33,24 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="51dp">
 
             <TextView
-                android:id="@+id/raceTextView"
+                android:id="@+id/raceDataTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Race"
-                android:textSize="21dp" />
+                android:text="@string/raceLabel"/>
 
             <TextView
-                android:id="@+id/raceListTextView"
+                android:id="@+id/raceListDataTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@+id/raceTextView"
                 android:gravity="right"
-                android:text="@string/chooseTextView"
-                android:textColor="@color/bright_cerulean"
-                android:textSize="21dp" />
+                android:text="@string/chooseTextView" />
 
 
         </RelativeLayout>
@@ -57,27 +59,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:layout_marginTop="30dp">
 
             <TextView
-                android:id="@+id/ethnicityTextView"
+                android:id="@+id/ethnicityDataTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="Ethnicity"
-                android:textSize="21dp" />
+                android:text="@string/ethnicityLabel"
+                />
 
             <TextView
-                android:id="@+id/ethnicityListTextView"
+                android:id="@+id/ethnicityListDataTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@+id/ethnicityTextView"
                 android:gravity="right"
                 android:text="@string/chooseTextView"
-                android:textColor="@color/bright_cerulean"
-                android:textSize="21dp" />
+                />
 
         </RelativeLayout>
 
@@ -85,5 +85,6 @@
         android:id="@+id/buttonAddDemographicInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Demographic Info"/>
+        android:text="@string/aDD_DEMOGRAPHIC_INFO_Button_Label"
+        android:layout_marginTop="70dp"/>
 </LinearLayout>

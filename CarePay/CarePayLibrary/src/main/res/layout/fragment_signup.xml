@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/signup_layout"
     android:orientation="vertical">
 
     <include layout="@layout/signup_toolbar"/>
@@ -10,103 +11,251 @@
         android:id="@+id/headerContainerLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
+        android:layout_weight="7.5"
         android:padding="17dp"
 
         android:orientation="vertical"
         android:visibility="visible">
-        <android.support.design.widget.TextInputLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="51dp"
-            >
-            <EditText
-                android:id="@+id/firstNameEditText"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="First Name"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="First Name"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/txt_first_name_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/holo_red_dark"/>
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/et_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:background="@null"
                 android:textColor="@color/blue_cerulian"
+                android:imeOptions="actionNext"
+                android:minHeight="30dp"
+                android:singleLine="true" />
 
-                />
-
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            >
-            <EditText
-                android:id="@+id/middleNameEditText"
+            <View
                 android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="3dp"
+                android:background="#c4c4c4" />
 
-                android:layout_height="match_parent"
-                android:hint="Middle Name"
-                android:textColor="@color/blue_cerulian"/>
 
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            >
-            <EditText
-                android:id="@+id/lastNameEditText"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Last Name"
-                android:textColor="@color/blue_cerulian"/>
+                android:layout_height="wrap_content">
 
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Middle Name"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/text_middle_name_optional"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Optional"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp">
+
+                </TextView>
+            </RelativeLayout>
+
             <EditText
-                android:id="@+id/emailsignupEditText"
+                android:id="@+id/et_middle_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Email"
-                android:textColor="@color/blue_cerulian"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:background="@null"
+                android:textColor="@color/blue_cerulian"
+                android:imeOptions="actionNext"
+                android:minHeight="30dp"
+                android:singleLine="true" />
 
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#c4c4c4" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last Name"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/txt_last_name_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/holo_red_dark"/>
+            </RelativeLayout>
+
             <EditText
-                android:id="@+id/createPasswordEditText"
+                android:id="@+id/et_last_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Create Password"
-                android:inputType="textPassword"
-                android:textColor="@color/blue_cerulian"/>
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_cerulian"
+                android:layout_marginTop="3dp"
+                android:background="@null"
+                android:imeOptions="actionNext"
+                android:minHeight="30dp"
+                android:singleLine="true" />
 
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#c4c4c4" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email-ID"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/txt_email_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/holo_red_dark"/>
+            </RelativeLayout>
+
             <EditText
-                android:id="@+id/repeatPasswordEditText"
+                android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Repeat Password"
-                android:inputType="textPassword"
-                android:textColor="@color/blue_cerulian"/>
+                android:textColor="@color/blue_cerulian"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:background="@null"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                android:minHeight="30dp" />
 
-        </android.support.design.widget.TextInputLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#c4c4c4" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Create password"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/txt_create_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/holo_red_dark"/>
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/et_create_password"
+                android:layout_width="match_parent"
+                android:textColor="@color/blue_cerulian"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:background="@null"
+                android:imeOptions="actionNext"
+                android:minHeight="30dp"
+                android:singleLine="true"
+                android:inputType="textPassword"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#c4c4c4" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Repeat Password"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/txt_repeat_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/holo_red_dark"/>
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/et_repeat_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_cerulian"
+                android:layout_marginTop="3dp"
+                android:background="@null"
+                android:imeOptions="actionDone"
+                android:minHeight="30dp"
+                android:singleLine="true"
+                android:inputType="textPassword" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#c4c4c4" />
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1.5"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="19dp">
+        android:padding="5dp">
 
         <Button
             android:id="@+id/signupButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
+            android:layout_height="match_parent"
             android:text="SIGN UP"
             android:background="@drawable/signin_button_background"
             android:textColor="@color/white"/>
@@ -143,4 +292,5 @@
         </LinearLayout>
 
     </LinearLayout>
+        </LinearLayout>
 </LinearLayout>

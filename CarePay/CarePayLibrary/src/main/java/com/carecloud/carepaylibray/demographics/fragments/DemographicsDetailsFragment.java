@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -23,7 +26,16 @@ import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.Utility;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
+
+import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -31,15 +43,18 @@ import java.util.Arrays;
  */
 public class DemographicsDetailsFragment extends Fragment implements View.OnClickListener {
 
-    private View     view;
-    private String[] raceArray;
-    private String[] ethnicityArray;
-    private String[] preferredLanguageArray;
-    private int      selectedArray;
-    private TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
-    private Button             buttonChangeCurrentPhoto;
-    private ImageView          imageViewDetailsImage;
+
+    ImageView imageViewDetailsImage;
     private ImageCaptureHelper imageCaptureHelper;
+
+    View view;
+    String[] raceArray;
+    String[] ethnicityArray;
+    String[] preferredLanguageArray;
+    int selectedArray;
+    TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
+    Button buttonChangeCurrentPhoto;
+
 
     @Nullable
     @Override
@@ -54,7 +69,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         imageCaptureHelper = new ImageCaptureHelper(getActivity());
         imageCaptureHelper.setImageViewTarget(imageViewDetailsImage);
         imageCaptureHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
-
+        setTypefaces(view);
         return view;
     }
 
@@ -65,7 +80,7 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         ethnicityTextView.setOnClickListener(this);
         preferredLanguageTextView = (TextView) view.findViewById(R.id.preferredLanguageListTextView);
         preferredLanguageTextView.setOnClickListener(this);
-        buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhoto);
+        buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         buttonChangeCurrentPhoto.setOnClickListener(this);
         imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
     }
@@ -135,8 +150,8 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
                         startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
-                                                                    ImageCaptureHelper.CHOOSER_NAME),
-                                               ImageCaptureHelper.SELECT_FILE);
+                                ImageCaptureHelper.CHOOSER_NAME),
+                                ImageCaptureHelper.SELECT_FILE);
                 } else {
                     //code for deny
                 }
@@ -157,10 +172,13 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == ImageCaptureHelper.SELECT_FILE)
+
+            if (requestCode == ImageCaptureHelper.SELECT_FILE) {
                 imageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.ROUND_IMAGE);
-            else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA)
+                changeButtonLabel();
+            } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA)
                 imageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.ROUND_IMAGE);
+            changeButtonLabel();
         }
     }
 
@@ -168,28 +186,56 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
         builder.setItems(ImageCaptureHelper.chooseActionDlOptions,
-                         new DialogInterface.OnClickListener() {
-                             @Override
-                             public void onClick(DialogInterface dialog, int item) {
-                                 if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[0])) {
-                                     imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
-                                     boolean result = Utility.checkPermissionCamera(getActivity());
-                                     if (result) {
-                                         startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
-                                     }
-                                 } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[1])) {
-                                     imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
-                                     boolean result = Utility.checkPermission(getActivity());
-                                     if (result) {
-                                         startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
-                                                                                     ImageCaptureHelper.CHOOSER_NAME),
-                                                                ImageCaptureHelper.SELECT_FILE);
-                                     }
-                                 } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[2])) {
-                                     dialog.dismiss();
-                                 }
-                             }
-                         });
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[0])) {
+                            imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
+                            boolean result = Utility.checkPermissionCamera(getActivity());
+                            if (result) {
+                                startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
+                            }
+                        } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[1])) {
+                            imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
+                            boolean result = Utility.checkPermission(getActivity());
+                            if (result) {
+                                startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
+                                        ImageCaptureHelper.CHOOSER_NAME),
+                                        ImageCaptureHelper.SELECT_FILE);
+                            }
+                        } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[2])) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
         builder.show();
+
+    }
+
+    private void changeButtonLabel() {
+        buttonChangeCurrentPhoto.setText(getString(R.string.changeCurrentPhotoButton));
+    }
+
+    private void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsHeading));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsSubHeading));
+
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.changeCurrentPhotoButton));
+
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.raceTextView));
+
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.raceListTextView));
+
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+
+
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
+
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }
 }
+
+
+

@@ -15,7 +15,7 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.activities.LibraryMainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/AppTheme"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
@@ -37,6 +37,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
         </activity>
+        <activity
+            android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

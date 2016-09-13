@@ -234,7 +234,7 @@ public class DemographicsDocumentsFragment extends Fragment {
     }
 
     /**
-     * Starts Camera or Gallery to caprture/select an image
+     * Starts Camera or Gallery to capture/select an image
      *
      * @param imageCaptureHelper The camera helper used with a particular imageview
      */
