@@ -18,7 +18,6 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
-            android:configChanges="screenSize|orientation"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
 
         <activity android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReview"

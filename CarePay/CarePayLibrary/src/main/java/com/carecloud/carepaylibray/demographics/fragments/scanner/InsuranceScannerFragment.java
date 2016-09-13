@@ -107,7 +107,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 //            buttonAddIns.setVisibility(View.VISIBLE);
         }
         // enable next button
-        ((DemographicsActivity)getActivity()).enableNextButton(true);
+//        ((DemographicsActivity)getActivity()).enableNextButton(true);
     }
 
     public void setIndex(int index) {

@@ -90,6 +90,6 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ((DemographicsActivity)getActivity()).enableNextButton(true);
+//        ((DemographicsActivity)getActivity()).enableNextButton(true);
     }
 }
