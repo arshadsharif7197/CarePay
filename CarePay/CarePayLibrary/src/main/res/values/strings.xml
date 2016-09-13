@@ -33,6 +33,16 @@
     </string-array>
 
 
+    <string name="Plan1">Plan1</string>
+    <string name="Plan2">Plan2</string>
+    <string name="Plan3">Plan3</string>
+
+
+    <string name="Provider1">Provider1</string>
+    <string name="Provider2">Provider2</string>
+    <string name="Provider3">Provider3</string>
+
+
     <string name="English">English</string>
     <string name="Spanish">Spanish</string>
 
@@ -40,6 +50,18 @@
         <item>@string/English</item>
         <item>@string/Spanish</item>
     </string-array>
+
+    <string-array name="plans">
+        <item>@string/Plan1</item>
+        <item>@string/Plan2</item>
+        <item>@string/Plan3</item>
+    </string-array>
+    <string-array name="providers">
+        <item>@string/Provider1</item>
+        <item>@string/Provider2</item>
+        <item>@string/Provider3</item>
+    </string-array>
+
 
 
     <string name="hispanic">Hispanic</string>
@@ -80,6 +102,8 @@
 
     <!-- Demographic Screens -->
 
+    <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
+
     <!--Address Fragment-->
 
     <string name="AddressHeadingTextView">Let\'s get you set up!</string>
@@ -111,7 +135,7 @@
     <string name="health_Insurance_Information">Health Insurance Information</string>
     <string name="add_Health_InsuranceInfo">Add Health Insurance Info</string>
     <string name="review_insurance_subHeading">We didn\’t find any insurance info associated with your profile. If you have health insurance, please fill in the fields below.</string>
-    <string name="demographics_title">Demographics</string>
+    <string name="demographics_title">Demographic</string>
     <string name="next_Button">Next</string>
 
 

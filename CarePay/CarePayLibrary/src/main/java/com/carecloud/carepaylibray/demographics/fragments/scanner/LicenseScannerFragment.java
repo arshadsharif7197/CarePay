@@ -90,6 +90,8 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ((DemographicsActivity)getActivity()).enableNextButton(true);
+        Button next = (Button) ((DemographicsActivity)getActivity()).getWindow().getDecorView().getRootView().findViewById(R.id.demographicsNextButton);
+        next.setEnabled(true);
+        next.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
     }
 }

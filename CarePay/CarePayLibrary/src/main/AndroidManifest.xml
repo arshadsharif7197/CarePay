@@ -18,9 +18,12 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
 
-        <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
+        <activity android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReview"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
+        <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity" />
 
         <activity android:name="com.carecloud.carepaylibray.activities.SignatureActivity"/>
 
