@@ -164,4 +164,8 @@ public class Utility {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
+    public static String  onShortDrName(String fullName){
+        String stringSplitArr[] = fullName.split(" ");
+        return String.valueOf(stringSplitArr[1].charAt(0))+String.valueOf(stringSplitArr[2].charAt(0));
+    }
 }
