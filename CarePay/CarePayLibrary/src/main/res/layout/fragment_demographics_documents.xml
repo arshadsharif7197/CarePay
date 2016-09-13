@@ -38,164 +38,34 @@
             android:paddingBottom="@dimen/top_bottom_scroll_padding"
             android:paddingTop="@dimen/top_bottom_scroll_padding">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                android:orientation="vertical">
+                android:id="@+id/demogrDocsLicense"/>
 
-                <LinearLayout
-                    style="@style/DemographicsDocsImageButtonContainerStyle">
-
-                    <ImageView
-                        android:id="@+id/demogr_license_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icn_camera"/>
-
-                    <Button
-                        android:id="@+id/demogr_docs_scan_license_btn"
-                        style="@style/DemographicsDocsButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:text="@string/demogr_docs_scan_label"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/demogr_license_scan_label"
-                        style="@style/DemographicsDocsDocumentLabelStyle"
-                        android:layout_weight="1"
-                        android:text="@string/demogr_license_scan_label"/>
-
-                    <TextView
-                        android:id="@+id/demogr_docs_license_num"
-                        style="@style/DemographicsDocsNumberStyle"
-                        android:visibility="gone"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/demogr_license_state_label"
-                        style="@style/DemographicsDocsLabelStyle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:text="@string/demogr_docs_license_number_label"/>
-
-                    <TextView
-                        android:id="@+id/demogr_tv_state"
-                        style="@style/DemographicsDocsClickableTextStyle"
-                        android:text="@string/demogr_tv_choose_label"/>
-
-                </LinearLayout>
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/demogr_insurance_switch"
-                    style="@style/DemographicsDocsLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                    android:checked="true"
-                    android:text="@string/demogr_insurance_switch_text"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/demogr_docs_insurance_container"
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/demogr_insurance_switch"
+                style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/demogr_docs_section_container_margin_top"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+                android:checked="true"
+                android:text="@string/demogr_insurance_switch_text"/>
 
-                <LinearLayout
-                    style="@style/DemographicsDocsImageButtonContainerStyle">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/demogrDocsInsurance1"/>
 
-                    <ImageView
-                        android:id="@+id/demogr_insurance_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icn_camera"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/demogrDocsInsurance2"/>
 
-                    <Button
-                        android:id="@+id/demogr_insurance_scan_insurance_btn"
-                        style="@style/DemographicsDocsButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:text="@string/demogr_docs_scan_label"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/demogrDocsInsurance3"/>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/demogr_insurance_provider_label"
-                        style="@style/DemographicsDocsLabelStyle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:text="@string/demogr_insurance_provider"/>
-
-                    <TextView
-                        android:id="@+id/demogr_docs_plan"
-                        style="@style/DemographicsDocsClickableTextStyle"
-                        android:layout_width="wrap_content"
-                        android:text="@string/demogr_tv_choose_label"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/demogr_insurance_plan_label"
-                        style="@style/DemographicsDocsLabelStyle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:text="@string/demogr_insurance_plan"/>
-
-                    <TextView
-                        android:id="@+id/demogr_docs_provider"
-                        style="@style/DemographicsDocsClickableTextStyle"
-                        android:text="@string/demogr_docs_tv_chose_company"
-                        android:textColor="@color/light_gray"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/demogr_insurance_number_label"
-                        style="@style/DemographicsDocsDocumentLabelStyle"
-                        android:text="@string/demogr_insurance_number_label"/>
-
-                    <TextView
-                        android:id="@+id/demogr_insurance_num"
-                        style="@style/DemographicsDocsNumberStyle"
-                        android:visibility="gone"/>
-                </LinearLayout>
-
-            </LinearLayout>
         </LinearLayout>
 
     </ScrollView>
