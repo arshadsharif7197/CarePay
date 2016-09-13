@@ -99,11 +99,19 @@
     <string name="detailsSubHeadingTextView">How about uploading your photo?</string>
 
     <string name="selectOrTakePhotoButton">SELECT OR TAKE PHOTO BUTTON</string>
+    <string name="changeCurrentPhotoButton">CHANGE CURRENT PHOTO</string>
     <string name="raceLabel">Race</string>
     <string name="ethnicityLabel">Ethnicity</string>
     <string name="languageLabel">Preferred Language</string>
     <string name="chooseTextView">Choose</string>
 
+    <string name="aDD_DEMOGRAPHIC_INFO_Button_Label">ADD DEMOGRAPHIC INFO</string>
+    <string name="nO_HAVE_HEALTH_INSURANCE_Button_Label">I DON\'T HAVE HEALTH INSURANCE</string>
+    <string name="health_Insurance_Information">Health Insurance Information</string>
+    <string name="add_Health_InsuranceInfo">Add Health Insurance Info</string>
+    <string name="review_insurance_subHeading">We didn\’t find any insurance info associated with your profile. If you have health insurance, please fill in the fields below.</string>
+    <string name="demographics_title">Demographics</string>
+    <string name="next_Button">Next</string>
 
 
 
@@ -120,8 +128,21 @@
 
     <!--Appointments List Fragment-->
 
+
     <string name="apt_day_today">TODAY</string>
     <string name="apt_day_upcoming">UPCOMING</string>
+
+    <string name="empty_phone_number_error_messae">Enter phone number</string>
+    <string name="incorrect_phone_number_error_messae">Enter valid phone number</string>
+    <string name="empty_zip_code_error_messae">Enter zip code</string>
+    <string name="empty_address_error_messae">Enter address</string>
+    <string name="empty_city_error_messae">Enter city</string>
+    <string name="minimum_char_in_city_error_messae">Enter minimum three letters in city</string>
+    <string name="empty_state_error_messae">Enter state</string>
+    <string name="select_state_error_messae">Select state from list only</string>
+
+    <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
+    <string name="close">Close</string>
 
 </resources>
 

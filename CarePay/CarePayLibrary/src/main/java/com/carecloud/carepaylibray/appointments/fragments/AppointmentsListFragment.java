@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -51,6 +52,12 @@ public class AppointmentsListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Appointments");
     }
 
     @Nullable
@@ -100,19 +107,19 @@ public class AppointmentsListFragment extends Fragment {
                         aptItem.setAptId(strAptId);
                         String strTime = objPhysian.getString(CarePayConstants.ATTR_TIME);
                         String inputdate=strTime.replaceAll(CarePayConstants.ATTR_UTC,"");
-
+                        aptItem.setAptDate(inputdate);
                         SimpleDateFormat simpleDateFormat=new SimpleDateFormat(CarePayConstants.DATE_FORMAT,Locale.getDefault());
                         String strDay = null;
                         try {
                             Calendar c = Calendar.getInstance();
-                            SimpleDateFormat sdf = new SimpleDateFormat(CarePayConstants.DATE_FORMAT);
+                            SimpleDateFormat sdf = new SimpleDateFormat(CarePayConstants.DATE_FORMAT,Locale.getDefault());
                             String strCurrentDate = sdf.format(c.getTime());
 
                             String date = strCurrentDate;
                             String dateafter = new SimpleDateFormat(CarePayConstants.DATE_FORMAT,Locale.getDefault()).format(simpleDateFormat.parse(inputdate));
 
                             SimpleDateFormat dateFormat = new SimpleDateFormat(
-                                    CarePayConstants.DATE_FORMAT);
+                                    CarePayConstants.DATE_FORMAT,Locale.getDefault());
                             Date convertedDate = new Date();
                             Date convertedDate2 = new Date();
 
@@ -128,16 +135,16 @@ public class AppointmentsListFragment extends Fragment {
                             aptItem.setAptType(strType);
                             if (convertedDate2.after(convertedDate)) {
                                 strDay = CarePayConstants.DAY_UPCOMING;
-                                Date initDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT).parse(strTime.replaceAll(CarePayConstants.ATTR_UTC,""));
-                                SimpleDateFormat formatter = new SimpleDateFormat(CarePayConstants.DATE_TIME_FORMAT);
+                                Date initDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT,Locale.getDefault()).parse(strTime.replaceAll(CarePayConstants.ATTR_UTC,""));
+                                SimpleDateFormat formatter = new SimpleDateFormat(CarePayConstants.DATE_TIME_FORMAT,Locale.getDefault());
                                 String upcomingDate = formatter.format(initDate);
-                                upcomingItems.add(new AppointmentModel(strAptId,strName, upcomingDate, strType, strDay));
+                                upcomingItems.add(new AppointmentModel(strAptId,strName, upcomingDate, strType, strDay,inputdate));
                             } else {
                                 strDay = CarePayConstants.DAY_TODAY;
-                                Date initDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT).parse(strTime.replaceAll(CarePayConstants.ATTR_UTC,""));
-                                SimpleDateFormat formatter = new SimpleDateFormat(CarePayConstants.DATE_FORMAT_AM_PM);
+                                Date initDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT,Locale.getDefault()).parse(strTime.replaceAll(CarePayConstants.ATTR_UTC,""));
+                                SimpleDateFormat formatter = new SimpleDateFormat(CarePayConstants.DATE_FORMAT_AM_PM,Locale.getDefault());
                                 String parsedDate = formatter.format(initDate);
-                                todayItems.add(new AppointmentModel(strAptId, strName, parsedDate, strType, strDay));
+                                todayItems.add(new AppointmentModel(strAptId, strName, parsedDate, strType, strDay,inputdate));
 
                             }
 
