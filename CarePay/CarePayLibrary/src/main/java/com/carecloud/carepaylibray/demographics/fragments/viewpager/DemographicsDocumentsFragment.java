@@ -11,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
 
@@ -33,6 +36,7 @@ public class DemographicsDocumentsFragment extends Fragment {
     private InsuranceScannerFragment[] insuranceFragments;
     private SwitchCompat               switchCompat;
     private int insuranceCount = 0;
+    private View view;
 
     @Nullable
     @Override
@@ -40,7 +44,7 @@ public class DemographicsDocumentsFragment extends Fragment {
                              @Nullable final Bundle savedInstanceState) {
         Log.v(LOG_TAG, "onCreateView()");
 
-        View view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
+        view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
         insuranceFragments = new InsuranceScannerFragment[MAX_INSURANCE_CARDS];
 
@@ -86,15 +90,17 @@ public class DemographicsDocumentsFragment extends Fragment {
         Button addHealthInfo = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
         addHealthInfo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View buttonView) { // add 2nd or 3rd card
                 if (insuranceCount < MAX_INSURANCE_CARDS) {
                     String insuranceTag = "insurance2";
                     int insuranceFragId = R.id.demographicsDocsInsurance2;
                     if (insuranceCount == 2) {
                         insuranceTag = "insurance3";
                         insuranceFragId = R.id.demographicsDocsInsurance3;
+                        // hide add health info button
+                        ((DemographicsActivity) getActivity()).showAddHealthButton(false);
                     }
-
+                    // create the fragment
                     InsuranceScannerFragment fragment = (InsuranceScannerFragment) fm.findFragmentByTag(insuranceTag);
                     if (fragment == null) {
                         fragment = new InsuranceScannerFragment();
@@ -109,7 +115,19 @@ public class DemographicsDocumentsFragment extends Fragment {
             }
         });
 
+        // set the fonts
         setTypefaces(view);
+        // override next button function for this screen
+        Button nextButton = ((DemographicsActivity)getActivity()).getNextButton();
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((DemographicsActivity)getActivity()).setCurrentItem(3, true);
+            }
+        });
+        // disable next button
+        ((DemographicsActivity)getActivity()).enableNextButton(false);
+
 
         return view;
     }

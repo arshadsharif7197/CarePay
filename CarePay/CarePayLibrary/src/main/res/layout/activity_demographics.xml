@@ -36,8 +36,8 @@
                 android:id="@+id/pager"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="17dp"
-                android:layout_marginRight="17dp"
+                android:layout_marginLeft="@dimen/demographics_docs_header_left_right_margin"
+                android:layout_marginRight="@dimen/demographics_docs_header_left_right_margin"
                 android:background="@color/white"/>
         </LinearLayout>
 
@@ -48,7 +48,7 @@
 
             <Button
                 android:id="@+id/demographicsAddMedInfoButton"
-                style="@style/DemographicsNextButtonStyle"
+                style="@style/DemographicsAddMedInfoButtonStyle"
                 android:text="@string/add_medical_info"
                 android:visibility="gone"/>
 

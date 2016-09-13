@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,8 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
     private ViewPager viewPager;
     private FunPagerAdapter funPagerAdapter;
-    Button nextButton;
+    private Button nextButton;
+    private Button addMoreButton;
     CallbackInterface callbackInterface;
 
     @Override
@@ -132,7 +134,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         nextButton = (Button) findViewById(R.id.demographicsNextButton);
         nextButton.setOnClickListener(this);
 
-
+        addMoreButton = (Button) findViewById(R.id.demographicsAddMedInfoButton);
     }
 
     private void setScreenTitle(int position) {
@@ -174,6 +176,23 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
     public void setAdapterViewItemClickListener(CallbackInterface callbackInterface) {
         this.callbackInterface = callbackInterface;
+    }
+
+    public void showAddHealthButton(boolean visible) {
+        if(!visible) {
+            addMoreButton.setVisibility(View.GONE);
+        } else {
+            addMoreButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void enableNextButton(boolean enabled) {
+        if(!enabled) {
+            nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+        } else {
+            nextButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+        }
+        nextButton.setEnabled(enabled);
     }
 
     /**
@@ -266,4 +285,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         Toast.makeText(DemographicsActivity.this, "backButtonClick", Toast.LENGTH_SHORT).show();
     }
 
+    public Button getNextButton() {
+        return nextButton;
+    }
 }

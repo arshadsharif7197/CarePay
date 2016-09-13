@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -26,15 +28,15 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTy
 
 public class InsuranceScannerFragment extends DocumentScannerFragment {
 
-    private static final String[] plans     = {"Plan1", "Plan2", "Plan3"};
-    private static final String[] providers = {"Provider1", "Provider2", "Provider3", "Provider4"};
+    private static final String[] plans     = {"Aetna Select", "Aetna Value Network HMO", "Elect Choice EPO", "HMO"};
+    private static final String[] providers = {"Aetna", "BlueCross Blue Shield", "Cigna", "GHI", "HIP"};
 
     private ImageCaptureHelper mInsuranceScanHelper;
     private Button             btnScanInsurance;
     private TextView           tvInsuranceNum;
     private TextView           tvPlan;
     private TextView           tvProvider;
-    private int                index; // use to identify the first created fragment
+    private int                index; // use to identify the firstly created fragment
 
     @Nullable
     @Override
@@ -54,7 +56,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                 selectImage(mInsuranceScanHelper);
             }
         });
-
 
         tvPlan = (TextView) view.findViewById(R.id.demogr_docs_plan);
         tvPlan.setOnClickListener(new View.OnClickListener() {
