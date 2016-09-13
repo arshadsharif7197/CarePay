@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
 
     /**
@@ -55,6 +57,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         View view = inflater.inflate(R.layout.fragment_select_language, container, false);
         languageListView = (RecyclerView) view.findViewById(R.id.languageRecyclerView);
         languageListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         languageConfirmButton = (ImageButton) view.findViewById(R.id.languageConfirmButton);
         languageConfirmButton.setEnabled(false);
         languageConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +89,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
 
-        languageOptionModel = new LanguageOptionModel();
+       /* languageOptionModel = new LanguageOptionModel();
         languageOptionModel.setValue("Français");
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
@@ -99,7 +102,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel = new LanguageOptionModel();
         languageOptionModel.setValue("廣州話");
         languageOptionModel.setChecked(false);
-        languageOptionModelList.add(languageOptionModel);
+        languageOptionModelList.add(languageOptionModel);*/
 
         if (!StringFunctions.isNullOrEmpty(languageName)) {
             for (int j = 0; j < languageOptionModelList.size(); j++) {
@@ -146,7 +149,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageListAdapter.notifyDataSetChanged();
         languageName = language.getValue();
         languageConfirmButton.setEnabled(true);
-        languageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
+
     }
 }
 

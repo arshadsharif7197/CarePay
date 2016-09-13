@@ -1,0 +1,120 @@
+[
+  {
+    "comment": "view appointments",
+    "action": "GET",
+    "url": "http://workflow.development.carecloud.com/workflow/appointments",
+    "response": {
+      "metadata": {
+        "lang": "en",
+        "stage": "appointments",
+        "workflow": "check-in",
+        "workflow_id": "someID"
+      },
+      "info": {
+        "appointments_heading": {
+          "visible": true,
+          "title": "Appointments"
+        },
+        "appointments_check_in_early_prompt": {
+          "description": "Your appointment with %physician% starts in %hours% hours. Want to check-in early?"
+        },
+        "dismiss_message": {
+          "title": "Dismiss"
+        },
+        "appointments_check_in_early": {
+          "title": "CHECK-IN-_EARLY"
+        }
+      },
+      "capture": {
+        "appointments": [
+          {
+            "appointment_id": "1234",
+            "physician": {
+              "name": "Dr. Dolittle Borton",
+              "type": "Family Physician"
+            },
+            "time": "09/09/16 3:45:17 PM UTC",
+            "qr_code_to_scan_at_office": "image_data",
+            "actions": [
+              "cancel_appointment",
+              "appointment_check-in"
+            ]
+          },
+          {
+            "appointment_id": "1235",
+            "physician": {
+              "name": "Dr. Ellie Borton",
+              "type": "Cardiologist"
+            },
+            "time": "09/08/16 5:12:28 PM UTC",
+            "qr_code_to_scan_at_office": "image_data",
+            "actions": [
+              "cancel_appointment",
+              "appointment_check-in"
+            ]
+          },
+          {
+            "appointment_id": "1236",
+            "physician": {
+              "name": "Dr. Bell Thomson",
+              "type": "Gynaec"
+            },
+            "time": "09/17/16 5:12:28 PM UTC",
+            "qr_code_to_scan_at_office": "image_data",
+            "actions": [
+              "cancel_appointment",
+              "appointment_check-in"
+            ]
+          },
+          {
+            "appointment_id": "1240",
+            "physician": {
+              "name": "Dr. Jon Thomson",
+              "type": "Gynaec"
+            },
+            "time": "09/19/16 5:12:28 PM UTC",
+            "qr_code_to_scan_at_office": "image_data",
+            "actions": [
+              "cancel_appointment",
+              "appointment_check-in"
+            ]
+          }
+
+        ]
+      },
+      "transitions": [
+        {
+          "name": "cancel_appointment",
+          "action": "POST",
+          "url": "http://workflow.development.carecloud.com/workflow/appointments/{appointment_id}/cancel",
+          "payload": {
+            "workflow_id": "134234"
+          }
+        },
+        {
+          "name": "appointment_checkin",
+          "action": "POST",
+          "url": "http://workflow.development.carecloud.com/workflow/appointments/{appointment_id}/check-in",
+          "payload": {
+            "workflow_id": "134234"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "comment": "appointment check in",
+    "action": "POST",
+    "url": "http://workflow.development.carecloud.com/workflow/appointments/checkin",
+    "payload": {
+      "body": {
+        "metadata": {
+          "workflow_id": "someID"
+        },
+        "data": {
+          "appointment_id": "1343423"
+        }
+      }
+    }
+  }
+]

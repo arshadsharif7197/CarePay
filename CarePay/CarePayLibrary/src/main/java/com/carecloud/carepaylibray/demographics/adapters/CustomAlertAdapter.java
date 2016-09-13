@@ -25,6 +25,7 @@ public class CustomAlertAdapter extends BaseAdapter {
     }
 
 
+
     @Override
     public int getCount() {
 

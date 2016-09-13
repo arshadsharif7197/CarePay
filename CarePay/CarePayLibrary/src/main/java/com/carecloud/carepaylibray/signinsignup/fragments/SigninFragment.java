@@ -1,12 +1,14 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,26 +19,30 @@ import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
-import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SigninFragment extends android.support.v4.app.Fragment implements TextWatcher {
+public class SigninFragment extends Fragment {
 
 
+    private TextView errorEmailTextView, errorPasswordTextView;
     private EditText emailEditText;
     private EditText passwordEditText;
+    private TextView changeLanguageTextView;
     private Button signinButton;
     private Button signupButton;
-    private TextView changeLanguageTextView;
 
+    private boolean isValidEmail, isValidPassword;
 
-    private OnSigninPageOptionsClickListner signinPageOptionsClickListner;
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+    }
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,11 +50,31 @@ public class SigninFragment extends android.support.v4.app.Fragment implements T
 
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
 
+        errorEmailTextView = (TextView) view.findViewById(R.id.txt_email_error);
+        errorPasswordTextView = (TextView) view.findViewById(R.id.txt_create_password);
+
         emailEditText = (EditText) view.findViewById(R.id.emailEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
 
-        emailEditText.addTextChangedListener(this);
-        passwordEditText.addTextChangedListener(this);
+
+        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
+        emailEditText.setTypeface(editTextFontFamily);
+        passwordEditText.setTypeface(editTextFontFamily);
+
+        emailEditText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_EMAIL, emailEditText, errorEmailTextView, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
+            @Override
+            public void OnInputChangedListner(boolean isValid) {
+                isValidEmail = isValid;
+                checkForButtonEnable();
+            }
+        }));
+        passwordEditText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_PASSWORD, passwordEditText, errorPasswordTextView, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
+            @Override
+            public void OnInputChangedListner(boolean isValid) {
+                isValidPassword = isValid;
+                checkForButtonEnable();
+            }
+        }));
 
         signinButton = (Button) view.findViewById(R.id.SigninButton);
 
@@ -56,21 +82,13 @@ public class SigninFragment extends android.support.v4.app.Fragment implements T
             @Override
             public void onClick(View view) {
 
-                if (!isValidEmail()) {
-                    emailEditText.setError("Enter valid mail");
-                    emailEditText.requestFocus();
-                    return;
+                if (isValidInfo()) {
+
+                    Intent intent = new Intent(getContext(), AppointmentsActivity.class);
+                    startActivity(intent);
+
                 }
-                if (passwordEditText.getText().toString().isEmpty()) {
-                    passwordEditText.setError("Enter Password");
-                    passwordEditText.requestFocus();
-                    return;
-                }
-                
-                Intent intent = new Intent(getContext(), HomeScreenActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().finish();
+
             }
         });
 
@@ -78,9 +96,17 @@ public class SigninFragment extends android.support.v4.app.Fragment implements T
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signinPageOptionsClickListner.onOptionClick(new SignupFragment(), "signup");
+                FragmentManager fm = ((SigninSignupActivity) getActivity()).getmFragmentManager();
+                SignupFragment fragment = (SignupFragment) fm.findFragmentByTag(SignupFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new SignupFragment();
+                }
+                fm.beginTransaction()
+                        .replace(R.id.signinLayout, fragment, SignupFragment.class.getSimpleName())
+                        .commit();
             }
         });
+
 
         changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
 
@@ -92,57 +118,42 @@ public class SigninFragment extends android.support.v4.app.Fragment implements T
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 getActivity().finish();
-
             }
         });
 
         //TODO change to common use
-        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        emailEditText.setTypeface(editTextFontFamily);
-        passwordEditText.setTypeface(editTextFontFamily);
 
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        signinPageOptionsClickListner = (OnSigninPageOptionsClickListner) getActivity();
-    }
 
-    private boolean isValidEmail() {
+    private boolean isValidInfo() {
 
-        String email = emailEditText.getText().toString();
-        Pattern pattern = Pattern.compile(SignupFragment.EMAIL_PATTERN);
-
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    public interface OnSigninPageOptionsClickListner {
-
-
-        public void onSigninButtonClick();
-
-        public void onOptionClick(SignupFragment fragment, String fragmentTagName);
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if (charSequence.toString().isEmpty()) {
-            signinButton.setEnabled(false);
+        if (isValidEmail && isValidPassword) {
+            return true;
+        } else if (!isValidEmail && !isValidPassword) {
+            Toast.makeText(getActivity(), "Fields can't be empty", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (!isValidEmail) {
+            Toast.makeText(getActivity(), "Enter valid Email-ID", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (!isValidPassword) {
+            Toast.makeText(getActivity(), "Enter valid password", Toast.LENGTH_LONG).show();
+            return false;
         } else {
-            signinButton.setEnabled(true);
+            Toast.makeText(getActivity(), "Fields can't be empty", Toast.LENGTH_LONG).show();
+            return false;
         }
+
     }
 
-    @Override
-    public void afterTextChanged(Editable editable) {
+    private void checkForButtonEnable() {
+        if (isValidEmail && isValidPassword) {
+            signinButton.setBackgroundResource(R.drawable.button_selector);
+            signinButton.setTextColor(Color.WHITE);
+        } else {
+            signinButton.setBackgroundResource(R.drawable.button_light_gray_background);
 
+        }
     }
 }
