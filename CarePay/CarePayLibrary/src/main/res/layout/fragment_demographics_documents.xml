@@ -41,7 +41,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/demogrDocsLicense"/>
+                android:id="@+id/demographicsDocsLicense"/>
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/demogr_insurance_switch"
@@ -54,17 +54,17 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/demogrDocsInsurance1"/>
+                android:id="@+id/demographicsDocsInsurance1"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/demogrDocsInsurance2"/>
+                android:id="@+id/demographicsDocsInsurance2"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/demogrDocsInsurance3"/>
+                android:id="@+id/demographicsDocsInsurance3"/>
 
         </LinearLayout>
 
