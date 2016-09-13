@@ -57,6 +57,7 @@
             android:background="@drawable/round_tv"
             android:gravity="center_vertical|center_horizontal"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:textSize="@dimen/apt_dl_text_big" />
 
         <LinearLayout
@@ -144,9 +145,9 @@
                 android:id="@+id/btn_check_at_office_id"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_btn_check_ht"
-                android:textColor="@color/white"
+                android:textColor="@color/blue_cerulian"
                 android:textSize="@dimen/apt_dl_textview_size"
-                android:background="@drawable/button_blue_fill_background"
+                android:background="@drawable/button_blue_border"
                 android:text="@string/check_in_at_office" />
         </LinearLayout>
     </LinearLayout>

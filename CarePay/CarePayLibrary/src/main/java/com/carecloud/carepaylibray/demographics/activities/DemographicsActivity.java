@@ -15,15 +15,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsAddressFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsDetailsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsDocumentsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsMoreDetailsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.myinterface.CallbackInterface;
@@ -36,7 +38,7 @@ import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
  */
-public class DemographicsActivity extends KeyboardHolderActivity implements View.OnClickListener {
+public class DemographicsActivity extends KeyboardHolderActivity {
 
 
     TextView title;
@@ -44,7 +46,6 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
     private ViewPager viewPager;
     private FunPagerAdapter funPagerAdapter;
-    Button nextButton;
     CallbackInterface callbackInterface;
 
     @Override
@@ -100,7 +101,6 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
         isStoragePermissionGranted();
 
-
         funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(4);
@@ -129,28 +129,28 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
 
-        nextButton = (Button) findViewById(R.id.demographicsNextButton);
-        nextButton.setOnClickListener(this);
+//        nextButton = (Button) findViewById(R.id.demographicsNextButton);
+//        nextButton.setOnClickListener(this);
 
-
+        //addMoreButton = (Button) findViewById(R.id.demographicsAddMedInfoButton);
     }
 
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
-                nextButton.setVisibility(View.VISIBLE);
+//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Address");
                 break;
             case 1:
-                nextButton.setVisibility(View.VISIBLE);
+//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Details");
                 break;
             case 2:
-                nextButton.setVisibility(View.VISIBLE);
+//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Documents");
                 break;
             case 3:
-                nextButton.setVisibility(View.GONE);
+//                nextButton.setVisibility(View.GONE);
                 title.setText("More Details");
                 break;
             default:
@@ -162,18 +162,30 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         viewPager.setCurrentItem(item, smoothScroll);
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view == nextButton) {
-            Log.e("getCurrentItem()", "" + viewPager.getCurrentItem());
-            callbackInterface.nextbuttonCallback(viewPager.getCurrentItem() + 1, true);
-        }
 
+    /**
+     * Show/hides the button that adds more insurance cards
+     * @param isVisible Whether visible
+     */
+    public void showAddHealthButton(boolean isVisible) {
+        if(!isVisible) {
+          //  addMoreButton.setVisibility(View.GONE);
+        } else {
+         //   addMoreButton.setVisibility(View.VISIBLE);
+        }
     }
 
-
-    public void setAdapterViewItemClickListener(CallbackInterface callbackInterface) {
-        this.callbackInterface = callbackInterface;
+    /**
+     * Enables disables 'Next' button
+     * @param enabled Whether enabled
+     */
+    public void enableNextButton(boolean enabled) {
+        if(!enabled) {
+        //    nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+        } else {
+           // nextButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+        }
+      //  nextButton.setEnabled(enabled);
     }
 
     /**
@@ -266,4 +278,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         Toast.makeText(DemographicsActivity.this, "backButtonClick", Toast.LENGTH_SHORT).show();
     }
 
+/*    public Button getNextButton() {
+    return nextButton;
+    }*/
 }

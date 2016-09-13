@@ -1,90 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:background="@color/white"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="17.0dp"
-    android:layout_marginRight="17dp">
+    android:layout_height="match_parent">
 
 
+    <include layout="@layout/demographics_review_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp">
 
         <TextView
+            style="@style/DemographicsFragmentsHeadingStyle"
+            android:layout_marginTop="20dp"
             android:id="@+id/detailsReviewHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
             android:text="@string/demoVerifyHeading"
             android:textColor="@color/charcoal"
              />
 
         <TextView
+            style="@style/DemographicsFragmentsSubHeadingStyle"
+            android:layout_marginTop="5dp"
             android:id="@+id/detailsReviewSubHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/detailsHeading"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"
             android:text="@string/demoVerifySubHeading"
 
             />
 
 
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="51dp">
+            android:layout_marginTop="36dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/raceDataTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/raceLabel"/>
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/raceLabel"
+                style="@style/DemographicsDocsLabelStyle"/>
 
             <TextView
+                android:text="@string/demogr_tv_choose_label"
+                style="@style/DemographicsDocsClickableTextStyle"
                 android:id="@+id/raceListDataTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@+id/raceTextView"
-                android:gravity="right"
-                android:text="@string/chooseTextView" />
+                android:layout_width="wrap_content"/>
+            </LinearLayout>
 
 
-        </RelativeLayout>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="36dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/ethnicityDataTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:text="@string/ethnicityLabel"
-                />
+                style="@style/DemographicsDocsLabelStyle"/>
 
             <TextView
+                android:text="@string/demogr_tv_choose_label"
+                style="@style/DemographicsDocsClickableTextStyle"
                 android:id="@+id/ethnicityListDataTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/ethnicityTextView"
-                android:gravity="right"
-                android:text="@string/chooseTextView"
-                />
+                android:layout_width="wrap_content"/>
+        </LinearLayout>
 
-        </RelativeLayout>
 
     <Button
+        android:textColor="@color/white"
         android:id="@+id/buttonAddDemographicInfo"
+        android:gravity="center"
+        android:background="@drawable/button_blue"
+        android:layout_marginTop="70dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/aDD_DEMOGRAPHIC_INFO_Button_Label"
-        android:layout_marginTop="70dp"/>
+        android:text="@string/aDD_DEMOGRAPHIC_INFO_Button_Label"/>
+
+    </LinearLayout>
 </LinearLayout>
