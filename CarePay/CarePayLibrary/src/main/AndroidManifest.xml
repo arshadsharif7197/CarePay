@@ -33,7 +33,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
         </activity>
-        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"/>
+        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
+            android:theme="@style/NavigationTheme"/>
     </application>
 
 </manifest>

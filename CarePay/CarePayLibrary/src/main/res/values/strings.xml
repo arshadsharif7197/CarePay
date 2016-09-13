@@ -146,4 +146,11 @@
     <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
     <string name="close">Close</string>
 
+
+    <!--<Navigation Screen>-->
+    <string name="Appointments_title">Appointments</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
 </resources>
