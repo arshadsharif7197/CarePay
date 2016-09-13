@@ -9,8 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -30,8 +30,9 @@ public class DemographicsDocumentsFragment extends Fragment {
     private static final int    MAX_INSURANCE_CARDS = 3;
 
     private FragmentManager            fm;
-    private InsuranceScannerFragment[] insuranceFragment;
+    private InsuranceScannerFragment[] insuranceFragments;
     private SwitchCompat               switchCompat;
+    private int insuranceCount = 0;
 
     @Nullable
     @Override
@@ -41,7 +42,7 @@ public class DemographicsDocumentsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
-        insuranceFragment = new InsuranceScannerFragment[MAX_INSURANCE_CARDS];
+        insuranceFragments = new InsuranceScannerFragment[MAX_INSURANCE_CARDS];
 
         fm = getChildFragmentManager();
 
@@ -53,12 +54,14 @@ public class DemographicsDocumentsFragment extends Fragment {
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, licenseFragment, "license").commit();
 
         // add first insurance fragment
-        insuranceFragment[0] = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
-        if (insuranceFragment[0] == null) {
-            insuranceFragment[0] = new InsuranceScannerFragment();
+        insuranceFragments[0] = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
+        if (insuranceFragments[0] == null) {
+            insuranceFragments[0] = new InsuranceScannerFragment();
+            insuranceFragments[0].setIndex(0);
         }
-        fm.beginTransaction().replace(R.id.demographicsDocsInsurance1, insuranceFragment[0], "insurance1")
+        fm.beginTransaction().replace(R.id.demographicsDocsInsurance1, insuranceFragments[0], "insurance1")
                 .commit();
+        insuranceCount = 1;
 
         // set the switch
         fm.executePendingTransactions();
@@ -66,8 +69,7 @@ public class DemographicsDocumentsFragment extends Fragment {
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-                for (int i = 0; i < insuranceFragment.length; i++) {
-                    InsuranceScannerFragment fragment = insuranceFragment[i];
+                for (InsuranceScannerFragment fragment : insuranceFragments) {
                     if (fragment != null) {
                         if (on) { // show all insurance fragments
                             fm.beginTransaction().show(fragment).commit();
@@ -79,6 +81,33 @@ public class DemographicsDocumentsFragment extends Fragment {
             }
         });
         switchCompat.setChecked(false);
+
+        // set add health info button
+        Button addHealthInfo = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
+        addHealthInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (insuranceCount < MAX_INSURANCE_CARDS) {
+                    String insuranceTag = "insurance2";
+                    int insuranceFragId = R.id.demographicsDocsInsurance2;
+                    if (insuranceCount == 2) {
+                        insuranceTag = "insurance3";
+                        insuranceFragId = R.id.demographicsDocsInsurance3;
+                    }
+
+                    InsuranceScannerFragment fragment = (InsuranceScannerFragment) fm.findFragmentByTag(insuranceTag);
+                    if (fragment == null) {
+                        fragment = new InsuranceScannerFragment();
+                        insuranceFragments[insuranceCount] = fragment;
+                        fragment.setIndex(insuranceCount);
+                        insuranceCount++;
+                    }
+                    fm.beginTransaction().replace(insuranceFragId, fragment, insuranceTag)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            }
+        });
 
         setTypefaces(view);
 

@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private TextView           tvInsuranceNum;
     private TextView           tvPlan;
     private TextView           tvProvider;
+    private int                index; // use to identify the first created fragment
 
     @Nullable
     @Override
@@ -93,5 +95,19 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_provider));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_number_label));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_num));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // if scanned first insurance, show the button to add more insurance cards
+        if(index == 0) {
+            Button buttonAddIns = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
+            buttonAddIns.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

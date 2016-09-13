@@ -48,8 +48,9 @@
 
             <Button
                 android:id="@+id/demographicsAddMedInfoButton"
-                style="@style/DemographicsAddMedInfoButtonStyle"
-                android:text="@string/add_medical_info"/>
+                style="@style/DemographicsNextButtonStyle"
+                android:text="@string/add_medical_info"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/demographicsNextButton"
