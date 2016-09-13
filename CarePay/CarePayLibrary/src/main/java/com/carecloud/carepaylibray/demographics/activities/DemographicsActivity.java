@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
  */
-public class DemographicsActivity extends KeyboardHolderActivity implements View.OnClickListener {
+public class DemographicsActivity extends KeyboardHolderActivity {
 
 
     TextView title;
@@ -45,8 +46,6 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
     private ViewPager viewPager;
     private FunPagerAdapter funPagerAdapter;
-    private Button nextButton;
-    private Button addMoreButton;
     CallbackInterface callbackInterface;
 
     @Override
@@ -130,28 +129,28 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
 
-        nextButton = (Button) findViewById(R.id.demographicsNextButton);
-        nextButton.setOnClickListener(this);
+//        nextButton = (Button) findViewById(R.id.demographicsNextButton);
+//        nextButton.setOnClickListener(this);
 
-        addMoreButton = (Button) findViewById(R.id.demographicsAddMedInfoButton);
+        //addMoreButton = (Button) findViewById(R.id.demographicsAddMedInfoButton);
     }
 
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
-                nextButton.setVisibility(View.VISIBLE);
+//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Address");
                 break;
             case 1:
-                nextButton.setVisibility(View.VISIBLE);
+//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Details");
                 break;
             case 2:
-                nextButton.setVisibility(View.VISIBLE);
+//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Documents");
                 break;
             case 3:
-                nextButton.setVisibility(View.GONE);
+//                nextButton.setVisibility(View.GONE);
                 title.setText("More Details");
                 break;
             default:
@@ -163,17 +162,6 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         viewPager.setCurrentItem(item, smoothScroll);
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view == nextButton) {
-            Log.e("getCurrentItem()", "" + viewPager.getCurrentItem());
-            callbackInterface.nextbuttonCallback(viewPager.getCurrentItem() + 1, true);
-        }
-    }
-
-    public void setAdapterViewItemClickListener(CallbackInterface callbackInterface) {
-        this.callbackInterface = callbackInterface;
-    }
 
     /**
      * Show/hides the button that adds more insurance cards
@@ -181,9 +169,9 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
      */
     public void showAddHealthButton(boolean isVisible) {
         if(!isVisible) {
-            addMoreButton.setVisibility(View.GONE);
+          //  addMoreButton.setVisibility(View.GONE);
         } else {
-            addMoreButton.setVisibility(View.VISIBLE);
+         //   addMoreButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -193,11 +181,11 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
      */
     public void enableNextButton(boolean enabled) {
         if(!enabled) {
-            nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+        //    nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
         } else {
-            nextButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+           // nextButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
         }
-        nextButton.setEnabled(enabled);
+      //  nextButton.setEnabled(enabled);
     }
 
     /**
@@ -290,7 +278,7 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         Toast.makeText(DemographicsActivity.this, "backButtonClick", Toast.LENGTH_SHORT).show();
     }
 
-    public Button getNextButton() {
-        return nextButton;
-    }
+/*    public Button getNextButton() {
+    return nextButton;
+    }*/
 }

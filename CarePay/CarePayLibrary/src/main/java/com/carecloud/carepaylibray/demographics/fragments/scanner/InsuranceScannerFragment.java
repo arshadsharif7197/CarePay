@@ -103,8 +103,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         super.onActivityResult(requestCode, resultCode, data);
         // if scanned first insurance, show the button to add more insurance cards
         if(index == 0) {
-            Button buttonAddIns = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
-            buttonAddIns.setVisibility(View.VISIBLE);
+      //      Button buttonAddIns = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
+//            buttonAddIns.setVisibility(View.VISIBLE);
         }
         // enable next button
         ((DemographicsActivity)getActivity()).enableNextButton(true);

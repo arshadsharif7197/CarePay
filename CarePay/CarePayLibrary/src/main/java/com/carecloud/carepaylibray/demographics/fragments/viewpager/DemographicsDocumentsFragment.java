@@ -85,9 +85,11 @@ public class DemographicsDocumentsFragment extends Fragment {
             }
         });
         switchCompat.setChecked(false);
+        return view;
+    }
 
         // set add health info button
-        Button addHealthInfo = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
+      /*  Button addHealthInfo = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
         addHealthInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) { // add 2nd or 3rd card
@@ -134,7 +136,7 @@ public class DemographicsDocumentsFragment extends Fragment {
 
         return view;
     }
-
+*/
     /**
      * Helper to set the typeface to all textviews
      *
