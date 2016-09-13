@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.ZoomButton;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
@@ -36,7 +37,9 @@ public class DemographicsDocumentsFragment extends Fragment {
     private InsuranceScannerFragment[] insuranceFragments;
     private SwitchCompat               switchCompat;
     private int insuranceCount = 0;
-    private View view;
+    private View   view;
+    private Button addMoreButton;
+    private Button nextButton;
 
     @Nullable
     @Override
@@ -85,12 +88,10 @@ public class DemographicsDocumentsFragment extends Fragment {
             }
         });
         switchCompat.setChecked(false);
-        return view;
-    }
 
         // set add health info button
-      /*  Button addHealthInfo = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
-        addHealthInfo.setOnClickListener(new View.OnClickListener() {
+        addMoreButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
+        addMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) { // add 2nd or 3rd card
                 if (insuranceCount < MAX_INSURANCE_CARDS) {
@@ -100,8 +101,9 @@ public class DemographicsDocumentsFragment extends Fragment {
                         insuranceTag = "insurance3";
                         insuranceFragId = R.id.demographicsDocsInsurance3;
                         // hide add health info button
-                        ((DemographicsActivity) getActivity()).showAddHealthButton(false);
+                        showAddHealthButton(false);
                     }
+
                     // create the fragment
                     InsuranceScannerFragment fragment = (InsuranceScannerFragment) fm.findFragmentByTag(insuranceTag);
                     if (fragment == null) {
@@ -116,27 +118,31 @@ public class DemographicsDocumentsFragment extends Fragment {
 
                     // scroll bottom
                     fm.executePendingTransactions();
-                    ((ScrollView)view.findViewById(R.id.demographicsDocsScroll)).fullScroll(View.FOCUS_DOWN);
+                    ((ScrollView) view.findViewById(R.id.demographicsDocsScroll)).fullScroll(View.FOCUS_DOWN);
                 }
             }
         });
 
         // set the fonts
         setTypefaces(view);
+
         // override next button function for this screen
-        Button nextButton = ((DemographicsActivity)getActivity()).getNextButton();
+        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((DemographicsActivity)getActivity()).setCurrentItem(3, true);
+                ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
             }
         });
+
+        showAddHealthButton(false);
+
         // disable next button
-        ((DemographicsActivity)getActivity()).enableNextButton(false);
+        enableNextButton(false);
 
         return view;
     }
-*/
+
     /**
      * Helper to set the typeface to all textviews
      *
@@ -146,5 +152,33 @@ public class DemographicsDocumentsFragment extends Fragment {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_title));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_subtitle));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_switch));
+    }
+
+
+    /**
+     * Show/hides the button that adds more insurance cards
+     *
+     * @param isVisible Whether visible
+     */
+    public void showAddHealthButton(boolean isVisible) {
+        if (!isVisible) {
+            addMoreButton.setVisibility(View.GONE);
+        } else {
+            addMoreButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Enables disables 'Next' button
+     *
+     * @param enabled Whether enabled
+     */
+    public void enableNextButton(boolean enabled) {
+        if (!enabled) {
+            nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+        } else {
+            nextButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+        }
+        nextButton.setEnabled(enabled);
     }
 }

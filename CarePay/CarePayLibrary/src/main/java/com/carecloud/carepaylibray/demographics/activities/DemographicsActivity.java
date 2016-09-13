@@ -46,7 +46,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     private ViewPager viewPager;
     private FunPagerAdapter funPagerAdapter;
-    CallbackInterface callbackInterface;
 
     @Override
     public void replaceFragment(Class fragClass, boolean addToBackStack) {
@@ -128,29 +127,20 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         });
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
-
-//        nextButton = (Button) findViewById(R.id.demographicsNextButton);
-//        nextButton.setOnClickListener(this);
-
-        //addMoreButton = (Button) findViewById(R.id.demographicsAddMedInfoButton);
     }
 
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
-//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Address");
                 break;
             case 1:
-//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Details");
                 break;
             case 2:
-//                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Documents");
                 break;
             case 3:
-//                nextButton.setVisibility(View.GONE);
                 title.setText("More Details");
                 break;
             default:
@@ -160,32 +150,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
-    }
-
-
-    /**
-     * Show/hides the button that adds more insurance cards
-     * @param isVisible Whether visible
-     */
-    public void showAddHealthButton(boolean isVisible) {
-        if(!isVisible) {
-          //  addMoreButton.setVisibility(View.GONE);
-        } else {
-         //   addMoreButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * Enables disables 'Next' button
-     * @param enabled Whether enabled
-     */
-    public void enableNextButton(boolean enabled) {
-        if(!enabled) {
-        //    nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-        } else {
-           // nextButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
-        }
-      //  nextButton.setEnabled(enabled);
     }
 
     /**
@@ -252,14 +216,12 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 //   Log.v(TAG, "Permission is granted");
                 return true;
             } else {
-                //  Log.v(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
-            //  Log.v(TAG, "Permission is granted");
             return true;
         }
     }
@@ -278,7 +240,4 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         Toast.makeText(DemographicsActivity.this, "backButtonClick", Toast.LENGTH_SHORT).show();
     }
 
-/*    public Button getNextButton() {
-    return nextButton;
-    }*/
 }

@@ -31,6 +31,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,10 @@ public class Utility {
     public static int convertDpToPx(Context context, float dps) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dps * scale + 0.5f);
+    }
+    public static void setProximaNovaSemiboldTypefaceEdittext(Context context, EditText view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
+        view.setTypeface(typeface);
     }
 
     public static int convertDpToPixel(float dp, Context context) {

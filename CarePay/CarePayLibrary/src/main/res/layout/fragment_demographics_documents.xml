@@ -71,4 +71,24 @@
 
     </ScrollView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <Button
+            style="@style/DemographicsAddMedInfoButtonStyle"
+            android:id="@+id/demographicsAddMedInfoButton"
+            android:layout_width="match_parent"
+            android:text="Add More"/>
+
+        <Button
+            style="@style/DemographicsNextButtonStyle"
+            android:id="@+id/demographicsNextButton"
+            android:layout_width="match_parent"
+            android:text="Next"/>
+
+    </LinearLayout>
+
 </LinearLayout>
