@@ -11,7 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -67,10 +69,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
         holder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
-            Toast.makeText(mContext,"Clicked "+item.getAptId(),Toast.LENGTH_LONG).show();
+            ((AppointmentsActivity)mContext).showAppointmentsDialog(item);
+           // Toast.makeText(mContext,"Clicked "+item.getAptId(),Toast.LENGTH_LONG).show();
          }
     });
+        holder.shortName.setText(Utility.onShortDrName(item.getDoctorName()));
     }
 
     @Override
@@ -80,7 +83,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
 
-        TextView doctorName, doctorType, time, sectionText;
+        TextView doctorName, doctorType, time, sectionText,shortName;
         View sectionHeader, divider;
 
     public AppointmentViewHolder(View itemView) {
@@ -94,6 +97,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
         Typeface textViewFont_gotham_rounded_book = Typeface.createFromAsset(itemView.getResources().getAssets(), "fonts/gotham_rounded_book.otf");
         time = (TextView) itemView.findViewById(R.id.time);
         time.setTypeface(textViewFont_gotham_rounded_book);
+        shortName=(TextView)itemView.findViewById(R.id.short_textview);
 
     }
 }
