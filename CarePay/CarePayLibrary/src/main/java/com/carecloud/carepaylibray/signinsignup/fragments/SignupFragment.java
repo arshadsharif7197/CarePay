@@ -27,7 +27,7 @@ import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 /**
  * Created by harish_revuri on 9/7/2016.
  */
-public class SignupFragment extends Fragment{
+public class SignupFragment extends Fragment {
 
 
     private TextView errorFirstNameView, textMiddleNameView, errorLastNameView, errorEmailView, errorPasswordView, errorRepeatPasswordView;
@@ -64,23 +64,18 @@ public class SignupFragment extends Fragment{
             }
         });
 
-
         submitButton = (Button) view.findViewById(R.id.signupButton);
         submitButton.setBackground(getResources().getDrawable(R.drawable.button_light_gray_background));
-
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (isValidInfo()) {
                     //Submit Registration
-
-                    Intent intent = new Intent(getContext(), DemographicsActivity.class);
+                    Intent intent = new Intent(getActivity(), DemographicsActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     getActivity().finish();
                 }
-
             }
         });
 
@@ -98,7 +93,7 @@ public class SignupFragment extends Fragment{
         passowrdText = (EditText) view.findViewById(R.id.et_create_password);
         repeatPassowrdText = (EditText) view.findViewById(R.id.et_repeat_password);
 
-        accountExistTextView = (TextView)view.findViewById(R.id.oldUserTextView);
+        accountExistTextView = (TextView) view.findViewById(R.id.oldUserTextView);
         Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
         firstNameText.setTypeface(editTextFontFamily);
         middleNameText.setTypeface(editTextFontFamily);
@@ -112,7 +107,6 @@ public class SignupFragment extends Fragment{
         emailText.setTypeface(editTextFontFamily);
         passowrdText.setTypeface(editTextFontFamily);
         repeatPassowrdText.setTypeface(editTextFontFamily);
-
 
         firstNameText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_TEXT, firstNameText, errorFirstNameView, "Enter First Name", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
@@ -157,8 +151,6 @@ public class SignupFragment extends Fragment{
             }
         }));
 
-
-
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,7 +167,6 @@ public class SignupFragment extends Fragment{
 
         return view;
     }
-
 
     private boolean isValidInfo() {
 
@@ -195,7 +186,7 @@ public class SignupFragment extends Fragment{
 
     }
 
-    private void checkForButtonEnable(){
+    private void checkForButtonEnable() {
         if (isValidFirstName && isValidMiddleName && isValidLastName && isValidEmail && isValidPassword && isValidRepeatPassword) {
             submitButton.setBackgroundResource(R.drawable.button_selector);
             submitButton.setTextColor(Color.WHITE);

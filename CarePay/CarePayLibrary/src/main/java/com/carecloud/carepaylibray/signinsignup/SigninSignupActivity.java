@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.signinsignup;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
-import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
 
 /**
  * Created by harish_revuri on 9/7/2016.

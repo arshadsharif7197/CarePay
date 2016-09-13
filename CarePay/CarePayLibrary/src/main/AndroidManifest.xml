@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.carecloud.carepaylibrary">
+<manifest package="com.carecloud.carepaylibrary"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
-    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera"/>
 
     <application
         android:allowBackup="true"
@@ -14,25 +14,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.carecloud.carepaylibray.activities.LibraryMainActivity" />
+        <activity android:name="com.carecloud.carepaylibray.activities.LibraryMainActivity"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
-            android:configChanges="screenSize|orientation" />
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+
+        <activity android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReview"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
         <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity" />
 
-        <activity android:name="com.carecloud.carepaylibray.activities.SignatureActivity" />
+        <activity android:name="com.carecloud.carepaylibray.activities.SignatureActivity"/>
 
-        <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity" />
+        <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.payment.PaymentActivity"
             android:parentActivityName="com.carecloud.carepaylibray.homescreen.HomeScreenActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity" />
+                android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
         </activity>
-        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity" />
+        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"/>
     </application>
 
 </manifest>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.Toolbar
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/demographics_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/blue_cerulian"
-    android:gravity="center"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    android:gravity="center">
 
     <TextView
         android:id="@+id/demographics_toolbar_title"
         style="@style/ResponsibilityToolbarTextStyle"
-        android:text="@string/demographics_title"/>
+        android:text="@string/demographics_title" />
 
 </android.support.v7.widget.Toolbar>
