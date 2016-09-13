@@ -107,7 +107,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             buttonAddIns.setVisibility(View.VISIBLE);
         }
         // enable next button
-        ((DemographicsActivity)getActivity()).enableNextButton(true);
+        Button next = (Button) ((DemographicsActivity)getActivity()).getWindow().getDecorView().getRootView().findViewById(R.id.demographicsNextButton);
+        next.setEnabled(true);
+        next.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
     }
 
     public void setIndex(int index) {

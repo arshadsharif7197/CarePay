@@ -2,173 +2,179 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="17dp"
-    android:paddingRight="17dp">
+    android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/reviewtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="21.0dp"
-        android:layout_gravity="center"
-        android:paddingTop="20dp"
-        android:text="Review Information" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:id="@+id/reviewSubtitle"
-        android:text="Please review your demographic and health insurance information below." />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
+    <include layout="@layout/review_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="17.0dp"
+        android:layout_marginRight="17.0dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/reviewtitle"
+            style="@style/DemographicsFragmentsHeadingStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/demographicSubTitle"
-            android:text="DEMOGRAPHIC"
-            android:textColor="@color/bright_cerulean" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/reviewRaceLabel"
-            android:text="RACE" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:id="@+id/reviewRaceEditText"
-            android:text="Other" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <TextView
-            android:id="@+id/reviewEthnicityLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ETHNICITY" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HISPANIC"
-
-            android:id="@+id/reviewEthnicityEditText"/>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/healthInsuranceSubTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Health Insurance" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/reviewCompanyLabel"
-            android:text="COMPANY" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:id="@+id/companyEditText"
-            android:text="Aetna" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/reviewPlanLabel"
-            android:text="PLAN" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:id="@+id/planNoEditText"
-            android:text="Aetna Select" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Insurance Card Number"
-            android:id="@+id/reviewInsuranceCardNoLabel"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/insuranceCardNoEditText"
-            android:text="1234567890" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:id="@+id/YesCorrectButton"
-            android:text="YES, THESE ARE CORRECT" />
+            android:text="Review Information" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
+        <TextView
+            android:id="@+id/reviewSubtitle"
+            style="@style/DemographicsFragmentsSubHeadingStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/review_subtitle" />
 
-        <Button
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/needUpdateButton"
-            android:text="I NEED TO UPDATE THIS INFORMATION" />
+            android:orientation="vertical"
+            android:layout_marginTop="9dp">
+
+            <TextView
+                style="@style/reviewDemographicBlue."
+                android:id="@+id/demographicSubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/demographics_title" />
+
+
+
+            <TextView
+                android:id="@+id/reviewRaceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RACE"
+                style="reviewDemographiclabel"
+                android:layout_marginTop="16.5dp" />
+
+            <TextView
+                style="reviewDemographictext"
+                android:id="@+id/reviewRaceEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other" />
+
+
+            <TextView
+
+                style="reviewDemographiclabel"
+                android:id="@+id/reviewEthnicityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ETHNICITY"
+                android:layout_marginTop="16.5dp" />
+
+            <TextView
+                style="reviewDemographictext"
+                android:id="@+id/reviewEthnicityEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HISPANIC" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="9dp">
+
+            <TextView
+                style="@style/reviewDemographicBlue."
+                android:id="@+id/healthInsuranceSubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Health Insurance"
+                 />
+
+
+            <TextView
+
+                style="reviewDemographiclabel"
+                android:id="@+id/reviewCompanyLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="COMPANY"
+                android:layout_marginTop="16.5dp" />
+
+            <TextView
+                style="reviewDemographictext"
+                android:id="@+id/reviewCompanyEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aetna" />
+
+
+            <TextView
+                style="reviewDemographiclabel"
+                android:id="@+id/reviewPlanLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PLAN"
+                android:layout_marginTop="16.5dp" />
+
+            <TextView
+                style="reviewDemographictext"
+                android:id="@+id/reviewPlanNoEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aetna Select"/>
+
+
+            <TextView
+                style="reviewDemographiclabel"
+                android:id="@+id/reviewInsuranceCardNoLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Insurance Card Number"
+                android:layout_marginTop="16.5dp"/>
+
+            <TextView
+                style="reviewDemographictext"
+                android:id="@+id/reviewInsuranceCardNoEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1234567890" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_marginTop="34.5dp"
+                android:id="@+id/YesCorrectButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/button_blue"
+                android:text="YES, THESE ARE CORRECT"
+                android:textColor="@color/white" />
+
+
+            <Button
+
+                android:id="@+id/needUpdateButton"
+                android:layout_marginTop="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/button_background"
+                android:text="I NEED TO UPDATE THIS INFORMATION"
+                android:textColor="@color/bright_cerulean" />
+        </LinearLayout>
+
     </LinearLayout>
-
-
 </LinearLayout>

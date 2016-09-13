@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
  */
-public class DemographicsActivity extends KeyboardHolderActivity implements View.OnClickListener {
+public class DemographicsActivity extends KeyboardHolderActivity {
 
 
     TextView title;
@@ -45,9 +46,6 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
     private ViewPager viewPager;
     private FunPagerAdapter funPagerAdapter;
-    private Button nextButton;
-    private Button addMoreButton;
-    CallbackInterface callbackInterface;
 
     @Override
     public void replaceFragment(Class fragClass, boolean addToBackStack) {
@@ -129,29 +127,20 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         });
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
-
-        nextButton = (Button) findViewById(R.id.demographicsNextButton);
-        nextButton.setOnClickListener(this);
-
-        addMoreButton = (Button) findViewById(R.id.demographicsAddMedInfoButton);
     }
 
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
-                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Address");
                 break;
             case 1:
-                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Details");
                 break;
             case 2:
-                nextButton.setVisibility(View.VISIBLE);
                 title.setText("Documents");
                 break;
             case 3:
-                nextButton.setVisibility(View.GONE);
                 title.setText("More Details");
                 break;
             default:
@@ -161,43 +150,6 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
 
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == nextButton) {
-            Log.e("getCurrentItem()", "" + viewPager.getCurrentItem());
-            callbackInterface.nextbuttonCallback(viewPager.getCurrentItem() + 1, true);
-        }
-    }
-
-    public void setAdapterViewItemClickListener(CallbackInterface callbackInterface) {
-        this.callbackInterface = callbackInterface;
-    }
-
-    /**
-     * Show/hides the button that adds more insurance cards
-     * @param isVisible Whether visible
-     */
-    public void showAddHealthButton(boolean isVisible) {
-        if(!isVisible) {
-            addMoreButton.setVisibility(View.GONE);
-        } else {
-            addMoreButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * Enables disables 'Next' button
-     * @param enabled Whether enabled
-     */
-    public void enableNextButton(boolean enabled) {
-        if(!enabled) {
-            nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-        } else {
-            nextButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
-        }
-        nextButton.setEnabled(enabled);
     }
 
     /**
@@ -264,14 +216,12 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
                 //   Log.v(TAG, "Permission is granted");
                 return true;
             } else {
-                //  Log.v(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
-            //  Log.v(TAG, "Permission is granted");
             return true;
         }
     }
@@ -290,7 +240,4 @@ public class DemographicsActivity extends KeyboardHolderActivity implements View
         Toast.makeText(DemographicsActivity.this, "backButtonClick", Toast.LENGTH_SHORT).show();
     }
 
-    public Button getNextButton() {
-        return nextButton;
-    }
 }
