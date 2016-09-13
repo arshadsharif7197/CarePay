@@ -65,7 +65,8 @@
     <string name="demogr_docs_logo">Logo</string>
     <string name="demogr_docs_logo_title">Documents, please</string>
     <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
-    <string name="demogr_docs_scan_label">Scan</string>
+    <string name="demogr_docs_scan_label">Scan Driver\'s License</string>
+    <string name="demogr_docs_scan_insurance_label">Scan Insurance Card</string>
     <string name="demogr_license_scan_label">driver\'s license number</string>
     <string name="demogr_docs_license_number_label">Driver\'s License State</string>
     <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
@@ -140,10 +141,9 @@
     <string name="minimum_char_in_city_error_messae">Enter minimum three letters in city</string>
     <string name="empty_state_error_messae">Enter state</string>
     <string name="select_state_error_messae">Select state from list only</string>
+    <string name="add_medical_info">Add More</string>
 
     <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
     <string name="close">Close</string>
 
 </resources>
-
-
