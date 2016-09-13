@@ -55,6 +55,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         View view = inflater.inflate(R.layout.fragment_select_language, container, false);
         languageListView = (RecyclerView) view.findViewById(R.id.languageRecyclerView);
         languageListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         languageConfirmButton = (ImageButton) view.findViewById(R.id.languageConfirmButton);
         languageConfirmButton.setEnabled(false);
         languageConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +87,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
 
-        languageOptionModel = new LanguageOptionModel();
+       /* languageOptionModel = new LanguageOptionModel();
         languageOptionModel.setValue("Français");
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
@@ -99,7 +100,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel = new LanguageOptionModel();
         languageOptionModel.setValue("廣州話");
         languageOptionModel.setChecked(false);
-        languageOptionModelList.add(languageOptionModel);
+        languageOptionModelList.add(languageOptionModel);*/
 
         if (!StringFunctions.isNullOrEmpty(languageName)) {
             for (int j = 0; j < languageOptionModelList.size(); j++) {
@@ -146,7 +147,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageListAdapter.notifyDataSetChanged();
         languageName = language.getValue();
         languageConfirmButton.setEnabled(true);
-        languageConfirmButton.setBackgroundResource(R.drawable.button_blue_fill_background);
+
     }
 }
 

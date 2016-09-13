@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="14dp"
-    android:background="@color/Munsell">
-
+    android:background="@color/white">
+<include layout="@layout/demographics_toolbar"/>
 
     <FrameLayout
         android:id="@+id/demogr_content_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginTop="27dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
             <LinearLayout
                 android:id="@+id/ll_for_vp"
+                android:layout_above="@+id/demographicsNextButton"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/demographicsNextButton"
                 android:orientation="vertical">
 
                 <com.viewpagerindicator.TabPageIndicator
@@ -31,42 +30,35 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:paddingLeft="30dp"
-                    android:paddingTop="30dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="17dp"
-                    android:paddingRight="17dp"
-                    android:background="@color/white">
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="17dp"/>
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/pager"
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white" />
-                </LinearLayout>
+                    android:background="@color/white"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="17dp"/>
             </LinearLayout>
-
 
             <Button
                 android:id="@+id/demographicsNextButton"
-                android:layout_width="326.0dp"
-                android:layout_height="46dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
+                style="ResponsButtonStyle"
+                android:fontFamily="GothamRounded-Medium"
+                android:layout_height="51dp"
+                android:layout_width="match_parent"
+                android:text="@string/next_Button"
                 android:background="@color/bright_cerulean"
-                android:gravity="center"
-                android:text="Next" />
-
+                android:layout_alignParentBottom="true"
+                android:gravity="center"/>
         </RelativeLayout>
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/demogr_keyboard_holder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
 

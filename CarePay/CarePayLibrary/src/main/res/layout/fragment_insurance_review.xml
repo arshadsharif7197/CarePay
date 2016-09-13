@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="14dp"
-    android:paddingRight="14dp">
+    android:orientation="vertical"
+    android:paddingLeft="17dp"
+    android:paddingRight="17dp">
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"/>
     <TextView
+        android:id="@+id/reviewtitle"
         android:layout_width="wrap_content"
         android:layout_height="21.0dp"
+        android:layout_gravity="center"
         android:paddingTop="20dp"
+        android:text="Review Information" />
 
-        android:text="Review Information"
-        android:layout_gravity="center"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please review your demographic and health insurance information below."
-        android:gravity="center"/>
+        android:gravity="center"
+        android:id="@+id/reviewSubtitle"
+        android:text="Please review your demographic and health insurance information below." />
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,38 +34,49 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/demographicSubTitle"
             android:text="DEMOGRAPHIC"
-            android:textColor="@color/bright_cerulean"/>
+            android:textColor="@color/bright_cerulean" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="20dp"/>
+            android:layout_height="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RACE"/>
+            android:id="@+id/reviewRaceLabel"
+            android:text="RACE" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Other"/>
+
+            android:id="@+id/reviewRaceEditText"
+            android:text="Other" />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+            android:layout_height="10dp" />
+
+        <TextView
+            android:id="@+id/reviewEthnicityLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ETHNICITY" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ETHNICITY"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HISPANIC"/>
+            android:text="HISPANIC"
+
+            android:id="@+id/reviewEthnicityEditText"/>
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp"/>
+        android:layout_height="20dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -71,71 +84,91 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/healthInsuranceSubTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Health Insurance"/>
+            android:text="Health Insurance" />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="15dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="COMPANY"/>
+            android:layout_height="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aetna"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+            android:id="@+id/reviewCompanyLabel"
+            android:text="COMPANY" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PLAN"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Aetna Select"/>
+
+            android:id="@+id/companyEditText"
+            android:text="Aetna" />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Insurance Card Number"/>
+            android:layout_height="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1234567890"/>
+            android:id="@+id/reviewPlanLabel"
+            android:text="PLAN" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/planNoEditText"
+            android:text="Aetna Select" />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+            android:layout_height="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Insurance Card Number"
+            android:id="@+id/reviewInsuranceCardNoLabel"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/insuranceCardNoEditText"
+            android:text="1234567890" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="YES, THESE ARE CORRECT"
-        android:layout_gravity="center"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/YesCorrectButton"
+            android:text="YES, THESE ARE CORRECT" />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="I NEED TO UPDATE THIS INFORMATION"
-        android:layout_gravity="center"/>
+            android:layout_height="10dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/needUpdateButton"
+            android:text="I NEED TO UPDATE THIS INFORMATION" />
     </LinearLayout>
 
-    
 
 </LinearLayout>

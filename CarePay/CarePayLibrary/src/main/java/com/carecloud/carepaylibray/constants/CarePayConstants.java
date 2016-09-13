@@ -16,4 +16,22 @@ public class CarePayConstants {
 
     public static final String DEFAULT_LANGUAGE = "English";
 
+    //Appointments Constants
+    public static final String ASSETS_JSON = "workflow.json";
+    public static final String ATTR_RESPONSE = "response";
+    public static final String ATTR_CAPTURE = "capture";
+    public static final String ATTR_APPOINTMENTS = "appointments";
+    public static final String ATTR_APPT_ID= "appointment_id";
+    public static final String ATTR_TIME = "time";
+    public static final String DATE_FORMAT = "MM/dd/yy hh:mm:ss a";
+    public static final String DAY_UPCOMING = "UPCOMING";
+    public static final String DAY_TODAY = "TODAY";
+    public static final String ATTR_PHYSICIAN = "physician";
+    public static final String ATTR_NAME = "name";
+    public static final String ATTR_TYPE = "type";
+    public static final String ATTR_UTC = "UTC";
+    public static final String DATE_FORMAT_AM_PM = "hh:mm a";
+    public static final String DATE_TIME_FORMAT = "dd MMM hh:mm a";
+
+
 }

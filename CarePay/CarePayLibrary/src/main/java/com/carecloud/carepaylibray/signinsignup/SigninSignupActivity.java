@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,12 +14,8 @@ import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
  * Created by harish_revuri on 9/7/2016.
  */
 
-public class SigninSignupActivity extends AppCompatActivity
 
-
-
-        implements SigninFragment.OnSigninPageOptionsClickListner, SignupFragment.OnSignupPageOptionsClickListner{
-
+public class SigninSignupActivity extends AppCompatActivity {
 
     private FragmentManager mFragmentManager;
 
@@ -28,14 +25,14 @@ public class SigninSignupActivity extends AppCompatActivity
 
         mFragmentManager = getSupportFragmentManager();
 
-        if(savedInstanceState == null){
-            mFragmentManager.beginTransaction().add(R.id.layoutSigninSignup, new SigninFragment(),"signin").addToBackStack("signin").commit();
+        if (savedInstanceState == null) {
+            mFragmentManager.beginTransaction().add(R.id.layoutSigninSignup, new SigninFragment(), "signin").addToBackStack("signin").commit();
         }
 
         mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                if(mFragmentManager.getBackStackEntryCount()==0) {
+                if (mFragmentManager.getBackStackEntryCount() == 0) {
                     mFragmentManager.popBackStack();
                     finish();
                 }
@@ -44,32 +41,14 @@ public class SigninSignupActivity extends AppCompatActivity
 
     }
 
-    private void switchFragment(Fragment fragment, String tagName){
-        if(tagName!=null) {
+    private void switchFragment(Fragment fragment, String tagName) {
+        if (tagName != null) {
             mFragmentManager.beginTransaction()
                     .replace(R.id.layoutSigninSignup, fragment).addToBackStack(tagName).commit();
         }
     }
 
-
-    @Override
-    public void onSigninButtonClick() {
-
-    }
-
-    @Override
-    public void onOptionClick(SignupFragment fragment, String fragmentTagName) {
-        switchFragment(fragment, fragmentTagName);
-    }
-
-    @Override
-    public void onSignupButtonClick() {
-
-    }
-
-    @Override
-    public void onSignupOptionClick(Fragment fragment, String fragmentTagName) {
-        mFragmentManager.beginTransaction().remove(fragment).commit();
-        mFragmentManager.popBackStack();
+    public FragmentManager getmFragmentManager() {
+        return mFragmentManager;
     }
 }
