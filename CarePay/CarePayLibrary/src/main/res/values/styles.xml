@@ -271,4 +271,60 @@
 
 
 
+    <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorPrimaryDark</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="ConsentActivityTitleStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">21.0sp</item>
+        <item name="android:gravity">center</item>
+
+    </style>
+
+    <style name="ConsentActivityDescriptionTextStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">13.0sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+
+    </style>
+
+    <style name="ConsentActivityContentTextStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/Feldgrau</item>
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
+        <item name="android:lineSpacingMultiplier">1</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+
+    </style>
+
+    <style name="ConsentActivityDoctornameTextStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:lineSpacingExtra">17.0sp</item>
+        <item name="android:gravity">left</item>
+
+    </style>
+
+    <style name="ConsentActivityDateStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/Feldgrau</item>
+        <item name="android:textSize">24.0sp</item>
+        <item name="android:gravity">center</item>
+
+    </style>
+
+
+
 </resources>

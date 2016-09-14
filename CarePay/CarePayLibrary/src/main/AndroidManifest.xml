@@ -25,7 +25,11 @@
             />
         <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity" />
 
-        <activity android:name="com.carecloud.carepaylibray.activities.SignatureActivity"/>
+        <activity android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+        <activity android:name="com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:windowSoftInputMode="adjustPan"></activity>
 
         <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
 
@@ -36,7 +40,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
         </activity>
-        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"/>
+        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
+            android:theme="@style/NavigationTheme"/>
     </application>
 
 </manifest>
