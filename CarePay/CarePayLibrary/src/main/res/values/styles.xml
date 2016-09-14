@@ -155,6 +155,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginStart">14dp</item>
         <item name="android:background">@drawable/button_background</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="DemographicsDocsHeaderTitleStyle" parent="android:Widget.TextView">
@@ -182,7 +183,6 @@
     <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/payne_gray</item>
         <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
     </style>
@@ -236,11 +236,9 @@
 
     </style>
 
-    <style name="DemographicsAddMedInfoButtonStyle" parent="ResponsButtonStyle">
-        <item name="android:background">@color/button_bright_cerulean</item>
+    <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
         <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
-        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginStart">0dp</item>
     </style>
 
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">

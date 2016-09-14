@@ -99,6 +99,8 @@
     <string name="demogr_tv_choose_label">Choose</string>
     <string name="demogr_docs_tv_chose_company">Choose company first</string>
     <string name="demogr_docs_rescan">Re-scan</string>
+    <string name="demogr_docs_add_card">Add Card</string>
+    <string name="demogr_docs_remove_card">Remove Card</string>
 
     <!-- Demographic Screens -->
 
@@ -169,5 +171,6 @@
 
     <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
     <string name="close">Close</string>
+    <string name="demogr_next">Next</string>
 
 </resources>
