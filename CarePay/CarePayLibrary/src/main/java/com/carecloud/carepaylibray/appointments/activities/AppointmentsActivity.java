@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.appointments.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReview;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import java.text.SimpleDateFormat;
@@ -181,6 +183,9 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             ((Button) view.findViewById(R.id.checkOfficeBtn)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    Intent demographicReviewIntent= new Intent(getApplicationContext(), DemographicReview.class);
+                    startActivity(demographicReviewIntent);
                     Toast.makeText(AppointmentsActivity.this, "Clicked on button icon,", Toast.LENGTH_LONG).show();
                 }
             });
