@@ -51,19 +51,19 @@
         <android.support.v7.widget.CardView
             android:id="@+id/apptUserPicCardView"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:elevation="12dp"
-            app:cardCornerRadius="30dp"
+            android:layout_width="@dimen/apt_dl_image_ht_wdh"
+            android:layout_height="@dimen/apt_dl_image_ht_wdh"
+            android:elevation="@dimen/apt_dl_image_elevation"
+            app:cardCornerRadius="@dimen/apt_dl_image_radius"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/apt_dl_appt_shortname_margin"
-            android:innerRadius="0dp"
+            android:innerRadius="@dimen/apt_dl_zero_ht_wdh"
             android:shape="ring"
             android:visibility="gone"
             android:thicknessRatio="1.9">
             <ImageView
                 android:id="@+id/apptUserPicImageView"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/apt_dl_image_ht_wdh"
                 android:layout_width="match_parent"
                 android:src="@drawable/icn_signup_step_2_user_on"
                 android:layout_alignParentTop="true"
@@ -112,7 +112,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="@dimen/apt_dl_boader_ht"
                 android:layout_marginBottom="@dimen/apt_dl_margin"
                 android:layout_marginTop="@dimen/apt_dl_margin"
                 android:background="@color/light_gray_dialog" />
@@ -124,7 +124,7 @@
 
                 <TextView
                     android:id="@+id/apptAddressTextView"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0.7"
@@ -138,7 +138,7 @@
 
                 <ImageView
                     android:id="@+id/apptLocationImageView"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.15"
                     android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
@@ -146,7 +146,7 @@
 
                 <ImageView
                     android:id="@+id/apptDailImageView"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.15"
                     android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
@@ -158,7 +158,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="@dimen/apt_dl_boader_ht"
                 android:layout_marginBottom="@dimen/apt_dl_margin"
                 android:layout_marginTop="@dimen/apt_dl_margin"
                 android:background="@color/light_gray_dialog" />
