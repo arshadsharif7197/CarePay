@@ -8,12 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
@@ -39,11 +37,11 @@ public class AppointmentsListFragment extends Fragment {
 
     private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
     private ArrayList<AppointmentModel> mAptItems = new ArrayList<>();
-    private AppointmentModel mAptItem;
-    private AppointmentsAdapter mAppointmentsAdapterToday, mAppointmentsAdapterUpcoming;
+    private AppointmentModel aptItem;
+    private AppointmentsAdapter appointmentsAdapter, appointmentsAdapterUpcoming;
     private ArrayList<AppointmentModel> todayAppointmentsItems = new ArrayList<AppointmentModel>();
     private ArrayList<AppointmentModel> upcomingAppointmentsItems = new ArrayList<AppointmentModel>();
-    private RecyclerView mRecyclerViewToday, mRecyclerViewUpcoming;
+    private RecyclerView recyclerViewToday, recyclerViewUpcoming;
 
 
     @Override
@@ -63,7 +61,7 @@ public class AppointmentsListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.fragment_appointments_list, container, false);
-        mAptItem = new AppointmentModel();
+        aptItem = new AppointmentModel();
         new AsyncListParser().execute();
         return view;
     }
@@ -126,7 +124,7 @@ public class AppointmentsListFragment extends Fragment {
                         {
                             JSONObject jsonObj_Physician = jsonArray_Appointments.getJSONObject(k);
                             String mAptId = jsonObj_Physician.getString(CarePayConstants.ATTR_APPT_ID);
-                            mAptItem.setAptId(mAptId);
+                            aptItem.setAptId(mAptId);
                             String mAptTime = jsonObj_Physician.getString(CarePayConstants.ATTR_TIME);
                             String mAptDate=mAptTime.replaceAll(CarePayConstants.ATTR_UTC,"");
 
@@ -143,14 +141,14 @@ public class AppointmentsListFragment extends Fragment {
 
                                 mCurrentConvertedDate = mSimpleDateFormat.parse(mCurrentDate);
                                 mConvertedAptDate = mSimpleDateFormat.parse(mAptDateFormat);
-                                mAptItem.setAptTime(mAptTime.replaceAll(CarePayConstants.ATTR_UTC,""));
+                                aptItem.setAppointmentTime(mAptTime.replaceAll(CarePayConstants.ATTR_UTC,""));
 
                                 JSONObject jsonObjectPhysician= jsonObj_Physician.getJSONObject(CarePayConstants.ATTR_PHYSICIAN);
                                 String mDoctorName = jsonObjectPhysician.getString(CarePayConstants.ATTR_NAME);
-                                mAptItem.setDoctorName(mDoctorName);
+                                aptItem.setDoctorName(mDoctorName);
 
                                 String mDoctorType = jsonObjectPhysician.getString(CarePayConstants.ATTR_TYPE);
-                                mAptItem.setAptType(mDoctorType);
+                                aptItem.setAppointmentType(mDoctorType);
                                 if (mConvertedAptDate.after(mCurrentConvertedDate)) {
                                     mAptDay = CarePayConstants.DAY_UPCOMING;
                                     Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT, Locale.ENGLISH).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC,""));
@@ -169,7 +167,7 @@ public class AppointmentsListFragment extends Fragment {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            mAptItem.setAptHeader(mAptDay);
+                            aptItem.setAppointmentHeader(mAptDay);
                         }
                     }
                 }
@@ -182,15 +180,15 @@ public class AppointmentsListFragment extends Fragment {
             Utility.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleToday );
             Utility.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleUpcoming );
 
-            mAppointmentsAdapterToday = new AppointmentsAdapter(getActivity(),todayAppointmentsItems);
-            mAppointmentsAdapterUpcoming = new AppointmentsAdapter(getActivity(),upcomingAppointmentsItems);
+            appointmentsAdapter = new AppointmentsAdapter(getActivity(),todayAppointmentsItems);
+            appointmentsAdapterUpcoming = new AppointmentsAdapter(getActivity(),upcomingAppointmentsItems);
 
-            mRecyclerViewToday = ((RecyclerView)getActivity().findViewById(R.id.appointments_recycler_view_today));
-            mRecyclerViewToday.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mRecyclerViewToday.setAdapter(mAppointmentsAdapterToday);
-            mRecyclerViewUpcoming = ((RecyclerView)getActivity().findViewById(R.id.appointments_recycler_view_upcoming));
-            mRecyclerViewUpcoming.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mRecyclerViewUpcoming.setAdapter(mAppointmentsAdapterUpcoming);
+            recyclerViewToday = ((RecyclerView)getActivity().findViewById(R.id.appointments_recycler_view_today));
+            recyclerViewToday.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerViewToday.setAdapter(appointmentsAdapter);
+            recyclerViewUpcoming = ((RecyclerView)getActivity().findViewById(R.id.appointments_recycler_view_upcoming));
+            recyclerViewUpcoming.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerViewUpcoming.setAdapter(appointmentsAdapterUpcoming);
 
         }
 
