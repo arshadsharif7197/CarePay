@@ -41,7 +41,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private FrameLayout     insCardContainer2;
     private FrameLayout     insCardContainer3;
     private boolean         isSecondCardAdded;
-    private boolean         isThirdCarAdded;
+    private boolean         isThirdCardAdded;
     private Button          addCardButton;
     private Button          removeCardButton;
     private Button          nextButton;
@@ -61,7 +61,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         insCardContainer3 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance3);
 
         isSecondCardAdded = false;
-        isThirdCarAdded = false;
+        isThirdCardAdded = false;
 
         fm = getChildFragmentManager();
         // add license fragment
@@ -114,7 +114,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                     // if not added yet, hide the container
                     showInsuranceCard(insCardContainer2, false);
                 }
-                if (isThirdCarAdded) {
+                if (isThirdCardAdded) {
                     showInsuranceCard(insCardContainer3, on);
                 } else {
                     // if not added yet, hide the container
@@ -130,6 +130,15 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) {
+                if (!isSecondCardAdded) {
+                    isSecondCardAdded = true;
+                    showInsuranceCard(insCardContainer2, true);
+                    showAddCardButton(false);
+                } else if (!isThirdCardAdded) {
+                    isThirdCardAdded = true;
+                    showInsuranceCard(insCardContainer3, true);
+                    showAddCardButton(false);
+                }
             }
         });
 
@@ -137,6 +146,15 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         removeCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isThirdCardAdded) {
+                    isThirdCardAdded = false;
+                    showInsuranceCard(insCardContainer3, false);
+                    showAddCardButton(true);
+                } else if (isSecondCardAdded) {
+                    isSecondCardAdded = false;
+                    showInsuranceCard(insCardContainer2, false);
+                    showRemoveCardButton(false);
+                }
             }
         });
 
@@ -156,7 +174,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // hide add/remove buttons
         showAddCardButton(false);
         showRemoveCardButton(false);
-        enableRemoveCardButton(false);
 
         // disable next button
         enableNextButton(false);
@@ -194,7 +211,9 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (!isVisible) {
             addCardButton.setVisibility(View.GONE);
         } else {
-            addCardButton.setVisibility(View.VISIBLE);
+            if(!isThirdCardAdded) { // show only if there is another add possibility
+                addCardButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -203,15 +222,17 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (!isVisible) {
             removeCardButton.setVisibility(View.GONE);
         } else {
-            removeCardButton.setVisibility(View.VISIBLE);
+            if (isSecondCardAdded || isThirdCardAdded) {
+                removeCardButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     @Override
     public void enableRemoveCardButton(boolean isEnabled) {
-        if(isEnabled) {
+        if (isEnabled) {
             // enable if at least one extra card was added
-            if(isSecondCardAdded || isThirdCarAdded) {
+            if (isSecondCardAdded || isThirdCardAdded) {
                 removeCardButton.setEnabled(true);
                 removeCardButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.blue_cerulian));
             } else {
@@ -234,3 +255,13 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         detailsScrollView.fullScroll(View.FOCUS_DOWN);
     }
 }
+
+/*
+* switch on -> first container
+* scan first -> add visible
+* add -> add gone -> remove vis
+* scan (2nd) -> add vis (remove vis)
+* add (3rd) -> add gone (remove vis)
+* remove (3rd) -> add visible
+* remove(2nd) -> (add vis) remove gone
+* */
