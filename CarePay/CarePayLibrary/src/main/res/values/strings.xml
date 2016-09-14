@@ -170,4 +170,29 @@
     <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
     <string name="close">Close</string>
 
+
+    <!--<Navigation Screen>-->
+    <string name="Appointments_title">Appointments</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="description">This is description</string>
+    <string name="consenttitle">Sign consent for medical care</string>
+    <string name="content">A keyboard typically has characters engraved or printed on the keys and each press of a
+        key typically corresponds to a single written symbol. </string>
+
+    <string name="male">Male</string>
+    <string name="Btn_Clr">clear</string>
+    <string name="tiltle1_3">Sign consent for medical care</string>
+    <string name="consentname">Consent for Medical Care</string>
+    <string name="consentdescrption">Please fill in this form about general cardiac symptoms you may have had in the past.</string>
+    <string name="constentcontent">I,Bruno O. Barros, understand that I have a condition thar requires medical treatment. Lorem ipsum dolor sit amet. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas sed diam eget risus varius blandit sit amet non magna.
+Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere consectetur est at lobortis.</string>
+    <string name="hipaa">Sign HIPAA Confidentiality Agreement</string>
+    <string name="yes_sig">Yes, This is my signature</string>
+    <string name="hint">Legal Representative Firstname</string>
+    <string name="hint_last">Legal Representative Lastname</string>
+
 </resources>

@@ -8,7 +8,7 @@
     <com.github.gcacace.signaturepad.views.SignaturePad
         android:id="@+id/signature_pad"
         android:layout_width="match_parent"
-        android:layout_height="218dp"
+        android:layout_height="@dimen/sig_pad"
         android:background="@color/white"
         app:penColor="@android:color/black" />
 
@@ -18,9 +18,21 @@
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         android:id="@+id/helperTv"
-        android:layout_marginTop="10dp"
-        android:textSize="12sp"
+        android:layout_marginTop="@dimen/consent_top"
+        android:textSize="@dimen/sig_txt"
         android:textColor="@color/gray"/>
+
+    <Button
+        android:layout_width="@dimen/btn_hght"
+        android:layout_height="@dimen/btn_width"
+        android:id="@+id/clearBtn"
+        android:background="@color/white"
+        android:layout_below="@+id/signature_view"
+        android:textColor="@color/rich_electric_blue"
+        android:layout_marginTop="@dimen/consent_top"
+        android:text="@string/Btn_Clr"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/consent_top"/>
 
 
 </RelativeLayout>
