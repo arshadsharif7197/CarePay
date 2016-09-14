@@ -1,10 +1,13 @@
 package com.carecloud.carepaylibray.activities;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -15,12 +18,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+
 public class SignatureActivity extends AppCompatActivity {
 
     private TextView titleTv, signatureHelpTv;
     private SignaturePad signaturePad;
     private SwitchCompat switchButton;
     private Button agreeBtn, clearBtn;
+    private EditText legalFirstNameET, legalLastNameET;
     private Map<Integer, List<String>> stringMap = new HashMap<>();
 
     @Override
@@ -29,6 +35,14 @@ public class SignatureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signature);
 
         init();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
+        TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
+        title.setText("Signature");
+        setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", title);
+        toolbar.setTitle("");
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
+        ((AppCompatActivity)this).setSupportActionBar(toolbar);
     }
 
     private void init() {
@@ -48,9 +62,11 @@ public class SignatureActivity extends AppCompatActivity {
         titleTv = (TextView) findViewById(R.id.titleTv);
         signatureHelpTv = (TextView) findViewById(R.id.helperTv);
         switchButton = (SwitchCompat) findViewById(R.id.switchButton);
-        clearBtn = (Button) findViewById(R.id.clearBtn);
         agreeBtn = (Button) findViewById(R.id.agreeBtn);
         signaturePad = (SignaturePad) findViewById(R.id.signature_pad);
+        clearBtn = (Button) findViewById(R.id.clearBtn);
+        legalFirstNameET = (EditText) findViewById(R.id.legalFirstName);
+        legalLastNameET = (EditText) findViewById(R.id.legalLastName);
 
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +86,14 @@ public class SignatureActivity extends AppCompatActivity {
             }
         });
 
+        agreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getIntent().hasExtra("consentform"))
+                    finish();
+            }
+        });
+
         signaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
             @Override
             public void onStartSigning() {
@@ -79,6 +103,8 @@ public class SignatureActivity extends AppCompatActivity {
             public void onSigned() {
                 agreeBtn.setEnabled(true);
                 agreeBtn.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+
+
             }
 
             @Override
@@ -100,9 +126,13 @@ public class SignatureActivity extends AppCompatActivity {
         if (!isChecked) {
             titleTv.setText(stringMap.get(0).get(0));
             signatureHelpTv.setText(stringMap.get(0).get(1));
+            legalFirstNameET.setVisibility(View.GONE);
+            legalLastNameET.setVisibility(View.GONE);
         } else {
             titleTv.setText(stringMap.get(1).get(0));
             signatureHelpTv.setText(stringMap.get(1).get(1));
+            legalFirstNameET.setVisibility(View.VISIBLE);
+            legalLastNameET.setVisibility(View.VISIBLE);
         }
     }
 }

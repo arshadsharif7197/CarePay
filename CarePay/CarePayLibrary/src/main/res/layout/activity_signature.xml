@@ -1,72 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".activities.SignatureActivity"
-    android:background="@color/munsell">
+    android:background="@color/munsell"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/titleTv"
+    <include layout="@layout/signup_toolbar" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:gravity="center"
-        android:text="Sign HIPAA Confidentiality Agreement"
-        android:textColor="@color/charcoal"
-        android:textSize="21sp" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/descriptionTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleTv"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="Make sure you’ve read the whole consent form and sign in the box below. If you're unable to sign, you can ask for a legal representative to sign for you."
-        android:textColor="@color/cadet_gray"
-        android:textSize="13sp" />
 
-    <android.support.v7.widget.SwitchCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/descriptionTv"
-        android:layout_marginTop="20dp"
-        android:text="I'm unable to sign"
-        android:id="@+id/switchButton"
-        android:textColor="@color/charcoal"
-        android:textSize="17sp" />
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sigtxt_hgt"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:text="@string/hipaa"
+            android:textColor="@color/charcoal"
+            android:textSize="@dimen/respons_total_label_text_size" />
 
-    <include
-        layout="@layout/signature_view"
-        android:layout_below="@+id/switchButton"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:id="@+id/signature_view"/>
+        <TextView
+            android:id="@+id/descriptionTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleTv"
+            android:layout_marginTop="@dimen/consent_top"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:text="Make sure you’ve read the whole consent form and sign in the box below. If you're unable to sign, you can ask for a legal representative to sign for you."
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/demographics_docs_button_text_size" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/clearBtn"
-        android:background="@color/cadet_gray"
-        android:layout_below="@+id/signature_view"
-        android:textColor="@color/white"
-        android:layout_marginTop="10dp"
-        android:text="clear Signature"/>
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switchButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/descriptionTv"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:layout_marginTop="@dimen/margintop"
+            android:text="I'm unable to sign"
+            android:textColor="@color/charcoal"
+            android:textSize="17sp" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/agreeBtn"
-        android:background="@drawable/agree_button_background"
-        android:layout_below="@+id/clearBtn"
-        android:enabled="false"
-        android:layout_marginTop="10dp"
-        android:text="Yes, This is my signature"
-        android:textColor="@color/white"/>
+        <EditText
+            android:id="@+id/legalFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/switchButton"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:hint="@string/hint"
+            android:visibility="gone" />
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/legalLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/legalFirstName"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:hint="@string/hint_last"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/signature_view"
+            layout="@layout/signature_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/legalLastName"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:layout_marginTop="@dimen/consent_top" />
+
+
+        <Button
+            android:id="@+id/agreeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:layout_marginBottom="@dimen/marginleftright"
+            android:background="@drawable/agree_button_background"
+            android:enabled="false"
+            android:text="@string/yes_sig"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</LinearLayout>
