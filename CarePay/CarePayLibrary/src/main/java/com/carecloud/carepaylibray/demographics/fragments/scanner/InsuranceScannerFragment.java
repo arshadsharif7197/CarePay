@@ -36,7 +36,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private TextView           tvInsuranceNum;
     private TextView           tvPlan;
     private TextView           tvProvider;
-    private int                index; // use to identify the firstly created fragment
 
     @Nullable
     @Override
@@ -104,12 +103,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         // invoke parent fragment to enable 'Next' button
         buttonsStatusCallback.enableNextButton(true);
+        buttonsStatusCallback.scrollToBottom();
         
         // invoke parent fragment to show add/remove buttons
-        // TODO: 9/14/2016  
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
+        buttonsStatusCallback.showAddCardButton(true);
+        buttonsStatusCallback.showRemoveCardButton(true);
     }
 }

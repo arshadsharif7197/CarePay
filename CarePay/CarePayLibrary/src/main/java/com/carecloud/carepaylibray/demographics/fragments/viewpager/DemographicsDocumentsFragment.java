@@ -113,9 +113,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                     // if not added yet, hide the container
                     showInsuranceCard(insCardContainer2, false);
                 }
-
                 if (isThirdCarAdded) {
-                    showInsuranceCard(insCardContainer2, on);
+                    showInsuranceCard(insCardContainer3, on);
                 } else {
                     // if not added yet, hide the container
                     showInsuranceCard(insCardContainer3, false);
@@ -151,6 +150,10 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
             }
         });
+
+        // hide add/remove buttons
+        showAddCardButton(false);
+        showRemoveCardButton(false);
 
         // disable next button
         enableNextButton(false);
@@ -209,5 +212,10 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     @Override
     public void enableNextButton(boolean isEnabled) {
         nextButton.setEnabled(isEnabled);
+    }
+
+    @Override
+    public void scrollToBottom() {
+        detailsScrollView.fullScroll(View.FOCUS_DOWN);
     }
 }
