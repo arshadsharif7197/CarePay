@@ -40,9 +40,6 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        //Utility.setProximaNovaRegularTypeface(this,mTitle);
-
         setSupportActionBar(toolbar);
 
 
@@ -149,11 +146,11 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             TextView typeTextView = ((TextView) view.findViewById(R.id.apptTypeTextView));
             TextView addressTextView =  ((TextView) view.findViewById(R.id.apptAddressTextView));
 
-            dateTextView.setText(onDateParseToString(appointmentModel.getAptDate())[0]);
-            timeTextView.setText(onDateParseToString(appointmentModel.getAptDate())[1]);
+            dateTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[0]);
+            timeTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[1]);
             shortNameTextView.setText(Utility.onShortDrName(appointmentModel.getDoctorName()));
             nameTextView.setText(appointmentModel.getDoctorName());
-            typeTextView.setText(appointmentModel.getAptType());
+            typeTextView.setText(appointmentModel.getAppointmentType());
             //addressTextView.setText(appointmentModel.getA());
 
             Utility.setTypefaceFromAssets(this,"fonts/proximanova_regular.otf",dateTextView);
