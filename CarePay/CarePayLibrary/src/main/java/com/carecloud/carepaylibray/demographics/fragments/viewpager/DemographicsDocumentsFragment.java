@@ -33,18 +33,20 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private static final String LOG_TAG             = DemographicsDocumentsFragment.class.getSimpleName();
     private static final int    MAX_INSURANCE_CARDS = 3;
 
-    private FragmentManager fm;
-    private View            view;
-    private ScrollView      detailsScrollView;
-    private SwitchCompat    switchCompat;
-    private FrameLayout     insCardContainer1;
-    private FrameLayout     insCardContainer2;
-    private FrameLayout     insCardContainer3;
-    private boolean         isSecondCardAdded;
-    private boolean         isThirdCardAdded;
-    private Button          addCardButton;
-    private Button          removeCardButton;
-    private Button          nextButton;
+    private FragmentManager          fm;
+    private View                     view;
+    private ScrollView               detailsScrollView;
+    private SwitchCompat             switchCompat;
+    private FrameLayout              insCardContainer1;
+    private FrameLayout              insCardContainer2;
+    private FrameLayout              insCardContainer3;
+    private InsuranceScannerFragment extraInsCardFrag1;
+    private InsuranceScannerFragment extraInsCardFrag2;
+    private boolean                  isSecondCardAdded;
+    private boolean                  isThirdCardAdded;
+    private Button                   addCardButton;
+    private Button                   removeCardButton;
+    private Button                   nextButton;
 
     @Nullable
     @Override
@@ -83,22 +85,22 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance1")
                 .commit();
 
-        insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
-        if (insuranceFragment == null) {
-            insuranceFragment = new InsuranceScannerFragment();
-            insuranceFragment.setButtonsStatusCallback(this);
+        extraInsCardFrag1 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
+        if (extraInsCardFrag1 == null) {
+            extraInsCardFrag1 = new InsuranceScannerFragment();
+            extraInsCardFrag1.setButtonsStatusCallback(this);
         }
         fm.beginTransaction()
-                .replace(R.id.demographicsDocsInsurance2, insuranceFragment, "insurance2")
+                .replace(R.id.demographicsDocsInsurance2, extraInsCardFrag1, "insurance2")
                 .commit();
 
-        insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
-        if (insuranceFragment == null) {
-            insuranceFragment = new InsuranceScannerFragment();
-            insuranceFragment.setButtonsStatusCallback(this);
+        extraInsCardFrag2 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
+        if (extraInsCardFrag2 == null) {
+            extraInsCardFrag2 = new InsuranceScannerFragment();
+            extraInsCardFrag2.setButtonsStatusCallback(this);
         }
         fm.beginTransaction()
-                .replace(R.id.demographicsDocsInsurance3, insuranceFragment, "insurance3")
+                .replace(R.id.demographicsDocsInsurance3, extraInsCardFrag2, "insurance3")
                 .commit();
 
         // set the switch
@@ -148,10 +150,12 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             public void onClick(View view) {
                 if (isThirdCardAdded) {
                     isThirdCardAdded = false;
+                    extraInsCardFrag2.resetViewsContent();
                     showInsuranceCard(insCardContainer3, false);
                     showAddCardButton(true);
                 } else if (isSecondCardAdded) {
                     isSecondCardAdded = false;
+                    extraInsCardFrag1.resetViewsContent();
                     showInsuranceCard(insCardContainer2, false);
                     showRemoveCardButton(false);
                 }
@@ -211,7 +215,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (!isVisible) {
             addCardButton.setVisibility(View.GONE);
         } else {
-            if(!isThirdCardAdded) { // show only if there is another add possibility
+            if (!isThirdCardAdded) { // show only if there is another add possibility
                 addCardButton.setVisibility(View.VISIBLE);
             }
         }

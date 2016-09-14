@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.fragments.scanner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,17 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         tvProvider.setText(providers[0]);
     }
 
+    public void resetViewsContent() {
+        Log.v(LOG_TAG, "resetViewsContent()");
+        btnScanInsurance.setText(R.string.demogr_docs_scan_insurance_label);
+        tvInsuranceNum.setText("");
+        tvInsuranceNum.setVisibility(View.GONE);
+        tvPlan.setText(getString(R.string.demogr_tv_choose_label));
+        tvProvider.setText(getString(R.string.demogr_docs_tv_chose_company));
+        mInsuranceScanHelper.resetTargetView();
+        // additional data deletion may be added when real data is used...
+    }
+
     @Override
     protected void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_btn));
@@ -104,7 +116,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         // invoke parent fragment to enable 'Next' button
         buttonsStatusCallback.enableNextButton(true);
         buttonsStatusCallback.scrollToBottom();
-        
+
         // invoke parent fragment to show add/remove buttons
         buttonsStatusCallback.showAddCardButton(true);
         buttonsStatusCallback.showRemoveCardButton(true);

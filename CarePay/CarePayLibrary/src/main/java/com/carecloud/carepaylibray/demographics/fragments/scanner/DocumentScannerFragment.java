@@ -177,6 +177,7 @@ public abstract class DocumentScannerFragment extends Fragment{
      */
     protected abstract void updateDetailViewsAfterScan();
 
+
     /**
      * Set the typefaces
      */
