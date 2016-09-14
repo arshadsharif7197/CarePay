@@ -35,6 +35,7 @@ import java.util.Locale;
 public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
@@ -64,11 +65,11 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fm = getSupportFragmentManager();
-        AppointmentsListFragment fragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new AppointmentsListFragment();
+        AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
+        if (appointmentsListFragment == null) {
+            appointmentsListFragment = new AppointmentsListFragment();
         }
-        fm.beginTransaction().replace(R.id.appointments_list_frag_holder, fragment,
+        fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
                 AppointmentsListFragment.class.getSimpleName()).commit();
     }
     @Override

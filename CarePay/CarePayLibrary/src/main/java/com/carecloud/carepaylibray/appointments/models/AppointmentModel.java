@@ -5,38 +5,37 @@ package com.carecloud.carepaylibray.appointments.models;
  */
 public class AppointmentModel {
 
-    private String aptId;
-    private String doctorName;
-    private String aptTime;
-    private String aptType;
-    private String aptDay;
-    private String aptDate;
+    private String mAptId;
+    private String mDoctorName;
+    private String mAptTime;
+    private String mAptType;
+    private String mAptDay;
+    private String mAptDate;
 
     public String getAptDate() {
-        return aptDate;
+        return mAptDate;
     }
 
     public void setAptDate(String aptDate) {
-        this.aptDate = aptDate;
+        this.mAptDate = aptDate;
     }
 
     public String getAptDay() {
-        return aptDay;
+        return mAptDay;
     }
 
     public void setAptDay(String aptDay) {
-        this.aptDay = aptDay;
+        this.mAptDay = aptDay;
     }
 
 
-
     public AppointmentModel(String aptId,String doctorName, String aptTime, String aptType, String aptDay,String aptDate) {
-        this.aptId = aptId;
-        this.doctorName = doctorName;
-        this.aptTime = aptTime;
-        this.aptType = aptType;
-        this.aptDay = aptDay;
-        this.aptDate = aptDate;
+        this.mAptDay = aptId;
+        this.mDoctorName = doctorName;
+        this.mAptTime = aptTime;
+        this.mAptType = aptType;
+        this.mAptDay = aptDay;
+        this.mAptDate = aptDate;
 
     }
     public AppointmentModel() {
@@ -44,44 +43,44 @@ public class AppointmentModel {
     }
 
     public String getAptId() {
-        return aptId;
+        return mAptId;
     }
 
     public void setAptId(String aptId) {
-        this.aptId = aptId;
+        this.mAptId = aptId;
     }
 
     public String getDoctorName() {
-        return doctorName;
+        return mDoctorName;
     }
 
     public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
+        this.mDoctorName = doctorName;
     }
 
     public String getAptTime() {
-        return aptTime;
+        return mAptTime;
     }
 
     public void setAptTime(String aptTime) {
-        this.aptTime = aptTime;
+        this.mAptTime = aptTime;
     }
 
     public String getAptType() {
-        return aptType;
+        return mAptType;
     }
 
     public void setAptType(String aptType) {
-        this.aptType = aptType;
+        this.mAptType = aptType;
     }
 
 
     public String getAptHeader() {
-        return aptDay;
+        return mAptDay;
     }
 
     public void setAptHeader(String aptHeader) {
-        this.aptDay = aptDay;
+        this.mAptDay = aptHeader;
     }
 
     private String aptHeader;
