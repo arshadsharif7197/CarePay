@@ -89,16 +89,18 @@
     <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
     <string name="demogr_docs_scan_label">Scan Driver\'s License</string>
     <string name="demogr_docs_scan_insurance_label">Scan Insurance Card</string>
-    <string name="demogr_license_scan_label">driver\'s license number</string>
+    <string name="demogr_license_scan_label">Driver\'s License Number</string>
     <string name="demogr_docs_license_number_label">Driver\'s License State</string>
     <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
     <string name="demogr_insurance_provider">Provider</string>
     <string name="demogr_insurance_plan">Plan</string>
-    <string name="demogr_insurance_number_label">Insurance card number</string>
+    <string name="demogr_insurance_number_label">Insurance Card Number</string>
     <string name="demogr_button_label">Next</string>
     <string name="demogr_tv_choose_label">Choose</string>
-    <string name="demogr_docs_tv_chose_company">Choose company first</string>
+    <string name="demogr_docs_tv_chose_company">Choose Company First</string>
     <string name="demogr_docs_rescan">Re-scan</string>
+    <string name="demogr_docs_add_card">Add Card</string>
+    <string name="demogr_docs_remove_card">Remove Card</string>
 
     <!-- Demographic Screens -->
 
@@ -153,7 +155,6 @@
 
     <!--Appointments List Fragment-->
 
-
     <string name="apt_day_today">TODAY</string>
     <string name="apt_day_upcoming">UPCOMING</string>
 
@@ -169,6 +170,7 @@
 
     <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
     <string name="close">Close</string>
+    <string name="demogr_next">Next</string>
 
 
     <!--<Navigation Screen>-->

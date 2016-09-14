@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.fragments.scanner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private TextView           tvInsuranceNum;
     private TextView           tvPlan;
     private TextView           tvProvider;
-    private int                index; // use to identify the firstly created fragment
 
     @Nullable
     @Override
@@ -87,6 +87,17 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         tvProvider.setText(providers[0]);
     }
 
+    public void resetViewsContent() {
+        Log.v(LOG_TAG, "resetViewsContent()");
+        btnScanInsurance.setText(R.string.demogr_docs_scan_insurance_label);
+        tvInsuranceNum.setText("");
+        tvInsuranceNum.setVisibility(View.GONE);
+        tvPlan.setText(getString(R.string.demogr_tv_choose_label));
+        tvProvider.setText(getString(R.string.demogr_docs_tv_chose_company));
+        mInsuranceScanHelper.resetTargetView();
+        // additional data deletion may be added when real data is used...
+    }
+
     @Override
     protected void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_btn));
@@ -101,18 +112,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // if scanned first insurance, show the button to add more insurance cards
-        if(index == 0) {
-            Button buttonAddIns = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
-            buttonAddIns.setVisibility(View.VISIBLE);
-        }
-        // enable next button
-        Button next = (Button) ((DemographicsActivity)getActivity()).getWindow().getDecorView().getRootView().findViewById(R.id.demographicsNextButton);
-        next.setEnabled(true);
-        next.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
-    }
 
-    public void setIndex(int index) {
-        this.index = index;
+        // invoke parent fragment to enable 'Next' button
+        buttonsStatusCallback.enableNextButton(true);
+        buttonsStatusCallback.scrollToBottom();
     }
 }
