@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -29,10 +30,10 @@ import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 public class SigninFragment extends Fragment {
 
 
-    private TextView errorEmailTextView, errorPasswordTextView;
+    private TextInputLayout emailHint, passwordHint;
     private EditText emailEditText;
     private EditText passwordEditText;
-    private TextView changeLanguageTextView;
+    private TextView changeLanguageTextView, forgotPasswordTextView;
     private Button signinButton;
     private Button signupButton;
 
@@ -50,25 +51,34 @@ public class SigninFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
 
-        errorEmailTextView = (TextView) view.findViewById(R.id.txt_email_error);
-        errorPasswordTextView = (TextView) view.findViewById(R.id.txt_create_password);
+        emailHint = (TextInputLayout)view.findViewById(R.id.emailTextInputLayout);
+        passwordHint = (TextInputLayout)view.findViewById(R.id.passwordTextInputLayout);
 
         emailEditText = (EditText) view.findViewById(R.id.emailEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
 
+        signinButton = (Button)view.findViewById(R.id.signin_button);
+        signupButton = (Button)view.findViewById(R.id.signup_button);
 
-        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
+        Typeface hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
+        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+        Typeface floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+        Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
+
         emailEditText.setTypeface(editTextFontFamily);
         passwordEditText.setTypeface(editTextFontFamily);
-
-        emailEditText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_EMAIL, emailEditText, errorEmailTextView, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
+        emailHint.setTypeface(hintFontFamily);
+        passwordHint.setTypeface(hintFontFamily);
+        signinButton.setTypeface(buttonFontFamily);
+        signupButton.setTypeface(buttonFontFamily);
+        emailEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingTextFontfamily, TextWatcherModel.InputType.TYPE_EMAIL, emailEditText, emailHint, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidEmail = isValid;
                 checkForButtonEnable();
             }
         }));
-        passwordEditText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_PASSWORD, passwordEditText, errorPasswordTextView, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
+        passwordEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingTextFontfamily,TextWatcherModel.InputType.TYPE_PASSWORD, passwordEditText, passwordHint, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidPassword = isValid;
@@ -76,7 +86,6 @@ public class SigninFragment extends Fragment {
             }
         }));
 
-        signinButton = (Button) view.findViewById(R.id.SigninButton);
 
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +101,7 @@ public class SigninFragment extends Fragment {
             }
         });
 
-        signupButton = (Button) view.findViewById(R.id.SignUpButton);
+        signupButton = (Button) view.findViewById(R.id.signup_button);
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,14 +111,16 @@ public class SigninFragment extends Fragment {
                     fragment = new SignupFragment();
                 }
                 fm.beginTransaction()
-                        .replace(R.id.signinLayout, fragment, SignupFragment.class.getSimpleName())
+                        .replace(R.id.signin_layout, fragment, SignupFragment.class.getSimpleName())
                         .commit();
             }
         });
 
 
         changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
-
+        forgotPasswordTextView = (TextView) view.findViewById(R.id.forgotPasswordTextView);
+        changeLanguageTextView.setTypeface(editTextFontFamily);
+        forgotPasswordTextView.setTypeface(editTextFontFamily);
         changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

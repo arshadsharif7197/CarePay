@@ -52,7 +52,7 @@ public class AppointmentsListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.Appointments_title);
+      //  ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.Appointments_title);
     }
 
     @Nullable
