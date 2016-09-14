@@ -31,7 +31,6 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTyp
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
     private static final String LOG_TAG             = DemographicsDocumentsFragment.class.getSimpleName();
-
     private FragmentManager          fm;
     private View                     view;
     private ScrollView               detailsScrollView;
@@ -55,6 +54,36 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // fetch the scroll view
         detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
 
+        setButtons();
+        setCardContainers();
+        setSwitch();
+
+        // set the fonts
+        setTypefaces(view);
+
+        // override next button function for this screen
+        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // move to next tab
+                ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
+            }
+        });
+
+        // hide add card button
+        showAddCardButton(false);
+
+        // disable next button
+        enableNextButton(false);
+
+        return view;
+    }
+
+    /**
+     * Helper to set the buttons
+     */
+    private void setButtons() {
         // set add health info button
         addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
         addCardButton.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +101,27 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             }
         });
 
+        // set add health info button
+        addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
+        addCardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View buttonView) {
+                if (!isSecondCardAdded) {
+                    isSecondCardAdded = true;
+                    showInsuranceCard(insCardContainer2, true);
+                } else if (!isThirdCardAdded) {
+                    isThirdCardAdded = true;
+                    showInsuranceCard(insCardContainer3, true);
+                    showAddCardButton(false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Helper to create the nested fragments containing the insurance card details
+     */
+    private void setCardContainers() {
         // fetch nested fragments containers
         insCardContainer1 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance1);
         insCardContainer2 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance2);
@@ -117,65 +167,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance3, extraInsCardFrag2, "insurance3")
                 .commit();
-
-        // set the switch
-        fm.executePendingTransactions();
-        switchCompat = (SwitchCompat) view.findViewById(R.id.demogr_insurance_switch);
-        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-                showInsuranceCard(insCardContainer1, on);
-                if(isSecondCardAdded) {
-                    showInsuranceCard(insCardContainer2, on);
-                } else {
-                    showInsuranceCard(insCardContainer2, false);
-                }
-                if(isThirdCardAdded) {
-                    showInsuranceCard(insCardContainer3, on);
-                } else {
-                    showInsuranceCard(insCardContainer3, false);
-                }
-                showAddCardButton(on && !isThirdCardAdded);
-            }
-        });
-        switchCompat.setChecked(false);
-
-        // set add health info button
-        addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
-        addCardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View buttonView) {
-                if (!isSecondCardAdded) {
-                    isSecondCardAdded = true;
-                    showInsuranceCard(insCardContainer2, true);
-                } else if (!isThirdCardAdded) {
-                    isThirdCardAdded = true;
-                    showInsuranceCard(insCardContainer3, true);
-                    showAddCardButton(false);
-                }
-            }
-        });
-
-        // set the fonts
-        setTypefaces(view);
-
-        // override next button function for this screen
-        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // move to next tab
-                ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
-            }
-        });
-
-        // hide add/remove buttons
-        showAddCardButton(false);
-
-        // disable next button
-        enableNextButton(false);
-
-        return view;
     }
 
     /**
@@ -201,6 +192,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_title));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_subtitle));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_switch));
+        setGothamRoundedMediumTypeface(getActivity(), addCardButton);
     }
 
     @Override
@@ -222,5 +214,33 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     @Override
     public void scrollToBottom() {
         detailsScrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
+
+    /**
+     * Helper to set the switch
+     */
+    private void setSwitch() {
+        // set the switch
+        fm.executePendingTransactions();
+        switchCompat = (SwitchCompat) view.findViewById(R.id.demogr_insurance_switch);
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
+                showInsuranceCard(insCardContainer1, on);
+                if(isSecondCardAdded) {
+                    showInsuranceCard(insCardContainer2, on);
+                } else {
+                    showInsuranceCard(insCardContainer2, false);
+                }
+                if(isThirdCardAdded) {
+                    showInsuranceCard(insCardContainer3, on);
+                } else {
+                    showInsuranceCard(insCardContainer3, false);
+                }
+                showAddCardButton(on && !isThirdCardAdded);
+            }
+        });
+        switchCompat.setChecked(false);
     }
 }
