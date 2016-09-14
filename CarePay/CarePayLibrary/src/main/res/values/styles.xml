@@ -7,7 +7,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="titleTextStyle">@style/actionBarTitle</item>
+
+
     </style>
+
+
     <style name="actionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
     </style>
@@ -66,19 +70,19 @@
     </style>
 
     <declare-styleable name="SympliTextView">
-        <attr name="fontPath" format="string" />
+        <attr name="fontPath" format="string"/>
 
         <!-- Inner shadow settings. -->
-        <attr name="innerShadowColor" format="color" />
-        <attr name="innerShadowDx" format="dimension" />
-        <attr name="innerShadowDy" format="dimension" />
-        <attr name="innerShadowRadius" format="dimension" />
+        <attr name="innerShadowColor" format="color"/>
+        <attr name="innerShadowDx" format="dimension"/>
+        <attr name="innerShadowDy" format="dimension"/>
+        <attr name="innerShadowRadius" format="dimension"/>
 
         <!-- Outer shadow settings. -->
-        <attr name="outerShadowColor" format="color" />
-        <attr name="outerShadowDx" format="dimension" />
-        <attr name="outerShadowDy" format="dimension" />
-        <attr name="outerShadowRadius" format="dimension" />
+        <attr name="outerShadowColor" format="color"/>
+        <attr name="outerShadowDx" format="dimension"/>
+        <attr name="outerShadowDy" format="dimension"/>
+        <attr name="outerShadowRadius" format="dimension"/>
     </declare-styleable>
 
     <!-- Responsibility styles -->
@@ -121,15 +125,15 @@
 
     <style name="ResponsButtonStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginStart">@dimen/respons_button_margin_left_right</item>
+        <item name="android:layout_marginEnd">@dimen/respons_button_margin_left_right</item>
         <item name="android:textSize">@dimen/respons_button_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">17dp</item>
-        <item name="android:layout_marginLeft">@dimen/respons_button_margin_left_right</item>
-        <item name="android:layout_marginRight">@dimen/respons_button_margin_left_right</item>
         <item name="android:background">@color/yellowGreen</item>
         <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="ResponsibilityToolbarTextStyle" parent="android:Widget.TextView">
@@ -171,6 +175,8 @@
     <style name="DemographicsDocsHeaderStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
     </style>
 
     <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
@@ -197,7 +203,8 @@
 
     <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height </item>
+        <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height
+        </item>
         <item name="android:orientation">horizontal</item>
     </style>
 
@@ -229,6 +236,51 @@
 
     </style>
 
+    <style name="DemographicsAddMedInfoButtonStyle" parent="ResponsButtonStyle">
+        <item name="android:background">@color/button_bright_cerulean</item>
+        <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
+    </style>
+
+    <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">
+        <item name="android:background">@color/bright_cerulean</item>
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+    </style>
+    <style name="errorTextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">ProximaNova-Semibold</item>
+        <item name="android:textColor">@color/harvard_crimson</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+    <style name="reviewDemographicBlue." parent="android:Widget.TextView">
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">@dimen/respons_detail_text_size</item>
+    </style>
+
+    <style name="reviewDemographiclabel." parent="android:Widget.TextView">
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">@dimen/respons_detail_til_label_text_size</item>
+    </style>
+
+    <style name="reviewDemographictext." parent="android:Widget.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/textview_default_textsize</item>
+    </style>
+
+
+
+
+    <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorPrimaryDark</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

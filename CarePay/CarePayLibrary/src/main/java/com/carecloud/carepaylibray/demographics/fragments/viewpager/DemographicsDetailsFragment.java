@@ -1,13 +1,10 @@
-package com.carecloud.carepaylibray.demographics.fragments;
+package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -22,15 +19,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.Utility;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
 import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
@@ -53,19 +46,17 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
     String[] preferredLanguageArray;
     int selectedArray;
     TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
-    Button buttonChangeCurrentPhoto;
+    Button buttonChangeCurrentPhoto,nextButton;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
-
         initialiseUIFields();
         raceArray = getResources().getStringArray(R.array.Race);
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
-
         imageCaptureHelper = new ImageCaptureHelper(getActivity());
         imageCaptureHelper.setImageViewTarget(imageViewDetailsImage);
         imageCaptureHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
@@ -73,7 +64,10 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         return view;
     }
 
+
     private void initialiseUIFields() {
+
+
         raceTextView = (TextView) view.findViewById(R.id.raceListTextView);
         raceTextView.setOnClickListener(this);
         ethnicityTextView = (TextView) view.findViewById(R.id.ethnicityListTextView);
@@ -82,6 +76,8 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         preferredLanguageTextView.setOnClickListener(this);
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         buttonChangeCurrentPhoto.setOnClickListener(this);
+        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
+        nextButton.setOnClickListener(this);
         imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
     }
 
@@ -98,9 +94,13 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
             showAlertDialogWithListview(preferredLanguageArray, "Select Preferred Language");
         } else if (view == buttonChangeCurrentPhoto) {
             selectImage();
+        }else if(view==nextButton){
+            nextbuttonClick();
         }
     }
-
+    private void nextbuttonClick() {
+        ((DemographicsActivity) getActivity()).setCurrentItem(2, true);
+    }
     private void showAlertDialogWithListview(final String[] raceArray, String title) {
         Log.e("raceArray==", raceArray.toString());
         Log.e("raceArray 23==", Arrays.asList(raceArray).toString());
@@ -231,11 +231,13 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
 
 
+        setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.demographicsNextButton));
+
+
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
 
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }
+
 }
-
-
 

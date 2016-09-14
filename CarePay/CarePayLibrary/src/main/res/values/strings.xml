@@ -33,6 +33,16 @@
     </string-array>
 
 
+    <string name="Plan1">Plan1</string>
+    <string name="Plan2">Plan2</string>
+    <string name="Plan3">Plan3</string>
+
+
+    <string name="Provider1">Provider1</string>
+    <string name="Provider2">Provider2</string>
+    <string name="Provider3">Provider3</string>
+
+
     <string name="English">English</string>
     <string name="Spanish">Spanish</string>
 
@@ -40,6 +50,18 @@
         <item>@string/English</item>
         <item>@string/Spanish</item>
     </string-array>
+
+    <string-array name="plans">
+        <item>@string/Plan1</item>
+        <item>@string/Plan2</item>
+        <item>@string/Plan3</item>
+    </string-array>
+    <string-array name="providers">
+        <item>@string/Provider1</item>
+        <item>@string/Provider2</item>
+        <item>@string/Provider3</item>
+    </string-array>
+
 
 
     <string name="hispanic">Hispanic</string>
@@ -65,7 +87,8 @@
     <string name="demogr_docs_logo">Logo</string>
     <string name="demogr_docs_logo_title">Documents, please</string>
     <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
-    <string name="demogr_docs_scan_label">Scan</string>
+    <string name="demogr_docs_scan_label">Scan Driver\'s License</string>
+    <string name="demogr_docs_scan_insurance_label">Scan Insurance Card</string>
     <string name="demogr_license_scan_label">driver\'s license number</string>
     <string name="demogr_docs_license_number_label">Driver\'s License State</string>
     <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
@@ -78,6 +101,8 @@
     <string name="demogr_docs_rescan">Re-scan</string>
 
     <!-- Demographic Screens -->
+
+    <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
 
     <!--Address Fragment-->
 
@@ -110,7 +135,7 @@
     <string name="health_Insurance_Information">Health Insurance Information</string>
     <string name="add_Health_InsuranceInfo">Add Health Insurance Info</string>
     <string name="review_insurance_subHeading">We didn\’t find any insurance info associated with your profile. If you have health insurance, please fill in the fields below.</string>
-    <string name="demographics_title">Demographics</string>
+    <string name="demographics_title">Demographic</string>
     <string name="next_Button">Next</string>
 
 
@@ -140,10 +165,16 @@
     <string name="minimum_char_in_city_error_messae">Enter minimum three letters in city</string>
     <string name="empty_state_error_messae">Enter state</string>
     <string name="select_state_error_messae">Select state from list only</string>
+    <string name="add_medical_info">Add More</string>
 
     <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
     <string name="close">Close</string>
 
+
+    <!--<Navigation Screen>-->
+    <string name="Appointments_title">Appointments</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
 </resources>
-
-
