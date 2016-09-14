@@ -35,6 +35,7 @@ import java.util.Locale;
 public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
@@ -64,11 +65,11 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fm = getSupportFragmentManager();
-        AppointmentsListFragment fragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new AppointmentsListFragment();
+        AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
+        if (appointmentsListFragment == null) {
+            appointmentsListFragment = new AppointmentsListFragment();
         }
-        fm.beginTransaction().replace(R.id.appointments_list_frag_holder, fragment,
+        fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
                 AppointmentsListFragment.class.getSimpleName()).commit();
     }
     @Override
@@ -141,12 +142,12 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.show();
 
-            TextView dateTextView =  ((TextView) view.findViewById(R.id.appt_date_tv));
-            TextView timeTextView = ((TextView) view.findViewById(R.id.appt_time_tv));
-            TextView shortNameTextView =  ((TextView) view.findViewById(R.id.appt_shortname_tv));
-            TextView nameTextView =   ((TextView) view.findViewById(R.id.appt_name_tv));
-            TextView typeTextView = ((TextView) view.findViewById(R.id.appt_type_tv));
-            TextView addressTextView =  ((TextView) view.findViewById(R.id.appt_address_tv));
+            TextView dateTextView =  ((TextView) view.findViewById(R.id.apptDateTextView));
+            TextView timeTextView = ((TextView) view.findViewById(R.id.apptTimeTextView));
+            TextView shortNameTextView =  ((TextView) view.findViewById(R.id.apptShortnameTextView));
+            TextView nameTextView =   ((TextView) view.findViewById(R.id.apptNameTextView));
+            TextView typeTextView = ((TextView) view.findViewById(R.id.apptTypeTextView));
+            TextView addressTextView =  ((TextView) view.findViewById(R.id.apptAddressTextView));
 
             dateTextView.setText(onDateParseToString(appointmentModel.getAptDate())[0]);
             timeTextView.setText(onDateParseToString(appointmentModel.getAptDate())[1]);
@@ -162,25 +163,25 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             Utility.setTypefaceFromAssets(this,"fonts/proximanova_regular.otf",typeTextView);
             Utility.setTypefaceFromAssets(this,"fonts/gotham_rounded_medium.otf",addressTextView);
 
-            ((ImageView) view.findViewById(R.id.dialog_appoint_close_id)).setOnClickListener(new View.OnClickListener() {
+            ((ImageView) view.findViewById(R.id.dialogAppointHeaderImageView)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.cancel();
                 }
             });
-            ((ImageView) view.findViewById(R.id.dialog_appoint_location_id)).setOnClickListener(new View.OnClickListener() {
+            ((ImageView) view.findViewById(R.id.apptLocationImageView)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(AppointmentsActivity.this, "Clicked on location icon,", Toast.LENGTH_LONG).show();
                 }
             });
-            ((ImageView) view.findViewById(R.id.dialog_appoint_dail_id)).setOnClickListener(new View.OnClickListener() {
+            ((ImageView) view.findViewById(R.id.apptDailImageView)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(AppointmentsActivity.this, "Clicked on dial icon,", Toast.LENGTH_LONG).show();
                 }
             });
-            ((Button) view.findViewById(R.id.btn_check_at_office_id)).setOnClickListener(new View.OnClickListener() {
+            ((Button) view.findViewById(R.id.checkOfficeBtn)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(AppointmentsActivity.this, "Clicked on button icon,", Toast.LENGTH_LONG).show();
