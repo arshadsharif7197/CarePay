@@ -74,7 +74,7 @@
     <dimen name="apt_dl_margin">20dp</dimen>
     <dimen name="apt_dialog_appoint_dail_margin">3dp</dimen>
     <dimen name="apt_dl_btn_check_ht">48dp</dimen>
-    <dimen name="apt_dl_appt_date_margin">14dp</dimen>
+    <dimen name="apt_dl_appt_date_margin">15dp</dimen>
     <dimen name="apt_dl_appt_time_margin">10dp</dimen>
     <dimen name="apt_dl_appt_shortname_margin">-30dp</dimen>
     <dimen name="apt_dl_textview_size">15sp</dimen>
