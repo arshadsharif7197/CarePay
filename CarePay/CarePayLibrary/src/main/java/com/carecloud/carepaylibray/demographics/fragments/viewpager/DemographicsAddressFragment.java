@@ -33,8 +33,12 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTy
 public class DemographicsAddressFragment extends GenericEditsFragment  {
 
     View view;
-    private TextInputLayout phNoTextInputLayout, address1TextInputLayout,address2TextInputLayout,cityTextInputLayout,
-            stateTextInputLayout,zipCodeTextInputLayout;
+    private TextInputLayout phNoTextInputLayout,
+            address1TextInputLayout,
+            address2TextInputLayout,
+            cityTextInputLayout,
+            stateTextInputLayout,
+            zipCodeTextInputLayout;
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
     private EditText address1EditText;
@@ -43,7 +47,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
     private Button nextButton;
     AutoCompleteTextView autoCompleteTextView;
     String state_var = null;
-    Context mainContext;
 
     private static final String[] states = new String[]{
             "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
@@ -51,20 +54,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
     };
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (getActivity() instanceof DemographicsActivity) {
-//            mainContext = getActivity();
-//            ((DemographicsActivity) mainContext).setAdapterViewItemClickListener(DemographicsAddressFragment.this);
-//        }
-//    }
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_address, container, false);
+
         initialiseUIFields();
 
 
@@ -95,7 +89,87 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
         });
 
         setTypefaces(view);
+        setFocusChangeListeners();
+
         return view;
+    }
+
+    /**
+     * Helper to set focus change listener in order to toggle hint strings to caps
+     */
+    private void setFocusChangeListeners() {
+        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String hint = getString(R.string.PhoneNumberEditText);
+                String hintCaps = hint.toUpperCase();
+                if(b) {
+                    phNoTextInputLayout.setHint(hintCaps);
+                } else {
+                    phNoTextInputLayout.setHint(hint);
+                }
+            }
+        });
+        address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String hint = getString(R.string.Address1EditText);
+                String hintCaps = hint.toUpperCase();
+                if(b) {
+                    address1TextInputLayout.setHint(hintCaps);
+                } else {
+                    address1TextInputLayout.setHint(hint);
+                }
+            }
+        });
+        address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String hint = getString(R.string.Address2EditText);
+                String hintCaps = hint.toUpperCase();
+                if(b) {
+                    address2TextInputLayout.setHint(hintCaps);
+                } else {
+                    address2TextInputLayout.setHint(hint);
+                }
+            }
+        });
+        cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String hint = getString(R.string.CityEditText);
+                String hintCaps = hint.toUpperCase();
+                if(b) {
+                    cityTextInputLayout.setHint(hintCaps);
+                } else {
+                    cityTextInputLayout.setHint(hint);
+                }
+            }
+        });
+        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String hint = getString(R.string.StateEditText);
+                String hintCaps = hint.toUpperCase();
+                if(b) {
+                    stateTextInputLayout.setHint(hintCaps);
+                } else {
+                    stateTextInputLayout.setHint(hint);
+                }
+            }
+        });
+        zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String hint = getString(R.string.ZipCodeEditText);
+                String hintCaps = hint.toUpperCase();
+                if(b) {
+                    zipCodeTextInputLayout.setHint(hintCaps);
+                } else {
+                    zipCodeTextInputLayout.setHint(hint);
+                }
+            }
+        });
     }
 
     private void initialiseUIFields() {
