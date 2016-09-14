@@ -61,16 +61,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // set the fonts
         setTypefaces(view);
 
-        // override next button function for this screen
-        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // move to next tab
-                ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
-            }
-        });
-
         // hide add card button
         showAddCardButton(false);
 
@@ -84,24 +74,17 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
      * Helper to set the buttons
      */
     private void setButtons() {
-        // set add health info button
-        addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
-        addCardButton.setOnClickListener(new View.OnClickListener() {
+        // next button
+        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View buttonView) {
-                if (!isSecondCardAdded) {
-                    isSecondCardAdded = true;
-                    showInsuranceCard(insCardContainer2, true);
-                    showAddCardButton(false);
-                } else if (!isThirdCardAdded) {
-                    isThirdCardAdded = true;
-                    showInsuranceCard(insCardContainer3, true);
-                    showAddCardButton(false);
-                }
+            public void onClick(View view) {
+                // move to next tab
+                ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
             }
         });
 
-        // set add health info button
+        // add button
         addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
         addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +97,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                     showInsuranceCard(insCardContainer3, true);
                     showAddCardButton(false);
                 }
+                scrollToBottom();
             }
         });
     }
@@ -213,7 +197,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
     @Override
     public void scrollToBottom() {
-        detailsScrollView.fullScroll(View.FOCUS_DOWN);
+        View bottomView = view.findViewById(R.id.demogr_docs_bottom_view);
+        detailsScrollView.scrollTo(0, bottomView.getBottom());
     }
 
 
