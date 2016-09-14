@@ -32,6 +32,7 @@ public class CarePayConstants {
     public static final String ATTR_UTC = "UTC";
     public static final String DATE_FORMAT_AM_PM = "hh:mm a";
     public static final String DATE_TIME_FORMAT = "dd MMM hh:mm a";
-
+    public static final int SIGNATURE_REQ_CODE = 100;
+    public static final String FORM_DATA  = "formdata";
 
 }

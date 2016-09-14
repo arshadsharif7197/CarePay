@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.review;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -8,9 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm1Fragment;
+import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
@@ -21,6 +26,7 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTy
 public class ReviewFragment  extends Fragment implements View.OnClickListener {
 
     View view;
+    Button testButton;
 
     public static ReviewFragment newInstance() {
         return new ReviewFragment();
@@ -56,10 +62,19 @@ public class ReviewFragment  extends Fragment implements View.OnClickListener {
     }
 
     private void initialiseUIFields() {
+
+        testButton = (Button) view.findViewById(R.id.YesCorrectButton);
+        testButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
+        if(view ==testButton){
+            Intent intent = new Intent(getActivity(), ConsentActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     private void setTypefaces(View view) {
