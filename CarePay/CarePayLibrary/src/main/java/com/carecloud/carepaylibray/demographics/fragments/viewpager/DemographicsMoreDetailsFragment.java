@@ -23,9 +23,7 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTyp
  */
 public class DemographicsMoreDetailsFragment extends Fragment implements View.OnClickListener {
     View view;
-    SwitchCompat wantUpdateSwitch;
     String[] getUpdateItemList;
-    List<String> selectedUpdateItemList = new ArrayList<String>();
 
     @Nullable
     @Override
@@ -37,17 +35,14 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         return view;
     }
 
-
     @Override
     public void onClick(View view) {
-
     }
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsSubHeading));
         setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.goToCarePayButton));
-
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.placeHolderIconTextViewId));
     }
 

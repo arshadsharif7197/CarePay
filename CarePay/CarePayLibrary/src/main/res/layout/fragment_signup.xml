@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity">
+
     <include layout="@layout/signup_toolbar" />
 
     <LinearLayout

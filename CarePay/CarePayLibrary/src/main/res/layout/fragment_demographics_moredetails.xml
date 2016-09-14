@@ -75,7 +75,8 @@
             android:textColor="@color/white"
             android:id="@+id/goToCarePayButton"
             android:background="@drawable/button_blue"
-            android:text="@string/GoToCarePayButton" />
+            android:text="@string/GoToCarePayButton"
+            android:onClick="o"/>
 
     </LinearLayout>
 

@@ -10,9 +10,11 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,11 +26,12 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 /**
  * Created by harish_revuri on 9/7/2016.
  */
 public class SigninFragment extends Fragment {
-
 
     private TextInputLayout emailHint, passwordHint;
     private EditText emailEditText;
@@ -44,22 +47,22 @@ public class SigninFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
+
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
 
-        emailHint = (TextInputLayout)view.findViewById(R.id.emailTextInputLayout);
-        passwordHint = (TextInputLayout)view.findViewById(R.id.passwordTextInputLayout);
+        emailHint = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
+        passwordHint = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
 
-        emailEditText = (EditText) view.findViewById(R.id.emailEditText);
+        emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
 
-        signinButton = (Button)view.findViewById(R.id.signin_button);
-        signupButton = (Button)view.findViewById(R.id.signup_button);
+        signinButton = (Button) view.findViewById(R.id.signin_button);
+        signupButton = (Button) view.findViewById(R.id.signup_button);
 
+        // TODO: 9/14/2016 replace with Utility.setTypeFace...
         Typeface hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
         Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
         Typeface floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
@@ -71,14 +74,23 @@ public class SigninFragment extends Fragment {
         passwordHint.setTypeface(hintFontFamily);
         signinButton.setTypeface(buttonFontFamily);
         signupButton.setTypeface(buttonFontFamily);
-        emailEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingTextFontfamily, TextWatcherModel.InputType.TYPE_EMAIL, emailEditText, emailHint, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
-            @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidEmail = isValid;
-                checkForButtonEnable();
-            }
-        }));
-        passwordEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingTextFontfamily,TextWatcherModel.InputType.TYPE_PASSWORD, passwordEditText, passwordHint, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
+
+        emailEditText.addTextChangedListener(
+                new TextWatcherModel(editTextFontFamily,
+                                     floatingTextFontfamily,
+                                     TextWatcherModel.InputType.TYPE_EMAIL,
+                                     emailEditText,
+                                     emailHint,
+                                     "Enter Valid Email",
+                                     false,
+                                     new TextWatcherModel.OnInputChangedListner() {
+                                         @Override
+                                         public void OnInputChangedListner(boolean isValid) {
+                                             isValidEmail = isValid;
+                                             checkForButtonEnable();
+                                         }
+                                     }));
+        passwordEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingTextFontfamily, TextWatcherModel.InputType.TYPE_PASSWORD, passwordEditText, passwordHint, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidPassword = isValid;
@@ -90,14 +102,10 @@ public class SigninFragment extends Fragment {
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (isValidInfo()) {
-
                     Intent intent = new Intent(getContext(), AppointmentsActivity.class);
                     startActivity(intent);
-
                 }
-
             }
         });
 
@@ -132,11 +140,41 @@ public class SigninFragment extends Fragment {
             }
         });
 
-        //TODO change to common use
+        // change hint to caps when floating hint
+        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                String hint = getString(R.string.email_text);
+                String hintCaps = hint.toUpperCase();
+                if (hasFocus) {
+                    // change hint to all caps
+                    emailHint.setHint(hintCaps);
+                } else {
+                    // change hint to lower
+                    emailHint.setHint(hint);
+                }
+            }
+        });
+        emailEditText.clearFocus();
+
+        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                String hint = getString(R.string.password_text);
+                String hintCaps = hint.toUpperCase();
+                if (hasFocus) {
+                    // change hint to all caps
+                    passwordHint.setHint(hintCaps);
+                } else {
+                    // change hint to lower
+                    passwordHint.setHint(hint);
+                }
+            }
+        });
+        passwordEditText.clearFocus();
 
         return view;
     }
-
 
     private boolean isValidInfo() {
 
