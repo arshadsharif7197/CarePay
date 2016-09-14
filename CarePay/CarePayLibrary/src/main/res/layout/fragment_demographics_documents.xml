@@ -29,14 +29,14 @@
         android:id="@+id/demographicsDocsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7">
+        android:layout_weight="7"
+        android:paddingBottom="@dimen/top_bottom_scroll_padding"
+        android:paddingTop="@dimen/top_bottom_scroll_padding">
 
         <LinearLayout
             style="@style/DemographicsDocsHeaderStyle"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/top_bottom_scroll_padding"
-            android:paddingTop="@dimen/top_bottom_scroll_padding">
+            android:orientation="vertical">
 
             <FrameLayout
                 android:id="@+id/demographicsDocsLicense"
@@ -80,20 +80,20 @@
         <Button
             android:id="@+id/demographicsAddMedInfoButton"
             style="@style/DemographicsAddRemoveInsuranceStyle"
-            android:text="@string/demogr_docs_add_card"
             android:layout_width="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/demogr_docs_add_card"/>
 
         <View
-            android:layout_width="4dp"
+            android:layout_width="@dimen/top_bottom_scroll_padding"
             android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/demographicsRemoveMedInfoButton"
             style="@style/DemographicsAddRemoveInsuranceStyle"
-            android:text="@string/demogr_docs_remove_card"
             android:layout_width="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/demogr_docs_remove_card"/>
 
     </LinearLayout>
 

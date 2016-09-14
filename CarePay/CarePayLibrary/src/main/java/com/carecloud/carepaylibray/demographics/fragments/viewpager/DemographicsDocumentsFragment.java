@@ -5,12 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -32,27 +32,37 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private static final String LOG_TAG             = DemographicsDocumentsFragment.class.getSimpleName();
     private static final int    MAX_INSURANCE_CARDS = 3;
 
-    private FragmentManager            fm;
-    private InsuranceScannerFragment[] insuranceFragments;
-    private SwitchCompat               switchCompat;
-    private int insuranceCount = 0;
-    private View   view;
-    private Button addCardButton;
-    private Button removeCardButton;
-    private Button nextButton;
+    private FragmentManager fm;
+    private View            view;
+    private ScrollView      detailsScrollView;
+    private SwitchCompat    switchCompat;
+    private FrameLayout     insCardContainer1;
+    private FrameLayout     insCardContainer2;
+    private FrameLayout     insCardContainer3;
+    private boolean         isSecondCardAdded;
+    private boolean         isThirdCarAdded;
+    private Button          addCardButton;
+    private Button          removeCardButton;
+    private Button          nextButton;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
-        Log.v(LOG_TAG, "onCreateView()");
-
         view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
-        insuranceFragments = new InsuranceScannerFragment[MAX_INSURANCE_CARDS];
+        // fetch the scroll view
+        detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
+
+        // fetch nested fragments containers
+        insCardContainer1 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance1);
+        insCardContainer2 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance2);
+        insCardContainer3 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance3);
+
+        isSecondCardAdded = false;
+        isThirdCarAdded = false;
 
         fm = getChildFragmentManager();
-
         // add license fragment
         LicenseScannerFragment licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
         if (licenseFragment == null) {
@@ -61,16 +71,34 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         }
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, licenseFragment, "license").commit();
 
-        // add first insurance fragment
-        insuranceFragments[0] = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
-        if (insuranceFragments[0] == null) {
-            insuranceFragments[0] = new InsuranceScannerFragment();
-            insuranceFragments[0].setIndex(0);
-            insuranceFragments[0].setButtonsStatusCallback(this);
+        // add insurance fragments
+        InsuranceScannerFragment insuranceFragment;
+        insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
+        if (insuranceFragment == null) {
+            insuranceFragment = new InsuranceScannerFragment();
+            insuranceFragment.setButtonsStatusCallback(this);
         }
-        fm.beginTransaction().replace(R.id.demographicsDocsInsurance1, insuranceFragments[0], "insurance1")
+        fm.beginTransaction()
+                .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance1")
                 .commit();
-        insuranceCount = 1;
+
+        insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
+        if (insuranceFragment == null) {
+            insuranceFragment = new InsuranceScannerFragment();
+            insuranceFragment.setButtonsStatusCallback(this);
+        }
+        fm.beginTransaction()
+                .replace(R.id.demographicsDocsInsurance2, insuranceFragment, "insurance2")
+                .commit();
+
+        insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
+        if (insuranceFragment == null) {
+            insuranceFragment = new InsuranceScannerFragment();
+            insuranceFragment.setButtonsStatusCallback(this);
+        }
+        fm.beginTransaction()
+                .replace(R.id.demographicsDocsInsurance3, insuranceFragment, "insurance3")
+                .commit();
 
         // set the switch
         fm.executePendingTransactions();
@@ -78,14 +106,19 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-                for (InsuranceScannerFragment fragment : insuranceFragments) {
-                    if (fragment != null) {
-                        if (on) { // show all insurance fragments
-                            fm.beginTransaction().show(fragment).commit();
-                        } else { // hide all insurance fragments
-                            fm.beginTransaction().hide(fragment).commit();
-                        }
-                    }
+                showInsuranceCard(insCardContainer1, on);
+                if (isSecondCardAdded) {
+                    showInsuranceCard(insCardContainer2, on);
+                } else {
+                    // if not added yet, hide the container
+                    showInsuranceCard(insCardContainer2, false);
+                }
+
+                if (isThirdCarAdded) {
+                    showInsuranceCard(insCardContainer2, on);
+                } else {
+                    // if not added yet, hide the container
+                    showInsuranceCard(insCardContainer3, false);
                 }
             }
         });
@@ -95,33 +128,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
         addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View buttonView) { // add 2nd or 3rd card
-                if (insuranceCount < MAX_INSURANCE_CARDS) {
-                    String insuranceTag = "insurance2";
-                    int insuranceFragId = R.id.demographicsDocsInsurance2;
-                    if (insuranceCount == 2) {
-                        insuranceTag = "insurance3";
-                        insuranceFragId = R.id.demographicsDocsInsurance3;
-                        // hide add health info button
-                    }
-
-                    // create the fragment
-                    InsuranceScannerFragment fragment = (InsuranceScannerFragment) fm.findFragmentByTag(insuranceTag);
-                    if (fragment == null) {
-                        fragment = new InsuranceScannerFragment();
-                        insuranceFragments[insuranceCount] = fragment;
-                        fragment.setIndex(insuranceCount);
-                        fragment.setButtonsStatusCallback(DemographicsDocumentsFragment.this);
-                        insuranceCount++;
-                    }
-                    fm.beginTransaction().replace(insuranceFragId, fragment, insuranceTag)
-                            .addToBackStack(null)
-                            .commit();
-
-                    // scroll bottom
-                    fm.executePendingTransactions();
-                    ((ScrollView) view.findViewById(R.id.demographicsDocsScroll)).fullScroll(View.FOCUS_DOWN);
-                }
+            public void onClick(View buttonView) {
             }
         });
 
@@ -140,6 +147,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // move to next tab
                 ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
             }
         });
@@ -148,6 +156,20 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         enableNextButton(false);
 
         return view;
+    }
+
+    /**
+     * Toggles visible/invisible a container of an insurance card details
+     *
+     * @param cardContainer The container
+     * @param isVisible     Whether visible
+     */
+    private void showInsuranceCard(FrameLayout cardContainer, boolean isVisible) {
+        if (isVisible) {
+            cardContainer.setVisibility(View.VISIBLE);
+        } else {
+            cardContainer.setVisibility(View.GONE);
+        }
     }
 
     /**
