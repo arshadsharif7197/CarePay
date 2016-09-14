@@ -188,8 +188,6 @@ public abstract class DocumentScannerFragment extends Fragment{
      */
     public interface NextAddRemoveStatusModifier {
         void showAddCardButton(boolean isVisible);
-        void showRemoveCardButton(boolean isVisible);
-        void enableRemoveCardButton(boolean isEnabled);
         void enableNextButton(boolean isEnabled);
         void scrollToBottom();
     }

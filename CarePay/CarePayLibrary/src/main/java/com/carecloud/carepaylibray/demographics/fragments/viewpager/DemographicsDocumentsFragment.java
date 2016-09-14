@@ -31,7 +31,6 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTyp
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
     private static final String LOG_TAG             = DemographicsDocumentsFragment.class.getSimpleName();
-    private static final int    MAX_INSURANCE_CARDS = 3;
 
     private FragmentManager          fm;
     private View                     view;
@@ -45,7 +44,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private boolean                  isSecondCardAdded;
     private boolean                  isThirdCardAdded;
     private Button                   addCardButton;
-    private Button                   removeCardButton;
     private Button                   nextButton;
 
     @Nullable
@@ -56,6 +54,23 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         // fetch the scroll view
         detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
+
+        // set add health info button
+        addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
+        addCardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View buttonView) {
+                if (!isSecondCardAdded) {
+                    isSecondCardAdded = true;
+                    showInsuranceCard(insCardContainer2, true);
+                    showAddCardButton(false);
+                } else if (!isThirdCardAdded) {
+                    isThirdCardAdded = true;
+                    showInsuranceCard(insCardContainer3, true);
+                    showAddCardButton(false);
+                }
+            }
+        });
 
         // fetch nested fragments containers
         insCardContainer1 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance1);
@@ -110,19 +125,17 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 showInsuranceCard(insCardContainer1, on);
-                if (isSecondCardAdded) {
+                if(isSecondCardAdded) {
                     showInsuranceCard(insCardContainer2, on);
                 } else {
-                    // if not added yet, hide the container
                     showInsuranceCard(insCardContainer2, false);
                 }
-                if (isThirdCardAdded) {
+                if(isThirdCardAdded) {
                     showInsuranceCard(insCardContainer3, on);
                 } else {
-                    // if not added yet, hide the container
                     showInsuranceCard(insCardContainer3, false);
                 }
-                scrollToBottom();
+                showAddCardButton(on && !isThirdCardAdded);
             }
         });
         switchCompat.setChecked(false);
@@ -135,29 +148,10 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 if (!isSecondCardAdded) {
                     isSecondCardAdded = true;
                     showInsuranceCard(insCardContainer2, true);
-                    showAddCardButton(false);
                 } else if (!isThirdCardAdded) {
                     isThirdCardAdded = true;
                     showInsuranceCard(insCardContainer3, true);
                     showAddCardButton(false);
-                }
-            }
-        });
-
-        removeCardButton = (Button) view.findViewById(R.id.demographicsRemoveMedInfoButton);
-        removeCardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isThirdCardAdded) {
-                    isThirdCardAdded = false;
-                    extraInsCardFrag2.resetViewsContent();
-                    showInsuranceCard(insCardContainer3, false);
-                    showAddCardButton(true);
-                } else if (isSecondCardAdded) {
-                    isSecondCardAdded = false;
-                    extraInsCardFrag1.resetViewsContent();
-                    showInsuranceCard(insCardContainer2, false);
-                    showRemoveCardButton(false);
                 }
             }
         });
@@ -177,7 +171,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         // hide add/remove buttons
         showAddCardButton(false);
-        showRemoveCardButton(false);
 
         // disable next button
         enableNextButton(false);
@@ -222,34 +215,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     }
 
     @Override
-    public void showRemoveCardButton(boolean isVisible) {
-        if (!isVisible) {
-            removeCardButton.setVisibility(View.GONE);
-        } else {
-            if (isSecondCardAdded || isThirdCardAdded) {
-                removeCardButton.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    @Override
-    public void enableRemoveCardButton(boolean isEnabled) {
-        if (isEnabled) {
-            // enable if at least one extra card was added
-            if (isSecondCardAdded || isThirdCardAdded) {
-                removeCardButton.setEnabled(true);
-                removeCardButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.blue_cerulian));
-            } else {
-                removeCardButton.setEnabled(false);
-                removeCardButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.slateGray));
-            }
-        } else {
-            removeCardButton.setEnabled(false);
-            removeCardButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.slateGray));
-        }
-    }
-
-    @Override
     public void enableNextButton(boolean isEnabled) {
         nextButton.setEnabled(isEnabled);
     }
@@ -259,13 +224,3 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         detailsScrollView.fullScroll(View.FOCUS_DOWN);
     }
 }
-
-/*
-* switch on -> first container
-* scan first -> add visible
-* add -> add gone -> remove vis
-* scan (2nd) -> add vis (remove vis)
-* add (3rd) -> add gone (remove vis)
-* remove (3rd) -> add visible
-* remove(2nd) -> (add vis) remove gone
-* */

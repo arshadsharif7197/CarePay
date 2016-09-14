@@ -184,7 +184,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/payne_gray</item>
-        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+        <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
     </style>
 
     <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
@@ -238,7 +238,8 @@
 
     <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
         <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
-        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
         <item name="android:background">@drawable/button_scan_card</item>
     </style>
 
