@@ -28,7 +28,7 @@
     <color name="Munsell">#eceff1</color>
     <color name="paint_color_thumbnail">#BAB399</color>
 
-    <color name="gray_round">#546e7a</color>
+    <color name="grayRound">#546e7a</color>
     <color name="light_gray_dialog">#eceff1</color>
     <color name="dark_green">#7ed321</color>
     <color name="transparent_apt">#00000000</color>
