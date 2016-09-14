@@ -1,9 +1,9 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 
 import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
@@ -23,34 +21,39 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTyp
  */
 public class DemographicsMoreDetailsFragment extends Fragment implements View.OnClickListener {
     View view;
-    SwitchCompat wantUpdateSwitch;
     String[] getUpdateItemList;
-    List<String> selectedUpdateItemList = new ArrayList<String>();
+    Button gotoCarePay;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
-
         getUpdateItemList = getResources().getStringArray(R.array.UpdatesMode);
         setTypefaces(view);
+        gotoCarePay = (Button) view.findViewById(R.id.goToCarePayButton);
+        onClick(view);
         return view;
     }
 
 
     @Override
     public void onClick(View view) {
-
+        gotoCarePay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
+                startActivity(appointmentIntent);
+            }
+        });
     }
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsSubHeading));
-        setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.goToCarePayButton));
-
+        setGothamRoundedMediumTypeface(getActivity(), (Button) view.findViewById(R.id.goToCarePayButton));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.placeHolderIconTextViewId));
     }
-
 
 
 }

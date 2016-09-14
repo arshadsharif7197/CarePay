@@ -123,7 +123,7 @@
 
     <string name="detailsHeadingTextView">Some details about you</string>
     <string name="detailsSubHeadingTextView">How about uploading your photo?</string>
-    <string name="selectOrTakePhotoButton">SELECT OR TAKE PHOTO BUTTON</string>
+    <string name="selectOrTakePhotoButton">SELECT OR TAKE PHOTO</string>
     <string name="changeCurrentPhotoButton">CHANGE CURRENT PHOTO</string>
     <string name="raceLabel">Race</string>
     <string name="ethnicityLabel">Ethnicity</string>
