@@ -11,13 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.ZoomButton;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
 
@@ -28,7 +27,7 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTyp
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
-public class DemographicsDocumentsFragment extends Fragment {
+public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
     private static final String LOG_TAG             = DemographicsDocumentsFragment.class.getSimpleName();
     private static final int    MAX_INSURANCE_CARDS = 3;
@@ -38,7 +37,8 @@ public class DemographicsDocumentsFragment extends Fragment {
     private SwitchCompat               switchCompat;
     private int insuranceCount = 0;
     private View   view;
-    private Button addMoreButton;
+    private Button addCardButton;
+    private Button removeCardButton;
     private Button nextButton;
 
     @Nullable
@@ -57,6 +57,7 @@ public class DemographicsDocumentsFragment extends Fragment {
         LicenseScannerFragment licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
         if (licenseFragment == null) {
             licenseFragment = new LicenseScannerFragment();
+            licenseFragment.setButtonsStatusCallback(this);
         }
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, licenseFragment, "license").commit();
 
@@ -65,6 +66,7 @@ public class DemographicsDocumentsFragment extends Fragment {
         if (insuranceFragments[0] == null) {
             insuranceFragments[0] = new InsuranceScannerFragment();
             insuranceFragments[0].setIndex(0);
+            insuranceFragments[0].setButtonsStatusCallback(this);
         }
         fm.beginTransaction().replace(R.id.demographicsDocsInsurance1, insuranceFragments[0], "insurance1")
                 .commit();
@@ -90,8 +92,8 @@ public class DemographicsDocumentsFragment extends Fragment {
         switchCompat.setChecked(false);
 
         // set add health info button
-        addMoreButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
-        addMoreButton.setOnClickListener(new View.OnClickListener() {
+        addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
+        addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) { // add 2nd or 3rd card
                 if (insuranceCount < MAX_INSURANCE_CARDS) {
@@ -101,7 +103,6 @@ public class DemographicsDocumentsFragment extends Fragment {
                         insuranceTag = "insurance3";
                         insuranceFragId = R.id.demographicsDocsInsurance3;
                         // hide add health info button
-                        showAddHealthButton(false);
                     }
 
                     // create the fragment
@@ -110,6 +111,7 @@ public class DemographicsDocumentsFragment extends Fragment {
                         fragment = new InsuranceScannerFragment();
                         insuranceFragments[insuranceCount] = fragment;
                         fragment.setIndex(insuranceCount);
+                        fragment.setButtonsStatusCallback(DemographicsDocumentsFragment.this);
                         insuranceCount++;
                     }
                     fm.beginTransaction().replace(insuranceFragId, fragment, insuranceTag)
@@ -120,6 +122,13 @@ public class DemographicsDocumentsFragment extends Fragment {
                     fm.executePendingTransactions();
                     ((ScrollView) view.findViewById(R.id.demographicsDocsScroll)).fullScroll(View.FOCUS_DOWN);
                 }
+            }
+        });
+
+        removeCardButton = (Button) view.findViewById(R.id.demographicsRemoveMedInfoButton);
+        removeCardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
             }
         });
 
@@ -134,8 +143,6 @@ public class DemographicsDocumentsFragment extends Fragment {
                 ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
             }
         });
-
-        showAddHealthButton(false);
 
         // disable next button
         enableNextButton(false);
@@ -154,31 +161,31 @@ public class DemographicsDocumentsFragment extends Fragment {
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_switch));
     }
 
-
-    /**
-     * Show/hides the button that adds more insurance cards
-     *
-     * @param isVisible Whether visible
-     */
-    public void showAddHealthButton(boolean isVisible) {
+    @Override
+    public void showAddCardButton(boolean isVisible) {
         if (!isVisible) {
-            addMoreButton.setVisibility(View.GONE);
+            addCardButton.setVisibility(View.GONE);
         } else {
-            addMoreButton.setVisibility(View.VISIBLE);
+            addCardButton.setVisibility(View.VISIBLE);
         }
     }
 
-    /**
-     * Enables disables 'Next' button
-     *
-     * @param enabled Whether enabled
-     */
-    public void enableNextButton(boolean enabled) {
-        if (!enabled) {
-            nextButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+    @Override
+    public void showRemoveCardButton(boolean isVisible) {
+        if (!isVisible) {
+            removeCardButton.setVisibility(View.GONE);
         } else {
-            nextButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+            removeCardButton.setVisibility(View.VISIBLE);
         }
-        nextButton.setEnabled(enabled);
+    }
+
+    @Override
+    public void enableRemoveCardButton(boolean isEnabled) {
+        removeCardButton.setEnabled(isEnabled);
+    }
+
+    @Override
+    public void enableNextButton(boolean isEnabled) {
+        nextButton.setEnabled(isEnabled);
     }
 }

@@ -242,7 +242,7 @@
     </style>
 
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">
-        <item name="android:background">@color/bright_cerulean</item>
+        <item name="android:background">@drawable/agree_button_background</item>
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
     </style>

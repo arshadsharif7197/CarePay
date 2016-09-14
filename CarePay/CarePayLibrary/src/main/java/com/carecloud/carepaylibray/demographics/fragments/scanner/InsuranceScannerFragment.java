@@ -101,15 +101,12 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // if scanned first insurance, show the button to add more insurance cards
-        if(index == 0) {
-            Button buttonAddIns = (Button) getActivity().getWindow().getDecorView().getRootView().findViewById(R.id.demographicsAddMedInfoButton);
-            buttonAddIns.setVisibility(View.VISIBLE);
-        }
-        // enable next button
-        Button next = (Button) ((DemographicsActivity)getActivity()).getWindow().getDecorView().getRootView().findViewById(R.id.demographicsNextButton);
-        next.setEnabled(true);
-        next.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+
+        // invoke parent fragment to enable 'Next' button
+        buttonsStatusCallback.enableNextButton(true);
+        
+        // invoke parent fragment to show add/remove buttons
+        // TODO: 9/14/2016  
     }
 
     public void setIndex(int index) {

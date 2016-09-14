@@ -32,7 +32,8 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public abstract class DocumentScannerFragment extends Fragment{
 
-    private ImageCaptureHelper mImageCaptureHelper;
+    private   ImageCaptureHelper          imageCaptureHelper;
+    protected NextAddRemoveStatusModifier buttonsStatusCallback;
 
     @Nullable
     @Override
@@ -48,7 +49,7 @@ public abstract class DocumentScannerFragment extends Fragment{
      * @param imageCaptureHelper The camera helper used with a particular imageview
      */
     public void selectImage(final ImageCaptureHelper imageCaptureHelper) {
-        mImageCaptureHelper = imageCaptureHelper;
+        this.imageCaptureHelper = imageCaptureHelper;
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
@@ -123,12 +124,12 @@ public abstract class DocumentScannerFragment extends Fragment{
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         Log.v(LOG_TAG, "onReauestPermissionsResult()");
-        String userChoosenTask = mImageCaptureHelper.getUserChoosenTask();
+        String userChoosenTask = imageCaptureHelper.getUserChoosenTask();
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
-                        startActivityForResult(Intent.createChooser(mImageCaptureHelper.galleryIntent(),
+                        startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
                                                                     ImageCaptureHelper.CHOOSER_NAME),
                                                ImageCaptureHelper.SELECT_FILE);
                 } else {
@@ -140,7 +141,7 @@ public abstract class DocumentScannerFragment extends Fragment{
             case Utility.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString()))
-                        startActivityForResult(mImageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
+                        startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
                 } else {
                     //code for deny
                     Log.v(LOG_TAG, "camera denied");
@@ -155,12 +156,20 @@ public abstract class DocumentScannerFragment extends Fragment{
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-                mImageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+                imageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                mImageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+                imageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
             }
             updateDetailViewsAfterScan();
         }
+    }
+
+    /**
+     * Set the callback that will enable this fragment to change the status of butons in another fragment
+     * @param buttonsStatusCallback The callback
+     */
+    public void setButtonsStatusCallback(NextAddRemoveStatusModifier buttonsStatusCallback) {
+        this.buttonsStatusCallback = buttonsStatusCallback;
     }
 
     /**
@@ -172,4 +181,14 @@ public abstract class DocumentScannerFragment extends Fragment{
      * Set the typefaces
      */
     protected abstract void setTypefaces(View view);
+
+    /**
+     * Callback interface to change the status of buttons of another fragment
+     */
+    public interface NextAddRemoveStatusModifier {
+        void showAddCardButton(boolean isVisible);
+        void showRemoveCardButton(boolean isVisible);
+        void enableRemoveCardButton(boolean isEnabled);
+        void enableNextButton(boolean isEnabled);
+    }
 }
