@@ -36,7 +36,6 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         return view;
     }
 
-
     @Override
     public void onClick(View view) {
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +50,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsSubHeading));
-        setGothamRoundedMediumTypeface(getActivity(), (Button) view.findViewById(R.id.goToCarePayButton));
+        setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.goToCarePayButton));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.placeHolderIconTextViewId));
     }
 
