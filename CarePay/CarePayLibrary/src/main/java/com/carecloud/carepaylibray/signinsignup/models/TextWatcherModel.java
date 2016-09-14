@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.signinsignup.models;
 
+import android.graphics.Typeface;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -23,12 +25,16 @@ public class TextWatcherModel implements TextWatcher {
 
     private InputType inputType;
     private EditText editText;
-    private TextView errorView;
+    private TextInputLayout errorView;
     private String errorMessage;
     private boolean isOptional;
     private OnInputChangedListner onInputChangedListner;
+    private Typeface normalTypeFace;
+    private Typeface floatingTypeFace;
 
-    public TextWatcherModel(final InputType inputType, EditText editText, final TextView errorView, final String errorMessage, boolean isOptional, OnInputChangedListner onInputChangedListner) {
+    public TextWatcherModel(final Typeface normalTypeFace, final Typeface floatingTypeFace, final InputType inputType, final EditText editText, final TextInputLayout errorView, final String errorMessage, boolean isOptional, OnInputChangedListner onInputChangedListner) {
+        this.normalTypeFace = normalTypeFace;
+        this.floatingTypeFace = floatingTypeFace;
         this.inputType =inputType;
         this.editText =editText;
         this.errorView =errorView;
@@ -38,13 +44,16 @@ public class TextWatcherModel implements TextWatcher {
 
         if(!isOptional){
             this.editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) {
+                        checkTypeFace();
                         doValidation();
                     }
                     return false;
                 }
+
             });
 
         }else{
@@ -61,7 +70,7 @@ public class TextWatcherModel implements TextWatcher {
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-
+        checkTypeFace();
         if(!isOptional) {
             doValidation();
         }else{
@@ -78,18 +87,18 @@ public class TextWatcherModel implements TextWatcher {
     private void doValidation(){
         if(inputType.equals(InputType.TYPE_EMAIL)){
             if(!isValidmail()){
-                errorView.setText(errorMessage);
+                errorView.setError(errorMessage);
                 updateStatus(false);
             }else{
-                errorView.setText(null);
+                errorView.setErrorEnabled(false);
                 updateStatus(true);
             }
         }else if(inputType.equals(InputType.TYPE_PASSWORD)|| inputType.equals(InputType.TYPE_TEXT)){
             if(!isValid()){
-                errorView.setText(errorMessage);
+                errorView.setError(errorMessage);
                 updateStatus(false);
             }else{
-                errorView.setText(null);
+                errorView.setErrorEnabled(false);
                 updateStatus(true);
             }
         }
@@ -128,6 +137,14 @@ public class TextWatcherModel implements TextWatcher {
         }
     }
 
+    private void checkTypeFace() {
+
+        if(editText.getText().toString().length()>0){
+            errorView.setTypeface(floatingTypeFace);
+        }else{
+            errorView.setTypeface(normalTypeFace);
+        }
+    }
 
     public enum InputType{
 
@@ -141,4 +158,5 @@ public class TextWatcherModel implements TextWatcher {
 
         public void OnInputChangedListner(boolean isValid);
     }
+
 }

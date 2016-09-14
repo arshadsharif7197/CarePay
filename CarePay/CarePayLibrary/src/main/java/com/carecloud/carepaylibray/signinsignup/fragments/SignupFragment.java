@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -29,14 +30,13 @@ import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
  */
 public class SignupFragment extends Fragment {
 
-
-    private TextView errorFirstNameView, textMiddleNameView, errorLastNameView, errorEmailView, errorPasswordView, errorRepeatPasswordView;
+    private TextInputLayout errorFirstNameView, textMiddleNameView, errorLastNameView, errorEmailView, errorPasswordView, errorRepeatPasswordView;
     private EditText firstNameText;
     private EditText middleNameText;
     private EditText lastNameText;
     private EditText emailText;
-    private EditText passowrdText;
-    private EditText repeatPassowrdText;
+    private EditText passwordText;
+    private EditText repeatPasswordText;
     private TextView accountExistTextView;
 
     private Button submitButton;
@@ -64,8 +64,11 @@ public class SignupFragment extends Fragment {
             }
         });
 
-        submitButton = (Button) view.findViewById(R.id.signupButton);
+
+        submitButton = (Button) view.findViewById(R.id.submitSignupButton);
         submitButton.setBackground(getResources().getDrawable(R.drawable.button_light_gray_background));
+        Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
+        submitButton.setTypeface(buttonFontFamily);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,71 +82,82 @@ public class SignupFragment extends Fragment {
             }
         });
 
-        errorFirstNameView = (TextView) view.findViewById(R.id.txt_first_name_error);
-        textMiddleNameView = (TextView) view.findViewById(R.id.text_middle_name_optional);
-        errorLastNameView = (TextView) view.findViewById(R.id.txt_last_name_error);
-        errorEmailView = (TextView) view.findViewById(R.id.txt_email_error);
-        errorPasswordView = (TextView) view.findViewById(R.id.txt_create_password);
-        errorRepeatPasswordView = (TextView) view.findViewById(R.id.txt_repeat_password);
 
-        firstNameText = (EditText) view.findViewById(R.id.et_first_name);
-        middleNameText = (EditText) view.findViewById(R.id.et_middle_name);
-        lastNameText = (EditText) view.findViewById(R.id.et_last_name);
+        errorFirstNameView = (TextInputLayout)view.findViewById(R.id.firstNameTextInputLayout);
+        textMiddleNameView = (TextInputLayout)view.findViewById(R.id.middleNameTextInputLayout);
+        errorLastNameView = (TextInputLayout) view.findViewById(R.id.lastNameTextInputLayout);
+        errorEmailView = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
+        errorPasswordView = (TextInputLayout) view.findViewById(R.id.createPasswordTextInputLayout);
+        errorRepeatPasswordView = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
+
+
+        firstNameText = (EditText) view.findViewById(R.id.firstNameEditText);
+        middleNameText = (EditText) view.findViewById(R.id.middleNameEditText);
+        lastNameText = (EditText) view.findViewById(R.id.lastNameEditText);
         emailText = (EditText) view.findViewById(R.id.emailEditText);
-        passowrdText = (EditText) view.findViewById(R.id.et_create_password);
-        repeatPassowrdText = (EditText) view.findViewById(R.id.et_repeat_password);
+        passwordText = (EditText) view.findViewById(R.id.createPasswordEditText);
+        repeatPasswordText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
+
+        accountExistTextView = (TextView)view.findViewById(R.id.oldUserTextView);
 
         accountExistTextView = (TextView) view.findViewById(R.id.oldUserTextView);
         Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        firstNameText.setTypeface(editTextFontFamily);
-        middleNameText.setTypeface(editTextFontFamily);
-        lastNameText.setTypeface(editTextFontFamily);
-        emailText.setTypeface(editTextFontFamily);
-        passowrdText.setTypeface(editTextFontFamily);
-        repeatPassowrdText.setTypeface(editTextFontFamily);
-        errorEmailView.setTypeface(editTextFontFamily);
-        middleNameText.setTypeface(editTextFontFamily);
-        lastNameText.setTypeface(editTextFontFamily);
-        emailText.setTypeface(editTextFontFamily);
-        passowrdText.setTypeface(editTextFontFamily);
-        repeatPassowrdText.setTypeface(editTextFontFamily);
+        Typeface textViewFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+        Typeface floatingFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
 
-        firstNameText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_TEXT, firstNameText, errorFirstNameView, "Enter First Name", false, new TextWatcherModel.OnInputChangedListner() {
-            @Override
+        firstNameText.setTypeface(textViewFontFamily);
+        middleNameText.setTypeface(textViewFontFamily);
+        lastNameText.setTypeface(textViewFontFamily);
+        emailText.setTypeface(textViewFontFamily);
+        passwordText.setTypeface(textViewFontFamily);
+        repeatPasswordText.setTypeface(textViewFontFamily);
+
+        errorFirstNameView.setTypeface(editTextFontFamily);
+        textMiddleNameView.setTypeface(editTextFontFamily);
+        errorLastNameView.setTypeface(editTextFontFamily);
+        errorEmailView.setTypeface(editTextFontFamily);
+        errorPasswordView.setTypeface(editTextFontFamily);
+        errorRepeatPasswordView.setTypeface(editTextFontFamily);
+
+
+        accountExistTextView.setTypeface(textViewFontFamily);
+
+        firstNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily,TextWatcherModel.InputType.TYPE_TEXT, firstNameText, errorFirstNameView, "Enter First Name", false, new TextWatcherModel.OnInputChangedListner() {
+           @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidFirstName = isValid;
                 checkForButtonEnable();
             }
         }));
-        middleNameText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_TEXT, middleNameText, textMiddleNameView, "Enter Middle Name", true, new TextWatcherModel.OnInputChangedListner() {
+        middleNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily,TextWatcherModel.InputType.TYPE_TEXT, middleNameText, textMiddleNameView, "Enter Middle Name", true, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidMiddleName = isValid;
                 checkForButtonEnable();
             }
         }));
-        lastNameText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_TEXT, lastNameText, errorLastNameView, "Enter Last Name", false, new TextWatcherModel.OnInputChangedListner() {
+        lastNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily,TextWatcherModel.InputType.TYPE_TEXT, lastNameText, errorLastNameView, "Enter Last Name", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidLastName = isValid;
                 checkForButtonEnable();
             }
         }));
-        emailText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_EMAIL, emailText, errorEmailView, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
+        emailText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily,TextWatcherModel.InputType.TYPE_EMAIL, emailText, errorEmailView, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidEmail = isValid;
                 checkForButtonEnable();
             }
         }));
-        passowrdText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_PASSWORD, passowrdText, errorPasswordView, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
+        passwordText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily,TextWatcherModel.InputType.TYPE_PASSWORD, passwordText, errorPasswordView, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidPassword = isValid;
                 checkForButtonEnable();
             }
         }));
-        repeatPassowrdText.addTextChangedListener(new TextWatcherModel(TextWatcherModel.InputType.TYPE_PASSWORD, repeatPassowrdText, errorRepeatPasswordView, "Confirm password can't be empty", false, new TextWatcherModel.OnInputChangedListner() {
+        repeatPasswordText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily,TextWatcherModel.InputType.TYPE_PASSWORD, repeatPasswordText, errorRepeatPasswordView, "Confirm password can't be empty", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
                 isValidRepeatPassword = isValid;
@@ -160,7 +174,7 @@ public class SignupFragment extends Fragment {
                     fragment = new SigninFragment();
                 }
                 fm.beginTransaction()
-                        .replace(R.id.signinLayout, fragment, SigninFragment.class.getSimpleName())
+                        .replace(R.id.signin_layout, fragment, SigninFragment.class.getSimpleName())
                         .commit();
             }
         });
@@ -172,7 +186,7 @@ public class SignupFragment extends Fragment {
 
         if (isValidFirstName && isValidMiddleName && isValidLastName && isValidEmail && isValidPassword && isValidRepeatPassword) {
 
-            if (passowrdText.getText().toString().equals(repeatPassowrdText.getText().toString())) {
+            if (passwordText.getText().toString().equals(repeatPasswordText.getText().toString())) {
                 return true;
             } else {
                 Toast.makeText(getActivity(), "Passwords not matched", Toast.LENGTH_LONG).show();
@@ -188,9 +202,11 @@ public class SignupFragment extends Fragment {
 
     private void checkForButtonEnable() {
         if (isValidFirstName && isValidMiddleName && isValidLastName && isValidEmail && isValidPassword && isValidRepeatPassword) {
+            submitButton.setEnabled(true);
             submitButton.setBackgroundResource(R.drawable.button_selector);
             submitButton.setTextColor(Color.WHITE);
         } else {
+            submitButton.setEnabled(false);
             submitButton.setBackgroundResource(R.drawable.button_light_gray_background);
 
         }

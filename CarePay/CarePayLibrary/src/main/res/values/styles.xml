@@ -154,7 +154,8 @@
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginStart">14dp</item>
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@drawable/button_scan_card</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="DemographicsDocsHeaderTitleStyle" parent="android:Widget.TextView">
@@ -182,9 +183,8 @@
     <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/payne_gray</item>
-        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+        <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
     </style>
 
     <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
@@ -236,15 +236,15 @@
 
     </style>
 
-    <style name="DemographicsAddMedInfoButtonStyle" parent="ResponsButtonStyle">
-        <item name="android:background">@color/button_bright_cerulean</item>
+    <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
         <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
         <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
         <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:background">@drawable/button_scan_card</item>
     </style>
 
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">
-        <item name="android:background">@color/bright_cerulean</item>
+        <item name="android:background">@drawable/agree_button_background</item>
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
     </style>
@@ -269,8 +269,7 @@
     </style>
 
 
-
-
+<!--< Navigation Screen Theme>-->
     <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
@@ -279,15 +278,14 @@
     <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+<!--;-->
 
-
+<!--<Consent forms styles>-->
     <style name="ConsentActivityTitleStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">21.0sp</item>
         <item name="android:gravity">center</item>
-
     </style>
 
     <style name="ConsentActivityDescriptionTextStyle" parent="android:Widget.TextView">
@@ -296,7 +294,6 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
-
     </style>
 
     <style name="ConsentActivityContentTextStyle" parent="android:Widget.TextView">
@@ -307,7 +304,6 @@
         <item name="android:gravity">left</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
-
     </style>
 
     <style name="ConsentActivityDoctornameTextStyle" parent="android:Widget.TextView">
@@ -315,16 +311,15 @@
         <item name="android:textSize">18.0sp</item>
         <item name="android:lineSpacingExtra">17.0sp</item>
         <item name="android:gravity">left</item>
-
     </style>
 
     <style name="ConsentActivityDateStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/Feldgrau</item>
         <item name="android:textSize">24.0sp</item>
         <item name="android:gravity">center</item>
-
     </style>
-
+<!--;-->
+<!--<SigninSignup error Appearance>-->
 
 
 </resources>

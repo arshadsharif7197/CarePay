@@ -89,16 +89,18 @@
     <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
     <string name="demogr_docs_scan_label">Scan Driver\'s License</string>
     <string name="demogr_docs_scan_insurance_label">Scan Insurance Card</string>
-    <string name="demogr_license_scan_label">driver\'s license number</string>
+    <string name="demogr_license_scan_label">Driver\'s License Number</string>
     <string name="demogr_docs_license_number_label">Driver\'s License State</string>
     <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
     <string name="demogr_insurance_provider">Provider</string>
     <string name="demogr_insurance_plan">Plan</string>
-    <string name="demogr_insurance_number_label">Insurance card number</string>
+    <string name="demogr_insurance_number_label">Insurance Card Number</string>
     <string name="demogr_button_label">Next</string>
     <string name="demogr_tv_choose_label">Choose</string>
-    <string name="demogr_docs_tv_chose_company">Choose company first</string>
+    <string name="demogr_docs_tv_chose_company">Choose Company First</string>
     <string name="demogr_docs_rescan">Re-scan</string>
+    <string name="demogr_docs_add_card">Add Card</string>
+    <string name="demogr_docs_remove_card">Remove Card</string>
 
     <!-- Demographic Screens -->
 
@@ -108,7 +110,6 @@
 
     <string name="AddressHeadingTextView">Let\'s get you set up!</string>
     <string name="AddressSubHeadingTextView">First, tell us your address \u0026 contact information</string>
-
     <string name="PhoneNumberEditText">Phone Number</string>
     <string name="ZipCodeEditText">Zip Code</string>
     <string name="Address1EditText">Address 1</string>
@@ -122,14 +123,12 @@
 
     <string name="detailsHeadingTextView">Some details about you</string>
     <string name="detailsSubHeadingTextView">How about uploading your photo?</string>
-
     <string name="selectOrTakePhotoButton">SELECT OR TAKE PHOTO BUTTON</string>
     <string name="changeCurrentPhotoButton">CHANGE CURRENT PHOTO</string>
     <string name="raceLabel">Race</string>
     <string name="ethnicityLabel">Ethnicity</string>
     <string name="languageLabel">Preferred Language</string>
     <string name="chooseTextView">Choose</string>
-
     <string name="aDD_DEMOGRAPHIC_INFO_Button_Label">ADD DEMOGRAPHIC INFO</string>
     <string name="nO_HAVE_HEALTH_INSURANCE_Button_Label">I DON\'T HAVE HEALTH INSURANCE</string>
     <string name="health_Insurance_Information">Health Insurance Information</string>
@@ -138,7 +137,24 @@
     <string name="demographics_title">Demographic</string>
     <string name="next_Button">Next</string>
 
+    <!--Signin Screen-->
+    <string name="email_text">Email</string>
+    <string name="password_text">Password</string>
+    <string name="submit_button">SIGN IN</string>
+    <string name="signup_button">CREATE NEW ACCOUNT</string>
+    <string name="language_textview">Change language</string>
+    <string name="forgot_password_textview">Forgot password?</string>
 
+    <!--Signup Screen-->
+    <string name="caps">FIRST NAME</string>
+    <string name="firstname_text">First Name</string>
+    <string name="middlename_text">Middle Name (optional)</string>
+    <string name="lastname_text">Last Name</string>
+    <string name="new_email_text">Email</string>
+    <string name="new_password_text">Create Password</string>
+    <string name="repeat_password_text">Repeat Password</string>
+    <string name="signup_submit_button">SIGN UP</string>
+    <string name="account_exist_textview">Already have an account?</string>
 
     <!--MoreDetails Fragment-->
 
@@ -153,10 +169,8 @@
 
     <!--Appointments List Fragment-->
 
-
     <string name="apt_day_today">TODAY</string>
     <string name="apt_day_upcoming">UPCOMING</string>
-
     <string name="empty_phone_number_error_messae">Enter phone number</string>
     <string name="incorrect_phone_number_error_messae">Enter valid phone number</string>
     <string name="empty_zip_code_error_messae">Enter zip code</string>
@@ -169,6 +183,7 @@
 
     <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
     <string name="close">Close</string>
+    <string name="demogr_next">Next</string>
 
 
     <!--<Navigation Screen>-->
@@ -177,7 +192,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
 
-
+<!--<consent forms>-->
     <string name="description">This is description</string>
     <string name="consenttitle">Sign consent for medical care</string>
     <string name="content">A keyboard typically has characters engraved or printed on the keys and each press of a
