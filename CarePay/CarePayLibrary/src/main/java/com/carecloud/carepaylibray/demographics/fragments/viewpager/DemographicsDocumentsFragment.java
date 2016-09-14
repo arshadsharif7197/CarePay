@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,6 +120,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                     // if not added yet, hide the container
                     showInsuranceCard(insCardContainer3, false);
                 }
+                scrollToBottom();
             }
         });
         switchCompat.setChecked(false);
@@ -154,6 +156,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // hide add/remove buttons
         showAddCardButton(false);
         showRemoveCardButton(false);
+        enableRemoveCardButton(false);
 
         // disable next button
         enableNextButton(false);
@@ -206,7 +209,19 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
     @Override
     public void enableRemoveCardButton(boolean isEnabled) {
-        removeCardButton.setEnabled(isEnabled);
+        if(isEnabled) {
+            // enable if at least one extra card was added
+            if(isSecondCardAdded || isThirdCarAdded) {
+                removeCardButton.setEnabled(true);
+                removeCardButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.blue_cerulian));
+            } else {
+                removeCardButton.setEnabled(false);
+                removeCardButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.slateGray));
+            }
+        } else {
+            removeCardButton.setEnabled(false);
+            removeCardButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.slateGray));
+        }
     }
 
     @Override

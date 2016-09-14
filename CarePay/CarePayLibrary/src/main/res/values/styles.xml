@@ -154,7 +154,7 @@
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginStart">14dp</item>
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@drawable/button_scan_card</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
@@ -239,6 +239,7 @@
     <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
         <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
         <item name="android:layout_marginStart">0dp</item>
+        <item name="android:background">@drawable/button_scan_card</item>
     </style>
 
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">

@@ -108,5 +108,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         // invoke parent fragment to show add/remove buttons
         buttonsStatusCallback.showAddCardButton(true);
         buttonsStatusCallback.showRemoveCardButton(true);
+        buttonsStatusCallback.enableRemoveCardButton(true);
     }
 }
