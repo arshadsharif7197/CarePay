@@ -24,6 +24,7 @@
     <dimen name="respons_total_label_text_size">21sp</dimen>
     <dimen name="respons_total_text_size">53dp</dimen>
     <dimen name="respons_detail_label_text_size">17sp</dimen>
+    <dimen name="respons_detail_til_label_text_size">10sp</dimen>
     <dimen name="respons_detail_text_size">14sp</dimen>
     <dimen name="respons_button_text_size">15sp</dimen>
     <dimen name="respons_toolbar_title_text_size">20sp</dimen>
@@ -35,6 +36,7 @@
     <!-- Demographics Documents -->
     <dimen name="demographics_docs_button_text_size">13sp</dimen>
     <dimen name="demographics_docs_header_left_right_margin">17dp</dimen>
+    <dimen name="demographics_docs_header_top_margin">17dp</dimen>
     <dimen name="demographics_docs_section_margin_top">10dp</dimen>
     <dimen name="demographics_docs_image_button_container_height">60dp</dimen>
     <dimen name="demographics_docs_image_button_container_margin_top">30dp</dimen>
@@ -44,12 +46,32 @@
     <dimen name="demogr_docs_section_container_margin_top">30dp</dimen>
     <dimen name="demogr_docs_thumbnail_width">100dp</dimen>
     <dimen name="demogr_docs_thumbnail_height">60dp</dimen>
+
     <!-- Appointments-->
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="item_layout_height">85dp</dimen>
+    <dimen name="item_layout_height">82dp</dimen>
     <dimen name="layout_margin">10dp</dimen>
     <dimen name="textview_textsize">14sp</dimen>
-    <dimen name="textview_margin">5dp</dimen>
+    <dimen name="textview_margin">9dp</dimen>
     <dimen name="imageview_profile_ht_wdh">58dp</dimen>
+    <dimen name="demographicsAddMedInfoBtnBottomMargin">6dp</dimen>
+    <dimen name="list_apt_padding_right">17dp</dimen>
+    <dimen name="apt_imgview_ht">24dp</dimen>
+    <dimen name="apt_dl_margin_bottom">5dp</dimen>
+    <dimen name="apt_dl_header_ht">110dp</dimen>
+    <dimen name="apt_dl_text_ht">37dp</dimen>
+    <dimen name="apt_dl_text_big">20sp</dimen>
+    <dimen name="apt_dl_text_date">30sp</dimen>
+    <dimen name="apt_dl_margin">20dp</dimen>
+    <dimen name="apt_dialog_appoint_dail_margin">3dp</dimen>
+    <dimen name="apt_dl_btn_check_ht">48dp</dimen>
+    <dimen name="apt_dl_appt_date_margin">14dp</dimen>
+    <dimen name="apt_dl_appt_time_margin">10dp</dimen>
+    <dimen name="apt_dl_appt_shortname_margin">-30dp</dimen>
+    <dimen name="apt_dl_textview_size">15sp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
 </resources>
 

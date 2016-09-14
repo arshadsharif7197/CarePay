@@ -1,64 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
-<include layout="@layout/demographics_toolbar"/>
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <FrameLayout
+    <include layout="@layout/demographics_toolbar" />
+
+    <LinearLayout
         android:id="@+id/demogr_content_holder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="27dp"
         android:layout_weight="1"
-        android:layout_marginTop="27dp">
+        android:orientation="vertical">
 
-        <RelativeLayout android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/ll_for_vp"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/ll_for_vp"
-                android:layout_above="@+id/demographicsNextButton"
+            <com.viewpagerindicator.TabPageIndicator
+                android:id="@+id/indicator"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:background="@color/white" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:background="@color/white" />
 
-                <com.viewpagerindicator.TabPageIndicator
-                    android:id="@+id/indicator"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:layout_marginLeft="17dp"
-                    android:layout_marginRight="17dp"/>
+        </LinearLayout>
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/pager"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:layout_marginLeft="17dp"
-                    android:layout_marginRight="17dp"/>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/demographicsNextButton"
-                style="ResponsButtonStyle"
-                android:fontFamily="GothamRounded-Medium"
-                android:layout_height="51dp"
-                android:layout_width="match_parent"
-                android:text="@string/next_Button"
-                android:background="@color/bright_cerulean"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"/>
-        </RelativeLayout>
-    </FrameLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/demogr_keyboard_holder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
 

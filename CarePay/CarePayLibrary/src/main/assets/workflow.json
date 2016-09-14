@@ -30,7 +30,7 @@
           {
             "appointment_id": "1234",
             "physician": {
-              "name": "Dr. Dolittle",
+              "name": "Dr. Dolittle Borton",
               "type": "Family Physician"
             },
             "time": "09/09/16 3:45:17 PM UTC",
@@ -59,7 +59,20 @@
               "name": "Dr. Bell Thomson",
               "type": "Gynaec"
             },
-            "time": "09/13/16 5:12:28 PM UTC",
+            "time": "09/17/16 5:12:28 PM UTC",
+            "qr_code_to_scan_at_office": "image_data",
+            "actions": [
+              "cancel_appointment",
+              "appointment_check-in"
+            ]
+          },
+          {
+            "appointment_id": "1240",
+            "physician": {
+              "name": "Dr. Jon Thomson",
+              "type": "Gynaec"
+            },
+            "time": "09/19/16 5:12:28 PM UTC",
             "qr_code_to_scan_at_office": "image_data",
             "actions": [
               "cancel_appointment",

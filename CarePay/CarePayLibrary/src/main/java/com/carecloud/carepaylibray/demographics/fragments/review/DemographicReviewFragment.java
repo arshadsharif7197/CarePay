@@ -1,10 +1,14 @@
-package com.carecloud.carepaylibray.demographics.fragments.demographicReview;
+package com.carecloud.carepaylibray.demographics.fragments.review;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +20,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.carecloud.carepaylibray.utils.Utility;
 
 import java.util.Arrays;
 
@@ -43,6 +49,23 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
+
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
+        TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
+        Utility.setGothamRoundedMediumTypeface(getActivity(), title);
+        toolbar.setTitle("");
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              /*  Intent intent = new Intent(getContext(), SigninSignupActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                getActivity().finish();*/
+            }
+        });
 
         initialiseUIFields();
         raceDataArray = getResources().getStringArray(R.array.Race);

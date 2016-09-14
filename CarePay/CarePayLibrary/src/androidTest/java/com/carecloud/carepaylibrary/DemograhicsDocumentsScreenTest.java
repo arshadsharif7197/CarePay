@@ -4,7 +4,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsDocumentsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 
 import org.junit.Before;
 import org.junit.Rule;

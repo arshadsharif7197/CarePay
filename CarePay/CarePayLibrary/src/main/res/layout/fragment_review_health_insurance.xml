@@ -1,120 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginRight="17.0dp"
-    android:layout_marginLeft="17.0dp">
+    android:orientation="vertical">
 
+    <include layout="@layout/health_insurance_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="30dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="17.0dp"
+        android:layout_marginRight="17.0dp"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/ReviewInsuranceTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/health_Insurance_Information"
-            android:layout_gravity="center"/>
-        <TextView
-            android:id="@+id/reviewInsuranceSubTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/review_insurance_subHeading"
-            android:layout_gravity="center"/>
-        <LinearLayout
-            style="@style/DemographicsDocsImageButtonContainerStyle">
-
-            <ImageView
-                android:id="@+id/demogr_review_insurance_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icn_camera"/>
-
-            <Button
-                android:id="@+id/demogr_review_insurance_scan_insurance_btn"
-                style="@style/DemographicsDocsButtonStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="@string/demogr_docs_scan_label"/>
-
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/demogr_review_insurance_provider_label"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="@string/demogr_insurance_provider"
-                style="@style/DemographicsDocsLabelStyle"/>
-
-            <TextView
-                android:text="@string/demogr_tv_choose_label"
-                style="@style/DemographicsDocsClickableTextStyle"
-                android:id="@+id/demogr_review_docs_provider"
-                android:layout_width="wrap_content"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/demogr_review_insurance_plan_label"
-                android:layout_width="0dp"
-                android:text="@string/demogr_insurance_plan"
-                android:layout_weight="1"
-                style="@style/DemographicsDocsLabelStyle"/>
-
-            <TextView
-                android:text="@string/demogr_docs_tv_chose_company"
-                android:id="@+id/demogr_review_docs_plan"
-                android:textColor="@color/light_gray"
-                style="@style/DemographicsDocsClickableTextStyle"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="30dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/demogr_review_insurance_number_label"
-                style="@style/DemographicsDocsDocumentLabelStyle"
-                android:text="@string/demogr_insurance_number_label"/>
+                android:id="@+id/ReviewInsuranceTitle"
+                style="@style/DemographicsFragmentsHeadingStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/health_Insurance_Information" />
 
             <TextView
-                android:id="@+id/demogr_review_insurance_num"
-                style="@style/DemographicsDocsNumberStyle"
-                android:text="123245699"/>
+                android:id="@+id/reviewInsuranceSubTitle"
+                style="@style/DemographicsFragmentsSubHeadingStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/review_insurance_subHeading" />
+
+            <LinearLayout
+                style="@style/DemographicsDocsImageButtonContainerStyle"
+                android:layout_marginTop="36dp">
+
+                <ImageView
+                    android:id="@+id/demogr_review_insurance_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icn_camera" />
+
+                <Button
+                    android:id="@+id/demogr_review_insurance_scan_insurance_btn"
+                    style="@style/DemographicsDocsButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/demogr_docs_scan_label" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/demogr_review_insurance_provider_label"
+                    style="@style/DemographicsDocsLabelStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/demogr_insurance_provider" />
+
+                <TextView
+                    android:id="@+id/demogr_review_docs_provider"
+                    style="@style/DemographicsDocsClickableTextStyle"
+                    android:layout_width="wrap_content"
+                    android:text="@string/demogr_tv_choose_label" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/demogr_review_insurance_plan_label"
+                    style="@style/DemographicsDocsLabelStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/demogr_insurance_plan" />
+
+                <TextView
+                    android:id="@+id/demogr_review_docs_plan"
+                    style="@style/DemographicsDocsClickableTextStyle"
+                    android:text="@string/demogr_docs_tv_chose_company" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/demogr_review_insurance_number_label"
+                    style="@style/DemographicsDocsDocumentLabelStyle"
+                    android:text="@string/demogr_insurance_number_label" />
+
+                <TextView
+                    android:id="@+id/demogr_review_insurance_num"
+                    style="@style/DemographicsDocsNumberStyle"
+                    android:text="123245699" />
+            </LinearLayout>
+
         </LinearLayout>
 
-</LinearLayout>
-    <Button
-        android:id="@+id/buttonAddHealthInsuranceInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:text="@string/add_Health_InsuranceInfo"/>
+        <Button
+            android:id="@+id/buttonAddHealthInsuranceInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:background="@drawable/button_blue"
+            android:text="@string/add_Health_InsuranceInfo"
+            android:textColor="@color/white"
 
-    <Button
-        android:id="@+id/buttonNoHealthInsuranceInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/nO_HAVE_HEALTH_INSURANCE_Button_Label"/>
+            />
 
+        <Button
+            android:id="@+id/buttonNoHealthInsuranceInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/button_default_background"
+            android:text="@string/nO_HAVE_HEALTH_INSURANCE_Button_Label"
+            android:textColor="@color/bright_cerulean" />
 
+    </LinearLayout>
 </LinearLayout>

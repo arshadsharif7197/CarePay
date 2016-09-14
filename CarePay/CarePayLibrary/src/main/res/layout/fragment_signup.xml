@@ -30,6 +30,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/signupFirstNameTextView"
                     android:text="First Name"
                     android:textSize="17sp" />
 
@@ -255,7 +256,7 @@
         <Button
             android:id="@+id/signupButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="SIGN UP"
             android:background="@drawable/signin_button_background"
             android:textColor="@color/white"/>
