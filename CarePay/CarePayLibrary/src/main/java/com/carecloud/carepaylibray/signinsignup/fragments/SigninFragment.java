@@ -98,7 +98,6 @@ public class SigninFragment extends Fragment {
             }
         }));
 
-
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,7 +122,6 @@ public class SigninFragment extends Fragment {
                         .commit();
             }
         });
-
 
         changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
         forgotPasswordTextView = (TextView) view.findViewById(R.id.forgotPasswordTextView);

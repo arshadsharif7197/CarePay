@@ -252,9 +252,9 @@ public class SignupFragment extends Fragment {
                 String hint = getString(R.string.repeat_password_text);
                 String hintCaps = hint.toUpperCase();
                 if (b) {
-                    passwordInputLayout.setHint(hintCaps);
+                    passwordRepeatInputLayout.setHint(hintCaps);
                 } else {
-                    passwordInputLayout.setHint(hint);
+                    passwordRepeatInputLayout.setHint(hint);
                 }
             }
         });
