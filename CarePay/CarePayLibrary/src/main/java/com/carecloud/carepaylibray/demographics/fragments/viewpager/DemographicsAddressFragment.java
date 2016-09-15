@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
+import com.carecloud.carepaylibray.utils.StringFunctions;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
@@ -106,7 +107,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     phNoTextInputLayout.setHint(hintCaps);
                 } else {
-                    if(phoneNumberEditText.getText().toString().isEmpty()) {
+                    if(StringFunctions.isNullOrEmpty(phoneNumberEditText.getText().toString())) {
                         // change hint to lower
                         phNoTextInputLayout.setHint(hint);
 
@@ -124,7 +125,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     address1TextInputLayout.setHint(hintCaps);
                 } else {
-                    if(address1EditText.getText().toString().isEmpty()) {
+                    if(StringFunctions.isNullOrEmpty(address1EditText.getText().toString())) {
                         // change hint to lower
                         address1TextInputLayout.setHint(hint);
 
@@ -142,7 +143,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     address2TextInputLayout.setHint(hintCaps);
                 } else {
-                    if(address2EditText.getText().toString().isEmpty()) {
+                    if(StringFunctions.isNullOrEmpty(address2EditText.getText().toString())) {
                         // change hint to lower
                         address2TextInputLayout.setHint(hint);
 
@@ -160,10 +161,9 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     cityTextInputLayout.setHint(hintCaps);
                 } else {
-                    if(cityEditText.getText().toString().isEmpty()) {
+                    if(StringFunctions.isNullOrEmpty(cityEditText.getText().toString())) {
                         // change hint to lower
                         cityTextInputLayout.setHint(hint);
-
                     } else {
                         cityEditText.setHint(hint);
                     }
@@ -178,10 +178,9 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     stateTextInputLayout.setHint(hintCaps);
                 } else {
-                    if(autoCompleteTextView.getText().toString().isEmpty()) {
+                    if(StringFunctions.isNullOrEmpty(autoCompleteTextView.getText().toString())) {
                         // change hint to lower
                         stateTextInputLayout.setHint(hint);
-
                     } else {
                         autoCompleteTextView.setHint(hint);
                     }
@@ -196,7 +195,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     zipCodeTextInputLayout.setHint(hintCaps);
                 } else {
-                    if(zipCodeEditText.getText().toString().isEmpty()) {
+                    if(StringFunctions.isNullOrEmpty(zipCodeEditText.getText().toString())) {
                         // change hint to lower
                         zipCodeTextInputLayout.setHint(hint);
                     } else {

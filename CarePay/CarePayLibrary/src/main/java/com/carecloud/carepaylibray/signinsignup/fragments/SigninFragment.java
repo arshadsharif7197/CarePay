@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
+import com.carecloud.carepaylibray.utils.StringFunctions;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -39,8 +40,11 @@ public class SigninFragment extends Fragment {
     private TextView changeLanguageTextView, forgotPasswordTextView;
     private Button signinButton;
     private Button signupButton;
-
     private boolean isValidEmail, isValidPassword;
+    private Typeface hintFontFamily;
+    private Typeface editTextFontFamily;
+    private Typeface floatingTextFontfamily;
+    private Typeface buttonFontFamily;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,10 +67,10 @@ public class SigninFragment extends Fragment {
         signupButton = (Button) view.findViewById(R.id.signup_button);
 
         // TODO: 9/14/2016 replace with Utility.setTypeFace...
-        Typeface hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-        Typeface floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-        Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
+        hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
+        editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+        floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+        buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
 
         emailEditText.setTypeface(editTextFontFamily);
         passwordEditText.setTypeface(editTextFontFamily);
@@ -74,29 +78,6 @@ public class SigninFragment extends Fragment {
         passwordHint.setTypeface(hintFontFamily);
         signinButton.setTypeface(buttonFontFamily);
         signupButton.setTypeface(buttonFontFamily);
-
-        emailEditText.addTextChangedListener(
-                new TextWatcherModel(editTextFontFamily,
-                                     floatingTextFontfamily,
-                                     TextWatcherModel.InputType.TYPE_EMAIL,
-                                     emailEditText,
-                                     emailHint,
-                                     "Enter Valid Email",
-                                     false,
-                                     new TextWatcherModel.OnInputChangedListner() {
-                                         @Override
-                                         public void OnInputChangedListner(boolean isValid) {
-                                             isValidEmail = isValid;
-                                             checkForButtonEnable();
-                                         }
-                                     }));
-        passwordEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingTextFontfamily, TextWatcherModel.InputType.TYPE_PASSWORD, passwordEditText, passwordHint, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
-            @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidPassword = isValid;
-                checkForButtonEnable();
-            }
-        }));
 
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +119,43 @@ public class SigninFragment extends Fragment {
             }
         });
 
+        setTextListeners();
+
+
+        return view;
+    }
+
+    /**
+     * Set the focus change and selct text listeners for the edit texts
+     */
+    private void setTextListeners() {
+        emailEditText.addTextChangedListener(
+                new TextWatcherModel(editTextFontFamily,
+                                     floatingTextFontfamily,
+                                     TextWatcherModel.InputType.TYPE_EMAIL,
+                                     emailEditText,
+                                     emailHint,
+                                     "Enter Valid Email",
+                                     false,
+                                     new TextWatcherModel.OnInputChangedListner() {
+                                         @Override
+                                         public void OnInputChangedListner(boolean isValid) {
+                                             isValidEmail = isValid;
+                                             checkForButtonEnable();
+                                         }
+                                     }));
+        passwordEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily,
+                                                                     floatingTextFontfamily,
+                                                                     TextWatcherModel.InputType.TYPE_PASSWORD,
+                                                                     passwordEditText, passwordHint,
+                                                                     "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
+            @Override
+            public void OnInputChangedListner(boolean isValid) {
+                isValidPassword = isValid;
+                checkForButtonEnable();
+            }
+        }));
+
         // change hint to caps when floating hint
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -149,7 +167,7 @@ public class SigninFragment extends Fragment {
                     // change hint to all caps
                     emailHint.setHint(hintCaps);
                 } else {
-                    if(emailEditText.getText().toString().isEmpty()) {
+                    if(StringFunctions.isNullOrEmpty(emailEditText.getText().toString())) {
                         // change hint to lower
                         emailHint.setHint(hint);
 
@@ -164,6 +182,7 @@ public class SigninFragment extends Fragment {
         passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
+                Log.v(LOG_TAG, "password has focus");
                 passwordHint.setHintTextAppearance(R.style.HintStyleFloating);
                 String hint = getString(R.string.password_text);
                 String hintCaps = hint.toUpperCase();
@@ -171,7 +190,7 @@ public class SigninFragment extends Fragment {
                     // change hint to all caps
                     passwordHint.setHint(hintCaps);
                 } else {
-                    if(passwordEditText.getText().toString().isEmpty()) {
+                    if(StringFunctions.isNullOrEmpty(passwordEditText.getText().toString())) {
                         passwordHint.setHint(hint);
                     } else {
                         // change hint to lower
@@ -181,8 +200,6 @@ public class SigninFragment extends Fragment {
             }
         });
         passwordEditText.clearFocus();
-
-        return view;
     }
 
     private boolean isValidInfo() {

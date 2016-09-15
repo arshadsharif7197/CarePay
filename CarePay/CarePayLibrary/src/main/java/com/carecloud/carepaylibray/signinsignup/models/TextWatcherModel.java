@@ -82,7 +82,6 @@ public class TextWatcherModel implements TextWatcher {
         } else {
             updateStatus(true);
         }
-
     }
 
     @Override
