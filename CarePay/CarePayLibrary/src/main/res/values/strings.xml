@@ -210,4 +210,9 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="hint">Legal Representative Firstname</string>
     <string name="hint_last">Legal Representative Lastname</string>
 
+    <!-- Intake -->
+    <string name="intakeNextButtonLastText">Finish intake forms</string>
+    <string name="intakeNextButtonText">Next Question</string>
+
+
 </resources>
