@@ -42,11 +42,10 @@ public class SignatureActivity extends AppCompatActivity {
         setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity)this).setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
     }
 
     private void init() {
-
         //init data
         List<String> dataList = new ArrayList<>();
         dataList.add("Sign HIPAA Confidentiality Agreement");
@@ -103,13 +102,10 @@ public class SignatureActivity extends AppCompatActivity {
             public void onSigned() {
                 agreeBtn.setEnabled(true);
                 agreeBtn.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
-
-
             }
 
             @Override
             public void onClear() {
-
             }
         });
     }
