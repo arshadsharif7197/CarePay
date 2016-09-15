@@ -39,7 +39,6 @@
 
                 />
 
-
         </LinearLayout>
 
         <LinearLayout
@@ -93,9 +92,14 @@
                     android:text="@string/chooseTextView"
                     android:textColor="@color/bright_cerulean"
                     android:textSize="18sp" />
-
-
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_view_height"
+                android:background="@color/light_gray"
+                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
+                android:layout_marginTop="@dimen/demo_view_margin_top">
+            </View>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -123,6 +127,13 @@
                     android:textSize="18sp" />
 
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_view_height"
+                android:background="@color/light_gray"
+                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
+                android:layout_marginTop="@dimen/demo_view_margin_top">
+            </View>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -151,6 +162,13 @@
 
 
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_view_height"
+                android:background="@color/light_gray"
+                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
+                android:layout_marginTop="@dimen/demo_view_margin_top">
+            </View>
 
         </LinearLayout>
     </LinearLayout>
