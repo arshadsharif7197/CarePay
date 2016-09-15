@@ -59,6 +59,7 @@
                 android:id="@+id/changeCurrentPhotoButton"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:layout_marginLeft="10dp"
                 style="@style/DemographicsAddRemoveInsuranceStyle"
                 android:text="@string/selectOrTakePhotoButton" />
 
