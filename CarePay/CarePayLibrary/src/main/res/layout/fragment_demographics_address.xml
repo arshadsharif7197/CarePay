@@ -156,17 +156,14 @@
                     style="@style/DemographicsFragmentsTextInputLayoutStyle."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-<<<<<<< Updated upstream
                     android:hint="@string/ZipCodeEditText"
                     android:imeOptions="actionDone"
                     android:maxLength="10"/>
-=======
                     android:ems="10"
                     android:hint="@string/PhoneNumberEditText"
                     android:inputType="phone"
                     android:maxLength="20"
                     android:nextFocusDown="@+id/addressEditTextId" />
->>>>>>> Stashed changes
 
             </android.support.design.widget.TextInputLayout>
 

@@ -60,8 +60,8 @@
     <dimen name="demo_view_margin_top">8dp</dimen>
     <dimen name="demo_view_margin_bottom">2dp</dimen>
     <dimen name="demo_view_height">1dp</dimen>
-    <dimen name="demo_scorllview_margin_top">25</dimen>
-    <dimen name="demo_scorllview_margin_right_left">17</dimen>
+    <dimen name="demo_scorllview_margin_top">25dp</dimen>
+    <dimen name="demo_scorllview_margin_right_left">17dp</dimen>
 
     <!-- Appointments-->
     <dimen name="fab_margin">16dp</dimen>
