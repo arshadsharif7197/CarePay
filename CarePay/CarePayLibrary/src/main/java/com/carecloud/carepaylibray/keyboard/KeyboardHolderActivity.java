@@ -27,12 +27,16 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
      * @param fragClass The class of the fragment
      * @param addToBackStack Whether to add to back stack or not
      */
-    public abstract void replaceFragment(Class fragClass, boolean addToBackStack);
+    public void replaceFragment(Class fragClass, boolean addToBackStack) {
+
+    }
 
     /**
      * Creates and add the fragment with contents
      */
-    public abstract void placeInitContentFragment();
+    public void placeInitContentFragment() {
+
+    }
 
     /**
      * Provides the activity layout id

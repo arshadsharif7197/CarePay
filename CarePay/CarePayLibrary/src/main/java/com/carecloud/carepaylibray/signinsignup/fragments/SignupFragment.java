@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.Utility;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
@@ -194,7 +195,12 @@ public class SignupFragment extends Fragment {
                 if (b) {
                     firstNameInputLayout.setHint(hintCaps);
                 } else {
-                    firstNameInputLayout.setHint(hint);
+                    if(StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
+                        // change hint to lower
+                        firstNameInputLayout.setHint(hint);
+                    } else {
+                        firstNameText.setHint(hint);
+                    }
                 }
             }
         });
@@ -206,7 +212,12 @@ public class SignupFragment extends Fragment {
                 if (b) {
                     middleNameInputLayout.setHint(hintCaps);
                 } else {
-                    middleNameInputLayout.setHint(hint);
+                    if(StringUtil.isNullOrEmpty(middleNameText.getText().toString())) {
+                        // change hint to lower
+                        middleNameInputLayout.setHint(hint);
+                    } else {
+                        middleNameText.setHint(hint);
+                    }
                 }
             }
         });
@@ -218,7 +229,12 @@ public class SignupFragment extends Fragment {
                 if (b) {
                     lastNameInputLayout.setHint(hintCaps);
                 } else {
-                    lastNameInputLayout.setHint(hint);
+                    if(StringUtil.isNullOrEmpty(lastNameText.getText().toString())) {
+                        // change hint to lower
+                        lastNameInputLayout.setHint(hint);
+                    } else {
+                        lastNameText.setHint(hint);
+                    }
                 }
             }
         });
@@ -230,7 +246,12 @@ public class SignupFragment extends Fragment {
                 if (b) {
                     emailInputLayout.setHint(hintCaps);
                 } else {
-                    emailInputLayout.setHint(hint);
+                    if(StringUtil.isNullOrEmpty(emailText.getText().toString())) {
+                        // change hint to lower
+                        emailInputLayout.setHint(hint);
+                    } else {
+                        emailText.setHint(hint);
+                    }
                 }
             }
         });
@@ -242,7 +263,12 @@ public class SignupFragment extends Fragment {
                 if (b) {
                     passwordInputLayout.setHint(hintCaps);
                 } else {
-                    passwordInputLayout.setHint(hint);
+                    if(StringUtil.isNullOrEmpty(passwordText.getText().toString())) {
+                        // change hint to lower
+                        passwordInputLayout.setHint(hint);
+                    } else {
+                        passwordText.setHint(hint);
+                    }
                 }
             }
         });
@@ -254,7 +280,12 @@ public class SignupFragment extends Fragment {
                 if (b) {
                     passwordRepeatInputLayout.setHint(hintCaps);
                 } else {
-                    passwordRepeatInputLayout.setHint(hint);
+                    if(StringUtil.isNullOrEmpty(repeatPasswordText.getText().toString())) {
+                        // change hint to lower
+                        passwordRepeatInputLayout.setHint(hint);
+                    } else {
+                        repeatPasswordText.setHint(hint);
+                    }
                 }
             }
         });

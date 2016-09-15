@@ -22,15 +22,17 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
         <activity android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReview"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+
         <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity" />
 
         <activity android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
-        <activity android:name="com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity"
+
+        <activity
+            android:name="com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
 
@@ -41,8 +43,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
         </activity>
+
         <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
             android:theme="@style/NavigationTheme"/>
+
+        <activity android:name="com.carecloud.carepaylibray.intake.InTakeActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
     </application>
 
 </manifest>
