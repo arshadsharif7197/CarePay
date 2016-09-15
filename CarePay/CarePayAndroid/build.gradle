@@ -22,4 +22,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayLibrary')
+    testCompile 'junit:junit:4.12'
+
 }

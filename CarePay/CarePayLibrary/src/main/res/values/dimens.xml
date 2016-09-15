@@ -56,6 +56,13 @@
     <dimen name="demogr_docs_thumbnail_width">100dp</dimen>
     <dimen name="demogr_docs_thumbnail_height">60dp</dimen>
 
+<!--    <Demographics Address>-->
+    <dimen name="demo_view_margin_top">8dp</dimen>
+    <dimen name="demo_view_margin_bottom">2dp</dimen>
+    <dimen name="demo_view_height">1dp</dimen>
+    <dimen name="demo_scorllview_margin_top">25dp</dimen>
+    <dimen name="demo_scorllview_margin_right_left">17dp</dimen>
+
     <!-- Appointments-->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="item_layout_height">82dp</dimen>
@@ -97,5 +104,18 @@
     <dimen name="btn_width">31dp</dimen>
     <dimen name="sigtxt_hgt">60dp</dimen>
     <dimen name="rounded">8dp</dimen>
+
+    <!-- InTake -->
+    <dimen name="intakeDotPadding">8dp</dimen>
+    <dimen name="intakeDottedProgressHeight">30dp</dimen>
+    <dimen name="intakeDotWidth">4dp</dimen>
+    <dimen name="intakeDotHeight">4dp</dimen>
+    <dimen name="intakeNextButtonContainerHeight">74dp</dimen>
+    <dimen name="intakeTitleTopMargin">42dp</dimen>
+    <dimen name="intakeQuestionStartEndMargin">15dp</dimen>
+    <dimen name="intakeTitleTextSize" type="dimen" format="float">21.0sp</dimen>
+    <dimen name="intakeCaptionTextSize">13sp</dimen>
+    <dimen name="intakeCaptionLeftRightMargin">40dp</dimen>
+
 </resources>
 
