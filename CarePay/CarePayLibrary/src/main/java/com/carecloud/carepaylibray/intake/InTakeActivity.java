@@ -128,6 +128,8 @@ public class InTakeActivity extends KeyboardHolderActivity {
                     tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_gray));
                 }
                 intakeCurrentPageIndex = position;
+                // update the title
+                updateTitle();
             }
 
             @Override
@@ -139,6 +141,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
         tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_blue));
         setCurrentItem(intakeCurrentPageIndex);
+        updateTitle();
     }
 
     /**
@@ -147,10 +150,17 @@ public class InTakeActivity extends KeyboardHolderActivity {
      * @param index The index
      */
     public void setCurrentItem(int index) {
-        formsToolbarTitleTv.setText(String.format(Locale.getDefault(),
-                                                  "Intake Form %d of %d", index + 1,
-                                                  formsViewPager.getAdapter().getCount()));
         formsViewPager.setCurrentItem(index);
+    }
+
+    /**
+     * Update the title according to the index of the current form
+     */
+    private void updateTitle() {
+        // set the title to show the first screen
+        formsToolbarTitleTv.setText(String.format(Locale.getDefault(),
+                                                  "Intake Form %d of %d", intakeCurrentPageIndex + 1,
+                                                  formsViewPager.getAdapter().getCount()));
     }
 
     /**
