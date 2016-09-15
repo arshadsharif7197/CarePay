@@ -323,5 +323,77 @@
     <style name="HintStyle">
         <item name="android:textAllCaps">true</item>
         <item name="android:textColorHint">@color/slateGray</item>
+        <item name="android:textColor">@color/slateGray</item>
     </style>
+
+    <style name="HintStyleFloating">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColorHint">@color/darkblue</item>
+        <item name="android:textColor">@color/darkblue</item>
+    </style>
+
+    <!-- InTake -->
+    <style name="InTakeNextButtonStyle" parent="DemographicsNextButtonStyle">
+        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+    <style name="InTakeDotStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/circle_indicator_gray</item>
+    </style>
+
+    <style name="InTakeDottedProgressStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/intakeDottedProgressHeight</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="InTakeNextButtonContainerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/intakeNextButtonContainerHeight</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/gray</item>
+    </style>
+
+    <style name="InTakeFragmentTitleStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/intakeTitleTextSize</item>
+        <item name="android:layout_marginTop">@dimen/intakeTitleTopMargin</item>
+    </style>
+
+    <style name="InTakeFragmentCaptionStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">@dimen/intakeCaptionTextSize</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:state_multiline">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginStart">@dimen/intakeCaptionLeftRightMargin</item>
+        <item name="android:layout_marginEnd">@dimen/intakeCaptionLeftRightMargin</item>
+    </style>
+
+    <style name="InTakeQuestionsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginStart">@dimen/intakeQuestionStartEndMargin</item>
+        <item name="android:layout_marginEnd">@dimen/intakeQuestionStartEndMargin</item>
+    </style>
+
+    <style name="CustomToolbarTextStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

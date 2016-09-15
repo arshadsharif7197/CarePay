@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.intake.InTakeActivity;
 
 public class AndroidMainActivity extends AppCompatActivity {
 
@@ -14,6 +15,7 @@ public class AndroidMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_android);
         Intent intent = new Intent(this, LibraryMainActivity.class);
+//        Intent intent = new Intent(this, InTakeActivity.class);
         startActivity(intent);
         finish();
     }
