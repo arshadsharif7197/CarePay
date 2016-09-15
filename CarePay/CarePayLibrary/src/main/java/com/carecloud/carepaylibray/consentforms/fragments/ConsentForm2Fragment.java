@@ -7,11 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,15 +28,13 @@ import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
-
 
 public class ConsentForm2Fragment extends Fragment {
 
-    private TextView titleTv, descriptionTv, contentTv, content2Tv, dateTv;
+    private TextView titleTextView, descriptionTextView, contentTextView, content2Tv, dateTv;
     private Button signButton;
     private IFragmentCallback fragmentCallback;
-    private EditText minorFirstNameET, minorLastNameET, dobET, genderET;
+    private EditText minorFirstNameEditText, minorLastNameEditText, dobEditText, genderEditText;
 
     @Nullable
     @Override
@@ -49,18 +43,16 @@ public class ConsentForm2Fragment extends Fragment {
         View view = inflater.inflate(R.layout.consent2_form_layout, container, false);
 
 
-
-        titleTv = (TextView) view.findViewById(R.id.titleTv);
-        descriptionTv = (TextView) view.findViewById(R.id.descriptionTv);
-        contentTv = (TextView) view.findViewById(R.id.contentTv);
+        titleTextView = (TextView) view.findViewById(R.id.titleTv);
+        descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
+        contentTextView = (TextView) view.findViewById(R.id.contentTv);
         content2Tv = (TextView) view.findViewById(R.id.content2Tv);
         dateTv = (TextView) view.findViewById(R.id.dateTv);
         signButton = (Button) view.findViewById(R.id.signButton);
-        minorFirstNameET = (EditText) view.findViewById(R.id.minorFirstNameET);
-        minorLastNameET = (EditText) view.findViewById(R.id.minorLastNameET);
-        dobET = (EditText) view.findViewById(R.id.dobET);
-        genderET = (EditText) view.findViewById(R.id.genderET);
-
+        minorFirstNameEditText = (EditText) view.findViewById(R.id.minorFirstNameET);
+        minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
+        dobEditText = (EditText) view.findViewById(R.id.dobET);
+        genderEditText = (EditText) view.findViewById(R.id.genderET);
         return view;
     }
 
@@ -90,27 +82,27 @@ public class ConsentForm2Fragment extends Fragment {
             signButton.setOnClickListener(clickListener);
         }
 
-        FormData formData = (FormData)getArguments().getSerializable(CarePayConstants.FORM_DATA);
+        FormData formData = (FormData) getArguments().getSerializable(CarePayConstants.FORM_DATA);
 
-        titleTv.setText(formData.getTitle());
-        descriptionTv.setText(formData.getDescription());
-        contentTv.setText(formData.getContent());
+        titleTextView.setText(formData.getTitle());
+        descriptionTextView.setText(formData.getDescription());
+        contentTextView.setText(formData.getContent());
         content2Tv.setText(formData.getContent2());
         dateTv.setText(formData.getDate());
 
-        genderET.setOnClickListener(new View.OnClickListener() {
+        genderEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showAlertDialogWithListview(new String[]{"Male", "Female"}, "Select Gender");
             }
         });
 
-        dobET.setOnClickListener(new View.OnClickListener() {
+        dobEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
                 new DatePickerDialog(getActivity(), myDateListener, cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)).show();
+                        cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
     }
@@ -118,7 +110,7 @@ public class ConsentForm2Fragment extends Fragment {
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            dobET.setText(new StringBuilder().append(i1).append("/").append(i2).append("/")
+            dobEditText.setText(new StringBuilder().append(i1).append("/").append(i2).append("/")
                     .append(i));
         }
     };
@@ -147,10 +139,10 @@ public class ConsentForm2Fragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (position) {
                     case 0:
-                        genderET.setText("Male");
+                        genderEditText.setText("Male");
                         break;
                     case 1:
-                        genderET.setText("Feale");
+                        genderEditText.setText("Feale");
                         break;
 
                 }

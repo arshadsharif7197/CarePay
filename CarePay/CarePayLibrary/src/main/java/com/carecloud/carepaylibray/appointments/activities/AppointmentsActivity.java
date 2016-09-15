@@ -34,7 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
 
@@ -71,6 +71,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
                 AppointmentsListFragment.class.getSimpleName()).commit();
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -127,8 +128,9 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public  void showAppointmentsDialog(AppointmentModel appointmentModel){
-        if(appointmentModel !=null) {
+
+    public void showAppointmentsDialog(AppointmentModel appointmentModel) {
+        if (appointmentModel != null) {
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     this);
             LayoutInflater inflater = (LayoutInflater) this
@@ -141,12 +143,12 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.show();
 
-            TextView dateTextView =  ((TextView) view.findViewById(R.id.apptDateTextView));
+            TextView dateTextView = ((TextView) view.findViewById(R.id.apptDateTextView));
             TextView timeTextView = ((TextView) view.findViewById(R.id.apptTimeTextView));
-            TextView shortNameTextView =  ((TextView) view.findViewById(R.id.apptShortnameTextView));
-            TextView nameTextView =   ((TextView) view.findViewById(R.id.apptNameTextView));
+            TextView shortNameTextView = ((TextView) view.findViewById(R.id.apptShortnameTextView));
+            TextView nameTextView = ((TextView) view.findViewById(R.id.apptNameTextView));
             TextView typeTextView = ((TextView) view.findViewById(R.id.apptTypeTextView));
-            TextView addressTextView =  ((TextView) view.findViewById(R.id.apptAddressTextView));
+            TextView addressTextView = ((TextView) view.findViewById(R.id.apptAddressTextView));
 
             dateTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[0]);
             timeTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[1]);
@@ -155,12 +157,12 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             typeTextView.setText(appointmentModel.getAppointmentType());
             //addressTextView.setText(appointmentModel.getA());
 
-            Utility.setTypefaceFromAssets(this,"fonts/proximanova_regular.otf",dateTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/gotham_rounded_book.otf",timeTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/proximanova_regular.otf",shortNameTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/proximanova_semibold.otf",nameTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/proximanova_regular.otf",typeTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/gotham_rounded_medium.otf",addressTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", dateTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/gotham_rounded_book.otf", timeTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", shortNameTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/proximanova_semibold.otf", nameTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", typeTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", addressTextView);
 
             ((ImageView) view.findViewById(R.id.dialogAppointHeaderImageView)).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -184,23 +186,22 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void onClick(View view) {
 
-                    Intent demographicReviewIntent= new Intent(getApplicationContext(), DemographicReview.class);
+                    Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
                     startActivity(demographicReviewIntent);
-                    Toast.makeText(AppointmentsActivity.this, "Clicked on button icon,", Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
 
-    private String[] onDateParseToString(String dateStr){
+    private String[] onDateParseToString(String dateStr) {
         String stringDate[] = dateStr.split(" ");
         String formateDate[] = new String[2];
-        try{
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
             Date appointdate = sdf.parse(stringDate[0]);
-            formateDate[0] = (String)android.text.format.DateFormat.format("MMMM", appointdate)+" "+(String)android.text.format.DateFormat.format("dd", appointdate);
-            formateDate[1] = stringDate[1]+" "+stringDate[2];
-        }catch(Exception ex){
+            formateDate[0] = (String) android.text.format.DateFormat.format("MMMM", appointdate) + " " + (String) android.text.format.DateFormat.format("dd", appointdate);
+            formateDate[1] = stringDate[1] + " " + stringDate[2];
+        } catch (Exception ex) {
 
         }
         return formateDate;
