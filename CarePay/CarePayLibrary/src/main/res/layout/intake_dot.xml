@@ -3,4 +3,5 @@
 <ImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/intakeDot"
-    style="@style/InTakeDotStyle"/>
+    style="@style/InTakeDotStyle"
+    android:paddingRight="@dimen/intakeDotPadding"/>

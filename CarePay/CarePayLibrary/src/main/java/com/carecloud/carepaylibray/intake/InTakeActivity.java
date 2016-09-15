@@ -73,7 +73,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         formsToolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(formsToolbar);
 
-        // set the dotted progress
+        // set the dotted tab
         LinearLayout dottedTabLl = (LinearLayout) findViewById(R.id.intakeDottedTab);
         intakeDotsImageView = createDotsImageViews(forms.size());
         for (ImageView dotView : intakeDotsImageView) {
@@ -122,10 +122,10 @@ public class InTakeActivity extends KeyboardHolderActivity {
                 // if scrolled next, just enable the next tab dot
                 if(position > intakeCurrentPageIndex) {
                     ImageView tabDot = intakeDotsImageView[position];
-                    tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.intake_dot_on));
+                    tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_blue));
                 } else if(position < intakeCurrentPageIndex){ // scrolled to prev
                     ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
-                    tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.intake_dot_off));
+                    tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_gray));
                 }
                 intakeCurrentPageIndex = position;
             }
@@ -137,7 +137,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         intakeCurrentPageIndex = 0;
         // enable first tab dot
         ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
-        tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.intake_dot_on));
+        tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_blue));
         setCurrentItem(intakeCurrentPageIndex);
     }
 
@@ -179,7 +179,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         }
         setCurrentItem(intakeCurrentPageIndex);
         ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
-        tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.intake_dot_on));
+        tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_blue));
 
     }
 
@@ -193,7 +193,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         } else {
             // disable the previous dot
             ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
-            tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.intake_dot_off));
+            tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_gray));
 
             // just get back to HomeActivity for now
             --intakeCurrentPageIndex;
