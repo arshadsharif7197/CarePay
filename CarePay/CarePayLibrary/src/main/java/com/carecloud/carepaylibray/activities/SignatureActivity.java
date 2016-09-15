@@ -34,7 +34,7 @@ public class SignatureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
 
-        init();
+        initViews();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
@@ -45,8 +45,8 @@ public class SignatureActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    private void init() {
-        //init data
+    private void initViews() {
+        //initViews data
         List<String> dataList = new ArrayList<>();
         dataList.add("Sign HIPAA Confidentiality Agreement");
         dataList.add("PATIENT SIGNATURE");
