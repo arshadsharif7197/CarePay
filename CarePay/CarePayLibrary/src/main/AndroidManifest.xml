@@ -38,10 +38,11 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.payment.PaymentActivity"
-            android:parentActivityName="com.carecloud.carepaylibray.homescreen.HomeScreenActivity">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:parentActivityName="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
+                android:value="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"/>
         </activity>
 
         <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"

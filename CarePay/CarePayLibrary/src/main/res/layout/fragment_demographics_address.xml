@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/Address2EditText"
-                    android:nextFocusDown="@+id/cityId"
+                    android:nextFocusForward="@+id/zipCodeId"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
@@ -91,10 +91,9 @@
                     style="@style/DemographicsFragmentsTextInputLayoutStyle."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits="1234567890-"
                     android:hint="@string/ZipCodeEditText"
-                    android:imeOptions="actionDone"
-                    android:maxLength="10"
+                    android:nextFocusForward="@+id/cityId"
+                    android:maxLength="6"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -134,12 +133,13 @@
                     app:errorTextAppearance="@style/errorTextAppearance">
 
                     <AutoCompleteTextView
+                        android:singleLine="true"
                         android:id="@+id/autoTextCompleteStates"
                         android:layout_width="match_parent"
+                        android:nextFocusForward="@+id/phNoTextInputLayout"
                         android:layout_height="match_parent"
-                        android:hint="@string/StateEditText"
-                        android:nextFocusDown="@+id/zipCodeId"
-                        android:singleLine="true" />
+                        android:imeOptions="actionNext"
+                        android:hint="@string/StateEditText"/>
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -156,14 +156,10 @@
                     style="@style/DemographicsFragmentsTextInputLayoutStyle."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/ZipCodeEditText"
-                    android:imeOptions="actionDone"
-                    android:maxLength="10"/>
-                    android:ems="10"
                     android:hint="@string/PhoneNumberEditText"
+                    android:imeOptions="actionDone"
                     android:inputType="phone"
-                    android:maxLength="20"
-                    android:nextFocusDown="@+id/addressEditTextId" />
+                    android:maxLength="10"/>
 
             </android.support.design.widget.TextInputLayout>
 
