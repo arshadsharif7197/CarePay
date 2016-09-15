@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.intake.InTakeActivity;
+import com.carecloud.carepaylibray.payment.PaymentActivity;
 
 public class AndroidMainActivity extends AppCompatActivity {
 
@@ -16,6 +17,7 @@ public class AndroidMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_android);
         Intent intent = new Intent(this, LibraryMainActivity.class);
 //        Intent intent = new Intent(this, InTakeActivity.class);
+//        Intent intent = new Intent(this, PaymentActivity.class);
         startActivity(intent);
         finish();
     }
