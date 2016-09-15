@@ -55,7 +55,7 @@ public class TextWatcherModel implements TextWatcher {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) {
-                        checkTypeFace();
+//                        checkTypeFace();
                         doValidation();
                     }
                     return false;
@@ -76,7 +76,7 @@ public class TextWatcherModel implements TextWatcher {
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        checkTypeFace();
+//        checkTypeFace();
         if (!isOptional) {
             doValidation();
         } else {

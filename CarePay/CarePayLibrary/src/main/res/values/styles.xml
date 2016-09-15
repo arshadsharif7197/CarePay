@@ -330,11 +330,17 @@
     <style name="HintStyle">
         <item name="android:textAllCaps">true</item>
         <item name="android:textColorHint">@color/slateGray</item>
+        <item name="android:textColor">@color/slateGray</item>
     </style>
 
+    <style name="HintStyleFloating">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColorHint">@color/darkblue</item>
+        <item name="android:textColor">@color/darkblue</item>
+    </style>
 
     <!-- InTake -->
-    <style name="InTakeNextButtonStyle" parent="ResponsButtonStyle">
+    <style name="InTakeNextButtonStyle" parent="DemographicsNextButtonStyle">
         <item name="android:background">@color/blue_cerulian</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_marginBottom">0dp</item>

@@ -142,14 +142,20 @@ public class SigninFragment extends Fragment {
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
+                emailHint.setHintTextAppearance(R.style.HintStyleFloating);
                 String hint = getString(R.string.email_text);
                 String hintCaps = hint.toUpperCase();
                 if (hasFocus) {
                     // change hint to all caps
                     emailHint.setHint(hintCaps);
                 } else {
-                    // change hint to lower
-                    emailHint.setHint(hint);
+                    if(emailEditText.getText().toString().isEmpty()) {
+                        // change hint to lower
+                        emailHint.setHint(hint);
+
+                    } else {
+                        emailEditText.setHint(hint);
+                    }
                 }
             }
         });
@@ -158,14 +164,19 @@ public class SigninFragment extends Fragment {
         passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
+                passwordHint.setHintTextAppearance(R.style.HintStyleFloating);
                 String hint = getString(R.string.password_text);
                 String hintCaps = hint.toUpperCase();
                 if (hasFocus) {
                     // change hint to all caps
                     passwordHint.setHint(hintCaps);
                 } else {
-                    // change hint to lower
-                    passwordHint.setHint(hint);
+                    if(passwordEditText.getText().toString().isEmpty()) {
+                        passwordHint.setHint(hint);
+                    } else {
+                        // change hint to lower
+                        passwordEditText.setHint(hintCaps);
+                    }
                 }
             }
         });

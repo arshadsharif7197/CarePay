@@ -106,7 +106,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     phNoTextInputLayout.setHint(hintCaps);
                 } else {
-                    phNoTextInputLayout.setHint(hint);
+                    if(phoneNumberEditText.getText().toString().isEmpty()) {
+                        // change hint to lower
+                        phNoTextInputLayout.setHint(hint);
+
+                    } else {
+                        phoneNumberEditText.setHint(hint);
+                    }
                 }
             }
         });
@@ -118,7 +124,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     address1TextInputLayout.setHint(hintCaps);
                 } else {
-                    address1TextInputLayout.setHint(hint);
+                    if(address1EditText.getText().toString().isEmpty()) {
+                        // change hint to lower
+                        address1TextInputLayout.setHint(hint);
+
+                    } else {
+                        address1EditText.setHint(hint);
+                    }
                 }
             }
         });
@@ -130,7 +142,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     address2TextInputLayout.setHint(hintCaps);
                 } else {
-                    address2TextInputLayout.setHint(hint);
+                    if(address2EditText.getText().toString().isEmpty()) {
+                        // change hint to lower
+                        address2TextInputLayout.setHint(hint);
+
+                    } else {
+                        address2EditText.setHint(hint);
+                    }
                 }
             }
         });
@@ -142,7 +160,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     cityTextInputLayout.setHint(hintCaps);
                 } else {
-                    cityTextInputLayout.setHint(hint);
+                    if(cityEditText.getText().toString().isEmpty()) {
+                        // change hint to lower
+                        cityTextInputLayout.setHint(hint);
+
+                    } else {
+                        cityEditText.setHint(hint);
+                    }
                 }
             }
         });
@@ -154,7 +178,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     stateTextInputLayout.setHint(hintCaps);
                 } else {
-                    stateTextInputLayout.setHint(hint);
+                    if(autoCompleteTextView.getText().toString().isEmpty()) {
+                        // change hint to lower
+                        stateTextInputLayout.setHint(hint);
+
+                    } else {
+                        autoCompleteTextView.setHint(hint);
+                    }
                 }
             }
         });
@@ -166,7 +196,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
                 if(b) {
                     zipCodeTextInputLayout.setHint(hintCaps);
                 } else {
-                    zipCodeTextInputLayout.setHint(hint);
+                    if(zipCodeEditText.getText().toString().isEmpty()) {
+                        // change hint to lower
+                        zipCodeTextInputLayout.setHint(hint);
+                    } else {
+                        zipCodeEditText.setHint(hint);
+                    }
                 }
             }
         });
@@ -178,7 +213,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
         address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         cityEditText = (EditText) view.findViewById(R.id.cityId);
-
 
         phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
