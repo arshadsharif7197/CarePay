@@ -22,6 +22,7 @@ public class AndroidMainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, PaymentActivity.class);
 //        Intent intent = new Intent(this, AppointmentsActivity.class);
 //        Intent intent = new Intent(this, ConsentActivity.class);
+//        Intent intent = new Intent(this, DemographicsActivity.class);
         startActivity(intent);
         finish();
     }
