@@ -30,7 +30,7 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTy
 /**
  * Created by lsoco_user on 9/2/2016.
  */
-public class DemographicsAddressFragment extends GenericEditsFragment  {
+public class DemographicsAddressFragment extends GenericEditsFragment {
 
     View view;
     private TextInputLayout phNoTextInputLayout,
@@ -90,7 +90,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
 
         setTypefaces(view);
         setFocusChangeListeners();
-
         return view;
     }
 
@@ -103,7 +102,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
             public void onFocusChange(View view, boolean b) {
                 String hint = getString(R.string.PhoneNumberEditText);
                 String hintCaps = hint.toUpperCase();
-                if(b) {
+                if (b) {
                     phNoTextInputLayout.setHint(hintCaps);
                 } else {
                     phNoTextInputLayout.setHint(hint);
@@ -115,7 +114,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
             public void onFocusChange(View view, boolean b) {
                 String hint = getString(R.string.Address1EditText);
                 String hintCaps = hint.toUpperCase();
-                if(b) {
+                if (b) {
                     address1TextInputLayout.setHint(hintCaps);
                 } else {
                     address1TextInputLayout.setHint(hint);
@@ -127,7 +126,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
             public void onFocusChange(View view, boolean b) {
                 String hint = getString(R.string.Address2EditText);
                 String hintCaps = hint.toUpperCase();
-                if(b) {
+                if (b) {
                     address2TextInputLayout.setHint(hintCaps);
                 } else {
                     address2TextInputLayout.setHint(hint);
@@ -139,7 +138,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
             public void onFocusChange(View view, boolean b) {
                 String hint = getString(R.string.CityEditText);
                 String hintCaps = hint.toUpperCase();
-                if(b) {
+                if (b) {
                     cityTextInputLayout.setHint(hintCaps);
                 } else {
                     cityTextInputLayout.setHint(hint);
@@ -151,7 +150,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
             public void onFocusChange(View view, boolean b) {
                 String hint = getString(R.string.StateEditText);
                 String hintCaps = hint.toUpperCase();
-                if(b) {
+                if (b) {
                     stateTextInputLayout.setHint(hintCaps);
                 } else {
                     stateTextInputLayout.setHint(hint);
@@ -163,7 +162,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
             public void onFocusChange(View view, boolean b) {
                 String hint = getString(R.string.ZipCodeEditText);
                 String hintCaps = hint.toUpperCase();
-                if(b) {
+                if (b) {
                     zipCodeTextInputLayout.setHint(hintCaps);
                 } else {
                     zipCodeTextInputLayout.setHint(hint);
@@ -295,7 +294,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment  {
         setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.cityId));
         setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.autoTextCompleteStates));
 
-        setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.demographicsNextButton));
+        setGothamRoundedMediumTypeface(getActivity(), (Button) view.findViewById(R.id.demographicsNextButton));
 
     }
 }
