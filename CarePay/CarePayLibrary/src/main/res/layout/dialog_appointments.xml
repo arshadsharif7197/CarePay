@@ -33,8 +33,8 @@
                 android:id="@+id/apptDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_text_ht"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
+                android:gravity="center_horizontal"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/apt_dl_text_date" />
 
@@ -48,28 +48,29 @@
                 android:textSize="@dimen/apt_dl_textview_size" />
 
         </LinearLayout>
-        <android.support.v7.widget.CardView
+
+        <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/apptUserPicCardView"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="@dimen/apt_dl_image_ht_wdh"
             android:layout_height="@dimen/apt_dl_image_ht_wdh"
-            android:elevation="@dimen/apt_dl_image_elevation"
-            app:cardCornerRadius="@dimen/apt_dl_image_radius"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/apt_dl_appt_shortname_margin"
+            android:elevation="@dimen/apt_dl_image_elevation"
             android:innerRadius="@dimen/apt_dl_zero_ht_wdh"
             android:shape="ring"
+            android:thicknessRatio="1.9"
             android:visibility="gone"
-            android:thicknessRatio="1.9">
+            app:cardCornerRadius="@dimen/apt_dl_image_radius">
+
             <ImageView
                 android:id="@+id/apptUserPicImageView"
-                android:layout_height="@dimen/apt_dl_image_ht_wdh"
                 android:layout_width="match_parent"
-                android:src="@drawable/icn_signup_step_2_user_on"
+                android:layout_height="@dimen/apt_dl_image_ht_wdh"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
-            </ImageView>
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icn_signup_step_2_user_on"></ImageView>
         </android.support.v7.widget.CardView>
+
         <TextView
             android:id="@+id/apptShortnameTextView"
             android:layout_width="wrap_content"
@@ -78,17 +79,17 @@
             android:background="@drawable/round_tv"
             android:gravity="center_vertical|center_horizontal"
             android:textColor="@color/white"
-            android:visibility="visible"
+            android:textSize="@dimen/apt_dl_text_big"
             android:textStyle="bold"
-            android:textSize="@dimen/apt_dl_text_big" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/apt_dl_margin"
             android:layout_marginTop="@dimen/apt_dl_appt_time_margin"
+            android:orientation="vertical"
             android:paddingBottom="@dimen/apt_dl_margin"
+            android:paddingLeft="@dimen/apt_dl_margin"
             android:paddingRight="@dimen/apt_dl_margin">
 
             <TextView
@@ -96,19 +97,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textSize="@dimen/textview_default_textsize"
                 android:textColor="@color/valuetext_default_textcolor"
-                 />
+                android:textSize="@dimen/textview_default_textsize" />
 
             <TextView
                 android:id="@+id/apptTypeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
-                android:textSize="@dimen/textview_textsize"
+                android:gravity="center_horizontal"
                 android:textColor="@color/lightSlateGray"
-                 />
+                android:textSize="@dimen/textview_textsize" />
 
             <View
                 android:layout_width="match_parent"
@@ -129,29 +128,29 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.7"
                     android:ellipsize="none"
-                    android:textSize="@dimen/textview_textsize"
-                    android:maxLines="3"
-                    android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
                     android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                    android:maxLines="3"
+                    android:scrollHorizontally="false"
+                    android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
                     android:textColor="@color/grayRound"
-                    android:scrollHorizontally="false" />
+                    android:textSize="@dimen/textview_textsize" />
 
                 <ImageView
                     android:id="@+id/apptLocationImageView"
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.15"
                     android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_weight="0.15"
                     android:src="@drawable/icn_appointment_card_directions" />
 
                 <ImageView
                     android:id="@+id/apptDailImageView"
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.15"
                     android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
-                    android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
                     android:layout_marginLeft="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_weight="0.15"
                     android:src="@drawable/icn_appointment_card_call" />
 
             </LinearLayout>
@@ -167,10 +166,10 @@
                 android:id="@+id/checkOfficeBtn"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_btn_check_ht"
-                android:textColor="@color/blue_cerulian"
-                android:textSize="@dimen/apt_dl_textview_size"
                 android:background="@drawable/button_blue_border"
-                android:text="@string/check_in_at_office" />
+                android:text="@string/check_in_at_office"
+                android:textColor="@color/blue_cerulian"
+                android:textSize="@dimen/apt_dl_textview_size" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

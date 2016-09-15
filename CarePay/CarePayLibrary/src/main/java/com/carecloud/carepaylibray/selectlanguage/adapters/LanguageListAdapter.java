@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
-import com.carecloud.carepaylibray.utils.StringFunctions;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         LanguageOptionModel languageSelected = languageListLanguageOptionModels.get(position);
-        if (!StringFunctions.isNullOrEmpty(languageSelected.getValue())) {
+        if (!StringUtil.isNullOrEmpty(languageSelected.getValue())) {
             holder.textViewLanguageName.setText(languageSelected.getValue());
             if (languageSelected.isChecked()) {
                 holder.textViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.colorPrimary));
