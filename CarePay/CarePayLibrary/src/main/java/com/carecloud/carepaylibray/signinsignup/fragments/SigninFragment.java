@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,7 +24,7 @@ import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
-import com.carecloud.carepaylibray.utils.StringFunctions;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -167,7 +166,7 @@ public class SigninFragment extends Fragment {
                     // change hint to all caps
                     emailHint.setHint(hintCaps);
                 } else {
-                    if(StringFunctions.isNullOrEmpty(emailEditText.getText().toString())) {
+                    if(StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
                         // change hint to lower
                         emailHint.setHint(hint);
 
@@ -190,7 +189,7 @@ public class SigninFragment extends Fragment {
                     // change hint to all caps
                     passwordHint.setHint(hintCaps);
                 } else {
-                    if(StringFunctions.isNullOrEmpty(passwordEditText.getText().toString())) {
+                    if(StringUtil.isNullOrEmpty(passwordEditText.getText().toString())) {
                         passwordHint.setHint(hint);
                     } else {
                         // change hint to lower
