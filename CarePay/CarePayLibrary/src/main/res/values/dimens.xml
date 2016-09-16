@@ -17,8 +17,17 @@
     <dimen name="language_button_topbottom">14dp</dimen>
     <dimen name="language_body_margintop">26dp</dimen>
     <dimen name="language_radio_image_rightmargin">10dp</dimen>
-
     <dimen name="top_bottom_scroll_padding">4dp</dimen>
+
+
+    <!--sign in screen-->
+    <dimen name="error_textsize">10sp</dimen>
+    <dimen name="textview_size">15sp</dimen>
+
+    <!--sign up screen-->
+    <dimen name="signup_textsize">17sp</dimen>
+    <dimen name="signup_button_textsize">13sp</dimen>
+    <dimen name="signup_textview_existing_account_size">15sp</dimen>
 
     <!-- Responsibility -->
     <dimen name="respons_total_label_text_size">21sp</dimen>
@@ -47,6 +56,13 @@
     <dimen name="demogr_docs_thumbnail_width">100dp</dimen>
     <dimen name="demogr_docs_thumbnail_height">60dp</dimen>
 
+<!--    <Demographics Address>-->
+    <dimen name="demo_view_margin_top">8dp</dimen>
+    <dimen name="demo_view_margin_bottom">2dp</dimen>
+    <dimen name="demo_view_height">1dp</dimen>
+    <dimen name="demo_scorllview_margin_top">25dp</dimen>
+    <dimen name="demo_scorllview_margin_right_left">17dp</dimen>
+
     <!-- Appointments-->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="item_layout_height">82dp</dimen>
@@ -65,7 +81,7 @@
     <dimen name="apt_dl_margin">20dp</dimen>
     <dimen name="apt_dialog_appoint_dail_margin">3dp</dimen>
     <dimen name="apt_dl_btn_check_ht">48dp</dimen>
-    <dimen name="apt_dl_appt_date_margin">14dp</dimen>
+    <dimen name="apt_dl_appt_date_margin">16dp</dimen>
     <dimen name="apt_dl_appt_time_margin">10dp</dimen>
     <dimen name="apt_dl_appt_shortname_margin">-30dp</dimen>
     <dimen name="apt_dl_textview_size">15sp</dimen>
@@ -78,5 +94,28 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
+
+    <dimen name="marginleftright">17dp</dimen>
+    <dimen name="margintop">20dp</dimen>
+    <dimen name="consent_top">10dp</dimen>
+    <dimen name="sig_pad">208dp</dimen>
+    <dimen name="sig_txt">12sp</dimen>
+    <dimen name="btn_hght">68dp</dimen>
+    <dimen name="btn_width">31dp</dimen>
+    <dimen name="sigtxt_hgt">60dp</dimen>
+    <dimen name="rounded">8dp</dimen>
+
+    <!-- InTake -->
+    <dimen name="intakeDotPadding">8dp</dimen>
+    <dimen name="intakeDottedProgressHeight">30dp</dimen>
+    <dimen name="intakeDotWidth">4dp</dimen>
+    <dimen name="intakeDotHeight">4dp</dimen>
+    <dimen name="intakeNextButtonContainerHeight">74dp</dimen>
+    <dimen name="intakeTitleTopMargin">42dp</dimen>
+    <dimen name="intakeQuestionStartEndMargin">15dp</dimen>
+    <dimen name="intakeTitleTextSize" type="dimen" format="float">21.0sp</dimen>
+    <dimen name="intakeCaptionTextSize">13sp</dimen>
+    <dimen name="intakeCaptionLeftRightMargin">40dp</dimen>
+
 </resources>
 

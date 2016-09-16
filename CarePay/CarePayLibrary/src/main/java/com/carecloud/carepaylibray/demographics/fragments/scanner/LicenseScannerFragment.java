@@ -68,7 +68,6 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         setTypefaces(view);
 
         return view;
-
     }
 
     protected void updateDetailViewsAfterScan() { // license has been scanned
@@ -90,8 +89,8 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Button next = (Button) ((DemographicsActivity)getActivity()).getWindow().getDecorView().getRootView().findViewById(R.id.demographicsNextButton);
-        next.setEnabled(true);
-        next.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+
+        // invoke parent fragment to enable Next Button
+        buttonsStatusCallback.enableNextButton(true);
     }
 }

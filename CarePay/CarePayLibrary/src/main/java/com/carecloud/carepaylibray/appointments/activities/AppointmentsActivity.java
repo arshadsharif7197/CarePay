@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.appointments.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,22 +29,24 @@ import android.widget.Toast;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReview;
+import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
+public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        //Utility.setProximaNovaRegularTypeface(this,mTitle);
-
         setSupportActionBar(toolbar);
 
 
@@ -64,13 +69,14 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fm = getSupportFragmentManager();
-        AppointmentsListFragment fragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new AppointmentsListFragment();
+        AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
+        if (appointmentsListFragment == null) {
+            appointmentsListFragment = new AppointmentsListFragment();
         }
-        fm.beginTransaction().replace(R.id.appointments_list_frag_holder, fragment,
+        fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
                 AppointmentsListFragment.class.getSimpleName()).commit();
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -105,14 +111,15 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_appointments) {
 
         } else if (id == R.id.nav_payments) {
-
+            Intent intent = new Intent(this, PaymentActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
@@ -127,8 +134,9 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public  void showAppointmentsDialog(AppointmentModel appointmentModel){
-        if(appointmentModel !=null) {
+
+    public void showAppointmentsDialog(AppointmentModel appointmentModel) {
+        if (appointmentModel != null) {
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     this);
             LayoutInflater inflater = (LayoutInflater) this
@@ -141,67 +149,68 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.show();
 
-            TextView dateTextView =  ((TextView) view.findViewById(R.id.apptDateTextView));
+            TextView dateTextView = ((TextView) view.findViewById(R.id.apptDateTextView));
             TextView timeTextView = ((TextView) view.findViewById(R.id.apptTimeTextView));
-            TextView shortNameTextView =  ((TextView) view.findViewById(R.id.apptShortnameTextView));
-            TextView nameTextView =   ((TextView) view.findViewById(R.id.apptNameTextView));
+            TextView shortNameTextView = ((TextView) view.findViewById(R.id.apptShortnameTextView));
+            TextView nameTextView = ((TextView) view.findViewById(R.id.apptNameTextView));
             TextView typeTextView = ((TextView) view.findViewById(R.id.apptTypeTextView));
-            TextView addressTextView =  ((TextView) view.findViewById(R.id.apptAddressTextView));
+            TextView addressTextView = ((TextView) view.findViewById(R.id.apptAddressTextView));
 
-            dateTextView.setText(onDateParseToString(appointmentModel.getAptDate())[0]);
-            timeTextView.setText(onDateParseToString(appointmentModel.getAptDate())[1]);
+            dateTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[0]);
+            timeTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[1]);
             shortNameTextView.setText(Utility.onShortDrName(appointmentModel.getDoctorName()));
             nameTextView.setText(appointmentModel.getDoctorName());
-            typeTextView.setText(appointmentModel.getAptType());
+            typeTextView.setText(appointmentModel.getAppointmentType());
             //addressTextView.setText(appointmentModel.getA());
 
-            Utility.setTypefaceFromAssets(this,"fonts/proximanova_regular.otf",dateTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/gotham_rounded_book.otf",timeTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/proximanova_regular.otf",shortNameTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/proximanova_semibold.otf",nameTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/proximanova_regular.otf",typeTextView);
-            Utility.setTypefaceFromAssets(this,"fonts/gotham_rounded_medium.otf",addressTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", dateTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/gotham_rounded_book.otf", timeTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", shortNameTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/proximanova_semibold.otf", nameTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", typeTextView);
+            Utility.setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", addressTextView);
 
-            ((ImageView) view.findViewById(R.id.dialogAppointHeaderImageView)).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.dialogAppointHeaderImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.cancel();
                 }
             });
-            ((ImageView) view.findViewById(R.id.apptLocationImageView)).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.apptLocationImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(AppointmentsActivity.this, "Clicked on location icon,", Toast.LENGTH_LONG).show();
                 }
             });
-            ((ImageView) view.findViewById(R.id.apptDailImageView)).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.apptDailImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(AppointmentsActivity.this, "Clicked on dial icon,", Toast.LENGTH_LONG).show();
                 }
             });
-            ((Button) view.findViewById(R.id.checkOfficeBtn)).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.checkOfficeBtn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(AppointmentsActivity.this, "Clicked on button icon,", Toast.LENGTH_LONG).show();
+
+                    Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
+                    startActivity(demographicReviewIntent);
                 }
             });
         }
     }
 
-    private String[] onDateParseToString(String dateStr){
+    private String[] onDateParseToString(String dateStr) {
         String stringDate[] = dateStr.split(" ");
         String formateDate[] = new String[2];
-        try{
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
             Date appointdate = sdf.parse(stringDate[0]);
-            formateDate[0] = (String)android.text.format.DateFormat.format("MMMM", appointdate)+" "+(String)android.text.format.DateFormat.format("dd", appointdate);
-            formateDate[1] = stringDate[1]+" "+stringDate[2];
-        }catch(Exception ex){
-
+            formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
+                    + android.text.format.DateFormat.format("dd", appointdate);
+            formateDate[1] = stringDate[1] + " " + stringDate[2];
+        } catch (Exception ex) {
+            Log.e(LOG_TAG, ex.getMessage());
         }
         return formateDate;
     }
-
-
 }

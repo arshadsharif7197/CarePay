@@ -39,32 +39,28 @@
 
                 />
 
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/DetailsProfileImage"
-                android:layout_width="86dp"
-                android:layout_height="86dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/icn_placeholder_user_profile" />
 
             <Button
                 android:id="@+id/changeCurrentPhotoButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="18dp"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_default_background"
+                android:layout_marginLeft="10dp"
+                style="@style/DemographicsAddRemoveInsuranceStyle"
                 android:text="@string/selectOrTakePhotoButton" />
-
 
         </LinearLayout>
 
@@ -92,14 +88,18 @@
                     android:layout_height="wrap_content"
                     style="DemographicsDocsClickableTextStyle"
                     android:layout_alignParentRight="true"
-
                     android:gravity="right"
                     android:text="@string/chooseTextView"
                     android:textColor="@color/bright_cerulean"
                     android:textSize="18sp" />
-
-
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_view_height"
+                android:background="@color/light_gray"
+                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
+                android:layout_marginTop="@dimen/demo_view_margin_top">
+            </View>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -127,6 +127,13 @@
                     android:textSize="18sp" />
 
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_view_height"
+                android:background="@color/light_gray"
+                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
+                android:layout_marginTop="@dimen/demo_view_margin_top">
+            </View>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -155,6 +162,13 @@
 
 
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_view_height"
+                android:background="@color/light_gray"
+                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
+                android:layout_marginTop="@dimen/demo_view_margin_top">
+            </View>
 
         </LinearLayout>
     </LinearLayout>
