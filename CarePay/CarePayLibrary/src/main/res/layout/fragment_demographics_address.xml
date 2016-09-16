@@ -163,14 +163,8 @@
 
     <Button
         android:id="@+id/demographicsNextButton"
-        android:layout_width="match_parent"
-        android:layout_height="51dp"
-        android:layout_weight="0"
-        android:background="@drawable/button_selector"
-        android:fontFamily="GothamRounded-Medium"
-        android:gravity="center"
         android:text="@string/next_Button"
-        android:textColor="@color/white"
-        android:textSize="13sp"/>
+        style="@style/DemographicsNextButtonStyle"
+/>
 </LinearLayout>
 

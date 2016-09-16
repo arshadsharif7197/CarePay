@@ -235,9 +235,11 @@
     </style>
 
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">
-        <item name="android:background">@drawable/agree_button_background</item>
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:fontFamily">GothamRounded-Medium</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+        <item name="android:background">@drawable/agree_button_background</item>
     </style>
 
     <!--<SigninSignup error Appearance>-->
@@ -270,7 +272,7 @@
     </style>
 
 
-<!-- Navigation Screen Theme-->
+    <!-- Navigation Screen Theme-->
     <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

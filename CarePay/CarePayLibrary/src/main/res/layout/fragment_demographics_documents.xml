@@ -28,8 +28,7 @@
     <ScrollView
         android:id="@+id/demographicsDocsScroll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"
+        android:layout_height="wrap_content"
         android:paddingBottom="@dimen/top_bottom_scroll_padding"
         android:paddingTop="@dimen/top_bottom_scroll_padding">
 
@@ -74,6 +73,10 @@
 
     </ScrollView>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
     <Button
         android:id="@+id/demographicsAddMedInfoButton"
         style="@style/DemographicsAddRemoveInsuranceStyle"
@@ -83,8 +86,6 @@
     <Button
         android:id="@+id/demographicsNextButton"
         style="@style/DemographicsNextButtonStyle"
-        android:layout_height="0dp"
-        android:layout_weight="1"
         android:text="@string/demogr_next"/>
 
 </LinearLayout>
