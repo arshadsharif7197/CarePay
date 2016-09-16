@@ -116,6 +116,7 @@
     <dimen name="intakeTitleTextSize" type="dimen" format="float">21.0sp</dimen>
     <dimen name="intakeCaptionTextSize">13sp</dimen>
     <dimen name="intakeCaptionLeftRightMargin">40dp</dimen>
+    <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
 
 </resources>
 
