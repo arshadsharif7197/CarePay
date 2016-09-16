@@ -17,14 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            />
-      <!--  <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Toolbar Title"
-            android:layout_gravity="center"
-            android:id="@+id/toolbar_title" />-->
+            app:title="@string/Appointments_title"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 

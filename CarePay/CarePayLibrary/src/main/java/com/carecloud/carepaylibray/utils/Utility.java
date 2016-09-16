@@ -167,7 +167,7 @@ public class Utility {
 
 
     public static void setProximaNovaExtraboldTypeface(Context context, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Xbold.otf");
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
         view.setTypeface(typeface);
     }
     public static void setProximaNovaSemiboldTypeface(Context context, TextView view) {
