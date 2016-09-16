@@ -248,6 +248,11 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="SingupEditsContainerStyle" parent="DemographicsDocsHeaderStyle">
+        <item name="android:fontFamily">ProximaNova-Semibold</item>
+        <item name="android:layout_marginTop">@dimen/signup_bottom_margin</item>
+    </style>
+
     <!-- <Review Screens Style>-->
     <style name="reviewDemographicBlue." parent="android:Widget.TextView">
         <item name="android:textColor">@color/bright_cerulean</item>

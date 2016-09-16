@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            style="@style/DemographicsDocsHeaderStyle"
+            style="@style/SingupEditsContainerStyle"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
