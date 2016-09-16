@@ -111,6 +111,13 @@
     <dimen name="sigtxt_hgt">60dp</dimen>
     <dimen name="rounded">8dp</dimen>
 
+
+   <!-- <consent_forms>-->
+    <dimen name="consent_layout_left_right_margin">15dp</dimen>
+    <dimen name="consent_spinner_left_margin">90dp</dimen>
+    <dimen name="consent_minor_textsize">17sp</dimen>
+    <dimen name="consent_view_margin_top_bottom">10dp</dimen>
+
     <!-- InTake -->
     <dimen name="intakeDotPadding">8dp</dimen>
     <dimen name="intakeDottedProgressHeight">30dp</dimen>

@@ -31,7 +31,7 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
