@@ -246,6 +246,7 @@
         <item name="android:fontFamily">ProximaNova-Semibold</item>
         <item name="android:textColor">@color/harvard_crimson</item>
         <item name="android:textSize">10sp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="SingupEditsContainerStyle" parent="DemographicsDocsHeaderStyle">
@@ -320,19 +321,6 @@
         <item name="android:textColor">@color/Feldgrau</item>
         <item name="android:textSize">24.0sp</item>
         <item name="android:gravity">center</item>
-    </style>
-
-<!-- SigninSignup -->
-    <style name="HintStyle">
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColorHint">@color/slateGray</item>
-        <item name="android:textColor">@color/slateGray</item>
-    </style>
-
-    <style name="HintStyleFloating">
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColorHint">@color/darkblue</item>
-        <item name="android:textColor">@color/darkblue</item>
     </style>
 
     <!-- InTake -->
