@@ -161,15 +161,37 @@
                 android:layout_marginBottom="@dimen/apt_dl_margin"
                 android:layout_marginTop="@dimen/apt_dl_margin"
                 android:background="@color/light_gray_dialog" />
-
-            <Button
-                android:id="@+id/checkOfficeBtn"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/apt_dl_btn_check_ht"
-                android:background="@drawable/button_blue_border"
-                android:text="@string/check_in_at_office"
-                android:textColor="@color/blue_cerulian"
-                android:textSize="@dimen/apt_dl_textview_size" />
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/checkOfficeBtn"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="@dimen/apt_dl_btn_check_ht"
+                    android:background="@drawable/button_blue_border"
+                    android:text="@string/check_in_at_office"
+                    android:paddingLeft="@dimen/apt_dl_btn_texxt_pd"
+                    android:paddingRight="@dimen/apt_dl_btn_texxt_pd"
+                    android:textColor="@color/blue_cerulian"
+                    android:textSize="@dimen/apt_dl_textview_size" />
+                <Button
+                     android:id="@+id/checkOfficeNow"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                     android:layout_height="@dimen/apt_dl_btn_check_ht"
+                     android:background="@drawable/button_green_fill_background"
+                     android:text="@string/check_in_now"
+                     android:textColor="@color/white"
+                     android:paddingLeft="@dimen/apt_dl_btn_texxt_pd"
+                    android:paddingRight="@dimen/apt_dl_btn_texxt_pd"
+                    android:visibility="visible"
+                     android:layout_marginLeft="@dimen/apt_dl_btn_margin"
+                     android:textSize="@dimen/apt_dl_textview_size" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
