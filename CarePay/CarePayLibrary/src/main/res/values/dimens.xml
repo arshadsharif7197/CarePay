@@ -92,6 +92,10 @@
     <dimen name="apt_dl_image_elevation">12dp</dimen>
     <dimen name="apt_dl_zero_ht_wdh">0dp</dimen>
     <dimen name="apt_dl_boader_ht">2dp</dimen>
+    <dimen name="apt_dl_btn_width">133dp</dimen>
+    <dimen name="apt_dl_btn_txt_size">13sp</dimen>
+    <dimen name="apt_dl_btn_texxt_pd">30dp</dimen>
+    <dimen name="apt_dl_btn_margin">20dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
@@ -106,6 +110,13 @@
     <dimen name="btn_width">31dp</dimen>
     <dimen name="sigtxt_hgt">60dp</dimen>
     <dimen name="rounded">8dp</dimen>
+
+
+   <!-- <consent_forms>-->
+    <dimen name="consent_layout_left_right_margin">15dp</dimen>
+    <dimen name="consent_spinner_left_margin">90dp</dimen>
+    <dimen name="consent_minor_textsize">17sp</dimen>
+    <dimen name="consent_view_margin_top_bottom">10dp</dimen>
 
     <!-- InTake -->
     <dimen name="intakeDotPadding">8dp</dimen>
