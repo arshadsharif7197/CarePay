@@ -28,6 +28,7 @@
     <dimen name="signup_textsize">17sp</dimen>
     <dimen name="signup_button_textsize">13sp</dimen>
     <dimen name="signup_textview_existing_account_size">15sp</dimen>
+    <dimen name="signup_bottom_margin">10dp</dimen>
 
     <!-- Responsibility -->
     <dimen name="respons_total_label_text_size">21sp</dimen>
