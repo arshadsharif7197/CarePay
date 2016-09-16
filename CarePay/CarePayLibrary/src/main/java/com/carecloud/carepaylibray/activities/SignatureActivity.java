@@ -34,7 +34,7 @@ public class SignatureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
 
-        init();
+        initViews();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
@@ -42,12 +42,11 @@ public class SignatureActivity extends AppCompatActivity {
         setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity)this).setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
     }
 
-    private void init() {
-
-        //init data
+    private void initViews() {
+        //initViews data
         List<String> dataList = new ArrayList<>();
         dataList.add("Sign HIPAA Confidentiality Agreement");
         dataList.add("PATIENT SIGNATURE");
@@ -103,13 +102,10 @@ public class SignatureActivity extends AppCompatActivity {
             public void onSigned() {
                 agreeBtn.setEnabled(true);
                 agreeBtn.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
-
-
             }
 
             @Override
             public void onClear() {
-
             }
         });
     }

@@ -184,6 +184,7 @@
     <string name="check_in_at_office">CHECK-IN AT OFFICE</string>
     <string name="close">Close</string>
     <string name="demogr_next">Next</string>
+    <string name="check_in_now">CHECK-IN NOW</string>
 
 
     <!--<Navigation Screen>-->
@@ -197,6 +198,7 @@
     <string name="consenttitle">Sign consent for medical care</string>
     <string name="content">A keyboard typically has characters engraved or printed on the keys and each press of a
         key typically corresponds to a single written symbol. </string>
+    <string name="Minors_information">MINOR’S INFORMATION</string>
 
     <string name="male">Male</string>
     <string name="Btn_Clr">clear</string>

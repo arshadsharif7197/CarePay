@@ -81,7 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/language_footer_margin_top"
-        android:layout_weight="1.25"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@drawable/button_selector"
+            android:background="@drawable/language_button_selector"
             android:src="@drawable/icn_check_disabled" />
 
     </LinearLayout>
