@@ -135,7 +135,7 @@
     </style>
 
 
-    <!-- Documents -->
+    <!-- Demographics Documents -->
 
     <style name="DemographicsDocsButtonStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/rich_electric_blue</item>
@@ -149,6 +149,7 @@
     </style>
 
     <style name="DemographicsDocsHeaderTitleStyle" parent="android:Widget.TextView">
+        <item name="android:layout_gravity">center</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/charcoal</item>
@@ -189,7 +190,6 @@
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
     </style>
-
 
     <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>

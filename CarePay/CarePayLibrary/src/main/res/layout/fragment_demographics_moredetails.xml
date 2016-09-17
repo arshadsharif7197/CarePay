@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,70 +12,57 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/placeHolderIconTextViewId"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="34dp"
-            android:background="@drawable/circle_shape"
-            android:gravity="center"
-            android:text="@string/PlaceHolderIcon" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/placeHolderIconTextViewId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/circle_shape"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/PlaceHolderIcon"/>
+        </FrameLayout>
+
     </LinearLayout>
 
     <LinearLayout
+        style="@style/DemographicsDocsHeaderStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
         android:layout_weight="2"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/moreDetailsHeading"
-            style="@style/DemographicsFragmentsHeadingStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/moreDetailsHeadingTextView" />
+            style="@style/DemographicsDocsHeaderTitleStyle"
+            android:text="@string/moreDetailsHeadingTextView"/>
 
         <TextView
             android:id="@+id/moreDetailsSubHeading"
-            style="@style/DemographicsFragmentsSubHeadingStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:paddingLeft="17dp"
-            android:paddingRight="17dp"
-            android:text="@string/moreDetailsSubHeadingTextView" />
+            style="@style/DemographicsDocsHeaderSubtitleStyle"
+            android:text="@string/moreDetailsSubHeadingTextView"/>
     </LinearLayout>
 
 
     <LinearLayout
+        style="@style/DemographicsDocsHeaderStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="43dp"
-        android:layout_weight="4"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:orientation="vertical">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="17dp"
-            android:paddingRight="17dp">
-
-
-            <Button
-                android:id="@+id/goToCarePayButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/button_blue"
-                android:text="@string/GoToCarePayButton"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/goToCarePayButton"
+            style="@style/DemographicsNextButtonStyle"
+            android:background="@drawable/button_selector"
+            android:text="@string/GoToCarePayButton"/>
 
     </LinearLayout>
 
