@@ -309,6 +309,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 if (checkCity()) {
                     if (checkState()) {
                         if (checkZipcode()) {
+                            // move to next
                             ((DemographicsActivity) getActivity()).setCurrentItem(1, true);
                         }
                     }

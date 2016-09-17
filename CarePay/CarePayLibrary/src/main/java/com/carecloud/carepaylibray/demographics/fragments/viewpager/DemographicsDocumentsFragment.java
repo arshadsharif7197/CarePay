@@ -196,7 +196,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
     @Override
     public void scrollToBottom() {
-        View bottomView = view.findViewById(R.id.demogr_docs_bottom_view);
+        View bottomView = view.findViewById(R.id.demographicsDocsBottomView);
         detailsScrollView.scrollTo(0, bottomView.getBottom());
     }
 

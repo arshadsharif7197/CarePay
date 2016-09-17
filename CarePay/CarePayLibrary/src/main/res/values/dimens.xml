@@ -45,6 +45,7 @@
     <dimen name="respons_button_margin_left_right">17dp</dimen>
 
     <!-- Demographics Documents -->
+    <dimen name="demographics_docs_header_top">36dp</dimen>
     <dimen name="demographics_docs_button_text_size">13sp</dimen>
     <dimen name="demographics_docs_header_left_right_margin">17dp</dimen>
     <dimen name="demographics_docs_header_top_margin">17dp</dimen>
@@ -54,9 +55,9 @@
     <dimen name="demographics_docs_header_title_text_size" type="dimen" format="float">21.0sp</dimen>
     <dimen name="demographics_docs_number_text_size" type="dimen" format="float">17.0sp</dimen>
     <dimen name="demographics_docs_clickable_text_size" type="dimen" format="float">14.0sp</dimen>
-    <dimen name="demogr_docs_section_container_margin_top">30dp</dimen>
-    <dimen name="demogr_docs_thumbnail_width">100dp</dimen>
-    <dimen name="demogr_docs_thumbnail_height">60dp</dimen>
+    <dimen name="demographics_docs_section_container_margin_top">30dp</dimen>
+    <dimen name="demographics_docs_thumbnail_width">100dp</dimen>
+    <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
 
 <!--    <Demographics Address>-->
     <dimen name="divider_margin_top">8dp</dimen>

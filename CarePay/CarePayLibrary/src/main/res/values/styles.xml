@@ -166,9 +166,11 @@
 
     <style name="DemographicsDocsHeaderStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
         <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginTop">@dimen/demographics_docs_header_top</item>
     </style>
 
     <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">

@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.utils.Utility;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -81,13 +82,15 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(funPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override
             public void onPageSelected(int position) {
+                // hide the keyboard (just in case)
+                Utility.hideSoftKeyboard(DemographicsActivity.this);
                 currentPageIndex = position;
                 setScreenTitle(position);
             }
@@ -95,7 +98,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
             }
-        });
+        };
+        viewPager.addOnPageChangeListener(pageChangeListener);
 
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -104,6 +108,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             }
         });
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
+        indicator.setOnPageChangeListener(pageChangeListener);
         indicator.setViewPager(viewPager);
     }
 

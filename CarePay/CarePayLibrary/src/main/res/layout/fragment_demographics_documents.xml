@@ -4,13 +4,11 @@
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:gravity="center"
               android:orientation="vertical">
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -28,7 +26,8 @@
     <ScrollView
         android:id="@+id/demographicsDocsScroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:paddingBottom="@dimen/top_bottom_scroll_padding"
         android:paddingTop="@dimen/top_bottom_scroll_padding">
 
@@ -66,17 +65,12 @@
                 android:layout_height="wrap_content"/>
 
             <View
-                android:id="@+id/demogr_docs_bottom_view"
+                android:id="@+id/demographicsDocsBottomView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </ScrollView>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/demographicsAddMedInfoButton"
