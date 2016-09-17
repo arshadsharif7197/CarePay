@@ -17,13 +17,14 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/placeHolderIconTextViewId"
+                android:id="@+id/placeHolderIconImageViewId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/circle_shape"/>
 
             <TextView
+                android:id="@+id/placeHolderIconTextViewId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

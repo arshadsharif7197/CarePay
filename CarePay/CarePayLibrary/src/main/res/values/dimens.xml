@@ -59,8 +59,8 @@
     <dimen name="demogr_docs_thumbnail_height">60dp</dimen>
 
 <!--    <Demographics Address>-->
-    <dimen name="demo_view_margin_top">8dp</dimen>
-    <dimen name="demo_view_margin_bottom">2dp</dimen>
+    <dimen name="divider_margin_top">8dp</dimen>
+    <dimen name="divider_margin_bottom">2dp</dimen>
     <dimen name="demo_view_height">1dp</dimen>
     <dimen name="demo_scorllview_margin_top">25dp</dimen>
     <dimen name="demo_scorllview_margin_right_left">17dp</dimen>
