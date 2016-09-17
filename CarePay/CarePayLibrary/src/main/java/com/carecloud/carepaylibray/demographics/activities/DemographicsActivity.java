@@ -89,8 +89,10 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
             @Override
             public void onPageSelected(int position) {
-                // hide the keyboard (just in case)
-                Utility.hideSoftKeyboard(DemographicsActivity.this);
+                if(position != 0) {
+                    // hide the keyboard (just in case)
+                    Utility.hideSoftKeyboard(DemographicsActivity.this);
+                }
                 currentPageIndex = position;
                 setScreenTitle(position);
             }
