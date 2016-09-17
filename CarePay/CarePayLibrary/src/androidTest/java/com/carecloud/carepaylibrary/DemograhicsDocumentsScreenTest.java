@@ -53,17 +53,17 @@ public class DemograhicsDocumentsScreenTest {
         onView(withId(R.id.demogr_docs_root)).check(matches(isDisplayed()));
 
         // does the switch exist?
-        onView(withId(R.id.demogr_insurance_switch)).check(matches(isDisplayed()));
+        onView(withId(R.id.demographicsInsuranceSwitch)).check(matches(isDisplayed()));
 
         // is the switch off initially?
-        onView(withId(R.id.demogr_insurance_switch)).check(matches(not(isChecked())));
+        onView(withId(R.id.demographicsInsuranceSwitch)).check(matches(not(isChecked())));
 
         // if switch on, does the insurance details container is visible?
-        onView(withId(R.id.demogr_insurance_switch)).perform(click());
+        onView(withId(R.id.demographicsInsuranceSwitch)).perform(click());
         onView(withId(R.id.demogr_docs_insurance_container)).check(matches(isDisplayed()));
 
         // if switch off, does the insurance details container is hidden?
-        onView(withId(R.id.demogr_insurance_switch)).perform(click());
+        onView(withId(R.id.demographicsInsuranceSwitch)).perform(click());
         onView(withId(R.id.demogr_docs_insurance_container)).check(matches(not(isDisplayed())));
     }
 

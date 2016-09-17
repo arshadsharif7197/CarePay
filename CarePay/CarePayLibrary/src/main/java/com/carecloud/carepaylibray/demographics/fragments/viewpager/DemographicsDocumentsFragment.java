@@ -172,9 +172,9 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
      * @param view The parent view
      */
     private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_title));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_subtitle));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_switch));
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsInsuranceSwitch));
         setGothamRoundedMediumTypeface(getActivity(), addCardButton);
     }
 
@@ -207,7 +207,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private void setSwitch() {
         // set the switch
         fm.executePendingTransactions();
-        switchCompat = (SwitchCompat) view.findViewById(R.id.demogr_insurance_switch);
+        switchCompat = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {

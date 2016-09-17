@@ -26,6 +26,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.hardware.input.InputManager;
 import android.os.Build;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -175,5 +176,46 @@ public class Utility {
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+    }
+
+    /**
+     * Handles the change from normal to caps of the hint in a view wrapped by a text input layout;
+     * The view has to have the input text layout set as tag; the input text layout the hint (as tag)
+     * @param view The edit view
+     * @param hasFocus When the view gains the focus
+     */
+    public static void handleHintChange(View view, boolean hasFocus) {
+        if (view == null) {
+            return;
+        }
+
+        EditText editText = (EditText) view;
+        TextInputLayout textInputLayout = (TextInputLayout) editText.getTag();
+        if (textInputLayout == null) {
+            return;
+        }
+        String hint = (String) textInputLayout.getTag();
+        if (hint == null) {
+            hint = ""; // if no hint use the empty string
+        }
+        String hintCaps = hint.toUpperCase();
+        String text = editText.getText().toString();
+        if (hasFocus) {
+            // focus gained; set the hint to text input layout
+            textInputLayout.setHint(hintCaps);
+            if (StringUtil.isNullOrEmpty(text)) {
+                // if no text set empty hint in the edit
+                editText.setHint("");
+            }
+        } else {
+            if (StringUtil.isNullOrEmpty(text)) { // lose focus, and no text in the edit
+                // remove hint from the text input layout
+                textInputLayout.setHint("");
+                // change hint to lower in the edit
+                editText.setHint(hint);
+            } else {
+                textInputLayout.setHint(hintCaps);
+            }
+        }
     }
 }

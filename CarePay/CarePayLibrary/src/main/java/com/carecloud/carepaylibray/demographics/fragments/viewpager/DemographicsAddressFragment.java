@@ -97,6 +97,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
      * Helper to set focus change listener in order to toggle hint strings to caps
      */
     private void setFocusChangeListeners() {
+        address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+            }
+        });
+
         phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -104,35 +111,18 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 String hintCaps = hint.toUpperCase();
                 if (b) {
                     phNoTextInputLayout.setHint(hintCaps);
-                } else {
+                } else { // lost focus
                     if(StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString())) {
                         // change hint to lower
                         phNoTextInputLayout.setHint(hint);
-
                     } else {
                         phoneNumberEditText.setHint(hint);
                     }
+                    // perform check
                 }
             }
         });
-        address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.Address1EditText);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    address1TextInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(address1EditText.getText().toString())) {
-                        // change hint to lower
-                        address1TextInputLayout.setHint(hint);
 
-                    } else {
-                        address1EditText.setHint(hint);
-                    }
-                }
-            }
-        });
         address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -205,14 +195,20 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private void initialiseUIFields() {
+        String hint = getString(R.string.Address1EditText);
+        address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
+        // set hint as the tag of the text input layout (used in hint Utility.handleHintChange())
+        address1TextInputLayout.setTag(hint);
+        // set text input layout as the tag of the edit text (used in hint Utility.handleHintChange())
+        address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
+
+        address1EditText.setTag(address1TextInputLayout);
         phoneNumberEditText = (EditText) view.findViewById(R.id.phNoEditText);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
-        address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         cityEditText = (EditText) view.findViewById(R.id.cityId);
 
         phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
-        address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);

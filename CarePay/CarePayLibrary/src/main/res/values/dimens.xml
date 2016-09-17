@@ -58,6 +58,7 @@
     <dimen name="demographics_docs_section_container_margin_top">30dp</dimen>
     <dimen name="demographics_docs_thumbnail_width">100dp</dimen>
     <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
+    <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
 
 <!--    <Demographics Address>-->
     <dimen name="divider_margin_top">8dp</dimen>
@@ -130,7 +131,6 @@
     <dimen name="intakeTitleTextSize" type="dimen" format="float">21.0sp</dimen>
     <dimen name="intakeCaptionTextSize">13sp</dimen>
     <dimen name="intakeCaptionLeftRightMargin">40dp</dimen>
-    <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
 
 </resources>
 

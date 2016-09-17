@@ -12,12 +12,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/demogr_docs_header_title"
+            android:id="@+id/demographicsDocsHeaderTitle"
             style="@style/DemographicsDocsHeaderTitleStyle"
             android:text="@string/demogr_docs_logo_title"/>
 
         <TextView
-            android:id="@+id/demogr_docs_header_subtitle"
+            android:id="@+id/demographicsDocsHeaderSubtitle"
             style="@style/DemographicsDocsHeaderSubtitleStyle"
             android:text="@string/demogr_docs_logo_message"/>
 
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"/>
 
             <android.support.v7.widget.SwitchCompat
-                android:id="@+id/demogr_insurance_switch"
+                android:id="@+id/demographicsInsuranceSwitch"
                 style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
