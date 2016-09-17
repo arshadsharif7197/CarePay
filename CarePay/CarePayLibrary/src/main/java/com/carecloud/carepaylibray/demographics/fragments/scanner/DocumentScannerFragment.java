@@ -30,10 +30,11 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * Created by lsoco_user on 9/13/2016.
  * Generic fragment that incorporates camera scanning functionality
  */
-public abstract class DocumentScannerFragment extends Fragment{
+public abstract class DocumentScannerFragment extends Fragment {
 
     private   ImageCaptureHelper          imageCaptureHelper;
     protected NextAddRemoveStatusModifier buttonsStatusCallback;
+    private   int                         imageShape;
 
     @Nullable
     @Override
@@ -156,16 +157,23 @@ public abstract class DocumentScannerFragment extends Fragment{
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-                imageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+                imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                imageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+                imageCaptureHelper.onCaptureImageResult(data, getImageShape());
             }
             updateDetailViewsAfterScan();
         }
     }
 
     /**
+     * Gets the shape of the captured image
+     * @return The shape (ImageCaptureHelper.ROUND_IMAGE or RECTANGULAR_IMAGE)
+     */
+    public abstract int getImageShape();
+
+    /**
      * Set the callback that will enable this fragment to change the status of butons in another fragment
+     *
      * @param buttonsStatusCallback The callback
      */
     public void setButtonsStatusCallback(NextAddRemoveStatusModifier buttonsStatusCallback) {
@@ -187,8 +195,11 @@ public abstract class DocumentScannerFragment extends Fragment{
      * Callback interface to change the status of buttons of another fragment
      */
     public interface NextAddRemoveStatusModifier {
+
         void showAddCardButton(boolean isVisible);
+
         void enableNextButton(boolean isEnabled);
+
         void scrollToBottom();
     }
 }

@@ -93,4 +93,9 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         // invoke parent fragment to enable Next Button
         buttonsStatusCallback.enableNextButton(true);
     }
+
+    @Override
+    public int getImageShape() {
+        return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    }
 }

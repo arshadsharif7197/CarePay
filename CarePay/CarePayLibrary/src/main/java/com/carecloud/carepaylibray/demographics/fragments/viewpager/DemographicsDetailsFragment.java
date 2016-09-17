@@ -1,12 +1,11 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
-import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +20,8 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
+import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.Utility;
 
@@ -34,51 +35,58 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTy
  * Created by lsoco_user on 9/2/2016.
  * Implements demographics details screen
  */
-public class DemographicsDetailsFragment extends Fragment implements View.OnClickListener {
+public class DemographicsDetailsFragment extends Fragment
+        implements View.OnClickListener,
+                   DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-
-    ImageView imageViewDetailsImage;
-    private ImageCaptureHelper imageCaptureHelper;
-
-    View view;
-    String[] raceArray;
-    String[] ethnicityArray;
-    String[] preferredLanguageArray;
-    int selectedArray;
-    TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
-    Button buttonChangeCurrentPhoto,nextButton;
-
+    private View     view;
+    private String[] raceArray;
+    private String[] ethnicityArray;
+    private String[] preferredLanguageArray;
+    private int      selectedArray;
+    private TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
+    private Button nextButton;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
+
         initialiseUIFields();
+
         raceArray = getResources().getStringArray(R.array.Race);
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity());
-        imageCaptureHelper.setImageViewTarget(imageViewDetailsImage);
-        imageCaptureHelper.setImgWidth(129); // TODO: 9/9/2016 create dimen
+
         setTypefaces(view);
         return view;
     }
 
-
     private void initialiseUIFields() {
+        // add capture picture fragment
+        FragmentManager fm = getChildFragmentManager();
+        String tag = ProfilePictureFragment.class.getSimpleName();
+        ProfilePictureFragment fragment
+                = (ProfilePictureFragment) fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = new ProfilePictureFragment();
+            fragment.setButtonsStatusCallback(this);
+        }
+        fm.beginTransaction()
+                .replace(R.id.demographicsAddressPicCapturer, fragment, tag)
+                .commit();
 
-
+        // get handlers to the other views
         raceTextView = (TextView) view.findViewById(R.id.raceListTextView);
         raceTextView.setOnClickListener(this);
         ethnicityTextView = (TextView) view.findViewById(R.id.ethnicityListTextView);
         ethnicityTextView.setOnClickListener(this);
         preferredLanguageTextView = (TextView) view.findViewById(R.id.preferredLanguageListTextView);
         preferredLanguageTextView.setOnClickListener(this);
-        buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
-        buttonChangeCurrentPhoto.setOnClickListener(this);
         nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
         nextButton.setOnClickListener(this);
-        imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
+        enableNextButton(false); // 'next' is initially disabled
     }
 
     @Override
@@ -92,15 +100,16 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         } else if (view == preferredLanguageTextView) {
             selectedArray = 3;
             showAlertDialogWithListview(preferredLanguageArray, "Select Preferred Language");
-        } else if (view == buttonChangeCurrentPhoto) {
-            selectImage();
-        }else if(view==nextButton){
+        } else if (view == nextButton) {
             nextbuttonClick();
         }
     }
+
     private void nextbuttonClick() {
         ((DemographicsActivity) getActivity()).setCurrentItem(2, true);
+        // other task may be performed...
     }
+
     private void showAlertDialogWithListview(final String[] raceArray, String title) {
         Log.e("raceArray==", raceArray.toString());
         Log.e("raceArray 23==", Arrays.asList(raceArray).toString());
@@ -141,103 +150,105 @@ public class DemographicsDetailsFragment extends Fragment implements View.OnClic
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        String userChoosenTask = imageCaptureHelper.getUserChoosenTask();
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        String userChoosenTask = imageCaptureHelper.getUserChoosenTask();
+//
+//        switch (requestCode) {
+//            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
+//                        startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
+//                                                                    ImageCaptureHelper.CHOOSER_NAME),
+//                                               ImageCaptureHelper.SELECT_FILE);
+//                } else {
+//                    //code for deny
+//                }
+//                break;
+//
+//            case Utility.MY_PERMISSIONS_CAMERA:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString()))
+//                        startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
+//                } else {
+//                    //code for deny
+//                }
+//        }
+//    }
 
-        switch (requestCode) {
-            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
-                        startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
-                                ImageCaptureHelper.CHOOSER_NAME),
-                                ImageCaptureHelper.SELECT_FILE);
-                } else {
-                    //code for deny
-                }
-                break;
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == Activity.RESULT_OK) {
+//
+//            if (requestCode == ImageCaptureHelper.SELECT_FILE) {
+//                imageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.ROUND_IMAGE);
+//                changeButtonLabel();
+//            } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA)
+//                imageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.ROUND_IMAGE);
+//            changeButtonLabel();
+//        }
+//    }
 
-            case Utility.MY_PERMISSIONS_CAMERA:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString()))
-                        startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
-                } else {
-                    //code for deny
-                }
-        }
-    }
+//    public void selectImage() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
+//        builder.setItems(ImageCaptureHelper.chooseActionDlOptions,
+//                         new DialogInterface.OnClickListener() {
+//                             @Override
+//                             public void onClick(DialogInterface dialog, int item) {
+//                                 if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[0])) {
+//                                     imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
+//                                     boolean result = Utility.checkPermissionCamera(getActivity());
+//                                     if (result) {
+//                                         startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
+//                                     }
+//                                 } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[1])) {
+//                                     imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
+//                                     boolean result = Utility.checkPermission(getActivity());
+//                                     if (result) {
+//                                         startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
+//                                                                                     ImageCaptureHelper.CHOOSER_NAME),
+//                                                                ImageCaptureHelper.SELECT_FILE);
+//                                     }
+//                                 } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[2])) {
+//                                     dialog.dismiss();
+//                                 }
+//                             }
+//                         });
+//        builder.show();
+//
+//    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK) {
-
-            if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-                imageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.ROUND_IMAGE);
-                changeButtonLabel();
-            } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA)
-                imageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.ROUND_IMAGE);
-            changeButtonLabel();
-        }
-    }
-
-    public void selectImage() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
-        builder.setItems(ImageCaptureHelper.chooseActionDlOptions,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[0])) {
-                            imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
-                            boolean result = Utility.checkPermissionCamera(getActivity());
-                            if (result) {
-                                startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
-                            }
-                        } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[1])) {
-                            imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
-                            boolean result = Utility.checkPermission(getActivity());
-                            if (result) {
-                                startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
-                                        ImageCaptureHelper.CHOOSER_NAME),
-                                        ImageCaptureHelper.SELECT_FILE);
-                            }
-                        } else if (ImageCaptureHelper.chooseActionDlOptions[item].equals(ImageCaptureHelper.chooseActionDlOptions[2])) {
-                            dialog.dismiss();
-                        }
-                    }
-                });
-        builder.show();
-
-    }
-
-    private void changeButtonLabel() {
-        buttonChangeCurrentPhoto.setText(getString(R.string.changeCurrentPhotoButton));
-    }
+//    private void changeButtonLabel() {
+//        buttonChangeCurrentPhoto.setText(getString(R.string.changeCurrentPhotoButton));
+//    }
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsSubHeading));
-
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.changeCurrentPhotoButton));
-
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.raceTextView));
-
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.raceListTextView));
-
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
-
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
-
-
-        setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.demographicsNextButton));
-
-
+        setGothamRoundedMediumTypeface(getActivity(), (Button) view.findViewById(R.id.demographicsNextButton));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
-
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }
 
-}
+    @Override
+    public void showAddCardButton(boolean isVisible) {
 
+    }
+
+    @Override
+    public void enableNextButton(boolean isEnabled) {
+        nextButton.setEnabled(isEnabled);
+    }
+
+    @Override
+    public void scrollToBottom() {
+
+    }
+}

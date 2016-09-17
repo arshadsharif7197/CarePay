@@ -31,7 +31,7 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTy
 /**
  * Created by lsoco_user on 9/2/2016.
  */
-public class DemographicsAddressFragment extends Fragment {
+public class DemographicsAddressFragment extends GenericEditsFragment {
 
     View view;
     private TextInputLayout phNoTextInputLayout,

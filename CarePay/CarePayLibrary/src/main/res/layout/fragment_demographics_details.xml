@@ -24,28 +24,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        style="@style/DemographicsDocsHeaderStyle"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:id="@+id/demographicsAddressPicCapturer"/>
 
-        <ImageView
-            android:id="@+id/DetailsProfileImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icn_placeholder_user_profile"/>
-
-        <Button
-            android:id="@+id/changeCurrentPhotoButton"
-            style="@style/DemographicsAddRemoveInsuranceStyle"
-            android:layout_width="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="@string/selectOrTakePhotoButton"/>
-
-    </LinearLayout>
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
