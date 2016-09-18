@@ -104,115 +104,81 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
         });
 
-        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.PhoneNumberEditText);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    phNoTextInputLayout.setHint(hintCaps);
-                } else { // lost focus
-                    if(StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString())) {
-                        // change hint to lower
-                        phNoTextInputLayout.setHint(hint);
-                    } else {
-                        phoneNumberEditText.setHint(hint);
-                    }
-                    // perform check
-                }
-            }
-        });
-
         address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.Address2EditText);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    address2TextInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(address2EditText.getText().toString())) {
-                        // change hint to lower
-                        address2TextInputLayout.setHint(hint);
+                Utility.handleHintChange(view, b);
+            }
+        });
 
-                    } else {
-                        address2EditText.setHint(hint);
-                    }
-                }
-            }
-        });
-        cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.CityEditText);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    cityTextInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
-                        // change hint to lower
-                        cityTextInputLayout.setHint(hint);
-                    } else {
-                        cityEditText.setHint(hint);
-                    }
-                }
-            }
-        });
-        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.StateEditText);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    stateTextInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(autoCompleteTextView.getText().toString())) {
-                        // change hint to lower
-                        stateTextInputLayout.setHint(hint);
-                    } else {
-                        autoCompleteTextView.setHint(hint);
-                    }
-                }
-            }
-        });
         zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.ZipCodeEditText);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    zipCodeTextInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
-                        // change hint to lower
-                        zipCodeTextInputLayout.setHint(hint);
-                    } else {
-                        zipCodeEditText.setHint(hint);
-                    }
-                }
+                Utility.handleHintChange(view, b);
+            }
+        });
+
+        cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+            }
+        });
+
+        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+            }
+        });
+
+        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
             }
         });
     }
 
+    /**
+     * Inits the UI components; to manipulate the change of the hint to caps when floating,
+     * set the textinputlayout as the tag of the corresponding edittext and the hint as the
+     * the tag of the textinputlayout
+     */
     private void initialiseUIFields() {
-        String hint = getString(R.string.Address1EditText);
+        String hint;
+
+        hint = getString(R.string.Address1EditText);
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        // set hint as the tag of the text input layout (used in hint Utility.handleHintChange())
         address1TextInputLayout.setTag(hint);
-        // set text input layout as the tag of the edit text (used in hint Utility.handleHintChange())
         address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
-
         address1EditText.setTag(address1TextInputLayout);
-        phoneNumberEditText = (EditText) view.findViewById(R.id.phNoEditText);
-        zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
-        address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
-        cityEditText = (EditText) view.findViewById(R.id.cityId);
 
-        phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
+        hint = getString(R.string.Address2EditText);
         address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
-        stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+        address2TextInputLayout.setTag(hint);
+        address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
+        address2EditText.setTag(address2TextInputLayout);
+
+        hint = getString(R.string.ZipCodeEditText);
         zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
+        zipCodeTextInputLayout.setTag(hint);
+        zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
+        zipCodeEditText.setTag(zipCodeTextInputLayout);
+
+        hint = getString(R.string.CityEditText);
+        cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
+        cityTextInputLayout.setTag(hint);
+        cityEditText = (EditText) view.findViewById(R.id.cityId);
+        cityEditText.setTag(cityTextInputLayout);
+
+        stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+
+        hint = getString(R.string.PhoneNumberEditText);
+        phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
+        phNoTextInputLayout.setTag(hint);
+        phoneNumberEditText = (EditText) view.findViewById(R.id.phNoEditText);
+        phoneNumberEditText.setTag(phNoTextInputLayout);
 
         nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +188,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
         });
     }
-
 
     private boolean checkState() {
         if (TextUtils.isEmpty(autoCompleteTextView.getText().toString().trim())) {
