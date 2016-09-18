@@ -50,7 +50,7 @@ public class DemograhicsDocumentsScreenTest {
         assertThat("Displayed fragment is null", docsParentFragment, is(notNullValue()));
 
         // does the fragment's root view exist?
-        onView(withId(R.id.demogr_docs_root)).check(matches(isDisplayed()));
+        onView(withId(R.id.demographicsDocsRootContainer)).check(matches(isDisplayed()));
 
         // does the switch exist?
         onView(withId(R.id.demographicsInsuranceSwitch)).check(matches(isDisplayed()));

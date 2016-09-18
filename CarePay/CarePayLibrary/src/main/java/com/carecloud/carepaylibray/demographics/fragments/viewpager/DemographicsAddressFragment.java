@@ -3,24 +3,25 @@ package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.Utility;
 
 import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
@@ -34,20 +35,26 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTy
 public class DemographicsAddressFragment extends GenericEditsFragment {
 
     View view;
-    private TextInputLayout phNoTextInputLayout,
-            address1TextInputLayout,
-            address2TextInputLayout,
-            cityTextInputLayout,
-            stateTextInputLayout,
-            zipCodeTextInputLayout;
-    private EditText phoneNumberEditText;
-    private EditText zipCodeEditText;
-    private EditText address1EditText;
-    private EditText address2EditText;
-    private EditText cityEditText;
-    private Button nextButton;
-    AutoCompleteTextView autoCompleteTextView;
-    String state_var = null;
+    private LinearLayout         rootContainer;
+    private TextInputLayout      phNoTextInputLayout;
+    private TextInputLayout      address1TextInputLayout;
+    private TextInputLayout      address2TextInputLayout;
+    private TextInputLayout      cityTextInputLayout;
+    private TextInputLayout      stateTextInputLayout;
+    private TextInputLayout      zipCodeTextInputLayout;
+    private EditText             phoneNumberEditText;
+    private EditText             zipCodeEditText;
+    private EditText             address1EditText;
+    private EditText             address2EditText;
+    private EditText             cityEditText;
+    private Button               nextButton;
+    private boolean              isAddressValid;
+    private boolean              isZipValid;
+    private boolean              isCityValid;
+    private boolean              isStateValid;
+    private boolean              isPhoneValid;
+    private AutoCompleteTextView stateAutoCompleteTextView;
+    private String state_var = null;
 
     private static final String[] states = new String[]{
             "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
@@ -61,83 +68,17 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         view = inflater.inflate(R.layout.fragment_demographics_address, container, false);
 
         initialiseUIFields();
-
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.autocomplete_state_item, R.id.text1, states);
-        autoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.autoTextCompleteStates);
-        autoCompleteTextView.setThreshold(1);
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                state_var = adapter.getItem(position).toString();
-            }
-        });
-        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                state_var = null;
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
         setTypefaces(view);
-        setFocusChangeListeners();
+
+        isAddressValid = false;
+        isCityValid = false;
+        isStateValid = false;
+        isZipValid = false;
+        isPhoneValid = false;
+
+        nextButton.setEnabled(false);
+
         return view;
-    }
-
-    /**
-     * Helper to set focus change listener in order to toggle hint strings to caps
-     */
-    private void setFocusChangeListeners() {
-        address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
-            }
-        });
-
-        address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
-            }
-        });
-
-        zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
-            }
-        });
-
-        cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
-            }
-        });
-
-        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
-            }
-        });
-
-        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
-            }
-        });
     }
 
     /**
@@ -146,6 +87,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
      * the tag of the textinputlayout
      */
     private void initialiseUIFields() {
+        rootContainer = (LinearLayout) view.findViewById(R.id.demographicsAddressRootContainer);
+
         String hint;
 
         hint = getString(R.string.Address1EditText);
@@ -173,6 +116,33 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         cityEditText.setTag(cityTextInputLayout);
 
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                                                                      R.layout.autocomplete_state_item,
+                                                                      R.id.text1,
+                                                                      states);
+        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.autoTextCompleteStates);
+        stateAutoCompleteTextView.setThreshold(1);
+        stateAutoCompleteTextView.setAdapter(adapter);
+        stateAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                state_var = adapter.getItem(position);
+            }
+        });
+        stateAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                state_var = null;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         hint = getString(R.string.PhoneNumberEditText);
         phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
@@ -180,23 +150,163 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         phoneNumberEditText = (EditText) view.findViewById(R.id.phNoEditText);
         phoneNumberEditText.setTag(phNoTextInputLayout);
 
-        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
+        nextButton = (Button) view.findViewById(R.id.demographicsAddressNextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nextbuttonClick();
+                // move to next
+                ((DemographicsActivity) getActivity()).setCurrentItem(1, true);
+            }
+        });
+
+        setFocusChangeListeners();
+        setEditActionListeners();
+    }
+
+    private void setEditActionListeners() {
+        address1EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    // check the validity
+                    isAddressValid = checkAddress();
+                    // maybe the user chose to edit this last. so check the other fields as well
+                    // and enable 'Next' accordingly
+                    nextButton.setEnabled(checkReadyForNext());
+                    address2EditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        zipCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    isZipValid = checkZipcode();
+                    nextButton.setEnabled(checkReadyForNext());
+                    cityEditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        cityEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    isCityValid = checkCity();
+                    nextButton.setEnabled(checkReadyForNext());
+                    stateAutoCompleteTextView.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        stateAutoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    isStateValid = checkState();
+                    nextButton.setEnabled(checkReadyForNext());
+                    phNoTextInputLayout.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    isPhoneValid = checkPhoneNumber();
+                    nextButton.setEnabled(checkReadyForNext());
+                    phoneNumberEditText.clearFocus();
+                    Utility.hideSoftKeyboard(getActivity());
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Helper to set focus change listener in order to toggle hint strings to caps
+     */
+    private void setFocusChangeListeners() {
+        address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+                if (!b) { // when focus is lost, check for the validity and enable 'next' accordingly
+                    isAddressValid = checkAddress();
+                    nextButton.setEnabled(checkReadyForNext());
+                }
+            }
+        });
+
+        address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+            }
+        });
+
+        zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+                if (!b) {
+                    isZipValid = checkZipcode();
+                    nextButton.setEnabled(checkReadyForNext());
+                }
+            }
+        });
+
+        cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+                if (!b) {
+                    isCityValid = checkCity();
+                    nextButton.setEnabled(checkReadyForNext());
+                }
+            }
+        });
+
+        stateAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+                if (!b) {
+                    isStateValid = checkState();
+                    nextButton.setEnabled(checkReadyForNext());
+                }
+            }
+        });
+
+        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+                if (!b) {
+                    isPhoneValid = checkPhoneNumber();
+                    nextButton.setEnabled(checkReadyForNext());
+                }
             }
         });
     }
 
     private boolean checkState() {
-        if (TextUtils.isEmpty(autoCompleteTextView.getText().toString().trim())) {
-            autoCompleteTextView.requestFocus();
+        if (TextUtils.isEmpty(stateAutoCompleteTextView.getText().toString().trim())) {
             stateTextInputLayout.setErrorEnabled(true);
             stateTextInputLayout.setError(getString(R.string.empty_state_error_messae));
             return false;
         } else if (state_var == null) {
-            autoCompleteTextView.requestFocus();
             stateTextInputLayout.setErrorEnabled(true);
             stateTextInputLayout.setError(getString(R.string.select_state_error_messae));
             return false;
@@ -208,12 +318,10 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     private boolean checkCity() {
         if (TextUtils.isEmpty(cityEditText.getText().toString().trim())) {
-            cityEditText.requestFocus();
             cityTextInputLayout.setErrorEnabled(true);
             cityTextInputLayout.setError(getString(R.string.empty_city_error_messae));
             return false;
         } else if (cityEditText.getText().toString().trim().length() < 3) {
-            cityEditText.requestFocus();
             cityTextInputLayout.setErrorEnabled(true);
             cityTextInputLayout.setError(getString(R.string.minimum_char_in_city_error_messae));
             return false;
@@ -225,7 +333,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     private boolean checkAddress() {
         if (TextUtils.isEmpty(address1EditText.getText().toString().trim())) {
-            address1EditText.requestFocus();
             address1TextInputLayout.setErrorEnabled(true);
             address1TextInputLayout.setError(getString(R.string.empty_address_error_messae));
             return false;
@@ -237,7 +344,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     private boolean checkZipcode() {
         if (TextUtils.isEmpty(zipCodeEditText.getText().toString().trim())) {
-            zipCodeEditText.requestFocus();
             zipCodeTextInputLayout.setErrorEnabled(true);
             zipCodeTextInputLayout.setError(getString(R.string.empty_zip_code_error_messae));
             return false;
@@ -247,14 +353,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         return true;
     }
 
-    private boolean checkPhonenumber() {
+    private boolean checkPhoneNumber() {
         if (TextUtils.isEmpty(phoneNumberEditText.getText().toString().trim())) {
-            phoneNumberEditText.requestFocus();
             phNoTextInputLayout.setErrorEnabled(true);
             phNoTextInputLayout.setError(getString(R.string.empty_phone_number_error_messae));
             return false;
         } else if (!Utility.isValidPhoneNumber(phoneNumberEditText.getText().toString().trim())) {
-            phoneNumberEditText.requestFocus();
             phNoTextInputLayout.setErrorEnabled(true);
             phNoTextInputLayout.setError(getString(R.string.incorrect_phone_number_error_messae));
             return false;
@@ -264,29 +368,22 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         return true;
     }
 
-    private void nextbuttonClick() {
-        if (checkPhonenumber()) {
-            if (checkAddress()) {
-                if (checkCity()) {
-                    if (checkState()) {
-                        if (checkZipcode()) {
-                            // move to next
-                            ((DemographicsActivity) getActivity()).setCurrentItem(1, true);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.addressHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.addressSubHeading));
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.zipCodeId));
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.addressEditTextId));
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.addressEditText2Id));
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.cityId));
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), (EditText) view.findViewById(R.id.autoTextCompleteStates));
-        setGothamRoundedMediumTypeface(getActivity(), (Button) view.findViewById(R.id.demographicsNextButton));
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), zipCodeEditText);
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), address1EditText);
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), address2EditText);
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), cityEditText);
+        setProximaNovaSemiboldTypefaceEdittext(getActivity(), stateAutoCompleteTextView);
+        setGothamRoundedMediumTypeface(getActivity(), nextButton);
+    }
+
+    private boolean checkReadyForNext() {
+        return isAddressValid
+                && isZipValid
+                && isCityValid
+                && isStateValid
+                && isPhoneValid;
     }
 }

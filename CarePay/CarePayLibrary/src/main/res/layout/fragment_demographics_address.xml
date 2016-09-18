@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/linearLayout"
+<LinearLayout android:id="@+id/demographicsAddressRootContainer"
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -31,7 +31,6 @@
             style="@style/DemographicsDocsHeaderStyle"
             android:layout_marginTop="0dp"
             android:orientation="vertical"
-            android:focusableInTouchMode="true"
             android:id="@+id/demographicsAddressDetContainer">
 
             <android.support.design.widget.TextInputLayout
@@ -128,7 +127,7 @@
         android:layout_weight="1"/>
 
     <Button
-        android:id="@+id/demographicsNextButton"
+        android:id="@+id/demographicsAddressNextButton"
         android:text="@string/next_Button"
         style="@style/DemographicsNextButtonStyle"/>
 </LinearLayout>
