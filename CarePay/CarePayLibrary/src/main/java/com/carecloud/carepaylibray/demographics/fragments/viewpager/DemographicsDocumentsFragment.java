@@ -74,7 +74,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
      */
     private void setButtons() {
         // next button
-        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
+        nextButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

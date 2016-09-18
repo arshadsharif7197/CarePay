@@ -51,7 +51,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/goToCarePayButton"
+            android:id="@+id/demographicsGoToCarePayButton"
             style="@style/DemographicsNextButtonStyle"
             android:background="@drawable/button_selector"
             android:text="@string/GoToCarePayButton"/>

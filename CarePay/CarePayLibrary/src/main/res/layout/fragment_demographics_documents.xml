@@ -79,7 +79,7 @@
         android:text="@string/demogr_docs_add_card"/>
 
     <Button
-        android:id="@+id/demographicsNextButton"
+        android:id="@+id/demographicsDocsNextButton"
         style="@style/DemographicsNextButtonStyle"
         android:text="@string/demogr_next"/>
 

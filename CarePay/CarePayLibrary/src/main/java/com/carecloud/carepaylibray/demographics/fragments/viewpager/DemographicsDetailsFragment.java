@@ -77,7 +77,7 @@ public class DemographicsDetailsFragment extends Fragment
         ethnicityTextView.setOnClickListener(this);
         preferredLanguageTextView = (TextView) view.findViewById(R.id.preferredLanguageListTextView);
         preferredLanguageTextView.setOnClickListener(this);
-        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
+        nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         nextButton.setOnClickListener(this);
         enableNextButton(false); // 'next' is initially disabled
     }
@@ -150,7 +150,7 @@ public class DemographicsDetailsFragment extends Fragment
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.raceListTextView));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
-        setGothamRoundedMediumTypeface(getActivity(), (Button) view.findViewById(R.id.demographicsNextButton));
+        setGothamRoundedMediumTypeface(getActivity(), nextButton);
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }

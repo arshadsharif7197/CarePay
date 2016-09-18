@@ -224,10 +224,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE) {
                     isPhoneValid = checkPhoneNumber();
-                    nextButton.setEnabled(checkReadyForNext());
-                    phoneNumberEditText.clearFocus();
-                    Utility.hideSoftKeyboard(getActivity());
-                    return true;
+                    boolean isEnabled = checkReadyForNext();
+                    if (isEnabled) {
+                        Utility.hideSoftKeyboard(getActivity());
+                    }
+                    nextButton.setEnabled(isEnabled);
+                    return isEnabled;
                 }
                 return false;
             }

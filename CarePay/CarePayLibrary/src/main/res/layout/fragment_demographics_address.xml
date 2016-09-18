@@ -129,5 +129,6 @@
     <Button
         android:id="@+id/demographicsAddressNextButton"
         android:text="@string/next_Button"
-        style="@style/DemographicsNextButtonStyle"/>
+        style="@style/DemographicsNextButtonStyle"
+        android:focusable="true"/>
 </LinearLayout>

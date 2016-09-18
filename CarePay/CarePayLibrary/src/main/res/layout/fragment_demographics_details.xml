@@ -130,7 +130,7 @@
         android:layout_weight="1"/>
 
     <Button
-        android:id="@+id/demographicsNextButton"
+        android:id="@+id/demographicsDetailsNextButton"
         style="@style/DemographicsNextButtonStyle"
         android:text="@string/next_Button"/>
 

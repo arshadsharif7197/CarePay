@@ -40,7 +40,7 @@ public class DemograhicsDocumentsScreenTest {
     public void setUp() {
         activity = activityRule.getActivity();
         // move to Documents page
-        onView(withId(R.id.demographicsNextButton)).perform(click()).perform(click());
+        onView(withId(R.id.demographicsDocsNextButton)).perform(click()).perform(click());
         docsParentFragment = (DemographicsDocumentsFragment) activity.getFragmentAt(2);
     }
 
