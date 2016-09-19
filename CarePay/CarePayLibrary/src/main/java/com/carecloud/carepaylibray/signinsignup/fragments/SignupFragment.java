@@ -66,7 +66,6 @@ public class SignupFragment extends Fragment {
 
 
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
-        submitButton.setBackground(getResources().getDrawable(R.drawable.button_light_gray_background));
         Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
         submitButton.setTypeface(buttonFontFamily);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +80,7 @@ public class SignupFragment extends Fragment {
                 }
             }
         });
+//        submitButton.setEnabled(false);
 
         firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.firstNameTextInputLayout);
         middleNameInputLayout = (TextInputLayout) view.findViewById(R.id.middleNameTextInputLayout);
@@ -190,18 +190,7 @@ public class SignupFragment extends Fragment {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.firstname_text);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    firstNameInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
-                        // change hint to lower
-                        firstNameInputLayout.setHint(hint);
-                    } else {
-                        firstNameText.setHint(hint);
-                    }
-                }
+                Utility.handleHintChange(view, b);
             }
         });
         middleNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -309,15 +298,20 @@ public class SignupFragment extends Fragment {
 
     }
 
-    private void checkForButtonEnable() {
-        if (isValidFirstName && isValidMiddleName && isValidLastName && isValidEmail && isValidPassword && isValidRepeatPassword) {
+    private boolean checkForButtonEnable() {
+        boolean areAllValid = isValidFirstName
+                && isValidMiddleName
+                && isValidLastName
+                && isValidEmail
+                && isValidPassword
+                && isValidRepeatPassword;
+
+        if (areAllValid) {
             submitButton.setEnabled(true);
-            submitButton.setBackgroundResource(R.drawable.button_selector);
-            submitButton.setTextColor(Color.WHITE);
         } else {
             submitButton.setEnabled(false);
-            submitButton.setBackgroundResource(R.drawable.button_light_gray_background);
-
         }
+
+        return areAllValid;
     }
 }
