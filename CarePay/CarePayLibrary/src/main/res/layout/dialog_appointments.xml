@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/dialog_appoint_close_id"
+        android:id="@+id/dialogAppointHeaderImageView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/apt_imgview_ht"
         android:layout_gravity="left"
@@ -30,16 +30,16 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/appt_date_tv"
+                android:id="@+id/apptDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_text_ht"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
+                android:gravity="center_horizontal"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/apt_dl_text_date" />
 
             <TextView
-                android:id="@+id/appt_time_tv"
+                android:id="@+id/apptTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_appt_date_margin"
                 android:layout_marginBottom="@dimen/apt_dl_appt_time_margin"
@@ -49,48 +49,69 @@
 
         </LinearLayout>
 
+        <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/apptUserPicCardView"
+            android:layout_width="@dimen/apt_dl_image_ht_wdh"
+            android:layout_height="@dimen/apt_dl_image_ht_wdh"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/apt_dl_appt_shortname_margin"
+            android:elevation="@dimen/apt_dl_image_elevation"
+            android:innerRadius="@dimen/apt_dl_zero_ht_wdh"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/apt_dl_image_radius">
+
+            <ImageView
+                android:id="@+id/apptUserPicImageView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/apt_dl_image_ht_wdh"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icn_signup_step_2_user_on"></ImageView>
+        </android.support.v7.widget.CardView>
+
         <TextView
-            android:id="@+id/appt_shortname_tv"
+            android:id="@+id/apptShortnameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/apt_dl_appt_shortname_margin"
             android:background="@drawable/round_tv"
             android:gravity="center_vertical|center_horizontal"
             android:textColor="@color/white"
+            android:textSize="@dimen/apt_dl_text_big"
             android:textStyle="bold"
-            android:textSize="@dimen/apt_dl_text_big" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/apt_dl_margin"
             android:layout_marginTop="@dimen/apt_dl_appt_time_margin"
+            android:orientation="vertical"
             android:paddingBottom="@dimen/apt_dl_margin"
+            android:paddingLeft="@dimen/apt_dl_margin"
             android:paddingRight="@dimen/apt_dl_margin">
 
             <TextView
-                android:id="@+id/appt_name_tv"
+                android:id="@+id/apptNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textSize="@dimen/textview_default_textsize"
                 android:textColor="@color/valuetext_default_textcolor"
-                 />
+                android:textSize="@dimen/textview_default_textsize" />
 
             <TextView
-                android:id="@+id/appt_type_tv"
+                android:id="@+id/apptTypeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
-                android:textSize="@dimen/textview_textsize"
+                android:gravity="center_horizontal"
                 android:textColor="@color/lightSlateGray"
-                 />
+                android:textSize="@dimen/textview_textsize" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="@dimen/apt_dl_boader_ht"
                 android:layout_marginBottom="@dimen/apt_dl_margin"
                 android:layout_marginTop="@dimen/apt_dl_margin"
                 android:background="@color/light_gray_dialog" />
@@ -101,54 +122,76 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/appt_address_tv"
-                    android:layout_width="0dp"
+                    android:id="@+id/apptAddressTextView"
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0.7"
                     android:ellipsize="none"
-                    android:textSize="@dimen/textview_textsize"
-                    android:maxLines="3"
-                    android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
                     android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
-                    android:textColor="@color/gray_round"
-                    android:scrollHorizontally="false" />
+                    android:maxLines="3"
+                    android:scrollHorizontally="false"
+                    android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
+                    android:textColor="@color/grayRound"
+                    android:textSize="@dimen/textview_textsize" />
 
                 <ImageView
-                    android:id="@+id/dialog_appoint_location_id"
-                    android:layout_width="0dp"
+                    android:id="@+id/apptLocationImageView"
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.15"
                     android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_weight="0.15"
                     android:src="@drawable/icn_appointment_card_directions" />
 
                 <ImageView
-                    android:id="@+id/dialog_appoint_dail_id"
-                    android:layout_width="0dp"
+                    android:id="@+id/apptDailImageView"
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.15"
                     android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
-                    android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
                     android:layout_marginLeft="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_weight="0.15"
                     android:src="@drawable/icn_appointment_card_call" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="@dimen/apt_dl_boader_ht"
                 android:layout_marginBottom="@dimen/apt_dl_margin"
                 android:layout_marginTop="@dimen/apt_dl_margin"
                 android:background="@color/light_gray_dialog" />
-
-            <Button
-                android:id="@+id/btn_check_at_office_id"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/apt_dl_btn_check_ht"
-                android:textColor="@color/blue_cerulian"
-                android:textSize="@dimen/apt_dl_textview_size"
-                android:background="@drawable/button_blue_border"
-                android:text="@string/check_in_at_office" />
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/checkOfficeBtn"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="@dimen/apt_dl_btn_check_ht"
+                    android:background="@drawable/button_blue_border"
+                    android:text="@string/check_in_at_office"
+                    android:paddingLeft="@dimen/apt_dl_btn_texxt_pd"
+                    android:paddingRight="@dimen/apt_dl_btn_texxt_pd"
+                    android:textColor="@color/blue_cerulian"
+                    android:textSize="@dimen/apt_dl_textview_size" />
+                <Button
+                     android:id="@+id/checkOfficeNow"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                     android:layout_height="@dimen/apt_dl_btn_check_ht"
+                     android:background="@drawable/button_green_fill_background"
+                     android:text="@string/check_in_now"
+                     android:textColor="@color/white"
+                     android:paddingLeft="@dimen/apt_dl_btn_texxt_pd"
+                    android:paddingRight="@dimen/apt_dl_btn_texxt_pd"
+                    android:visibility="visible"
+                     android:layout_marginLeft="@dimen/apt_dl_btn_margin"
+                     android:textSize="@dimen/apt_dl_textview_size" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

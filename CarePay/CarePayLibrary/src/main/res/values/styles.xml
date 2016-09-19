@@ -7,10 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="titleTextStyle">@style/actionBarTitle</item>
-
-
     </style>
-
 
     <style name="actionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
@@ -62,27 +59,20 @@
         <item name="android:keyPreviewLayout">@layout/keyboard_preview</item>
     </style>
 
-
-    <style name="MySwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">@color/rich_electric_blue</item>
-        <item name="colorSwitchThumbNormal">@color/light_gray</item>
-        <item name="android:colorForeground">@color/uncheck_confirm_button</item>
-    </style>
-
     <declare-styleable name="SympliTextView">
-        <attr name="fontPath" format="string"/>
+        <attr name="fontPath" format="string" />
 
         <!-- Inner shadow settings. -->
-        <attr name="innerShadowColor" format="color"/>
-        <attr name="innerShadowDx" format="dimension"/>
-        <attr name="innerShadowDy" format="dimension"/>
-        <attr name="innerShadowRadius" format="dimension"/>
+        <attr name="innerShadowColor" format="color" />
+        <attr name="innerShadowDx" format="dimension" />
+        <attr name="innerShadowDy" format="dimension" />
+        <attr name="innerShadowRadius" format="dimension" />
 
         <!-- Outer shadow settings. -->
-        <attr name="outerShadowColor" format="color"/>
-        <attr name="outerShadowDx" format="dimension"/>
-        <attr name="outerShadowDy" format="dimension"/>
-        <attr name="outerShadowRadius" format="dimension"/>
+        <attr name="outerShadowColor" format="color" />
+        <attr name="outerShadowDx" format="dimension" />
+        <attr name="outerShadowDy" format="dimension" />
+        <attr name="outerShadowRadius" format="dimension" />
     </declare-styleable>
 
     <!-- Responsibility styles -->
@@ -154,7 +144,8 @@
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginStart">14dp</item>
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@drawable/button_scan_card</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="DemographicsDocsHeaderTitleStyle" parent="android:Widget.TextView">
@@ -182,9 +173,8 @@
     <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/payne_gray</item>
-        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+        <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
     </style>
 
     <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
@@ -233,26 +223,36 @@
     <style name="DemographicsFragmentsTextInputLayoutStyle." parent="android:Widget.EditText">
         <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textSize">17.0sp</item>
-
     </style>
 
-    <style name="DemographicsAddMedInfoButtonStyle" parent="ResponsButtonStyle">
-        <item name="android:background">@color/button_bright_cerulean</item>
+    <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
         <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
-        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:background">@drawable/button_scan_card</item>
     </style>
 
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">
-        <item name="android:background">@color/bright_cerulean</item>
+        <item name="android:background">@drawable/agree_button_background</item>
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
     </style>
+
+    <!--<SigninSignup error Appearance>-->
     <style name="errorTextAppearance" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">ProximaNova-Semibold</item>
         <item name="android:textColor">@color/harvard_crimson</item>
         <item name="android:textSize">10sp</item>
     </style>
+
+    <style name="SingupEditsContainerStyle" parent="DemographicsDocsHeaderStyle">
+        <item name="android:fontFamily">ProximaNova-Semibold</item>
+        <item name="android:layout_marginTop">@dimen/signup_bottom_margin</item>
+    </style>
+
+    <!-- <Review Screens Style>-->
     <style name="reviewDemographicBlue." parent="android:Widget.TextView">
         <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textSize">@dimen/respons_detail_text_size</item>
@@ -269,18 +269,133 @@
     </style>
 
 
-
-
+<!-- Navigation Screen Theme-->
     <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="windowActionBar">false</item>
-    <item name="windowNoTitle">true</item>
-    <item name="colorPrimary">@color/colorPrimary</item>
-    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!--;-->
 
+    <!--<Consent forms styles>-->
+    <style name="ConsentActivityTitleStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">21.0sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ConsentActivityDescriptionTextStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">13.0sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="ConsentActivityContentTextStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/Feldgrau</item>
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
+        <item name="android:lineSpacingMultiplier">1</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="ConsentActivityDoctornameTextStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:lineSpacingExtra">17.0sp</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="ConsentActivityDateStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/Feldgrau</item>
+        <item name="android:textSize">24.0sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+<!-- SigninSignup -->
+    <style name="HintStyle">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColorHint">@color/slateGray</item>
+        <item name="android:textColor">@color/slateGray</item>
+    </style>
+
+    <style name="HintStyleFloating">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColorHint">@color/darkblue</item>
+        <item name="android:textColor">@color/darkblue</item>
+    </style>
+
+    <!-- InTake -->
+    <style name="InTakeNextButtonStyle" parent="DemographicsNextButtonStyle">
+        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+    <style name="InTakeDotStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/circle_indicator_gray</item>
+    </style>
+
+    <style name="InTakeDottedProgressStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/intakeDottedProgressHeight</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="InTakeNextButtonContainerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/intakeNextButtonContainerHeight</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/gray</item>
+    </style>
+
+    <style name="InTakeFragmentTitleStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/intakeTitleTextSize</item>
+        <item name="android:layout_marginTop">@dimen/intakeTitleTopMargin</item>
+    </style>
+
+    <style name="InTakeFragmentCaptionStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">@dimen/intakeCaptionTextSize</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:state_multiline">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginStart">@dimen/intakeCaptionLeftRightMargin</item>
+        <item name="android:layout_marginEnd">@dimen/intakeCaptionLeftRightMargin</item>
+    </style>
+
+    <style name="InTakeQuestionsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginStart">@dimen/intakeQuestionStartEndMargin</item>
+        <item name="android:layout_marginEnd">@dimen/intakeQuestionStartEndMargin</item>
+    </style>
+
+    <style name="CustomToolbarTextStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
 
 </resources>

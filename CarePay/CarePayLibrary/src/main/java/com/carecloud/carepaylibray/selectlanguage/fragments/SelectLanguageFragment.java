@@ -17,7 +17,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.selectlanguage.adapters.LanguageListAdapter;
 import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
-import com.carecloud.carepaylibray.utils.StringFunctions;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +104,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);*/
 
-        if (!StringFunctions.isNullOrEmpty(languageName)) {
+        if (!StringUtil.isNullOrEmpty(languageName)) {
             for (int j = 0; j < languageOptionModelList.size(); j++) {
                 LanguageOptionModel languageOptionModelData = languageOptionModelList.get(j);
                 if (languageOptionModelData.getValue().equalsIgnoreCase(languageName)) {
@@ -121,7 +121,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (!StringFunctions.isNullOrEmpty(languageName)) {
+        if (!StringUtil.isNullOrEmpty(languageName)) {
             outState.putString("language", languageName);
         }
         super.onSaveInstanceState(outState);

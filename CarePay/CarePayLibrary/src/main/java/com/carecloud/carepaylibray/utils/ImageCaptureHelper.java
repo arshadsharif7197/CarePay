@@ -227,4 +227,8 @@ public class ImageCaptureHelper {
         }
         imageViewTarget.setImageBitmap(bitmap);
     }
+
+    public void resetTargetView() {
+        imageViewTarget.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_camera));
+    }
 }

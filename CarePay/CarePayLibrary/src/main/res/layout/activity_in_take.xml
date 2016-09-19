@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:id="@+id/activity_in_take"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.carecloud.carepaylibray.intake.InTakeActivity">
+
+    <include layout="@layout/toolbar_intake"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/intakeDottedTab"
+            style="@style/InTakeDottedProgressStyle"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/intakeViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/intakeBtnNext"
+                android:text="Next Question"
+                style="@style/InTakeNextButtonStyle"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/intakeKeyboardHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

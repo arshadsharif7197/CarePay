@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/titleTv"
+        style="@style/ConsentActivityTitleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/consentname" />
+
+    <TextView
+        android:id="@+id/descriptionTv"
+        style="@style/ConsentActivityDescriptionTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/marginleftright"
+        android:layout_marginRight="@dimen/marginleftright"
+        android:layout_below="@+id/titleTv"
+        android:text="@string/consentdescrption" />
+
+    <Button
+        android:id="@+id/signButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blue_cerulian"
+        android:textColor="@color/white"
+        android:text="@string/tiltle1_3" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/signButton"
+        android:layout_below="@+id/descriptionTv"
+        android:layout_marginTop="@dimen/margintop"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/contentTv"
+                style="@style/ConsentActivityContentTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="99"
+                android:scrollbars="vertical"
+                android:layout_gravity="left"
+                android:layout_marginLeft="@dimen/marginleftright"
+                android:layout_marginRight="@dimen/marginleftright"
+                android:text="@string/constentcontent" />
+
+
+            <TextView
+                android:id="@+id/dateTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ConsentActivityDateStyle" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

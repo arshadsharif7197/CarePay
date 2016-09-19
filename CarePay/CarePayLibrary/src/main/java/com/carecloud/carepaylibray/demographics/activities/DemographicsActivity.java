@@ -12,14 +12,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
@@ -28,7 +24,6 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.myinterface.CallbackInterface;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -40,22 +35,10 @@ import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
-
-    TextView title;
-
-
+    private TextView title;
+    private int currentPageIndex;
     private ViewPager viewPager;
     private FunPagerAdapter funPagerAdapter;
-
-    @Override
-    public void replaceFragment(Class fragClass, boolean addToBackStack) {
-
-    }
-
-    @Override
-    public void placeInitContentFragment() {
-
-    }
 
     @Override
     public int getLayoutRes() {
@@ -85,13 +68,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
         (DemographicsActivity.this).setSupportActionBar(toolbar);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                backButtonClick();
-            }
-        });
-
         // set the language
         Intent intent = getIntent();
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
@@ -100,6 +76,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
         isStoragePermissionGranted();
 
+        currentPageIndex = 0;
         funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(4);
@@ -111,6 +88,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
             @Override
             public void onPageSelected(int position) {
+                currentPageIndex = position;
                 setScreenTitle(position);
             }
 
@@ -236,8 +214,15 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return ((FunPagerAdapter) viewPager.getAdapter()).getItem(pos);
     }
 
-    private void backButtonClick() {
-        Toast.makeText(DemographicsActivity.this, "backButtonClick", Toast.LENGTH_SHORT).show();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            if(currentPageIndex == 0) {
+                onBackPressed();
+            } else {
+                setCurrentItem(currentPageIndex - 1, true);
+            }
+        }
+        return true;
     }
-
 }
