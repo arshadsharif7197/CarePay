@@ -178,4 +178,16 @@ public class Utility {
         String stringSplitArr[] = fullName.split(" ");
         return String.valueOf(stringSplitArr[1].charAt(0))+String.valueOf(stringSplitArr[2].charAt(0));
     }
+
+    /**
+     * get days as a ordinal string
+     * @param num the int to evaluate
+     * @return return a ordinal String with day
+     */
+    public static String getDayOrdinal(int num)
+    {
+        String[] suffix = {"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"};
+        int m = num % 100;
+        return String.valueOf(num) + suffix[(m > 10 && m < 20) ? 0 : (m % 10)];
+    }
 }
