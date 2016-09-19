@@ -48,6 +48,7 @@ public class SignupFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
+        // set the toolbar
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.signup_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
         Utility.setGothamRoundedMediumTypeface(getActivity(), title);
@@ -65,6 +66,7 @@ public class SignupFragment extends Fragment {
         });
 
 
+        // set the buttons
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
         Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
         submitButton.setTypeface(buttonFontFamily);
@@ -80,89 +82,10 @@ public class SignupFragment extends Fragment {
                 }
             }
         });
-//        submitButton.setEnabled(false);
-
-        firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.firstNameTextInputLayout);
-        middleNameInputLayout = (TextInputLayout) view.findViewById(R.id.middleNameTextInputLayout);
-        lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.lastNameTextInputLayout);
-        emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
-        passwordInputLayout = (TextInputLayout) view.findViewById(R.id.createPasswordTextInputLayout);
-        passwordRepeatInputLayout = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
-
-        firstNameText = (EditText) view.findViewById(R.id.firstNameEditText);
-        middleNameText = (EditText) view.findViewById(R.id.middleNameEditText);
-        lastNameText = (EditText) view.findViewById(R.id.lastNameEditText);
-        emailText = (EditText) view.findViewById(R.id.emailEditText);
-        passwordText = (EditText) view.findViewById(R.id.createPasswordEditText);
-        repeatPasswordText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
+        submitButton.setEnabled(false);
 
         accountExistTextView = (TextView) view.findViewById(R.id.oldUserTextView);
         accountExistTextView = (TextView) view.findViewById(R.id.oldUserTextView);
-
-        // TODO: 9/14/2016 change to use the Utilities
-        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        Typeface textViewFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-        Typeface floatingFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-
-        firstNameInputLayout.setTypeface(editTextFontFamily);
-        middleNameInputLayout.setTypeface(editTextFontFamily);
-        lastNameInputLayout.setTypeface(editTextFontFamily);
-        emailInputLayout.setTypeface(editTextFontFamily);
-        passwordInputLayout.setTypeface(editTextFontFamily);
-        passwordRepeatInputLayout.setTypeface(editTextFontFamily);
-        accountExistTextView.setTypeface(textViewFontFamily);
-        // get the edit texts and add the hint string res as tag
-        firstNameText.setTypeface(textViewFontFamily);
-        middleNameText.setTypeface(textViewFontFamily);
-        lastNameText.setTypeface(textViewFontFamily);
-        emailText.setTypeface(textViewFontFamily);
-        passwordText.setTypeface(textViewFontFamily);
-        repeatPasswordText.setTypeface(textViewFontFamily);
-
-
-        firstNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, firstNameText, firstNameInputLayout, "Enter First Name", false, new TextWatcherModel.OnInputChangedListner() {
-            @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidFirstName = isValid;
-                checkForButtonEnable();
-            }
-        }));
-        middleNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, middleNameText, middleNameInputLayout, "Enter Middle Name", true, new TextWatcherModel.OnInputChangedListner() {
-            @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidMiddleName = isValid;
-                checkForButtonEnable();
-            }
-        }));
-        lastNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, lastNameText, lastNameInputLayout, "Enter Last Name", false, new TextWatcherModel.OnInputChangedListner() {
-            @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidLastName = isValid;
-                checkForButtonEnable();
-            }
-        }));
-        emailText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_EMAIL, emailText, emailInputLayout, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
-            @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidEmail = isValid;
-                checkForButtonEnable();
-            }
-        }));
-        passwordText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_PASSWORD, passwordText, passwordInputLayout, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
-            @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidPassword = isValid;
-                checkForButtonEnable();
-            }
-        }));
-        repeatPasswordText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_PASSWORD, repeatPasswordText, passwordRepeatInputLayout, "Confirm password can't be empty", false, new TextWatcherModel.OnInputChangedListner() {
-            @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidRepeatPassword = isValid;
-                checkForButtonEnable();
-            }
-        }));
-
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,10 +100,125 @@ public class SignupFragment extends Fragment {
             }
         });
 
-        // hint
-        setChangeFocusListeners();
+        setEditTexts(view);
+
+
+//        firstNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, firstNameText, firstNameInputLayout, "Enter First Name", false, new TextWatcherModel.OnInputChangedListner() {
+//            @Override
+//            public void OnInputChangedListner(boolean isValid) {
+//                isValidFirstName = isValid;
+//                checkForButtonEnable();
+//            }
+//        }));
+//        middleNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, middleNameText, middleNameInputLayout, "Enter Middle Name", true, new TextWatcherModel.OnInputChangedListner() {
+//            @Override
+//            public void OnInputChangedListner(boolean isValid) {
+//                isValidMiddleName = isValid;
+//                checkForButtonEnable();
+//            }
+//        }));
+//        lastNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, lastNameText, lastNameInputLayout, "Enter Last Name", false, new TextWatcherModel.OnInputChangedListner() {
+//            @Override
+//            public void OnInputChangedListner(boolean isValid) {
+//                isValidLastName = isValid;
+//                checkForButtonEnable();
+//            }
+//        }));
+//        emailText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_EMAIL, emailText, emailInputLayout, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
+//            @Override
+//            public void OnInputChangedListner(boolean isValid) {
+//                isValidEmail = isValid;
+//                checkForButtonEnable();
+//            }
+//        }));
+//        passwordText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_PASSWORD, passwordText, passwordInputLayout, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
+//            @Override
+//            public void OnInputChangedListner(boolean isValid) {
+//                isValidPassword = isValid;
+//                checkForButtonEnable();
+//            }
+//        }));
+//        repeatPasswordText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_PASSWORD, repeatPasswordText, passwordRepeatInputLayout, "Confirm password can't be empty", false, new TextWatcherModel.OnInputChangedListner() {
+//            @Override
+//            public void OnInputChangedListner(boolean isValid) {
+//                isValidRepeatPassword = isValid;
+//                checkForButtonEnable();
+//            }
+//        }));
+
 
         return view;
+    }
+
+    private void setEditTexts(View view) {
+
+        String hint = getString(R.string.firstname_text);
+        firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.firstNameTextInputLayout);
+        firstNameInputLayout.setTag(hint);
+        firstNameText = (EditText) view.findViewById(R.id.firstNameEditText);
+        firstNameText.setTag(firstNameInputLayout);
+
+        hint = getString(R.string.middlename_text);
+        middleNameInputLayout = (TextInputLayout) view.findViewById(R.id.middleNameTextInputLayout);
+        middleNameInputLayout.setTag(hint);
+        middleNameText = (EditText) view.findViewById(R.id.middleNameEditText);
+        middleNameText.setTag(middleNameInputLayout);
+
+        hint = getString(R.string.lastname_text);
+        lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.lastNameTextInputLayout);
+        lastNameInputLayout.setTag(hint);
+        lastNameText = (EditText) view.findViewById(R.id.lastNameEditText);
+        lastNameText.setTag(lastNameInputLayout);
+
+        hint = getString(R.string.email_text);
+        emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
+        emailInputLayout.setTag(hint);
+        emailText = (EditText) view.findViewById(R.id.emailEditText);
+        emailText.setTag(emailInputLayout);
+
+        hint = getString(R.string.password_text);
+        passwordInputLayout = (TextInputLayout) view.findViewById(R.id.createPasswordTextInputLayout);
+        passwordInputLayout.setTag(hint);
+        passwordText = (EditText) view.findViewById(R.id.createPasswordEditText);
+        passwordText.setTag(passwordInputLayout);
+
+        hint = getString(R.string.repeat_password_text);
+        passwordRepeatInputLayout = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
+        passwordRepeatInputLayout.setTag(hint);
+        repeatPasswordText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
+        repeatPasswordText.setTag(passwordRepeatInputLayout);
+
+        setEditsTypefaces();
+
+        setChangeFocusListeners();
+
+    }
+
+    private void setEditsTypefaces() {
+        // TODO: 9/14/2016 change to use the Utilities
+        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
+        Typeface textViewFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+        Typeface floatingFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+
+        firstNameInputLayout.setTypeface(editTextFontFamily);
+        firstNameText.setTypeface(textViewFontFamily);
+
+        middleNameInputLayout.setTypeface(editTextFontFamily);
+        middleNameText.setTypeface(textViewFontFamily);
+
+        lastNameInputLayout.setTypeface(editTextFontFamily);
+        lastNameText.setTypeface(textViewFontFamily);
+
+        emailInputLayout.setTypeface(editTextFontFamily);
+        emailText.setTypeface(textViewFontFamily);
+
+        passwordInputLayout.setTypeface(editTextFontFamily);
+        passwordText.setTypeface(textViewFontFamily);
+
+        passwordRepeatInputLayout.setTypeface(editTextFontFamily);
+        repeatPasswordText.setTypeface(textViewFontFamily);
+
+        accountExistTextView.setTypeface(textViewFontFamily);
     }
 
     /**
@@ -190,92 +228,38 @@ public class SignupFragment extends Fragment {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+
                 Utility.handleHintChange(view, b);
             }
         });
         middleNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.middlename_text);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    middleNameInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(middleNameText.getText().toString())) {
-                        // change hint to lower
-                        middleNameInputLayout.setHint(hint);
-                    } else {
-                        middleNameText.setHint(hint);
-                    }
-                }
+                Utility.handleHintChange(view, b);
             }
         });
         lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.lastname_text);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    lastNameInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(lastNameText.getText().toString())) {
-                        // change hint to lower
-                        lastNameInputLayout.setHint(hint);
-                    } else {
-                        lastNameText.setHint(hint);
-                    }
-                }
+                Utility.handleHintChange(view, b);
             }
         });
-//        emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean b) {
-//                String hint = getString(R.string.email_text);
-//                String hintCaps = hint.toUpperCase();
-//                if (b) {
-//                    emailInputLayout.setHint(hintCaps);
-//                } else {
-//                    if(StringUtil.isNullOrEmpty(emailText.getText().toString())) {
-//                        // change hint to lower
-//                        emailInputLayout.setHint(hint);
-//                    } else {
-//                        emailText.setHint(hint);
-//                    }
-//                }
-//            }
-//        });
+        emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utility.handleHintChange(view, b);
+            }
+        });
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.password_text);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    passwordInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(passwordText.getText().toString())) {
-                        // change hint to lower
-                        passwordInputLayout.setHint(hint);
-                    } else {
-                        passwordText.setHint(hint);
-                    }
-                }
+                Utility.handleHintChange(view, b);
             }
         });
         repeatPasswordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.repeat_password_text);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    passwordRepeatInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(repeatPasswordText.getText().toString())) {
-                        // change hint to lower
-                        passwordRepeatInputLayout.setHint(hint);
-                    } else {
-                        repeatPasswordText.setHint(hint);
-                    }
-                }
+                Utility.handleHintChange(view, b);
             }
         });
     }
