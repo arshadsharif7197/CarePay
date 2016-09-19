@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,8 +43,13 @@ public class SignupFragment extends Fragment {
     private EditText repeatPasswordText;
     private TextView accountExistTextView;
     private Button   submitButton;
-    private boolean  isValidFirstName, isValidMiddleName, isValidLastName, isValidEmail, isValidPassword, isValidRepeatPassword;
-    private boolean isPasswordMatch;
+    private boolean  isValidFirstName;
+    private boolean  isValidMiddleName;
+    private boolean  isValidLastName;
+    private boolean  isValidEmail;
+    private boolean  isValidPassword;
+    private boolean  isValidRepeatPassword;
+    private boolean  isPasswordMatch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -156,36 +162,72 @@ public class SignupFragment extends Fragment {
         firstNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    isValidFirstName = checkFirstName();
+                    submitButton.setEnabled(areAllValid());
+                    middleNameText.requestFocus();
+                    return isValidFirstName;
+                }
                 return false;
             }
         });
         middleNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) { // no validations for middle name
+                    lastNameText.requestFocus();
+                    return true;
+                }
                 return false;
             }
         });
         lastNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    isValidLastName = checkLastName();
+                    submitButton.setEnabled(areAllValid());
+                    emailText.requestFocus();
+                    return isValidLastName;
+                }
                 return false;
             }
         });
         emailText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    isValidEmail = checkEmail();
+                    submitButton.setEnabled(areAllValid());
+                    passwordText.requestFocus();
+                    return isValidEmail;
+                }
                 return false;
             }
         });
         passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    isValidPassword = checkPassword();
+                    submitButton.setEnabled(areAllValid());
+                    repeatPasswordText.requestFocus();
+                    return isValidPassword;
+                }
                 return false;
             }
         });
         repeatPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    isPasswordMatch = checkPasswordsMatch();
+                    if (areAllValid()) {
+                        submitButton.setEnabled(areAllValid());
+                        submitButton.requestFocus();
+                    }
+                    return isPasswordMatch;
+                }
                 return false;
             }
         });
@@ -261,30 +303,49 @@ public class SignupFragment extends Fragment {
         });
     }
 
-
     private boolean checkFirstName() {
-        return StringUtil.isNullOrEmpty(this.firstNameText.getText().toString());
+        boolean isFirstNameInvalid = StringUtil.isNullOrEmpty(this.firstNameText.getText().toString());
+        String error = (isFirstNameInvalid ? "error" : null);
+        firstNameInputLayout.setErrorEnabled(isFirstNameInvalid);
+        firstNameInputLayout.setError(error);
+        return !isFirstNameInvalid;
     }
 
     private boolean checkLastName() {
-        return StringUtil.isNullOrEmpty(this.lastNameText.getText().toString());
+        boolean isLastNameInvalid =  StringUtil.isNullOrEmpty(this.lastNameText.getText().toString());
+        String error = (isLastNameInvalid ? "error" : null);
+        lastNameInputLayout.setErrorEnabled(isLastNameInvalid);
+        lastNameInputLayout.setError(error);
+        return !isLastNameInvalid;
     }
 
     private boolean checkEmail() {
         String email = emailText.getText().toString();
-        return StringUtil.isNullOrEmpty(email) && Utility.isValidmail(email);
+        boolean isEmailInvalid = StringUtil.isNullOrEmpty(email) || !Utility.isValidmail(email);
+        String error = (isEmailInvalid ? "error" : null);
+        emailInputLayout.setErrorEnabled(isEmailInvalid);
+        emailInputLayout.setError(error);
+        return !isEmailInvalid;
     }
 
     private boolean checkPassword() {
-        return StringUtil.isNullOrEmpty(passwordText.getText().toString());
+        boolean isPassInvalid =  StringUtil.isNullOrEmpty(passwordText.getText().toString());
+        String error = (isPassInvalid ? "error" : null);
+        passwordInputLayout.setErrorEnabled(isPassInvalid);
+        passwordInputLayout.setError(error);
+        return isPassInvalid;
     }
 
     private boolean checkPasswordsMatch() {
         String password = passwordText.getText().toString();
         String repeatedPassword = repeatPasswordText.getText().toString();
-        return StringUtil.isNullOrEmpty(password)
-                && StringUtil.isNullOrEmpty(repeatedPassword)
-                && (password.equals(repeatedPassword));
+        boolean isNotMachedPassw =  StringUtil.isNullOrEmpty(password)
+                || StringUtil.isNullOrEmpty(repeatedPassword)
+                || !(password.equals(repeatedPassword));
+        String error = (isNotMachedPassw ? "error" : null);
+        passwordRepeatInputLayout.setErrorEnabled(isNotMachedPassw);
+        passwordRepeatInputLayout.setError(error);
+        return !isNotMachedPassw;
     }
 
     private boolean areAllValid() {

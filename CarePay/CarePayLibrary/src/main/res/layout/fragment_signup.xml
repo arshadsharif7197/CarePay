@@ -115,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/repeat_password_text"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:singleLine="true"
                     android:textColor="@color/blue_cerulian"/>
@@ -139,7 +139,9 @@
         <Button
             android:id="@+id/submitSignupButton"
             android:text="@string/signup_submit_button"
-            style="@style/DemographicsNextButtonStyle"/>
+            style="@style/DemographicsNextButtonStyle"
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
 
         <TextView
             android:id="@+id/oldUserTextView"
