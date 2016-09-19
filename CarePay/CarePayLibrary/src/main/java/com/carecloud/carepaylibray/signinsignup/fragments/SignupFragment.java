@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class SignupFragment extends Fragment {
     private TextView accountExistTextView;
     private Button   submitButton;
     private boolean  isValidFirstName, isValidMiddleName, isValidLastName, isValidEmail, isValidPassword, isValidRepeatPassword;
+    private boolean isPasswordMatch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +75,7 @@ public class SignupFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isValidInfo()) {
+                if (areAllValid()) {
                     //Submit Registration
                     Intent intent = new Intent(getActivity(), DemographicsActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -101,51 +103,6 @@ public class SignupFragment extends Fragment {
         });
 
         setEditTexts(view);
-
-
-//        firstNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, firstNameText, firstNameInputLayout, "Enter First Name", false, new TextWatcherModel.OnInputChangedListner() {
-//            @Override
-//            public void OnInputChangedListner(boolean isValid) {
-//                isValidFirstName = isValid;
-//                checkForButtonEnable();
-//            }
-//        }));
-//        middleNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, middleNameText, middleNameInputLayout, "Enter Middle Name", true, new TextWatcherModel.OnInputChangedListner() {
-//            @Override
-//            public void OnInputChangedListner(boolean isValid) {
-//                isValidMiddleName = isValid;
-//                checkForButtonEnable();
-//            }
-//        }));
-//        lastNameText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_TEXT, lastNameText, lastNameInputLayout, "Enter Last Name", false, new TextWatcherModel.OnInputChangedListner() {
-//            @Override
-//            public void OnInputChangedListner(boolean isValid) {
-//                isValidLastName = isValid;
-//                checkForButtonEnable();
-//            }
-//        }));
-//        emailText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_EMAIL, emailText, emailInputLayout, "Enter Valid Email", false, new TextWatcherModel.OnInputChangedListner() {
-//            @Override
-//            public void OnInputChangedListner(boolean isValid) {
-//                isValidEmail = isValid;
-//                checkForButtonEnable();
-//            }
-//        }));
-//        passwordText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_PASSWORD, passwordText, passwordInputLayout, "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
-//            @Override
-//            public void OnInputChangedListner(boolean isValid) {
-//                isValidPassword = isValid;
-//                checkForButtonEnable();
-//            }
-//        }));
-//        repeatPasswordText.addTextChangedListener(new TextWatcherModel(editTextFontFamily, floatingFontfamily, TextWatcherModel.InputType.TYPE_PASSWORD, repeatPasswordText, passwordRepeatInputLayout, "Confirm password can't be empty", false, new TextWatcherModel.OnInputChangedListner() {
-//            @Override
-//            public void OnInputChangedListner(boolean isValid) {
-//                isValidRepeatPassword = isValid;
-//                checkForButtonEnable();
-//            }
-//        }));
-
 
         return view;
     }
@@ -192,6 +149,46 @@ public class SignupFragment extends Fragment {
 
         setChangeFocusListeners();
 
+        setActionListeners();
+    }
+
+    private void setActionListeners() {
+        firstNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return false;
+            }
+        });
+        middleNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return false;
+            }
+        });
+        lastNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return false;
+            }
+        });
+        emailText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return false;
+            }
+        });
+        passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return false;
+            }
+        });
+        repeatPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return false;
+            }
+        });
     }
 
     private void setEditsTypefaces() {
@@ -264,38 +261,39 @@ public class SignupFragment extends Fragment {
         });
     }
 
-    private boolean isValidInfo() {
 
-        if (isValidFirstName && isValidMiddleName && isValidLastName && isValidEmail && isValidPassword && isValidRepeatPassword) {
-
-            if (passwordText.getText().toString().equals(repeatPasswordText.getText().toString())) {
-                return true;
-            } else {
-                Toast.makeText(getActivity(), "Passwords not matched", Toast.LENGTH_LONG).show();
-                return false;
-            }
-
-        } else {
-            Toast.makeText(getActivity(), "Fields can't be empty", Toast.LENGTH_LONG).show();
-            return false;
-        }
-
+    private boolean checkFirstName() {
+        return StringUtil.isNullOrEmpty(this.firstNameText.getText().toString());
     }
 
-    private boolean checkForButtonEnable() {
-        boolean areAllValid = isValidFirstName
+    private boolean checkLastName() {
+        return StringUtil.isNullOrEmpty(this.lastNameText.getText().toString());
+    }
+
+    private boolean checkEmail() {
+        String email = emailText.getText().toString();
+        return StringUtil.isNullOrEmpty(email) && Utility.isValidmail(email);
+    }
+
+    private boolean checkPassword() {
+        return StringUtil.isNullOrEmpty(passwordText.getText().toString());
+    }
+
+    private boolean checkPasswordsMatch() {
+        String password = passwordText.getText().toString();
+        String repeatedPassword = repeatPasswordText.getText().toString();
+        return StringUtil.isNullOrEmpty(password)
+                && StringUtil.isNullOrEmpty(repeatedPassword)
+                && (password.equals(repeatedPassword));
+    }
+
+    private boolean areAllValid() {
+        return isValidFirstName
                 && isValidMiddleName
                 && isValidLastName
                 && isValidEmail
                 && isValidPassword
-                && isValidRepeatPassword;
-
-        if (areAllValid) {
-            submitButton.setEnabled(true);
-        } else {
-            submitButton.setEnabled(false);
-        }
-
-        return areAllValid;
+                && isValidRepeatPassword
+                && isPasswordMatch;
     }
 }

@@ -19,9 +19,9 @@ import java.util.regex.Pattern;
  */
 public class TextWatcherModel implements TextWatcher {
 
-    public static final String EMAIL_PATTERN =
-            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+//    public static final String EMAIL_PATTERN =
+//            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+//                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
 
     private InputType             inputType;
@@ -91,7 +91,7 @@ public class TextWatcherModel implements TextWatcher {
 
     private void doValidation() {
         if (inputType.equals(InputType.TYPE_EMAIL)) {
-            if (!isValidmail()) {
+            if (!isValidmail("")) {
                 textInputLayout.setError(errorMessage);
                 updateStatus(false);
             } else {
@@ -116,16 +116,18 @@ public class TextWatcherModel implements TextWatcher {
         }
     }
 
-    private boolean isValidmail() {
-        if (editText != null) {
-            String email = editText.getText().toString();
+    private boolean isValidmail(String email) {
+        final String EMAIL_PATTERN =
+                "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        if (email != null) {
+            email = editText.getText().toString();
             Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
             Matcher matcher = pattern.matcher(email);
             return matcher.matches();
-        } else {
-            return false;
         }
+        return false;
     }
 
     private boolean isValid() {
