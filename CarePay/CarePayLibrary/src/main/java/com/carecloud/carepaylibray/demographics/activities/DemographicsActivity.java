@@ -13,8 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -24,6 +22,7 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.utils.Utility;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -78,16 +77,20 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
         currentPageIndex = 0;
         funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.demographicsViewPager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(funPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override
             public void onPageSelected(int position) {
+                if(position != 0) {
+                    // hide the keyboard (just in case)
+                    Utility.hideSoftKeyboard(DemographicsActivity.this);
+                }
                 currentPageIndex = position;
                 setScreenTitle(position);
             }
@@ -95,15 +98,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
             }
-        });
+        };
+        viewPager.addOnPageChangeListener(pageChangeListener);
 
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
-            }
-        });
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
+        indicator.setOnPageChangeListener(pageChangeListener);
         indicator.setViewPager(viewPager);
     }
 

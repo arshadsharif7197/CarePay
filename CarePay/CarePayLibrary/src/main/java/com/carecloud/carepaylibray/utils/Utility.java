@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.utils;
 
 /**
  * Created by sharath_rampally on 8/24/2016.
+ * Utilities
  */
 
 import android.Manifest;
@@ -24,13 +25,18 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.hardware.input.InputManager;
 import android.os.Build;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,34 +45,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utility {
-    private static final String PHONE_NUMBER_REGEX= "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})";
+
+    private static final String PHONE_NUMBER_REGEX = "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})";
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int MY_PERMISSIONS_CAMERA                        = 124;
-
-    private static final String SHARED_PREF_SEL_LANG_KEY = "sel_lang";
-
-    public static int convertPxToDp(int px) {
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, displaymetrics);
-    }
-
-    public static int convertDpToPx(Context context, float dps) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dps * scale + 0.5f);
-    }
-    public static void setProximaNovaSemiboldTypefaceEdittext(Context context, EditText view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
-        view.setTypeface(typeface);
-    }
-
-    public static int convertDpToPixel(float dp, Context context) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return (int) px;
-    }
-
 
     public static boolean checkPermission(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
@@ -136,6 +119,40 @@ public class Utility {
         return sizeInInches >= 6.5;
     }
 
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        Pattern pattern = Pattern.compile(PHONE_NUMBER_REGEX);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
+
+    public static String onShortDrName(String fullName) {
+        String stringSplitArr[] = fullName.split(" ");
+        return String.valueOf(stringSplitArr[1].charAt(0)) + String.valueOf(stringSplitArr[2].charAt(0));
+    }
+
+    /* Font utils*/
+
+    public static void setTypefaceFromAssets(Context context, String pathToFontInAssets, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), pathToFontInAssets);
+        view.setTypeface(typeface);
+    }
+
+    public static void setProximaNovaRegularTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_regular.otf");
+        view.setTypeface(typeface);
+    }
+
+    public static void setProximaNovaExtraboldTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
+        view.setTypeface(typeface);
+    }
+
+    public static void setProximaNovaSemiboldTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
+        view.setTypeface(typeface);
+    }
+
     public static void setGothamRoundedBookTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
         view.setTypeface(typeface);
@@ -146,36 +163,60 @@ public class Utility {
         view.setTypeface(typeface);
     }
 
-
-
-    public static boolean isValidPhoneNumber(String phoneNumber) {
-        Pattern pattern = Pattern.compile(PHONE_NUMBER_REGEX);
-        Matcher matcher = pattern.matcher(phoneNumber);
-        return matcher.matches();
-    }
-
-    public static void setTypefaceFromAssets(Context context, String pathToFontInAssets, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), pathToFontInAssets);
-        view.setTypeface(typeface);
-    }
-
-
-    public static void setProximaNovaRegularTypeface(Context context, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_regular.otf");
-        view.setTypeface(typeface);
-    }
-
-
-    public static void setProximaNovaExtraboldTypeface(Context context, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
-        view.setTypeface(typeface);
-    }
-    public static void setProximaNovaSemiboldTypeface(Context context, TextView view) {
+    public static void setProximaNovaSemiboldTypefaceEdittext(Context context, EditText view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
-    public static String  onShortDrName(String fullName){
-        String stringSplitArr[] = fullName.split(" ");
-        return String.valueOf(stringSplitArr[1].charAt(0))+String.valueOf(stringSplitArr[2].charAt(0));
+
+
+    /**
+     * Hides the keyboard
+     *
+     * @param activity The activity
+     */
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+    }
+
+    /**
+     * Handles the change from normal to caps of the hint in a view wrapped by a text input layout;
+     * The view has to have the input text layout set as tag; the input text layout the hint (as tag)
+     * @param view The edit view
+     * @param hasFocus When the view gains the focus
+     */
+    public static void handleHintChange(View view, boolean hasFocus) {
+        if (view == null) {
+            return;
+        }
+
+        EditText editText = (EditText) view;
+        TextInputLayout textInputLayout = (TextInputLayout) editText.getTag();
+        if (textInputLayout == null) {
+            return;
+        }
+        String hint = (String) textInputLayout.getTag();
+        if (hint == null) {
+            hint = ""; // if no hint use the empty string
+        }
+        String hintCaps = hint.toUpperCase();
+        String text = editText.getText().toString();
+        if (hasFocus) {
+            // focus gained; set the hint to text input layout
+            textInputLayout.setHint(hintCaps);
+            if (StringUtil.isNullOrEmpty(text)) {
+                // if no text set empty hint in the edit
+                editText.setHint("");
+            }
+        } else {
+            if (StringUtil.isNullOrEmpty(text)) { // lose focus, and no text in the edit
+                // remove hint from the text input layout
+                textInputLayout.setHint("");
+                // change hint to lower in the edit
+                editText.setHint(hint);
+            } else {
+                textInputLayout.setHint(hintCaps);
+            }
+        }
     }
 }

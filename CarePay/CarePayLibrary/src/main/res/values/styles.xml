@@ -35,7 +35,6 @@
     <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
@@ -52,6 +51,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <!-- Custom Keyboard -->
     <style name="keyboard_1_style">
         <!--<item name="android:keyBackground">@drawable/k1_selector</item>-->
         <item name="android:keyTextColor">@android:color/white</item>
@@ -60,20 +60,53 @@
     </style>
 
     <declare-styleable name="SympliTextView">
-        <attr name="fontPath" format="string" />
+        <attr name="fontPath" format="string"/>
 
         <!-- Inner shadow settings. -->
-        <attr name="innerShadowColor" format="color" />
-        <attr name="innerShadowDx" format="dimension" />
-        <attr name="innerShadowDy" format="dimension" />
-        <attr name="innerShadowRadius" format="dimension" />
+        <attr name="innerShadowColor" format="color"/>
+        <attr name="innerShadowDx" format="dimension"/>
+        <attr name="innerShadowDy" format="dimension"/>
+        <attr name="innerShadowRadius" format="dimension"/>
 
         <!-- Outer shadow settings. -->
-        <attr name="outerShadowColor" format="color" />
-        <attr name="outerShadowDx" format="dimension" />
-        <attr name="outerShadowDy" format="dimension" />
-        <attr name="outerShadowRadius" format="dimension" />
+        <attr name="outerShadowColor" format="color"/>
+        <attr name="outerShadowDx" format="dimension"/>
+        <attr name="outerShadowDy" format="dimension"/>
+        <attr name="outerShadowRadius" format="dimension"/>
     </declare-styleable>
+
+
+    <!-- Common -->
+    <style name="TextInputLayoutStyle" parent="TextAppearence.App.TextInputLayout">
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="errorTextAppearance">@style/errorTextAppearance</item>
+    </style>
+
+    <style name="AlertListTextView" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/respons_detail_label_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
+    <style name="EditTextStyle" parent="android:Widget.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17.0sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:fontFamily">proximanova_regular</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="CityEditTextStyle" parent="EditTextStyle">
+        <item name="android:digits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</item>
+        <item name="android:hint">@string/CityEditText</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:maxLength">255</item>
+    </style>
 
     <!-- Responsibility styles -->
     <style name="ResponsTotalLabelStyle" parent="android:Widget.TextView">
@@ -92,13 +125,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-    </style>
-
-    <style name="AlertListTextView" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/charcoal</item>
-        <item name="android:textSize">@dimen/respons_detail_label_text_size</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:fontFamily">ProximaNova-Regular</item>
     </style>
 
     <style name="ResponsDetailLabelStyle" parent="android:Widget.TextView">
@@ -135,7 +161,7 @@
     </style>
 
 
-    <!-- Documents -->
+    <!-- Demographics Documents -->
 
     <style name="DemographicsDocsButtonStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/rich_electric_blue</item>
@@ -149,6 +175,7 @@
     </style>
 
     <style name="DemographicsDocsHeaderTitleStyle" parent="android:Widget.TextView">
+        <item name="android:layout_gravity">center</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/charcoal</item>
@@ -165,9 +192,13 @@
 
     <style name="DemographicsDocsHeaderStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
-        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:layout_marginTop">@dimen/demographics_docs_header_top</item>
     </style>
 
     <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
@@ -189,7 +220,6 @@
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
     </style>
-
 
     <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
@@ -220,11 +250,6 @@
         <item name="android:layout_gravity">center</item>
     </style>
 
-    <style name="DemographicsFragmentsTextInputLayoutStyle." parent="android:Widget.EditText">
-        <item name="android:textColor">@color/bright_cerulean</item>
-        <item name="android:textSize">17.0sp</item>
-    </style>
-
     <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
         <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
         <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
@@ -235,24 +260,29 @@
     </style>
 
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">
-        <item name="android:background">@drawable/agree_button_background</item>
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:fontFamily">GothamRounded-Medium</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+        <item name="android:background">@drawable/agree_button_background</item>
     </style>
 
-    <!--<SigninSignup error Appearance>-->
+
+    <!-- Signin Signup -->
+
     <style name="errorTextAppearance" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">ProximaNova-Semibold</item>
         <item name="android:textColor">@color/harvard_crimson</item>
         <item name="android:textSize">10sp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="SingupEditsContainerStyle" parent="DemographicsDocsHeaderStyle">
         <item name="android:fontFamily">ProximaNova-Semibold</item>
-        <item name="android:layout_marginTop">@dimen/signup_bottom_margin</item>
+
     </style>
 
-    <!-- <Review Screens Style>-->
+    <!-- Demographics Review Screens Style>-->
     <style name="reviewDemographicBlue." parent="android:Widget.TextView">
         <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textSize">@dimen/respons_detail_text_size</item>
@@ -269,7 +299,7 @@
     </style>
 
 
-<!-- Navigation Screen Theme-->
+    <!-- Navigation Screen Theme-->
     <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -278,9 +308,9 @@
         <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
     <!--;-->
 
     <!--<Consent forms styles>-->
@@ -319,19 +349,6 @@
         <item name="android:textColor">@color/Feldgrau</item>
         <item name="android:textSize">24.0sp</item>
         <item name="android:gravity">center</item>
-    </style>
-
-<!-- SigninSignup -->
-    <style name="HintStyle">
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColorHint">@color/slateGray</item>
-        <item name="android:textColor">@color/slateGray</item>
-    </style>
-
-    <style name="HintStyleFloating">
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColorHint">@color/darkblue</item>
-        <item name="android:textColor">@color/darkblue</item>
     </style>
 
     <!-- InTake -->

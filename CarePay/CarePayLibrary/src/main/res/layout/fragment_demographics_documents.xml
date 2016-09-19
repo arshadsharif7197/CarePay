@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/demogr_docs_root"
+<LinearLayout android:id="@+id/demographicsDocsRootContainer"
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:gravity="center"
               android:orientation="vertical">
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/demogr_docs_header_title"
+            android:id="@+id/demographicsDocsHeaderTitle"
             style="@style/DemographicsDocsHeaderTitleStyle"
             android:text="@string/demogr_docs_logo_title"/>
 
         <TextView
-            android:id="@+id/demogr_docs_header_subtitle"
+            android:id="@+id/demographicsDocsHeaderSubtitle"
             style="@style/DemographicsDocsHeaderSubtitleStyle"
             android:text="@string/demogr_docs_logo_message"/>
 
@@ -29,7 +27,7 @@
         android:id="@+id/demographicsDocsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
+        android:layout_weight="1"
         android:paddingBottom="@dimen/top_bottom_scroll_padding"
         android:paddingTop="@dimen/top_bottom_scroll_padding">
 
@@ -44,32 +42,35 @@
                 android:layout_height="wrap_content"/>
 
             <android.support.v7.widget.SwitchCompat
-                android:id="@+id/demogr_insurance_switch"
+                android:id="@+id/demographicsInsuranceSwitch"
                 style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                android:checked="true"
+                android:checked="false"
                 android:text="@string/demogr_insurance_switch_text"/>
 
             <FrameLayout
                 android:id="@+id/demographicsDocsInsurance1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
             <FrameLayout
                 android:id="@+id/demographicsDocsInsurance2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
             <FrameLayout
                 android:id="@+id/demographicsDocsInsurance3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
             <View
+                android:id="@+id/demographicsDocsBottomView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/demogr_docs_bottom_view"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </ScrollView>
@@ -81,10 +82,8 @@
         android:text="@string/demogr_docs_add_card"/>
 
     <Button
-        android:id="@+id/demographicsNextButton"
+        android:id="@+id/demographicsDocsNextButton"
         style="@style/DemographicsNextButtonStyle"
-        android:layout_height="0dp"
-        android:layout_weight="1"
         android:text="@string/demogr_next"/>
 
 </LinearLayout>
