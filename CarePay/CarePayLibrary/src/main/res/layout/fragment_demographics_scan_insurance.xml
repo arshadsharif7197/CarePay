@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/demogr_docs_section_container_margin_top"
+    android:layout_marginTop="@dimen/demographics_docs_section_container_margin_top"
     android:orientation="vertical">
 
     <LinearLayout

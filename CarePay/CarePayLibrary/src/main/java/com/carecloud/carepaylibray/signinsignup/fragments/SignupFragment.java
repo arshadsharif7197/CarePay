@@ -238,23 +238,23 @@ public class SignupFragment extends Fragment {
                 }
             }
         });
-        emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String hint = getString(R.string.email_text);
-                String hintCaps = hint.toUpperCase();
-                if (b) {
-                    emailInputLayout.setHint(hintCaps);
-                } else {
-                    if(StringUtil.isNullOrEmpty(emailText.getText().toString())) {
-                        // change hint to lower
-                        emailInputLayout.setHint(hint);
-                    } else {
-                        emailText.setHint(hint);
-                    }
-                }
-            }
-        });
+//        emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean b) {
+//                String hint = getString(R.string.email_text);
+//                String hintCaps = hint.toUpperCase();
+//                if (b) {
+//                    emailInputLayout.setHint(hintCaps);
+//                } else {
+//                    if(StringUtil.isNullOrEmpty(emailText.getText().toString())) {
+//                        // change hint to lower
+//                        emailInputLayout.setHint(hint);
+//                    } else {
+//                        emailText.setHint(hint);
+//                    }
+//                }
+//            }
+//        });
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {

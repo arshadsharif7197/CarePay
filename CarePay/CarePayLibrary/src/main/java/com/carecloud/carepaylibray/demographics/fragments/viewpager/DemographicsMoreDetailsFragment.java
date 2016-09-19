@@ -31,7 +31,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
         getUpdateItemList = getResources().getStringArray(R.array.UpdatesMode);
         setTypefaces(view);
-        gotoCarePay = (Button) view.findViewById(R.id.goToCarePayButton);
+        gotoCarePay = (Button) view.findViewById(R.id.demographicsGoToCarePayButton);
         onClick(view);
         return view;
     }
@@ -50,7 +50,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsSubHeading));
-        setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.goToCarePayButton));
+        setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.demographicsGoToCarePayButton));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.placeHolderIconTextViewId));
     }
 
