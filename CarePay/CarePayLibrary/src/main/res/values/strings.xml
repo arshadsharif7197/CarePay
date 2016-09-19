@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">CarePayLibrary</string>
-    <string name="api_base_url">http://57e47f3d.ngrok.io</string>
+    <string name="api_base_url">https://g8r79tifa4.execute-api.us-east-1.amazonaws.com</string>
+    <string name="google_map_api_base_url">https://maps.googleapis.com</string>
+    <string name="google_map_api_key">AIzaSyDFrx3OGugrIUQzsoEJVobtQoz6f9MMim</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
