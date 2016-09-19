@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/list_apt_padding_right"
     android:paddingRight="@dimen/list_apt_padding_right">
 
@@ -26,7 +27,7 @@
                 android:layout_gravity="left"
                 android:background="@drawable/round_list_tv"
                 android:gravity="center_vertical|center_horizontal"
-                android:src="@drawable/icn_placeholder_user_profile"
+                android:src="@drawable/icn_placeholder_user_profile_png"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/apt_dl_text_big" />
 
@@ -71,5 +72,8 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorAccent"/>
 </LinearLayout>

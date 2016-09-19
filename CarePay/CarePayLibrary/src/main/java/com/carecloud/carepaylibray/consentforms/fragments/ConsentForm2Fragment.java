@@ -12,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -33,8 +35,10 @@ public class ConsentForm2Fragment extends Fragment {
 
     private TextView titleTextView, descriptionTextView, contentTextView, content2Tv, dateTv;
     private Button signButton;
+    Spinner genderspinner;
     private IFragmentCallback fragmentCallback;
     private EditText minorFirstNameEditText, minorLastNameEditText, dobEditText, genderEditText;
+    private String[] state = { "Male", "Female"};
 
     @Nullable
     @Override
@@ -52,7 +56,10 @@ public class ConsentForm2Fragment extends Fragment {
         minorFirstNameEditText = (EditText) view.findViewById(R.id.minorFirstNameET);
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
         dobEditText = (EditText) view.findViewById(R.id.dobET);
-        genderEditText = (EditText) view.findViewById(R.id.genderET);
+        genderspinner = (Spinner)view.findViewById(R.id.genderspinner);
+        ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, state);
+        adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderspinner.setAdapter(adapter_state);
         return view;
     }
 
@@ -90,13 +97,6 @@ public class ConsentForm2Fragment extends Fragment {
         content2Tv.setText(formData.getContent2());
         dateTv.setText(formData.getDate());
 
-        genderEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAlertDialogWithListview(new String[]{"Male", "Female"}, "Select Gender");
-            }
-        });
-
         dobEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,6 +106,14 @@ public class ConsentForm2Fragment extends Fragment {
             }
         });
     }
+
+
+    public void onItemSelected(AdapterView<?> parent, View view, int position,
+                               long id) {
+        genderspinner.setSelection(position);
+        String selState = (String) genderspinner.getSelectedItem();
+    }
+
 
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override

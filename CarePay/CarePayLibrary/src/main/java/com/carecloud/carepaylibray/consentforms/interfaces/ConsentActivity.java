@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,19 +16,14 @@ import com.carecloud.carepaylibray.activities.SignatureActivity;
 import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm1Fragment;
 import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.homescreen.HomeScreenActivity;
 import com.carecloud.carepaylibray.intake.InTakeActivity;
 
 import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
 
-    public enum FORMS {
-        FORM1, FORM2, FORM3
-    }
-
     private TextView title;
-    private FORMS showingForm = FORMS.FORM1;
+    private FormId showingForm = FormId.FORM1;
     private View indicator0, indicator1, indicator2;
 
     @Override
@@ -39,12 +35,14 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         indicator0 = findViewById(R.id.indicator0);
         indicator1 = findViewById(R.id.indicator1);
         indicator2 = findViewById(R.id.indicator2);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
         setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(toolbar);
+
         replaceFragment(getForm(), false);
     }
 
@@ -74,40 +72,45 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
                 replaceFragment(fragment, true);
             } else {
                 startActivity(new Intent(ConsentActivity.this, InTakeActivity.class));
+                finish();
             }
         }
     }
 
     private Fragment getForm() {
-        if (showingForm == FORMS.FORM1) {
+        if (showingForm == FormId.FORM1) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getFormData("form1"));
             ConsentForm1Fragment consentForm1Fragment = new ConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
             title.setText("Consent Form 1 of 3");
-            updateTitle(FORMS.FORM1);
-
+            updateTitle(FormId.FORM1);
             return consentForm1Fragment;
-        } else if (showingForm == FORMS.FORM2) {
+        } else if (showingForm == FormId.FORM2) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getFormData("form2"));
             ConsentForm2Fragment consentForm2Fragment = new ConsentForm2Fragment();
             consentForm2Fragment.setArguments(bundle);
-            updateTitle(FORMS.FORM2);
+            updateTitle(FormId.FORM2);
             return consentForm2Fragment;
         } else {
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getFormData("form3"));
             ConsentForm1Fragment consentForm1Fragment = new ConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
-            updateTitle(FORMS.FORM3);
+            updateTitle(FormId.FORM3);
             return consentForm1Fragment;
         }
     }
 
-    private void updateTitle(FORMS forms) {
-        switch (forms) {
+    /**
+     * Updates the title to show the form number and the corresponding bulleted tab
+     * @param currentForm The id of the current form
+     */
+    private void updateTitle(FormId currentForm) {
+        switch (currentForm) {
             case FORM1:
+                title.setText("Consent Form 1 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_gray);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_gray);
@@ -127,7 +130,6 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_blue);
                 break;
         }
-
     }
 
     private FormData getFormData(String formName) {
@@ -157,24 +159,58 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     }
 
     private Fragment getNextForm() {
-        if (showingForm == FORMS.FORM1) {
-            showingForm = FORMS.FORM2;
-            return getForm();
-        } else if (showingForm == FORMS.FORM2) {
-            showingForm = FORMS.FORM3;
+        showingForm = showingForm.next();
+        if(showingForm != FormId.NONE) {
             return getForm();
         }
         return null;
     }
 
-
     @Override
     public void onBackPressed() {
+        showingForm = showingForm.prev();
+        if(showingForm != FormId.NONE) {
+            updateTitle(showingForm);
+        }
         super.onBackPressed();
-        if (getSupportFragmentManager().getBackStackEntryCount() > 2) {
-            updateTitle(FORMS.FORM2);
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            updateTitle(FORMS.FORM1);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
+    }
+
+    /**
+     * Enum to identify the forms
+     */
+    public enum FormId {
+        FORM1, FORM2, FORM3, NONE;
+
+        /**
+         * Go to next
+         */
+        public FormId next() {
+            if(this.equals(FORM1)) {
+                return FORM2;
+            } else if(this.equals(FORM2)){
+                return FORM3;
+            }
+            return NONE;
+        }
+
+        /**
+         * Go to prev
+         */
+        public FormId prev() {
+            if(this.equals(FORM3)) {
+                return FORM2;
+            } else if(this.equals(FORM2)){
+                return FORM1;
+            }
+            return NONE;
         }
     }
 }

@@ -117,4 +117,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         buttonsStatusCallback.enableNextButton(true);
         buttonsStatusCallback.scrollToBottom();
     }
+
+    @Override
+    public int getImageShape() {
+        return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    }
 }

@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-feature android:name="android.hardware.camera"/>
 
@@ -21,34 +21,39 @@
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
-        <activity android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReview"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReview"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
-        <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity" />
+        <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
 
-        <activity android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.payment.PaymentActivity"
-            android:parentActivityName="com.carecloud.carepaylibray.homescreen.HomeScreenActivity">
+            android:parentActivityName="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
+                android:value="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"/>
         </activity>
 
-        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
+        <activity
+            android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
             android:theme="@style/NavigationTheme"/>
 
-        <activity android:name="com.carecloud.carepaylibray.intake.InTakeActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.intake.InTakeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
     </application>
 
 </manifest>

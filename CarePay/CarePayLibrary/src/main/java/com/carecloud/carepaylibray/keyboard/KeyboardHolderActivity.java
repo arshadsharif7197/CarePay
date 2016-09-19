@@ -65,7 +65,7 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
         setContentView(getLayoutRes());
 
         // hide sys keyboard
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         fm = getSupportFragmentManager();
 
@@ -106,13 +106,13 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
     }
 
     public void bindKeyboardToEdits(List<EditText> edits) {
-        // bind the keyboard to the mEdits
-        MyKeyboard keyboard = ((MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG)).getKeyboard();
-        if (keyboard != null) {
-            (new KeyboardBinderHelper(this, edits)).bindEditsToKeyboard();
-        } else {
-            Log.v(LOG_TAG, "keyboard null");
-        }
+//        // bind the keyboard to the mEdits
+//        MyKeyboard keyboard = ((MyKeyboardFragment) fm.findFragmentByTag(KB_FRAG_TAG)).getKeyboard();
+//        if (keyboard != null) {
+//            (new KeyboardBinderHelper(this, edits)).bindEditsToKeyboard();
+//        } else {
+//            Log.v(LOG_TAG, "keyboard null");
+//        }
     }
 
     public void toggleKeyboardVisible(boolean visible) {

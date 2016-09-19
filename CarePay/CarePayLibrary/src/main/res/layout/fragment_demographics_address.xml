@@ -1,171 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linearLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="10dp"
-    android:orientation="vertical">
 
+<LinearLayout android:id="@+id/demographicsAddressRootContainer"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        style="@style/DemographicsDocsHeaderStyle"
+        android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/addressHeading"
-            style="@style/DemographicsFragmentsHeadingStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/AddressHeadingTextView" />
+            style="@style/DemographicsDocsHeaderTitleStyle"
+            android:text="@string/AddressHeadingTextView"/>
 
         <TextView
             android:id="@+id/addressSubHeading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:hint="@string/AddressSubHeadingTextView"
-            android:textColor="@color/cadet_gray" />
+            style="@style/DemographicsDocsHeaderSubtitleStyle"
+            android:text="@string/AddressSubHeadingTextView"/>
 
     </LinearLayout>
 
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
+        android:orientation="vertical">
 
-        >
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/phNoTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:errorTextAppearance="@style/errorTextAppearance">
-
-                <EditText
-                    android:id="@+id/phNoEditText"
-                    style="@style/DemographicsFragmentsTextInputLayoutStyle."
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/PhoneNumberEditText"
-                    android:inputType="phone"
-                    android:maxLength="20"
-                    android:nextFocusDown="@+id/addressEditTextId" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/address1TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
-
-                <EditText
-                    android:id="@+id/addressEditTextId"
-                    style="@style/DemographicsFragmentsTextInputLayoutStyle."
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/Address1EditText"
-                    android:nextFocusForward="@+id/addressEditText2Id"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/address2TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
-
-                <EditText
-                    android:id="@+id/addressEditText2Id"
-                    style="@style/DemographicsFragmentsTextInputLayoutStyle."
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/Address2EditText"
-                    android:nextFocusDown="@+id/cityId"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
+            android:fillViewport="true">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:id="@+id/demographicsAddressDetContainer"
+                style="@style/DemographicsDocsHeaderStyle"
+                android:layout_marginTop="0dp"
+                android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/cityTextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:errorTextAppearance="@style/errorTextAppearance">
+                    android:id="@+id/address1TextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_weight="1">
 
                     <EditText
-                        android:id="@+id/cityId"
-                        style="@style/DemographicsFragmentsTextInputLayoutStyle."
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                        android:hint="@string/CityEditText"
+                        android:id="@+id/addressEditTextId"
+                        style="@style/EditTextStyle"
+                        android:hint="@string/Address1EditText"
                         android:imeOptions="actionNext"
-                        android:maxLength="255"
-                        android:nextFocusRight="@+id/autoTextCompleteStates"
-                        android:singleLine="true" />
+                        android:nextFocusForward="@+id/addressEditText2Id"/>
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/stateTextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:errorTextAppearance="@style/errorTextAppearance">
+                    android:id="@+id/address2TextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_weight="1">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/autoTextCompleteStates"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="@string/StateEditText"
-                        android:nextFocusDown="@+id/zipCodeId"
-                        android:singleLine="true" />
+                    <EditText
+                        android:id="@+id/addressEditText2Id"
+                        style="@style/EditTextStyle"
+                        android:hint="@string/Address2EditText"
+                        android:nextFocusForward="@+id/zipCodeId"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/zipCodeTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/zipCodeId"
+                        style="@style/EditTextStyle"
+                        android:hint="@string/ZipCodeEditText"
+                        android:maxLength="6"
+                        android:nextFocusForward="@+id/cityId"/>
 
                 </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/zipCodeTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
-
-                <EditText
-                    android:id="@+id/zipCodeId"
-                    style="@style/DemographicsFragmentsTextInputLayoutStyle."
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/ZipCodeEditText"
-                    android:imeOptions="actionDone"
-                    android:maxLength="10"/>
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/cityTextInputLayout"
+                        style="@style/TextInputLayoutStyle"
+                        android:layout_weight="1">
 
-        </LinearLayout>
-    </ScrollView>
+                        <EditText
+                            android:id="@+id/cityId"
+                            style="@style/CityEditTextStyle"
+                            android:nextFocusRight="@+id/autoTextCompleteStates"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/stateTextInputLayout"
+                        style="@style/TextInputLayoutStyle"
+                        android:layout_weight="1">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoTextCompleteStates"
+                            style="@style/EditTextStyle"
+                            android:hint="@string/StateEditText"
+                            android:imeOptions="actionNext"
+                            android:inputType="textAutoComplete"
+                            android:maxLength="2"
+                            android:nextFocusForward="@+id/phNoEditText"/>
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/phNoTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/phNoEditText"
+                        style="@style/EditTextStyle"
+                        android:hint="@string/PhoneNumberEditText"
+                        android:imeOptions="actionNext"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:nextFocusForward="@+id/demographicsAddressNextButton"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -173,15 +140,9 @@
         android:layout_weight="1"/>
 
     <Button
-        android:id="@+id/demographicsNextButton"
-        android:layout_width="match_parent"
-        android:layout_height="51dp"
-        android:background="@drawable/button_selector"
-        android:fontFamily="GothamRounded-Medium"
-        android:gravity="center"
-        android:layout_weight="0"
-        android:text="@string/next_Button"
-        android:textColor="@color/white"
-        android:textSize="13sp" />
+        android:id="@+id/demographicsAddressNextButton"
+        style="@style/DemographicsNextButtonStyle"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:text="@string/next_Button"/>
 </LinearLayout>
-
