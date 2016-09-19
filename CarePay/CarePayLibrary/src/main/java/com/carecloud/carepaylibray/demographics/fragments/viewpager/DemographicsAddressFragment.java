@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,8 @@ import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTy
  */
 public class DemographicsAddressFragment extends GenericEditsFragment {
 
+    private static final String LOG_TAG = DemographicsAddressFragment.class.getSimpleName();
     View view;
-    private LinearLayout         rootContainer;
     private TextInputLayout      phNoTextInputLayout;
     private TextInputLayout      address1TextInputLayout;
     private TextInputLayout      address2TextInputLayout;
@@ -87,8 +88,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
      * the tag of the textinputlayout
      */
     private void initialiseUIFields() {
-        rootContainer = (LinearLayout) view.findViewById(R.id.demographicsAddressRootContainer);
-
         String hint;
 
         hint = getString(R.string.Address1EditText);
@@ -115,7 +114,9 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         cityEditText.setTag(cityTextInputLayout);
 
+        hint = getString(R.string.StateEditText);
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+        stateTextInputLayout.setTag(hint);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                                                                       R.layout.autocomplete_state_item,
                                                                       R.id.text1,
@@ -143,6 +144,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             public void afterTextChanged(Editable s) {
             }
         });
+        stateTextInputLayout.setTag(stateTextInputLayout);
 
         hint = getString(R.string.PhoneNumberEditText);
         phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
@@ -222,13 +224,17 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE) {
+//                if (i == EditorInfo.IME_ACTION_DONE) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    Log.v(LOG_TAG, "phoNUm : action_done");
                     isPhoneValid = checkPhoneNumber();
                     boolean isEnabled = checkReadyForNext();
-                    if (isEnabled) {
+                    if(isEnabled) {
                         Utility.hideSoftKeyboard(getActivity());
+                        nextButton.setEnabled(true);
+                        phoneNumberEditText.clearFocus();
+                        nextButton.requestFocus();
                     }
-                    nextButton.setEnabled(isEnabled);
                     return isEnabled;
                 }
                 return false;

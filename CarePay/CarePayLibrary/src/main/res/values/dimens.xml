@@ -66,6 +66,7 @@
     <dimen name="demo_view_height">1dp</dimen>
     <dimen name="demo_scorllview_margin_top">25dp</dimen>
     <dimen name="demo_scorllview_margin_right_left">17dp</dimen>
+    <dimen name="demogr_address_details_container_height">300dp</dimen>
 
     <!-- Appointments-->
     <dimen name="fab_margin">16dp</dimen>
