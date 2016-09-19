@@ -69,7 +69,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         view = inflater.inflate(R.layout.fragment_demographics_address, container, false);
 
         initialiseUIFields();
-        setTypefaces(view);
 
         isAddressValid = false;
         isCityValid = false;
@@ -161,6 +160,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
         });
 
+        setTypefaces(view);
         setFocusChangeListeners();
         setEditActionListeners();
     }
