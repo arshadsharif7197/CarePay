@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Intent;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -19,11 +18,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.Utility;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
@@ -109,6 +106,12 @@ public class SignupFragment extends Fragment {
                         .commit();
             }
         });
+
+        isValidFirstName = true;
+        isValidLastName = true;
+        isValidPassword = true;
+        isValidEmail = true;
+        isPasswordMatch = true;
 
         setEditTexts(view);
 

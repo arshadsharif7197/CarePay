@@ -11,7 +11,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp">
 
         <LinearLayout
             style="@style/SingupEditsContainerStyle"
@@ -23,7 +24,8 @@
                 android:id="@+id/firstNameTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                app:errorTextAppearance="@style/errorTextAppearance"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/firstNameEditText"
@@ -50,7 +52,8 @@
                     android:imeOptions="actionNext"
                     android:nextFocusForward="@+id/lastNameEditText"
                     android:singleLine="true"
-                    android:textColor="@color/blue_cerulian"/>
+                    android:textColor="@color/blue_cerulian"
+                    android:visibility="gone"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -58,7 +61,8 @@
                 android:id="@+id/lastNameTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                app:errorTextAppearance="@style/errorTextAppearance"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/lastNameEditText"
@@ -136,7 +140,6 @@
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
-        android:layout_marginTop="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginBottom="@dimen/signup_bottom_margin">
