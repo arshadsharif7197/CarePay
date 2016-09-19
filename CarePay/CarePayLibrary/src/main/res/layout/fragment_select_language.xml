@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@drawable/button_selector"
+            android:background="@drawable/language_button_selector"
             android:src="@drawable/icn_check_disabled" />
 
     </LinearLayout>
