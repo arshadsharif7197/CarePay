@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.appointments.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -154,7 +155,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             TextView shortNameTextView = ((TextView) view.findViewById(R.id.apptShortnameTextView));
             TextView nameTextView = ((TextView) view.findViewById(R.id.apptNameTextView));
             TextView typeTextView = ((TextView) view.findViewById(R.id.apptTypeTextView));
-            TextView addressTextView = ((TextView) view.findViewById(R.id.apptAddressTextView));
+            final TextView addressTextView = ((TextView) view.findViewById(R.id.apptAddressTextView));
 
             dateTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[0]);
             timeTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[1]);
@@ -179,13 +180,13 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             view.findViewById(R.id.apptLocationImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(AppointmentsActivity.this, "Clicked on location icon,", Toast.LENGTH_LONG).show();
+                    onMapView(addressTextView.getText().toString());
                 }
             });
             view.findViewById(R.id.apptDailImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onPhoneCall();
+                    onPhoneCall("000000000");
                 }
             });
             view.findViewById(R.id.checkOfficeBtn).setOnClickListener(new View.OnClickListener() {
@@ -193,8 +194,6 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
                 public void onClick(View view) {
                     onCheckInAtOffice();
                     dialog.cancel();
-                    /*Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
-                    startActivity(demographicReviewIntent);*/
                 }
             });
             view.findViewById(R.id.checkOfficeNow).setOnClickListener(new View.OnClickListener() {
@@ -213,15 +212,19 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
             Date appointdate = sdf.parse(stringDate[0]);
             formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
-                    + android.text.format.DateFormat.format("dd", appointdate);
+                    + Utility.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
             formateDate[1] = stringDate[1] + " " + stringDate[2];
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage());
         }
         return formateDate;
     }
-    private void onPhoneCall(){
-        Toast.makeText(AppointmentsActivity.this, "Clicked on dial icon,", Toast.LENGTH_LONG).show();
+    private void onPhoneCall(final String phoneNumber){
+        try{
+            startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
+        }catch (android.content.ActivityNotFoundException ex){
+            Toast.makeText(getApplicationContext(),"Activity is not founded",Toast.LENGTH_SHORT).show();
+        }
     }
     private void onCheckInAtOffice(){
         Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
@@ -236,4 +239,15 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
     private void onCreateAppointment(){
         Toast.makeText(AppointmentsActivity.this, "Clicked on onCreateAppointment method,", Toast.LENGTH_LONG).show();
         }
+
+    /**
+     * show device map view based on address.
+     * @param address the String to evaluate
+     */
+    private void onMapView(final String address){
+        Uri mapUri = Uri.parse("geo:0,0?q=" + Uri.encode(address));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+    }
 }

@@ -3,17 +3,16 @@
 <LinearLayout android:id="@+id/signup_layout"
               xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity">
+              android:orientation="vertical">
 
     <include layout="@layout/signup_toolbar"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/signup_bottom_margin">
 
         <LinearLayout
             style="@style/SingupEditsContainerStyle"
@@ -135,8 +134,7 @@
         style="@style/DemographicsDocsHeaderStyle"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="@dimen/signup_bottom_margin"
-        >
+        android:layout_marginBottom="@dimen/signup_bottom_margin">
 
         <Button
             android:id="@+id/submitSignupButton"

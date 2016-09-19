@@ -27,7 +27,7 @@
                 android:layout_gravity="left"
                 android:background="@drawable/round_list_tv"
                 android:gravity="center_vertical|center_horizontal"
-                android:src="@drawable/icn_placeholder_user_profile"
+                android:src="@drawable/icn_placeholder_user_profile_png"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/apt_dl_text_big" />
 
