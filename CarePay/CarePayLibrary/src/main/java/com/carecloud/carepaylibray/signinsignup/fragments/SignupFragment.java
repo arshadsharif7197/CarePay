@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.Utility;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 
 /**
  * Created by harish_revuri on 9/7/2016.
@@ -43,12 +46,11 @@ public class SignupFragment extends Fragment {
     private EditText repeatPasswordText;
     private TextView accountExistTextView;
     private Button   submitButton;
+
     private boolean  isValidFirstName;
-    private boolean  isValidMiddleName;
     private boolean  isValidLastName;
     private boolean  isValidEmail;
     private boolean  isValidPassword;
-    private boolean  isValidRepeatPassword;
     private boolean  isPasswordMatch;
 
     @Override
@@ -166,7 +168,7 @@ public class SignupFragment extends Fragment {
                     isValidFirstName = checkFirstName();
                     submitButton.setEnabled(areAllValid());
                     middleNameText.requestFocus();
-                    return isValidFirstName;
+                    return true;
                 }
                 return false;
             }
@@ -188,7 +190,7 @@ public class SignupFragment extends Fragment {
                     isValidLastName = checkLastName();
                     submitButton.setEnabled(areAllValid());
                     emailText.requestFocus();
-                    return isValidLastName;
+                    return true;
                 }
                 return false;
             }
@@ -200,7 +202,7 @@ public class SignupFragment extends Fragment {
                     isValidEmail = checkEmail();
                     submitButton.setEnabled(areAllValid());
                     passwordText.requestFocus();
-                    return isValidEmail;
+                    return true;
                 }
                 return false;
             }
@@ -212,7 +214,7 @@ public class SignupFragment extends Fragment {
                     isValidPassword = checkPassword();
                     submitButton.setEnabled(areAllValid());
                     repeatPasswordText.requestFocus();
-                    return isValidPassword;
+                    return true;
                 }
                 return false;
             }
@@ -222,11 +224,21 @@ public class SignupFragment extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
                     isPasswordMatch = checkPasswordsMatch();
-                    if (areAllValid()) {
-                        submitButton.setEnabled(areAllValid());
+                    boolean isReadyForNext = areAllValid();
+                    Log.v(LOG_TAG, " isREadyForNext = " + isReadyForNext
+                            + " isValidFirstName=" + isValidFirstName
+                            + " isValidLastNAme=" + isValidLastName
+                            + " isEmailValid=" + isValidEmail
+                            + " isPasswordValid=" + isValidPassword
+                            + " isMAtchedPAssw=" + isPasswordMatch);
+
+                    if (isReadyForNext) {
+                        Utility.hideSoftKeyboard(getActivity());
+                        submitButton.setEnabled(true);
+                        repeatPasswordText.clearFocus();
                         submitButton.requestFocus();
                     }
-                    return isPasswordMatch;
+                    return true;
                 }
                 return false;
             }
@@ -267,7 +279,10 @@ public class SignupFragment extends Fragment {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-
+                if(!b) { // when loosing focus, validate as well
+                    isValidFirstName = checkFirstName();
+                    submitButton.setEnabled(areAllValid());
+                }
                 Utility.handleHintChange(view, b);
             }
         });
@@ -280,24 +295,40 @@ public class SignupFragment extends Fragment {
         lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                if(!b) {
+                    isValidLastName = checkLastName();
+                    submitButton.setEnabled(areAllValid());
+                }
                 Utility.handleHintChange(view, b);
             }
         });
         emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                if(!b) {
+                    isValidEmail = checkEmail();
+                    submitButton.setEnabled(areAllValid());
+                }
                 Utility.handleHintChange(view, b);
             }
         });
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                if(!b) {
+                    isValidPassword = checkPassword();
+                    submitButton.setEnabled(areAllValid());
+                }
                 Utility.handleHintChange(view, b);
             }
         });
         repeatPasswordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                if(!b) {
+                    isPasswordMatch = checkPasswordsMatch();
+                    submitButton.setEnabled(areAllValid());
+                }
                 Utility.handleHintChange(view, b);
             }
         });
@@ -333,7 +364,7 @@ public class SignupFragment extends Fragment {
         String error = (isPassInvalid ? "error" : null);
         passwordInputLayout.setErrorEnabled(isPassInvalid);
         passwordInputLayout.setError(error);
-        return isPassInvalid;
+        return !isPassInvalid;
     }
 
     private boolean checkPasswordsMatch() {
@@ -350,11 +381,9 @@ public class SignupFragment extends Fragment {
 
     private boolean areAllValid() {
         return isValidFirstName
-                && isValidMiddleName
                 && isValidLastName
                 && isValidEmail
                 && isValidPassword
-                && isValidRepeatPassword
                 && isPasswordMatch;
     }
 }
