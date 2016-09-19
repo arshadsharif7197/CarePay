@@ -22,11 +22,11 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
 
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 
 /**
@@ -89,7 +89,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             public void onPageSelected(int position) {
                 if(position != 0) {
                     // hide the keyboard (just in case)
-                    Utility.hideSoftKeyboard(DemographicsActivity.this);
+                    SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
                 }
                 currentPageIndex = position;
                 setScreenTitle(position);
