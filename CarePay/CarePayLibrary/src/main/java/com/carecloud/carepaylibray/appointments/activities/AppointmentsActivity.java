@@ -163,12 +163,12 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             typeTextView.setText(appointmentModel.getAppointmentType());
             //addressTextView.setText(appointmentModel.getA());
 
-            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", dateTextView);
-            Utility.setTypefaceFromAssets(this, "fonts/gotham_rounded_book.otf", timeTextView);
-            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", shortNameTextView);
-            Utility.setTypefaceFromAssets(this, "fonts/proximanova_semibold.otf", nameTextView);
-            Utility.setTypefaceFromAssets(this, "fonts/proximanova_regular.otf", typeTextView);
-            Utility.setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", addressTextView);
+            Utility.setProximaNovaRegularTypeface(this, dateTextView);
+            Utility.setGothamRoundedBookTypeface(this, timeTextView);
+            Utility.setProximaNovaRegularTypeface(this, shortNameTextView);
+            Utility.setProximaNovaSemiboldTypeface(this, nameTextView);
+            Utility.setProximaNovaRegularTypeface(this, typeTextView);
+            Utility.setGothamRoundedMediumTypeface(this, addressTextView);
 
             view.findViewById(R.id.dialogAppointHeaderImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -185,15 +185,22 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             view.findViewById(R.id.apptDailImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(AppointmentsActivity.this, "Clicked on dial icon,", Toast.LENGTH_LONG).show();
+                    onPhoneCall();
                 }
             });
             view.findViewById(R.id.checkOfficeBtn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
-                    startActivity(demographicReviewIntent);
+                    onCheckInAtOffice();
+                    dialog.cancel();
+                    /*Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
+                    startActivity(demographicReviewIntent);*/
+                }
+            });
+            view.findViewById(R.id.checkOfficeNow).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onCheckInAtNow();
                 }
             });
         }
@@ -213,4 +220,20 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         }
         return formateDate;
     }
+    private void onPhoneCall(){
+        Toast.makeText(AppointmentsActivity.this, "Clicked on dial icon,", Toast.LENGTH_LONG).show();
+    }
+    private void onCheckInAtOffice(){
+        Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
+        startActivity(demographicReviewIntent);
+        }
+    private  void onCheckInEarly(){
+        Toast.makeText(AppointmentsActivity.this, "Clicked on onCheckInEarly method,", Toast.LENGTH_LONG).show();
+        }
+    private void onCheckInAtNow(){
+        Toast.makeText(AppointmentsActivity.this, "Clicked on onCheckInAtNow method,", Toast.LENGTH_LONG).show();
+        }
+    private void onCreateAppointment(){
+        Toast.makeText(AppointmentsActivity.this, "Clicked on onCreateAppointment method,", Toast.LENGTH_LONG).show();
+        }
 }

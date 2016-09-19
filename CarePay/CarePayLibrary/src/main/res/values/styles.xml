@@ -9,7 +9,6 @@
         <item name="titleTextStyle">@style/actionBarTitle</item>
     </style>
 
-
     <style name="actionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
     </style>
@@ -167,10 +166,8 @@
     <style name="DemographicsDocsHeaderStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
-        </item>
-        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin
-        </item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin</item>
     </style>
 
     <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
@@ -248,6 +245,11 @@
         <item name="android:fontFamily">ProximaNova-Semibold</item>
         <item name="android:textColor">@color/harvard_crimson</item>
         <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="SingupEditsContainerStyle" parent="DemographicsDocsHeaderStyle">
+        <item name="android:fontFamily">ProximaNova-Semibold</item>
+        <item name="android:layout_marginTop">@dimen/signup_bottom_margin</item>
     </style>
 
     <!-- <Review Screens Style>-->
