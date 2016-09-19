@@ -208,6 +208,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // set the switch
         fm.executePendingTransactions();
         switchCompat = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
+
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
@@ -225,6 +226,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 showAddCardButton(on && !isThirdCardAdded);
             }
         });
-        switchCompat.setChecked(false);
+//        switchCompat.setChecked(false);
     }
 }

@@ -13,8 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -79,7 +77,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
         currentPageIndex = 0;
         funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.demographicsViewPager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(funPagerAdapter);
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -103,12 +101,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
 
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
-            }
-        });
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setOnPageChangeListener(pageChangeListener);
         indicator.setViewPager(viewPager);
