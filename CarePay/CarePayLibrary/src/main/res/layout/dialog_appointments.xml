@@ -131,7 +131,7 @@
                     android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
                     android:maxLines="3"
                     android:scrollHorizontally="false"
-                    android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
+                    android:text="2451 Fillingim St, Mobile, AL 36617, United States"
                     android:textColor="@color/grayRound"
                     android:textSize="@dimen/textview_textsize" />
 
