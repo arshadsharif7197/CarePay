@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -69,6 +70,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         view = inflater.inflate(R.layout.fragment_demographics_address, container, false);
 
         initialiseUIFields();
+        setTypefaces(view);
 
         isAddressValid = false;
         isCityValid = false;
