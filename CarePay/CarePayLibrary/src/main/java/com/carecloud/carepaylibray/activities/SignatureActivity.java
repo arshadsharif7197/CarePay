@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class SignatureActivity extends AppCompatActivity {
 

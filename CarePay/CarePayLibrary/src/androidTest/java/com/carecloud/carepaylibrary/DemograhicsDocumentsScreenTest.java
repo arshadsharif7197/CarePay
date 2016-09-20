@@ -13,10 +13,13 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -39,8 +42,11 @@ public class DemograhicsDocumentsScreenTest {
     @Before
     public void setUp() {
         activity = activityRule.getActivity();
+
         // move to Documents page
-        onView(withId(R.id.demographicsNextButton)).perform(click()).perform(click());
+        onView(withId(R.id.demographicsViewPager)).perform(swipeLeft());
+        onView(withId(R.id.demographicsViewPager)).perform(swipeLeft());
+
         docsParentFragment = (DemographicsDocumentsFragment) activity.getFragmentAt(2);
     }
 
@@ -50,21 +56,23 @@ public class DemograhicsDocumentsScreenTest {
         assertThat("Displayed fragment is null", docsParentFragment, is(notNullValue()));
 
         // does the fragment's root view exist?
-        onView(withId(R.id.demogr_docs_root)).check(matches(isDisplayed()));
+        onView(withId(R.id.demographicsDocsRootContainer)).check(matches(isDisplayed()));
 
         // does the switch exist?
-        onView(withId(R.id.demogr_insurance_switch)).check(matches(isDisplayed()));
+        onView(withId(R.id.demographicsInsuranceSwitch)).check(matches(isDisplayed()));
 
         // is the switch off initially?
-        onView(withId(R.id.demogr_insurance_switch)).check(matches(not(isChecked())));
+        onView(withId(R.id.demographicsInsuranceSwitch)).check(matches(not(isChecked())));
+        onView(withId(R.id.demographicsDocsInsurance1)).check(matches(not(isDisplayed())));
 
         // if switch on, does the insurance details container is visible?
-        onView(withId(R.id.demogr_insurance_switch)).perform(click());
-        onView(withId(R.id.demogr_docs_insurance_container)).check(matches(isDisplayed()));
+        onView(withId(R.id.demographicsInsuranceSwitch)).perform(click()); // mystery: two clicks (maybe some async things happen)
+        onView(withId(R.id.demographicsInsuranceSwitch)).perform(click());
+        onView(withId(R.id.demographicsDocsInsurance1)).check(matches(isDisplayed()));
 
         // if switch off, does the insurance details container is hidden?
-        onView(withId(R.id.demogr_insurance_switch)).perform(click());
-        onView(withId(R.id.demogr_docs_insurance_container)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.demographicsInsuranceSwitch)).perform(click());
+        onView(withId(R.id.demographicsDocsInsurance1)).check(matches(not(isDisplayed())));
     }
 
     @Test

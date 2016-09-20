@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.PermissionsUtil;
 
 import java.util.Arrays;
 
@@ -30,10 +30,11 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * Created by lsoco_user on 9/13/2016.
  * Generic fragment that incorporates camera scanning functionality
  */
-public abstract class DocumentScannerFragment extends Fragment{
+public abstract class DocumentScannerFragment extends Fragment {
 
     private   ImageCaptureHelper          imageCaptureHelper;
     protected NextAddRemoveStatusModifier buttonsStatusCallback;
+    private   int                         imageShape;
 
     @Nullable
     @Override
@@ -59,13 +60,13 @@ public abstract class DocumentScannerFragment extends Fragment{
                              public void onClick(DialogInterface dialog, int item) {
                                  if (item == 0) { // "Take picture" chosen
                                      imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
-                                     boolean result = Utility.checkPermissionCamera(getActivity());
+                                     boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
                                      if (result) {
                                          startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
                                      }
                                  } else if (item == 1) {  // "Select from Gallery" chosen
                                      imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
-                                     boolean result = Utility.checkPermission(getActivity());
+                                     boolean result = PermissionsUtil.checkPermission(getActivity());
                                      if (result) {
                                          startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
                                                                                      ImageCaptureHelper.CHOOSER_NAME),
@@ -126,7 +127,7 @@ public abstract class DocumentScannerFragment extends Fragment{
         Log.v(LOG_TAG, "onReauestPermissionsResult()");
         String userChoosenTask = imageCaptureHelper.getUserChoosenTask();
         switch (requestCode) {
-            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+            case PermissionsUtil.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
                         startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
@@ -138,7 +139,7 @@ public abstract class DocumentScannerFragment extends Fragment{
                 }
                 break;
 
-            case Utility.MY_PERMISSIONS_CAMERA:
+            case PermissionsUtil.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString()))
                         startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
@@ -156,16 +157,23 @@ public abstract class DocumentScannerFragment extends Fragment{
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-                imageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+                imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                imageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+                imageCaptureHelper.onCaptureImageResult(data, getImageShape());
             }
             updateDetailViewsAfterScan();
         }
     }
 
     /**
+     * Gets the shape of the captured image
+     * @return The shape (ImageCaptureHelper.ROUND_IMAGE or RECTANGULAR_IMAGE)
+     */
+    public abstract int getImageShape();
+
+    /**
      * Set the callback that will enable this fragment to change the status of butons in another fragment
+     *
      * @param buttonsStatusCallback The callback
      */
     public void setButtonsStatusCallback(NextAddRemoveStatusModifier buttonsStatusCallback) {
@@ -187,8 +195,11 @@ public abstract class DocumentScannerFragment extends Fragment{
      * Callback interface to change the status of buttons of another fragment
      */
     public interface NextAddRemoveStatusModifier {
+
         void showAddCardButton(boolean isVisible);
+
         void enableNextButton(boolean isEnabled);
+
         void scrollToBottom();
     }
 }

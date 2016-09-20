@@ -1,162 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     android:id="@+id/linearLayout"
-    android:layout_above="@+id/demographicsNextButton"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_above="@+id/demographicsNextButton"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/DemographicsDocsHeaderStyle"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/detailsHeading"
+            style="@style/DemographicsDocsHeaderTitleStyle"
+            android:text="@string/detailsHeadingTextView"/>
+
+        <TextView
+            android:id="@+id/detailsSubHeading"
+            style="@style/DemographicsDocsHeaderSubtitleStyle"
+            android:text="@string/detailsSubHeadingTextView"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/demographicsAddressPicCapturer"/>
+
+
+    <LinearLayout
+        style="@style/DemographicsDocsHeaderStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/demogr_details_margin_top_detials_container"
+        android:orientation="vertical">
 
         <LinearLayout
-            style="@style/DemographicsDocsHeaderStyle"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:id="@+id/detailsHeading"
-                style="@style/DemographicsDocsHeaderTitleStyle"
-                android:text="@string/detailsHeadingTextView" />
-
-            <TextView
-                android:id="@+id/detailsSubHeading"
-                style="@style/DemographicsDocsHeaderSubtitleStyle"
-                android:text="@string/detailsSubHeadingTextView"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/DemographicsDocsHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/DetailsProfileImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icn_placeholder_user_profile" />
-
-            <Button
-                android:id="@+id/changeCurrentPhotoButton"
+            <TextView
+                android:id="@+id/raceTextView"
+                style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_marginLeft="10dp"
-                style="@style/DemographicsAddRemoveInsuranceStyle"
-                android:text="@string/selectOrTakePhotoButton" />
+                android:text="@string/raceLabel"/>
+
+            <TextView
+                android:id="@+id/raceListTextView"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:text="@string/demogr_tv_choose_label"
+                android:textColor="@color/bright_cerulean"/>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/demo_view_height"
+            android:layout_marginBottom="@dimen/divider_margin_bottom"
+            android:layout_marginTop="@dimen/divider_margin_top"
+            android:background="@color/light_gray">
+        </View>
 
         <LinearLayout
-            style="@style/DemographicsDocsHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/demogr_details_margin_top_detials_container">
+            android:orientation="horizontal">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/raceTextView"
-                    style="@style/DemographicsDocsLabelStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/raceLabel" />
-
-                <TextView
-                    android:id="@+id/raceListTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="DemographicsDocsClickableTextStyle"
-                    android:layout_alignParentRight="true"
-                    android:gravity="right"
-                    android:text="@string/chooseTextView"
-                    android:textColor="@color/bright_cerulean"
-                    android:textSize="18sp" />
-            </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/demo_view_height"
-                android:background="@color/light_gray"
-                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
-                android:layout_marginTop="@dimen/demo_view_margin_top">
-            </View>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+            <TextView
+                android:id="@+id/ethnicityTextView"
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:text="@string/ethnicityLabel"/>
 
-                <TextView
-                    android:id="@+id/ethnicityTextView"
-                    style="@style/DemographicsDocsLabelStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="@string/ethnicityLabel"/>
-
-                <TextView
-                    android:id="@+id/ethnicityListTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="right"
-                    android:text="@string/chooseTextView"
-                    android:textColor="@color/bright_cerulean"
-                    android:textSize="18sp" />
-
-            </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/demo_view_height"
-                android:background="@color/light_gray"
-                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
-                android:layout_marginTop="@dimen/demo_view_margin_top">
-            </View>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/DemographicsDocsLabelStyle"
-                    android:id="@+id/preferredLanguageTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="@string/languageLabel"/>
-
-                <TextView
-
-                    android:id="@+id/preferredLanguageListTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/chooseTextView"
-                    android:textColor="@color/bright_cerulean"
-                    android:textSize="18sp" />
-
-
-            </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/demo_view_height"
-                android:background="@color/light_gray"
-                android:layout_marginBottom="@dimen/demo_view_margin_bottom"
-                android:layout_marginTop="@dimen/demo_view_margin_top">
-            </View>
+            <TextView
+                android:id="@+id/ethnicityListTextView"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:text="@string/chooseTextView"
+                android:textColor="@color/bright_cerulean"/>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/demo_view_height"
+            android:layout_marginBottom="@dimen/divider_margin_bottom"
+            android:layout_marginTop="@dimen/divider_margin_top"
+            android:background="@color/light_gray">
+        </View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/preferredLanguageTextView"
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/languageLabel"/>
+
+            <TextView
+                android:id="@+id/preferredLanguageListTextView"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:text="@string/chooseTextView"
+                android:textColor="@color/bright_cerulean"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/demo_view_height"
+            android:layout_marginBottom="@dimen/divider_margin_bottom"
+            android:layout_marginTop="@dimen/divider_margin_top"
+            android:background="@color/light_gray">
+        </View>
+
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -164,13 +130,10 @@
         android:layout_weight="1"/>
 
     <Button
-        android:id="@+id/demographicsNextButton"
-        android:background="@drawable/button_selector"
-        android:fontFamily="GothamRounded-Medium"
+        android:id="@+id/demographicsDetailsNextButton"
         style="@style/DemographicsNextButtonStyle"
-        android:layout_width="match_parent"
         android:text="@string/next_Button"/>
 
-    </LinearLayout>
+</LinearLayout>
 
 
