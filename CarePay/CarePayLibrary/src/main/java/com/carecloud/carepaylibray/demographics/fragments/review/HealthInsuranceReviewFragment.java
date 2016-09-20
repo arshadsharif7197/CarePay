@@ -25,13 +25,14 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.PermissionsUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Arrays;
 
-import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 public class HealthInsuranceReviewFragment extends Fragment implements View.OnClickListener {
 
@@ -68,7 +69,7 @@ public class HealthInsuranceReviewFragment extends Fragment implements View.OnCl
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.health_insurance_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.health_insurance_toolbar_title);
-        Utility.setGothamRoundedMediumTypeface(getActivity(), title);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -153,7 +154,7 @@ public class HealthInsuranceReviewFragment extends Fragment implements View.OnCl
                                            @NonNull int[] grantResults) {
         String userChoosenTask = reviewImageCaptureHelper.getUserChoosenTask();
         switch (requestCode) {
-            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+            case PermissionsUtil.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
                         startActivityForResult(Intent.createChooser(reviewImageCaptureHelper.galleryIntent(),
@@ -165,7 +166,7 @@ public class HealthInsuranceReviewFragment extends Fragment implements View.OnCl
                 }
                 break;
 
-            case Utility.MY_PERMISSIONS_CAMERA:
+            case PermissionsUtil.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString()))
                         startActivityForResult(reviewImageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
@@ -241,13 +242,13 @@ public class HealthInsuranceReviewFragment extends Fragment implements View.OnCl
                     public void onClick(DialogInterface dialog, int item) {
                         if (item == 0) { // "Take picture" chosen
                             imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
-                            boolean result = Utility.checkPermissionCamera(getActivity());
+                            boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
                             if (result) {
                                 startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
                             }
                         } else if (item == 1) {  // "Select from Gallery" chosen
                             imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
-                            boolean result = Utility.checkPermission(getActivity());
+                            boolean result = PermissionsUtil.checkPermission(getActivity());
                             if (result) {
                                 startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
                                         ImageCaptureHelper.CHOOSER_NAME),

@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -58,7 +58,7 @@ public class SignupFragment extends Fragment {
         // set the toolbar
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.signup_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
-        Utility.setGothamRoundedMediumTypeface(getActivity(), title);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -236,7 +236,7 @@ public class SignupFragment extends Fragment {
                             + " isMAtchedPAssw=" + isPasswordMatch);
 
                     if (isReadyForNext) {
-                        Utility.hideSoftKeyboard(getActivity());
+                        SystemUtil.hideSoftKeyboard(getActivity());
                         submitButton.setEnabled(true);
                         repeatPasswordText.clearFocus();
                         submitButton.requestFocus();
@@ -286,13 +286,13 @@ public class SignupFragment extends Fragment {
                     isValidFirstName = checkFirstName();
                     submitButton.setEnabled(areAllValid());
                 }
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
             }
         });
         middleNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
             }
         });
         lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -302,7 +302,7 @@ public class SignupFragment extends Fragment {
                     isValidLastName = checkLastName();
                     submitButton.setEnabled(areAllValid());
                 }
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
             }
         });
         emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -312,7 +312,7 @@ public class SignupFragment extends Fragment {
                     isValidEmail = checkEmail();
                     submitButton.setEnabled(areAllValid());
                 }
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
             }
         });
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -322,7 +322,7 @@ public class SignupFragment extends Fragment {
                     isValidPassword = checkPassword();
                     submitButton.setEnabled(areAllValid());
                 }
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
             }
         });
         repeatPasswordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -332,7 +332,7 @@ public class SignupFragment extends Fragment {
                     isPasswordMatch = checkPasswordsMatch();
                     submitButton.setEnabled(areAllValid());
                 }
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
             }
         });
     }
@@ -355,7 +355,7 @@ public class SignupFragment extends Fragment {
 
     private boolean checkEmail() {
         String email = emailText.getText().toString();
-        boolean isEmailInvalid = StringUtil.isNullOrEmpty(email) || !Utility.isValidmail(email);
+        boolean isEmailInvalid = StringUtil.isNullOrEmpty(email) || !StringUtil.isValidmail(email);
         String error = (isEmailInvalid ? "error" : null);
         emailInputLayout.setErrorEnabled(isEmailInvalid);
         emailInputLayout.setError(error);
