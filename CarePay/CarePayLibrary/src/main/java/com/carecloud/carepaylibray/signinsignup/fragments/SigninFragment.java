@@ -1,5 +1,8 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -9,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,12 +23,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.cognito.AppHelper;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
+
+import java.util.Locale;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -82,8 +96,9 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isValidInfo()) {
-                    Intent intent = new Intent(getContext(), AppointmentsActivity.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(getContext(), AppointmentsActivity.class);
+//                    startActivity(intent);
+                    signInUser();
                 }
             }
         });
@@ -229,4 +244,140 @@ public class SigninFragment extends Fragment {
 
         }
     }
+
+    // cognito
+    private AlertDialog    userDialog;
+    private ProgressDialog waitDialog;
+
+    private void showDialogMessage(String title, String body) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title).setMessage(body).setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    userDialog.dismiss();
+                } catch (Exception e) {
+                    //
+                }
+            }
+        });
+        userDialog = builder.create();
+        userDialog.show();
+    }
+
+    private void showWaitDialog(String message) {
+        closeWaitDialog();
+        waitDialog = new ProgressDialog(getActivity());
+        waitDialog.setTitle(message);
+        waitDialog.show();
+    }
+
+    private void closeWaitDialog() {
+        try {
+            waitDialog.dismiss();
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    private void exit(String uname) {
+        exit(getActivity(), uname, null);
+    }
+
+    private void exit(Activity activity, String uname, String password) {
+//        Intent intent = new Intent();
+//        if (uname == null) {
+//            uname = "";
+//        }
+//        if (password == null) {
+//            password = "";
+//        }
+//        intent.putExtra("name", uname);
+//        intent.putExtra("password", password);
+//        activity.setResult(RESULT_OK, intent);
+
+        Log.v(LOG_TAG, "Login complete!");
+
+        // for demo, go back to the login screen
+//        FragmentManager fm = getFragmentManager();
+//        SigninFragment signinFragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
+//        if(signinFragment == null) {
+//            signinFragment = new SigninFragment();
+//        }
+//        getFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.layoutSigninSignup, signinFragment, SigninFragment.class.getSimpleName())
+//                .commit();
+//
+        // go to Appointments
+        Intent intent = new Intent(activity, AppointmentsActivity.class);
+        activity.startActivity(intent);
+        activity.finish();
+    }
+
+    AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+        @Override
+        public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
+            Log.e(LOG_TAG, "Auth Success");
+            AppHelper.setCurrSession(cognitoUserSession);
+            AppHelper.newDevice(device);
+            closeWaitDialog();
+            launchUser();
+        }
+
+        @Override
+        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String username) {
+            closeWaitDialog();
+            Locale.setDefault(Locale.US);
+            getUserAuthentication(authenticationContinuation, username);
+        }
+
+        @Override
+        public void getMFACode(MultiFactorAuthenticationContinuation multiFactorAuthenticationContinuation) {
+            closeWaitDialog();
+//            mfaAuth(multiFactorAuthenticationContinuation);
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            closeWaitDialog();
+            showDialogMessage("Sign-in failed", AppHelper.formatException(e));
+        }
+
+        @Override
+        public void authenticationChallenge(ChallengeContinuation continuation) {
+            // TODO change the place holder
+        }
+    };
+
+    private void signInUser() {
+        Log.v(LOG_TAG, "signInUser()");
+        String username = emailEditText.getText().toString();
+
+        AppHelper.setUser(username);
+
+        String password = passwordEditText.getText().toString();
+
+        showWaitDialog("Signing in...");
+        AppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
+    }
+
+    private void launchUser() {
+        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
+        startActivity(userActivity);
+    }
+
+    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
+
+        if(username != null) {
+            AppHelper.setUser(username);
+        }
+
+        String password = passwordEditText.getText().toString();
+
+        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
+        continuation.setAuthenticationDetails(authenticationDetails);
+        continuation.continueTask();
+    }
+
 }
