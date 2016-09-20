@@ -122,6 +122,7 @@
     <dimen name="consent_layout_left_right_margin">15dp</dimen>
     <dimen name="consent_spinner_left_margin">90dp</dimen>
     <dimen name="consent_minor_textsize">17sp</dimen>
+    <dimen name="consent_minor_info_textsize">14sp</dimen>
     <dimen name="consent_view_margin_top_bottom">10dp</dimen>
     <dimen name="date_textview_top_bottom">42dp</dimen>
     <dimen name="consentform_relativeLayout_margin">3dp</dimen>

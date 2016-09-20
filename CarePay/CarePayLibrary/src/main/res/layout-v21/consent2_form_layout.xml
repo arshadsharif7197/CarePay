@@ -60,7 +60,7 @@
                 android:layout_marginTop="@dimen/consent_top"
                 android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
                 android:text="@string/Minors_information"
-                android:textSize="14.0sp"
+                android:textSize="@dimen/consent_minor_info_textsize"
                 android:textColor="@color/bright_cerulean"/>
 
             <android.support.design.widget.TextInputLayout
@@ -72,9 +72,8 @@
                     android:id="@+id/minorFirstNameET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/Consent_Form_Edit_Text"
                     android:hint="Minor's First Name"
-                    android:textColorHint="@color/payne_gray"
-                    android:textColor="@color/bright_cerulean"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -146,13 +145,6 @@
                     android:text="@string/choose_gender"
                     style="@style/ConsentForm_spinnerStyle"
                     android:clickable="true"/>
-
-                <Spinner
-                    android:id="@+id/genderspinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/ConsentForm_spinnerStyle"
-                    android:visibility="gone"/>
 
             </RelativeLayout>
 
