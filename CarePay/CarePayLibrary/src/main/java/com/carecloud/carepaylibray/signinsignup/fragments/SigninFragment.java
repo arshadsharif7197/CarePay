@@ -65,7 +65,7 @@ public class SigninFragment extends Fragment {
         signinButton = (Button) view.findViewById(R.id.signin_button);
         signupButton = (Button) view.findViewById(R.id.signup_button);
 
-        // TODO: 9/14/2016 replace with Utility.setTypeFace...
+        // TODO: 9/14/2016 replace with SystemUtil.setTypeFace...
         hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
         editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
         floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");

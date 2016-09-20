@@ -5,9 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +16,10 @@ import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.consentforms.interfaces.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+
 
 
 public class ConsentForm1Fragment extends Fragment {
@@ -34,9 +33,6 @@ public class ConsentForm1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.consent_form_layout, container, false);
-
-
-
 
         titleTv = (TextView) view.findViewById(R.id.titleTv);
         descriptionTv = (TextView) view.findViewById(R.id.descriptionTv);
@@ -61,7 +57,6 @@ public class ConsentForm1Fragment extends Fragment {
             } catch (Exception e) {
             }
         }
-
 
     }
 
@@ -90,4 +85,10 @@ public class ConsentForm1Fragment extends Fragment {
             }
         }
     };
+
+    private void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(),(TextView) view.findViewById(R.id.titleTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.descriptionTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.contentTv));
+    }
 }

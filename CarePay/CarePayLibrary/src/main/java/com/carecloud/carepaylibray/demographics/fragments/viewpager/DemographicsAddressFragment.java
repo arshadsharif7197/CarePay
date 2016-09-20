@@ -23,11 +23,12 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypefaceEdittext;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypefaceEdittext;
 
 
 /**
@@ -161,6 +162,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
         });
 
+        setTypefaces(view);
         setFocusChangeListeners();
         setEditActionListeners();
     }
@@ -230,7 +232,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     isPhoneValid = checkPhoneNumber();
                     boolean isEnabled = checkReadyForNext();
                     if(isEnabled) {
-                        Utility.hideSoftKeyboard(getActivity());
+                        SystemUtil.hideSoftKeyboard(getActivity());
                         nextButton.setEnabled(true);
                         phoneNumberEditText.clearFocus();
                         nextButton.requestFocus();
@@ -249,7 +251,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
                 if (!b) { // when focus is lost, check for the validity and enable 'next' accordingly
                     isAddressValid = checkAddress();
                     nextButton.setEnabled(checkReadyForNext());
@@ -260,14 +262,14 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
             }
         });
 
         zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
                 if (!b) {
                     isZipValid = checkZipcode();
                     nextButton.setEnabled(checkReadyForNext());
@@ -278,7 +280,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
                 if (!b) {
                     isCityValid = checkCity();
                     nextButton.setEnabled(checkReadyForNext());
@@ -289,7 +291,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         stateAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
                 if (!b) {
                     isStateValid = checkState();
                     nextButton.setEnabled(checkReadyForNext());
@@ -300,7 +302,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Utility.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, b);
                 if (!b) {
                     isPhoneValid = checkPhoneNumber();
                     nextButton.setEnabled(checkReadyForNext());
@@ -366,7 +368,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             phNoTextInputLayout.setErrorEnabled(true);
             phNoTextInputLayout.setError(getString(R.string.empty_phone_number_error_messae));
             return false;
-        } else if (!Utility.isValidPhoneNumber(phoneNumberEditText.getText().toString().trim())) {
+        } else if (!StringUtil.isValidPhoneNumber(phoneNumberEditText.getText().toString().trim())) {
             phNoTextInputLayout.setErrorEnabled(true);
             phNoTextInputLayout.setError(getString(R.string.incorrect_phone_number_error_messae));
             return false;

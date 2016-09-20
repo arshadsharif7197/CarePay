@@ -326,6 +326,8 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_marginLeft">@dimen/marginleftright</item>
+        <item name="android:layout_marginRight">@dimen/marginleftright</item>
     </style>
 
     <style name="ConsentActivityContentTextStyle" parent="android:Widget.TextView">
@@ -349,6 +351,41 @@
         <item name="android:textColor">@color/Feldgrau</item>
         <item name="android:textSize">24.0sp</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/date_textview_top_bottom</item>
+        <item name="android:layout_marginBottom">@dimen/date_textview_top_bottom</item>
+    </style>
+
+    <style name="ConsentForm_spinnerStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:text">@string/choose_gender</item>
+        <item name="android:layout_marginTop">@dimen/consent_view_margin_top_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/consent_spinner_left_margin</item>
+        <item name="android:layout_alignBaseline">@id/minor_gender</item>
+        <item name="android:layout_toRightOf">@id/minor_gender</item>
+        <item name="android:drawSelectorOnTop">true</item>
+        <item name="android:textSize">@dimen/consent_minor_textsize</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
+    </style>
+
+
+    <style name="Consent_Form_View_Style" >
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">@dimen/consentform_relativeLayout_margin</item>
+        <item name="android:layout_marginRight">@dimen/consentform_relativeLayout_margin</item>
+        <item name="android:layout_marginTop">@dimen/consent_view_margin_top_bottom</item>
+        <item name="android:layout_marginBottom">@dimen/consent_view_margin_top_bottom</item>
+        <item name="android:background">@color/payne_gray</item>
+    </style>
+
+    <style name="Consent_form_Button">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/language_button_selector</item>
+    </style>
+
+
+    <style name="Consent_Form_Edit_Text">s
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColorHint">@color/payne_gray</item>
     </style>
 
     <!-- InTake -->

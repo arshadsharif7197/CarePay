@@ -30,14 +30,19 @@ import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 
 public class ConsentForm2Fragment extends Fragment {
 
-    private TextView titleTextView, descriptionTextView, contentTextView, content2Tv, dateTv;
+    private TextView titleTextView, descriptionTextView, contentTextView, content2Tv, dateTv,
+            dobTextView;
     private Button signButton;
     Spinner genderspinner;
     private IFragmentCallback fragmentCallback;
-    private EditText minorFirstNameEditText, minorLastNameEditText, dobEditText, genderEditText;
+    private EditText minorFirstNameEditText, minorLastNameEditText, genderEditText;
     private String[] state = { "Male", "Female"};
 
     @Nullable
@@ -55,11 +60,13 @@ public class ConsentForm2Fragment extends Fragment {
         signButton = (Button) view.findViewById(R.id.signButton);
         minorFirstNameEditText = (EditText) view.findViewById(R.id.minorFirstNameET);
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
-        dobEditText = (EditText) view.findViewById(R.id.dobET);
+        dobTextView = (TextView) view.findViewById(R.id.dobET);
         genderspinner = (Spinner)view.findViewById(R.id.genderspinner);
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, state);
         adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderspinner.setAdapter(adapter_state);
+        setTypefaces(view);
+
         return view;
     }
 
@@ -97,7 +104,7 @@ public class ConsentForm2Fragment extends Fragment {
         content2Tv.setText(formData.getContent2());
         dateTv.setText(formData.getDate());
 
-        dobEditText.setOnClickListener(new View.OnClickListener() {
+        dobTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
@@ -118,7 +125,7 @@ public class ConsentForm2Fragment extends Fragment {
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            dobEditText.setText(new StringBuilder().append(i1).append("/").append(i2).append("/")
+            dobTextView.setText(new StringBuilder().append(i1).append("/").append(i2).append("/")
                     .append(i));
         }
     };
@@ -168,4 +175,19 @@ public class ConsentForm2Fragment extends Fragment {
             }
         }
     };
+
+
+    private void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(),(TextView) view.findViewById(R.id.titleTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.descriptionTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.contentTv));
+        setProximaNovaSemiboldTypeface(getActivity(),(TextView) view.findViewById(R.id.minor_information));
+        setProximaNovaRegularTypeface(getActivity(),(EditText) view.findViewById(R.id.minorFirstNameET));
+        setProximaNovaRegularTypeface(getActivity(),(EditText) view.findViewById(R.id.minorLastNameET));
+        setProximaNovaSemiboldTypeface(getActivity(),(TextView) view.findViewById(R.id.dobET));
+        setProximaNovaSemiboldTypeface(getActivity(),(TextView) view.findViewById(R.id.choose_genderTextView));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.minor_dateofbirth));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.minor_gender));
+    }
+
 }

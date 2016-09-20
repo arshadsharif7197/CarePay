@@ -1,22 +1,27 @@
 package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 
@@ -25,7 +30,7 @@ import java.util.ArrayList;
  */
 public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapter.AppointmentViewHolder> {
 
-        Context context;
+        static Context context;
 
         ArrayList <AppointmentModel> appointmentItems;
         ArrayList<Integer> mSectionHeaderIndices;
@@ -67,7 +72,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
         final AppointmentModel item = appointmentItems.get(position);
         holder.doctorName.setText(item.getDoctorName());
         holder.doctorType.setText(item.getAppointmentType());
-        Utility.setGothamRoundedMediumTypeface(context,holder.shortName);
+        SystemUtil.setGothamRoundedMediumTypeface(context,holder.shortName);
         String splitStr[]= item.getAppointmentTime().replaceAll("UTC","").split(" ");
         String htmlStr="";
         if(splitStr.length > 3) {
@@ -77,7 +82,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
             //span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             span.setSpan(new RelativeSizeSpan(1.75f), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             span.setSpan(new ForegroundColorSpan(Color.parseColor("#455A64")), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            Utility.setProximaNovaRegularTypeface(context,holder.time);
+            SystemUtil.setProximaNovaRegularTypeface(context,holder.time);
             holder.time.setText(span);
         }else{
             holder.time.setText(item.getAppointmentTime().replaceAll("UTC",""));
@@ -91,7 +96,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
            // Toast.makeText(context,"Clicked "+item.getAppointmentId(),Toast.LENGTH_LONG).show();
          }
     });
-        holder.shortName.setText(Utility.onShortDrName(item.getDoctorName()));
+        holder.shortName.setText(SystemUtil.onShortDrName(item.getDoctorName()));
+        //if(position ==1){
+        //    holder.cellAvtar.setVisibility(View.VISIBLE);
+        //}else
+        holder.cellAvtar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -103,6 +112,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
 
         TextView doctorName, doctorType, time, sectionText,shortName;
         View sectionHeader, divider;
+        ImageView cellAvtar;
 
     public AppointmentViewHolder(View itemView) {
         super(itemView);
@@ -115,8 +125,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
         Typeface textViewFont_gotham_rounded_bold = Typeface.createFromAsset(itemView.getResources().getAssets(), "fonts/gotham_rounded_bold.otf");
         time = (TextView) itemView.findViewById(R.id.time);
         time.setTypeface(textViewFont_gotham_rounded_bold);
-        shortName=(TextView)itemView.findViewById(R.id.short_textview);
-
+        shortName=(TextView)itemView.findViewById(R.id.avtarTextView);
+        cellAvtar =(ImageView) itemView.findViewById(R.id.cellAvtarImageView);
     }
-}
+  }
 }

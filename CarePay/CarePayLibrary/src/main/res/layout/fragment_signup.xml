@@ -12,10 +12,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/signup_bottom_margin">
+        android:layout_marginTop="100dp">
 
         <LinearLayout
             style="@style/SingupEditsContainerStyle"
+            android:layout_marginTop="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -23,7 +24,8 @@
                 android:id="@+id/firstNameTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                app:errorTextAppearance="@style/errorTextAppearance"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/firstNameEditText"
@@ -31,10 +33,10 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/firstname_text"
                     android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/middleNameEditText"
                     android:singleLine="true"
                     android:textColor="@color/blue_cerulian"/>
             </android.support.design.widget.TextInputLayout>
-
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/middleNameTextInputLayout"
@@ -48,8 +50,10 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/middlename_text"
                     android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/lastNameEditText"
                     android:singleLine="true"
-                    android:textColor="@color/blue_cerulian"/>
+                    android:textColor="@color/blue_cerulian"
+                    android:visibility="gone"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -57,7 +61,8 @@
                 android:id="@+id/lastNameTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                app:errorTextAppearance="@style/errorTextAppearance"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/lastNameEditText"
@@ -65,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/lastname_text"
                     android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/emailEditText"
                     android:singleLine="true"
                     android:textColor="@color/blue_cerulian"/>
 
@@ -82,6 +88,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/email_text"
                     android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/passwordEditText"
                     android:singleLine="true"
                     android:textColor="@color/blue_cerulian"/>
 
@@ -99,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/password_text"
                     android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/repeatPasswordEditText"
                     android:inputType="textPassword"
                     android:singleLine="true"
                     android:textColor="@color/blue_cerulian"/>
@@ -116,7 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/repeat_password_text"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:singleLine="true"
                     android:textColor="@color/blue_cerulian"/>
@@ -138,11 +146,10 @@
 
         <Button
             android:id="@+id/submitSignupButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_light_gray_background"
             android:text="@string/signup_submit_button"
-            android:textColor="@color/white"/>
+            style="@style/DemographicsNextButtonStyle"
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
 
         <TextView
             android:id="@+id/oldUserTextView"
