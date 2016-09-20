@@ -58,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/consent_top"
+                android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
                 android:text="@string/Minors_information"
                 android:textSize="14.0sp"
                 android:textColor="@color/bright_cerulean"/>
