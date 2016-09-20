@@ -1,5 +1,8 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Typeface;
@@ -8,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,12 +23,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.cognito.AppHelper;
+import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
+import static android.app.Activity.RESULT_OK;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
@@ -44,11 +54,14 @@ public class SignupFragment extends Fragment {
     private TextView accountExistTextView;
     private Button   submitButton;
 
-    private boolean  isValidFirstName;
-    private boolean  isValidLastName;
-    private boolean  isValidEmail;
-    private boolean  isValidPassword;
-    private boolean  isPasswordMatch;
+    private boolean        isValidFirstName;
+    private boolean        isValidLastName;
+    private boolean        isValidEmail;
+    private boolean        isValidPassword;
+    private boolean        isPasswordMatch;
+    private AlertDialog    userDialog;
+    private ProgressDialog waitDialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,11 +94,14 @@ public class SignupFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (areAllValid()) {
-                    //Submit Registration
-                    Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    getActivity().finish();
+                    // request user registration
+                    registerUser();
+
+                    //Submit Registration // TODO: 9/20/2016 move of the onActivityResult() after registration
+//                    Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    getActivity().finish();
                 }
             }
         });
@@ -282,7 +298,7 @@ public class SignupFragment extends Fragment {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) { // when loosing focus, validate as well
+                if (!b) { // when loosing focus, validate as well
                     isValidFirstName = checkFirstName();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -298,7 +314,7 @@ public class SignupFragment extends Fragment {
         lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     isValidLastName = checkLastName();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -308,7 +324,7 @@ public class SignupFragment extends Fragment {
         emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     isValidEmail = checkEmail();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -318,7 +334,7 @@ public class SignupFragment extends Fragment {
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     isValidPassword = checkPassword();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -328,7 +344,7 @@ public class SignupFragment extends Fragment {
         repeatPasswordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     isPasswordMatch = checkPasswordsMatch();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -346,7 +362,7 @@ public class SignupFragment extends Fragment {
     }
 
     private boolean checkLastName() {
-        boolean isLastNameInvalid =  StringUtil.isNullOrEmpty(this.lastNameText.getText().toString());
+        boolean isLastNameInvalid = StringUtil.isNullOrEmpty(this.lastNameText.getText().toString());
         String error = (isLastNameInvalid ? "error" : null);
         lastNameInputLayout.setErrorEnabled(isLastNameInvalid);
         lastNameInputLayout.setError(error);
@@ -363,7 +379,7 @@ public class SignupFragment extends Fragment {
     }
 
     private boolean checkPassword() {
-        boolean isPassInvalid =  StringUtil.isNullOrEmpty(passwordText.getText().toString());
+        boolean isPassInvalid = StringUtil.isNullOrEmpty(passwordText.getText().toString());
         String error = (isPassInvalid ? "error" : null);
         passwordInputLayout.setErrorEnabled(isPassInvalid);
         passwordInputLayout.setError(error);
@@ -373,7 +389,7 @@ public class SignupFragment extends Fragment {
     private boolean checkPasswordsMatch() {
         String password = passwordText.getText().toString();
         String repeatedPassword = repeatPasswordText.getText().toString();
-        boolean isNotMachedPassw =  StringUtil.isNullOrEmpty(password)
+        boolean isNotMachedPassw = StringUtil.isNullOrEmpty(password)
                 || StringUtil.isNullOrEmpty(repeatedPassword)
                 || !(password.equals(repeatedPassword));
         String error = (isNotMachedPassw ? "error" : null);
@@ -388,5 +404,131 @@ public class SignupFragment extends Fragment {
                 && isValidEmail
                 && isValidPassword
                 && isPasswordMatch;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10) {
+            if (resultCode == RESULT_OK) {
+                String name = null;
+                if (data.hasExtra("name")) {
+                    name = data.getStringExtra("name");
+                }
+                exit(getActivity(), name, passwordText.getText().toString());
+            }
+        }
+    }
+
+
+    // cognito
+
+    private void registerUser() {
+        Log.v(LOG_TAG, "registerUser()");
+        // Read user data and register
+        CognitoUserAttributes userAttributes = new CognitoUserAttributes();
+
+        showWaitDialog("Signing up...");
+
+        String email = emailText.getText().toString();
+        if (email.length() > 0) {
+//            userAttributes.addAttribute(AppHelper.getSignUpFieldsC2O().get("name"), email);
+            userAttributes.addAttribute(AppHelper.getSignUpFieldsC2O().get("Email"), email);
+        }
+
+        AppHelper.getPool().signUpInBackground(emailText.getText().toString(),
+                                               passwordText.getText().toString(),
+                                               userAttributes,
+                                               null,
+                                               signUpHandler);
+    }
+
+    private void showDialogMessage(String title, String body, final boolean exit) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title).setMessage(body).setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    userDialog.dismiss();
+                    if (exit) {
+                        exit(emailText.getText().toString());
+                    }
+                } catch (Exception e) {
+                    if (exit) {
+                        exit(emailText.getText().toString());
+                    }
+                }
+            }
+        });
+        userDialog = builder.create();
+        userDialog.show();
+    }
+
+    private void showWaitDialog(String message) {
+        closeWaitDialog();
+        waitDialog = new ProgressDialog(getActivity());
+        waitDialog.setTitle(message);
+        waitDialog.show();
+    }
+
+    private void closeWaitDialog() {
+        try {
+            waitDialog.dismiss();
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    private void exit(String uname) {
+        exit(getActivity(), uname, null);
+    }
+
+    private void exit(Activity activity, String uname, String password) {
+        Intent intent = new Intent();
+        if (uname == null) {
+            uname = "";
+        }
+        if (password == null) {
+            password = "";
+        }
+        intent.putExtra("name", uname);
+        intent.putExtra("password", password);
+        activity.setResult(RESULT_OK, intent);
+        activity.finish();
+    }
+
+    SignUpHandler signUpHandler = new SignUpHandler() {
+        @Override
+        public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
+                              CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
+            // Check signUpConfirmationState to see if the user is already confirmed
+            closeWaitDialog();
+            Boolean regState = signUpConfirmationState;
+            if (signUpConfirmationState) {
+                Log.v(LOG_TAG, "signUpConfirmationState == true");
+                // User is already confirmed
+                showDialogMessage("Sign up successful!", emailText.getText().toString() + " has been Confirmed", true);
+            } else {
+                Log.v(LOG_TAG, "signUpConfirmationState == false");
+                // User is not confirmed
+                confirmSignUp(cognitoUserCodeDeliveryDetails);
+            }
+        }
+
+        @Override
+        public void onFailure(Exception exception) {
+            closeWaitDialog();
+            showDialogMessage("Sign up failed", AppHelper.formatException(exception), false);
+        }
+    };
+
+    private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
+        Intent intent = new Intent(getActivity(), SignUpConfirmActivity.class);
+        intent.putExtra("source", "signup");
+        intent.putExtra("name", emailText.getText().toString());
+        intent.putExtra("destination", cognitoUserCodeDeliveryDetails.getDestination());
+        intent.putExtra("deliveryMed", cognitoUserCodeDeliveryDetails.getDeliveryMedium());
+        intent.putExtra("attribute", cognitoUserCodeDeliveryDetails.getAttributeName());
+        startActivityForResult(intent, 10);
     }
 }

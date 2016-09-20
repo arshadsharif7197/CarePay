@@ -54,6 +54,13 @@
         <activity
             android:name="com.carecloud.carepaylibray.intake.InTakeActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+
+        <activity android:name="com.carecloud.carepaylibray.cognito.SignUpConfirmActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+
+        <activity android:name="com.carecloud.carepaylibray.cognito.VerifyActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+
     </application>
 
 </manifest>

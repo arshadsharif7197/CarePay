@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.cognito.AppHelper;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 
 /**
@@ -37,6 +38,8 @@ public class SigninSignupActivity extends AppCompatActivity {
             }
         });
 
+        // init Cognito
+        AppHelper.init(getApplicationContext());
     }
 
     private void switchFragment(Fragment fragment, String tagName) {
