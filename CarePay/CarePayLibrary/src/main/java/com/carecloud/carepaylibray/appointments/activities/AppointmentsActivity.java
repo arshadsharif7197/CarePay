@@ -22,15 +22,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReview;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.Utility;
 
@@ -227,7 +225,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         }
     }
     private void onCheckInAtOffice(){
-        Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
+        Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
         startActivity(demographicReviewIntent);
         }
     private  void onCheckInEarly(){
