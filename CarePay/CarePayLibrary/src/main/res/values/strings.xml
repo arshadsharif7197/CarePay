@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">CarePayLibrary</string>
-    <string name="api_base_url">http://57e47f3d.ngrok.io</string>
+    <string name="api_base_url">https://g8r79tifa4.execute-api.us-east-1.amazonaws.com</string>
+    <string name="google_map_api_base_url">https://maps.googleapis.com</string>
+    <string name="google_map_api_key">AIzaSyDFrx3OGugrIUQzsoEJVobtQoz6f9MMim</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -176,7 +178,7 @@
     <string name="empty_zip_code_error_messae">Enter zip code</string>
     <string name="empty_address_error_messae">Enter address</string>
     <string name="empty_city_error_messae">Enter city</string>
-    <string name="minimum_char_in_city_error_messae">Enter minimum three letters in city</string>
+    <string name="minimum_char_in_city_error_messae">Minimum three letters</string>
     <string name="empty_state_error_messae">Enter state</string>
     <string name="select_state_error_messae">Select state from list only</string>
     <string name="add_medical_info">Add More</string>

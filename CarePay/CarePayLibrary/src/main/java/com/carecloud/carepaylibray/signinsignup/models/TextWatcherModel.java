@@ -55,7 +55,7 @@ public class TextWatcherModel implements TextWatcher {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) {
-//                        checkTypeFace();
+                        checkTypeFace();
                         doValidation();
                     }
                     return false;
@@ -123,9 +123,8 @@ public class TextWatcherModel implements TextWatcher {
 
             Matcher matcher = pattern.matcher(email);
             return matcher.matches();
-        } else {
-            return false;
         }
+        return false;
     }
 
     private boolean isValid() {

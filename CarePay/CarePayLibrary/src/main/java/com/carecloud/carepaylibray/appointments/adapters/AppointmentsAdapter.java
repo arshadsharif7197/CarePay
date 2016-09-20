@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 
@@ -67,7 +67,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
         final AppointmentModel item = appointmentItems.get(position);
         holder.doctorName.setText(item.getDoctorName());
         holder.doctorType.setText(item.getAppointmentType());
-        Utility.setGothamRoundedMediumTypeface(context,holder.shortName);
+        SystemUtil.setGothamRoundedMediumTypeface(context,holder.shortName);
         String splitStr[]= item.getAppointmentTime().replaceAll("UTC","").split(" ");
         String htmlStr="";
         if(splitStr.length > 3) {
@@ -77,7 +77,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
             //span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             span.setSpan(new RelativeSizeSpan(1.75f), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             span.setSpan(new ForegroundColorSpan(Color.parseColor("#455A64")), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            Utility.setProximaNovaRegularTypeface(context,holder.time);
+            SystemUtil.setProximaNovaRegularTypeface(context,holder.time);
             holder.time.setText(span);
         }else{
             holder.time.setText(item.getAppointmentTime().replaceAll("UTC",""));
@@ -91,7 +91,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
            // Toast.makeText(context,"Clicked "+item.getAppointmentId(),Toast.LENGTH_LONG).show();
          }
     });
-        holder.shortName.setText(Utility.onShortDrName(item.getDoctorName()));
+        holder.shortName.setText(SystemUtil.onShortDrName(item.getDoctorName()));
     }
 
     @Override
