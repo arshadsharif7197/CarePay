@@ -90,7 +90,7 @@
             android:layout_marginLeft="@dimen/marginleftright"
             android:layout_marginRight="@dimen/marginleftright"
             android:layout_marginBottom="@dimen/marginleftright"
-            android:background="@drawable/agree_button_background"
+            android:background="@drawable/button_selector"
             android:enabled="false"
             android:text="@string/yes_sig"
             android:textColor="@color/white" />
