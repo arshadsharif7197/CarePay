@@ -16,40 +16,30 @@ import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 
 public class SigninSignupActivity extends AppCompatActivity {
 
-    private FragmentManager mFragmentManager;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_signup);
 
-        mFragmentManager = getSupportFragmentManager();
-
+        FragmentManager mFragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            mFragmentManager.beginTransaction().add(R.id.layoutSigninSignup, new SigninFragment(), "signin").addToBackStack("signin").commit();
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.layoutSigninSignup, new SigninFragment(), SigninFragment.class.getSimpleName())
+                    .addToBackStack("signin")
+                    .commit();
         }
 
-        mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                if (mFragmentManager.getBackStackEntryCount() == 0) {
-                    mFragmentManager.popBackStack();
-                    finish();
-                }
-            }
-        });
+//        mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+//            @Override
+//            public void onBackStackChanged() {
+//                if (mFragmentManager.getBackStackEntryCount() == 0) {
+//                    mFragmentManager.popBackStack();
+//                    finish();
+//                }
+//            }
+//        });
 
         // init Cognito
         AppHelper.init(getApplicationContext());
     }
 
-    private void switchFragment(Fragment fragment, String tagName) {
-        if (tagName != null) {
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.layoutSigninSignup, fragment).addToBackStack(tagName).commit();
-        }
-    }
-
-    public FragmentManager getmFragmentManager() {
-        return mFragmentManager;
-    }
 }

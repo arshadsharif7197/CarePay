@@ -36,7 +36,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDel
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.VerificationHandler;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
 public class SignUpConfirmActivity extends AppCompatActivity {
     private EditText username;
@@ -141,7 +140,8 @@ public class SignUpConfirmActivity extends AppCompatActivity {
                 if(s.length() == 0) {
                     TextView label = (TextView) findViewById(R.id.textViewConfirmCodeLabel);
                     label.setText(confCode.getHint());
-                    confCode.setBackground(getDrawable(R.drawable.text_border_selector));
+                    confCode.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
+                                                                     R.drawable.text_border_selector));
                 }
             }
 
@@ -185,14 +185,16 @@ public class SignUpConfirmActivity extends AppCompatActivity {
         if(userName == null || userName.length() < 1) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmUserIdMessage);
             label.setText(username.getHint()+" cannot be empty");
-            username.setBackground(getDrawable(R.drawable.text_border_error));
+            username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
+                                                             R.drawable.text_border_error));
             return;
         }
 
         if(confirmCode == null || confirmCode.length() < 1) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmCodeMessage);
             label.setText(confCode.getHint()+" cannot be empty");
-            confCode.setBackground(getDrawable(R.drawable.text_border_error));
+            confCode.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
+                                                             R.drawable.text_border_error));
             return;
         }
 
@@ -204,7 +206,8 @@ public class SignUpConfirmActivity extends AppCompatActivity {
         if(userName == null || userName.length() < 1) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmUserIdMessage);
             label.setText(username.getHint()+" cannot be empty");
-            username.setBackground(getDrawable(R.drawable.text_border_error));
+            username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
+                                                             R.drawable.text_border_error));
             return;
         }
         AppHelper.getPool().getUser(userName).resendConfirmationCodeInBackground(resendConfCodeHandler);
@@ -221,11 +224,13 @@ public class SignUpConfirmActivity extends AppCompatActivity {
         public void onFailure(Exception exception) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmUserIdMessage);
             label.setText("Confirmation failed!");
-            username.setBackground(getDrawable(R.drawable.text_border_error));
+            username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
+                                                             R.drawable.text_border_error));
 
             label = (TextView) findViewById(R.id.textViewConfirmCodeMessage);
             label.setText("Confirmation failed!");
-            confCode.setBackground(getDrawable(R.drawable.text_border_error));
+            confCode.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
+                                                             R.drawable.text_border_error));
 
             showDialogMessage("Confirmation failed", AppHelper.formatException(exception), false);
         }

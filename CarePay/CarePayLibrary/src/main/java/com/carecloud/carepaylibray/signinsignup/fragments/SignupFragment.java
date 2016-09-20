@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,6 +31,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHan
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.cognito.AppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
@@ -112,13 +114,13 @@ public class SignupFragment extends Fragment {
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = ((SigninSignupActivity) getActivity()).getmFragmentManager();
+                FragmentManager fm = getFragmentManager();
                 SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new SigninFragment();
                 }
                 fm.beginTransaction()
-                        .replace(R.id.signin_layout, fragment, SigninFragment.class.getSimpleName())
+                        .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
                         .commit();
             }
         });
@@ -484,17 +486,33 @@ public class SignupFragment extends Fragment {
     }
 
     private void exit(Activity activity, String uname, String password) {
-        Intent intent = new Intent();
-        if (uname == null) {
-            uname = "";
-        }
-        if (password == null) {
-            password = "";
-        }
-        intent.putExtra("name", uname);
-        intent.putExtra("password", password);
-        activity.setResult(RESULT_OK, intent);
-        activity.finish();
+//        Intent intent = new Intent();
+//        if (uname == null) {
+//            uname = "";
+//        }
+//        if (password == null) {
+//            password = "";
+//        }
+//        intent.putExtra("name", uname);
+//        intent.putExtra("password", password);
+//        activity.setResult(RESULT_OK, intent);
+
+        Log.v(LOG_TAG, "Registration complete!");
+
+        // for demo, go back to the login screen
+//        FragmentManager fm = getFragmentManager();
+//        SigninFragment signinFragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
+//        if(signinFragment == null) {
+//            signinFragment = new SigninFragment();
+//        }
+//        getFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.layoutSigninSignup, signinFragment, SigninFragment.class.getSimpleName())
+//                .commit();
+//
+        activity.onBackPressed();
+
+//        activity.finish();
     }
 
     SignUpHandler signUpHandler = new SignUpHandler() {

@@ -92,13 +92,14 @@ public class SigninFragment extends Fragment {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = ((SigninSignupActivity) getActivity()).getmFragmentManager();
+                FragmentManager fm = getFragmentManager();
                 SignupFragment fragment = (SignupFragment) fm.findFragmentByTag(SignupFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new SignupFragment();
                 }
                 fm.beginTransaction()
                         .replace(R.id.signin_layout, fragment, SignupFragment.class.getSimpleName())
+                        .addToBackStack(null)
                         .commit();
             }
         });
