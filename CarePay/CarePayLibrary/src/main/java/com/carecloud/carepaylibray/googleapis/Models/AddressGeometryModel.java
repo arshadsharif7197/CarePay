@@ -4,26 +4,26 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/15/2016.
  */
-public class AddressGeometry {
+public class AddressGeometryModel {
     @SerializedName("bounds")
     @Expose
-    private GeometryBounds bounds;
+    private GeometryBoundsModel bounds;
     @SerializedName("location")
     @Expose
-    private GeometryLocation location;
+    private GeometryLocationModel location;
     @SerializedName("location_type")
     @Expose
     private String locationType;
     @SerializedName("viewport")
     @Expose
-    private GeometryViewport viewport;
+    private GeometryViewportModel viewport;
 
     /**
      *
      * @return
      * The bounds
      */
-    public GeometryBounds getBounds() {
+    public GeometryBoundsModel getBounds() {
         return bounds;
     }
 
@@ -32,7 +32,7 @@ public class AddressGeometry {
      * @param bounds
      * The bounds
      */
-    public void setBounds(GeometryBounds bounds) {
+    public void setBounds(GeometryBoundsModel bounds) {
         this.bounds = bounds;
     }
 
@@ -41,7 +41,7 @@ public class AddressGeometry {
      * @return
      * The location
      */
-    public GeometryLocation getLocation() {
+    public GeometryLocationModel getLocation() {
         return location;
     }
 
@@ -50,7 +50,7 @@ public class AddressGeometry {
      * @param location
      * The location
      */
-    public void setLocation(GeometryLocation location) {
+    public void setLocation(GeometryLocationModel location) {
         this.location = location;
     }
 
@@ -77,7 +77,7 @@ public class AddressGeometry {
      * @return
      * The viewport
      */
-    public GeometryViewport getViewport() {
+    public GeometryViewportModel getViewport() {
         return viewport;
     }
 
@@ -86,7 +86,7 @@ public class AddressGeometry {
      * @param viewport
      * The viewport
      */
-    public void setViewport(GeometryViewport viewport) {
+    public void setViewport(GeometryViewportModel viewport) {
         this.viewport = viewport;
     }
 

@@ -22,7 +22,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
         <activity
-            android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReview"
+            android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
         <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>

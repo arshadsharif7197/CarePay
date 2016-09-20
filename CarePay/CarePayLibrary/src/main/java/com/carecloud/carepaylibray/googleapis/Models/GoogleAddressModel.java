@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/15/2016.
  */
-public class GoogleAddress {
+public class GoogleAddressModel {
     @SerializedName("results")
     @Expose
-    private List<GoogleAddressResult> results = new ArrayList<GoogleAddressResult>();
+    private List<GoogleAddressResultModel> results = new ArrayList<GoogleAddressResultModel>();
     @SerializedName("status")
     @Expose
     private String status;
@@ -19,7 +19,7 @@ public class GoogleAddress {
      * @return
      * The results
      */
-    public List<GoogleAddressResult> getResults() {
+    public List<GoogleAddressResultModel> getResults() {
         return results;
     }
 
@@ -28,7 +28,7 @@ public class GoogleAddress {
      * @param results
      * The results
      */
-    public void setResults(List<GoogleAddressResult> results) {
+    public void setResults(List<GoogleAddressResultModel> results) {
         this.results = results;
     }
 
