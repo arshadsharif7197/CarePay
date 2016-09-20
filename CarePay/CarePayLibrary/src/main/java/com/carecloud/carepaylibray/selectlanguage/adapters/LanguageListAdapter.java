@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             holder.textViewLanguageName.setText(languageSelected.getValue());
             if (languageSelected.isChecked()) {
                 holder.textViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.colorPrimary));
-                Utility.setProximaNovaSemiboldTypeface(Context, holder.textViewLanguageName);
+                SystemUtil.setProximaNovaSemiboldTypeface(Context, holder.textViewLanguageName);
                 holder.radioImageLanguageSelect.setImageResource(R.drawable.cell_radio_on);
               //  holder.cardView.setCardBackgroundColor(ContextCompat.getColor(Context, R.color.white));
             }
@@ -74,7 +74,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             textViewLanguageName.setTextColor(ContextCompat.getColor(Context, R.color.slateGray));
             radioImageLanguageSelect = (ImageView) itemView.findViewById(R.id.languageRadioImage);
             radioImageLanguageSelect.setImageResource(R.drawable.cell_radio_off);
-            Utility.setProximaNovaRegularTypeface(Context, textViewLanguageName);
+            SystemUtil.setProximaNovaRegularTypeface(Context, textViewLanguageName);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

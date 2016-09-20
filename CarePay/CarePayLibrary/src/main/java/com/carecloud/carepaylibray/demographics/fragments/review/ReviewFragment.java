@@ -13,15 +13,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm1Fragment;
 import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
-import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaExtraboldTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 public class ReviewFragment  extends Fragment implements View.OnClickListener {
 
@@ -42,7 +40,7 @@ public class ReviewFragment  extends Fragment implements View.OnClickListener {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.review_toolbar_title);
-        Utility.setGothamRoundedMediumTypeface(getActivity(), title);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);

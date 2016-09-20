@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 import java.util.Locale;
@@ -68,7 +68,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         // set the toolbar
         formsToolbar = (Toolbar) findViewById(R.id.intakeToolbar);
         formsToolbarTitleTv = (TextView) formsToolbar.findViewById(R.id.intakeToolbarTitle);
-        Utility.setGothamRoundedMediumTypeface(this, formsToolbarTitleTv);
+        SystemUtil.setGothamRoundedMediumTypeface(this, formsToolbarTitleTv);
         formsToolbar.setTitle("");
         formsToolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(formsToolbar);

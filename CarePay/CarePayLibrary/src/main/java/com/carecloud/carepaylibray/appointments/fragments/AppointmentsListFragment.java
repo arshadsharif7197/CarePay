@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -177,8 +176,8 @@ public class AppointmentsListFragment extends Fragment {
 
             TextView mTextViewSectionTitleToday = (TextView) getActivity().findViewById(R.id.appointments_section_title_Today);
             TextView mTextViewSectionTitleUpcoming = (TextView) getActivity().findViewById(R.id.appointments_section_title_Upcoming);
-            Utility.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleToday );
-            Utility.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleUpcoming );
+            SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleToday );
+            SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleUpcoming );
 
             appointmentsAdapter = new AppointmentsAdapter(getActivity(),todayAppointmentsItems);
             appointmentsAdapterUpcoming = new AppointmentsAdapter(getActivity(),upcomingAppointmentsItems);
