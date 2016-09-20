@@ -22,8 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +30,8 @@ import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragme
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReview;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -159,17 +158,17 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
 
             dateTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[0]);
             timeTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[1]);
-            shortNameTextView.setText(Utility.onShortDrName(appointmentModel.getDoctorName()));
+            shortNameTextView.setText(SystemUtil.onShortDrName(appointmentModel.getDoctorName()));
             nameTextView.setText(appointmentModel.getDoctorName());
             typeTextView.setText(appointmentModel.getAppointmentType());
             //addressTextView.setText(appointmentModel.getA());
 
-            Utility.setProximaNovaRegularTypeface(this, dateTextView);
-            Utility.setGothamRoundedBookTypeface(this, timeTextView);
-            Utility.setProximaNovaRegularTypeface(this, shortNameTextView);
-            Utility.setProximaNovaSemiboldTypeface(this, nameTextView);
-            Utility.setProximaNovaRegularTypeface(this, typeTextView);
-            Utility.setGothamRoundedMediumTypeface(this, addressTextView);
+            SystemUtil.setProximaNovaRegularTypeface(this, dateTextView);
+            SystemUtil.setGothamRoundedBookTypeface(this, timeTextView);
+            SystemUtil.setProximaNovaRegularTypeface(this, shortNameTextView);
+            SystemUtil.setProximaNovaSemiboldTypeface(this, nameTextView);
+            SystemUtil.setProximaNovaRegularTypeface(this, typeTextView);
+            SystemUtil.setGothamRoundedMediumTypeface(this, addressTextView);
 
             view.findViewById(R.id.dialogAppointHeaderImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -212,7 +211,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
             Date appointdate = sdf.parse(stringDate[0]);
             formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
-                    + Utility.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
+                    + DateUtil.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
             formateDate[1] = stringDate[1] + " " + stringDate[2];
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage());

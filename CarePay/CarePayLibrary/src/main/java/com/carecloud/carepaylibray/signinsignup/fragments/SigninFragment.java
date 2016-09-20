@@ -65,7 +65,7 @@ public class SigninFragment extends Fragment {
         signinButton = (Button) view.findViewById(R.id.signin_button);
         signupButton = (Button) view.findViewById(R.id.signup_button);
 
-        // TODO: 9/14/2016 replace with Utility.setTypeFace...
+        // TODO: 9/14/2016 replace with SystemUtil.setTypeFace...
         hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
         editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
         floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
@@ -159,7 +159,6 @@ public class SigninFragment extends Fragment {
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                emailHint.setHintTextAppearance(R.style.HintStyleFloating);
                 String hint = getString(R.string.email_text);
                 String hintCaps = hint.toUpperCase();
                 if (hasFocus) {
@@ -182,7 +181,6 @@ public class SigninFragment extends Fragment {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 Log.v(LOG_TAG, "password has focus");
-                passwordHint.setHintTextAppearance(R.style.HintStyleFloating);
                 String hint = getString(R.string.password_text);
                 String hintCaps = hint.toUpperCase();
                 if (hasFocus) {
