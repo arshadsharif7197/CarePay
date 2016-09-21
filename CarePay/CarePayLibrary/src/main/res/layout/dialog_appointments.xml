@@ -5,30 +5,30 @@
     android:layout_height="match_parent"
     android:background="@color/transparent_apt"
     android:orientation="vertical">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/dialogAppointHeaderTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/apt_imgview_ht"
-        android:layout_gravity="left"
-        android:gravity="left"
-        android:text="@string/close"
-        android:textColor="@color/white"
-        android:layout_marginBottom="@dimen/apt_dl_margin_bottom" />
-    <TextView
-        android:id="@+id/dialogEditAppointTextView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:gravity="right"
-        android:layout_height="@dimen/apt_imgview_ht"
-        android:layout_gravity="right"
-        android:text="@string/edit_appointment_dialog"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        android:layout_marginBottom="@dimen/apt_dl_margin_bottom" />
-</LinearLayout>
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/dialogAppointHeaderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:text="@string/close"
+            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/apt_dl_margin_bottom" />
+        <TextView
+            android:id="@+id/dialogEditAppointTextView"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_gravity="right"
+            android:text="@string/edit_appointment_dialog"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/apt_dl_margin_bottom" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -139,36 +139,36 @@
                 android:layout_marginBottom="@dimen/apt_dl_view_margin"
                 android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="@dimen/apt_dl_zero_ht_wdh"
-                android:layout_weight="0.7"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/appointAddressHeaderTextView"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
+                    android:layout_weight="0.7"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:ellipsize="none"
-                    android:singleLine="true"
-                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
-                    android:maxLines="3"
-                    android:scrollHorizontally="false"
-                    android:text="Fillingim"
-                    android:textColor="@color/payne_gray"
-                    android:textSize="@dimen/textview_textsize" />
-                <TextView
-                    android:id="@+id/appointAddressTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="none"
-                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
-                    android:maxLines="2"
-                    android:text="2451 Fillingim St, Mobile, AL 36617, United States"
-                    android:textColor="@color/bermudagrey"
-                    android:textSize="@dimen/textview_textsize" />
-            </LinearLayout>
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/appointAddressHeaderTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:ellipsize="none"
+                        android:singleLine="true"
+                        android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                        android:maxLines="3"
+                        android:scrollHorizontally="false"
+                        android:text="Fillingim"
+                        android:textColor="@color/payne_gray"
+                        android:textSize="@dimen/textview_textsize" />
+                    <TextView
+                        android:id="@+id/appointAddressTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="none"
+                        android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                        android:maxLines="2"
+                        android:text="2451 Fillingim St, Mobile, AL 36617, United States"
+                        android:textColor="@color/bermudagrey"
+                        android:textSize="@dimen/textview_textsize" />
+                </LinearLayout>
                 <ImageView
                     android:id="@+id/appointLocationImageView"
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
@@ -228,16 +228,16 @@
                     android:visibility="gone"
                     android:textSize="@dimen/apt_dl_textview_size" />
                 <Button
-                     android:id="@+id/checkOfficeNowButton"
+                    android:id="@+id/checkOfficeNowButton"
                     android:layout_width="0dp"
                     android:layout_weight="0.5"
-                     android:layout_height="match_parent"
-                     android:background="@drawable/button_green_fill_background"
-                     android:text="@string/check_in_now"
-                     android:textColor="@color/white"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_green_fill_background"
+                    android:text="@string/check_in_now"
+                    android:textColor="@color/white"
                     android:visibility="gone"
-                     android:layout_marginLeft="@dimen/apt_dl_btn_margin"
-                     android:textSize="@dimen/apt_dl_textview_size" />
+                    android:layout_marginLeft="@dimen/apt_dl_btn_margin"
+                    android:textSize="@dimen/apt_dl_textview_size" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/appointRequestPendingLayout"
@@ -255,7 +255,7 @@
                     android:textColor="@color/lightningyellow"
                     android:text="APPOINTMENT REQUEST PENDING"
                     android:layout_height="wrap_content" />
-                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
