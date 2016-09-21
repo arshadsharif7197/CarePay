@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
@@ -32,8 +31,6 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicReview;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -151,14 +148,14 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.show();
 
-            TextView dateTextView = ((TextView) view.findViewById(R.id.apptDateTextView));
-            TextView timeTextView = ((TextView) view.findViewById(R.id.apptTimeTextView));
-            TextView shortNameTextView = ((TextView) view.findViewById(R.id.apptShortnameTextView));
-            TextView nameTextView = ((TextView) view.findViewById(R.id.apptNameTextView));
-            TextView typeTextView = ((TextView) view.findViewById(R.id.apptTypeTextView));
-            final TextView addressTextView = ((TextView) view.findViewById(R.id.apptAddressTextView));
-            final TextView addressHeaderTextView = ((TextView) view.findViewById(R.id.apptAddressHeaderTextView));
-            TextView requestPendingTextView = (TextView)view.findViewById(R.id.apptReqPndgTextView);
+            TextView dateTextView = ((TextView) view.findViewById(R.id.appointDateTextView));
+            TextView timeTextView = ((TextView) view.findViewById(R.id.appointTimeTextView));
+            TextView shortNameTextView = ((TextView) view.findViewById(R.id.appointShortnameTextView));
+            TextView nameTextView = ((TextView) view.findViewById(R.id.appointNameTextView));
+            TextView typeTextView = ((TextView) view.findViewById(R.id.appointTypeTextView));
+            final TextView addressTextView = ((TextView) view.findViewById(R.id.appointAddressTextView));
+            final TextView addressHeaderTextView = ((TextView) view.findViewById(R.id.appointAddressHeaderTextView));
+            TextView requestPendingTextView = (TextView)view.findViewById(R.id.appointRequestPendingTextView);
 
             dateTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[0]);
             timeTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[1]);
@@ -176,38 +173,38 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             SystemUtil.setProximaNovaExtraboldTypeface(this, addressHeaderTextView);
             SystemUtil.setGothamRoundedMediumTypeface(this, requestPendingTextView);
 
-            view.findViewById(R.id.dialogAppointHeaderImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.dialogAppointHeaderTextView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.cancel();
                 }
             });
-            view.findViewById(R.id.apptLocationImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.appointLocationImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onMapView(addressTextView.getText().toString());
                 }
             });
-            view.findViewById(R.id.apptDailImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.appointDailImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onPhoneCall("000000000");
                 }
             });
-            view.findViewById(R.id.checkOfficeBtn).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.checkOfficeButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onCheckInAtOffice();
                     dialog.cancel();
                 }
             });
-            view.findViewById(R.id.checkOfficeNow).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.checkOfficeNowButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onCheckInAtNow();
                 }
             });
-            view.findViewById(R.id.dialogAppointEditTextView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.dialogEditAppointTextView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                    onEditAppointMent();
@@ -219,6 +216,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
                     onRequestPending();
                 }
             });
+            //second argument is only for testing it will change based on which dialog wants to show.
             onDialogTypeVisible(view,1);
         }
     }
@@ -295,31 +293,31 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
     private void onDialogTypeVisible(View view,int type){
             switch (type){
                 case 1:
-                    view.findViewById(R.id.apptDialogButtonLayout).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.checkOfficeNow).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.checkOfficeBtn).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
                     break;
                 case 2:
-                    view.findViewById(R.id.apptDialogButtonLayout).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.checkOfficeBtn).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
                     break;
                 case 3:
-                    view.findViewById(R.id.apptDialogButtonLayout).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.checkOfficeNow).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
                     break;
                 case 4:
-                    view.findViewById(R.id.dialogAppointEditTextView).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.dialogEditAppointTextView).setVisibility(View.VISIBLE);
 
                     break;
                 case 5:
-                    view.findViewById(R.id.apptReqPndgLayout).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.appointRequestPendingLayout).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);
-                    ((TextView)view.findViewById(R.id.apptDateTextView)).setTextColor(getResources().getColor(R.color.white));
-                    ((TextView)view.findViewById(R.id.apptTimeTextView)).setTextColor(getResources().getColor(R.color.white));
+                    ((TextView)view.findViewById(R.id.appointDateTextView)).setTextColor(getResources().getColor(R.color.white));
+                    ((TextView)view.findViewById(R.id.appointTimeTextView)).setTextColor(getResources().getColor(R.color.white));
                     break;
                 case 6:
-                    view.findViewById(R.id.apptDialogButtonLayout).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.checkOfficeNow).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.reasonTextInputLayout).setVisibility(View.VISIBLE);
                     break;
                 default: break;

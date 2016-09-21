@@ -10,7 +10,7 @@
     android:orientation="horizontal"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/dialogAppointHeaderImageView"
+        android:id="@+id/dialogAppointHeaderTextView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/apt_imgview_ht"
         android:layout_gravity="left"
@@ -19,7 +19,7 @@
         android:textColor="@color/white"
         android:layout_marginBottom="@dimen/apt_dl_margin_bottom" />
     <TextView
-        android:id="@+id/dialogAppointEditTextView"
+        android:id="@+id/dialogEditAppointTextView"
         android:layout_width="match_parent"
         android:gravity="right"
         android:layout_height="@dimen/apt_imgview_ht"
@@ -47,7 +47,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/apptDateTextView"
+                android:id="@+id/appointDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
@@ -56,7 +56,7 @@
                 android:textSize="@dimen/apt_dl_text_date" />
 
             <TextView
-                android:id="@+id/apptTimeTextView"
+                android:id="@+id/appointTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/apt_dl_appt_time_margin"
@@ -67,7 +67,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/apptUserPicCardView"
+            android:id="@+id/appointUserPicCardView"
             android:layout_width="@dimen/apt_dl_image_ht_wdh"
             android:layout_height="@dimen/apt_dl_image_ht_wdh"
             android:layout_centerHorizontal="true"
@@ -80,7 +80,7 @@
             app:cardCornerRadius="@dimen/apt_dl_image_radius">
 
             <ImageView
-                android:id="@+id/apptUserPicImageView"
+                android:id="@+id/appointUserPicImageView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_image_ht_wdh"
                 android:layout_alignParentTop="true"
@@ -89,7 +89,7 @@
         </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/apptShortnameTextView"
+            android:id="@+id/appointShortnameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/apt_dl_appt_shortname_margin"
@@ -110,7 +110,7 @@
             android:paddingRight="@dimen/apt_dl_margin">
 
             <TextView
-                android:id="@+id/apptNameTextView"
+                android:id="@+id/appointNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -118,7 +118,7 @@
                 android:textSize="@dimen/apt_dl_text_big" />
 
             <TextView
-                android:id="@+id/apptTypeTextView"
+                android:id="@+id/appointTypeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/apptAddressHeaderTextView"
+                    android:id="@+id/appointAddressHeaderTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
@@ -158,7 +158,7 @@
                     android:textColor="@color/payne_gray"
                     android:textSize="@dimen/textview_textsize" />
                 <TextView
-                    android:id="@+id/apptAddressTextView"
+                    android:id="@+id/appointAddressTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -170,7 +170,7 @@
                     android:textSize="@dimen/textview_textsize" />
             </LinearLayout>
                 <ImageView
-                    android:id="@+id/apptLocationImageView"
+                    android:id="@+id/appointLocationImageView"
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
@@ -178,7 +178,7 @@
                     android:src="@drawable/icn_appointment_card_directions" />
 
                 <ImageView
-                    android:id="@+id/apptDailImageView"
+                    android:id="@+id/appointDailImageView"
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
@@ -209,7 +209,7 @@
 
             </android.support.design.widget.TextInputLayout>
             <LinearLayout
-                android:id="@+id/apptDialogButtonLayout"
+                android:id="@+id/appointDialogButtonLayout"
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal"
@@ -218,7 +218,7 @@
                 android:visibility="gone"
                 android:layout_height="wrap_content">
                 <Button
-                    android:id="@+id/checkOfficeBtn"
+                    android:id="@+id/checkOfficeButton"
                     android:layout_width="0dp"
                     android:layout_weight="0.5"
                     android:layout_height="match_parent"
@@ -228,7 +228,7 @@
                     android:visibility="gone"
                     android:textSize="@dimen/apt_dl_textview_size" />
                 <Button
-                     android:id="@+id/checkOfficeNow"
+                     android:id="@+id/checkOfficeNowButton"
                     android:layout_width="0dp"
                     android:layout_weight="0.5"
                      android:layout_height="match_parent"
@@ -240,7 +240,7 @@
                      android:textSize="@dimen/apt_dl_textview_size" />
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/apptReqPndgLayout"
+                android:id="@+id/appointRequestPendingLayout"
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/apt_dl_margin"
@@ -249,7 +249,7 @@
                 android:visibility="gone"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/apptReqPndgTextView"
+                    android:id="@+id/appointRequestPendingTextView"
                     android:layout_width="wrap_content"
                     android:textSize="@dimen/apt_dl_btn_txt_size"
                     android:textColor="@color/lightningyellow"
