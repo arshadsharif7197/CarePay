@@ -165,7 +165,7 @@
                         android:ellipsize="none"
                         android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
                         android:maxLines="2"
-                        android:text="2451 Fillingim St, Mobile, AL 36617, United States"
+                        android:text=""
                         android:textColor="@color/bermudagrey"
                         android:textSize="@dimen/textview_textsize" />
                 </LinearLayout>

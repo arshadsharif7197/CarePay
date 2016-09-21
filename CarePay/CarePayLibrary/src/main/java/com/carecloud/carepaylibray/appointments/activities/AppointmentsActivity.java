@@ -293,32 +293,23 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
     private void onDialogTypeVisible(View view,int type){
         switch (type){
             case 1:
-                view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
-                break;
-            case 2:
-                view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
-                break;
-            case 3:
-                view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
-                break;
-            case 4:
-                view.findViewById(R.id.dialogEditAppointTextView).setVisibility(View.VISIBLE);
+                onCheckOffceNowUI(view);
 
                 break;
+            case 2:
+                onCheckAtOfficeUI(view);
+                break;
+            case 3:
+                onCheckNowEarlyUI(view);
+                break;
+            case 4:
+                onEditAppointmentUI(view);
+                break;
             case 5:
-                view.findViewById(R.id.appointRequestPendingLayout).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);
-                ((TextView)view.findViewById(R.id.appointDateTextView)).setTextColor(getResources().getColor(R.color.white));
-                ((TextView)view.findViewById(R.id.appointTimeTextView)).setTextColor(getResources().getColor(R.color.white));
+                onPendingAppointmentUI(view);
                 break;
             case 6:
-                view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.reasonTextInputLayout).setVisibility(View.VISIBLE);
+                onReasonAppointmentUI(view);
                 break;
             default: break;
 
@@ -335,5 +326,32 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
      */
     private void onRequestPending(){
 
+    }
+    private void onCheckOffceNowUI(View view){
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
+    }
+    private void onCheckAtOfficeUI(View view){
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
+    }
+    private void onCheckNowEarlyUI(View view){
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+    }
+    private void onEditAppointmentUI(View view){
+        view.findViewById(R.id.dialogEditAppointTextView).setVisibility(View.VISIBLE);
+    }
+    private void onPendingAppointmentUI(View view){
+        view.findViewById(R.id.appointRequestPendingLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);
+        ((TextView) view.findViewById(R.id.appointDateTextView)).setTextColor(getResources().getColor(R.color.white));
+        ((TextView) view.findViewById(R.id.appointTimeTextView)).setTextColor(getResources().getColor(R.color.white));
+    }
+    private void onReasonAppointmentUI(View view){
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.reasonTextInputLayout).setVisibility(View.VISIBLE);
     }
 }
