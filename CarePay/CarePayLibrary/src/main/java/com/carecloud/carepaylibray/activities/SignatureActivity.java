@@ -101,7 +101,6 @@ public class SignatureActivity extends AppCompatActivity {
             @Override
             public void onSigned() {
                 agreeBtn.setEnabled(true);
-                agreeBtn.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
             }
 
             @Override
@@ -114,7 +113,6 @@ public class SignatureActivity extends AppCompatActivity {
         if(signaturePad != null){
             signaturePad.clear();
             agreeBtn.setEnabled(false);
-            agreeBtn.setBackgroundColor(getResources().getColor(R.color.light_gray));
         }
     }
 

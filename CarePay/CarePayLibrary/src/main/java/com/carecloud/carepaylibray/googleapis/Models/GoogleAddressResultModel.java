@@ -9,16 +9,16 @@ import java.util.List;
 /**
  * Created by Jahirul Bhuiyan on 9/16/2016.
  */
-public class GoogleAddressResult {
+public class GoogleAddressResultModel {
     @SerializedName("address_components")
     @Expose
-    private List<AddressComponent> addressComponents = new ArrayList<AddressComponent>();
+    private List<AddressComponentModel> addressComponents = new ArrayList<AddressComponentModel>();
     @SerializedName("formatted_address")
     @Expose
     private String formattedAddress;
     @SerializedName("geometry")
     @Expose
-    private AddressGeometry geometry;
+    private Object geometry;
     @SerializedName("place_id")
     @Expose
     private String placeId;
@@ -34,7 +34,7 @@ public class GoogleAddressResult {
      * @return
      * The addressComponents
      */
-    public List<AddressComponent> getAddressComponents() {
+    public List<AddressComponentModel> getAddressComponents() {
         return addressComponents;
     }
 
@@ -43,7 +43,7 @@ public class GoogleAddressResult {
      * @param addressComponents
      * The address_components
      */
-    public void setAddressComponents(List<AddressComponent> addressComponents) {
+    public void setAddressComponents(List<AddressComponentModel> addressComponents) {
         this.addressComponents = addressComponents;
     }
 
@@ -70,7 +70,7 @@ public class GoogleAddressResult {
      * @return
      * The geometry
      */
-    public AddressGeometry getGeometry() {
+    public Object getGeometry() {
         return geometry;
     }
 
@@ -79,7 +79,7 @@ public class GoogleAddressResult {
      * @param geometry
      * The geometry
      */
-    public void setGeometry(AddressGeometry geometry) {
+    public void setGeometry(Object geometry) {
         this.geometry = geometry;
     }
 

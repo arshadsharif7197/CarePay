@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.base;
 import com.smartystreets.api.exceptions.SmartyException;
 import com.smartystreets.api.us_street.*;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -10,21 +11,17 @@ import java.util.ArrayList;
  * Created by Rahul on 9/19/16.
  */
 public class SmartystreetsAddressService {
-    private static   Client client = new ClientBuilder("735638a9-0390-4037-bec4-05cf6135ed53", "T8XDbVVqO8r63KVvJTnp").build();
+    private static Client client = new ClientBuilder("735638a9-0390-4037-bec4-05cf6135ed53", "T8XDbVVqO8r63KVvJTnp").build();
 
 
     public static Candidate getAddressByZipCode(String zipcode){
 
-        Lookup lookup = null;
-        Candidate  candidate=null;
+        Lookup lookup;
+        Candidate  candidate;
+        lookup = new Lookup();
+        lookup.setZipCode(zipcode);
         try {
-            //TODO lookup = new Lookup();
-            lookup.setZipCode(zipcode);
             client.send(lookup);
-            ArrayList<Candidate> candidates = lookup.getResult();
-            if (candidates!=null && !candidates.isEmpty())
-                candidate= candidates.get(0);
-
         }
         catch (SmartyException ex) {
             System.out.println(ex.getMessage());
@@ -32,11 +29,9 @@ public class SmartystreetsAddressService {
         }
         catch (IOException ex) {
             ex.printStackTrace();
-        }finally {
-            lookup=null;
-
         }
-
+        ArrayList<Candidate> results = lookup.getResult();
+        candidate =results.get(0);
         return candidate;
 
     }
