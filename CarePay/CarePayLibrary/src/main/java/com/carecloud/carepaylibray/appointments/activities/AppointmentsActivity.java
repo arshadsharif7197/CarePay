@@ -28,8 +28,11 @@ import android.widget.Toast;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.cognito.AppHelper;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -123,7 +126,17 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
+            // perform log out, of course
+            String userName = AppHelper.getCurrUser();
+            if(userName != null) {
+                Log.v(LOG_TAG, "sign out");
+                AppHelper.getPool().getUser().signOut();
 
+                // go to Sign in screen
+                Intent intent = new Intent(this, SigninSignupActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else if (id == R.id.nav_purchase) {
 
         } else if (id == R.id.nav_notification) {
@@ -218,6 +231,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         }
         return formateDate;
     }
+
     private void onPhoneCall(final String phoneNumber){
         try{
             startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
@@ -225,16 +239,20 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             Toast.makeText(getApplicationContext(),"Activity is not founded",Toast.LENGTH_SHORT).show();
         }
     }
+
     private void onCheckInAtOffice(){
         Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
         startActivity(demographicReviewIntent);
         }
+
     private  void onCheckInEarly(){
         Toast.makeText(AppointmentsActivity.this, "Clicked on onCheckInEarly method,", Toast.LENGTH_LONG).show();
         }
+
     private void onCheckInAtNow(){
         Toast.makeText(AppointmentsActivity.this, "Clicked on onCheckInAtNow method,", Toast.LENGTH_LONG).show();
         }
+
     private void onCreateAppointment(){
         Toast.makeText(AppointmentsActivity.this, "Clicked on onCreateAppointment method,", Toast.LENGTH_LONG).show();
         }
