@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
@@ -63,9 +64,10 @@ public class SignupFragment extends Fragment {
     private boolean             isValidEmail;
     private boolean             isValidPassword;
     private boolean             isPasswordMatch;
-    private AlertDialog         userDialog;
+
     private CognitoDialogHelper dlgHelper;
     private String              userName;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +79,10 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
+
+        // hide progress
+        progressBar = (ProgressBar) view.findViewById(R.id.signupProgressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         // set the toolbar
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.signup_toolbar);
@@ -421,11 +427,8 @@ public class SignupFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
-                String name = null;
-                if (data.hasExtra("name")) {
-                    name = data.getStringExtra("name");
-                }
-                getActivity().onBackPressed();
+                // TODO: 9/21/2016 auto-fill
+                getActivity().onBackPressed(); // get back to sign in for now
             }
         }
     }
@@ -436,7 +439,7 @@ public class SignupFragment extends Fragment {
         // Read user data and register
         CognitoUserAttributes userAttributes = new CognitoUserAttributes();
 
-        dlgHelper.showWaitDialog("Signing up..."); // TODO: 9/21/2016 prepare string for translation
+        progressBar.setVisibility(View.VISIBLE);
 
         userName = emailText.getText().toString();
         if (userName.length() > 0) {
@@ -467,15 +470,9 @@ public class SignupFragment extends Fragment {
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
                               CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
             // Check signUpConfirmationState to see if the user is already confirmed
-            dlgHelper.closeWaitDialog();
             if (signUpConfirmationState) {
                 Log.v(LOG_TAG, "signUpConfirmationState == true");
-                // User is already confirmed
-//                showDialogMessage("Sign up successful!",
-//                                  emailText.getText().toString() + " has been Confirmed",
-//                                  true);
-                dlgHelper.showDialogMessage("Sign up successful!",
-                                            userName + " has been Confirmed");
+                progressBar.setVisibility(View.INVISIBLE);
                 getActivity().onBackPressed(); // confirmed; get back to SignInFragment
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
@@ -486,10 +483,7 @@ public class SignupFragment extends Fragment {
 
         @Override
         public void onFailure(Exception exception) {
-            dlgHelper.closeWaitDialog();
-//            showDialogMessage("Sign up failed", // TODO: 9/21/2016 ready for translation
-//                              AppHelper.formatException(exception),
-//                              false);
+            progressBar.setVisibility(View.INVISIBLE);
             dlgHelper.showDialogMessage("Sign up failed!",
                                         AppHelper.formatException(exception));
         }

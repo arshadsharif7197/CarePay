@@ -9,6 +9,13 @@
 
     <include layout="@layout/signup_toolbar"/>
 
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/signupProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

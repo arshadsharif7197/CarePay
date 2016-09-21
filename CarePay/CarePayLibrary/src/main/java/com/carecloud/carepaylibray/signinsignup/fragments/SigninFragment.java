@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +59,7 @@ public class SigninFragment extends Fragment {
 
     private CognitoDialogHelper cognitoDlgHelper;
     private String              userName;
+    private ProgressBar         progressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +72,9 @@ public class SigninFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
+
+        progressBar = (ProgressBar) view.findViewById(R.id.signInProgress);
+        progressBar.setVisibility(View.INVISIBLE);
 
         emailHint = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
         passwordHint = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
@@ -132,7 +137,6 @@ public class SigninFragment extends Fragment {
         });
 
         setTextListeners();
-
 
         return view;
     }
@@ -246,7 +250,8 @@ public class SigninFragment extends Fragment {
     private void signInUser() {
         Log.v(LOG_TAG, "sign in user");
 
-        cognitoDlgHelper.showWaitDialog("Signing in..."); // TODO: 9/21/2016 prepare for translation
+        progressBar.setVisibility(View.VISIBLE);
+
         userName = emailEditText.getText().toString();
         AppHelper.setUser(userName);
         AppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
@@ -281,7 +286,7 @@ public class SigninFragment extends Fragment {
 
             AppHelper.setCurrSession(cognitoUserSession);
             AppHelper.newDevice(device);
-            cognitoDlgHelper.closeWaitDialog();
+            progressBar.setVisibility(View.INVISIBLE);
             launchUser();
         }
 
@@ -295,12 +300,11 @@ public class SigninFragment extends Fragment {
         @Override
         public void getMFACode(MultiFactorAuthenticationContinuation multiFactorAuthenticationContinuation) {
             cognitoDlgHelper.closeWaitDialog();
-//            mfaAuth(multiFactorAuthenticationContinuation);
         }
 
         @Override
         public void onFailure(Exception e) {
-            cognitoDlgHelper.closeWaitDialog();
+            progressBar.setVisibility(View.INVISIBLE);
             cognitoDlgHelper.showDialogMessage("Sign-in failed", // TODO: 9/21/2016 prepare for translation if kept
                                                AppHelper.formatException(e));
         }
