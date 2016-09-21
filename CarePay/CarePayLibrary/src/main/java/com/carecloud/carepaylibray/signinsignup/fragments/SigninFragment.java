@@ -112,9 +112,7 @@ public class SigninFragment extends Fragment {
             public void onClick(View view) {
 
                 Intent intent = new Intent(getContext(), LibraryMainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                getActivity().finish();
             }
         });
 
