@@ -156,7 +156,7 @@ public class AppHelper {
         currSession = session;
     }
 
-    public static  CognitoUserSession getCurrSession() {
+    public static CognitoUserSession getCurrSession() {
         return currSession;
     }
 
@@ -165,7 +165,7 @@ public class AppHelper {
         refreshWithSync();
     }
 
-    public static  CognitoUserDetails getUserDetails() {
+    public static CognitoUserDetails getUserDetails() {
         return userDetails;
     }
 
@@ -219,12 +219,12 @@ public class AppHelper {
 
     public static List<String> getNewAvailableOptions() {
         List<String> newOption = new ArrayList<String>();
-        for(String attribute : attributeDisplaySeq) {
-            if(!(currUserAttributes.contains(attribute))) {
+        for (String attribute : attributeDisplaySeq) {
+            if (!(currUserAttributes.contains(attribute))) {
                 newOption.add(attribute);
             }
         }
-        return  newOption;
+        return newOption;
     }
 
     public static String formatException(Exception exception) {
@@ -234,17 +234,17 @@ public class AppHelper {
 
         String temp = exception.getMessage();
 
-        if(temp != null && temp.length() > 0) {
+        if (temp != null && temp.length() > 0) {
             formattedString = temp.split("\\(")[0];
-            if(temp != null && temp.length() > 0) {
+            if (temp != null && temp.length() > 0) {
                 return formattedString;
             }
         }
 
-        return  formattedString;
+        return formattedString;
     }
 
-    public  static  int getItemCount() {
+    public static int getItemCount() {
         return itemCount;
     }
 
@@ -252,8 +252,8 @@ public class AppHelper {
         return trustedDevicesCount;
     }
 
-    public  static ItemToDisplay getItemForDisplay(int position) {
-        return  currDisplayedItems.get(position);
+    public static ItemToDisplay getItemForDisplay(int position) {
+        return currDisplayedItems.get(position);
     }
 
     public static ItemToDisplay getDeviceForDisplay(int position) {
@@ -272,7 +272,7 @@ public class AppHelper {
         thisDeviceTrustState = false;
         deviceDetails = devicesList;
         trustedDevices = new ArrayList<ItemToDisplay>();
-        for(CognitoDevice device: devicesList) {
+        for (CognitoDevice device : devicesList) {
             if (thisDevice != null && thisDevice.getDeviceKey().equals(device.getDeviceKey())) {
                 thisDeviceTrustState = true;
             } else {
@@ -325,8 +325,8 @@ public class AppHelper {
         signUpFieldsC2O.put("Phone number", "phone_number");
         signUpFieldsC2O.put("Phone number verified", "phone_number_verified");
         signUpFieldsC2O.put("Email verified", "email_verified");
-        signUpFieldsC2O.put("Email","email");
-        signUpFieldsC2O.put("Middle name","middle_name");
+        signUpFieldsC2O.put("Email", "email");
+        signUpFieldsC2O.put("Middle name", "middle_name");
 
         signUpFieldsO2C = new HashMap<String, String>();
         signUpFieldsO2C.put("given_name", "Given name");
@@ -355,60 +355,56 @@ public class AppHelper {
         currUserAttributes.clear();
         itemCount = 0;
 
-        for(Map.Entry<String, String> attr: userDetails.getAttributes().getAttributes().entrySet()) {
+        for (Map.Entry<String, String> attr : userDetails.getAttributes().getAttributes().entrySet()) {
 
             tempKeys.add(attr.getKey());
             tempValues.add(attr.getValue());
 
-            if(attr.getKey().contains("email_verified")) {
+            if (attr.getKey().contains("email_verified")) {
                 emailVerified = attr.getValue().contains("true");
-            }
-            else if(attr.getKey().contains("phone_number_verified")) {
+            } else if (attr.getKey().contains("phone_number_verified")) {
                 phoneVerified = attr.getValue().contains("true");
             }
 
-            if(attr.getKey().equals("email")) {
+            if (attr.getKey().equals("email")) {
                 emailAvailable = true;
-            }
-            else if(attr.getKey().equals("phone_number")) {
+            } else if (attr.getKey().equals("phone_number")) {
                 phoneAvailable = true;
             }
         }
 
         // Arrange the input attributes per the display sequence
         Set<String> keySet = new HashSet<>(tempKeys);
-        for(String det: attributeDisplaySeq) {
-            if(keySet.contains(det)) {
+        for (String det : attributeDisplaySeq) {
+            if (keySet.contains(det)) {
                 // Adding items to display list in the required sequence
 
                 ItemToDisplay item = new ItemToDisplay(signUpFieldsO2C.get(det), tempValues.get(tempKeys.indexOf(det)), "",
                                                        Color.BLACK, Color.DKGRAY, Color.parseColor("#37A51C"),
                                                        0, null);
 
-                if(det.contains("email")) {
-                    if(emailVerified) {
+                if (det.contains("email")) {
+                    if (emailVerified) {
                         item.setDataDrawable("checked");
                         item.setMessageText("Email verified");
-                    }
-                    else {
+                    } else {
                         item.setDataDrawable("not_checked");
                         item.setMessageText("Email not verified");
                         item.setMessageColor(Color.parseColor("#E94700"));
                     }
                 }
 
-                if(det.contains("phone_number")) {
-                    if(phoneVerified) {
+                if (det.contains("phone_number")) {
+                    if (phoneVerified) {
                         item.setDataDrawable("checked");
                         item.setMessageText("Phone number verified");
-                    }
-                    else {
+                    } else {
                         item.setDataDrawable("not_checked");
                         item.setMessageText("Phone number not verified");
                         item.setMessageColor(Color.parseColor("#E94700"));
                     }
                 }
-                
+
                 currDisplayedItems.add(item);
                 currUserAttributes.add(det);
                 itemCount++;
@@ -424,5 +420,118 @@ public class AppHelper {
     private static void deleteAttribute(String attributeName) {
 
     }
-}
 
+    /**
+     * Authentication related item to display
+     */
+    private static class ItemToDisplay {
+
+        // Text for display
+        private String labelText;
+        private String dataText;
+        private String messageText;
+
+        // Display text colors
+        private int labelColor;
+        private int dataColor;
+        private int messageColor;
+
+        // Data box background
+        private int dataBackground;
+
+        // Data box drawable
+        private String dataDrawable;
+
+        // Constructor
+        protected ItemToDisplay(String labelText, String dataText, String messageText,
+                                int labelColor, int dataColor, int messageColor,
+                                int dataBackground, String dataDrawable) {
+            this.labelText = labelText;
+            this.dataText = dataText;
+            this.messageText = messageText;
+            this.labelColor = labelColor;
+            this.dataColor = dataColor;
+            this.messageColor = messageColor;
+            this.dataBackground = dataBackground;
+            this.dataDrawable = dataDrawable;
+        }
+
+        public String getLabelText() {
+            return labelText;
+        }
+
+        public void setLabelText(String labelText) {
+            this.labelText = labelText;
+        }
+
+        public String getDataText() {
+            return dataText;
+        }
+
+        public void setDataText(String dataText) {
+            this.dataText = dataText;
+        }
+
+        public String getMessageText() {
+            return messageText;
+        }
+
+        public void setMessageText(String messageText) {
+            this.messageText = messageText;
+        }
+
+        public int getLabelColor() {
+            return labelColor;
+        }
+
+        public void setLabelColor(int labelColor) {
+            this.labelColor = labelColor;
+        }
+
+        public int getDataColor() {
+            return dataColor;
+        }
+
+        public void setDataColor(int dataColor) {
+            this.dataColor = dataColor;
+        }
+
+        public int getMessageColor() {
+            return messageColor;
+        }
+
+        public void setMessageColor(int messageColor) {
+            this.messageColor = messageColor;
+        }
+
+        public int getDataBackground() {
+            return dataBackground;
+        }
+
+        public void setDataBackground(int dataBackground) {
+            this.dataBackground = dataBackground;
+        }
+
+        public String getDataDrawable() {
+            return dataDrawable;
+        }
+
+        public void setDataDrawable(String dataDrawable) {
+            this.dataDrawable = dataDrawable;
+        }
+
+        @Override
+        public String toString() {
+            return "ItemToDisplay{" +
+                    "labelText='" + labelText + '\'' +
+                    ", dataText='" + dataText + '\'' +
+                    ", messageText='" + messageText + '\'' +
+                    ", labelColor=" + labelColor +
+                    ", dataColor=" + dataColor +
+                    ", messageColor=" + messageColor +
+                    ", dataBackground=" + dataBackground +
+                    ", dataDrawable='" + dataDrawable + '\'' +
+                    '}';
+        }
+    }
+}

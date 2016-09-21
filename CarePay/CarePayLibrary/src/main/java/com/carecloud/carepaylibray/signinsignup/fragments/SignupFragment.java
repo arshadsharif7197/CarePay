@@ -1,10 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +8,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,9 +26,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDel
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.cognito.AppHelper;
-import com.carecloud.carepaylibray.cognito.CognitoDialogHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
@@ -65,14 +57,12 @@ public class SignupFragment extends Fragment {
     private boolean             isValidPassword;
     private boolean             isPasswordMatch;
 
-    private CognitoDialogHelper dlgHelper;
     private String              userName;
     private ProgressBar progressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dlgHelper = new CognitoDialogHelper(getActivity());
     }
 
     @Override
@@ -90,7 +80,6 @@ public class SignupFragment extends Fragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,12 +101,6 @@ public class SignupFragment extends Fragment {
                 if (areAllValid()) {
                     // request user registration
                     registerUser();
-
-                    //Submit Registration // TODO: 9/20/2016 move of the onActivityResult() after registration
-//                    Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(intent);
-//                    getActivity().finish();
                 }
             }
         });
@@ -484,8 +467,10 @@ public class SignupFragment extends Fragment {
         @Override
         public void onFailure(Exception exception) {
             progressBar.setVisibility(View.INVISIBLE);
-            dlgHelper.showDialogMessage("Sign up failed!",
-                                        AppHelper.formatException(exception));
+            SystemUtil.showDialogMessage(getActivity(),
+                                        "Sign up failed!",
+                                         "Invalid id or password");
+            Log.e(LOG_TAG, AppHelper.formatException(exception));
         }
     };
 }

@@ -31,9 +31,9 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.cognito.AppHelper;
-import com.carecloud.carepaylibray.cognito.CognitoDialogHelper;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Locale;
 
@@ -57,15 +57,13 @@ public class SigninFragment extends Fragment {
     private Typeface floatingTextFontfamily;
     private Typeface buttonFontFamily;
 
-    private CognitoDialogHelper cognitoDlgHelper;
-    private String              userName;
-    private ProgressBar         progressBar;
+    private String      userName;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        cognitoDlgHelper = new CognitoDialogHelper(getActivity());
     }
 
     @Nullable
@@ -292,21 +290,21 @@ public class SigninFragment extends Fragment {
 
         @Override
         public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String username) {
-            cognitoDlgHelper.closeWaitDialog();
-            Locale.setDefault(Locale.US);
+            Locale.setDefault(Locale.getDefault());
             getUserAuthentication(authenticationContinuation, username);
         }
 
         @Override
         public void getMFACode(MultiFactorAuthenticationContinuation multiFactorAuthenticationContinuation) {
-            cognitoDlgHelper.closeWaitDialog();
         }
 
         @Override
         public void onFailure(Exception e) {
             progressBar.setVisibility(View.INVISIBLE);
-            cognitoDlgHelper.showDialogMessage("Sign-in failed", // TODO: 9/21/2016 prepare for translation if kept
-                                               AppHelper.formatException(e));
+            SystemUtil.showDialogMessage(getActivity(),
+                                         "Sign-in failed",
+                                         "Invalid user id or password");// TODO: 9/21/2016 prepare for translation if kept
+            Log.e(LOG_TAG, AppHelper.formatException(e));
         }
 
         @Override
