@@ -257,6 +257,7 @@ public class SigninFragment extends Fragment {
 
         Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
         startActivity(userActivity);
+        getActivity().finish();
     }
 
     private void getUserAuthentication(AuthenticationContinuation continuation, String username) {

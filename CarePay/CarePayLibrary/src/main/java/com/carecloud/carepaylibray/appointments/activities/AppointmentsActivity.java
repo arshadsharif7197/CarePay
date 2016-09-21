@@ -44,8 +44,9 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @Override
+    private TextView appointmentsDrawerUserIdTextView;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
@@ -70,6 +71,16 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // get handler to navigation drawer's user id text view
+//        appointmentsDrawerUserIdTextView = (TextView) drawer.findViewById(R.id.appointmentsDrawerIdTextView);
+        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.appointmentsDrawerIdTextView);
+        String userId = AppHelper.getCurrUser();
+        if(userId != null) {
+            appointmentsDrawerUserIdTextView.setText(userId);
+        } else {
+            appointmentsDrawerUserIdTextView.setText("");
+        }
 
         FragmentManager fm = getSupportFragmentManager();
         AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
@@ -132,6 +143,8 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
                 Log.v(LOG_TAG, "sign out");
                 AppHelper.getPool().getUser().signOut();
                 AppHelper.setUser(null);
+                // update the drawer user id fields
+                appointmentsDrawerUserIdTextView.setText("");
 
                 // go to Sign in screen
                 Intent intent = new Intent(this, SigninSignupActivity.class);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
@@ -84,6 +85,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
         }
     }
 
+    // Cognito
     private boolean findCurrentUser() {
         CognitoUser user = AppHelper.getPool().getCurrentUser();
         String userName = user.getUserId();
@@ -104,6 +106,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
             // move to Appointments
             Intent intent = new Intent(LibraryMainActivity.this, AppointmentsActivity.class);
             startActivity(intent);
+            LibraryMainActivity.this.finish();
         }
 
         @Override
