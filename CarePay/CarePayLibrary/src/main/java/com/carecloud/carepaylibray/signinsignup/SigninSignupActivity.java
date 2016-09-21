@@ -24,7 +24,6 @@ public class SigninSignupActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             mFragmentManager.beginTransaction()
                     .replace(R.id.layoutSigninSignup, new SigninFragment(), SigninFragment.class.getSimpleName())
-                    .addToBackStack("signin")
                     .commit();
         }
 

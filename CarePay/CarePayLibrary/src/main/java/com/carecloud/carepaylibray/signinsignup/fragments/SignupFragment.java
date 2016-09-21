@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,6 +31,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDel
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.cognito.AppHelper;
+import com.carecloud.carepaylibray.cognito.CognitoDialogHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -56,14 +58,20 @@ public class SignupFragment extends Fragment {
     private TextView accountExistTextView;
     private Button   submitButton;
 
-    private boolean        isValidFirstName;
-    private boolean        isValidLastName;
-    private boolean        isValidEmail;
-    private boolean        isValidPassword;
-    private boolean        isPasswordMatch;
-    private AlertDialog    userDialog;
-    private ProgressDialog waitDialog;
+    private boolean             isValidFirstName;
+    private boolean             isValidLastName;
+    private boolean             isValidEmail;
+    private boolean             isValidPassword;
+    private boolean             isPasswordMatch;
+    private AlertDialog         userDialog;
+    private CognitoDialogHelper dlgHelper;
+    private String              userName;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dlgHelper = new CognitoDialogHelper(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -417,102 +425,41 @@ public class SignupFragment extends Fragment {
                 if (data.hasExtra("name")) {
                     name = data.getStringExtra("name");
                 }
-                exit(getActivity(), name, passwordText.getText().toString());
+                getActivity().onBackPressed();
             }
         }
     }
 
-
     // cognito
-
     private void registerUser() {
         Log.v(LOG_TAG, "registerUser()");
         // Read user data and register
         CognitoUserAttributes userAttributes = new CognitoUserAttributes();
 
-        showWaitDialog("Signing up...");
+        dlgHelper.showWaitDialog("Signing up..."); // TODO: 9/21/2016 prepare string for translation
 
-        String email = emailText.getText().toString();
-        if (email.length() > 0) {
-//            userAttributes.addAttribute(AppHelper.getSignUpFieldsC2O().get("name"), email);
-            userAttributes.addAttribute(AppHelper.getSignUpFieldsC2O().get("Email"), email);
+        userName = emailText.getText().toString();
+        if (userName.length() > 0) {
+            userAttributes.addAttribute(AppHelper.getSignUpFieldsC2O().get("Email"), userName);
+            // add more attributes here is needed...
         }
+        String password = passwordText.getText().toString();
 
-        AppHelper.getPool().signUpInBackground(emailText.getText().toString(),
-                                               passwordText.getText().toString(),
+        AppHelper.getPool().signUpInBackground(userName,
+                                               password,
                                                userAttributes,
                                                null,
                                                signUpHandler);
     }
 
-    private void showDialogMessage(String title, String body, final boolean exit) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title).setMessage(body).setNeutralButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    userDialog.dismiss();
-                    if (exit) {
-                        exit(emailText.getText().toString());
-                    }
-                } catch (Exception e) {
-                    if (exit) {
-                        exit(emailText.getText().toString());
-                    }
-                }
-            }
-        });
-        userDialog = builder.create();
-        userDialog.show();
-    }
-
-    private void showWaitDialog(String message) {
-        closeWaitDialog();
-        waitDialog = new ProgressDialog(getActivity());
-        waitDialog.setTitle(message);
-        waitDialog.show();
-    }
-
-    private void closeWaitDialog() {
-        try {
-            waitDialog.dismiss();
-        } catch (Exception e) {
-            //
-        }
-    }
-
-    private void exit(String uname) {
-        exit(getActivity(), uname, null);
-    }
-
-    private void exit(Activity activity, String uname, String password) {
-//        Intent intent = new Intent();
-//        if (uname == null) {
-//            uname = "";
-//        }
-//        if (password == null) {
-//            password = "";
-//        }
-//        intent.putExtra("name", uname);
-//        intent.putExtra("password", password);
-//        activity.setResult(RESULT_OK, intent);
-
-        Log.v(LOG_TAG, "Registration complete!");
-
-        // for demo, go back to the login screen
-//        FragmentManager fm = getFragmentManager();
-//        SigninFragment signinFragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
-//        if(signinFragment == null) {
-//            signinFragment = new SigninFragment();
-//        }
-//        getFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.layoutSigninSignup, signinFragment, SigninFragment.class.getSimpleName())
-//                .commit();
-//
-        activity.onBackPressed();
-
-//        activity.finish();
+    private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
+        Intent intent = new Intent(getActivity(), SignUpConfirmActivity.class);
+        intent.putExtra("source", "signup");
+        intent.putExtra("name", userName);
+        intent.putExtra("destination", cognitoUserCodeDeliveryDetails.getDestination());
+        intent.putExtra("deliveryMed", cognitoUserCodeDeliveryDetails.getDeliveryMedium());
+        intent.putExtra("attribute", cognitoUserCodeDeliveryDetails.getAttributeName());
+        startActivityForResult(intent, 10);
     }
 
     SignUpHandler signUpHandler = new SignUpHandler() {
@@ -520,33 +467,31 @@ public class SignupFragment extends Fragment {
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
                               CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
             // Check signUpConfirmationState to see if the user is already confirmed
-            closeWaitDialog();
-            Boolean regState = signUpConfirmationState;
+            dlgHelper.closeWaitDialog();
             if (signUpConfirmationState) {
                 Log.v(LOG_TAG, "signUpConfirmationState == true");
                 // User is already confirmed
-                showDialogMessage("Sign up successful!", emailText.getText().toString() + " has been Confirmed", true);
+//                showDialogMessage("Sign up successful!",
+//                                  emailText.getText().toString() + " has been Confirmed",
+//                                  true);
+                dlgHelper.showDialogMessage("Sign up successful!",
+                                            userName + " has been Confirmed");
+                getActivity().onBackPressed(); // confirmed; get back to SignInFragment
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed
-                confirmSignUp(cognitoUserCodeDeliveryDetails);
+                confirmSignUp(cognitoUserCodeDeliveryDetails); // not Confirmed; launch confirm activity
             }
         }
 
         @Override
         public void onFailure(Exception exception) {
-            closeWaitDialog();
-            showDialogMessage("Sign up failed", AppHelper.formatException(exception), false);
+            dlgHelper.closeWaitDialog();
+//            showDialogMessage("Sign up failed", // TODO: 9/21/2016 ready for translation
+//                              AppHelper.formatException(exception),
+//                              false);
+            dlgHelper.showDialogMessage("Sign up failed!",
+                                        AppHelper.formatException(exception));
         }
     };
-
-    private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
-        Intent intent = new Intent(getActivity(), SignUpConfirmActivity.class);
-        intent.putExtra("source", "signup");
-        intent.putExtra("name", emailText.getText().toString());
-        intent.putExtra("destination", cognitoUserCodeDeliveryDetails.getDestination());
-        intent.putExtra("deliveryMed", cognitoUserCodeDeliveryDetails.getDeliveryMedium());
-        intent.putExtra("attribute", cognitoUserCodeDeliveryDetails.getAttributeName());
-        startActivityForResult(intent, 10);
-    }
 }
