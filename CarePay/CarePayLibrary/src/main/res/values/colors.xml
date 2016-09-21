@@ -34,4 +34,6 @@
     <color name="Feldgrau">#455a64</color>
     <color name="darkblue">#176D9C</color>
     <color name="pastelblue">#ffb0bec5</color>
+    <color name="bermudagrey">#78909c</color>
+    <color name="lightningyellow">#f5a623</color>
 </resources>
