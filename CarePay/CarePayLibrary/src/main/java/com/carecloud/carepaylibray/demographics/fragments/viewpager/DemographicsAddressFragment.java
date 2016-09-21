@@ -20,10 +20,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.SmartystreetsAddressService;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.smartystreets.api.us_street.Candidate;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -69,6 +71,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         view = inflater.inflate(R.layout.fragment_demographics_address, container, false);
 
         initialiseUIFields();
+        setTypefaces(view);
 
         isAddressValid = false;
         isCityValid = false;
@@ -267,11 +270,17 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                SystemUtil.handleHintChange(view, b);
                 if (!b) {
                     isZipValid = checkZipcode();
                     nextButton.setEnabled(checkReadyForNext());
                 }
+                SystemUtil.handleHintChange(view, b);
+                if(!b){
+                    Candidate candidate= SmartystreetsAddressService.getAddressByZipCode(zipCodeEditText.getText().toString());
+                    cityEditText.setText(candidate.getComponents().getCityName());
+                    stateAutoCompleteTextView.setText(candidate.getComponents().getState());
+                }
+
             }
         });
 

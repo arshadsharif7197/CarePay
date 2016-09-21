@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/15/2016.
  */
-public class LatLang {
+public class LatLangModel {
     @SerializedName("lat")
     @Expose
     private Double lat;

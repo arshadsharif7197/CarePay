@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,12 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -30,15 +30,20 @@ import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 
 public class ConsentForm2Fragment extends Fragment {
 
-    private TextView titleTextView, descriptionTextView, contentTextView, content2Tv, dateTv;
+    private TextView titleTextView, descriptionTextView, contentTextView, content2Tv, dateTv,
+            dobTextView,chooseGenderTextView;
     private Button signButton;
-    Spinner genderspinner;
     private IFragmentCallback fragmentCallback;
-    private EditText minorFirstNameEditText, minorLastNameEditText, dobEditText, genderEditText;
-    private String[] state = { "Male", "Female"};
+    private ScrollView scrollView;
+    private EditText minorFirstNameEditText, minorLastNameEditText;
+    private String[] gender = { "Male", "Female"};
 
     @Nullable
     @Override
@@ -50,16 +55,17 @@ public class ConsentForm2Fragment extends Fragment {
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
         contentTextView = (TextView) view.findViewById(R.id.contentTv);
+        chooseGenderTextView=(TextView)view.findViewById(R.id.choose_genderTextView);
         content2Tv = (TextView) view.findViewById(R.id.content2Tv);
         dateTv = (TextView) view.findViewById(R.id.dateTv);
         signButton = (Button) view.findViewById(R.id.signButton);
+        signButton.setEnabled(false);
         minorFirstNameEditText = (EditText) view.findViewById(R.id.minorFirstNameET);
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
-        dobEditText = (EditText) view.findViewById(R.id.dobET);
-        genderspinner = (Spinner)view.findViewById(R.id.genderspinner);
-        ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, state);
-        adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genderspinner.setAdapter(adapter_state);
+        dobTextView = (TextView) view.findViewById(R.id.dobET);
+        scrollView=(ScrollView) view.findViewById(R.id.scrollView);
+        setTypefaces(view);
+
         return view;
     }
 
@@ -97,7 +103,7 @@ public class ConsentForm2Fragment extends Fragment {
         content2Tv.setText(formData.getContent2());
         dateTv.setText(formData.getDate());
 
-        dobEditText.setOnClickListener(new View.OnClickListener() {
+        dobTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
@@ -105,20 +111,35 @@ public class ConsentForm2Fragment extends Fragment {
                         cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-    }
 
+        chooseGenderTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlertDialogWithListview(gender,"Gender Select");
+            }
+        });
 
-    public void onItemSelected(AdapterView<?> parent, View view, int position,
-                               long id) {
-        genderspinner.setSelection(position);
-        String selState = (String) genderspinner.getSelectedItem();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+                    int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
+
+                    if (diff==0){
+                        signButton.setEnabled(true);
+                    }
+
+                }
+            });
+        }
     }
 
 
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            dobEditText.setText(new StringBuilder().append(i1).append("/").append(i2).append("/")
+            dobTextView.setText(new StringBuilder().append(i1).append("/").append(i2).append("/")
                     .append(i));
         }
     };
@@ -127,7 +148,7 @@ public class ConsentForm2Fragment extends Fragment {
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton("", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -147,10 +168,10 @@ public class ConsentForm2Fragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (position) {
                     case 0:
-                        genderEditText.setText("Male");
+                        chooseGenderTextView.setText("Male");
                         break;
                     case 1:
-                        genderEditText.setText("Feale");
+                        chooseGenderTextView.setText("Female");
                         break;
 
                 }
@@ -168,4 +189,19 @@ public class ConsentForm2Fragment extends Fragment {
             }
         }
     };
+
+
+    private void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(),(TextView) view.findViewById(R.id.titleTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.descriptionTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.contentTv));
+        setProximaNovaSemiboldTypeface(getActivity(),(TextView) view.findViewById(R.id.minor_information));
+        setProximaNovaRegularTypeface(getActivity(),minorFirstNameEditText);
+        setProximaNovaRegularTypeface(getActivity(), minorLastNameEditText);
+        setProximaNovaSemiboldTypeface(getActivity(),(TextView) view.findViewById(R.id.dobET));
+        setProximaNovaSemiboldTypeface(getActivity(),(TextView) view.findViewById(R.id.choose_genderTextView));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.minor_dateofbirth));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.minor_gender));
+    }
+
 }

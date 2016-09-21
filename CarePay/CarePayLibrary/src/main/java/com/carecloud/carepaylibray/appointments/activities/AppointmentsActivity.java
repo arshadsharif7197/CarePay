@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReview;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -253,7 +253,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
      * call check-in at office api.
      */
     private void onCheckInAtOffice(){
-        Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReview.class);
+        Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
         startActivity(demographicReviewIntent);
     }
     /**

@@ -22,18 +22,18 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
         <activity
-            android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReview"
+            android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
         <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/NavigationTheme"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>

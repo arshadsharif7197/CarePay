@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.utils.DividerItemDecoration;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
@@ -184,9 +185,11 @@ public class AppointmentsListFragment extends Fragment {
 
             recyclerViewToday = ((RecyclerView)getActivity().findViewById(R.id.appointments_recycler_view_today));
             recyclerViewToday.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerViewToday.addItemDecoration(new DividerItemDecoration(getActivity()));
             recyclerViewToday.setAdapter(appointmentsAdapter);
             recyclerViewUpcoming = ((RecyclerView)getActivity().findViewById(R.id.appointments_recycler_view_upcoming));
             recyclerViewUpcoming.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerViewUpcoming.addItemDecoration(new DividerItemDecoration(getActivity()));
             recyclerViewUpcoming.setAdapter(appointmentsAdapterUpcoming);
 
         }
