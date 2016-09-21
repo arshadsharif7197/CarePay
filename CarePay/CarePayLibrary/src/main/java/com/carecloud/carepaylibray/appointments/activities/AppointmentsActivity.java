@@ -131,6 +131,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             if(userName != null) {
                 Log.v(LOG_TAG, "sign out");
                 AppHelper.getPool().getUser().signOut();
+                AppHelper.setUser(null);
 
                 // go to Sign in screen
                 Intent intent = new Intent(this, SigninSignupActivity.class);

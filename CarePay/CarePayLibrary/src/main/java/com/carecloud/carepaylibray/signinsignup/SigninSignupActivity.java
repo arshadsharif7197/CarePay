@@ -36,9 +36,5 @@ public class SigninSignupActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-
-        // init Cognito
-        AppHelper.init(getApplicationContext());
     }
-
 }
