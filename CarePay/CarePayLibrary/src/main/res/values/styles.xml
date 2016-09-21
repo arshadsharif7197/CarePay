@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="titleTextStyle">@style/actionBarTitle</item>
+        <item name="android:overScrollMode">never</item>
     </style>
 
     <style name="actionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -362,6 +363,7 @@
         <item name="android:layout_alignBaseline">@id/minor_gender</item>
         <item name="android:layout_toRightOf">@id/minor_gender</item>
         <item name="android:drawSelectorOnTop">true</item>
+        <item name="android:gravity">right</item>
         <item name="android:textSize">@dimen/consent_minor_textsize</item>
         <item name="android:textColor">@color/bright_cerulean</item>
     </style>
