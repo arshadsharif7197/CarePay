@@ -60,7 +60,7 @@
     <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
     <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
 
-<!--    <Demographics Address>-->
+    <!--    <Demographics Address>-->
     <dimen name="divider_margin_top">8dp</dimen>
     <dimen name="divider_margin_bottom">2dp</dimen>
     <dimen name="demo_view_height">1dp</dimen>
@@ -96,9 +96,13 @@
     <dimen name="apt_dl_boader_ht">2dp</dimen>
     <dimen name="apt_dl_btn_width">133dp</dimen>
     <dimen name="apt_dl_btn_txt_size">13sp</dimen>
-    <dimen name="apt_dl_btn_texxt_pd">4dp</dimen>
+    <dimen name="apt_dl_btn_texxt_pd">30dp</dimen>
     <dimen name="apt_dl_btn_margin">20dp</dimen>
+    <dimen name="apt_lst_view_ht">0.8px</dimen>
+    <dimen name="apt_lst_img_elevation">1dp</dimen>
     <dimen name="apt_dl_view_margin">15dp</dimen>
+
+
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
@@ -115,11 +119,14 @@
     <dimen name="rounded">8dp</dimen>
 
 
-   <!-- <consent_forms>-->
+    <!-- <consent_forms>-->
     <dimen name="consent_layout_left_right_margin">15dp</dimen>
     <dimen name="consent_spinner_left_margin">90dp</dimen>
     <dimen name="consent_minor_textsize">17sp</dimen>
+    <dimen name="consent_minor_info_textsize">14sp</dimen>
     <dimen name="consent_view_margin_top_bottom">10dp</dimen>
+    <dimen name="date_textview_top_bottom">42dp</dimen>
+    <dimen name="consentform_relativeLayout_margin">3dp</dimen>
 
     <!-- InTake -->
     <dimen name="intakeDotPadding">8dp</dimen>
@@ -134,4 +141,3 @@
     <dimen name="intakeCaptionLeftRightMargin">40dp</dimen>
 
 </resources>
-
