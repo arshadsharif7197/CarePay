@@ -137,11 +137,6 @@ public class SignupFragment extends Fragment {
 
         setEditTexts(view);
 
-        // for test
-        emailText.setText("lvictor1979@gmail.com");
-        passwordText.setText("Liviu123_");
-        repeatPasswordText.setText("Liviu123_");
-
         return view;
     }
 
