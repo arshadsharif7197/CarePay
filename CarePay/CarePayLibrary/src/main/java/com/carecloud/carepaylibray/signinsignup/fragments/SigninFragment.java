@@ -123,8 +123,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getContext(), LibraryMainActivity.class);
-                startActivity(intent);
+                getActivity().onBackPressed();
             }
         });
 

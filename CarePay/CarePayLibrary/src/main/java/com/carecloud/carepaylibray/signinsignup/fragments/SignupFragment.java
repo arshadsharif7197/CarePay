@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -37,6 +40,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
@@ -67,8 +71,9 @@ public class SignupFragment extends Fragment {
     private boolean isValidPassword;
     private boolean isPasswordMatch;
 
-    private String      userName;
-    private ProgressBar progressBar;
+    private String       userName;
+    private ProgressBar  progressBar;
+    private LinearLayout parentLayout;
 
 
     @Override
@@ -76,6 +81,7 @@ public class SignupFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
+        parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
         // hide progress
         progressBar = (ProgressBar) view.findViewById(R.id.signupProgressBar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -95,6 +101,11 @@ public class SignupFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // check all
+                isValidEmail = checkEmail();
+                isValidPassword = checkPassword();
+                isPasswordMatch = checkPasswordsMatch();
+
                 if (areAllValid()) {
                     // request user registration
                     registerUser();
@@ -121,9 +132,9 @@ public class SignupFragment extends Fragment {
 
         isValidFirstName = true;
         isValidLastName = true;
-        isValidPassword = true;
-        isValidEmail = true;
-        isPasswordMatch = true;
+        isValidPassword = false;
+        isValidEmail = false;
+        isPasswordMatch = false;
 
         setEditTexts(view);
 
@@ -173,6 +184,63 @@ public class SignupFragment extends Fragment {
         setChangeFocusListeners();
 
         setActionListeners();
+
+        setTextWatchers();
+    }
+
+    private void setTextWatchers() {
+        emailText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isValidEmail = checkEmail();
+                submitButton.setEnabled(areAllValid());
+            }
+        });
+
+        passwordText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isValidPassword = checkPassword();
+                submitButton.setEnabled(areAllValid());
+            }
+        });
+
+        repeatPasswordText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isPasswordMatch = checkPasswordsMatch();
+                submitButton.setEnabled(areAllValid());
+            }
+        });
     }
 
     private void setActionListeners() {
@@ -227,6 +295,7 @@ public class SignupFragment extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
                     isValidPassword = checkPassword();
+                    isPasswordMatch = checkPasswordsMatch();
                     submitButton.setEnabled(areAllValid());
                     repeatPasswordText.requestFocus();
                     return true;
@@ -251,7 +320,7 @@ public class SignupFragment extends Fragment {
                         SystemUtil.hideSoftKeyboard(getActivity());
                         submitButton.setEnabled(true);
                         repeatPasswordText.clearFocus();
-                        submitButton.requestFocus();
+                        parentLayout.requestFocus();
                     }
                     return true;
                 }
@@ -296,7 +365,8 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) { // when loosing focus, validate as well
                     isValidFirstName = checkFirstName();
-                    submitButton.setEnabled(areAllValid());
+                    boolean isAllVal = areAllValid();
+                    submitButton.setEnabled(isAllVal);
                 }
                 SystemUtil.handleHintChange(view, b);
             }
@@ -312,7 +382,8 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
                     isValidLastName = checkLastName();
-                    submitButton.setEnabled(areAllValid());
+                    boolean isAllValid = areAllValid();
+                    submitButton.setEnabled(isAllValid);
                 }
                 SystemUtil.handleHintChange(view, b);
             }
@@ -332,6 +403,7 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
                     isValidPassword = checkPassword();
+                    isPasswordMatch = checkPasswordsMatch();
                     submitButton.setEnabled(areAllValid());
                 }
                 SystemUtil.handleHintChange(view, b);
