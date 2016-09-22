@@ -40,7 +40,7 @@ public class AddressUtil {
         Credentials mobile = new SharedCredentials("6588384621595519", "CarePayMobile");
         Client client = new ClientBuilder(mobile).build();
         Lookup lookup;
-        City city;
+        City city = null;
         lookup = new Lookup();
         lookup.setZipCode(zipcode);
 
@@ -54,8 +54,12 @@ public class AddressUtil {
         catch (IOException ex) {
             ex.printStackTrace();
         }
+
         Result result = lookup.getResult();
-        city = result.getCity(0);
+        if(result != null && result.isValid())
+        {
+            city = result.getCity(0);
+        }
         return city;
 
     }
