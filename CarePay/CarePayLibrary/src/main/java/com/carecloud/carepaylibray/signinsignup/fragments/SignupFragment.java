@@ -101,6 +101,7 @@ public class SignupFragment extends Fragment {
                 getActivity().finish();
             }
         });
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
@@ -426,28 +427,8 @@ public class SignupFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
-
-//                // confirmed
-//                CognitoUser user = AppHelper.getPool().getUser(userName);
-//                if(user != null ) {
-//                    Log.v(LOG_TAG, "user not null");
-//                    String userName = user.getUserId();
-//                    if(userName != null ) {
-//                        Log.v(LOG_TAG, userName);
-//                    } else {
-//                        Log.v(LOG_TAG, "user name null");
-//                    }
-//                } else {
-//                    Log.v(LOG_TAG, "null user");
-//                }
-//                AppHelper.setUser(userName);
-
+                // confirmed; (auto)sign-in
                 AppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
-
-//                // do to Demographics
-//                Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-//                startActivity(intent);
-//                getActivity().finish();
             }
         }
     }

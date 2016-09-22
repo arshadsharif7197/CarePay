@@ -115,7 +115,7 @@ public class SigninFragment extends Fragment {
                     fragment = new SignupFragment();
                 }
                 fm.beginTransaction()
-                        .replace(R.id.signin_layout, fragment, SignupFragment.class.getSimpleName())
+                        .replace(R.id.layoutSigninSignup, fragment, SignupFragment.class.getSimpleName())
                         .addToBackStack(null)
                         .commit();
             }
