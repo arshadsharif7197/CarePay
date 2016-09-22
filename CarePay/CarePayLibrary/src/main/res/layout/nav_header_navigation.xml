@@ -16,14 +16,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:paddingBottom="@dimen/nav_header_bottom_padding"
+        android:paddingBottom="6dp"
         android:src="@drawable/icn_placeholder_user_profile_png" />
 
     <TextView
         android:id="@+id/appointmentsDrawerIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="bruno@apptheory.com"
-        android:paddingBottom="@dimen/nav_header_bottom_padding" />
+        android:text="bruno@apptheory.com" />
 
 </LinearLayout>
