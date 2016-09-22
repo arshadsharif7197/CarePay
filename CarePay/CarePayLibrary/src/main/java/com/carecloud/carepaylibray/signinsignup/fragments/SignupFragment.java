@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -60,19 +61,15 @@ public class SignupFragment extends Fragment {
     private TextView accountExistTextView;
     private Button   submitButton;
 
-    private boolean             isValidFirstName;
-    private boolean             isValidLastName;
-    private boolean             isValidEmail;
-    private boolean             isValidPassword;
-    private boolean             isPasswordMatch;
+    private boolean isValidFirstName;
+    private boolean isValidLastName;
+    private boolean isValidEmail;
+    private boolean isValidPassword;
+    private boolean isPasswordMatch;
 
-    private String              userName;
+    private String      userName;
     private ProgressBar progressBar;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,16 +86,17 @@ public class SignupFragment extends Fragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), SigninSignupActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                Intent intent = new Intent(getContext(), SigninSignupActivity.class);
+////                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+////                startActivity(intent);
+////                getActivity().finish();
+//                getActivity().onBackPressed();
+//            }
+//        });
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
@@ -480,7 +478,6 @@ public class SignupFragment extends Fragment {
         @Override
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
                               CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
-//            progressBar.setVisibility(View.INVISIBLE);
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
                 Log.v(LOG_TAG, "signUpConfirmationState == true");
@@ -499,7 +496,7 @@ public class SignupFragment extends Fragment {
         public void onFailure(Exception exception) {
             progressBar.setVisibility(View.INVISIBLE);
             SystemUtil.showDialogMessage(getActivity(),
-                                        "Sign up failed!",
+                                         "Sign up failed!",
                                          "Invalid id or password");
             Log.e(LOG_TAG, CognitoAppHelper.formatException(exception));
         }

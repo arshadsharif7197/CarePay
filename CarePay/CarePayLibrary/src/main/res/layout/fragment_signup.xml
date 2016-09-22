@@ -24,14 +24,14 @@
         <LinearLayout
             style="@style/SingupEditsContainerStyle"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/firstNameTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:errorTextAppearance="@style/errorTextAppearance">
 
                 <EditText
@@ -49,7 +49,7 @@
                 android:id="@+id/middleNameTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:errorTextAppearance="@style/errorTextAppearance">
 
                 <EditText
@@ -69,7 +69,7 @@
                 android:id="@+id/lastNameTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:errorTextAppearance="@style/errorTextAppearance">
 
                 <EditText

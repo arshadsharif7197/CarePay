@@ -286,8 +286,8 @@
     <style name="SigninSignupButtonStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        android:background="@drawable/button_selector"
-        android:textColor="@color/white"
+        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <!-- Demographics Review Screens Style>-->
