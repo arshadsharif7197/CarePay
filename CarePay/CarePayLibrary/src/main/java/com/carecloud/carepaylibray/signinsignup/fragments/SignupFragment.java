@@ -86,16 +86,6 @@ public class SignupFragment extends Fragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                Intent intent = new Intent(getContext(), SigninSignupActivity.class);
-////                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-////                startActivity(intent);
-////                getActivity().finish();
-//                getActivity().onBackPressed();
-//            }
-//        });
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
@@ -475,11 +465,8 @@ public class SignupFragment extends Fragment {
                               CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
-                Log.v(LOG_TAG, "signUpConfirmationState == true");
-                // confirmed; go to Demographics
-                Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-                getActivity().startActivity(intent);
-                getActivity().finish();
+                // auto-confirmed; sign-in
+                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed

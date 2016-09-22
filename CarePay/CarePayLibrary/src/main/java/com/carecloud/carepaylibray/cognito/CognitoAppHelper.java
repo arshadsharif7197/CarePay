@@ -70,14 +70,14 @@ public class CognitoAppHelper {
     /**
      * Add you app id
      */
-    private static final String clientId = "33hd7aq7r1uk5net1q7kt2p7jr";/* "71le76qt8rcpbqo682qb7j07q0";*/
+    private static final String clientId = "33hd7aq7r1uk5net1q7kt2p7jr"; /*"71le76qt8rcpbqo682qb7j07q0";*/
 
     /**
      * App secret associated with your app id - if the App id does not have an associated App secret,
      * set the App secret to null.
      * e.g. clientSecret = null;
      */
-    private static final String clientSecret = null;/* "j9n2l7ul6jnrq68hb0c0dc4oea8i44ifm5jmictv9eisk711f67";*/
+    private static final String clientSecret = null; /* "j9n2l7ul6jnrq68hb0c0dc4oea8i44ifm5jmictv9eisk711f67";*/
 
     /**
      * Set Your User Pools region.
