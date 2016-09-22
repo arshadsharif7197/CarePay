@@ -154,7 +154,7 @@
                         android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
                         android:maxLines="3"
                         android:scrollHorizontally="false"
-                        android:text="Mercy Hospital"
+                        android:text="Fillingim"
                         android:textColor="@color/payne_gray"
                         android:textSize="@dimen/textview_textsize" />
                     <TextView
@@ -165,7 +165,7 @@
                         android:ellipsize="none"
                         android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
                         android:maxLines="2"
-                        android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
+                        android:text=""
                         android:textColor="@color/bermudagrey"
                         android:textSize="@dimen/textview_textsize" />
                 </LinearLayout>

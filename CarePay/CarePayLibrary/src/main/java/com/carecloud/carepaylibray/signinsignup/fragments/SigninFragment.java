@@ -122,7 +122,9 @@ public class SigninFragment extends Fragment {
         changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().popBackStack();
+
+                Intent intent = new Intent(getContext(), LibraryMainActivity.class);
+                startActivity(intent);
             }
         });
 

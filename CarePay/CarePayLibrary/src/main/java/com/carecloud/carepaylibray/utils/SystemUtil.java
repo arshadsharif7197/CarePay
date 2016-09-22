@@ -43,10 +43,6 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_regular.otf");
         view.setTypeface(typeface);
     }
-    public static void setProximaNovaSemiboldTextInputLayout(Context context, TextInputLayout view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
-        view.setTypeface(typeface);
-    }
 
     public static void setProximaNovaExtraboldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
