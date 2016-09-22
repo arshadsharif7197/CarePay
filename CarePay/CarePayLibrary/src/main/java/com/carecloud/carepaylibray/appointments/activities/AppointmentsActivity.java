@@ -27,8 +27,10 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -40,8 +42,9 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @Override
+    private TextView appointmentsDrawerUserIdTextView;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
@@ -66,6 +69,15 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // get handler to navigation drawer's user id text view
+        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.appointmentsDrawerIdTextView);
+        String userId = CognitoAppHelper.getCurrUser();
+        if(userId != null) {
+            appointmentsDrawerUserIdTextView.setText(userId);
+        } else {
+            appointmentsDrawerUserIdTextView.setText("");
+        }
 
         FragmentManager fm = getSupportFragmentManager();
         AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
@@ -122,7 +134,20 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
+            // perform log out, of course
+            String userName = CognitoAppHelper.getCurrUser();
+            if(userName != null) {
+                Log.v(LOG_TAG, "sign out");
+                CognitoAppHelper.getPool().getUser().signOut();
+                CognitoAppHelper.setUser(null);
+                // update the drawer user id fields
+                appointmentsDrawerUserIdTextView.setText("");
 
+                // go to Sign in screen
+                Intent intent = new Intent(this, SigninSignupActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else if (id == R.id.nav_purchase) {
 
         } else if (id == R.id.nav_notification) {
@@ -238,6 +263,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         }
         return formateDate;
     }
+
     /**
      * show device phone call UI based on phone number.
      * @param phoneNumber the String to evaluate
@@ -249,6 +275,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
 
         }
     }
+
     /**
      * call check-in at office api.
      */
@@ -256,6 +283,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
         startActivity(demographicReviewIntent);
     }
+
     /**
      * call check-in early api.
      */
