@@ -1,22 +1,49 @@
 package com.carecloud.carepaylibray.activities;
 
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicTransitionsDataObjectModel;
+import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LibraryMainActivity extends KeyboardHolderActivity {
 
-
+    DemographicModel model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
+        Call<DemographicModel> call = apptService.fetchDemographicInformation();
+        call.enqueue(new Callback<DemographicModel>()
+        {
+            @Override
+            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+                model=response.body();
+                DemographicTransitionsDataObjectModel dd= model.getMetadata().getTransitions().getConfirmDemographics().getTransitionsData();
+                Log.d("sdadad","adasdasdasd");
+            }
+
+            @Override
+            public void onFailure(Call<DemographicModel> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

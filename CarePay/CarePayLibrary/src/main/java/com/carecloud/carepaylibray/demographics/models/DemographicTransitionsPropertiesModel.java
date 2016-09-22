@@ -1,0 +1,16 @@
+package com.carecloud.carepaylibray.demographics.models;
+
+import com.carecloud.carepaylibray.base.models.BaseTransitionsPropertyModel;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Created by Jahirul Bhuiyan on 9/22/2016.
+ */
+public class DemographicTransitionsPropertiesModel {
+
+    @SerializedName("phone")
+    @Expose
+    private String phone;
+
+}
