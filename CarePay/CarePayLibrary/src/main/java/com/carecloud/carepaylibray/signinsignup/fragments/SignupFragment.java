@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,16 +21,27 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.activities.LibraryMainActivity;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.cognito.AppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.google.api.services.drive.model.App;
 
 import static android.app.Activity.RESULT_OK;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -90,7 +102,6 @@ public class SignupFragment extends Fragment {
             }
         });
 
-
         // set the buttons
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
         Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
@@ -129,6 +140,11 @@ public class SignupFragment extends Fragment {
         isPasswordMatch = true;
 
         setEditTexts(view);
+
+        // for test
+        emailText.setText("lvictor1979@gmail.com");
+        passwordText.setText("Liviu123_");
+        repeatPasswordText.setText("Liviu123_");
 
         return view;
     }
@@ -410,8 +426,28 @@ public class SignupFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
-                // TODO: 9/21/2016 auto-fill
-                getActivity().onBackPressed(); // get back to sign in for now
+
+//                // confirmed
+//                CognitoUser user = AppHelper.getPool().getUser(userName);
+//                if(user != null ) {
+//                    Log.v(LOG_TAG, "user not null");
+//                    String userName = user.getUserId();
+//                    if(userName != null ) {
+//                        Log.v(LOG_TAG, userName);
+//                    } else {
+//                        Log.v(LOG_TAG, "user name null");
+//                    }
+//                } else {
+//                    Log.v(LOG_TAG, "null user");
+//                }
+//                AppHelper.setUser(userName);
+
+                AppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+
+//                // do to Demographics
+//                Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+//                startActivity(intent);
+//                getActivity().finish();
             }
         }
     }
@@ -448,15 +484,32 @@ public class SignupFragment extends Fragment {
         startActivityForResult(intent, 10);
     }
 
+    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
+        Log.v(LOG_TAG, "getUserAuthentication()");
+
+        userName = username;
+        if (username != null) {
+            AppHelper.setUser(username);
+        }
+
+        String password = passwordText.getText().toString();
+        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
+        continuation.setAuthenticationDetails(authenticationDetails);
+        continuation.continueTask();
+    }
+
     SignUpHandler signUpHandler = new SignUpHandler() {
         @Override
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
                               CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
+//            progressBar.setVisibility(View.INVISIBLE);
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
                 Log.v(LOG_TAG, "signUpConfirmationState == true");
-                progressBar.setVisibility(View.INVISIBLE);
-                getActivity().onBackPressed(); // confirmed; get back to SignInFragment
+                // confirmed; go to Demographics
+                Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed
@@ -471,6 +524,45 @@ public class SignupFragment extends Fragment {
                                         "Sign up failed!",
                                          "Invalid id or password");
             Log.e(LOG_TAG, AppHelper.formatException(exception));
+        }
+    };
+
+    private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+        @Override
+        public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
+            Log.v(LOG_TAG, "auth success");
+            AppHelper.setCurrSession(userSession);
+            AppHelper.newDevice(newDevice);
+
+            progressBar.setVisibility(View.INVISIBLE);
+
+            // do to Demographics
+            Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+
+        }
+
+        @Override
+        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
+            Log.v(LOG_TAG, "getAuthenticationDetails()");
+            getUserAuthentication(authenticationContinuation, userId);
+        }
+
+        @Override
+        public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
+            Log.v(LOG_TAG, "getMFACode()");
+        }
+
+        @Override
+        public void authenticationChallenge(ChallengeContinuation continuation) {
+            Log.v(LOG_TAG, "authenticationChallenge()");
+        }
+
+        @Override
+        public void onFailure(Exception exception) {
+            progressBar.setVisibility(View.INVISIBLE);
+            Log.e(LOG_TAG, exception.getLocalizedMessage());
         }
     };
 }

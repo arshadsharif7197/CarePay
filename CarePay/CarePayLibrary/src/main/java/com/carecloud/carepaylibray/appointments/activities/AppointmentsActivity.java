@@ -73,7 +73,6 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
 
         // get handler to navigation drawer's user id text view
-//        appointmentsDrawerUserIdTextView = (TextView) drawer.findViewById(R.id.appointmentsDrawerIdTextView);
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.appointmentsDrawerIdTextView);
         String userId = AppHelper.getCurrUser();
         if(userId != null) {

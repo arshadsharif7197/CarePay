@@ -36,7 +36,8 @@
             android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
+        <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.payment.PaymentActivity"

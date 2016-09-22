@@ -126,6 +126,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
 
         @Override
         public void onFailure(Exception exception) {
+            Log.e(LOG_TAG, exception.getLocalizedMessage());
         }
     };
 }
