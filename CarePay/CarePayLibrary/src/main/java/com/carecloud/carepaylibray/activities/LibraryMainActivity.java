@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.widget.LinearLayout;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
@@ -16,7 +15,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.cognito.AppHelper;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
@@ -29,7 +28,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // init Cognito
-        AppHelper.init(getApplicationContext());
+        CognitoAppHelper.init(getApplicationContext());
 
         super.onCreate(savedInstanceState);
     }
@@ -87,10 +86,10 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
 
     // Cognito
     private boolean findCurrentUser() {
-        CognitoUser user = AppHelper.getPool().getCurrentUser();
+        CognitoUser user = CognitoAppHelper.getPool().getCurrentUser();
         String userName = user.getUserId();
         if(userName != null) {
-            AppHelper.setUser(userName);
+            CognitoAppHelper.setUser(userName);
             user.getSessionInBackground(authenticationHandler);
             return true;
         }
@@ -100,8 +99,8 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
     private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
         @Override
         public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-            AppHelper.setCurrSession(userSession);
-            AppHelper.newDevice(newDevice);
+            CognitoAppHelper.setCurrSession(userSession);
+            CognitoAppHelper.newDevice(newDevice);
 
             // move to Appointments
             Intent intent = new Intent(LibraryMainActivity.this, AppointmentsActivity.class);

@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +28,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.Authentic
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.cognito.AppHelper;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -250,8 +248,8 @@ public class SigninFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         userName = emailEditText.getText().toString();
-        AppHelper.setUser(userName);
-        AppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+        CognitoAppHelper.setUser(userName);
+        CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
     }
 
     private void launchUser() {
@@ -267,7 +265,7 @@ public class SigninFragment extends Fragment {
 
         userName = username;
         if (username != null) {
-            AppHelper.setUser(username);
+            CognitoAppHelper.setUser(username);
         }
 
         String password = passwordEditText.getText().toString();
@@ -281,8 +279,8 @@ public class SigninFragment extends Fragment {
         public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
             Log.v(LOG_TAG, "Auth Success");
 
-            AppHelper.setCurrSession(cognitoUserSession);
-            AppHelper.newDevice(device);
+            CognitoAppHelper.setCurrSession(cognitoUserSession);
+            CognitoAppHelper.newDevice(device);
             progressBar.setVisibility(View.INVISIBLE);
             launchUser();
         }
@@ -303,7 +301,7 @@ public class SigninFragment extends Fragment {
             SystemUtil.showDialogMessage(getActivity(),
                                          "Sign-in failed",
                                          "Invalid user id or password");// TODO: 9/21/2016 prepare for translation if kept
-            Log.e(LOG_TAG, AppHelper.formatException(e));
+            Log.e(LOG_TAG, CognitoAppHelper.formatException(e));
         }
 
         @Override

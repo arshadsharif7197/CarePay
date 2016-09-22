@@ -28,11 +28,10 @@ import android.widget.Toast;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.cognito.AppHelper;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
-import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -74,7 +73,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
 
         // get handler to navigation drawer's user id text view
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.appointmentsDrawerIdTextView);
-        String userId = AppHelper.getCurrUser();
+        String userId = CognitoAppHelper.getCurrUser();
         if(userId != null) {
             appointmentsDrawerUserIdTextView.setText(userId);
         } else {
@@ -137,11 +136,11 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
 
         } else if (id == R.id.nav_logout) {
             // perform log out, of course
-            String userName = AppHelper.getCurrUser();
+            String userName = CognitoAppHelper.getCurrUser();
             if(userName != null) {
                 Log.v(LOG_TAG, "sign out");
-                AppHelper.getPool().getUser().signOut();
-                AppHelper.setUser(null);
+                CognitoAppHelper.getPool().getUser().signOut();
+                CognitoAppHelper.setUser(null);
                 // update the drawer user id fields
                 appointmentsDrawerUserIdTextView.setText("");
 

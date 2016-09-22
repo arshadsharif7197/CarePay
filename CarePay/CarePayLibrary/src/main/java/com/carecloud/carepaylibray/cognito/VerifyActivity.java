@@ -89,8 +89,8 @@ public class VerifyActivity extends AppCompatActivity {
         reqEmailVerf = (Button) findViewById(R.id.buttonVerifyEmail);
         sendVerfCode = (Button) findViewById(R.id.buttonSendVerifyCode);
 
-        if(AppHelper.isEmailAvailable()) {
-            if(AppHelper.isEmailVerified()) {
+        if(CognitoAppHelper.isEmailAvailable()) {
+            if(CognitoAppHelper.isEmailVerified()) {
                 reqEmailVerf.setClickable(false);
                 reqEmailVerf.setBackground(ContextCompat.getDrawable(VerifyActivity.this, R.drawable.button_success));
                 reqEmailVerf.setText("Email verified");
@@ -110,8 +110,8 @@ public class VerifyActivity extends AppCompatActivity {
             reqEmailVerf.setClickable(false);
         }
 
-        if(AppHelper.isPhoneAvailable()) {
-            if(AppHelper.isPhoneVerified()) {
+        if(CognitoAppHelper.isPhoneAvailable()) {
+            if(CognitoAppHelper.isPhoneVerified()) {
                 reqPhoneVerf.setClickable(false);
                 reqPhoneVerf.setBackground(ContextCompat.getDrawable(VerifyActivity.this, R.drawable.button_success));
                 reqPhoneVerf.setText("Phone number verified");
@@ -151,7 +151,7 @@ public class VerifyActivity extends AppCompatActivity {
 
     private void reqVerfCode() {
         showWaitDialog("Requesting verification code...");
-        AppHelper.getPool().getUser(AppHelper.getCurrUser()).getAttributeVerificationCodeInBackground(attrReqCode, verReqHandler);
+        CognitoAppHelper.getPool().getUser(CognitoAppHelper.getCurrUser()).getAttributeVerificationCodeInBackground(attrReqCode, verReqHandler);
     }
 
     private void sendVerfCode() {
@@ -172,12 +172,12 @@ public class VerifyActivity extends AppCompatActivity {
         }
         showWaitDialog("Verifying...");
         hideCodeTX();
-        AppHelper.getPool().getUser(AppHelper.getCurrUser()).verifyAttributeInBackground(attrReqCode, code, verHandler);
+        CognitoAppHelper.getPool().getUser(CognitoAppHelper.getCurrUser()).verifyAttributeInBackground(attrReqCode, code, verHandler);
     }
 
     private void getDetails() {
         //showWaitDialog("Refreshing...");
-        AppHelper.getPool().getUser(AppHelper.getCurrUser()).getDetailsInBackground(detailsHandler);
+        CognitoAppHelper.getPool().getUser(CognitoAppHelper.getCurrUser()).getDetailsInBackground(detailsHandler);
     }
 
     VerificationHandler verReqHandler = new VerificationHandler() {
@@ -211,7 +211,7 @@ public class VerifyActivity extends AppCompatActivity {
         public void onFailure(Exception exception) {
             // Show error
             closeWaitDialog();
-            showDialogMessage("Verification failed",AppHelper.formatException(exception),false);
+            showDialogMessage("Verification failed", CognitoAppHelper.formatException(exception), false);
         }
     };
 
@@ -220,7 +220,7 @@ public class VerifyActivity extends AppCompatActivity {
         public void onSuccess(CognitoUserDetails cognitoUserDetails) {
             closeWaitDialog();
             // Store details in the AppHandler
-            AppHelper.setUserDetails(cognitoUserDetails);
+            CognitoAppHelper.setUserDetails(cognitoUserDetails);
 
             if(attrReqCode.equals("phone_number")) {
                 reqPhoneVerf.setBackground(ContextCompat.getDrawable(VerifyActivity.this, R.drawable.button_success));

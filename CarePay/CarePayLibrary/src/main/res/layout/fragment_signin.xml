@@ -82,7 +82,7 @@
         <Button
             android:id="@+id/signin_button"
             android:text="@string/submit_button"
-            style="@style/SignInSignUpButtonStyle"/>
+            style="@style/SigninSignupButtonStyle"/>
 
         <Button
             android:id="@+id/signup_button"

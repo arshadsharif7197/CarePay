@@ -198,7 +198,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
             return;
         }
 
-        AppHelper.getPool().getUser(userName).confirmSignUpInBackground(confirmCode, true, confHandler);
+        CognitoAppHelper.getPool().getUser(userName).confirmSignUpInBackground(confirmCode, true, confHandler);
     }
 
     private void reqConfCode() {
@@ -210,7 +210,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
                                                              R.drawable.text_border_error));
             return;
         }
-        AppHelper.getPool().getUser(userName).resendConfirmationCodeInBackground(resendConfCodeHandler);
+        CognitoAppHelper.getPool().getUser(userName).resendConfirmationCodeInBackground(resendConfCodeHandler);
 
     }
 
@@ -232,7 +232,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
             confCode.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
 
-            showDialogMessage("Confirmation failed", AppHelper.formatException(exception), false);
+            showDialogMessage("Confirmation failed", CognitoAppHelper.formatException(exception), false);
         }
     };
 
@@ -252,7 +252,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
             label.setText("Confirmation code resend failed");
             username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
-            showDialogMessage("Confirmation code request has failed", AppHelper.formatException(exception), false);
+            showDialogMessage("Confirmation code request has failed", CognitoAppHelper.formatException(exception), false);
         }
     };
 

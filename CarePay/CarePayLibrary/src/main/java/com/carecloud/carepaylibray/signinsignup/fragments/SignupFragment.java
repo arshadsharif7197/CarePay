@@ -33,15 +33,12 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.LibraryMainActivity;
-import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.cognito.AppHelper;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
-import com.google.api.services.drive.model.App;
 
 import static android.app.Activity.RESULT_OK;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -428,7 +425,7 @@ public class SignupFragment extends Fragment {
         if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
                 // confirmed; (auto)sign-in
-                AppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
             }
         }
     }
@@ -443,16 +440,16 @@ public class SignupFragment extends Fragment {
 
         userName = emailText.getText().toString();
         if (userName.length() > 0) {
-            userAttributes.addAttribute(AppHelper.getSignUpFieldsC2O().get("Email"), userName);
+            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
             // add more attributes here is needed...
         }
         String password = passwordText.getText().toString();
 
-        AppHelper.getPool().signUpInBackground(userName,
-                                               password,
-                                               userAttributes,
-                                               null,
-                                               signUpHandler);
+        CognitoAppHelper.getPool().signUpInBackground(userName,
+                                                      password,
+                                                      userAttributes,
+                                                      null,
+                                                      signUpHandler);
     }
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
@@ -470,7 +467,7 @@ public class SignupFragment extends Fragment {
 
         userName = username;
         if (username != null) {
-            AppHelper.setUser(username);
+            CognitoAppHelper.setUser(username);
         }
 
         String password = passwordText.getText().toString();
@@ -504,7 +501,7 @@ public class SignupFragment extends Fragment {
             SystemUtil.showDialogMessage(getActivity(),
                                         "Sign up failed!",
                                          "Invalid id or password");
-            Log.e(LOG_TAG, AppHelper.formatException(exception));
+            Log.e(LOG_TAG, CognitoAppHelper.formatException(exception));
         }
     };
 
@@ -512,8 +509,8 @@ public class SignupFragment extends Fragment {
         @Override
         public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
             Log.v(LOG_TAG, "auth success");
-            AppHelper.setCurrSession(userSession);
-            AppHelper.newDevice(newDevice);
+            CognitoAppHelper.setCurrSession(userSession);
+            CognitoAppHelper.newDevice(newDevice);
 
             progressBar.setVisibility(View.INVISIBLE);
 
