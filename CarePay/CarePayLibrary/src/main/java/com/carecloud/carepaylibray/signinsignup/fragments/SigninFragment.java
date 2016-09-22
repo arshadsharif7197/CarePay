@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,22 +8,32 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.Locale;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -33,36 +42,39 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SigninFragment extends Fragment {
 
-    private TextInputLayout emailHint, passwordHint;
+    private TextInputLayout emailTextInput, passwordTexInput;
     private EditText emailEditText;
     private EditText passwordEditText;
     private TextView changeLanguageTextView, forgotPasswordTextView;
-    private Button signinButton;
-    private Button signupButton;
+    private Button  signinButton;
+    private Button  signupButton;
     private boolean isValidEmail, isValidPassword;
+
     private Typeface hintFontFamily;
     private Typeface editTextFontFamily;
     private Typeface floatingTextFontfamily;
     private Typeface buttonFontFamily;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-    }
+    private String      userName;
+    private ProgressBar progressBar;
+
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
 
-        emailHint = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-        passwordHint = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
+        progressBar = (ProgressBar) view.findViewById(R.id.signInProgress);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        emailTextInput = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
+        passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
 
         emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
 
         signinButton = (Button) view.findViewById(R.id.signin_button);
+        signinButton.setEnabled(false);
         signupButton = (Button) view.findViewById(R.id.signup_button);
 
         // TODO: 9/14/2016 replace with SystemUtil.setTypeFace...
@@ -73,8 +85,8 @@ public class SigninFragment extends Fragment {
 
         emailEditText.setTypeface(editTextFontFamily);
         passwordEditText.setTypeface(editTextFontFamily);
-        emailHint.setTypeface(hintFontFamily);
-        passwordHint.setTypeface(hintFontFamily);
+        emailTextInput.setTypeface(hintFontFamily);
+        passwordTexInput.setTypeface(hintFontFamily);
         signinButton.setTypeface(buttonFontFamily);
         signupButton.setTypeface(buttonFontFamily);
 
@@ -82,8 +94,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isValidInfo()) {
-                    Intent intent = new Intent(getContext(), AppointmentsActivity.class);
-                    startActivity(intent);
+                    signInUser();
                 }
             }
         });
@@ -92,13 +103,14 @@ public class SigninFragment extends Fragment {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = ((SigninSignupActivity) getActivity()).getmFragmentManager();
+                FragmentManager fm = getFragmentManager();
                 SignupFragment fragment = (SignupFragment) fm.findFragmentByTag(SignupFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new SignupFragment();
                 }
                 fm.beginTransaction()
-                        .replace(R.id.signin_layout, fragment, SignupFragment.class.getSimpleName())
+                        .replace(R.id.layoutSigninSignup, fragment, SignupFragment.class.getSimpleName())
+                        .addToBackStack(null)
                         .commit();
             }
         });
@@ -117,7 +129,8 @@ public class SigninFragment extends Fragment {
         });
 
         setTextListeners();
-
+        emailTextInput.setError(null);
+        passwordTexInput.setError(null);
 
         return view;
     }
@@ -131,7 +144,7 @@ public class SigninFragment extends Fragment {
                                      floatingTextFontfamily,
                                      TextWatcherModel.InputType.TYPE_EMAIL,
                                      emailEditText,
-                                     emailHint,
+                                     emailTextInput,
                                      "Enter Valid Email",
                                      false,
                                      new TextWatcherModel.OnInputChangedListner() {
@@ -144,7 +157,7 @@ public class SigninFragment extends Fragment {
         passwordEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily,
                                                                      floatingTextFontfamily,
                                                                      TextWatcherModel.InputType.TYPE_PASSWORD,
-                                                                     passwordEditText, passwordHint,
+                                                                     passwordEditText, passwordTexInput,
                                                                      "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
@@ -161,11 +174,11 @@ public class SigninFragment extends Fragment {
                 String hintCaps = hint.toUpperCase();
                 if (hasFocus) {
                     // change hint to all caps
-                    emailHint.setHint(hintCaps);
+                    emailTextInput.setHint(hintCaps);
                 } else {
-                    if(StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
+                    if (StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
                         // change hint to lower
-                        emailHint.setHint(hint);
+                        emailTextInput.setHint(hint);
 
                     } else {
                         emailEditText.setHint(hint);
@@ -183,10 +196,10 @@ public class SigninFragment extends Fragment {
                 String hintCaps = hint.toUpperCase();
                 if (hasFocus) {
                     // change hint to all caps
-                    passwordHint.setHint(hintCaps);
+                    passwordTexInput.setHint(hintCaps);
                 } else {
-                    if(StringUtil.isNullOrEmpty(passwordEditText.getText().toString())) {
-                        passwordHint.setHint(hint);
+                    if (StringUtil.isNullOrEmpty(passwordEditText.getText().toString())) {
+                        passwordTexInput.setHint(hint);
                     } else {
                         // change hint to lower
                         passwordEditText.setHint(hintCaps);
@@ -219,11 +232,78 @@ public class SigninFragment extends Fragment {
 
     private void checkForButtonEnable() {
         if (isValidEmail && isValidPassword) {
-            signinButton.setBackgroundResource(R.drawable.button_selector);
-            signinButton.setTextColor(Color.WHITE);
+            signinButton.setEnabled(true);
         } else {
-            signinButton.setBackgroundResource(R.drawable.button_light_gray_background);
-
+            signinButton.setEnabled(false);
         }
     }
+
+    // cognito
+    private void signInUser() {
+        Log.v(LOG_TAG, "sign in user");
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        userName = emailEditText.getText().toString();
+        CognitoAppHelper.setUser(userName);
+        CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+    }
+
+    private void launchUser() {
+        Log.v(LOG_TAG, "launchUser()");
+
+        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
+        startActivity(userActivity);
+        getActivity().finish();
+    }
+
+    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
+        Log.v(LOG_TAG, "getUserAuthentication()");
+
+        userName = username;
+        if (username != null) {
+            CognitoAppHelper.setUser(username);
+        }
+
+        String password = passwordEditText.getText().toString();
+        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
+        continuation.setAuthenticationDetails(authenticationDetails);
+        continuation.continueTask();
+    }
+
+    private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+        @Override
+        public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
+            Log.v(LOG_TAG, "Auth Success");
+
+            CognitoAppHelper.setCurrSession(cognitoUserSession);
+            CognitoAppHelper.newDevice(device);
+            progressBar.setVisibility(View.INVISIBLE);
+            launchUser();
+        }
+
+        @Override
+        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String username) {
+            Locale.setDefault(Locale.getDefault());
+            getUserAuthentication(authenticationContinuation, username);
+        }
+
+        @Override
+        public void getMFACode(MultiFactorAuthenticationContinuation multiFactorAuthenticationContinuation) {
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            progressBar.setVisibility(View.INVISIBLE);
+            SystemUtil.showDialogMessage(getActivity(),
+                                         "Sign-in failed",
+                                         "Invalid user id or password");// TODO: 9/21/2016 prepare for translation if kept
+            Log.e(LOG_TAG, CognitoAppHelper.formatException(e));
+        }
+
+        @Override
+        public void authenticationChallenge(ChallengeContinuation continuation) {
+            // TODO change the place holder
+        }
+    };
 }
