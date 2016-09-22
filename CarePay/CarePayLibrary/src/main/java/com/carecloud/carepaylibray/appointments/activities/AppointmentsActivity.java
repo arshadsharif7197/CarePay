@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
@@ -174,12 +173,14 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.show();
 
-            TextView dateTextView = ((TextView) view.findViewById(R.id.apptDateTextView));
-            TextView timeTextView = ((TextView) view.findViewById(R.id.apptTimeTextView));
-            TextView shortNameTextView = ((TextView) view.findViewById(R.id.apptShortnameTextView));
-            TextView nameTextView = ((TextView) view.findViewById(R.id.apptNameTextView));
-            TextView typeTextView = ((TextView) view.findViewById(R.id.apptTypeTextView));
-            final TextView addressTextView = ((TextView) view.findViewById(R.id.apptAddressTextView));
+            TextView dateTextView = ((TextView) view.findViewById(R.id.appointDateTextView));
+            TextView timeTextView = ((TextView) view.findViewById(R.id.appointTimeTextView));
+            TextView shortNameTextView = ((TextView) view.findViewById(R.id.appointShortnameTextView));
+            TextView nameTextView = ((TextView) view.findViewById(R.id.appointNameTextView));
+            TextView typeTextView = ((TextView) view.findViewById(R.id.appointTypeTextView));
+            final TextView addressTextView = ((TextView) view.findViewById(R.id.appointAddressTextView));
+            final TextView addressHeaderTextView = ((TextView) view.findViewById(R.id.appointAddressHeaderTextView));
+            TextView requestPendingTextView = (TextView)view.findViewById(R.id.appointRequestPendingTextView);
 
             dateTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[0]);
             timeTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[1]);
@@ -189,51 +190,70 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             //addressTextView.setText(appointmentModel.getA());
 
             SystemUtil.setProximaNovaRegularTypeface(this, dateTextView);
-            SystemUtil.setGothamRoundedBookTypeface(this, timeTextView);
+            SystemUtil.setGothamRoundedBoldTypeface(this, timeTextView);
             SystemUtil.setProximaNovaRegularTypeface(this, shortNameTextView);
             SystemUtil.setProximaNovaSemiboldTypeface(this, nameTextView);
             SystemUtil.setProximaNovaRegularTypeface(this, typeTextView);
-            SystemUtil.setGothamRoundedMediumTypeface(this, addressTextView);
+            SystemUtil.setProximaNovaRegularTypeface(this, addressTextView);
+            SystemUtil.setProximaNovaExtraboldTypeface(this, addressHeaderTextView);
+            SystemUtil.setGothamRoundedMediumTypeface(this, requestPendingTextView);
 
-            view.findViewById(R.id.dialogAppointHeaderImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.dialogAppointHeaderTextView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.cancel();
                 }
             });
-            view.findViewById(R.id.apptLocationImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.appointLocationImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onMapView(addressTextView.getText().toString());
                 }
             });
-            view.findViewById(R.id.apptDailImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.appointDailImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onPhoneCall("000000000");
                 }
             });
-            view.findViewById(R.id.checkOfficeBtn).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.checkOfficeButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onCheckInAtOffice();
                     dialog.cancel();
                 }
             });
-            view.findViewById(R.id.checkOfficeNow).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.checkOfficeNowButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onCheckInAtNow();
                 }
             });
+            view.findViewById(R.id.dialogEditAppointTextView).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onEditAppointMent();
+                }
+            });
+            requestPendingTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onRequestPending();
+                }
+            });
+            //second argument is only for testing it will change based on which dialog wants to show.
+            onDialogTypeVisible(view,1);
         }
     }
-
+    /**
+     * convert date string in to month and day.
+     * @param dateStr the String to evaluate
+     */
     private String[] onDateParseToString(String dateStr) {
         String stringDate[] = dateStr.split(" ");
         String formateDate[] = new String[2];
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.dateFormatString), Locale.ENGLISH);
             Date appointdate = sdf.parse(stringDate[0]);
             formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
                     + DateUtil.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
@@ -244,30 +264,44 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         return formateDate;
     }
 
+    /**
+     * show device phone call UI based on phone number.
+     * @param phoneNumber the String to evaluate
+     */
     private void onPhoneCall(final String phoneNumber){
         try{
             startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
         }catch (android.content.ActivityNotFoundException ex){
-            Toast.makeText(getApplicationContext(),"Activity is not founded",Toast.LENGTH_SHORT).show();
+
         }
     }
 
+    /**
+     * call check-in at office api.
+     */
     private void onCheckInAtOffice(){
         Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
         startActivity(demographicReviewIntent);
-        }
+    }
 
+    /**
+     * call check-in early api.
+     */
     private  void onCheckInEarly(){
-        Toast.makeText(AppointmentsActivity.this, "Clicked on onCheckInEarly method,", Toast.LENGTH_LONG).show();
-        }
 
+    }
+    /**
+     * call check-in at Nowapi.
+     */
     private void onCheckInAtNow(){
-        Toast.makeText(AppointmentsActivity.this, "Clicked on onCheckInAtNow method,", Toast.LENGTH_LONG).show();
-        }
 
+    }
+    /**
+     * create appointment UI.
+     */
     private void onCreateAppointment(){
-        Toast.makeText(AppointmentsActivity.this, "Clicked on onCreateAppointment method,", Toast.LENGTH_LONG).show();
-        }
+
+    }
 
     /**
      * show device map view based on address.
@@ -278,5 +312,74 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
+    }
+    /**
+     * show different dialog UI based on type.
+     * @param view ,View to evaluate
+     * @param type , int to evaluate
+     */
+    private void onDialogTypeVisible(View view,int type){
+        switch (type){
+            case 1:
+                onCheckOffceNowUI(view);
+
+                break;
+            case 2:
+                onCheckAtOfficeUI(view);
+                break;
+            case 3:
+                onCheckNowEarlyUI(view);
+                break;
+            case 4:
+                onEditAppointmentUI(view);
+                break;
+            case 5:
+                onPendingAppointmentUI(view);
+                break;
+            case 6:
+                onReasonAppointmentUI(view);
+                break;
+            default: break;
+
+        }
+    }
+    /**
+     * call edit appointment page.
+     */
+    private void onEditAppointMent(){
+
+    }
+    /**
+     * call request pending api.
+     */
+    private void onRequestPending(){
+
+    }
+    private void onCheckOffceNowUI(View view){
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
+    }
+    private void onCheckAtOfficeUI(View view){
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
+    }
+    private void onCheckNowEarlyUI(View view){
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+    }
+    private void onEditAppointmentUI(View view){
+        view.findViewById(R.id.dialogEditAppointTextView).setVisibility(View.VISIBLE);
+    }
+    private void onPendingAppointmentUI(View view){
+        view.findViewById(R.id.appointRequestPendingLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);
+        ((TextView) view.findViewById(R.id.appointDateTextView)).setTextColor(getResources().getColor(R.color.white));
+        ((TextView) view.findViewById(R.id.appointTimeTextView)).setTextColor(getResources().getColor(R.color.white));
+    }
+    private void onReasonAppointmentUI(View view){
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.reasonTextInputLayout).setVisibility(View.VISIBLE);
     }
 }

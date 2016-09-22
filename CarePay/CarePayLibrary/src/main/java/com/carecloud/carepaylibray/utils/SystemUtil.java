@@ -63,6 +63,10 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
         view.setTypeface(typeface);
     }
+    public static void setGothamRoundedBoldTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_bold.otf");
+        view.setTypeface(typeface);
+    }
 
     public static void setProximaNovaSemiboldTypefaceEdittext(Context context, EditText view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");

@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -20,12 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.SmartystreetsAddressService;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
+import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.smartystreets.api.us_street.Candidate;
+import com.smartystreets.api.us_zipcode.City;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -58,12 +59,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private boolean              isPhoneValid;
     private AutoCompleteTextView stateAutoCompleteTextView;
     private String state_var = null;
-
-    private static final String[] states = new String[]{
-            "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
-            "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
-            "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-    };
+    private City                 smartyStreetsResponse ;
 
     @Nullable
     @Override
@@ -122,8 +118,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                                                                       R.layout.autocomplete_state_item,
                                                                       R.id.text1,
-                                                                      states);
-        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.autoTextCompleteStates);
+                                                                      AddressUtil.states);
+        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
         stateAutoCompleteTextView.setThreshold(1);
         stateAutoCompleteTextView.setAdapter(adapter);
         stateAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -276,9 +272,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 }
                 SystemUtil.handleHintChange(view, b);
                 if(!b){
-                    Candidate candidate= SmartystreetsAddressService.getAddressByZipCode(zipCodeEditText.getText().toString());
-                    cityEditText.setText(candidate.getComponents().getCityName());
-                    stateAutoCompleteTextView.setText(candidate.getComponents().getState());
+                    getCityAndState(zipCodeEditText.getText().toString());
                 }
 
             }
@@ -403,4 +397,34 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 && isStateValid
                 && isPhoneValid;
     }
+
+   /**
+    * Background task to call smarty streets zip code lookup.
+    *
+    * The response is a com.smartystreets.api.us_zipcode.City object,
+    * that contains city, mailableCity, stateAbbreviation and state.
+    *
+    * */
+
+   private void getCityAndState(String zipcode)
+   {
+
+   new  AsyncTask<String, Void, Void>() {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            smartyStreetsResponse = AddressUtil.getCityAndStateByZipCode(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            cityEditText.setText(smartyStreetsResponse.getCity());
+            stateAutoCompleteTextView.setText(smartyStreetsResponse.getStateAbbreviation());
+            stateAutoCompleteTextView.showDropDown();
+        }
+    }.execute(zipcode);
+   }
 }
