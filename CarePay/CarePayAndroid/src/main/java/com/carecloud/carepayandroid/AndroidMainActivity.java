@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.intake.InTakeActivity;
@@ -25,6 +26,8 @@ public class AndroidMainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, ConsentActivity.class);
 //        Intent intent = new Intent(this, DemographicsActivity.class);
 //        Intent intent = new Intent(this, SigninSignupActivity.class);
+//        Intent intent = new Intent(this, SignUpConfirmActivity.class);
+
         startActivity(intent);
         finish();
     }

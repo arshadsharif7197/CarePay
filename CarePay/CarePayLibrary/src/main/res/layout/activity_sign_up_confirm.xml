@@ -32,7 +32,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/blue_cerulian"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <TextView
@@ -40,10 +40,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
+                android:layout_gravity="left"
                 android:text="@string/Menu"
                 android:textAlignment="center"
-                android:textColor="@color/toolbar_items"
+                android:textColor="@color/white"
                 android:textSize="@dimen/action_bar_text"/>
         </android.support.v7.widget.Toolbar>
 

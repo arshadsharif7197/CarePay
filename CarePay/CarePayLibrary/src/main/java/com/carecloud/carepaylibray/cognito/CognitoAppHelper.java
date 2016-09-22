@@ -65,25 +65,25 @@ public class CognitoAppHelper {
     /**
      * Add your pool id here
      */
-    private static final String userPoolId = "us-east-1_m9M7XF4pZ"; //"us-west-2_0eHuDp72i";
+    private static final String userPoolId = "us-east-1_m9M7XF4pZ"; /*"us-west-2_0eHuDp72i";*/
 
     /**
      * Add you app id
      */
-    private static final String clientId = "33hd7aq7r1uk5net1q7kt2p7jr"; //"71le76qt8rcpbqo682qb7j07q0";
+    private static final String clientId = "33hd7aq7r1uk5net1q7kt2p7jr";/* "71le76qt8rcpbqo682qb7j07q0";*/
 
     /**
      * App secret associated with your app id - if the App id does not have an associated App secret,
      * set the App secret to null.
      * e.g. clientSecret = null;
      */
-    private static final String clientSecret = null; //"j9n2l7ul6jnrq68hb0c0dc4oea8i44ifm5jmictv9eisk711f67";
+    private static final String clientSecret = null;/* "j9n2l7ul6jnrq68hb0c0dc4oea8i44ifm5jmictv9eisk711f67";*/
 
     /**
      * Set Your User Pools region.
      * e.g. if your user pools are in US East (N Virginia) then set cognitoRegion = Regions.US_EAST_1.
      */
-    private static final Regions cognitoRegion = Regions.US_EAST_1; //Regions.US_WEST_2;
+    private static final Regions cognitoRegion = Regions.US_EAST_1; /* Regions.US_WEST_2;*/
 
     // User details from the service
     private static CognitoUserSession currSession;

@@ -42,7 +42,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SigninFragment extends Fragment {
 
-    private TextInputLayout emailHint, passwordHint;
+    private TextInputLayout emailTextInput, passwordTexInput;
     private EditText emailEditText;
     private EditText passwordEditText;
     private TextView changeLanguageTextView, forgotPasswordTextView;
@@ -67,8 +67,8 @@ public class SigninFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.signInProgress);
         progressBar.setVisibility(View.INVISIBLE);
 
-        emailHint = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-        passwordHint = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
+        emailTextInput = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
+        passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
 
         emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
@@ -85,8 +85,8 @@ public class SigninFragment extends Fragment {
 
         emailEditText.setTypeface(editTextFontFamily);
         passwordEditText.setTypeface(editTextFontFamily);
-        emailHint.setTypeface(hintFontFamily);
-        passwordHint.setTypeface(hintFontFamily);
+        emailTextInput.setTypeface(hintFontFamily);
+        passwordTexInput.setTypeface(hintFontFamily);
         signinButton.setTypeface(buttonFontFamily);
         signupButton.setTypeface(buttonFontFamily);
 
@@ -129,6 +129,8 @@ public class SigninFragment extends Fragment {
         });
 
         setTextListeners();
+        emailTextInput.setError(null);
+        passwordTexInput.setError(null);
 
         return view;
     }
@@ -142,7 +144,7 @@ public class SigninFragment extends Fragment {
                                      floatingTextFontfamily,
                                      TextWatcherModel.InputType.TYPE_EMAIL,
                                      emailEditText,
-                                     emailHint,
+                                     emailTextInput,
                                      "Enter Valid Email",
                                      false,
                                      new TextWatcherModel.OnInputChangedListner() {
@@ -155,7 +157,7 @@ public class SigninFragment extends Fragment {
         passwordEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily,
                                                                      floatingTextFontfamily,
                                                                      TextWatcherModel.InputType.TYPE_PASSWORD,
-                                                                     passwordEditText, passwordHint,
+                                                                     passwordEditText, passwordTexInput,
                                                                      "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
             @Override
             public void OnInputChangedListner(boolean isValid) {
@@ -172,11 +174,11 @@ public class SigninFragment extends Fragment {
                 String hintCaps = hint.toUpperCase();
                 if (hasFocus) {
                     // change hint to all caps
-                    emailHint.setHint(hintCaps);
+                    emailTextInput.setHint(hintCaps);
                 } else {
                     if (StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
                         // change hint to lower
-                        emailHint.setHint(hint);
+                        emailTextInput.setHint(hint);
 
                     } else {
                         emailEditText.setHint(hint);
@@ -194,10 +196,10 @@ public class SigninFragment extends Fragment {
                 String hintCaps = hint.toUpperCase();
                 if (hasFocus) {
                     // change hint to all caps
-                    passwordHint.setHint(hintCaps);
+                    passwordTexInput.setHint(hintCaps);
                 } else {
                     if (StringUtil.isNullOrEmpty(passwordEditText.getText().toString())) {
-                        passwordHint.setHint(hint);
+                        passwordTexInput.setHint(hint);
                     } else {
                         // change hint to lower
                         passwordEditText.setHint(hintCaps);
