@@ -81,11 +81,8 @@
 
         <Button
             android:id="@+id/signin_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_light_gray_background"
             android:text="@string/submit_button"
-            android:textColor="@color/white" />
+            style="@style/SignInSignUpButtonStyle"/>
 
         <Button
             android:id="@+id/signup_button"

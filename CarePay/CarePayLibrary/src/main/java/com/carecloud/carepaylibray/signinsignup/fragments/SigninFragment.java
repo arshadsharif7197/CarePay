@@ -81,6 +81,7 @@ public class SigninFragment extends Fragment {
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
 
         signinButton = (Button) view.findViewById(R.id.signin_button);
+        signinButton.setEnabled(false);
         signupButton = (Button) view.findViewById(R.id.signup_button);
 
         // TODO: 9/14/2016 replace with SystemUtil.setTypeFace...
@@ -236,11 +237,9 @@ public class SigninFragment extends Fragment {
 
     private void checkForButtonEnable() {
         if (isValidEmail && isValidPassword) {
-            signinButton.setBackgroundResource(R.drawable.button_selector);
-            signinButton.setTextColor(Color.WHITE);
+            signinButton.setEnabled(true);
         } else {
-            signinButton.setBackgroundResource(R.drawable.button_light_gray_background);
-
+            signinButton.setEnabled(false);
         }
     }
 

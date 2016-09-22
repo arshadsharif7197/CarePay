@@ -283,6 +283,13 @@
 
     </style>
 
+    <style name="SigninSignupButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        android:background="@drawable/button_selector"
+        android:textColor="@color/white"
+    </style>
+
     <!-- Demographics Review Screens Style>-->
     <style name="reviewDemographicBlue." parent="android:Widget.TextView">
         <item name="android:textColor">@color/bright_cerulean</item>
