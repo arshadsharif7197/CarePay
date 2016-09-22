@@ -421,9 +421,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            cityEditText.setText(smartyStreetsResponse.getCity());
-            stateAutoCompleteTextView.setText(smartyStreetsResponse.getStateAbbreviation());
-            stateAutoCompleteTextView.showDropDown();
+            if(smartyStreetsResponse != null)
+            {
+                cityEditText.setText(smartyStreetsResponse.getCity());
+                stateAutoCompleteTextView.setText(smartyStreetsResponse.getStateAbbreviation());
+                stateAutoCompleteTextView.showDropDown();
+            }
+
         }
     }.execute(zipcode);
    }

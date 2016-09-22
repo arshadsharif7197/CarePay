@@ -36,7 +36,9 @@
             android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
+        <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.payment.PaymentActivity"
@@ -54,6 +56,11 @@
         <activity
             android:name="com.carecloud.carepaylibray.intake.InTakeActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+
+        <activity android:name="com.carecloud.carepaylibray.cognito.SignUpConfirmActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:windowSoftInputMode="adjustNothing"/>
+
     </application>
 
 </manifest>

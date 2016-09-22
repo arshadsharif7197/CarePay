@@ -74,8 +74,9 @@
                         android:id="@+id/zipCodeId"
                         style="@style/EditTextStyle"
                         android:hint="@string/ZipCodeEditText"
-                        android:maxLength="6"
-                        android:nextFocusForward="@+id/cityId"/>
+                        android:maxLength="9"
+                        android:nextFocusForward="@+id/cityId"
+                        android:digits="0123456789"/>
 
                 </android.support.design.widget.TextInputLayout>
 

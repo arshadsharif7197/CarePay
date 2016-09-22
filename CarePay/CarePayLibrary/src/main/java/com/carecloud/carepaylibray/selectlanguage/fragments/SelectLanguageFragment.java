@@ -65,6 +65,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SigninSignupActivity.class);
                 getActivity().startActivity(intent);
+                getActivity().finish();
             }
         });
         loadData();
