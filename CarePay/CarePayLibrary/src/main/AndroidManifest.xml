@@ -61,9 +61,6 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             android:windowSoftInputMode="adjustNothing"/>
 
-        <activity android:name="com.carecloud.carepaylibray.cognito.VerifyActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
-
     </application>
 
 </manifest>

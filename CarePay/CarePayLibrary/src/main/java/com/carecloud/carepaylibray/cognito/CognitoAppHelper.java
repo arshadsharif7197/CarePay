@@ -22,12 +22,10 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.cognitoidentityprovider.model.AttributeType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,22 +41,11 @@ public class CognitoAppHelper {
     private static Map<String, String> signUpFieldsC2O;
     private static Map<String, String> signUpFieldsO2C;
 
-    private static CognitoAppHelper cognitoAppHelper;
-    private static CognitoUserPool  userPool;
-    private static String           user;
-    private static CognitoDevice    newDevice;
-
-    private static CognitoUserAttributes attributesChanged;
-    private static List<AttributeType>   attributesToDelete;
-
-    private static List<ItemToDisplay> currDisplayedItems;
+    private static CognitoAppHelper    cognitoAppHelper;
+    private static CognitoUserPool     userPool;
+    private static String              user;
+    private static CognitoDevice       newDevice;
     private static int                 itemCount;
-
-    private static List<ItemToDisplay> trustedDevices;
-    private static int                 trustedDevicesCount;
-    private static List<CognitoDevice> deviceDetails;
-    private static CognitoDevice       thisDevice;
-    private static boolean             thisDeviceTrustState;
 
     // Change the next three lines of code to run this demo on your user pool
 
@@ -114,13 +101,6 @@ public class CognitoAppHelper {
             // Create a user pool with default ClientConfiguration
             userPool = new CognitoUserPool(context, userPoolId, clientId, clientSecret, cognitoRegion);
 
-            // This will also work
-            /*
-            ClientConfiguration clientConfiguration = new ClientConfiguration();
-            AmazonCognitoIdentityProvider cipClient = new AmazonCognitoIdentityProviderClient(new AnonymousAWSCredentials(), clientConfiguration);
-            cipClient.setRegion(Region.getRegion(cognitoRegion));
-            userPool = new CognitoUserPool(context, userPoolId, clientId, clientSecret, cipClient);
-            */
         }
 
         phoneVerified = false;
@@ -129,11 +109,7 @@ public class CognitoAppHelper {
         emailAvailable = false;
 
         currUserAttributes = new HashSet<String>();
-        currDisplayedItems = new ArrayList<ItemToDisplay>();
-        trustedDevices = new ArrayList<ItemToDisplay>();
         newDevice = null;
-        thisDevice = null;
-        thisDeviceTrustState = false;
     }
 
     public static CognitoUserPool getPool() {
@@ -144,29 +120,13 @@ public class CognitoAppHelper {
         return signUpFieldsC2O;
     }
 
-    public static Map<String, String> getSignUpFieldsO2C() {
-        return signUpFieldsO2C;
-    }
-
-    public static List<String> getAttributeDisplaySeq() {
-        return attributeDisplaySeq;
-    }
-
     public static void setCurrSession(CognitoUserSession session) {
         currSession = session;
-    }
-
-    public static CognitoUserSession getCurrSession() {
-        return currSession;
     }
 
     public static void setUserDetails(CognitoUserDetails details) {
         userDetails = details;
         refreshWithSync();
-    }
-
-    public static CognitoUserDetails getUserDetails() {
-        return userDetails;
     }
 
     public static String getCurrUser() {
@@ -193,40 +153,6 @@ public class CognitoAppHelper {
         return emailAvailable;
     }
 
-    public static void setPhoneVerified(boolean phoneVerif) {
-        phoneVerified = phoneVerif;
-    }
-
-    public static void setEmailVerified(boolean emailVerif) {
-        emailVerified = emailVerif;
-    }
-
-    public static void setPhoneAvailable(boolean phoneAvail) {
-        phoneAvailable = phoneAvail;
-    }
-
-    public static void setEmailAvailable(boolean emailAvail) {
-        emailAvailable = emailAvail;
-    }
-
-    public static void clearCurrUserAttributes() {
-        currUserAttributes.clear();
-    }
-
-    public static void addCurrUserattribute(String attribute) {
-        currUserAttributes.add(attribute);
-    }
-
-    public static List<String> getNewAvailableOptions() {
-        List<String> newOption = new ArrayList<String>();
-        for (String attribute : attributeDisplaySeq) {
-            if (!(currUserAttributes.contains(attribute))) {
-                newOption.add(attribute);
-            }
-        }
-        return newOption;
-    }
-
     public static String formatException(Exception exception) {
         String formattedString = "Internal Error";
         Log.e("App Error", exception.toString());
@@ -248,64 +174,8 @@ public class CognitoAppHelper {
         return itemCount;
     }
 
-    public static int getDevicesCount() {
-        return trustedDevicesCount;
-    }
-
-    public static ItemToDisplay getItemForDisplay(int position) {
-        return currDisplayedItems.get(position);
-    }
-
-    public static ItemToDisplay getDeviceForDisplay(int position) {
-        if (position >= trustedDevices.size()) {
-            return new ItemToDisplay(" ", " ", " ", Color.BLACK, Color.DKGRAY, Color.parseColor("#37A51C"), 0, null);
-        }
-        return trustedDevices.get(position);
-    }
-
     public static void newDevice(CognitoDevice device) {
         newDevice = device;
-    }
-
-    public static void setDevicesForDisplay(List<CognitoDevice> devicesList) {
-        trustedDevicesCount = 0;
-        thisDeviceTrustState = false;
-        deviceDetails = devicesList;
-        trustedDevices = new ArrayList<ItemToDisplay>();
-        for (CognitoDevice device : devicesList) {
-            if (thisDevice != null && thisDevice.getDeviceKey().equals(device.getDeviceKey())) {
-                thisDeviceTrustState = true;
-            } else {
-                ItemToDisplay item = new ItemToDisplay("", device.getDeviceName(), device.getCreateDate().toString(), Color.BLACK, Color.DKGRAY, Color.parseColor("#329AD6"), 0, null);
-                item.setDataDrawable("checked");
-                trustedDevices.add(item);
-                trustedDevicesCount++;
-            }
-        }
-    }
-
-    public static CognitoDevice getDeviceDetail(int position) {
-        if (position <= trustedDevicesCount) {
-            return deviceDetails.get(position);
-        } else {
-            return null;
-        }
-    }
-
-    public static CognitoDevice getNewDevice() {
-        return newDevice;
-    }
-
-    public static CognitoDevice getThisDevice() {
-        return thisDevice;
-    }
-
-    public static void setThisDevice(CognitoDevice device) {
-        thisDevice = device;
-    }
-
-    public static boolean getThisDeviceTrustState() {
-        return thisDeviceTrustState;
     }
 
     private static void setData() {
@@ -351,7 +221,6 @@ public class CognitoAppHelper {
         emailAvailable = false;
         phoneAvailable = false;
 
-        currDisplayedItems = new ArrayList<ItemToDisplay>();
         currUserAttributes.clear();
         itemCount = 0;
 
@@ -371,167 +240,6 @@ public class CognitoAppHelper {
             } else if (attr.getKey().equals("phone_number")) {
                 phoneAvailable = true;
             }
-        }
-
-        // Arrange the input attributes per the display sequence
-        Set<String> keySet = new HashSet<>(tempKeys);
-        for (String det : attributeDisplaySeq) {
-            if (keySet.contains(det)) {
-                // Adding items to display list in the required sequence
-
-                ItemToDisplay item = new ItemToDisplay(signUpFieldsO2C.get(det), tempValues.get(tempKeys.indexOf(det)), "",
-                                                       Color.BLACK, Color.DKGRAY, Color.parseColor("#37A51C"),
-                                                       0, null);
-
-                if (det.contains("email")) {
-                    if (emailVerified) {
-                        item.setDataDrawable("checked");
-                        item.setMessageText("Email verified");
-                    } else {
-                        item.setDataDrawable("not_checked");
-                        item.setMessageText("Email not verified");
-                        item.setMessageColor(Color.parseColor("#E94700"));
-                    }
-                }
-
-                if (det.contains("phone_number")) {
-                    if (phoneVerified) {
-                        item.setDataDrawable("checked");
-                        item.setMessageText("Phone number verified");
-                    } else {
-                        item.setDataDrawable("not_checked");
-                        item.setMessageText("Phone number not verified");
-                        item.setMessageColor(Color.parseColor("#E94700"));
-                    }
-                }
-
-                currDisplayedItems.add(item);
-                currUserAttributes.add(det);
-                itemCount++;
-            }
-        }
-    }
-
-    private static void modifyAttribute(String attributeName, String newValue) {
-        //
-
-    }
-
-    private static void deleteAttribute(String attributeName) {
-
-    }
-
-    /**
-     * Authentication related item to display
-     */
-    private static class ItemToDisplay {
-
-        // Text for display
-        private String labelText;
-        private String dataText;
-        private String messageText;
-
-        // Display text colors
-        private int labelColor;
-        private int dataColor;
-        private int messageColor;
-
-        // Data box background
-        private int dataBackground;
-
-        // Data box drawable
-        private String dataDrawable;
-
-        // Constructor
-        protected ItemToDisplay(String labelText, String dataText, String messageText,
-                                int labelColor, int dataColor, int messageColor,
-                                int dataBackground, String dataDrawable) {
-            this.labelText = labelText;
-            this.dataText = dataText;
-            this.messageText = messageText;
-            this.labelColor = labelColor;
-            this.dataColor = dataColor;
-            this.messageColor = messageColor;
-            this.dataBackground = dataBackground;
-            this.dataDrawable = dataDrawable;
-        }
-
-        public String getLabelText() {
-            return labelText;
-        }
-
-        public void setLabelText(String labelText) {
-            this.labelText = labelText;
-        }
-
-        public String getDataText() {
-            return dataText;
-        }
-
-        public void setDataText(String dataText) {
-            this.dataText = dataText;
-        }
-
-        public String getMessageText() {
-            return messageText;
-        }
-
-        public void setMessageText(String messageText) {
-            this.messageText = messageText;
-        }
-
-        public int getLabelColor() {
-            return labelColor;
-        }
-
-        public void setLabelColor(int labelColor) {
-            this.labelColor = labelColor;
-        }
-
-        public int getDataColor() {
-            return dataColor;
-        }
-
-        public void setDataColor(int dataColor) {
-            this.dataColor = dataColor;
-        }
-
-        public int getMessageColor() {
-            return messageColor;
-        }
-
-        public void setMessageColor(int messageColor) {
-            this.messageColor = messageColor;
-        }
-
-        public int getDataBackground() {
-            return dataBackground;
-        }
-
-        public void setDataBackground(int dataBackground) {
-            this.dataBackground = dataBackground;
-        }
-
-        public String getDataDrawable() {
-            return dataDrawable;
-        }
-
-        public void setDataDrawable(String dataDrawable) {
-            this.dataDrawable = dataDrawable;
-        }
-
-        @Override
-        public String toString() {
-            return "ItemToDisplay{" +
-                    "labelText='" + labelText + '\'' +
-                    ", dataText='" + dataText + '\'' +
-                    ", messageText='" + messageText + '\'' +
-                    ", labelColor=" + labelColor +
-                    ", dataColor=" + dataColor +
-                    ", messageColor=" + messageColor +
-                    ", dataBackground=" + dataBackground +
-                    ", dataDrawable='" + dataDrawable + '\'' +
-                    '}';
         }
     }
 }
