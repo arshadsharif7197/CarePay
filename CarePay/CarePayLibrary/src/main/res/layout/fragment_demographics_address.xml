@@ -93,7 +93,7 @@
                         <EditText
                             android:id="@+id/cityId"
                             style="@style/CityEditTextStyle"
-                            android:nextFocusRight="@+id/autoTextCompleteStates"/>
+                            android:nextFocusRight="@+id/stateAutoCompleteTextView"/>
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -103,7 +103,7 @@
                         android:layout_weight="1">
 
                         <AutoCompleteTextView
-                            android:id="@+id/autoTextCompleteStates"
+                            android:id="@+id/stateAutoCompleteTextView"
                             style="@style/EditTextStyle"
                             android:hint="@string/StateEditText"
                             android:imeOptions="actionNext"
