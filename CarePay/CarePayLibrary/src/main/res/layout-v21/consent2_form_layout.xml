@@ -96,7 +96,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
+                android:paddingTop="@dimen/consentform_realtivelayout_textpaddingtop"
                 android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
                 android:layout_marginLeft="@dimen/consentform_relativeLayout_margin">
 
