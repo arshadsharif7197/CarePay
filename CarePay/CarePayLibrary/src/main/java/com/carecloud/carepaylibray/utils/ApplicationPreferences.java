@@ -35,4 +35,13 @@ public class ApplicationPreferences {
     public String getUserLanguage() {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, CarePayConstants.DEFAULT_LANGUAGE);
     }
+
+    public void writeStringToSharedPref(String key, String value) {
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public String readStringFromSharedPref(String key) {
+        return sharedPreferences.getString(key, CarePayConstants.DEFAULT_STRING_PREFERENCES);
+    }
 }
