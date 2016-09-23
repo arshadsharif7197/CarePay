@@ -461,4 +461,47 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="AppointmentAvailableHoursListRowText" parent="android:Widget.TextView">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/apt_available_hours_list_row_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
+    <style name="AppointmentAvailableHoursListHeaderText" parent="android:Widget.TextView">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">@dimen/apt_available_hours_list_header_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Semibold</item>
+    </style>
+
+    <style name="AppointmentPopupButton" parent="android:Widget.Button">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/apt_popup_button_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">GothamRounded-Medium</item>
+    </style>
+
+    <style name="AppointmentPopupMessageText" parent="android:Widget.TextView">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/glitter</item>
+        <item name="android:textSize">@dimen/apt_popup_message_text</item>
+        <item name="android:lineSpacingExtra">@dimen/apt_popup_message_text_line_spacing</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
+    <style name="ChooseProviderSectionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/choose_provider_title_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/choose_provider_title_margin_top</item>
+        <item name="android:textColor">@color/lightSlateGray</item>
+        <item name="android:textSize">@dimen/textview_textsize</item>
+    </style>
+
 </resources>

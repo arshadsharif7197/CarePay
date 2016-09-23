@@ -1,16 +1,12 @@
 package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,32 +71,39 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
         SystemUtil.setGothamRoundedMediumTypeface(context,holder.shortName);
         String splitStr[]= item.getAppointmentTime().replaceAll("UTC","").split(" ");
         String htmlStr="";
-        if(splitStr.length > 3) {
-            StringBuilder stringBuilder=new StringBuilder();
-            stringBuilder.append(splitStr[0]+"\n"+splitStr[1]+"\n"+splitStr[2]+" "+splitStr[3]);
+
+        if (splitStr.length > 3) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(splitStr[0] + "\n" + splitStr[1] + "\n" + splitStr[2] + " " + splitStr[3]);
             Spannable span = new SpannableString(stringBuilder);
             //span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             span.setSpan(new RelativeSizeSpan(1.75f), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             span.setSpan(new ForegroundColorSpan(Color.parseColor("#455A64")), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            SystemUtil.setProximaNovaRegularTypeface(context,holder.time);
+            SystemUtil.setProximaNovaRegularTypeface(context, holder.time);
             holder.time.setText(span);
-        }else{
-            holder.time.setText(item.getAppointmentTime().replaceAll("UTC",""));
+        } else {
+            holder.time.setText(item.getAppointmentTime().replaceAll("UTC", ""));
             holder.time.setTextColor(context.getResources().getColor(R.color.dark_green));
         }
+
         //bindSectionHeader(holder, position, item);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            ((AppointmentsActivity) context).showAppointmentsDialog(item);
-           // Toast.makeText(context,"Clicked "+item.getAppointmentId(),Toast.LENGTH_LONG).show();
-         }
-    });
+            @Override
+            public void onClick(View v) {
+                if (item.isPending()) {
+                    ((AppointmentsActivity) context).showAppointmentsDialog(context, item, 5);
+                } else {
+                    ((AppointmentsActivity) context).showAppointmentsDialog(context, item, 1);
+                }
+            }
+        });
         holder.shortName.setText(SystemUtil.onShortDrName(item.getDoctorName()));
-        //if(position ==1){
-        //    holder.cellAvtar.setVisibility(View.VISIBLE);
-        //}else
-        holder.cellAvtar.setVisibility(View.INVISIBLE);
+
+        if (item.isPending()) {
+            holder.cellAvtar.setVisibility(View.VISIBLE);
+        } else {
+            holder.cellAvtar.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -114,7 +117,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
         View sectionHeader, divider;
         ImageView cellAvtar;
 
-    public AppointmentViewHolder(View itemView) {
+    AppointmentViewHolder(View itemView) {
         super(itemView);
         Typeface textViewFont_proximanova_semibold = Typeface.createFromAsset(itemView.getResources().getAssets(), "fonts/proximanova_semibold.otf");
         doctorName = (TextView) itemView.findViewById(R.id.doctor_name);
