@@ -7,4 +7,8 @@ import com.carecloud.carepaylibray.base.models.BaseTransitionsDataModel;
  */
 public class DemographicTransitionsDataModel extends BaseTransitionsDataModel {
 
+    public DemographicTransitionsPropertiesModel getProperties(){
+        return super.getProperties(DemographicTransitionsPropertiesModel.class);
+    }
+
 }

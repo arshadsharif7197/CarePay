@@ -11,6 +11,13 @@ public class DemographicTransitionsPropertiesModel {
 
     @SerializedName("phone")
     @Expose
-    private String phone;
+    private BaseTransitionsPropertyModel phone;
 
+    public BaseTransitionsPropertyModel getPhone() {
+        return phone;
+    }
+
+    public void setPhone(BaseTransitionsPropertyModel phone) {
+        this.phone = phone;
+    }
 }

@@ -1,4 +1,5 @@
 package com.carecloud.carepaylibray.base.models;
+import com.carecloud.carepaylibray.demographics.models.DemographicTransitionsDataObjectModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
@@ -16,7 +17,7 @@ public abstract class BaseTransitionsModel {
     @SerializedName("data")
     @Expose
     private JsonObject data;
-    private Gson gson = new Gson();
+
     /**
      *
      * @return
@@ -63,9 +64,14 @@ public abstract class BaseTransitionsModel {
         return gson.fromJson(data, convertTo);
     }*/
 
-    public JsonObject getData() {
-        return data;
+    public <S>S getData(Class<S> convertTo){
+        Gson gson = new Gson();
+        return gson.fromJson(data, convertTo);
     }
+
+    /*public JsonObject getData() {
+        return data;
+    }*/
 
     /**
      *
@@ -75,4 +81,6 @@ public abstract class BaseTransitionsModel {
     public void setData(JsonObject data) {
         this.data = data;
     }
+
+
 }
