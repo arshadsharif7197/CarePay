@@ -26,7 +26,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 
 public class ConsentForm1Fragment extends Fragment {
 
-    private TextView titleTv, descriptionTv, contentTv, dateTv;
+    private TextView titleTextView, descriptionTextView, contentTextView, dateTextView;
     private Button signButton;
     private IFragmentCallback fragmentCallback;
     private ScrollView scrollView;
@@ -37,10 +37,10 @@ public class ConsentForm1Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.consent_form_layout, container, false);
 
-        titleTv = (TextView) view.findViewById(R.id.titleTv);
-        descriptionTv = (TextView) view.findViewById(R.id.descriptionTv);
-        contentTv = (TextView) view.findViewById(R.id.contentTv);
-        dateTv = (TextView) view.findViewById(R.id.dateTv);
+        titleTextView = (TextView) view.findViewById(R.id.titleTv);
+        descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
+        contentTextView = (TextView) view.findViewById(R.id.contentTv);
+        dateTextView = (TextView) view.findViewById(R.id.dateTv);
         scrollView=(ScrollView)view.findViewById(R.id.scrollView);
         signButton = (Button) view.findViewById(R.id.signButton);
         signButton.setEnabled(false);
@@ -75,10 +75,10 @@ public class ConsentForm1Fragment extends Fragment {
 
         FormData formData = (FormData)getArguments().getSerializable(CarePayConstants.FORM_DATA);
 
-        titleTv.setText(formData.getTitle());
-        descriptionTv.setText(formData.getDescription());
-        contentTv.setText(formData.getContent());
-        dateTv.setText(formData.getDate());
+        titleTextView.setText(formData.getTitle());
+        descriptionTextView.setText(formData.getDescription());
+        contentTextView.setText(formData.getContent());
+        dateTextView.setText(formData.getDate());
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

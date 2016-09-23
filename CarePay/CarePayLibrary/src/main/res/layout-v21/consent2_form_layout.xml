@@ -74,7 +74,8 @@
                     android:layout_height="wrap_content"
                     style="@style/Consent_Form_Edit_Text"
                     android:hint="Minor's First Name"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:nextFocusForward="@+id/minorLastNameET"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -88,12 +89,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Minor's Last Name"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:nextFocusDown="@+id/dobET" />
             </android.support.design.widget.TextInputLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="5dp"
                 android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
                 android:layout_marginLeft="@dimen/consentform_relativeLayout_margin">
 
@@ -125,6 +128,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="5dp"
                 android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
                 android:layout_marginLeft="@dimen/consentform_relativeLayout_margin">
 
