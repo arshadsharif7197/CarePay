@@ -47,7 +47,7 @@ public class ConsentForm2Fragment extends Fragment {
     private Button signButton;
     private boolean isGenderSelected, isDatePicked;
     private IFragmentCallback fragmentCallback;
-    private ScrollView scrollView;
+    private ScrollView consentFormScrollView;
     private EditText minorFirstNameEditText, minorLastNameEditText;
     private String[] gender = {"Male", "Female"};
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
@@ -56,9 +56,7 @@ public class ConsentForm2Fragment extends Fragment {
             String dob = new StringBuilder().append(i1).append("/").append(i2).append("/")
                     .append(i).toString();
             dobTextView.setText(dob);
-            if (!(dob.equals(R.string.pick_date))) {
-                isDatePicked = true;
-            }
+                isDatePicked = !(dob.equals(R.string.pick_date));
             dobTextView.setTag(dob);
         }
     };
@@ -91,7 +89,7 @@ public class ConsentForm2Fragment extends Fragment {
         minorFirstNameEditText = (EditText) view.findViewById(R.id.minorFirstNameET);
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
         dobTextView = (TextView) view.findViewById(R.id.dobET);
-        scrollView = (ScrollView) view.findViewById(R.id.scrollView);
+        consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
         setTypefaces(view);
         setTextListeners();
         onClickListners();
@@ -242,11 +240,11 @@ public class ConsentForm2Fragment extends Fragment {
 
     private void getButtonEnabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            consentFormScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
-                    int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
+                    View view = (View) consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
+                    int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
 
                     if (diff == 0
                             && !StringUtil.isNullOrEmpty(minorLastNameEditText.getText().toString())

@@ -26,7 +26,7 @@
         android:text="@string/consenttitle"/>
 
     <ScrollView
-        android:id="@+id/scrollView"
+        android:id="@+id/consentform_scrollView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/signButton"
@@ -75,6 +75,7 @@
                     style="@style/Consent_Form_Edit_Text"
                     android:hint="Minor's First Name"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:imeOptions="actionNext"
                     android:nextFocusForward="@+id/minorLastNameET"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -90,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Minor's Last Name"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:nextFocusDown="@+id/dobET" />
+                    android:imeOptions="actionDone"/>
             </android.support.design.widget.TextInputLayout>
 
             <RelativeLayout

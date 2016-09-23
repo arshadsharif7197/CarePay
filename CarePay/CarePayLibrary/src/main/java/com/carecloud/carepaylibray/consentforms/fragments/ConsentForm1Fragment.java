@@ -29,7 +29,7 @@ public class ConsentForm1Fragment extends Fragment {
     private TextView titleTextView, descriptionTextView, contentTextView, dateTextView;
     private Button signButton;
     private IFragmentCallback fragmentCallback;
-    private ScrollView scrollView;
+    private ScrollView consentFormScrollView;
 
     @Nullable
     @Override
@@ -41,7 +41,7 @@ public class ConsentForm1Fragment extends Fragment {
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
         contentTextView = (TextView) view.findViewById(R.id.contentTv);
         dateTextView = (TextView) view.findViewById(R.id.dateTv);
-        scrollView=(ScrollView)view.findViewById(R.id.scrollView);
+        consentFormScrollView =(ScrollView)view.findViewById(R.id.consentform_scrollView);
         signButton = (Button) view.findViewById(R.id.signButton);
         signButton.setEnabled(false);
         setTypefaces(view);
@@ -82,11 +82,11 @@ public class ConsentForm1Fragment extends Fragment {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            consentFormScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
-                    int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
+                    View view = (View) consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
+                    int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
 
                     if (diff==0){
                         signButton.setEnabled(true);
