@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.carecloud.carepaylibray.appointments.fragments.AvailableHoursFragment">
+
+    <Button
+        android:id="@+id/add_appointment_date_pick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/payne_gray"
+        android:paddingBottom="@dimen/apt_available_hours_date_picker_padding"
+        android:paddingTop="@dimen/apt_available_hours_date_picker_padding"
+        android:textColor="@color/white" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/available_hours_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/apt_available_hours_list_padding"
+        android:paddingRight="@dimen/apt_available_hours_list_padding" />
+</LinearLayout>
