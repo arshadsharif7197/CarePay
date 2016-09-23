@@ -128,7 +128,7 @@
     <dimen name="consent_view_margin_top_bottom">10dp</dimen>
     <dimen name="date_textview_top_bottom">42dp</dimen>
     <dimen name="consentform_relativeLayout_margin">3dp</dimen>
-    <dimen name="consentform_realtivelayout_textpaddingtop">5dp</dimen>
+    <dimen name="consentform_realtivelayout_textpaddingtop">6dp</dimen>
 
     <!-- InTake -->
     <dimen name="intakeDotPadding">8dp</dimen>

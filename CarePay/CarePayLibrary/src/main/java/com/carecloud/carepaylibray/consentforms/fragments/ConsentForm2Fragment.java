@@ -249,8 +249,8 @@ public class ConsentForm2Fragment extends Fragment {
                     if (diff == 0
                             && !StringUtil.isNullOrEmpty(minorLastNameEditText.getText().toString())
                             && !StringUtil.isNullOrEmpty(minorLastNameEditText.getText().toString())
-                            && isDatePicked == true
-                            && isGenderSelected == true) {
+                            && isDatePicked
+                            && isGenderSelected) {
                         signButton.setEnabled(true);
                     }
                 }
