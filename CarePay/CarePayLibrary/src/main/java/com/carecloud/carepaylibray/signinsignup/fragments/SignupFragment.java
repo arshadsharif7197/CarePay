@@ -51,15 +51,22 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SignupFragment extends Fragment {
 
-    private TextInputLayout firstNameInputLayout, middleNameInputLayout, lastNameInputLayout, emailInputLayout, passwordInputLayout, passwordRepeatInputLayout;
-    private EditText firstNameText;
-    private EditText middleNameText;
-    private EditText lastNameText;
-    private EditText emailText;
-    private EditText passwordText;
-    private EditText repeatPasswordText;
-    private TextView accountExistTextView;
-    private Button   submitButton;
+    private TextInputLayout firstNameInputLayout;
+    private TextInputLayout middleNameInputLayout;
+    private TextInputLayout lastNameInputLayout;
+    private TextInputLayout emailInputLayout;
+    private TextInputLayout passwordInputLayout;
+    private TextInputLayout passwordRepeatInputLayout;
+
+    private EditText        firstNameText;
+    private EditText        middleNameText;
+    private EditText        lastNameText;
+    private EditText        emailText;
+    private EditText        passwordText;
+    private EditText        repeatPasswordText;
+    private TextView        accountExistTextView;
+
+    private Button          submitButton;
 
     private boolean isValidFirstName;
     private boolean isValidLastName;
@@ -77,13 +84,13 @@ public class SignupFragment extends Fragment {
     private boolean isPasswordEmpty;
     private boolean isRepeatPasswordEmpty;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
         parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
+
         // hide progress
         progressBar = (ProgressBar) view.findViewById(R.id.signupProgressBar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -190,6 +197,9 @@ public class SignupFragment extends Fragment {
         setActionListeners();
 
         setTextWatchers();
+
+//        firstNameText.requestFocus();
+        parentLayout.clearFocus();
     }
 
     private void setTextWatchers() {
@@ -292,6 +302,8 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) { // when loosing focus, validate as well
                     isValidFirstName = checkFirstName();
+                } else { // show the keyboard
+                    SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
             }
@@ -325,6 +337,9 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
                     isValidPassword = checkPassword();
+                    if(!isRepeatPasswordEmpty) {  // check reactively if the match password, if repeated not empty
+                        isPasswordMatch = checkPasswordsMatch();
+                    }
                 }
                 SystemUtil.handleHintChange(view, b);
             }
@@ -389,6 +404,10 @@ public class SignupFragment extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
                     isValidPassword = checkPassword();
+                    if(!isRepeatPasswordEmpty) { // check reactively if the match password, if repeated not empty
+                        isPasswordMatch = checkPasswordsMatch();
+                    }
+
                     repeatPasswordText.requestFocus();
                     return true;
                 }
@@ -439,7 +458,7 @@ public class SignupFragment extends Fragment {
 
     private boolean checkFirstName() { // valid  means non-empty
         isFirstNameEmpty = StringUtil.isNullOrEmpty(firstNameText.getText().toString());
-        String error = (isFirstNameEmpty ? "error" : null);
+        String error = (isFirstNameEmpty ? getString(R.string.signup_error_empty_first_name) : null);
         firstNameInputLayout.setErrorEnabled(isFirstNameEmpty);
         firstNameInputLayout.setError(error);
         return !isFirstNameEmpty;
@@ -447,7 +466,7 @@ public class SignupFragment extends Fragment {
 
     private boolean checkLastName() {
         isLastNameEmpty = StringUtil.isNullOrEmpty(lastNameText.getText().toString());
-        String error = (isLastNameEmpty ? "error" : null);
+        String error = (isLastNameEmpty ? getString(R.string.signup_error_empty_last_name) : null);
         lastNameInputLayout.setErrorEnabled(isLastNameEmpty);
         lastNameInputLayout.setError(error);
         return !isLastNameEmpty;
@@ -455,31 +474,46 @@ public class SignupFragment extends Fragment {
 
     private boolean checkEmail() {
         String email = emailText.getText().toString();
-        boolean isEmailInvalid = StringUtil.isNullOrEmpty(email) || !StringUtil.isValidmail(email);
-        String error = (isEmailInvalid ? "error" : null);
-        emailInputLayout.setErrorEnabled(isEmailInvalid);
-        emailInputLayout.setError(error);
-        return !isEmailInvalid;
+        isEmailEmpty = StringUtil.isNullOrEmpty(email);
+        boolean isEmailValid = StringUtil.isValidmail(email);
+        emailInputLayout.setErrorEnabled(isEmailEmpty || !isEmailValid); // enable for error if either empty or invalid email
+        if (isEmailEmpty) {
+            emailInputLayout.setError(getString(R.string.signin_signup_error_empty_email));
+        } else if (!isEmailValid) {
+            emailInputLayout.setError(getString(R.string.signin_signup_error_invalid_email));
+        } else {
+            emailInputLayout.setError(null);
+        }
+        return !isEmailEmpty && isEmailValid;
     }
 
     private boolean checkPassword() {
-        boolean isPassInvalid = StringUtil.isNullOrEmpty(passwordText.getText().toString());
-        String error = (isPassInvalid ? "error" : null);
-        passwordInputLayout.setErrorEnabled(isPassInvalid);
+        isPasswordEmpty = StringUtil.isNullOrEmpty(passwordText.getText().toString());
+        String error = (isPasswordEmpty ? getString(R.string.signin_signup_error_empty_password) : null);
+        passwordInputLayout.setErrorEnabled(isPasswordEmpty);
         passwordInputLayout.setError(error);
-        return !isPassInvalid;
+        return !isPasswordEmpty;
     }
 
     private boolean checkPasswordsMatch() {
         String password = passwordText.getText().toString();
         String repeatedPassword = repeatPasswordText.getText().toString();
-        boolean isNotMachedPassw = StringUtil.isNullOrEmpty(password)
-                || StringUtil.isNullOrEmpty(repeatedPassword)
-                || !(password.equals(repeatedPassword));
-        String error = (isNotMachedPassw ? "error" : null);
-        passwordRepeatInputLayout.setErrorEnabled(isNotMachedPassw);
-        passwordRepeatInputLayout.setError(error);
-        return !isNotMachedPassw;
+
+        isPasswordEmpty = StringUtil.isNullOrEmpty(password);
+        isRepeatPasswordEmpty = StringUtil.isNullOrEmpty(repeatedPassword);
+        boolean isNotMachedPassw = !(password.equals(repeatedPassword));
+
+        passwordRepeatInputLayout.setErrorEnabled(isPasswordEmpty || isRepeatPasswordEmpty || isNotMachedPassw);
+
+        if(isRepeatPasswordEmpty) {
+            passwordRepeatInputLayout.setError(getString(R.string.signin_signup_error_empty_repeat_password));
+        } else if(isNotMachedPassw) {
+            passwordRepeatInputLayout.setError(getString(R.string.signup_error_passwords_unmatched));
+        } else {
+            passwordRepeatInputLayout.setError(null);
+        }
+
+        return !(isPasswordEmpty || isRepeatPasswordEmpty || isNotMachedPassw);
     }
 
     private boolean areAllValid() {

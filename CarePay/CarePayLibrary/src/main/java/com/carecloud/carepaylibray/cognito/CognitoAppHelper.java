@@ -18,7 +18,6 @@
 package com.carecloud.carepaylibray.cognito;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
@@ -108,7 +107,7 @@ public class CognitoAppHelper {
         emailVerified = false;
         emailAvailable = false;
 
-        currUserAttributes = new HashSet<String>();
+        currUserAttributes = new HashSet<>();
         newDevice = null;
     }
 
@@ -122,6 +121,10 @@ public class CognitoAppHelper {
 
     public static void setCurrSession(CognitoUserSession session) {
         currSession = session;
+    }
+
+    public static CognitoUserSession getCurrSession() {
+        return currSession;
     }
 
     public static void setUserDetails(CognitoUserDetails details) {

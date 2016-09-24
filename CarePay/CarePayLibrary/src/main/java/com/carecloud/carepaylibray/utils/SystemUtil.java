@@ -13,6 +13,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -82,6 +83,14 @@ public class SystemUtil {
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+    }
+
+    /**
+     * Shows the soft keyboard
+     * @param activity The activity
+     */
+    public static void showSoftKeyboard(Activity activity) {
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     /**
