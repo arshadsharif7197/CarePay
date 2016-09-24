@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -208,7 +209,6 @@ public class SignupFragment extends Fragment {
 
         setTextWatchers();
 
-//        firstNameText.requestFocus();
         parentLayout.clearFocus();
     }
 

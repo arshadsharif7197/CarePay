@@ -113,26 +113,28 @@ public class SystemUtil {
         if (textInputLayout == null) {
             return;
         }
+
+        boolean error = textInputLayout.isErrorEnabled();
         String hint = (String) textInputLayout.getTag();
         if (hint == null) {
-            hint = ""; // if no hint use the empty string
+            hint = ""; // if no hint, use the empty string as hint
         }
         String hintCaps = hint.toUpperCase();
         String text = editText.getText().toString();
-        if (hasFocus) {
-            // focus gained; set the hint to text input layout
+        if (hasFocus) { // focus gained
+            // set the hint to text input layout (in caps)
             textInputLayout.setHint(hintCaps);
-            if (StringUtil.isNullOrEmpty(text)) {
-                // if no text set empty hint in the edit
+            if (StringUtil.isNullOrEmpty(text)) { // but only if there is no text in the edit
                 editText.setHint("");
             }
-        } else {
-            if (StringUtil.isNullOrEmpty(text)) { // lose focus, and no text in the edit
+        } else { // focus lost
+            if (StringUtil.isNullOrEmpty(text) && !error) { // if no text in the edit and error not enabled
                 // remove hint from the text input layout
                 textInputLayout.setHint("");
                 // change hint to lower in the edit
                 editText.setHint(hint);
-            } else {
+            } else { // there is some text in the edit or the error is enabled
+                // keep the hint up
                 textInputLayout.setHint(hintCaps);
             }
         }
