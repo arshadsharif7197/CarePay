@@ -10,12 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -201,7 +199,7 @@ public class SignupFragment extends Fragment {
         repeatPasswordText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
         repeatPasswordText.setTag(passwordRepeatInputLayout);
 
-        setEditsTypefaces();
+        setTypefaces();
 
         setChangeFocusListeners();
 
@@ -451,31 +449,26 @@ public class SignupFragment extends Fragment {
         });
     }
 
-    private void setEditsTypefaces() {
-        // TODO: 9/14/2016 change to use the Utilities
-        Typeface editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        Typeface textViewFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-        Typeface floatingFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+    private void setTypefaces() {
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), firstNameInputLayout);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), firstNameText);
 
-        firstNameInputLayout.setTypeface(editTextFontFamily);
-        firstNameText.setTypeface(textViewFontFamily);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), middleNameInputLayout);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), middleNameText);
 
-        middleNameInputLayout.setTypeface(editTextFontFamily);
-        middleNameText.setTypeface(textViewFontFamily);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), lastNameInputLayout);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), lastNameText);
 
-        lastNameInputLayout.setTypeface(editTextFontFamily);
-        lastNameText.setTypeface(textViewFontFamily);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), emailInputLayout);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), emailText);
 
-        emailInputLayout.setTypeface(editTextFontFamily);
-        emailText.setTypeface(textViewFontFamily);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), passwordInputLayout);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), passwordText);
 
-        passwordInputLayout.setTypeface(editTextFontFamily);
-        passwordText.setTypeface(textViewFontFamily);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), passwordRepeatInputLayout);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), repeatPasswordText);
 
-        passwordRepeatInputLayout.setTypeface(editTextFontFamily);
-        repeatPasswordText.setTypeface(textViewFontFamily);
-
-        accountExistTextView.setTypeface(textViewFontFamily);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), accountExistTextView);
     }
 
     private boolean checkFirstName() { // valid  means non-empty
@@ -547,13 +540,13 @@ public class SignupFragment extends Fragment {
     }
 
     private void enableSignupButton() {
-        boolean areAllNonEmtpy =
+        boolean areAllNonEmpty =
                 !(isFirstNameEmpty ||
                         isLastNameEmpty ||
                         isEmailEmpty ||
                         isPasswordEmpty ||
                         isRepeatPasswordEmpty);
-        submitButton.setEnabled(areAllNonEmtpy);
+        submitButton.setEnabled(areAllNonEmpty);
     }
 
     private void reset() {

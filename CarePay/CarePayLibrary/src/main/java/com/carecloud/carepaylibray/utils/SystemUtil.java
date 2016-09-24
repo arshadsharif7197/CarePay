@@ -77,6 +77,15 @@ public class SystemUtil {
         view.setTypeface(typeface);
     }
 
+    /**
+     * Set the type face of a text input layout
+     * @param context The context
+     * @param layout The layout
+     */
+    public static void setProximaNovaRegularTypefaceLayout(Context context, TextInputLayout layout) {
+        Typeface proximaNovaRegular = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/proximanova_regular.otf");
+        layout.setTypeface(proximaNovaRegular);
+    }
 
     /**
      * Hides the keyboard
@@ -132,6 +141,7 @@ public class SystemUtil {
                 // remove hint from the text input layout
                 textInputLayout.setHint("");
                 // change hint to lower in the edit
+                setProximaNovaRegularTypeface(view.getContext(), editText);
                 editText.setHint(hint);
             } else { // there is some text in the edit or the error is enabled
                 // keep the hint up
