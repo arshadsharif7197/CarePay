@@ -108,6 +108,7 @@ public class SigninFragment extends Fragment {
                 SignupFragment fragment = (SignupFragment) fm.findFragmentByTag(SignupFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new SignupFragment();
+                    fragment.setRetainInstance(true);
                 }
                 fm.beginTransaction()
                         .replace(R.id.layoutSigninSignup, fragment, SignupFragment.class.getSimpleName())

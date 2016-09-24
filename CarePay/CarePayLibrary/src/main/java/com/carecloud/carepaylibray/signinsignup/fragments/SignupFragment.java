@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -58,15 +59,15 @@ public class SignupFragment extends Fragment {
     private TextInputLayout passwordInputLayout;
     private TextInputLayout passwordRepeatInputLayout;
 
-    private EditText        firstNameText;
-    private EditText        middleNameText;
-    private EditText        lastNameText;
-    private EditText        emailText;
-    private EditText        passwordText;
-    private EditText        repeatPasswordText;
-    private TextView        accountExistTextView;
+    private EditText firstNameText;
+    private EditText middleNameText;
+    private EditText lastNameText;
+    private EditText emailText;
+    private EditText passwordText;
+    private EditText repeatPasswordText;
+    private TextView accountExistTextView;
 
-    private Button          submitButton;
+    private Button submitButton;
 
     private boolean isValidFirstName;
     private boolean isValidLastName;
@@ -87,6 +88,7 @@ public class SignupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        Log.v(LOG_TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
         parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
@@ -130,6 +132,7 @@ public class SignupFragment extends Fragment {
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                reset();
                 FragmentManager fm = getFragmentManager();
                 SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
                 if (fragment == null) {
@@ -141,11 +144,17 @@ public class SignupFragment extends Fragment {
             }
         });
 
-        isValidFirstName = true;
-        isValidLastName = true;
+        isValidFirstName = false;
+        isValidLastName = false;
         isValidPassword = false;
         isValidEmail = false;
         isPasswordMatch = false;
+
+        isFirstNameEmpty = true;
+        isLastNameEmpty = true;
+        isEmailEmpty = true;
+        isPasswordEmpty = true;
+        isRepeatPasswordEmpty = true;
 
         setEditTexts(view);
 
@@ -303,6 +312,7 @@ public class SignupFragment extends Fragment {
                 if (!b) { // when loosing focus, validate as well
                     isValidFirstName = checkFirstName();
                 } else { // show the keyboard
+                    firstNameText.requestFocus();
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
@@ -337,7 +347,7 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
                     isValidPassword = checkPassword();
-                    if(!isRepeatPasswordEmpty) {  // check reactively if the match password, if repeated not empty
+                    if (!isRepeatPasswordEmpty) {  // check reactively if the match password, if repeated not empty
                         isPasswordMatch = checkPasswordsMatch();
                     }
                 }
@@ -404,7 +414,7 @@ public class SignupFragment extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
                     isValidPassword = checkPassword();
-                    if(!isRepeatPasswordEmpty) { // check reactively if the match password, if repeated not empty
+                    if (!isRepeatPasswordEmpty) { // check reactively if the match password, if repeated not empty
                         isPasswordMatch = checkPasswordsMatch();
                     }
 
@@ -505,9 +515,9 @@ public class SignupFragment extends Fragment {
 
         passwordRepeatInputLayout.setErrorEnabled(isPasswordEmpty || isRepeatPasswordEmpty || isNotMachedPassw);
 
-        if(isRepeatPasswordEmpty) {
+        if (isRepeatPasswordEmpty) {
             passwordRepeatInputLayout.setError(getString(R.string.signin_signup_error_empty_repeat_password));
-        } else if(isNotMachedPassw) {
+        } else if (isNotMachedPassw) {
             passwordRepeatInputLayout.setError(getString(R.string.signup_error_passwords_unmatched));
         } else {
             passwordRepeatInputLayout.setError(null);
@@ -534,6 +544,46 @@ public class SignupFragment extends Fragment {
         submitButton.setEnabled(areAllNonEmtpy);
     }
 
+    private void reset() {
+        firstNameText.setText("");
+        firstNameInputLayout.setErrorEnabled(false);
+        firstNameInputLayout.setError(null);
+
+        middleNameText.setText("");
+
+        lastNameText.setText("");
+        lastNameInputLayout.setEnabled(false);
+        lastNameInputLayout.setError(null);
+
+        lastNameText.setText("");
+        lastNameInputLayout.setErrorEnabled(false);
+        lastNameInputLayout.setError(null);
+
+        emailText.setText("");
+        emailInputLayout.setErrorEnabled(false);
+        emailInputLayout.setError(null);
+
+        passwordText.setText("");
+        passwordInputLayout.setErrorEnabled(false);
+        passwordInputLayout.setError(null);
+
+        repeatPasswordText.setText("");
+        passwordRepeatInputLayout.setErrorEnabled(false);
+        passwordRepeatInputLayout.setError(null);
+
+        isFirstNameEmpty = true;
+        isLastNameEmpty = true;
+        isEmailEmpty = true;
+        isPasswordEmpty = true;
+        isRepeatPasswordEmpty = true;
+
+        isValidFirstName = false;
+        isValidLastName = false;
+        isValidEmail = false;
+        isValidPassword = false;
+        isPasswordMatch = false;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -543,6 +593,12 @@ public class SignupFragment extends Fragment {
                 CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
             }
         }
+    }
+
+    @Override
+    public void onStop() {
+        reset();
+        super.onStop();
     }
 
     // cognito
