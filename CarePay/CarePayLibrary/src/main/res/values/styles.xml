@@ -122,6 +122,16 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="SignupOptionalLabelStyle">
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_right</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:textSize">@dimen/signup_optional_label_text_size</item>
+    </style>
+
     <!-- Responsibility styles -->
 
     <style name="ResponsTotalLabelStyle" parent="android:Widget.TextView">

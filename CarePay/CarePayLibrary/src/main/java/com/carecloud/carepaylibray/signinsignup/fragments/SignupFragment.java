@@ -102,6 +102,20 @@ public class SignupFragment extends Fragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reset();
+                FragmentManager fm = getFragmentManager();
+                SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new SigninFragment();
+                }
+                fm.beginTransaction()
+                        .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
+                        .commit();
+            }
+        });
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
@@ -131,6 +145,7 @@ public class SignupFragment extends Fragment {
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                reset();
                 FragmentManager fm = getFragmentManager();
                 SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
                 if (fragment == null) {
@@ -174,6 +189,10 @@ public class SignupFragment extends Fragment {
         middleNameInputLayout.setTag(hint);
         middleNameText = (EditText) view.findViewById(R.id.middleNameEditText);
         middleNameText.setTag(middleNameInputLayout);
+
+        // set the label
+        TextView optionalLabel = (TextView) view.findViewById(R.id.signupOptionalLabel);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), optionalLabel);
 
         hint = getString(R.string.lastname_text);
         lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.lastNameTextInputLayout);
@@ -321,7 +340,7 @@ public class SignupFragment extends Fragment {
             @Override
             public void onFocusChange(View view, boolean b) {
                 SystemUtil.handleHintChange(view, b);
-                if(b) {
+                if (b) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
             }
@@ -550,28 +569,30 @@ public class SignupFragment extends Fragment {
     }
 
     private void reset() {
+        firstNameText.clearFocus();
         firstNameText.setText("");
         firstNameInputLayout.setErrorEnabled(false);
         firstNameInputLayout.setError(null);
 
+        middleNameText.clearFocus();
         middleNameText.setText("");
 
+        lastNameText.clearFocus();
         lastNameText.setText("");
         lastNameInputLayout.setEnabled(false);
         lastNameInputLayout.setError(null);
 
-        lastNameText.setText("");
-        lastNameInputLayout.setErrorEnabled(false);
-        lastNameInputLayout.setError(null);
-
+        emailText.clearFocus();
         emailText.setText("");
         emailInputLayout.setErrorEnabled(false);
         emailInputLayout.setError(null);
 
+        passwordText.clearFocus();
         passwordText.setText("");
         passwordInputLayout.setErrorEnabled(false);
         passwordInputLayout.setError(null);
 
+        repeatPasswordText.clearFocus();
         repeatPasswordText.setText("");
         passwordRepeatInputLayout.setErrorEnabled(false);
         passwordRepeatInputLayout.setError(null);
@@ -598,12 +619,6 @@ public class SignupFragment extends Fragment {
                 CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
             }
         }
-    }
-
-    @Override
-    public void onStop() {
-        reset();
-        super.onStop();
     }
 
     // cognito

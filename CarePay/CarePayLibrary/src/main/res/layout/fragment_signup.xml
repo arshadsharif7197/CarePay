@@ -22,7 +22,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="406dp"
+        android:layout_height="@dimen/signup_details_container_height"
         android:fillViewport="false">
 
         <LinearLayout
@@ -41,19 +41,31 @@
                     android:nextFocusForward="@+id/middleNameEditText"/>
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/middleNameTextInputLayout"
-                style="@style/SigninSignupTextInputStyle">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/middleNameEditText"
-                    style="@style/SigninSignupEditStyle"
-                    android:hint="@string/middlename_text"
-                    android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/lastNameEditText"/>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/middleNameTextInputLayout"
+                    style="@style/SigninSignupTextInputStyle">
 
+                    <EditText
+                        android:id="@+id/middleNameEditText"
+                        style="@style/SigninSignupEditStyle"
+                        android:hint="@string/middlename_text"
+                        android:imeOptions="actionNext"
+                        android:nextFocusForward="@+id/lastNameEditText"
+                        android:paddingTop="0dp"
+                        android:maxLength="25"/>
 
-            </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/signupOptionalLabel"
+                    style="@style/SignupOptionalLabelStyle"
+                    android:text="Optional"/>
+
+            </FrameLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/lastNameTextInputLayout"
@@ -109,10 +121,14 @@
         </LinearLayout>
     </ScrollView>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <Button
