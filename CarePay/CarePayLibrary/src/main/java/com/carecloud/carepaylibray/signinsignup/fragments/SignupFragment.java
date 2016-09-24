@@ -132,7 +132,6 @@ public class SignupFragment extends Fragment {
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                reset();
                 FragmentManager fm = getFragmentManager();
                 SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
                 if (fragment == null) {
@@ -157,6 +156,8 @@ public class SignupFragment extends Fragment {
         isRepeatPasswordEmpty = true;
 
         setEditTexts(view);
+
+        parentLayout.clearFocus();
 
         return view;
     }
@@ -322,6 +323,9 @@ public class SignupFragment extends Fragment {
             @Override
             public void onFocusChange(View view, boolean b) {
                 SystemUtil.handleHintChange(view, b);
+                if(b) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
             }
         });
         lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -329,6 +333,8 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
                     isValidLastName = checkLastName();
+                } else {
+                    SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
             }
@@ -338,6 +344,8 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
                     isValidEmail = checkEmail();
+                } else {
+                    SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
             }
@@ -350,6 +358,8 @@ public class SignupFragment extends Fragment {
                     if (!isRepeatPasswordEmpty) {  // check reactively if the match password, if repeated not empty
                         isPasswordMatch = checkPasswordsMatch();
                     }
+                } else {
+                    SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
             }
@@ -359,6 +369,8 @@ public class SignupFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
                     isPasswordMatch = checkPasswordsMatch();
+                } else {
+                    SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
             }
