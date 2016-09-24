@@ -126,8 +126,8 @@ public class SignupFragment extends Fragment {
         });
         submitButton.setEnabled(false);
 
-        accountExistTextView = (TextView) view.findViewById(R.id.oldUserTextView);
-        accountExistTextView = (TextView) view.findViewById(R.id.oldUserTextView);
+        accountExistTextView = (TextView) view.findViewById(R.id.signupAlreadyHaveAccountTextView);
+        accountExistTextView = (TextView) view.findViewById(R.id.signupAlreadyHaveAccountTextView);
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

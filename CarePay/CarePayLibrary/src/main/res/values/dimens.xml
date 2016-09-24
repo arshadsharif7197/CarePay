@@ -19,17 +19,18 @@
     <dimen name="language_radio_image_rightmargin">10dp</dimen>
     <dimen name="top_bottom_scroll_padding">4dp</dimen>
 
-
-    <!--sign in screen-->
+    <!-- sign in screen -->
     <dimen name="error_textsize">10sp</dimen>
     <dimen name="textview_size">15sp</dimen>
 
-    <!--sign up screen-->
+    <!-- sign up screen -->
     <dimen name="signup_textsize">17sp</dimen>
     <dimen name="signup_button_textsize">13sp</dimen>
     <dimen name="signup_textview_existing_account_size">15sp</dimen>
     <dimen name="signup_bottom_margin">10dp</dimen>
     <dimen name="signup_top_margin_edit_container">26dp</dimen>
+    <dimen name="signun_edittext_size">17sp</dimen>
+    <dimen name="signup_clickable_textview_height">55dp</dimen>
 
     <!-- Responsibility -->
     <dimen name="respons_total_label_text_size">21sp</dimen>
@@ -60,12 +61,14 @@
     <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
     <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
 
-    <!--    <Demographics Address>-->
+
+    <!-- Demographics Address -->
     <dimen name="divider_margin_top">8dp</dimen>
     <dimen name="divider_margin_bottom">2dp</dimen>
     <dimen name="demo_view_height">1dp</dimen>
     <dimen name="demo_scorllview_margin_top">25dp</dimen>
     <dimen name="demo_scorllview_margin_right_left">17dp</dimen>
+
 
     <!-- Appointments-->
     <dimen name="fab_margin">16dp</dimen>
@@ -119,7 +122,7 @@
     <dimen name="rounded">8dp</dimen>
 
 
-    <!-- <consent_forms>-->
+    <!-- consent_forms -->
     <dimen name="consent_layout_left_right_margin">15dp</dimen>
     <dimen name="consent_spinner_left_margin">90dp</dimen>
     <dimen name="consent_minor_textsize">17sp</dimen>
@@ -127,6 +130,7 @@
     <dimen name="consent_view_margin_top_bottom">10dp</dimen>
     <dimen name="date_textview_top_bottom">42dp</dimen>
     <dimen name="consentform_relativeLayout_margin">3dp</dimen>
+
 
     <!-- InTake -->
     <dimen name="intakeDotPadding">8dp</dimen>
