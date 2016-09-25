@@ -86,8 +86,6 @@ public class SignupFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        Log.v(LOG_TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
         parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
@@ -119,6 +117,16 @@ public class SignupFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
+        setClickables(view);
+
+        setEditTexts(view);
+
+        parentLayout.clearFocus();
+
+        return view;
+    }
+
+    private void setClickables(View view) {
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
         Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
         submitButton.setTypeface(buttonFontFamily);
@@ -156,28 +164,9 @@ public class SignupFragment extends Fragment {
                         .commit();
             }
         });
-
-        isValidFirstName = false;
-        isValidLastName = false;
-        isValidPassword = false;
-        isValidEmail = false;
-        isPasswordMatch = false;
-
-        isFirstNameEmpty = true;
-        isLastNameEmpty = true;
-        isEmailEmpty = true;
-        isPasswordEmpty = true;
-        isRepeatPasswordEmpty = true;
-
-        setEditTexts(view);
-
-        parentLayout.clearFocus();
-
-        return view;
     }
 
     private void setEditTexts(View view) {
-
         String hint = getString(R.string.firstname_text);
         firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.firstNameTextInputLayout);
         firstNameInputLayout.setTag(hint);
@@ -200,7 +189,7 @@ public class SignupFragment extends Fragment {
         lastNameText = (EditText) view.findViewById(R.id.lastNameEditText);
         lastNameText.setTag(lastNameInputLayout);
 
-        hint = getString(R.string.email_text);
+        hint = getString(R.string.signin_signup_email_hint);
         emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
         emailInputLayout.setTag(hint);
         emailText = (EditText) view.findViewById(R.id.emailEditText);
@@ -226,7 +215,17 @@ public class SignupFragment extends Fragment {
 
         setTextWatchers();
 
-        parentLayout.clearFocus();
+        isValidFirstName = false;
+        isValidLastName = false;
+        isValidPassword = false;
+        isValidEmail = false;
+        isPasswordMatch = false;
+
+        isFirstNameEmpty = true;
+        isLastNameEmpty = true;
+        isEmailEmpty = true;
+        isPasswordEmpty = true;
+        isRepeatPasswordEmpty = true;
     }
 
     private void setTextWatchers() {

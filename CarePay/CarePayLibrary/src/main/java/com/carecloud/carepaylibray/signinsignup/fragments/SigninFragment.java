@@ -8,18 +8,22 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
@@ -27,7 +31,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Chal
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
@@ -56,40 +59,33 @@ public class SigninFragment extends Fragment {
     private Typeface floatingTextFontfamily;
     private Typeface buttonFontFamily;
 
-    private String      userName;
-    private ProgressBar progressBar;
-
+    private String       userName;
+    private ProgressBar  progressBar;
+    private LinearLayout parentLayout;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
 
+        parentLayout = (LinearLayout) view.findViewById(R.id.signin_layout);
+
         progressBar = (ProgressBar) view.findViewById(R.id.signInProgress);
         progressBar.setVisibility(View.INVISIBLE);
 
-        emailTextInput = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-        passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
+        setEditTexts(view);
 
-        emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
-        passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+        setClickbles(view);
 
+        setTypefaces();
+
+        return view;
+    }
+
+    private void setClickbles(View view) {
         signinButton = (Button) view.findViewById(R.id.signin_button);
         signinButton.setEnabled(false);
         signupButton = (Button) view.findViewById(R.id.signup_button);
-
-        // TODO: 9/14/2016 replace with SystemUtil.setTypeFace...
-        hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-        floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-        buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
-
-        emailEditText.setTypeface(editTextFontFamily);
-        passwordEditText.setTypeface(editTextFontFamily);
-        emailTextInput.setTypeface(hintFontFamily);
-        passwordTexInput.setTypeface(hintFontFamily);
-        signinButton.setTypeface(buttonFontFamily);
-        signupButton.setTypeface(buttonFontFamily);
 
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,95 +120,145 @@ public class SigninFragment extends Fragment {
         changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    private void setTypefaces() {
+// TODO: 9/14/2016 replace with SystemUtil.setTypeFace...
+        hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
+        editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+        floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
+        buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
+
+        emailEditText.setTypeface(editTextFontFamily);
+        passwordEditText.setTypeface(editTextFontFamily);
+        emailTextInput.setTypeface(hintFontFamily);
+        passwordTexInput.setTypeface(hintFontFamily);
+        signinButton.setTypeface(buttonFontFamily);
+        signupButton.setTypeface(buttonFontFamily);
+    }
+
+    private void setEditTexts(View view) {
+        emailTextInput = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
+        emailTextInput.setTag(getString(R.string.signin_signup_email_hint));
+        emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
+        emailEditText.setTag(emailTextInput);
+
+        passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
+        passwordTexInput.setTag(getString(R.string.signin_signup_password_hint));
+        passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+        passwordEditText.setTag(passwordTexInput);
 
         setTextListeners();
-        emailTextInput.setError(null);
-        passwordTexInput.setError(null);
+        setChangeFocusListeners();
+        setActionListeners();
 
-        return view;
+        emailEditText.clearFocus();
+        passwordEditText.clearFocus();
     }
 
     /**
      * Set the focus change and selct text listeners for the edit texts
      */
     private void setTextListeners() {
-        emailEditText.addTextChangedListener(
-                new TextWatcherModel(editTextFontFamily,
-                                     floatingTextFontfamily,
-                                     TextWatcherModel.InputType.TYPE_EMAIL,
-                                     emailEditText,
-                                     emailTextInput,
-                                     "Enter Valid Email",
-                                     false,
-                                     new TextWatcherModel.OnInputChangedListner() {
-                                         @Override
-                                         public void OnInputChangedListner(boolean isValid) {
-                                             isValidEmail = isValid;
-                                             checkForButtonEnable();
-                                         }
-                                     }));
-        passwordEditText.addTextChangedListener(new TextWatcherModel(editTextFontFamily,
-                                                                     floatingTextFontfamily,
-                                                                     TextWatcherModel.InputType.TYPE_PASSWORD,
-                                                                     passwordEditText, passwordTexInput,
-                                                                     "Enter password", false, new TextWatcherModel.OnInputChangedListner() {
+        emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void OnInputChangedListner(boolean isValid) {
-                isValidPassword = isValid;
-                checkForButtonEnable();
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
-        }));
 
-        // change hint to caps when floating hint
-        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                String hint = getString(R.string.email_text);
-                String hintCaps = hint.toUpperCase();
-                if (hasFocus) {
-                    // change hint to all caps
-                    emailTextInput.setHint(hintCaps);
-                } else {
-                    if (StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
-                        // change hint to lower
-                        emailTextInput.setHint(hint);
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                    } else {
-                        emailEditText.setHint(hint);
-                    }
-                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
         emailEditText.clearFocus();
+    }
 
-        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+    private void setChangeFocusListeners() {
+        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                Log.v(LOG_TAG, "password has focus");
-                String hint = getString(R.string.password_text);
-                String hintCaps = hint.toUpperCase();
-                if (hasFocus) {
-                    // change hint to all caps
-                    passwordTexInput.setHint(hintCaps);
+            public void onFocusChange(View view, boolean b) {
+                if (!b) {
+//                    isValidEmail = checkEmail();
                 } else {
-                    if (StringUtil.isNullOrEmpty(passwordEditText.getText().toString())) {
-                        passwordTexInput.setHint(hint);
-                    } else {
-                        // change hint to lower
-                        passwordEditText.setHint(hintCaps);
-                    }
+                    SystemUtil.showSoftKeyboard(getActivity());
                 }
+                SystemUtil.handleHintChange(view, b);
             }
         });
-        passwordEditText.clearFocus();
+        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b) {
+//                    isValidPassword = checkPassword();
+//                    if (!isRepeatPasswordEmpty) {  // check reactively if the match password, if repeated not empty
+//                        isPasswordMatch = checkPasswordsMatch();
+//                    }
+                } else {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, b);
+            }
+        });
+    }
+
+    private void setActionListeners() {
+        emailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+//                    isValidEmail = checkEmail();
+                    passwordEditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+//                    isValidPassword = checkPassword();
+//                    if (!isRepeatPasswordEmpty) { // check reactively if the match password, if repeated not empty
+//                        isPasswordMatch = checkPasswordsMatch();
+                    passwordEditText.clearFocus();
+                    parentLayout.requestFocus();
+
+//                    }
+//
+//                    repeatPasswordText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private boolean isValidInfo() {
-
         if (isValidEmail && isValidPassword) {
             return true;
         } else if (!isValidEmail && !isValidPassword) {
@@ -228,7 +274,6 @@ public class SigninFragment extends Fragment {
             Toast.makeText(getActivity(), "Fields can't be empty", Toast.LENGTH_LONG).show();
             return false;
         }
-
     }
 
     private void checkForButtonEnable() {

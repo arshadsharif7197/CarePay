@@ -87,7 +87,7 @@
                 <EditText
                     android:id="@+id/emailEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:hint="@string/email_text"
+                    android:hint="@string/signin_signup_email_hint"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:nextFocusForward="@+id/passwordEditText"/>
@@ -139,7 +139,7 @@
 
         <TextView
             android:id="@+id/signupAlreadyHaveAccountTextView"
-            style="@style/SignupClickableTextView"
+            style="@style/SigninSignupClickableTextView"
             android:text="@string/account_exist_textview"/>
     </LinearLayout>
 
