@@ -53,6 +53,9 @@
             android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
             android:theme="@style/NavigationTheme"/>
 
+        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity"
+            android:theme="@style/NavigationTheme"/>
+
         <activity
             android:name="com.carecloud.carepaylibray.intake.InTakeActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutAddAppointment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/choose_provider_section_title_recent"
+        style="@style/ChooseProviderSectionTitle"
+        android:text="@string/choose_provider_recent_title" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/choose_provider_recycler_view_recent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/choose_provider_list_margin_top" />
+
+    <TextView
+        android:id="@+id/choose_provider_section_title_all"
+        style="@style/ChooseProviderSectionTitle"
+        android:text="@string/choose_provider_all_title" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/choose_provider_recycler_view_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/choose_provider_list_margin_top" />
+</LinearLayout>
