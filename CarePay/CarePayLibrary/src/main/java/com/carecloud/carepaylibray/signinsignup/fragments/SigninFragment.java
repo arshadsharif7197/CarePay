@@ -31,7 +31,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.Authentic
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
-import com.carecloud.carepaylibray.signinsignup.models.TextWatcherModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -78,6 +77,11 @@ public class SigninFragment extends Fragment {
 
         setTypefaces();
 
+        isEmptyEmail = true;
+        isEmptyPassword = true;
+        isValidEmail = false;
+        isValidPassword = false;
+
         return view;
     }
 
@@ -109,6 +113,7 @@ public class SigninFragment extends Fragment {
                         .replace(R.id.layoutSigninSignup, fragment, SignupFragment.class.getSimpleName())
                         .addToBackStack(null)
                         .commit();
+                reset();
             }
         });
 
@@ -171,7 +176,8 @@ public class SigninFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
+                enableSigninButton();
             }
         });
         passwordEditText.addTextChangedListener(new TextWatcher() {
@@ -187,7 +193,8 @@ public class SigninFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
+                enableSigninButton();
             }
         });
         emailEditText.clearFocus();
@@ -198,7 +205,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
-//                    isValidEmail = checkEmail();
+                    isValidEmail = checkEmail();
                 } else {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
@@ -209,10 +216,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
-//                    isValidPassword = checkPassword();
-//                    if (!isRepeatPasswordEmpty) {  // check reactively if the match password, if repeated not empty
-//                        isPasswordMatch = checkPasswordsMatch();
-//                    }
+                    isValidPassword = checkPassword();
                 } else {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
@@ -226,7 +230,7 @@ public class SigninFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
-//                    isValidEmail = checkEmail();
+                    isValidEmail = checkEmail();
                     passwordEditText.requestFocus();
                     return true;
                 }
@@ -236,16 +240,11 @@ public class SigninFragment extends Fragment {
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
-//                    isValidPassword = checkPassword();
-//                    if (!isRepeatPasswordEmpty) { // check reactively if the match password, if repeated not empty
-//                        isPasswordMatch = checkPasswordsMatch();
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    isValidPassword = checkPassword();
                     passwordEditText.clearFocus();
                     parentLayout.requestFocus();
-
-//                    }
-//
-//                    repeatPasswordText.requestFocus();
+                    SystemUtil.hideSoftKeyboard(getActivity());
                     return true;
                 }
                 return false;
@@ -280,9 +279,18 @@ public class SigninFragment extends Fragment {
         return isValidEmail && isValidPassword;
     }
 
-    private void enableSignupButton() {
-        boolean areAllNonEmpty = isEmptyEmail || isEmptyPassword;
+    private void enableSigninButton() {
+        boolean areAllNonEmpty = !(isEmptyEmail || isEmptyPassword);
         signinButton.setEnabled(areAllNonEmpty);
+    }
+
+    private void reset() {
+        emailEditText.setText("");
+        passwordEditText.setText("");
+        emailTextInput.setErrorEnabled(false);
+        emailTextInput.setError(null);
+        passwordTexInput.setErrorEnabled(false);
+        passwordTexInput.setError(null);
     }
 
     // cognito
@@ -297,8 +305,7 @@ public class SigninFragment extends Fragment {
     }
 
     private void launchUser() {
-        Log.v(LOG_TAG, "launchUser()");
-
+        reset();
         Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
         startActivity(userActivity);
         getActivity().finish();
