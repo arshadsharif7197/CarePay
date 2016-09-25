@@ -22,7 +22,7 @@
     <color name="payne_gray">#546E7A</color>
     <color name="Matisse">#176D9C</color>
     <color name="harvard_crimson">#d0021b</color>
-
+    <color name="black">#000000</color>
 
     <color name="Munsell">#eceff1</color>
     <color name="paint_color_thumbnail">#BAB399</color>
@@ -36,7 +36,6 @@
     <color name="pastelblue">#ffb0bec5</color>
 
     <!-- Cognito -->
-
     <color name="toolbar_background">#404142</color>
     <color name="toolbar_items">#CBCBCB</color>
     <color name="alert">#AC1600</color>
@@ -56,4 +55,8 @@
 
     <color name="bermudagrey">#78909c</color>
     <color name="lightningyellow">#f5a623</color>
+
+    <color name="divider_color">#c4c4c4</color>
+
+    <color name="checked_in_appointment_bg">#fffdea</color>
 </resources>
