@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
@@ -68,20 +69,20 @@ public class SignupFragment extends Fragment {
 
     private Button submitButton;
 
-    private boolean isValidFirstName;
-    private boolean isValidLastName;
-    private boolean isValidEmail;
-    private boolean isValidPassword;
-    private boolean isPasswordMatch;
 
     private String       userName;
     private ProgressBar  progressBar;
     private LinearLayout parentLayout;
 
     private boolean isFirstNameEmpty;
+    private boolean isValidFirstName;
     private boolean isLastNameEmpty;
+    private boolean isValidLastName;
     private boolean isEmailEmpty;
+    private boolean isValidEmail;
     private boolean isPasswordEmpty;
+    private boolean isValidPassword;
+    private boolean isPasswordMatch;
     private boolean isRepeatPasswordEmpty;
 
     @Override

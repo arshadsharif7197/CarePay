@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -21,7 +20,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
@@ -46,22 +44,23 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SigninFragment extends Fragment {
 
-    private TextInputLayout emailTextInput, passwordTexInput;
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private TextView changeLanguageTextView, forgotPasswordTextView;
-    private Button  signinButton;
-    private Button  signupButton;
-    private boolean isValidEmail, isValidPassword;
+    private TextInputLayout emailTextInput;
+    private TextInputLayout passwordTexInput;
+    private EditText        emailEditText;
+    private EditText        passwordEditText;
+    private TextView        changeLanguageTextView;
+    private TextView        forgotPasswordTextView;
+    private Button          signinButton;
+    private Button          signupButton;
+    private ProgressBar     progressBar;
+    private LinearLayout    parentLayout;
 
-    private Typeface hintFontFamily;
-    private Typeface editTextFontFamily;
-    private Typeface floatingTextFontfamily;
-    private Typeface buttonFontFamily;
+    private boolean isEmptyEmail;
+    private boolean isEmptyPassword;
+    private boolean isValidEmail;
+    private boolean isValidPassword;
 
-    private String       userName;
-    private ProgressBar  progressBar;
-    private LinearLayout parentLayout;
+    private String userName;
 
     @Nullable
     @Override
@@ -90,7 +89,7 @@ public class SigninFragment extends Fragment {
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isValidInfo()) {
+                if (areAllValid()) {
                     signInUser();
                 }
             }
@@ -115,8 +114,7 @@ public class SigninFragment extends Fragment {
 
         changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
         forgotPasswordTextView = (TextView) view.findViewById(R.id.forgotPasswordTextView);
-        changeLanguageTextView.setTypeface(editTextFontFamily);
-        forgotPasswordTextView.setTypeface(editTextFontFamily);
+
         changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,18 +124,15 @@ public class SigninFragment extends Fragment {
     }
 
     private void setTypefaces() {
-// TODO: 9/14/2016 replace with SystemUtil.setTypeFace...
-        hintFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_regular.otf");
-        editTextFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-        floatingTextFontfamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/proximanova_semibold.otf");
-        buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailEditText);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordEditText);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), emailTextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), passwordTexInput);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), signinButton);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), signupButton);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), changeLanguageTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), forgotPasswordTextView);
 
-        emailEditText.setTypeface(editTextFontFamily);
-        passwordEditText.setTypeface(editTextFontFamily);
-        emailTextInput.setTypeface(hintFontFamily);
-        passwordTexInput.setTypeface(hintFontFamily);
-        signinButton.setTypeface(buttonFontFamily);
-        signupButton.setTypeface(buttonFontFamily);
     }
 
     private void setEditTexts(View view) {
@@ -258,30 +253,36 @@ public class SigninFragment extends Fragment {
         });
     }
 
-    private boolean isValidInfo() {
-        if (isValidEmail && isValidPassword) {
-            return true;
-        } else if (!isValidEmail && !isValidPassword) {
-            Toast.makeText(getActivity(), "Fields can't be empty", Toast.LENGTH_LONG).show();
-            return false;
-        } else if (!isValidEmail) {
-            Toast.makeText(getActivity(), "Enter valid Email-ID", Toast.LENGTH_LONG).show();
-            return false;
-        } else if (!isValidPassword) {
-            Toast.makeText(getActivity(), "Enter valid password", Toast.LENGTH_LONG).show();
-            return false;
+    private boolean checkEmail() {
+        String email = emailEditText.getText().toString();
+        isEmptyEmail = StringUtil.isNullOrEmpty(email);
+        boolean isEmailValid = StringUtil.isValidmail(email);
+        emailTextInput.setErrorEnabled(isEmptyEmail || !isEmailValid); // enable for error if either empty or invalid email
+        if (isEmptyEmail) {
+            emailTextInput.setError(getString(R.string.signin_signup_error_empty_email));
+        } else if (!isEmailValid) {
+            emailTextInput.setError(getString(R.string.signin_signup_error_invalid_email));
         } else {
-            Toast.makeText(getActivity(), "Fields can't be empty", Toast.LENGTH_LONG).show();
-            return false;
+            emailTextInput.setError(null);
         }
+        return !isEmptyEmail && isEmailValid;
     }
 
-    private void checkForButtonEnable() {
-        if (isValidEmail && isValidPassword) {
-            signinButton.setEnabled(true);
-        } else {
-            signinButton.setEnabled(false);
-        }
+    private boolean checkPassword() {
+        isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
+        String error = (isEmptyPassword ? getString(R.string.signin_signup_error_empty_password) : null);
+        passwordTexInput.setErrorEnabled(isEmptyPassword);
+        passwordTexInput.setError(error);
+        return !isEmptyPassword;
+    }
+
+    private boolean areAllValid() {
+        return isValidEmail && isValidPassword;
+    }
+
+    private void enableSignupButton() {
+        boolean areAllNonEmpty = isEmptyEmail || isEmptyPassword;
+        signinButton.setEnabled(areAllNonEmpty);
     }
 
     // cognito

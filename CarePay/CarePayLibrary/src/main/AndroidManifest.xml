@@ -59,7 +59,7 @@
 
         <activity android:name="com.carecloud.carepaylibray.cognito.SignUpConfirmActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
 
     </application>
 
