@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class SignatureActivity extends AppCompatActivity {
 
@@ -101,7 +101,6 @@ public class SignatureActivity extends AppCompatActivity {
             @Override
             public void onSigned() {
                 agreeBtn.setEnabled(true);
-                agreeBtn.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
             }
 
             @Override
@@ -114,7 +113,6 @@ public class SignatureActivity extends AppCompatActivity {
         if(signaturePad != null){
             signaturePad.clear();
             agreeBtn.setEnabled(false);
-            agreeBtn.setBackgroundColor(getResources().getColor(R.color.light_gray));
         }
     }
 

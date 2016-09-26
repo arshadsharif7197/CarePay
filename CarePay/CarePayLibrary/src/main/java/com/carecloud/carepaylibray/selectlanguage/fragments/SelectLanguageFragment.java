@@ -89,21 +89,6 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
 
-       /* languageOptionModel = new LanguageOptionModel();
-        languageOptionModel.setValue("Français");
-        languageOptionModel.setChecked(false);
-        languageOptionModelList.add(languageOptionModel);
-
-        languageOptionModel = new LanguageOptionModel();
-        languageOptionModel.setValue("Português");
-        languageOptionModel.setChecked(false);
-        languageOptionModelList.add(languageOptionModel);
-
-        languageOptionModel = new LanguageOptionModel();
-        languageOptionModel.setValue("廣州話");
-        languageOptionModel.setChecked(false);
-        languageOptionModelList.add(languageOptionModel);*/
-
         if (!StringUtil.isNullOrEmpty(languageName)) {
             for (int j = 0; j < languageOptionModelList.size(); j++) {
                 LanguageOptionModel languageOptionModelData = languageOptionModelList.get(j);

@@ -20,8 +20,8 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScanne
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
 
-import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -74,7 +74,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
      */
     private void setButtons() {
         // next button
-        nextButton = (Button) view.findViewById(R.id.demographicsNextButton);
+        nextButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,9 +172,9 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
      * @param view The parent view
      */
     private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_title));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_header_subtitle));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_insurance_switch));
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsInsuranceSwitch));
         setGothamRoundedMediumTypeface(getActivity(), addCardButton);
     }
 
@@ -196,7 +196,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
     @Override
     public void scrollToBottom() {
-        View bottomView = view.findViewById(R.id.demogr_docs_bottom_view);
+        View bottomView = view.findViewById(R.id.demographicsDocsBottomView);
         detailsScrollView.scrollTo(0, bottomView.getBottom());
     }
 
@@ -207,7 +207,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private void setSwitch() {
         // set the switch
         fm.executePendingTransactions();
-        switchCompat = (SwitchCompat) view.findViewById(R.id.demogr_insurance_switch);
+        switchCompat = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
+
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
@@ -225,6 +226,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 showAddCardButton(on && !isThirdCardAdded);
             }
         });
-        switchCompat.setChecked(false);
+//        switchCompat.setChecked(false);
     }
 }

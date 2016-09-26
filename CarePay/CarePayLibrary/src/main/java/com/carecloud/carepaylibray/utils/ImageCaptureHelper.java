@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -17,8 +16,6 @@ import android.widget.ImageView;
 import com.carecloud.carepaylibrary.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -51,8 +48,8 @@ public class ImageCaptureHelper {
     public ImageCaptureHelper(Activity activity, ImageView targetImageView) {
         context = activity;
         imageViewTarget = targetImageView;
-        imgWidth = (int) context.getResources().getDimension(R.dimen.demogr_docs_thumbnail_width);
-        imgHeight = (int) context.getResources().getDimension(R.dimen.demogr_docs_thumbnail_height);
+        imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
+        imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
         Log.v(LOG_TAG, "ctor viewWidth=" + imageViewTarget.getWidth() + " viewHeight=" + imageViewTarget.getHeight());
     }
 

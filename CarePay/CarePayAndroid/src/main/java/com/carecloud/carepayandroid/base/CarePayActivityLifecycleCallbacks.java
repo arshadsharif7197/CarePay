@@ -2,11 +2,10 @@ package com.carecloud.carepayandroid.base;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by Jahirul Bhuiyan on 9/7/2016.
@@ -14,7 +13,7 @@ import com.carecloud.carepaylibray.utils.Utility;
 public class CarePayActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
-        if( Utility.isTablet(activity))
+        if( SystemUtil.isTablet(activity))
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         else
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

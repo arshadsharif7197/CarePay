@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent_apt"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/dialogAppointHeaderImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/apt_imgview_ht"
-        android:layout_gravity="left"
-        android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
-        android:src="@drawable/icn_patient_mode_nav_close" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/dialogAppointHeaderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_gravity="left"
+            android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+            android:gravity="left"
+            android:text="@string/close"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/dialogEditAppointTextView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_gravity="right"
+            android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+            android:gravity="right"
+            android:text="@string/edit_appointment_dialog"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,6 +42,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/dialogHeaderlayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/apt_dl_header_ht"
             android:layout_gravity="center"
@@ -30,18 +51,18 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/apptDateTextView"
+                android:id="@+id/appointDateTextView"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/apt_dl_text_ht"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
                 android:gravity="center_horizontal"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/apt_dl_text_date" />
 
             <TextView
-                android:id="@+id/apptTimeTextView"
+                android:id="@+id/appointTimeTextView"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/apt_dl_appt_date_margin"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/apt_dl_appt_time_margin"
                 android:gravity="center_horizontal"
                 android:textColor="@color/slateGray"
@@ -50,7 +71,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/apptUserPicCardView"
+            android:id="@+id/appointUserPicCardView"
             android:layout_width="@dimen/apt_dl_image_ht_wdh"
             android:layout_height="@dimen/apt_dl_image_ht_wdh"
             android:layout_centerHorizontal="true"
@@ -63,16 +84,16 @@
             app:cardCornerRadius="@dimen/apt_dl_image_radius">
 
             <ImageView
-                android:id="@+id/apptUserPicImageView"
+                android:id="@+id/appointUserPicImageView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_image_ht_wdh"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/icn_signup_step_2_user_on"></ImageView>
+                android:src="@drawable/icn_signup_step_2_user_on" />
         </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/apptShortnameTextView"
+            android:id="@+id/appointShortnameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/apt_dl_appt_shortname_margin"
@@ -93,50 +114,70 @@
             android:paddingRight="@dimen/apt_dl_margin">
 
             <TextView
-                android:id="@+id/apptNameTextView"
+                android:id="@+id/appointNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textColor="@color/valuetext_default_textcolor"
-                android:textSize="@dimen/textview_default_textsize" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/apt_dl_text_big" />
 
             <TextView
-                android:id="@+id/apptTypeTextView"
+                android:id="@+id/appointTypeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
                 android:gravity="center_horizontal"
-                android:textColor="@color/lightSlateGray"
+                android:textColor="@color/bermudagrey"
                 android:textSize="@dimen/textview_textsize" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_boader_ht"
-                android:layout_marginBottom="@dimen/apt_dl_margin"
                 android:layout_marginTop="@dimen/apt_dl_margin"
                 android:background="@color/light_gray_dialog" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/apt_dl_view_margin"
+                android:layout_marginTop="@dimen/apt_dl_view_margin"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/apptAddressTextView"
+                <LinearLayout
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_weight="0.7"
-                    android:ellipsize="none"
-                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
-                    android:maxLines="3"
-                    android:scrollHorizontally="false"
-                    android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
-                    android:textColor="@color/grayRound"
-                    android:textSize="@dimen/textview_textsize" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/appointAddressHeaderTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:ellipsize="none"
+                        android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                        android:maxLines="3"
+                        android:scrollHorizontally="false"
+                        android:singleLine="true"
+                        android:text="Mercy Hospital"
+                        android:textColor="@color/payne_gray"
+                        android:textSize="@dimen/textview_textsize" />
+
+                    <TextView
+                        android:id="@+id/appointAddressTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="none"
+                        android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                        android:maxLines="2"
+                        android:text="3663 S Miami Ave, Miami, FL 33133, USA"
+                        android:textColor="@color/bermudagrey"
+                        android:textSize="@dimen/textview_textsize" />
+                </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/apptLocationImageView"
+                    android:id="@+id/appointLocationImageView"
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
@@ -144,7 +185,7 @@
                     android:src="@drawable/icn_appointment_card_directions" />
 
                 <ImageView
-                    android:id="@+id/apptDailImageView"
+                    android:id="@+id/appointDailImageView"
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
@@ -158,39 +199,103 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_boader_ht"
-                android:layout_marginBottom="@dimen/apt_dl_margin"
-                android:layout_marginTop="@dimen/apt_dl_margin"
                 android:background="@color/light_gray_dialog" />
-            <LinearLayout
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/reasonTextInputLayout"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/apt_dl_margin"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/reasonEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Reason for visit"
+                    android:textColor="@color/blue_cerulian" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/appointDialogButtonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/apt_dl_margin"
                 android:gravity="center_horizontal"
-                android:layout_height="wrap_content">
+                android:orientation="horizontal"
+                android:visibility="gone">
+
                 <Button
-                    android:id="@+id/checkOfficeBtn"
+                    android:id="@+id/checkOfficeButton"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.5"
-                    android:layout_height="@dimen/apt_dl_btn_check_ht"
                     android:background="@drawable/button_blue_border"
                     android:text="@string/check_in_at_office"
-                    android:paddingLeft="@dimen/apt_dl_btn_texxt_pd"
-                    android:paddingRight="@dimen/apt_dl_btn_texxt_pd"
                     android:textColor="@color/blue_cerulian"
-                    android:textSize="@dimen/apt_dl_textview_size" />
+                    android:textSize="@dimen/apt_dl_textview_size"
+                    android:visibility="gone" />
+
                 <Button
-                     android:id="@+id/checkOfficeNow"
+                    android:id="@+id/checkOfficeNowButton"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/apt_dl_btn_margin"
                     android:layout_weight="0.5"
-                     android:layout_height="@dimen/apt_dl_btn_check_ht"
-                     android:background="@drawable/button_green_fill_background"
-                     android:text="@string/check_in_now"
-                     android:textColor="@color/white"
-                     android:paddingLeft="@dimen/apt_dl_btn_texxt_pd"
-                    android:paddingRight="@dimen/apt_dl_btn_texxt_pd"
-                    android:visibility="visible"
-                     android:layout_marginLeft="@dimen/apt_dl_btn_margin"
-                     android:textSize="@dimen/apt_dl_textview_size" />
+                    android:background="@drawable/button_green_fill_background"
+                    android:text="@string/check_in_now"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/apt_dl_textview_size"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/appointRequestPendingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/apt_dl_margin"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/appointRequestPendingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="APPOINTMENT REQUEST PENDING"
+                    android:textColor="@color/lightningyellow"
+                    android:textSize="@dimen/apt_dl_btn_txt_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/appointRequestQueueLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="28dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="QUEUE"
+                    android:textColor="#607d8b"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/appointRequestQueueTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You are 3rd"
+                    android:textColor="#7ed321"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
