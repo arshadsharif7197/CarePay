@@ -4,20 +4,20 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/15/2016.
  */
-public class GeometryBounds {
+public class GeometryBoundsModel {
     @SerializedName("northeast")
     @Expose
-    private LatLang northeast;
+    private LatLangModel northeast;
     @SerializedName("southwest")
     @Expose
-    private LatLang southwest;
+    private LatLangModel southwest;
 
     /**
      *
      * @return
      * The northeast
      */
-    public LatLang getNortheast() {
+    public LatLangModel getNortheast() {
         return northeast;
     }
 
@@ -26,7 +26,7 @@ public class GeometryBounds {
      * @param northeast
      * The northeast
      */
-    public void setNortheast(LatLang northeast) {
+    public void setNortheast(LatLangModel northeast) {
         this.northeast = northeast;
     }
 
@@ -35,7 +35,7 @@ public class GeometryBounds {
      * @return
      * The southwest
      */
-    public LatLang getSouthwest() {
+    public LatLangModel getSouthwest() {
         return southwest;
     }
 
@@ -44,7 +44,7 @@ public class GeometryBounds {
      * @param southwest
      * The southwest
      */
-    public void setSouthwest(LatLang southwest) {
+    public void setSouthwest(LatLangModel southwest) {
         this.southwest = southwest;
     }
 }
