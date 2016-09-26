@@ -2,16 +2,15 @@ package com.carecloud.carepaylibray.consentforms.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -19,15 +18,18 @@ import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.consentforms.interfaces.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+
 
 
 public class ConsentForm1Fragment extends Fragment {
 
-    private TextView titleTv, descriptionTv, contentTv, dateTv;
+    private TextView titleTextView, descriptionTextView, contentTextView, dateTextView;
     private Button signButton;
     private IFragmentCallback fragmentCallback;
+    private ScrollView consentFormScrollView;
 
     @Nullable
     @Override
@@ -35,15 +37,14 @@ public class ConsentForm1Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.consent_form_layout, container, false);
 
-
-
-
-        titleTv = (TextView) view.findViewById(R.id.titleTv);
-        descriptionTv = (TextView) view.findViewById(R.id.descriptionTv);
-        contentTv = (TextView) view.findViewById(R.id.contentTv);
-        dateTv = (TextView) view.findViewById(R.id.dateTv);
+        titleTextView = (TextView) view.findViewById(R.id.titleTv);
+        descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
+        contentTextView = (TextView) view.findViewById(R.id.contentTv);
+        dateTextView = (TextView) view.findViewById(R.id.dateTv);
+        consentFormScrollView =(ScrollView)view.findViewById(R.id.consentform_scrollView);
         signButton = (Button) view.findViewById(R.id.signButton);
-
+        signButton.setEnabled(false);
+        setTypefaces(view);
         return view;
     }
 
@@ -62,7 +63,6 @@ public class ConsentForm1Fragment extends Fragment {
             }
         }
 
-
     }
 
     @Override
@@ -75,10 +75,26 @@ public class ConsentForm1Fragment extends Fragment {
 
         FormData formData = (FormData)getArguments().getSerializable(CarePayConstants.FORM_DATA);
 
-        titleTv.setText(formData.getTitle());
-        descriptionTv.setText(formData.getDescription());
-        contentTv.setText(formData.getContent());
-        dateTv.setText(formData.getDate());
+        titleTextView.setText(formData.getTitle());
+        descriptionTextView.setText(formData.getDescription());
+        contentTextView.setText(formData.getContent());
+        dateTextView.setText(formData.getDate());
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            consentFormScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    View view = (View) consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
+                    int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
+
+                    if (diff==0){
+                        signButton.setEnabled(true);
+                    }
+
+                }
+            });
+        }
     }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -90,4 +106,12 @@ public class ConsentForm1Fragment extends Fragment {
             }
         }
     };
+
+    private void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(),(TextView) view.findViewById(R.id.titleTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.descriptionTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.contentTv));
+        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.dateTv));
+
+    }
 }

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/sig_pad"
         android:background="@color/white"
-        app:penColor="@android:color/black" />
+        app:penColor="@color/bright_cerulean" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
         android:layout_width="@dimen/btn_hght"
         android:layout_height="@dimen/btn_width"
         android:id="@+id/clearBtn"
-        android:background="@color/white"
+        android:background="@drawable/button_blue_border"
         android:layout_below="@+id/signature_view"
         android:textColor="@color/rich_electric_blue"
         android:layout_marginTop="@dimen/consent_top"

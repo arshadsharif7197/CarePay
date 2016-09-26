@@ -12,13 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 9/13/2016.

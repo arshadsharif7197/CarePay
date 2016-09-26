@@ -18,7 +18,7 @@ import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.InTakeActivity;
 
-import static com.carecloud.carepaylibray.utils.Utility.setTypefaceFromAssets;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
 

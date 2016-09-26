@@ -65,7 +65,7 @@ public abstract class KeyboardHolderActivity extends AppCompatActivity {
         setContentView(getLayoutRes());
 
         // hide sys keyboard
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         fm = getSupportFragmentManager();
 

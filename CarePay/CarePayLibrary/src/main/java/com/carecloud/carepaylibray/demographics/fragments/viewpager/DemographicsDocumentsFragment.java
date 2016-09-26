@@ -20,8 +20,8 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScanne
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
 
-import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 /**
  * Created by lsoco_user on 9/2/2016.

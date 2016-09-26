@@ -29,14 +29,16 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/NavigationTheme"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
+        <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.payment.PaymentActivity"
@@ -51,9 +53,17 @@
             android:name="com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity"
             android:theme="@style/NavigationTheme"/>
 
+        <activity android:name="com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity"
+            android:theme="@style/NavigationTheme"/>
+
         <activity
             android:name="com.carecloud.carepaylibray.intake.InTakeActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+
+        <activity android:name="com.carecloud.carepaylibray.cognito.SignUpConfirmActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:windowSoftInputMode="adjustResize"/>
+
     </application>
 
 </manifest>

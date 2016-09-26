@@ -1,12 +1,14 @@
 <resources>
 
     <!-- Base application theme. -->
+
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="titleTextStyle">@style/actionBarTitle</item>
+        <item name="android:overScrollMode">never</item>
     </style>
 
     <style name="actionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -52,6 +54,7 @@
     </style>
 
     <!-- Custom Keyboard -->
+
     <style name="keyboard_1_style">
         <!--<item name="android:keyBackground">@drawable/k1_selector</item>-->
         <item name="android:keyTextColor">@android:color/white</item>
@@ -77,6 +80,7 @@
 
 
     <!-- Common -->
+
     <style name="TextInputLayoutStyle" parent="TextAppearence.App.TextInputLayout">
         <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textSize">15.0sp</item>
@@ -108,7 +112,28 @@
         <item name="android:maxLength">255</item>
     </style>
 
+    <style name="SigninSignupClickableTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/signup_clickable_textview_height</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textSize">@dimen/signup_textview_existing_account_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SignupOptionalLabelStyle">
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_right</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:textSize">@dimen/signup_optional_label_text_size</item>
+    </style>
+
     <!-- Responsibility styles -->
+
     <style name="ResponsTotalLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -277,12 +302,31 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <style name="SingupEditsContainerStyle" parent="DemographicsDocsHeaderStyle">
-        <item name="android:fontFamily">ProximaNova-Semibold</item>
-
+    <style name="SigninSignupButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="SigninSignupTextInputStyle" parent="TextInputLayoutStyle"/>
+
+    <style name="SigninSignupEditStyle" parent="EditTextStyle">
+        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:imeOptions">actionNext</item>
+    </style>
+
+    <style name="SigninNewAccountButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:background">@drawable/button_default_background</item>
+        <item name="android:textColor">@color/blue_cerulian</item>
+    </style>
+
+
     <!-- Demographics Review Screens Style>-->
+
     <style name="reviewDemographicBlue." parent="android:Widget.TextView">
         <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textSize">@dimen/respons_detail_text_size</item>
@@ -300,6 +344,7 @@
 
 
     <!-- Navigation Screen Theme-->
+
     <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -311,9 +356,10 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-    <!--;-->
 
-    <!--<Consent forms styles>-->
+
+    <!-- Consent forms -->
+
     <style name="ConsentActivityTitleStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">21.0sp</item>
@@ -326,6 +372,8 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_marginLeft">@dimen/marginleftright</item>
+        <item name="android:layout_marginRight">@dimen/marginleftright</item>
     </style>
 
     <style name="ConsentActivityContentTextStyle" parent="android:Widget.TextView">
@@ -349,9 +397,45 @@
         <item name="android:textColor">@color/Feldgrau</item>
         <item name="android:textSize">24.0sp</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/date_textview_top_bottom</item>
+        <item name="android:layout_marginBottom">@dimen/date_textview_top_bottom</item>
     </style>
 
+    <style name="ConsentForm_spinnerStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:text">@string/choose_gender</item>
+        <item name="android:layout_marginTop">@dimen/consent_view_margin_top_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/consent_spinner_left_margin</item>
+        <item name="android:layout_alignBaseline">@id/minor_gender</item>
+        <item name="android:layout_toRightOf">@id/minor_gender</item>
+        <item name="android:drawSelectorOnTop">true</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textSize">@dimen/consent_minor_textsize</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
+    </style>
+
+    <style name="Consent_Form_View_Style">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">@dimen/consentform_relativeLayout_margin</item>
+        <item name="android:layout_marginRight">@dimen/consentform_relativeLayout_margin</item>
+        <item name="android:layout_marginTop">@dimen/consent_view_margin_top_bottom</item>
+        <item name="android:layout_marginBottom">@dimen/consent_view_margin_top_bottom</item>
+        <item name="android:background">@color/payne_gray</item>
+    </style>
+
+    <style name="Consent_form_Button">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/language_button_selector</item>
+    </style>
+
+    <style name="Consent_Form_Edit_Text">s
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColorHint">@color/payne_gray</item>
+    </style>
+
+
     <!-- InTake -->
+
     <style name="InTakeNextButtonStyle" parent="DemographicsNextButtonStyle">
         <item name="android:background">@color/blue_cerulian</item>
         <item name="android:layout_gravity">center</item>
@@ -413,6 +497,49 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="AppointmentAvailableHoursListRowText" parent="android:Widget.TextView">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/apt_available_hours_list_row_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
+    <style name="AppointmentAvailableHoursListHeaderText" parent="android:Widget.TextView">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">@dimen/apt_available_hours_list_header_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Semibold</item>
+    </style>
+
+    <style name="AppointmentPopupButton" parent="android:Widget.Button">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/apt_popup_button_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">GothamRounded-Medium</item>
+    </style>
+
+    <style name="AppointmentPopupMessageText" parent="android:Widget.TextView">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/glitter</item>
+        <item name="android:textSize">@dimen/apt_popup_message_text</item>
+        <item name="android:lineSpacingExtra">@dimen/apt_popup_message_text_line_spacing</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
+    <style name="ChooseProviderSectionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/choose_provider_title_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/choose_provider_title_margin_top</item>
+        <item name="android:textColor">@color/lightSlateGray</item>
+        <item name="android:textSize">@dimen/textview_textsize</item>
     </style>
 
 </resources>

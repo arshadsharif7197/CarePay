@@ -20,9 +20,9 @@ import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import java.util.Arrays;
-import static com.carecloud.carepaylibray.utils.Utility.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.Utility.setProximaNovaSemiboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 9/2/2016.

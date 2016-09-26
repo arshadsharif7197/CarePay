@@ -6,9 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,15 +20,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
-import com.carecloud.carepaylibray.utils.Utility;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,23 +41,14 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @Override
+    private TextView appointmentsDrawerUserIdTextView;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        FloatingActionButton floatingActionButtonz = (FloatingActionButton) findViewById(R.id.fab);
-        floatingActionButtonz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,8 +59,18 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // get handler to navigation drawer's user id text view
+        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.appointmentsDrawerIdTextView);
+        String userId = CognitoAppHelper.getCurrUser();
+        if(userId != null) {
+            appointmentsDrawerUserIdTextView.setText(userId);
+        } else {
+            appointmentsDrawerUserIdTextView.setText("");
+        }
+
         FragmentManager fm = getSupportFragmentManager();
-        AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
+        AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment)
+                fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
         if (appointmentsListFragment == null) {
             appointmentsListFragment = new AppointmentsListFragment();
         }
@@ -122,7 +124,20 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
+            // perform log out, of course
+            String userName = CognitoAppHelper.getCurrUser();
+            if(userName != null) {
+                Log.v(LOG_TAG, "sign out");
+                CognitoAppHelper.getPool().getUser().signOut();
+                CognitoAppHelper.setUser(null);
+                // update the drawer user id fields
+                appointmentsDrawerUserIdTextView.setText("");
 
+                // go to Sign in screen
+                Intent intent = new Intent(this, SigninSignupActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else if (id == R.id.nav_purchase) {
 
         } else if (id == R.id.nav_notification) {
@@ -134,118 +149,258 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         return true;
     }
 
-    public void showAppointmentsDialog(AppointmentModel appointmentModel) {
+    public void showAppointmentsDialog(final Context context, final AppointmentModel appointmentModel, int index) {
         if (appointmentModel != null) {
-            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    this);
-            LayoutInflater inflater = (LayoutInflater) this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.dialog_appointments, null);
             alertDialogBuilder.setView(view);
             alertDialogBuilder.setCancelable(false);
+
             final AlertDialog dialog = alertDialogBuilder.create();
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.show();
 
-            TextView dateTextView = ((TextView) view.findViewById(R.id.apptDateTextView));
-            TextView timeTextView = ((TextView) view.findViewById(R.id.apptTimeTextView));
-            TextView shortNameTextView = ((TextView) view.findViewById(R.id.apptShortnameTextView));
-            TextView nameTextView = ((TextView) view.findViewById(R.id.apptNameTextView));
-            TextView typeTextView = ((TextView) view.findViewById(R.id.apptTypeTextView));
-            final TextView addressTextView = ((TextView) view.findViewById(R.id.apptAddressTextView));
+            TextView dateTextView = ((TextView) view.findViewById(R.id.appointDateTextView));
+            TextView timeTextView = ((TextView) view.findViewById(R.id.appointTimeTextView));
+            TextView shortNameTextView = ((TextView) view.findViewById(R.id.appointShortnameTextView));
+            TextView nameTextView = ((TextView) view.findViewById(R.id.appointNameTextView));
+            TextView typeTextView = ((TextView) view.findViewById(R.id.appointTypeTextView));
+            final TextView addressTextView = ((TextView) view.findViewById(R.id.appointAddressTextView));
+            final TextView addressHeaderTextView = ((TextView) view.findViewById(R.id.appointAddressHeaderTextView));
+            TextView requestPendingTextView = (TextView)view.findViewById(R.id.appointRequestPendingTextView);
 
-            dateTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[0]);
-            timeTextView.setText(onDateParseToString(appointmentModel.getAppointmentDate())[1]);
-            shortNameTextView.setText(Utility.onShortDrName(appointmentModel.getDoctorName()));
+            dateTextView.setText(onDateParseToString(context, appointmentModel.getAppointmentDate())[0]);
+            timeTextView.setText(onDateParseToString(context, appointmentModel.getAppointmentDate())[1]);
+            shortNameTextView.setText(SystemUtil.onShortDrName(appointmentModel.getDoctorName()));
             nameTextView.setText(appointmentModel.getDoctorName());
             typeTextView.setText(appointmentModel.getAppointmentType());
             //addressTextView.setText(appointmentModel.getA());
 
-            Utility.setProximaNovaRegularTypeface(this, dateTextView);
-            Utility.setGothamRoundedBookTypeface(this, timeTextView);
-            Utility.setProximaNovaRegularTypeface(this, shortNameTextView);
-            Utility.setProximaNovaSemiboldTypeface(this, nameTextView);
-            Utility.setProximaNovaRegularTypeface(this, typeTextView);
-            Utility.setGothamRoundedMediumTypeface(this, addressTextView);
+            SystemUtil.setProximaNovaRegularTypeface(context, dateTextView);
+            SystemUtil.setGothamRoundedBoldTypeface(context, timeTextView);
+            SystemUtil.setProximaNovaRegularTypeface(context, shortNameTextView);
+            SystemUtil.setProximaNovaSemiboldTypeface(context, nameTextView);
+            SystemUtil.setProximaNovaRegularTypeface(context, typeTextView);
+            SystemUtil.setProximaNovaRegularTypeface(context, addressTextView);
+            SystemUtil.setProximaNovaExtraboldTypeface(context, addressHeaderTextView);
+            SystemUtil.setGothamRoundedMediumTypeface(context, requestPendingTextView);
 
-            view.findViewById(R.id.dialogAppointHeaderImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.dialogAppointHeaderTextView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.cancel();
                 }
             });
-            view.findViewById(R.id.apptLocationImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.appointLocationImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onMapView(addressTextView.getText().toString());
+                    onMapView(context, appointmentModel.getPlaceAddress());
                 }
             });
-            view.findViewById(R.id.apptDailImageView).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.appointDailImageView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onPhoneCall("000000000");
+                    onPhoneCall(context, "000000000");
                 }
             });
-            view.findViewById(R.id.checkOfficeBtn).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.checkOfficeButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onCheckInAtOffice();
                     dialog.cancel();
                 }
             });
-            view.findViewById(R.id.checkOfficeNow).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.checkOfficeNowButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onCheckInAtNow();
                 }
             });
+            view.findViewById(R.id.dialogEditAppointTextView).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onEditAppointMent();
+                }
+            });
+            requestPendingTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onRequestPending();
+                }
+            });
+            //second argument is only for testing it will change based on which dialog wants to show.
+            onDialogTypeVisible(context, view, index, appointmentModel);
         }
     }
-
-    private String[] onDateParseToString(String dateStr) {
-        String stringDate[] = dateStr.split(" ");
+    /**
+     * convert date string in to month and day.
+     * @param dateStr the String to evaluate
+     */
+    private String[] onDateParseToString(Context context, String dateStr) {
         String formateDate[] = new String[2];
+        String stringDate[] = dateStr.split(" ");
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat(context.getString(R.string.dateFormatString), Locale.ENGLISH);
             Date appointdate = sdf.parse(stringDate[0]);
             formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
-                    + Utility.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
+                    + DateUtil.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
             formateDate[1] = stringDate[1] + " " + stringDate[2];
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage());
         }
         return formateDate;
     }
-    private void onPhoneCall(final String phoneNumber){
-        try{
-            startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
-        }catch (android.content.ActivityNotFoundException ex){
-            Toast.makeText(getApplicationContext(),"Activity is not founded",Toast.LENGTH_SHORT).show();
+
+    /**
+     * show device phone call UI based on phone number.
+     * @param phoneNumber the String to evaluate
+     */
+    private void onPhoneCall(Context context, final String phoneNumber){
+        try {
+            context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Log.e(LOG_TAG, ex.getMessage());
         }
     }
-    private void onCheckInAtOffice(){
+
+    /**
+     * call check-in at office api.
+     */
+    private void onCheckInAtOffice() {
         Intent demographicReviewIntent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
         startActivity(demographicReviewIntent);
-        }
+    }
+
+    /**
+     * call check-in early api.
+     */
     private  void onCheckInEarly(){
-        Toast.makeText(AppointmentsActivity.this, "Clicked on onCheckInEarly method,", Toast.LENGTH_LONG).show();
-        }
+
+    }
+    /**
+     * call check-in at Nowapi.
+     */
     private void onCheckInAtNow(){
-        Toast.makeText(AppointmentsActivity.this, "Clicked on onCheckInAtNow method,", Toast.LENGTH_LONG).show();
-        }
+
+    }
+    /**
+     * create appointment UI.
+     */
     private void onCreateAppointment(){
-        Toast.makeText(AppointmentsActivity.this, "Clicked on onCreateAppointment method,", Toast.LENGTH_LONG).show();
-        }
+
+    }
 
     /**
      * show device map view based on address.
      * @param address the String to evaluate
      */
-    private void onMapView(final String address){
+    private void onMapView(Context context, final String address){
         Uri mapUri = Uri.parse("geo:0,0?q=" + Uri.encode(address));
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
         mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+        context.startActivity(mapIntent);
+    }
+    /**
+     * show different dialog UI based on type.
+     * @param view ,View to evaluate
+     * @param type , int to evaluate
+     */
+    private void onDialogTypeVisible(Context context, View view, int type, AppointmentModel appointmentModel) {
+        switch (type){
+            case 1:
+                onCheckOffceNowUI(view);
+                break;
+            case 2:
+                onCheckAtOfficeUI(view);
+                break;
+            case 3:
+                onCheckNowEarlyUI(view);
+                break;
+            case 4:
+                onEditAppointmentUI(view);
+                break;
+            case 5:
+                onPendingAppointmentUI(context, view);
+                break;
+            case 6:
+                onReasonAppointmentUI(context, view, appointmentModel);
+                break;
+            case 7:
+                onCheckedInAppointmentUI(context, view);
+                break;
+
+            default: break;
+        }
+    }
+    /**
+     * call edit appointment page.
+     */
+    private void onEditAppointMent(){
+
+    }
+    /**
+     * call request pending api.
+     */
+    private void onRequestPending() {
+
+    }
+
+    private void onCheckOffceNowUI(View view) {
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
+    }
+
+    private void onCheckAtOfficeUI(View view) {
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeButton).setVisibility(View.VISIBLE);
+    }
+
+    private void onCheckNowEarlyUI(View view) {
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+    }
+
+    private void onEditAppointmentUI(View view) {
+        view.findViewById(R.id.dialogEditAppointTextView).setVisibility(View.VISIBLE);
+    }
+
+    private void onPendingAppointmentUI(Context context, View view) {
+        view.findViewById(R.id.appointRequestPendingLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);
+        ((TextView) view.findViewById(R.id.appointDateTextView)).setTextColor(context.getResources().getColor(R.color.white));
+        ((TextView) view.findViewById(R.id.appointTimeTextView)).setTextColor(context.getResources().getColor(R.color.white));
+    }
+
+    private void onReasonAppointmentUI(final Context context, View view, AppointmentModel appointmentModel) {
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.checkOfficeNowButton).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.reasonTextInputLayout).setVisibility(View.VISIBLE);
+        Button action = (Button) view.findViewById(R.id.checkOfficeNowButton);
+        action.setText(appointmentModel.getButtonTitle());
+
+        action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppointmentsListFragment.showCheckedInView = true;
+                ((AddAppointmentActivity) context).finish();
+            }
+        });
+    }
+
+    private void onCheckedInAppointmentUI(Context context, View view) {
+        view.findViewById(R.id.dialogEditAppointTextView).setVisibility(View.GONE);
+        view.findViewById(R.id.appointRequestQueueLayout).setVisibility(View.VISIBLE);
+    }
+
+    static AppointmentModel model;
+    public void setAppointmentModel(AppointmentModel model) {
+        AppointmentsActivity.model = model;
+    }
+
+    public AppointmentModel getModel() {
+        return AppointmentsActivity.model;
     }
 }
