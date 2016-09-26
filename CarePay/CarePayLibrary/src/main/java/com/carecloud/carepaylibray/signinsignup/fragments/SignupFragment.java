@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -52,32 +53,33 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SignupFragment extends Fragment {
 
+    private LinearLayout parentLayout;
+    private ProgressBar  progressBar;
+
     private TextInputLayout firstNameInputLayout;
     private TextInputLayout middleNameInputLayout;
     private TextInputLayout lastNameInputLayout;
+    private EditText        firstNameText;
+    private EditText        middleNameText;
+    private EditText        lastNameText;
+    private boolean         isFirstNameEmpty;
+    private boolean         isLastNameEmpty;
+
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
     private TextInputLayout passwordRepeatInputLayout;
+    private EditText        emailText;
+    private EditText        passwordText;
+    private EditText        repeatPasswordText;
+    private boolean         isEmailEmpty;
+    private boolean         isPasswordEmpty;
+    private boolean         isRepeatPasswordEmpty;
 
-    private EditText firstNameText;
-    private EditText middleNameText;
-    private EditText lastNameText;
-    private EditText emailText;
-    private EditText passwordText;
-    private EditText repeatPasswordText;
+    private Button   submitButton;
     private TextView accountExistTextView;
 
-    private Button submitButton;
+    private String userName;
 
-    private String       userName;
-    private ProgressBar  progressBar;
-    private LinearLayout parentLayout;
-
-    private boolean isFirstNameEmpty;
-    private boolean isLastNameEmpty;
-    private boolean isEmailEmpty;
-    private boolean isPasswordEmpty;
-    private boolean isRepeatPasswordEmpty;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,20 +97,6 @@ public class SignupFragment extends Fragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                reset();
-                FragmentManager fm = getFragmentManager();
-                SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = new SigninFragment();
-                }
-                fm.beginTransaction()
-                        .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
-                        .commit();
-            }
-        });
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
@@ -202,12 +190,6 @@ public class SignupFragment extends Fragment {
         setActionListeners();
 
         setTextWatchers();
-
-        isFirstNameEmpty = true;
-        isLastNameEmpty = true;
-        isEmailEmpty = true;
-        isPasswordEmpty = true;
-        isRepeatPasswordEmpty = true;
     }
 
     private void setTextWatchers() {
@@ -516,15 +498,15 @@ public class SignupFragment extends Fragment {
     private boolean areAllValid() {
         // check in reverse order that they are placed on the screen
         boolean isPasswordMatch = checkPasswordsMatch();
-        if(!isPasswordMatch) {
+        if (!isPasswordMatch) {
             repeatPasswordText.requestFocus();
         }
         boolean isValidPassword = checkPassword();
-        if(!isValidPassword) {
+        if (!isValidPassword) {
             passwordText.requestFocus();
         }
         boolean isValidEmail = checkEmail();
-        if(!isValidEmail) {
+        if (!isValidEmail) {
             emailText.requestFocus();
         }
 
@@ -570,11 +552,6 @@ public class SignupFragment extends Fragment {
         passwordRepeatInputLayout.setErrorEnabled(false);
         passwordRepeatInputLayout.setError(null);
 
-        isFirstNameEmpty = true;
-        isLastNameEmpty = true;
-        isEmailEmpty = true;
-        isPasswordEmpty = true;
-        isRepeatPasswordEmpty = true;
     }
 
     @Override
@@ -586,6 +563,17 @@ public class SignupFragment extends Fragment {
                 CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Log.v(LOG_TAG, "home pressed");
+            reset();
+            getActivity().onOptionsItemSelected(item);
+            return true;
+        }
+        return false;
     }
 
     // cognito
