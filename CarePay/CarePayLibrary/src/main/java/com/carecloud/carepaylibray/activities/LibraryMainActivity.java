@@ -35,7 +35,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
             @Override
             public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
                 model=response.body();
-                DemographicTransitionsDataObjectModel dd= model.getMetadata().getTransitions().getConfirmDemographics().getTransitionsData();
+                DemographicTransitionsDataObjectModel dd= model.getMetadata().getTransitions().getConfirmDemographics().getData();
                 Log.d("sdadad","adasdasdasd");
             }
 
