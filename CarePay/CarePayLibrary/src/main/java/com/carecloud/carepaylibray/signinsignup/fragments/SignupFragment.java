@@ -1,30 +1,47 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Intent;
-
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
+import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
+import static android.app.Activity.RESULT_OK;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
@@ -44,16 +61,24 @@ public class SignupFragment extends Fragment {
     private TextView accountExistTextView;
     private Button   submitButton;
 
-    private boolean  isValidFirstName;
-    private boolean  isValidLastName;
-    private boolean  isValidEmail;
-    private boolean  isValidPassword;
-    private boolean  isPasswordMatch;
+    private boolean isValidFirstName;
+    private boolean isValidLastName;
+    private boolean isValidEmail;
+    private boolean isValidPassword;
+    private boolean isPasswordMatch;
+
+    private String      userName;
+    private ProgressBar progressBar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
+
+        // hide progress
+        progressBar = (ProgressBar) view.findViewById(R.id.signupProgressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         // set the toolbar
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.signup_toolbar);
@@ -61,17 +86,7 @@ public class SignupFragment extends Fragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), SigninSignupActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
-
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
@@ -81,11 +96,8 @@ public class SignupFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (areAllValid()) {
-                    //Submit Registration
-                    Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    getActivity().finish();
+                    // request user registration
+                    registerUser();
                 }
             }
         });
@@ -96,13 +108,13 @@ public class SignupFragment extends Fragment {
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = ((SigninSignupActivity) getActivity()).getmFragmentManager();
+                FragmentManager fm = getFragmentManager();
                 SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new SigninFragment();
                 }
                 fm.beginTransaction()
-                        .replace(R.id.signin_layout, fragment, SigninFragment.class.getSimpleName())
+                        .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
                         .commit();
             }
         });
@@ -282,7 +294,7 @@ public class SignupFragment extends Fragment {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) { // when loosing focus, validate as well
+                if (!b) { // when loosing focus, validate as well
                     isValidFirstName = checkFirstName();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -298,7 +310,7 @@ public class SignupFragment extends Fragment {
         lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     isValidLastName = checkLastName();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -308,7 +320,7 @@ public class SignupFragment extends Fragment {
         emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     isValidEmail = checkEmail();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -318,7 +330,7 @@ public class SignupFragment extends Fragment {
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     isValidPassword = checkPassword();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -328,7 +340,7 @@ public class SignupFragment extends Fragment {
         repeatPasswordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     isPasswordMatch = checkPasswordsMatch();
                     submitButton.setEnabled(areAllValid());
                 }
@@ -346,7 +358,7 @@ public class SignupFragment extends Fragment {
     }
 
     private boolean checkLastName() {
-        boolean isLastNameInvalid =  StringUtil.isNullOrEmpty(this.lastNameText.getText().toString());
+        boolean isLastNameInvalid = StringUtil.isNullOrEmpty(this.lastNameText.getText().toString());
         String error = (isLastNameInvalid ? "error" : null);
         lastNameInputLayout.setErrorEnabled(isLastNameInvalid);
         lastNameInputLayout.setError(error);
@@ -363,7 +375,7 @@ public class SignupFragment extends Fragment {
     }
 
     private boolean checkPassword() {
-        boolean isPassInvalid =  StringUtil.isNullOrEmpty(passwordText.getText().toString());
+        boolean isPassInvalid = StringUtil.isNullOrEmpty(passwordText.getText().toString());
         String error = (isPassInvalid ? "error" : null);
         passwordInputLayout.setErrorEnabled(isPassInvalid);
         passwordInputLayout.setError(error);
@@ -373,7 +385,7 @@ public class SignupFragment extends Fragment {
     private boolean checkPasswordsMatch() {
         String password = passwordText.getText().toString();
         String repeatedPassword = repeatPasswordText.getText().toString();
-        boolean isNotMachedPassw =  StringUtil.isNullOrEmpty(password)
+        boolean isNotMachedPassw = StringUtil.isNullOrEmpty(password)
                 || StringUtil.isNullOrEmpty(repeatedPassword)
                 || !(password.equals(repeatedPassword));
         String error = (isNotMachedPassw ? "error" : null);
@@ -389,4 +401,125 @@ public class SignupFragment extends Fragment {
                 && isValidPassword
                 && isPasswordMatch;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10) {
+            if (resultCode == RESULT_OK) {
+                // confirmed; (auto)sign-in
+                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+            }
+        }
+    }
+
+    // cognito
+    private void registerUser() {
+        Log.v(LOG_TAG, "registerUser()");
+        // Read user data and register
+        CognitoUserAttributes userAttributes = new CognitoUserAttributes();
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        userName = emailText.getText().toString();
+        if (userName.length() > 0) {
+            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
+            // add more attributes here is needed...
+        }
+        String password = passwordText.getText().toString();
+
+        CognitoAppHelper.getPool().signUpInBackground(userName,
+                                                      password,
+                                                      userAttributes,
+                                                      null,
+                                                      signUpHandler);
+    }
+
+    private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
+        Intent intent = new Intent(getActivity(), SignUpConfirmActivity.class);
+        intent.putExtra("source", "signup");
+        intent.putExtra("name", userName);
+        intent.putExtra("destination", cognitoUserCodeDeliveryDetails.getDestination());
+        intent.putExtra("deliveryMed", cognitoUserCodeDeliveryDetails.getDeliveryMedium());
+        intent.putExtra("attribute", cognitoUserCodeDeliveryDetails.getAttributeName());
+        startActivityForResult(intent, 10);
+    }
+
+    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
+        Log.v(LOG_TAG, "getUserAuthentication()");
+
+        userName = username;
+        if (username != null) {
+            CognitoAppHelper.setUser(username);
+        }
+
+        String password = passwordText.getText().toString();
+        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
+        continuation.setAuthenticationDetails(authenticationDetails);
+        continuation.continueTask();
+    }
+
+    SignUpHandler signUpHandler = new SignUpHandler() {
+        @Override
+        public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
+                              CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
+            // Check signUpConfirmationState to see if the user is already confirmed
+            if (signUpConfirmationState) {
+                // auto-confirmed; sign-in
+                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+            } else {
+                Log.v(LOG_TAG, "signUpConfirmationState == false");
+                // User is not confirmed
+                confirmSignUp(cognitoUserCodeDeliveryDetails); // not Confirmed; launch confirm activity
+            }
+        }
+
+        @Override
+        public void onFailure(Exception exception) {
+            progressBar.setVisibility(View.INVISIBLE);
+            SystemUtil.showDialogMessage(getActivity(),
+                                         "Sign up failed!",
+                                         "Invalid id or password");
+            Log.e(LOG_TAG, CognitoAppHelper.formatException(exception));
+        }
+    };
+
+    private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+        @Override
+        public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
+            Log.v(LOG_TAG, "auth success");
+            CognitoAppHelper.setCurrSession(userSession);
+            CognitoAppHelper.newDevice(newDevice);
+
+            progressBar.setVisibility(View.INVISIBLE);
+
+            // do to Demographics
+            Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+
+        }
+
+        @Override
+        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
+            Log.v(LOG_TAG, "getAuthenticationDetails()");
+            getUserAuthentication(authenticationContinuation, userId);
+        }
+
+        @Override
+        public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
+            Log.v(LOG_TAG, "getMFACode()");
+        }
+
+        @Override
+        public void authenticationChallenge(ChallengeContinuation continuation) {
+            Log.v(LOG_TAG, "authenticationChallenge()");
+        }
+
+        @Override
+        public void onFailure(Exception exception) {
+            progressBar.setVisibility(View.INVISIBLE);
+            Log.e(LOG_TAG, exception.getLocalizedMessage());
+        }
+    };
 }

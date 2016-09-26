@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
@@ -31,8 +30,10 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
         getUpdateItemList = getResources().getStringArray(R.array.UpdatesMode);
         setTypefaces(view);
+
         gotoCarePay = (Button) view.findViewById(R.id.demographicsGoToCarePayButton);
         onClick(view);
+
         return view;
     }
 
@@ -43,6 +44,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             public void onClick(View v) {
                 Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
                 startActivity(appointmentIntent);
+                getActivity().finish();
             }
         });
     }
@@ -53,6 +55,5 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.demographicsGoToCarePayButton));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.placeHolderIconTextViewId));
     }
-
 
 }
