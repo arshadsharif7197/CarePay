@@ -140,7 +140,9 @@
     <string name="next_Button">Next</string>
 
     <!--Signin Screen-->
-    <string name="email_text">Email</string>
+    <string name="signin_signup_email_hint">Email</string>
+    <string name="signin_signup_password_hint">Create Password</string>
+
     <string name="password_text">Password</string>
     <string name="submit_button">SIGN IN</string>
     <string name="signup_button">CREATE NEW ACCOUNT</string>
@@ -150,16 +152,20 @@
     <!--Signup Screen-->
     <string name="caps">FIRST NAME</string>
     <string name="firstname_text">First Name</string>
-    <string name="middlename_text">Middle Name (optional)</string>
+    <string name="middlename_text">Middle Name</string>
     <string name="lastname_text">Last Name</string>
-    <string name="new_email_text">Email</string>
-    <string name="new_password_text">Create Password</string>
     <string name="repeat_password_text">Repeat Password</string>
     <string name="signup_submit_button">SIGN UP</string>
     <string name="account_exist_textview">Already have an account?</string>
+    <string name="signup_error_empty_first_name">First name is empty</string>
+    <string name="signup_error_empty_last_name">Last name is empty</string>
+    <string name="signin_signup_error_empty_email">Email is empty</string>
+    <string name="signin_signup_error_invalid_email">Email is invalid</string>
+    <string name="signin_signup_error_empty_password">Password is empty</string>
+    <string name="signin_signup_error_empty_repeat_password">Repeat password is empty</string>
+    <string name="signup_error_passwords_unmatched">Passwords do not match</string>
 
     <!--MoreDetails Fragment-->
-
     <string name="PlaceHolderIcon">PlaceHolder Icon</string>
     <string name="moreDetailsHeadingTextView">You\'re all set!</string>
     <string name="moreDetailsSubHeadingTextView">Maecenas faucibus mollis interdum. Sed posuere consectetur est at lobortis.</string>

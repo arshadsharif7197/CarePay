@@ -1,175 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
+    android:id="@+id/signUpLl"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <include layout="@layout/signup_toolbar"/>
 
     <ProgressBar
+        android:id="@+id/signupProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:indeterminate="true"
         android:layout_marginTop="-8dp"
-        android:id="@+id/signupProgressBar"/>
+        android:indeterminate="true"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:fillViewport="false">
 
         <LinearLayout
-            style="@style/SingupEditsContainerStyle"
+            style="@style/DemographicsDocsHeaderStyle"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/firstNameTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                style="@style/SigninSignupTextInputStyle">
 
                 <EditText
                     android:id="@+id/firstNameEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/SigninSignupEditStyle"
                     android:hint="@string/firstname_text"
-                    android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/middleNameEditText"
-                    android:singleLine="true"
-                    android:textColor="@color/blue_cerulian"/>
+                    android:nextFocusForward="@+id/middleNameEditText"/>
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/middleNameTextInputLayout"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/middleNameEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/middlename_text"
-                    android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/lastNameEditText"
-                    android:singleLine="true"
-                    android:textColor="@color/blue_cerulian"
-                    />
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/middleNameTextInputLayout"
+                    style="@style/SigninSignupTextInputStyle">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/middleNameEditText"
+                        style="@style/SigninSignupEditStyle"
+                        android:hint="@string/middlename_text"
+                        android:imeOptions="actionNext"
+                        android:maxLength="25"
+                        android:nextFocusForward="@+id/lastNameEditText"
+                        android:paddingTop="0dp"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/signupOptionalLabel"
+                    style="@style/SignupOptionalLabelStyle"
+                    android:text="Optional"/>
+
+            </FrameLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/lastNameTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                style="@style/SigninSignupTextInputStyle">
 
                 <EditText
                     android:id="@+id/lastNameEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/SigninSignupEditStyle"
                     android:hint="@string/lastname_text"
                     android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/emailEditText"
-                    android:singleLine="true"
-                    android:textColor="@color/blue_cerulian"/>
+                    android:nextFocusForward="@+id/emailEditText"/>
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/emailTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                style="@style/SigninSignupTextInputStyle">
 
                 <EditText
                     android:id="@+id/emailEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/email_text"
+                    style="@style/SigninSignupEditStyle"
+                    android:hint="@string/signin_signup_email_hint"
                     android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/passwordEditText"
-                    android:singleLine="true"
-                    android:textColor="@color/blue_cerulian"/>
+                    android:inputType="textEmailAddress"
+                    android:nextFocusForward="@+id/passwordEditText"/>
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/createPasswordTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                style="@style/SigninSignupTextInputStyle">
 
                 <EditText
                     android:id="@+id/createPasswordEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/SigninSignupEditStyle"
                     android:hint="@string/password_text"
-                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
-                    android:nextFocusForward="@+id/repeatPasswordEditText"
-                    android:singleLine="true"
-                    android:textColor="@color/blue_cerulian"/>
+                    android:nextFocusForward="@+id/repeatPasswordEditText"/>
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/repeatPasswordTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:errorTextAppearance="@style/errorTextAppearance">
+                style="@style/SigninSignupTextInputStyle">
 
                 <EditText
                     android:id="@+id/repeatPasswordEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/SigninSignupEditStyle"
                     android:hint="@string/repeat_password_text"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textColor="@color/blue_cerulian"/>
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
-
     </ScrollView>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/signup_bottom_margin"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/submitSignupButton"
             style="@style/DemographicsNextButtonStyle"
             android:background="@drawable/button_selector"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:text="@string/signup_submit_button"/>
 
         <TextView
-            android:id="@+id/oldUserTextView"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="@string/account_exist_textview"
-            android:textColor="@color/blue_cerulian"
-            android:textSize="@dimen/signup_textview_existing_account_size"
-            android:textStyle="bold"/>
+            android:id="@+id/signupAlreadyHaveAccountTextView"
+            style="@style/SigninSignupClickableTextView"
+            android:text="@string/account_exist_textview"/>
     </LinearLayout>
 
 </LinearLayout>

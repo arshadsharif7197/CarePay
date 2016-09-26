@@ -29,8 +29,9 @@ public class AllProviderAdapter extends RecyclerView.Adapter<AllProviderAdapter.
 
     @Override
     public ProviderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.choose_provider_list_item, parent, false);
-        return new ProviderViewHolder(view);
+        View chooseProviderListItemView = LayoutInflater.from(context).inflate(
+                R.layout.choose_provider_list_item, parent, false);
+        return new ProviderViewHolder(chooseProviderListItemView);
     }
 
     @Override
