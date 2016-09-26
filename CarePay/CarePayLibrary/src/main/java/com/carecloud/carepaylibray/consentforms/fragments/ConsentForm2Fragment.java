@@ -111,8 +111,6 @@ public class ConsentForm2Fragment extends Fragment {
             } catch (Exception e) {
             }
         }
-
-
     }
 
     @Override
