@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/15/2016.
  */
-public class GeometryLocation {
+public class GeometryLocationModel {
     @SerializedName("lat")
     @Expose
     private Double lat;

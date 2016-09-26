@@ -74,8 +74,9 @@
                         android:id="@+id/zipCodeId"
                         style="@style/EditTextStyle"
                         android:hint="@string/ZipCodeEditText"
-                        android:maxLength="6"
-                        android:nextFocusForward="@+id/cityId"/>
+                        android:maxLength="9"
+                        android:nextFocusForward="@+id/cityId"
+                        android:digits="0123456789"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -93,7 +94,7 @@
                         <EditText
                             android:id="@+id/cityId"
                             style="@style/CityEditTextStyle"
-                            android:nextFocusRight="@+id/autoTextCompleteStates"/>
+                            android:nextFocusRight="@+id/stateAutoCompleteTextView"/>
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -103,7 +104,7 @@
                         android:layout_weight="1">
 
                         <AutoCompleteTextView
-                            android:id="@+id/autoTextCompleteStates"
+                            android:id="@+id/stateAutoCompleteTextView"
                             style="@style/EditTextStyle"
                             android:hint="@string/StateEditText"
                             android:imeOptions="actionNext"

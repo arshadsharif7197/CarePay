@@ -7,8 +7,10 @@ package com.carecloud.carepaylibray.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -51,6 +53,10 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
+    public static void setProximaNovaSemiboldTextInputLayout(Context context, TextInputLayout view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
+        view.setTypeface(typeface);
+    }
 
     public static void setGothamRoundedBookTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
@@ -59,6 +65,10 @@ public class SystemUtil {
 
     public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
+        view.setTypeface(typeface);
+    }
+    public static void setGothamRoundedBoldTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_bold.otf");
         view.setTypeface(typeface);
     }
 
@@ -117,6 +127,29 @@ public class SystemUtil {
                 textInputLayout.setHint(hintCaps);
             }
         }
+    }
+
+    /**
+     * Shows a message dialog
+     * @param context The context
+     * @param title The title
+     * @param body The message
+     */
+    public static void showDialogMessage(Context context, String title, String body) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title)
+                .setMessage(body)
+                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+        AlertDialog userDialog = builder.create();
+        userDialog.show();
     }
 
 }
