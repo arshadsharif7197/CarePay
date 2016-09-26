@@ -69,7 +69,6 @@ public class SignupFragment extends Fragment {
 
     private Button submitButton;
 
-
     private String       userName;
     private ProgressBar  progressBar;
     private LinearLayout parentLayout;
