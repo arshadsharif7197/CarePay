@@ -52,11 +52,11 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
         if (viewType == SECTION_HEADER) {
-            View v1 = inflater.inflate(R.layout.apt_available_hours_list_header_row, viewGroup, false);
-            viewHolder = new ViewHolderSectionHeader(v1);
+            View availableHoursListHeaderRow = inflater.inflate(R.layout.apt_available_hours_list_header_row, viewGroup, false);
+            viewHolder = new ViewHolderSectionHeader(availableHoursListHeaderRow);
         } else {
-            View v2 = inflater.inflate(R.layout.apt_available_hours_list_data_row, viewGroup, false);
-            viewHolder = new ViewHolderTimeSlot(v2);
+            View availableHoursListDataRow = inflater.inflate(R.layout.apt_available_hours_list_data_row, viewGroup, false);
+            viewHolder = new ViewHolderTimeSlot(availableHoursListDataRow);
         }
         return viewHolder;
     }
