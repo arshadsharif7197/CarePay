@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.carecloud.carepaylibray.activities.LibraryMainActivity">
+        <activity android:name=".AndroidMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

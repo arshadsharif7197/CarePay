@@ -1,9 +1,11 @@
 package com.carecloud.carepaylibray.appointments.models;
 
+import java.io.Serializable;
+
 /**
  * Created by harshal_patil on 9/8/2016.
  */
-public class AppointmentModel {
+public class AppointmentModel implements Serializable {
 
     private String appointmentId;
     private String doctorName;
@@ -11,6 +13,44 @@ public class AppointmentModel {
     private String appointmentType;
     private String appointmentDay;
     private String appointmentDate;
+    private String placeName;
+    private boolean isPending;
+
+    public boolean isPending() {
+        return isPending;
+    }
+
+    public void setPending(boolean pending) {
+        isPending = pending;
+    }
+
+    public String getPlaceAddress() {
+        return placeAddress;
+    }
+
+    public void setPlaceAddress(String placeAddress) {
+        this.placeAddress = placeAddress;
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
+    private String placeAddress;
+
+    public String getButtonTitle() {
+        return buttonTitle;
+    }
+
+    public void setButtonTitle(String buttonTitle) {
+        this.buttonTitle = buttonTitle;
+    }
+
+    private String buttonTitle;
 
     public String getAppointmentDate() {
         return appointmentDate;
@@ -30,7 +70,7 @@ public class AppointmentModel {
 
 
     public AppointmentModel(String aptId,String doctorName, String aptTime, String aptType, String aptDay,String aptDate) {
-        this.appointmentDay = aptId;
+        this.appointmentId = aptId;
         this.doctorName = doctorName;
         this.appointmentTime = aptTime;
         this.appointmentType = aptType;
@@ -38,6 +78,17 @@ public class AppointmentModel {
         this.appointmentDate = aptDate;
 
     }
+
+    public AppointmentModel(String aptId, String doctorName, String aptTime, String aptType, String aptDay, String aptDate, boolean isPending) {
+        this.appointmentId = aptId;
+        this.doctorName = doctorName;
+        this.appointmentTime = aptTime;
+        this.appointmentType = aptType;
+        this.appointmentDay = aptDay;
+        this.appointmentDate = aptDate;
+        this.isPending = isPending;
+    }
+
     public AppointmentModel() {
 
     }
