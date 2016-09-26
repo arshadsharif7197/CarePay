@@ -44,7 +44,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
 
         super.onCreate(savedInstanceState);
 
-        DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
+       /* DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
         Call<DemographicModel> call = apptService.fetchDemographicInformation();
         call.enqueue(new Callback<DemographicModel>()
         {
@@ -59,7 +59,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
             public void onFailure(Call<DemographicModel> call, Throwable t) {
 
             }
-        });
+        });*/
     }
 
     @Override
