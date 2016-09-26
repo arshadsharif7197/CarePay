@@ -23,6 +23,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.utils.DividerItemDecoration;
 import com.carecloud.carepaylibray.appointments.utils.PopupNotificationWithAction;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -277,9 +278,9 @@ public class AppointmentsListFragment extends Fragment {
                 Log.e(LOG_TAG, e.getMessage());
             }
 
-            TextView mTextViewSectionTitleToday = (TextView) getActivity().findViewById(R.id.appointments_section_title_Today);
+            CustomProxyNovaSemiBoldLabel mTextViewSectionTitleToday = (CustomProxyNovaSemiBoldLabel) getActivity().findViewById(R.id.appointments_section_title_Today);
             TextView mTextViewSectionTitleUpcoming = (TextView) getActivity().findViewById(R.id.appointments_section_title_Upcoming);
-            SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleToday );
+            //SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleToday );
             SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleUpcoming );
 
             AppointmentsAdapter appointmentsAdapter = new AppointmentsAdapter(getActivity(), todayAppointmentsItems);
