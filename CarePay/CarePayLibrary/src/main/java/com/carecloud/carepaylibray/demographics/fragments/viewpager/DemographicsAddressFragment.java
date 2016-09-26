@@ -30,6 +30,7 @@ import com.smartystreets.api.us_zipcode.City;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypefaceEdittext;
 
 
@@ -40,6 +41,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     private static final String LOG_TAG = DemographicsAddressFragment.class.getSimpleName();
     View view;
+
     private TextInputLayout      phNoTextInputLayout;
     private TextInputLayout      address1TextInputLayout;
     private TextInputLayout      address2TextInputLayout;
@@ -52,11 +54,22 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private EditText             address2EditText;
     private EditText             cityEditText;
     private Button               nextButton;
+
     private boolean              isAddressValid;
     private boolean              isZipValid;
     private boolean              isCityValid;
     private boolean              isStateValid;
     private boolean              isPhoneValid;
+
+    private TextInputLayout firstNameInputLayout;
+    private TextInputLayout middleNameInputLayout;
+    private TextInputLayout lastNameInputLayout;
+    private EditText        firstNameText;
+    private EditText        middleNameText;
+    private EditText        lastNameText;
+    private boolean         isFirstNameEmpty;
+    private boolean         isLastNameEmpty;
+
     private AutoCompleteTextView stateAutoCompleteTextView;
     private String state_var = null;
     private City                 smartyStreetsResponse ;
@@ -88,6 +101,28 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private void initialiseUIFields() {
         String hint;
 
+        hint = getString(R.string.firstname_text);
+        firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressFirstNameTextInput);
+        firstNameInputLayout.setTag(hint);
+        firstNameText = (EditText) view.findViewById(R.id.demogrAddressFirstNameEdit);
+        firstNameText.setTag(firstNameInputLayout);
+
+        hint = getString(R.string.middlename_text);
+        middleNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressMiddleNameTextInputLayout);
+        middleNameInputLayout.setTag(hint);
+        middleNameText = (EditText) view.findViewById(R.id.demogrAddressMiddleNameEditText);
+        middleNameText.setTag(middleNameInputLayout);
+
+        // set the label
+        TextView optionalLabelMiddleName = (TextView) view.findViewById(R.id.demogrAddresssMiddleNameOptionalLabel);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), optionalLabelMiddleName);
+
+        hint = getString(R.string.lastname_text);
+        lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressLastNameTextInput);
+        lastNameInputLayout.setTag(hint);
+        lastNameText = (EditText) view.findViewById(R.id.demogrAddressLastNameEdit);
+        lastNameText.setTag(lastNameInputLayout);
+
         hint = getString(R.string.Address1EditText);
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address1TextInputLayout.setTag(hint);
@@ -99,6 +134,10 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         address2TextInputLayout.setTag(hint);
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         address2EditText.setTag(address2TextInputLayout);
+
+        // set the label
+        TextView optionalLabelAddress = (TextView) view.findViewById(R.id.demogrAddressOptionalLabel);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), optionalLabelAddress);
 
         hint = getString(R.string.ZipCodeEditText);
         zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
@@ -162,9 +201,44 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         setTypefaces(view);
         setFocusChangeListeners();
         setEditActionListeners();
+        setTextWachers();
+    }
+
+    private void setTextWachers() {
+
     }
 
     private void setEditActionListeners() {
+        firstNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    middleNameText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        middleNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) { // no validations for middle name
+                    lastNameText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        lastNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    address1EditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
         address1EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -245,6 +319,34 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
      * Helper to set focus change listener in order to toggle hint strings to caps
      */
     private void setFocusChangeListeners() {
+        firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) { // show the keyboard
+                    firstNameText.requestFocus();
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, b);
+            }
+        });
+        middleNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                SystemUtil.handleHintChange(view, b);
+                if (b) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+            }
+        });
+        lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, b);
+            }
+        });
         address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -380,8 +482,18 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private void setTypefaces(View view) {
+        setProximaNovaRegularTypefaceLayout(getActivity(), firstNameInputLayout);
+        setProximaNovaRegularTypeface(getActivity(), firstNameText);
+
+        setProximaNovaRegularTypefaceLayout(getActivity(), middleNameInputLayout);
+        setProximaNovaRegularTypeface(getActivity(), middleNameText);
+
+        setProximaNovaRegularTypefaceLayout(getActivity(), lastNameInputLayout);
+        setProximaNovaRegularTypeface(getActivity(), lastNameText);
+
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.addressHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.addressSubHeading));
+
         setProximaNovaSemiboldTypefaceEdittext(getActivity(), zipCodeEditText);
         setProximaNovaSemiboldTypefaceEdittext(getActivity(), address1EditText);
         setProximaNovaSemiboldTypefaceEdittext(getActivity(), address2EditText);

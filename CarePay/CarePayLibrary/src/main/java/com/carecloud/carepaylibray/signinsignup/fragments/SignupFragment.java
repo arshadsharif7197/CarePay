@@ -104,6 +104,12 @@ public class SignupFragment extends Fragment {
 
         setEditTexts(view);
 
+        isFirstNameEmpty = false;  // init false because hidden
+        isLastNameEmpty = false;  // init false because hidden
+        isEmailEmpty = true;
+        isPasswordEmpty = true;
+        isRepeatPasswordEmpty = true;
+
         parentLayout.clearFocus();
 
         return view;
@@ -552,6 +558,11 @@ public class SignupFragment extends Fragment {
         passwordRepeatInputLayout.setErrorEnabled(false);
         passwordRepeatInputLayout.setError(null);
 
+        isFirstNameEmpty = false; // init false because hidden
+        isLastNameEmpty = false; // init false because hidden
+        isEmailEmpty = true;
+        isPasswordEmpty = true;
+        isRepeatPasswordEmpty = true;
     }
 
     @Override
@@ -568,7 +579,7 @@ public class SignupFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Log.v(LOG_TAG, "home pressed");
+            SystemUtil.hideSoftKeyboard(getActivity()); // hide the keyboard (for courtesy)
             reset();
             getActivity().onOptionsItemSelected(item);
             return true;
