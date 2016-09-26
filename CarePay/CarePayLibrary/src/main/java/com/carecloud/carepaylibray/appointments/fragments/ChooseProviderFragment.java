@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.appointments.fragments;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -38,8 +39,10 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
         super.onCreate(savedInstanceState);
 
         ((AddAppointmentActivity) getActivity()).setTitle("Choose Provider");
-        ((AddAppointmentActivity) getActivity()).setToolbarNavigationIcon(
-                ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
+
+        // Set screen navigation icon
+        Drawable closeIcon = ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close);
+        ((AddAppointmentActivity) getActivity()).setToolbarNavigationIcon(closeIcon);
     }
 
     @Nullable
@@ -47,66 +50,66 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_choose_provider, container, false);
+        final View chooseProviderView = inflater.inflate(R.layout.fragment_choose_provider, container, false);
 
         /// DUMMY DATA START
-        AppointmentModel pm = new AppointmentModel();
-        pm.setDoctorName("Dr. Ellie Burton");
-        pm.setAppointmentType("Family Physician");
-        pm.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        pm.setAptId("1234");
-        pm.setPlaceName("Mercy Hospital");
-        pm.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
-        recentProviderItems.add(pm);
-        allProviderItems.add(pm);
+        AppointmentModel appointmentModel = new AppointmentModel();
+        appointmentModel.setDoctorName("Dr. Ellie Burton");
+        appointmentModel.setAppointmentType("Family Physician");
+        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
+        appointmentModel.setAptId("1234");
+        appointmentModel.setPlaceName("Mercy Hospital");
+        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
+        recentProviderItems.add(appointmentModel);
+        allProviderItems.add(appointmentModel);
 
-        pm = new AppointmentModel();
-        pm.setDoctorName("Dr. Joshua Wellington");
-        pm.setAppointmentType("Neurologist");
-        pm.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        pm.setAptId("1234");
-        pm.setPlaceName("Mercy Hospital");
-        pm.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
-        recentProviderItems.add(pm);
-        allProviderItems.add(pm);
+        appointmentModel = new AppointmentModel();
+        appointmentModel.setDoctorName("Dr. Joshua Wellington");
+        appointmentModel.setAppointmentType("Neurologist");
+        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
+        appointmentModel.setAptId("1234");
+        appointmentModel.setPlaceName("Mercy Hospital");
+        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
+        recentProviderItems.add(appointmentModel);
+        allProviderItems.add(appointmentModel);
 
-        pm = new AppointmentModel();
-        pm.setDoctorName("Dr. George Diaz");
-        pm.setAppointmentType("Urologist");
-        pm.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        pm.setAptId("1234");
-        pm.setPlaceName("Mercy Hospital");
-        pm.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
-        allProviderItems.add(pm);
+        appointmentModel = new AppointmentModel();
+        appointmentModel.setDoctorName("Dr. George Diaz");
+        appointmentModel.setAppointmentType("Urologist");
+        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
+        appointmentModel.setAptId("1234");
+        appointmentModel.setPlaceName("Mercy Hospital");
+        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
+        allProviderItems.add(appointmentModel);
 
-        pm = new AppointmentModel();
-        pm.setDoctorName("Dr. Helena S. Harley");
-        pm.setAppointmentType("Pediatry");
-        pm.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        pm.setAptId("1234");
-        pm.setPlaceName("Mercy Hospital");
-        pm.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
-        allProviderItems.add(pm);
+        appointmentModel = new AppointmentModel();
+        appointmentModel.setDoctorName("Dr. Helena S. Harley");
+        appointmentModel.setAppointmentType("Pediatry");
+        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
+        appointmentModel.setAptId("1234");
+        appointmentModel.setPlaceName("Mercy Hospital");
+        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
+        allProviderItems.add(appointmentModel);
         /// DUMMY DATA END
 
         // Load and display Recent provider
         RecentProviderAdapter recentProviderAdapter = new RecentProviderAdapter(getActivity(), recentProviderItems, this);
-        RecyclerView recyclerViewRecent = ((RecyclerView) view.findViewById(R.id.choose_provider_recycler_view_recent));
+        RecyclerView recyclerViewRecent = ((RecyclerView) chooseProviderView.findViewById(R.id.choose_provider_recycler_view_recent));
         recyclerViewRecent.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewRecent.setAdapter(recentProviderAdapter);
 
         // Load and display All provider
         AllProviderAdapter allProviderAdapter = new AllProviderAdapter(getActivity(), allProviderItems, this);
-        RecyclerView recyclerViewAll = ((RecyclerView) view.findViewById(R.id.choose_provider_recycler_view_all));
+        RecyclerView recyclerViewAll = ((RecyclerView) chooseProviderView.findViewById(R.id.choose_provider_recycler_view_all));
         recyclerViewAll.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewAll.setAdapter(allProviderAdapter);
 
-        return view;
+        return chooseProviderView;
     }
 
     private void loadVisitTypeScreen(AppointmentModel model) {
-        VisitTypeDialog dialog = new VisitTypeDialog(getActivity(), model, this);
-        dialog.show();
+        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(getActivity(), model, this);
+        visitTypeDialog.show();
     }
 
     @Override
@@ -123,9 +126,9 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
 
     @Override
     public void onDialogListItemClickListener(AppointmentModel model) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         AvailableHoursFragment visitTypeFragment = (AvailableHoursFragment)
-                fm.findFragmentByTag(AvailableHoursFragment.class.getSimpleName());
+                fragmentManager.findFragmentByTag(AvailableHoursFragment.class.getSimpleName());
 
         if (visitTypeFragment == null) {
             visitTypeFragment = new AvailableHoursFragment();
@@ -135,7 +138,7 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
         bundle.putSerializable("DATA", model);
         visitTypeFragment.setArguments(bundle);
 
-        fm.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
+        fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
                 AvailableHoursFragment.class.getSimpleName()).commit();
     }
 }
