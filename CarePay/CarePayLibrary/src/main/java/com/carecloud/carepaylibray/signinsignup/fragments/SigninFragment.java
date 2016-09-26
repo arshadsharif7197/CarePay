@@ -143,7 +143,7 @@ public class SigninFragment extends Fragment {
         emailEditText.setTag(emailTextInput);
 
         passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
-        passwordTexInput.setTag(getString(R.string.signin_signup_password_hint));
+        passwordTexInput.setTag(getString(R.string.password_text));
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         passwordEditText.setTag(passwordTexInput);
 
