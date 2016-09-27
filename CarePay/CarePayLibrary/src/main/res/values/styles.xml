@@ -389,8 +389,9 @@
         <item name="android:lineSpacingExtra">10dp</item>
         <item name="android:lineSpacingMultiplier">1</item>
         <item name="android:gravity">left</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginLeft">17dp</item>
+        <item name="android:layout_marginRight">17dp</item>
     </style>
 
     <style name="ConsentActivityDoctornameTextStyle" parent="android:Widget.TextView">
@@ -408,7 +409,7 @@
         <item name="android:layout_marginBottom">@dimen/date_textview_top_bottom</item>
     </style>
 
-    <style name="ConsentForm_spinnerStyle" parent="android:Widget.TextView.SpinnerItem">
+    <style name="ConsentForm_GenderStyle" parent="android:Widget.TextView.SpinnerItem">
         <item name="android:text">@string/choose_gender</item>
         <item name="android:layout_marginTop">@dimen/consent_view_margin_top_bottom</item>
         <item name="android:layout_marginLeft">@dimen/consent_spinner_left_margin</item>
@@ -438,6 +439,8 @@
     <style name="Consent_Form_Edit_Text">s
         <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textColorHint">@color/payne_gray</item>
+        <item name="android:inputType">textPersonName</item>
+        <item name="android:singleLine">true</item>
     </style>
 
 

@@ -8,7 +8,10 @@ package com.carecloud.carepaylibray.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
@@ -17,6 +20,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.carecloud.carepaylibrary.R;
+
+import java.util.Date;
+import java.util.Locale;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 public class SystemUtil {
 
@@ -173,6 +183,33 @@ public class SystemUtil {
         AlertDialog userDialog = builder.create();
         userDialog.show();
     }
+
+    /**
+     * convert date string in to month and day.
+     * @param dateStr the String to evaluate
+     */
+    public static String[] onDateParseToString(Context context,String dateStr) {
+        String stringDate[] = dateStr.split(" ");
+        String formateDate[] = new String[2];
+        try {
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(context.getString(R.string.dateFormatString), Locale.ENGLISH);
+            Date appointdate = sdf.parse(stringDate[0]);
+            formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
+                    + DateUtil.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
+            formateDate[1] = stringDate[1] + " " + stringDate[2];
+        } catch (Exception ex) {
+            Log.e(LOG_TAG, ex.getMessage());
+        }
+        return formateDate;
+    }
+
+    public static boolean isNotEmptyString(String string){
+        if (string != null && !string.isEmpty() && !string.equals("null")){
+            return true;
+        }
+        return false;
+    }
+
 
 
     /**

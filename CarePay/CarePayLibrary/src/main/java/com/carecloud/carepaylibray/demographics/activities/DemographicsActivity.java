@@ -10,23 +10,47 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicTransitionsDataObjectModel;
+import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
@@ -36,11 +60,17 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
-    private TextView        title;
-    private int             currentPageIndex;
-    private ViewPager       viewPager;
-    private FunPagerAdapter funPagerAdapter;
-    private Button          nextButton;
+    private TextView title;
+    private int currentPageIndex;
+    private ViewPager viewPager;
+    private DemographicPagerAdapter demographicPagerAdapter;
+    ProgressBar demographicProgressBar;
+
+    private DemographicModel demographicModel = null;
+
+    public DemographicModel getDemographicModel() {
+        return demographicModel;
+    }
 
     @Override
     public int getLayoutRes() {
@@ -75,14 +105,19 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
             setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
         }
-
+        demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
+        demographicProgressBar.setVisibility(View.GONE);
         isStoragePermissionGranted();
+        getDemographicInformation();
+        setupPager();
+    }
 
+    private void setupPager() {
         currentPageIndex = 0;
-        funPagerAdapter = new FunPagerAdapter(getSupportFragmentManager());
+        demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.demographicsViewPager);
         viewPager.setOffscreenPageLimit(4);
-        viewPager.setAdapter(funPagerAdapter);
+        viewPager.setAdapter(demographicPagerAdapter);
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -107,6 +142,88 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setOnPageChangeListener(pageChangeListener);
         indicator.setViewPager(viewPager);
+    }
+
+    private void getDemographicInformation() {
+        demographicProgressBar.setVisibility(View.VISIBLE);
+        DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
+        Call<DemographicModel> call = apptService.fetchDemographicInformation();
+        call.enqueue(new Callback<DemographicModel>() {
+            @Override
+            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+                demographicModel = response.body();
+                demographicProgressBar.setVisibility(View.GONE);
+                Log.d("sdadad", "adasdasdasd");
+
+                if (demographicModel.getPayload().getDemographics()==null) {
+
+                    DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
+                    demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
+                    demographicPayloadAddressModel.setAddress1("#800");
+                    demographicPayloadAddressModel.setCity("Miami");
+                    demographicPayloadAddressModel.setState("FL");
+                    demographicPayloadAddressModel.setZipcode("33127");
+                    demographicPayloadAddressModel.setPhone("18007654222");
+
+                    DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel=new DemographicPayloadPersonalDetailsModel();
+
+                    DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
+
+                    List<String> updates = new ArrayList<String>();
+
+                    DemographicPayloadInfoPayloadModel demographicPayloadInfoPayloadModel = new DemographicPayloadInfoPayloadModel();
+                    demographicPayloadInfoPayloadModel.setAddress(demographicPayloadAddressModel);
+                    demographicPayloadInfoPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
+                    demographicPayloadInfoPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
+                    demographicPayloadInfoPayloadModel.setUpdates(updates);
+
+                    DemographicPayloadInfoMetaDataModel demographicPayloadInfoMetaDataModel=new DemographicPayloadInfoMetaDataModel();
+                    demographicPayloadInfoMetaDataModel.setUsername(CognitoAppHelper.getCurrUser());
+
+                    DemographicPayloadInfoModel demographics=new DemographicPayloadInfoModel();
+                    demographics.setMetadata(demographicPayloadInfoMetaDataModel);
+                    demographics.setPayload(demographicPayloadInfoPayloadModel);
+
+
+                    DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
+                    demographicPayloadModel.setDemographics(demographics);
+                    demographicModel.setPayload(demographicPayloadModel);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<DemographicModel> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    public void confirmDemographicInformation() {
+        if (demographicModel != null) {
+            demographicModel.setMetadata(null);
+            demographicProgressBar.setVisibility(View.VISIBLE);
+            DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
+            Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicModel);
+            call.enqueue(new Callback<DemographicModel>() {
+                @Override
+                public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+                    demographicModel = response.body();
+                    demographicProgressBar.setVisibility(View.GONE);
+                    Log.d("sdadad", "adasdasdasd");
+
+                    Intent appointmentIntent = new Intent(DemographicsActivity.this, AppointmentsActivity.class);
+                    startActivity(appointmentIntent);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Call<DemographicModel> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     private void setScreenTitle(int position) {
@@ -135,7 +252,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     /**
      * Adapter for the viewpager
      */
-    class FunPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
+
+
+    class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 
         final         int   PAGE_COUNT = 4;
         private final int[] ICONS      = new int[]{
@@ -148,7 +267,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         /**
          * Constructor of the class
          */
-        public FunPagerAdapter(FragmentManager fm) {
+        public DemographicPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -213,7 +332,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
      * @return The fragments
      */
     public Fragment getFragmentAt(int pos) {
-        return ((FunPagerAdapter) viewPager.getAdapter()).getItem(pos);
+        return ((DemographicPagerAdapter) viewPager.getAdapter()).getItem(pos);
     }
 
     @Override
