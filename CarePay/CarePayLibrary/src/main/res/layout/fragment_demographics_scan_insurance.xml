@@ -82,7 +82,7 @@
         <TextView
             android:id="@+id/demogr_insurance_num"
             style="@style/DemographicsDocsNumberStyle"
-            android:visibility="gone"/>
+            android:text=""/>
 
     </LinearLayout>
 
