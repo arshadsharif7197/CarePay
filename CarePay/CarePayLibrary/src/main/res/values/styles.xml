@@ -97,6 +97,7 @@
     </style>
 
     <style name="EditTextStyle" parent="android:Widget.EditText">
+        <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">17.0sp</item>
@@ -110,6 +111,7 @@
         <item name="android:hint">@string/CityEditText</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:maxLength">255</item>
+        <item name="android:paddingStart">0dp</item>
     </style>
 
     <style name="SigninSignupClickableTextView">
@@ -296,8 +298,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/bright_cerulean</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
         <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginBottom">@dimen/demographics_docs_section_margin_top</item>
+        <item name="android:layout_marginStart">3dp</item>
     </style>
 
     <!-- Signin Signup -->
@@ -319,7 +323,6 @@
     <style name="SigninSignupTextInputStyle" parent="TextInputLayoutStyle"/>
 
     <style name="SigninSignupEditStyle" parent="EditTextStyle">
-        <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:imeOptions">actionNext</item>
     </style>
 

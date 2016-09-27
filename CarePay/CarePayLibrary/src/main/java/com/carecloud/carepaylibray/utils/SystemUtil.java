@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;

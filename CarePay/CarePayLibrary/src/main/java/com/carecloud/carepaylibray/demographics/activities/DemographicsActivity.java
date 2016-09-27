@@ -10,12 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -108,7 +106,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
         isStoragePermissionGranted();
-        getDemographicInformation();
+//        getDemographicInformation();
         setupPager();
     }
 
