@@ -29,7 +29,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/demographics_docs_section_margin_top"
+        android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
         android:layout_weight="1">
 
         <LinearLayout

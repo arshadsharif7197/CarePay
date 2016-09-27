@@ -65,7 +65,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         showAddCardButton(false);
 
         // disable next button
-        enableNextButton(false);
+//        enableNextButton(false); // TODO: 9/27/2016 uncomment
 
         return view;
     }

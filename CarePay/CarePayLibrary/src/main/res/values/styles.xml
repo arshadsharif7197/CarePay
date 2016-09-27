@@ -133,6 +133,13 @@
         <item name="android:textSize">@dimen/signup_optional_label_text_size</item>
     </style>
 
+    <style name="CustomToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <!-- Responsibility styles -->
 
     <style name="ResponsTotalLabelStyle" parent="android:Widget.TextView">

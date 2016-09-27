@@ -61,6 +61,7 @@
     <dimen name="demographics_docs_thumbnail_width">100dp</dimen>
     <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
     <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
+    <dimen name="demographics_address_bottom_margin">20dp</dimen>
 
 
     <!-- Demographics Address -->
