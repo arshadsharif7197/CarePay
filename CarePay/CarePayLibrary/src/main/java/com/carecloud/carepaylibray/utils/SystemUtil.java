@@ -8,14 +8,26 @@ package com.carecloud.carepaylibray.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.carecloud.carepaylibrary.R;
+
+import java.util.Date;
+import java.util.Locale;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 public class SystemUtil {
 
@@ -77,6 +89,15 @@ public class SystemUtil {
         view.setTypeface(typeface);
     }
 
+    /**
+     * Set the type face of a text input layout
+     * @param context The context
+     * @param layout The layout
+     */
+    public static void setProximaNovaRegularTypefaceLayout(Context context, TextInputLayout layout) {
+        Typeface proximaNovaRegular = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/proximanova_regular.otf");
+        layout.setTypeface(proximaNovaRegular);
+    }
 
     /**
      * Hides the keyboard
@@ -86,6 +107,15 @@ public class SystemUtil {
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+    }
+
+    /**
+     * Shows the soft keyboard
+     * @param activity The activity
+     */
+    public static void showSoftKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     /**
@@ -104,26 +134,29 @@ public class SystemUtil {
         if (textInputLayout == null) {
             return;
         }
+
+        boolean error = textInputLayout.isErrorEnabled();
         String hint = (String) textInputLayout.getTag();
         if (hint == null) {
-            hint = ""; // if no hint use the empty string
+            hint = ""; // if no hint, use the empty string as hint
         }
         String hintCaps = hint.toUpperCase();
         String text = editText.getText().toString();
-        if (hasFocus) {
-            // focus gained; set the hint to text input layout
+        if (hasFocus) { // focus gained
+            // set the hint to text input layout (in caps)
             textInputLayout.setHint(hintCaps);
-            if (StringUtil.isNullOrEmpty(text)) {
-                // if no text set empty hint in the edit
+            if (StringUtil.isNullOrEmpty(text)) { // but only if there is no text in the edit
                 editText.setHint("");
             }
-        } else {
-            if (StringUtil.isNullOrEmpty(text)) { // lose focus, and no text in the edit
+        } else { // focus lost
+            if (StringUtil.isNullOrEmpty(text) && !error) { // if no text in the edit and error not enabled
                 // remove hint from the text input layout
                 textInputLayout.setHint("");
                 // change hint to lower in the edit
+                setProximaNovaRegularTypeface(view.getContext(), editText);
                 editText.setHint(hint);
-            } else {
+            } else { // there is some text in the edit or the error is enabled
+                // keep the hint up
                 textInputLayout.setHint(hintCaps);
             }
         }
@@ -151,5 +184,32 @@ public class SystemUtil {
         AlertDialog userDialog = builder.create();
         userDialog.show();
     }
+
+    /**
+     * convert date string in to month and day.
+     * @param dateStr the String to evaluate
+     */
+    public static String[] onDateParseToString(Context context,String dateStr) {
+        String stringDate[] = dateStr.split(" ");
+        String formateDate[] = new String[2];
+        try {
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(context.getString(R.string.dateFormatString), Locale.ENGLISH);
+            Date appointdate = sdf.parse(stringDate[0]);
+            formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
+                    + DateUtil.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
+            formateDate[1] = stringDate[1] + " " + stringDate[2];
+        } catch (Exception ex) {
+            Log.e(LOG_TAG, ex.getMessage());
+        }
+        return formateDate;
+    }
+
+    public static boolean isNotEmptyString(String string){
+        if (string != null && !string.isEmpty() && !string.equals("null")){
+            return true;
+        }
+        return false;
+    }
+
 
 }

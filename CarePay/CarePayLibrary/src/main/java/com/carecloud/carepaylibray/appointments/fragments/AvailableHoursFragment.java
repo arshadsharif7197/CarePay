@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.appointments.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -42,8 +43,10 @@ public class AvailableHoursFragment extends Fragment {
         }
 
         getActivity().setTitle(R.string.apt_available_hours_title);
-        ((AddAppointmentActivity) getActivity()).setToolbarNavigationIcon(
-                ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+
+        // Set Navigation icon
+        Drawable backIcon = ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back) ;
+        ((AddAppointmentActivity) getActivity()).setToolbarNavigationIcon(backIcon);
     }
 
     @SuppressLint("DefaultLocale")
@@ -52,25 +55,27 @@ public class AvailableHoursFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_available_hours_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.available_hours_recycler_view);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        recyclerView.setAdapter(new AvailableHoursAdapter(getActivity(), getSampleArrayList(), model));
+        View availableHoursListView = inflater.inflate(R.layout.fragment_available_hours_list, container, false);
+        
+        LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(getActivity());
+        availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        
+        RecyclerView availableHoursRecycleView = (RecyclerView) availableHoursListView.findViewById(R.id.available_hours_recycler_view);
+        availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
+        availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(), getSampleArrayList(), model));
 
-        final Button datePickerButton = (Button) view.findViewById(R.id.add_appointment_date_pick);
+        final Button appointmentDatePickerButton = (Button) availableHoursListView.findViewById(R.id.add_appointment_date_pick);
         Calendar calendar = Calendar.getInstance();
-        datePickerButton.setText(String.format("%1$tA, %1$tb %1$td", calendar));
+        appointmentDatePickerButton.setText(String.format("%1$tA, %1$tb %1$td", calendar));
 
-        datePickerButton.setOnClickListener(new View.OnClickListener() {
+        appointmentDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setScheduleDate(datePickerButton);
+                setScheduleDate(appointmentDatePickerButton);
             }
         });
 
-        return view;
+        return availableHoursListView;
     }
 
     @SuppressLint("DefaultLocale")
@@ -80,7 +85,7 @@ public class AvailableHoursFragment extends Fragment {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        final DatePickerDialog mDatePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog appointmentDatePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 Calendar calendar = Calendar.getInstance();
@@ -89,8 +94,8 @@ public class AvailableHoursFragment extends Fragment {
             }
         }, year, month, day);
 
-        mDatePicker.setTitle("Pick a Date");
-        mDatePicker.show();
+        appointmentDatePicker.setTitle("Pick a Date");
+        appointmentDatePicker.show();
     }
 
     /**
