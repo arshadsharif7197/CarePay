@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.base;
 import android.content.Context;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.constants.ResponseConstants;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -74,6 +75,8 @@ public class BaseServiceGenerator {
                 Request.Builder requestBuilderWithToken = original.newBuilder()
                         .header("Content-Type", "application/json")
                         .header("Accept", "application/json")
+                        .header("username", CognitoAppHelper.getCurrUser())
+                        .header("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())
                         .method(original.method(), original.body());
                 Request request = requestBuilderWithToken.build();
                 return chain.proceed(request);
