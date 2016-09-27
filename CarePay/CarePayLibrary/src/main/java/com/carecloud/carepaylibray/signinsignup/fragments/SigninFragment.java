@@ -31,7 +31,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.Authentic
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -94,9 +93,9 @@ public class SigninFragment extends Fragment {
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if (areAllValid()) {
+                if (areAllValid()) {
                     signInUser();
-                //}
+                }
             }
         });
 
@@ -307,10 +306,7 @@ public class SigninFragment extends Fragment {
 
     private void launchUser() {
         reset();
-
-        // TODO change to appointment. using Demographic for endpoint integration
-        //Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
-        Intent userActivity = new Intent(getActivity(), DemographicsActivity.class);
+        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
         startActivity(userActivity);
         getActivity().finish();
     }
