@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_apt"
+    android:id="@+id/rootDialogQRtLayout"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/dialogQRHeaderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_gravity="left"
+            android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+            android:gravity="left"
+            android:text="@string/close"
+            android:src="@drawable/icn_patient_mode_nav_close"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/apt_dl_margin"
+        android:paddingLeft="@dimen/apt_dl_margin"
+        android:paddingRight="@dimen/apt_dl_margin"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+<TextView
+    android:layout_width="match_parent"
+    android:text="Scan the code below at the practice"
+    android:layout_marginLeft="@dimen/qr_code_header_text_padding"
+    android:layout_marginRight="@dimen/qr_code_header_text_padding"
+    android:layout_marginTop="@dimen/apt_dl_margin"
+    android:textSize="@dimen/qr_code_header_text"
+    android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:src="@drawable/qr_code"
+        android:layout_marginTop="@dimen/apt_dl_margin"
+        android:layout_height="200dp" />
+    <Button
+        android:id="@+id/qrcodeCancelButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/apt_dl_margin"
+        android:background="@drawable/button_blue_border"
+        android:text="@string/cancel_button"
+        android:textColor="@color/blue_cerulian"
+        android:textSize="@dimen/apt_dl_textview_size" />
+</LinearLayout>
+</LinearLayout>
