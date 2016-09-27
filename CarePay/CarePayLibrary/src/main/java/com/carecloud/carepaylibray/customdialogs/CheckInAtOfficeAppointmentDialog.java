@@ -20,9 +20,11 @@ public class CheckInAtOfficeAppointmentDialog  extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
+    private AppointmentModel appointmentModel;
     public CheckInAtOfficeAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
+        this.appointmentModel = appointmentModel;
     }
 
     @Override

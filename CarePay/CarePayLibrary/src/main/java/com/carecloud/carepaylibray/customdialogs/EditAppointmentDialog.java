@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import org.w3c.dom.Text;
 
@@ -23,9 +24,11 @@ public class EditAppointmentDialog  extends BaseDoctorInfoDialog {
 
     private LinearLayout rootLayout;
     private Context context;
+    private AppointmentModel appointmentModel;
     public EditAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
+        this.appointmentModel = appointmentModel;
     }
 
     @Override
@@ -39,6 +42,8 @@ public class EditAppointmentDialog  extends BaseDoctorInfoDialog {
         TextView editAppointmentTextView = (TextView)rootLayout.findViewById(R.id.dialogEditAppointTextView);
         editAppointmentTextView.setVisibility(View.VISIBLE);
         editAppointmentTextView.setText(R.string.edit_appointment_dialog);
+        editAppointmentTextView.setTextColor(context.getResources().getColor(R.color.glitter));
+        SystemUtil.setGothamRoundedMediumTypeface(context,editAppointmentTextView);
         editAppointmentTextView.setOnClickListener(this);
     }
 
