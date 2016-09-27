@@ -3,31 +3,117 @@ package com.carecloud.carepaylibray.demographics.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
  */
 public class DemographicPayloadModel {
 
-    @SerializedName("demographics")
+    @SerializedName("address")
     @Expose
-    private DemographicPayloadInfoModel demographics;
-
+    private DemographicPayloadAddressModel address;
+    @SerializedName("personal_details")
+    @Expose
+    private DemographicPayloadPersonalDetailsModel personalDetails;
+    @SerializedName("drivers_license")
+    @Expose
+    private DemographicPayloadDriversLicenseModel driversLicense;
+    @SerializedName("insurances")
+    @Expose
+    private List<DemographicPayloadInsuranceModel> insurances = new ArrayList<DemographicPayloadInsuranceModel>();
+    @SerializedName("updates")
+    @Expose
+    private List<String> updates = new ArrayList<String>();
 
     /**
      *
      * @return
-     * The demographics
+     * The address
      */
-    public DemographicPayloadInfoModel getDemographics() {
-        return demographics;
+    public DemographicPayloadAddressModel getAddress() {
+        return address;
     }
 
     /**
      *
-     * @param demographics
-     * The demographics
+     * @param address
+     * The address
      */
-    public void setDemographics(DemographicPayloadInfoModel demographics) {
-        this.demographics = demographics;
+    public void setAddress(DemographicPayloadAddressModel address) {
+        this.address = address;
+    }
+
+    /**
+     *
+     * @return
+     * The personalDetails
+     */
+    public DemographicPayloadPersonalDetailsModel getPersonalDetails() {
+        return personalDetails;
+    }
+
+    /**
+     *
+     * @param personalDetails
+     * The personal_details
+     */
+    public void setPersonalDetails(DemographicPayloadPersonalDetailsModel personalDetails) {
+        this.personalDetails = personalDetails;
+    }
+
+    /**
+     *
+     * @return
+     * The driversLicense
+     */
+    public DemographicPayloadDriversLicenseModel getDriversLicense() {
+        return driversLicense;
+    }
+
+    /**
+     *
+     * @param driversLicense
+     * The drivers_license
+     */
+    public void setDriversLicense(DemographicPayloadDriversLicenseModel driversLicense) {
+        this.driversLicense = driversLicense;
+    }
+
+    /**
+     *
+     * @return
+     * The insurances
+     */
+    public List<DemographicPayloadInsuranceModel> getInsurances() {
+        return insurances;
+    }
+
+    /**
+     *
+     * @param insurances
+     * The insurances
+     */
+    public void setInsurances(List<DemographicPayloadInsuranceModel> insurances) {
+        this.insurances = insurances;
+    }
+
+    /**
+     *
+     * @return
+     * The updates
+     */
+    public List<String> getUpdates() {
+        return updates;
+    }
+
+    /**
+     *
+     * @param updates
+     * The updates
+     */
+    public void setUpdates(List<String> updates) {
+        this.updates = updates;
     }
 }
