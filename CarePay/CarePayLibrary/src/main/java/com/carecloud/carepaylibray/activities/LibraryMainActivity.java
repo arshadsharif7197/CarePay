@@ -36,30 +36,11 @@ import retrofit2.Response;
 
 public class LibraryMainActivity extends KeyboardHolderActivity {
 
-    DemographicModel model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // init Cognito
         CognitoAppHelper.init(getApplicationContext());
-
         super.onCreate(savedInstanceState);
-
-       /* DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.fetchDemographicInformation();
-        call.enqueue(new Callback<DemographicModel>()
-        {
-            @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                model=response.body();
-                DemographicTransitionsDataObjectModel dd= model.getMetadata().getTransitions().getConfirmDemographics().getData();
-                Log.d("sdadad","adasdasdasd");
-            }
-
-            @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
-
-            }
-        });*/
     }
 
     @Override
