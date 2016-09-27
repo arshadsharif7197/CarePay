@@ -106,7 +106,7 @@
 
                 <EditText
                     android:id="@+id/addressEditTextId"
-                    style="@style/EditTextStyle"
+                    style="@style/SigninSignupEditStyle"
                     android:hint="@string/Address1EditText"
                     android:imeOptions="actionNext"
                     android:nextFocusForward="@+id/addressEditText2Id"/>
@@ -124,7 +124,7 @@
 
                     <EditText
                         android:id="@+id/addressEditText2Id"
-                        style="@style/EditTextStyle"
+                        style="@style/SigninSignupEditStyle"
                         android:hint="@string/Address2EditText"
                         android:imeOptions="actionNext"
                         android:nextFocusForward="@+id/zipCodeId"/>
@@ -144,7 +144,7 @@
 
                 <EditText
                     android:id="@+id/zipCodeId"
-                    style="@style/EditTextStyle"
+                    style="@style/SigninSignupEditStyle"
                     android:digits="0123456789"
                     android:hint="@string/ZipCodeEditText"
                     android:imeOptions="actionNext"
@@ -195,7 +195,7 @@
 
                 <EditText
                     android:id="@+id/phNoEditText"
-                    style="@style/EditTextStyle"
+                    style="@style/SigninSignupEditStyle"
                     android:hint="@string/PhoneNumberEditText"
                     android:imeOptions="actionDone"
                     android:inputType="phone"
