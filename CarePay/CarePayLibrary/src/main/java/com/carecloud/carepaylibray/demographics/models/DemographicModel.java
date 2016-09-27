@@ -12,6 +12,10 @@ public class DemographicModel {
     @Expose
     private DemographicPayloadModel payload;
 
+    @SerializedName("state")
+    @Expose
+    private String state;
+
     /**
      *
      * @return
@@ -46,5 +50,23 @@ public class DemographicModel {
      */
     public void setPayload(DemographicPayloadModel payload) {
         this.payload = payload;
+    }
+
+    /**
+     *
+     * @return
+     * The state
+     */
+    public String getState() {
+        return state;
+    }
+
+    /**
+     *
+     * @param state
+     * The state
+     */
+    public void setState(String state) {
+        this.state = state;
     }
 }
