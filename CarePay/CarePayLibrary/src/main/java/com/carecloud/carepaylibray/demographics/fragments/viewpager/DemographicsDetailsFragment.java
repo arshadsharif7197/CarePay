@@ -14,12 +14,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
+
 import java.util.Arrays;
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;

@@ -18,6 +18,7 @@ import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.consentforms.interfaces.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
