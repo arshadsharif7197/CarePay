@@ -186,7 +186,7 @@
     <string name="empty_city_error_messae">Enter city</string>
     <string name="minimum_char_in_city_error_messae">Minimum three letters</string>
     <string name="empty_state_error_messae">Enter state</string>
-    <string name="select_state_error_messae">Select state from list only</string>
+    <string name="select_state_error_messae">The state is invalid</string>
     <string name="add_medical_info">Add More</string>
 
     <string name="check_in_at_office">CHECK-IN \nAT OFFICE</string>
@@ -243,5 +243,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="apt_available_hours_title">Available Hours</string>
 
     <string name="checked_in_label">CHECKED-IN</string>
+    <string name="demogr_section_name_label">Name</string>
+    <string name="demogr_section_address_label">Address</string>
 
 </resources>
