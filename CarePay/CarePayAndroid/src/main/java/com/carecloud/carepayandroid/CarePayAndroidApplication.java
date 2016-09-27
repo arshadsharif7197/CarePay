@@ -3,6 +3,7 @@ package com.carecloud.carepayandroid;
 import android.app.Application;
 
 import com.carecloud.carepayandroid.base.CarePayActivityLifecycleCallbacks;
+import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
 
@@ -15,5 +16,6 @@ public class CarePayAndroidApplication extends Application {
         super.onCreate();
         ApplicationPreferences.createPreferences(this);
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
+        CognitoAppHelper.init(getApplicationContext());
     }
 }
