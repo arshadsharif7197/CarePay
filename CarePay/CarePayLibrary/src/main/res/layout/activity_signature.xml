@@ -57,6 +57,7 @@
             android:layout_marginRight="@dimen/marginleftright"
             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:hint="@string/hint"
+            android:textColor="@color/bright_cerulean"
             android:visibility="gone" />
 
         <EditText
@@ -68,6 +69,8 @@
             android:layout_marginRight="@dimen/marginleftright"
             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:hint="@string/hint_last"
+            android:textColorHint="@color/pastelblue"
+            android:textColor="@color/bright_cerulean"
             android:visibility="gone" />
 
         <include
@@ -76,6 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/legalLastName"
+            android:textColorHint="@color/pastelblue"
             android:layout_marginLeft="@dimen/marginleftright"
             android:layout_marginRight="@dimen/marginleftright"
             android:layout_marginTop="@dimen/consent_top" />

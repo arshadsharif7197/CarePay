@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -52,38 +53,33 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SignupFragment extends Fragment {
 
+    private LinearLayout parentLayout;
+    private ProgressBar  progressBar;
+
     private TextInputLayout firstNameInputLayout;
     private TextInputLayout middleNameInputLayout;
     private TextInputLayout lastNameInputLayout;
+    private EditText        firstNameText;
+    private EditText        middleNameText;
+    private EditText        lastNameText;
+    private boolean         isFirstNameEmpty;
+    private boolean         isLastNameEmpty;
+
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
     private TextInputLayout passwordRepeatInputLayout;
+    private EditText        emailText;
+    private EditText        passwordText;
+    private EditText        repeatPasswordText;
+    private boolean         isEmailEmpty;
+    private boolean         isPasswordEmpty;
+    private boolean         isRepeatPasswordEmpty;
 
-    private EditText firstNameText;
-    private EditText middleNameText;
-    private EditText lastNameText;
-    private EditText emailText;
-    private EditText passwordText;
-    private EditText repeatPasswordText;
+    private Button   submitButton;
     private TextView accountExistTextView;
 
-    private Button submitButton;
+    private String userName;
 
-
-    private String       userName;
-    private ProgressBar  progressBar;
-    private LinearLayout parentLayout;
-
-    private boolean isFirstNameEmpty;
-    private boolean isValidFirstName;
-    private boolean isLastNameEmpty;
-    private boolean isValidLastName;
-    private boolean isEmailEmpty;
-    private boolean isValidEmail;
-    private boolean isPasswordEmpty;
-    private boolean isValidPassword;
-    private boolean isPasswordMatch;
-    private boolean isRepeatPasswordEmpty;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,26 +97,18 @@ public class SignupFragment extends Fragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                reset();
-                FragmentManager fm = getFragmentManager();
-                SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = new SigninFragment();
-                }
-                fm.beginTransaction()
-                        .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
-                        .commit();
-            }
-        });
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
         setClickables(view);
 
         setEditTexts(view);
+
+        isFirstNameEmpty = false;  // init false because hidden
+        isLastNameEmpty = false;  // init false because hidden
+        isEmailEmpty = true;
+        isPasswordEmpty = true;
+        isRepeatPasswordEmpty = true;
 
         parentLayout.clearFocus();
 
@@ -129,18 +117,9 @@ public class SignupFragment extends Fragment {
 
     private void setClickables(View view) {
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
-        Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
-        submitButton.setTypeface(buttonFontFamily);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // check all
-                isValidFirstName = checkFirstName();
-                isValidLastName = checkLastName();
-                isValidEmail = checkEmail();
-                isValidPassword = checkPassword();
-                isPasswordMatch = checkPasswordsMatch();
-
                 if (areAllValid()) {
                     // request user registration ony if all fiels are valid
                     registerUser();
@@ -215,18 +194,6 @@ public class SignupFragment extends Fragment {
         setActionListeners();
 
         setTextWatchers();
-
-        isValidFirstName = false;
-        isValidLastName = false;
-        isValidPassword = false;
-        isValidEmail = false;
-        isPasswordMatch = false;
-
-        isFirstNameEmpty = true;
-        isLastNameEmpty = true;
-        isEmailEmpty = true;
-        isPasswordEmpty = true;
-        isRepeatPasswordEmpty = true;
     }
 
     private void setTextWatchers() {
@@ -244,6 +211,10 @@ public class SignupFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isFirstNameEmpty = StringUtil.isNullOrEmpty(firstNameText.getText().toString());
+                if (!isFirstNameEmpty) {
+                    firstNameInputLayout.setError(null);
+                    firstNameInputLayout.setErrorEnabled(false);
+                }
                 enableSignupButton();
             }
         });
@@ -262,6 +233,10 @@ public class SignupFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isLastNameEmpty = StringUtil.isNullOrEmpty(lastNameText.getText().toString());
+                if (!isLastNameEmpty) {
+                    lastNameInputLayout.setError(null);
+                    lastNameInputLayout.setErrorEnabled(false);
+                }
                 enableSignupButton();
             }
         });
@@ -280,6 +255,10 @@ public class SignupFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isEmailEmpty = StringUtil.isNullOrEmpty(emailText.getText().toString());
+                if (!isEmailEmpty) {
+                    emailInputLayout.setError(null);
+                    emailInputLayout.setErrorEnabled(false);
+                }
                 enableSignupButton();
             }
         });
@@ -298,6 +277,10 @@ public class SignupFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isPasswordEmpty = StringUtil.isNullOrEmpty(passwordText.getText().toString());
+                if (!isPasswordEmpty) {
+                    passwordInputLayout.setError(null);
+                    passwordInputLayout.setErrorEnabled(false);
+                }
                 enableSignupButton();
             }
         });
@@ -315,6 +298,10 @@ public class SignupFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isRepeatPasswordEmpty = StringUtil.isNullOrEmpty(repeatPasswordText.getText().toString());
+                if (!isRepeatPasswordEmpty) {
+                    passwordRepeatInputLayout.setError(null);
+                    passwordRepeatInputLayout.setErrorEnabled(false);
+                }
                 enableSignupButton();
             }
         });
@@ -327,9 +314,7 @@ public class SignupFragment extends Fragment {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b) { // when loosing focus, validate as well
-                    isValidFirstName = checkFirstName();
-                } else { // show the keyboard
+                if (b) { // show the keyboard
                     firstNameText.requestFocus();
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
@@ -348,9 +333,7 @@ public class SignupFragment extends Fragment {
         lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    isValidLastName = checkLastName();
-                } else {
+                if (b) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
@@ -359,9 +342,7 @@ public class SignupFragment extends Fragment {
         emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    isValidEmail = checkEmail();
-                } else {
+                if (b) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
@@ -370,12 +351,7 @@ public class SignupFragment extends Fragment {
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    isValidPassword = checkPassword();
-                    if (!isRepeatPasswordEmpty) {  // check reactively if the match password, if repeated not empty
-                        isPasswordMatch = checkPasswordsMatch();
-                    }
-                } else {
+                if (b) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
@@ -384,9 +360,7 @@ public class SignupFragment extends Fragment {
         repeatPasswordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    isPasswordMatch = checkPasswordsMatch();
-                } else {
+                if (b) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
@@ -399,7 +373,6 @@ public class SignupFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
-                    isValidFirstName = checkFirstName();
                     middleNameText.requestFocus();
                     return true;
                 }
@@ -420,7 +393,6 @@ public class SignupFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
-                    isValidLastName = checkLastName();
                     emailText.requestFocus();
                     return true;
                 }
@@ -431,7 +403,6 @@ public class SignupFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
-                    isValidEmail = checkEmail();
                     passwordText.requestFocus();
                     return true;
                 }
@@ -442,11 +413,6 @@ public class SignupFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
-                    isValidPassword = checkPassword();
-                    if (!isRepeatPasswordEmpty) { // check reactively if the match password, if repeated not empty
-                        isPasswordMatch = checkPasswordsMatch();
-                    }
-
                     repeatPasswordText.requestFocus();
                     return true;
                 }
@@ -457,7 +423,6 @@ public class SignupFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE) {
-                    isPasswordMatch = checkPasswordsMatch();
                     repeatPasswordText.clearFocus();
                     parentLayout.requestFocus();
                     SystemUtil.hideSoftKeyboard(getActivity());
@@ -469,41 +434,26 @@ public class SignupFragment extends Fragment {
     }
 
     private void setTypefaces() {
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), firstNameInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), firstNameText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), firstNameInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), firstNameText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), middleNameInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), middleNameText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), middleNameInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), middleNameText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), lastNameInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), lastNameText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), lastNameInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), lastNameText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), emailInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), emailText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), passwordInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), passwordText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), passwordRepeatInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), repeatPasswordText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordRepeatInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), repeatPasswordText);
 
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), accountExistTextView);
-    }
-
-    private boolean checkFirstName() { // valid  means non-empty
-        isFirstNameEmpty = StringUtil.isNullOrEmpty(firstNameText.getText().toString());
-        String error = (isFirstNameEmpty ? getString(R.string.signup_error_empty_first_name) : null);
-        firstNameInputLayout.setErrorEnabled(isFirstNameEmpty);
-        firstNameInputLayout.setError(error);
-        return !isFirstNameEmpty;
-    }
-
-    private boolean checkLastName() {
-        isLastNameEmpty = StringUtil.isNullOrEmpty(lastNameText.getText().toString());
-        String error = (isLastNameEmpty ? getString(R.string.signup_error_empty_last_name) : null);
-        lastNameInputLayout.setErrorEnabled(isLastNameEmpty);
-        lastNameInputLayout.setError(error);
-        return !isLastNameEmpty;
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), accountExistTextView);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), submitButton);
     }
 
     private boolean checkEmail() {
@@ -551,11 +501,21 @@ public class SignupFragment extends Fragment {
     }
 
     private boolean areAllValid() {
-        return isValidFirstName
-                && isValidLastName
-                && isValidEmail
-                && isValidPassword
-                && isPasswordMatch;
+        // check in reverse order that they are placed on the screen
+        boolean isPasswordMatch = checkPasswordsMatch();
+        if (!isPasswordMatch) {
+            repeatPasswordText.requestFocus();
+        }
+        boolean isValidPassword = checkPassword();
+        if (!isValidPassword) {
+            passwordText.requestFocus();
+        }
+        boolean isValidEmail = checkEmail();
+        if (!isValidEmail) {
+            emailText.requestFocus();
+        }
+
+        return isValidEmail && isValidPassword && isPasswordMatch;
     }
 
     private void enableSignupButton() {
@@ -597,17 +557,11 @@ public class SignupFragment extends Fragment {
         passwordRepeatInputLayout.setErrorEnabled(false);
         passwordRepeatInputLayout.setError(null);
 
-        isFirstNameEmpty = true;
-        isLastNameEmpty = true;
+        isFirstNameEmpty = false; // init false because hidden
+        isLastNameEmpty = false; // init false because hidden
         isEmailEmpty = true;
         isPasswordEmpty = true;
         isRepeatPasswordEmpty = true;
-
-        isValidFirstName = false;
-        isValidLastName = false;
-        isValidEmail = false;
-        isValidPassword = false;
-        isPasswordMatch = false;
     }
 
     @Override
@@ -619,6 +573,17 @@ public class SignupFragment extends Fragment {
                 CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            SystemUtil.hideSoftKeyboard(getActivity()); // hide the keyboard (for courtesy)
+            reset();
+            getActivity().onOptionsItemSelected(item);
+            return true;
+        }
+        return false;
     }
 
     // cognito

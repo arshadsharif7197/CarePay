@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.customdialogs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +10,18 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 
 /**
- * Created by prem_mourya on 9/22/2016.
+ * Created by prem_mourya on 9/27/2016.
  */
 
-public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
+public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
     private AppointmentModel appointmentModel;
-    public CheckInEarlyAppointmentDialog(Context context, AppointmentModel appointmentModel) {
+    public QueueAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
         this.appointmentModel = appointmentModel;
@@ -28,33 +30,15 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainLayout = (LinearLayout) getAddActionChildView();
-        setActionButton();
+        mainLayout = (LinearLayout)getAddActionChildView();
+        setChildView();
     }
-
-    private void setActionButton() {
+    private void setChildView(){
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View childActionView = inflater.inflate(R.layout.dialog_checkin_early_appointment, null);
-        Button checkin = (Button) childActionView.findViewById(R.id.checkinEarlyButton);
-        checkin.setOnClickListener(this);
+        View childActionView = inflater.inflate(R.layout.dialog_queue_appointment, null);
 
         mainLayout.addView(childActionView);
     }
 
-    @Override
-    public void onClick(View view) {
-        super.onClick(view);
-        int viewId = view.getId();
-        if (viewId == R.id.checkinEarlyButton) {
-            onCheckInEarly();
-            cancel();
-        }
-    }
-
-    /**
-     * call check-in Now api.
-     */
-    private void onCheckInEarly() {
-    }
 }

@@ -166,6 +166,7 @@
     <dimen name="apt_popup_message_text_line_spacing">20sp</dimen>
     <dimen name="apt_popup_button_text">13sp</dimen>
     <dimen name="apt_popup_button_margin">6dp</dimen>
+    <dimen name="apt_popup_optional">10sp</dimen>
 
     <!-- Cognito -->
     <dimen name="activity_intra_group_separation">10dp</dimen>
@@ -197,5 +198,6 @@
     <dimen name="choose_provider_title_margin_top">26dp</dimen>
     <dimen name="choose_provider_title_margin_start">17dp</dimen>
     <dimen name="checked_in_label_font">14sp</dimen>
-
+    <dimen name="qr_code_header_text">22sp</dimen>
+    <dimen name="qr_code_header_text_padding">79dp</dimen>
 </resources>

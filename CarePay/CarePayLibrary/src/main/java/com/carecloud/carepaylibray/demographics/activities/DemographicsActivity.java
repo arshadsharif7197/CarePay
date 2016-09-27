@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -107,7 +106,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
         isStoragePermissionGranted();
-        getDemographicInformation();
+//        getDemographicInformation();
         setupPager();
     }
 
@@ -255,8 +254,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 
-        final int PAGE_COUNT = 4;
-        private final int[] ICONS = new int[]{
+        final         int   PAGE_COUNT = 4;
+        private final int[] ICONS      = new int[]{
                 R.drawable.signup_step1_indicator,
                 R.drawable.signup_step2_indicator,
                 R.drawable.signup_step3_indicator,
@@ -315,8 +314,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -338,6 +337,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (currentPageIndex == 0) {
+                SystemUtil.hideSoftKeyboard(this);
                 onBackPressed();
             } else {
                 setCurrentItem(currentPageIndex - 1, true);
@@ -345,4 +345,5 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         return true;
     }
+
 }
