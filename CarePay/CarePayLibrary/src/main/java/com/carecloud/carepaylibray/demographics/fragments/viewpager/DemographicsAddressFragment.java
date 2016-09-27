@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -78,11 +79,32 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private boolean isStateEmtpy;
     private boolean isZipEmpty;
 
+    private boolean isNextVisible = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_address, container, false);
 
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = view.getRootView().getHeight() - view.getHeight();
+                if (heightDiff > SystemUtil.dpToPx(getActivity(), 250)) { // if more than 200 dp, it's probably a keyboard...
+                    if(isNextVisible) {
+                        Log.v(LOG_TAG, "onShown()");
+                        nextButton.setVisibility(View.GONE);
+                        isNextVisible = false;
+                    }
+                } else {
+                    if(!isNextVisible) {
+                        Log.v(LOG_TAG, "onHidden()");
+                        nextButton.setVisibility(View.VISIBLE);
+                        isNextVisible = true;
+                    }
+                }
+            }
+        });
         rootLayout = (LinearLayout) view.findViewById(R.id.demographicsAddressRootContainer);
 
         initialiseUIFields();

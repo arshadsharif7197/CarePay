@@ -12,7 +12,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -34,10 +36,11 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
-    private TextView title;
-    private int currentPageIndex;
-    private ViewPager viewPager;
+    private TextView        title;
+    private int             currentPageIndex;
+    private ViewPager       viewPager;
     private FunPagerAdapter funPagerAdapter;
+    private Button          nextButton;
 
     @Override
     public int getLayoutRes() {
@@ -87,7 +90,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(position != 0) {
+                if (position != 0) {
                     // hide the keyboard (just in case)
                     SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
                 }
@@ -134,8 +137,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
      */
     class FunPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 
-        final int PAGE_COUNT = 4;
-        private final int[] ICONS = new int[]{
+        final         int   PAGE_COUNT = 4;
+        private final int[] ICONS      = new int[]{
                 R.drawable.signup_step1_indicator,
                 R.drawable.signup_step2_indicator,
                 R.drawable.signup_step3_indicator,
@@ -194,8 +197,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -215,8 +218,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
-            if(currentPageIndex == 0) {
+        if (item.getItemId() == android.R.id.home) {
+            if (currentPageIndex == 0) {
+                SystemUtil.hideSoftKeyboard(this);
                 onBackPressed();
             } else {
                 setCurrentItem(currentPageIndex - 1, true);
@@ -224,4 +228,5 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         return true;
     }
+
 }

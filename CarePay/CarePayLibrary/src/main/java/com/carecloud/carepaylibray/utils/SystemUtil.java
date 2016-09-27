@@ -12,14 +12,11 @@ import android.graphics.Typeface;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 public class SystemUtil {
 
@@ -177,4 +174,15 @@ public class SystemUtil {
         userDialog.show();
     }
 
+
+    /**
+     * Utility to convert dp to pixels
+     * @param context The context
+     * @param valueInDp The dps
+     * @return The pxs
+     */
+    public static float dpToPx(Context context, float valueInDp) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
+    }
 }
