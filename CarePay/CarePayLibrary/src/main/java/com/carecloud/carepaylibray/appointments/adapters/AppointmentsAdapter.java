@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeader;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.PendingAppointmentRequestDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -106,7 +107,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
             if(position == 0) {
                 holder.appointmentSectionLinearLayout.setVisibility(View.GONE);
                 holder.appointmentItemLinearLayout.setVisibility(View.GONE);
-                TextView appointmentStickyHearderTitle = (TextView) view.findViewById(R.id.appointments_sticky_header_title);
+                CustomProxyNovaSemiBoldLabel appointmentStickyHearderTitle = (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.appointments_sticky_header_title);
                 appointmentStickyHearderTitle.setText(item.getAppointmentHeader());
             } else {
                 holder.appointmentSectionLinearLayout.setVisibility(View.VISIBLE);
@@ -128,7 +129,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
                 if (object.getClass() == AppointmentModel.class) {
                     final AppointmentModel item = (AppointmentModel) object;
                     View view = appointmentsListFragment.getView();
-                    TextView appointmentStickyHearderTitle = (TextView) view.findViewById(R.id.appointments_sticky_header_title);
+                    CustomProxyNovaSemiBoldLabel appointmentStickyHearderTitle = (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.appointments_sticky_header_title);
                     appointmentStickyHearderTitle.setText(item.getAppointmentHeader());
                 }
             }

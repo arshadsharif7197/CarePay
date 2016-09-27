@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeader;
 import com.carecloud.carepaylibray.appointments.utils.PopupNotificationWithAction;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
 import org.json.JSONArray;
@@ -49,7 +50,7 @@ public class AppointmentsListFragment extends Fragment {
     private ArrayList<AppointmentModel> appointmentsItems = new ArrayList<AppointmentModel>();
     private ArrayList<Object> appointmentListWithHeader;
     private RecyclerView appointmentRecyclerView;
-    private TextView appointmentStickyHearderTitle;
+    private CustomProxyNovaSemiBoldLabel appointmentStickyHearderTitle;
     private AppointmentsListFragment appointmentsListFragment;
 
     public static boolean showCheckedInView;
@@ -166,8 +167,8 @@ public class AppointmentsListFragment extends Fragment {
                     String mUpcomingDate = mSimpleDateFormat_Time.format(mSourceAptDate);
                     newAppointmentEntry.setAppointmentTime(mUpcomingDate);
                 } else if (mConvertedAptDate.before(mCurrentConvertedDate)) {
-                    /*Appointment on this date was in past so setting day as empty string*/
-                    newAppointmentEntry.setAppointmentDay("");
+                    /*skipping this as the appointment was in past.*/
+                    return;
                 } else {
                     newAppointmentEntry.setAppointmentDay(CarePayConstants.DAY_TODAY);
                     Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT, Locale.ENGLISH).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
@@ -208,7 +209,7 @@ public class AppointmentsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
-        appointmentStickyHearderTitle = (TextView) appointmentsListView.findViewById(R.id.appointments_sticky_header_title);
+        appointmentStickyHearderTitle = (CustomProxyNovaSemiBoldLabel) appointmentsListView.findViewById(R.id.appointments_sticky_header_title);
         appointmentsListFragment = this;
         aptItem = new AppointmentModel();
         new AsyncListParser().execute();
@@ -280,7 +281,6 @@ public class AppointmentsListFragment extends Fragment {
                                         String mAptId = jsonObj_Physician.getString(CarePayConstants.ATTR_APPT_ID);
                                         aptItem.setAptId(mAptId);
                                         String mAptTime = jsonObj_Physician.getString(CarePayConstants.ATTR_TIME);
-//                            String mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
 
                                         String mAptDate = "", mAptDateWithoutTime = "";
                                         if (mAptTime != null) {
@@ -344,7 +344,6 @@ public class AppointmentsListFragment extends Fragment {
             }
 
             appointmentListWithHeader = getAppointmentListWithHeader();
-
             if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
                 appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
                 appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -352,7 +351,6 @@ public class AppointmentsListFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
             }
-
             checkUpcomingAppointmentForReminder();
         }
     }
@@ -360,7 +358,7 @@ public class AppointmentsListFragment extends Fragment {
     /*Method to return appointmentListWithHeader*/
     private ArrayList<Object> getAppointmentListWithHeader() {
         if (appointmentsItems != null && appointmentsItems.size() > 0) {
-                /*To sort appointment list based on apointment time*/
+            /*To sort appointment list based on appointment time*/
             Collections.sort(appointmentsItems, new Comparator<AppointmentModel>() {
                 public int compare(AppointmentModel o1, AppointmentModel o2) {
                     if(o1.getAppointmentDate() != null && o2.getAppointmentDate() != null) {
@@ -395,7 +393,7 @@ public class AppointmentsListFragment extends Fragment {
                 }
             });
 
-                /*To create appointment list data structure along with headers*/
+            /*To create appointment list data structure along with headers*/
             String previousDay = "";
             appointmentListWithHeader = new ArrayList<Object>();
 
