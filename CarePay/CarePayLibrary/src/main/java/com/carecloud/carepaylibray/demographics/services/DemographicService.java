@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.demographics.services;
 
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.googleapis.Models.GoogleAddressModel;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -13,7 +15,8 @@ import retrofit2.http.POST;
 public interface DemographicService {
     @GET(value = "dev/workflow/carepay/patient_checkin/demographics/information")
     Call<DemographicModel> fetchDemographicInformation( );
-
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
-    Call<DemographicModel> confirmDemographicInformation(@Body DemographicModel demographicModel);
+    Call<DemographicModel> confirmDemographicInformation(@Body DemographicPayloadModel demographicModel);
+
+
 }

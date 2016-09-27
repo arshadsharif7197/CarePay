@@ -10,7 +10,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <include layout="@layout/signup_toolbar"/>
+    <include layout="@layout/toolbar_signup"/>
 
     <ProgressBar
         android:id="@+id/signupProgressBar"
