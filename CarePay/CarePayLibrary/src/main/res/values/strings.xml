@@ -96,7 +96,7 @@
     <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
     <string name="demogr_insurance_provider">Provider</string>
     <string name="demogr_insurance_plan">Plan</string>
-    <string name="demogr_insurance_number_label">Insurance Card Number</string>
+    <string name="demogr_insurance_number_label">Insurance Policy Number</string>
     <string name="demogr_button_label">Next</string>
     <string name="demogr_tv_choose_label">Choose</string>
     <string name="demogr_docs_tv_chose_company">Choose Company First</string>

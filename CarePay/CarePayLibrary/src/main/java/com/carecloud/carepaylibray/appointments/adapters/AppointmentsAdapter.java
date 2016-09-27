@@ -112,7 +112,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
             } else {
                 holder.appointmentSectionLinearLayout.setVisibility(View.VISIBLE);
                 holder.appointmentItemLinearLayout.setVisibility(View.GONE);
-                SystemUtil.setProximaNovaSemiboldTypeface(context, holder.appointmentSectionHeaderTitle);
                 holder.appointmentSectionHeaderTitle.setText(item.getAppointmentHeader());
             }
         }
@@ -142,7 +141,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
     }
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
-        private TextView doctorName, doctorType, time, shortName, appointmentSectionHeaderTitle;
+        private TextView doctorName, doctorType, time, shortName;
+        private CustomProxyNovaSemiBoldLabel appointmentSectionHeaderTitle;
         private ImageView cellAvtar;
         private LinearLayout appointmentSectionLinearLayout, appointmentItemLinearLayout;
 
@@ -162,7 +162,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
 
         appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
         appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
-        appointmentSectionHeaderTitle = (TextView) itemView.findViewById(R.id.appointments_section_header_title);
+        appointmentSectionHeaderTitle = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointments_section_header_title);
     }
   }
 }
