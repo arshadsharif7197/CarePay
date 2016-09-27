@@ -160,7 +160,6 @@ public class SystemUtil {
                 // remove hint from the text input layout
                 textInputLayout.setHint("");
                 // change hint to lower in the edit
-//                setProximaNovaRegularTypeface(view.getContext(), editText);
                 editText.setTypeface(editTextTypeface);
                 editText.setHint(hint);
             } else { // there is some text in the edit or the error is enabled
