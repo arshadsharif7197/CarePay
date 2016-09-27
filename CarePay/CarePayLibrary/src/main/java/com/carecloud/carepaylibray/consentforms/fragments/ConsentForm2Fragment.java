@@ -241,7 +241,7 @@ public class ConsentForm2Fragment extends Fragment {
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            String dob = new StringBuilder().append(i1).append("/").append(i2).append("/")
+            String dob = new StringBuilder().append(i1+1).append("/").append(i2).append("/")
                     .append(i).toString();
             dobTextView.setText(dob);
             isDatePicked = !(dob.equals(R.string.pick_date));
