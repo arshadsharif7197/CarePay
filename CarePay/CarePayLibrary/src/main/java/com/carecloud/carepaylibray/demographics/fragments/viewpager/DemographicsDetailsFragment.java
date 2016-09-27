@@ -146,11 +146,15 @@ public class DemographicsDetailsFragment extends Fragment
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsSubHeading));
+
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.raceTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.raceListTextView));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+
         setGothamRoundedMediumTypeface(getActivity(), nextButton);
+
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }
