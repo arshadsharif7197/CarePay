@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <ImageView
             android:id="@+id/dialogAppointHeaderTextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/apt_imgview_ht"
@@ -20,6 +20,7 @@
             android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
             android:gravity="left"
             android:text="@string/close"
+            android:src="@drawable/icn_patient_mode_nav_close"
             android:textColor="@color/white" />
 
         <TextView
@@ -31,6 +32,7 @@
             android:gravity="right"
             android:text="@string/edit_appointment_dialog"
             android:textColor="@color/white"
+            android:textSize="@dimen/textview_textsize"
             android:visibility="gone" />
     </LinearLayout>
 

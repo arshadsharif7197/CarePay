@@ -292,6 +292,13 @@
         <item name="android:background">@drawable/agree_button_background</item>
     </style>
 
+    <style name="DemographicsSectionLabelStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 
     <!-- Signin Signup -->
 

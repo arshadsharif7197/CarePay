@@ -12,6 +12,7 @@ public class DemographicPayloadModel {
     @Expose
     private DemographicPayloadInfoModel demographics;
 
+
     /**
      *
      * @return
