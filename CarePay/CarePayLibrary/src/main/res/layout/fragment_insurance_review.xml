@@ -51,24 +51,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RACE"
-                style="reviewDemographiclabel"
+                android:textColor="@color/cadet_gray"
                 android:layout_marginTop="16.5dp" />
 
             <TextView
-                style="reviewDemographictext"
                 android:id="@+id/reviewRaceEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Other" />
+                android:text="Other"
+                android:textColor="@color/charcoal"/>
 
 
             <TextView
-
-                style="reviewDemographiclabel"
                 android:id="@+id/reviewEthnicityLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ETHNICITY"
+                android:textColor="@color/cadet_gray"
                 android:layout_marginTop="16.5dp" />
 
             <TextView
@@ -76,7 +75,8 @@
                 android:id="@+id/reviewEthnicityEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HISPANIC" />
+                android:text="HISPANIC"
+                android:textColor="@color/charcoal"/>
 
         </LinearLayout>
 
@@ -92,57 +92,55 @@
                 android:id="@+id/healthInsuranceSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Health Insurance"
-                 />
+                android:text="HEALTH INSURANCE"/>
 
 
             <TextView
-
-                style="reviewDemographiclabel"
                 android:id="@+id/reviewCompanyLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="COMPANY"
-                android:layout_marginTop="16.5dp" />
+                android:layout_marginTop="16.5dp"
+                android:textColor="@color/cadet_gray"/>
 
             <TextView
-                style="reviewDemographictext"
                 android:id="@+id/reviewCompanyEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aetna" />
+                android:text="Aetna"
+                android:textColor="@color/charcoal"/>
 
 
             <TextView
-                style="reviewDemographiclabel"
                 android:id="@+id/reviewPlanLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/cadet_gray"
                 android:text="PLAN"
                 android:layout_marginTop="16.5dp" />
 
             <TextView
-                style="reviewDemographictext"
                 android:id="@+id/reviewPlanNoEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aetna Select"/>
+                android:text="Aetna Select"
+                android:textColor="@color/charcoal"/>
 
 
             <TextView
-                style="reviewDemographiclabel"
                 android:id="@+id/reviewInsuranceCardNoLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Insurance Card Number"
+                android:text="INSURANCE POLICY NUMBER"
+                android:textColor="@color/cadet_gray"
                 android:layout_marginTop="16.5dp"/>
 
             <TextView
-                style="reviewDemographictext"
                 android:id="@+id/reviewInsuranceCardNoEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234567890" />
+                android:text="1234567890"
+                android:textColor="@color/charcoal"/>
 
 
         </LinearLayout>
@@ -158,13 +156,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/button_blue"
+                android:background="@drawable/button_selector"
                 android:text="YES, THESE ARE CORRECT"
                 android:textColor="@color/white" />
 
 
             <Button
-
                 android:id="@+id/needUpdateButton"
                 android:layout_marginTop="14dp"
                 android:layout_width="match_parent"

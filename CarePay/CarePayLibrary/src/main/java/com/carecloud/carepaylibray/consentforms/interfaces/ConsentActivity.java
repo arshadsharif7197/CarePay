@@ -18,6 +18,7 @@ import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.InTakeActivity;
 
+import static android.R.attr.fragment;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
@@ -75,12 +76,16 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CarePayConstants.SIGNATURE_REQ_CODE) {
-            Fragment fragment = getNextForm();
-            if (fragment != null) {
-                replaceFragment(fragment, true);
-            } else {
-                startActivity(new Intent(ConsentActivity.this, InTakeActivity.class));
-                finish();
+            if (SignatureActivity.isFromBackButton) {
+                SignatureActivity.isFromBackButton = false;
+            }else {
+                Fragment fragment = getNextForm();
+                if (fragment != null) {
+                    replaceFragment(fragment, true);
+                } else {
+                    startActivity(new Intent(ConsentActivity.this, InTakeActivity.class));
+                    finish();
+                }
             }
         }
     }
