@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class SignatureActivity extends AppCompatActivity {
@@ -43,6 +45,8 @@ public class SignatureActivity extends AppCompatActivity {
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(toolbar);
+        setTypefaces();
+        onClickListeners();
     }
 
     private void initViews() {
@@ -66,7 +70,12 @@ public class SignatureActivity extends AppCompatActivity {
         clearBtn = (Button) findViewById(R.id.clearBtn);
         legalFirstNameET = (EditText) findViewById(R.id.legalFirstName);
         legalLastNameET = (EditText) findViewById(R.id.legalLastName);
+        String headerTitle = getIntent().getExtras().getString("Header_Title");
+        titleTv.setText(headerTitle);
 
+    }
+
+    private void onClickListeners() {
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,7 +97,7 @@ public class SignatureActivity extends AppCompatActivity {
         agreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getIntent().hasExtra("consentform"))
+                if (getIntent().hasExtra("consentform"))
                     finish();
             }
         });
@@ -107,10 +116,12 @@ public class SignatureActivity extends AppCompatActivity {
             public void onClear() {
             }
         });
+
+
     }
 
-    private void clearSignature(){
-        if(signaturePad != null){
+    private void clearSignature() {
+        if (signaturePad != null) {
             signaturePad.clear();
             agreeBtn.setEnabled(false);
         }
@@ -128,5 +139,10 @@ public class SignatureActivity extends AppCompatActivity {
             legalFirstNameET.setVisibility(View.VISIBLE);
             legalLastNameET.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setTypefaces() {
+        setGothamRoundedMediumTypeface(this, titleTv);
+        setProximaNovaRegularTypeface(this, (TextView) findViewById(R.id.descriptionTv));
     }
 }

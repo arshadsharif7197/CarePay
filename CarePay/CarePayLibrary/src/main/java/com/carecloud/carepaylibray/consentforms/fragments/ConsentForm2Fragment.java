@@ -50,24 +50,7 @@ public class ConsentForm2Fragment extends Fragment {
     private ScrollView consentFormScrollView;
     private EditText minorFirstNameEditText, minorLastNameEditText;
     private String[] gender = {"Male", "Female"};
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            String dob = new StringBuilder().append(i1).append("/").append(i2).append("/")
-                    .append(i).toString();
-            dobTextView.setText(dob);
-                isDatePicked = !(dob.equals(R.string.pick_date));
-            dobTextView.setTag(dob);
-        }
-    };
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.signButton && fragmentCallback != null) {
-                fragmentCallback.signButtonClicked();
-            }
-        }
-    };
+
 
     @Nullable
     @Override
@@ -174,10 +157,9 @@ public class ConsentForm2Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
-                DatePickerDialog datepickerdailog = new DatePickerDialog(getActivity(), myDateListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
-                datepickerdailog.show();
-                minorLastNameEditText.clearFocus();
-                minorFirstNameEditText.clearFocus();
+                DatePickerDialog datepickerDialog = new DatePickerDialog(getActivity(), myDateListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+                datepickerDialog.show();
+                datepickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             }
         });
 
@@ -244,11 +226,11 @@ public class ConsentForm2Fragment extends Fragment {
                     View view = (View) consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
                     int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
 
-                    if (diff == 0
-                            && !StringUtil.isNullOrEmpty(minorLastNameEditText.getText().toString())
+                    if (diff == 0)
+                           /* && !StringUtil.isNullOrEmpty(minorLastNameEditText.getText().toString())
                             && !StringUtil.isNullOrEmpty(minorLastNameEditText.getText().toString())
                             && isDatePicked
-                            && isGenderSelected) {
+                            && isGenderSelected)*/ {
                         signButton.setEnabled(true);
                     }
                 }
@@ -256,12 +238,31 @@ public class ConsentForm2Fragment extends Fragment {
 
         }
     }
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+            String dob = new StringBuilder().append(i1).append("/").append(i2).append("/")
+                    .append(i).toString();
+            dobTextView.setText(dob);
+            isDatePicked = !(dob.equals(R.string.pick_date));
+            dobTextView.setTag(dob);
+        }
+    };
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.signButton && fragmentCallback != null) {
+                fragmentCallback.signButtonClicked();
+            }
+        }
+    };
 
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.titleTv));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.descriptionTv));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.contentTv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.content2Tv));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.minor_information));
         setProximaNovaRegularTypeface(getActivity(), minorFirstNameEditText);
         setProximaNovaRegularTypeface(getActivity(), minorLastNameEditText);

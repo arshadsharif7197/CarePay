@@ -11,6 +11,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AvailableHoursModel;
+import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
@@ -84,7 +85,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 // Launch dialog of appointment request
                 AppointmentsActivity baseActivity = new AppointmentsActivity();
                 baseActivity.setAppointmentModel(model);
-                baseActivity.showAppointmentsDialog(context, model, 6);
+                new RequestAppointmentDialog(context,model).show();
             }
         });
     }

@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-permission android:name="android.permission.SET_DEBUG_APP"></uses-permission>
+
+
     <uses-feature android:name="android.hardware.camera"/>
 
     <application
@@ -15,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".AndroidMainActivity">
+        <activity android:name="com.carecloud.carepaylibray.activities.LibraryMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
