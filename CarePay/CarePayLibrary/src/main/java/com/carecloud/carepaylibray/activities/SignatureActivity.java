@@ -32,7 +32,7 @@ public class SignatureActivity extends AppCompatActivity {
     private Button agreeBtn, clearBtn;
     private EditText legalFirstNameET, legalLastNameET;
     private Map<Integer, List<String>> stringMap = new HashMap<>();
-    public static boolean isFromBackButton = false;
+    public static boolean isBackButtonClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +151,7 @@ public class SignatureActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        isFromBackButton = true;
+        isBackButtonClicked = true;
         Intent mIntent = getIntent();
         setResult(CarePayConstants.SIGNATURE_REQ_CODE,mIntent);
         finish();

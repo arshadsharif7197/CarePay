@@ -7,12 +7,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -47,12 +49,13 @@ public class ReviewFragment  extends Fragment implements View.OnClickListener {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              /*  Intent intent = new Intent(getContext(), SigninSignupActivity.class);
+               Intent intent = new Intent(getContext(), AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                getActivity().finish();*/
+                getActivity().finish();
             }
         });
+
 
         initialiseUIFields();
         setTypefaces(view);
@@ -74,6 +77,15 @@ public class ReviewFragment  extends Fragment implements View.OnClickListener {
             getActivity().finish();
         }
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+         if (item.getItemId()==android.R.id.home) {
+            getActivity().onBackPressed();
+                return true;
+         }
+                return false;
+        }
+
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.reviewtitle));
