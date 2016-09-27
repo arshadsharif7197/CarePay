@@ -4,33 +4,18 @@
     android:layout_height="match_parent">
 
 
-    <TextView
-        android:id="@+id/titleTv"
-        style="@style/ConsentActivityTitleStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/descriptionTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/ConsentActivityDescriptionTextStyle"
-        android:layout_below="@+id/titleTv"
-        android:text="@string/description" />
-
     <Button
         android:id="@+id/signButton"
+        style="@style/Consent_form_Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Consent_form_Button"
-        android:text="@string/consenttitle"/>
+        android:text="@string/consenttitle" />
 
     <ScrollView
         android:id="@+id/consentform_scrollView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/signButton"
-        android:layout_below="@+id/descriptionTv"
         android:layout_marginTop="@dimen/margintop"
         android:fillViewport="true"
         android:scrollbars="vertical">
@@ -38,131 +23,158 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/consent_layout_left_right_margin"
-            android:layout_marginRight="@dimen/consent_layout_left_right_margin">
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/top_consentform_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/titleTv"
+                    style="@style/ConsentActivityTitleStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/descriptionTv"
+                    style="@style/ConsentActivityDescriptionTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/titleTv"
+                    android:text="@string/description" />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/contentTv"
                 style="@style/ConsentActivityContentTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop"
                 android:gravity="left"
-                android:maxLines="99" android:scrollbars="vertical"
+                android:maxLines="99"
+                android:scrollbars="vertical"
                 android:text="@string/content"
                 android:textSize="@dimen/respons_toolbar_title_text_size" />
 
-
-            <TextView
-                android:id="@+id/minor_information"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/consent_top"
-                android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
-                android:text="@string/Minors_information"
-                android:textSize="@dimen/consent_minor_info_textsize"
-                android:textColor="@color/bright_cerulean"/>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/minorFirstNameET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/Consent_Form_Edit_Text"
-                    android:hint="Minor's First Name"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/minorLastNameET"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/minorLastName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/minorLastNameET"
-                    style="@style/Consent_Form_Edit_Text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Minor's Last Name"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:imeOptions="actionDone"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/consentform_realtivelayout_textpaddingtop"
-                android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-                android:layout_marginLeft="@dimen/consentform_relativeLayout_margin">
+                android:layout_marginLeft="17.0dp"
+                android:layout_marginRight="17dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/dobET"
+                    android:id="@+id/minor_information"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:layout_marginRight="5dp"
-                    android:textSize="@dimen/consent_minor_textsize"
+                    android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginTop="@dimen/consent_top"
+                    android:text="@string/Minors_information"
                     android:textColor="@color/bright_cerulean"
-                    android:text="@string/pick_date"/>
+                    android:textSize="@dimen/consent_minor_info_textsize" />
 
-                <TextView
-                    android:id="@+id/minor_dateofbirth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:textSize="@dimen/consent_minor_textsize"
-                    android:textColor="@color/charcoal"
-                    android:text="Minor's Date of Birth"/>
-
-            </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                style="@style/Consent_Form_View_Style"/>
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/consentform_realtivelayout_textpaddingtop"
-                android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-                android:layout_marginLeft="@dimen/consentform_relativeLayout_margin">
-
-                <TextView
-                    android:id="@+id/minor_gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/consent_minor_textsize"
-                    android:text="Minor's Gender" />
-
-
-                <TextView
-                    android:id="@+id/choose_genderTextView"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/choose_gender"
-                    style="@style/ConsentForm_spinnerStyle"
-                    android:clickable="true"/>
+                    android:layout_marginTop="@dimen/consentform_textinput_margintop">
 
-            </RelativeLayout>
+                    <EditText
+                        android:id="@+id/minorFirstNameET"
+                        style="@style/Consent_Form_Edit_Text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Minor's First Name"
+                        android:imeOptions="actionNext" />
+                </android.support.design.widget.TextInputLayout>
 
-            <View
-                android:layout_width="match_parent"
-                style="@style/Consent_Form_View_Style" />
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/minorLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/consentform_textinput_margintop">
+
+                    <EditText
+                        android:id="@+id/minorLastNameET"
+                        style="@style/Consent_Form_Edit_Text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Minor's Last Name"
+                        android:imeOptions="actionDone" />
+                </android.support.design.widget.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop">
+
+                    <TextView
+                        android:id="@+id/dobET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:gravity="right"
+                        android:text="@string/pick_date"
+                        android:textColor="@color/bright_cerulean"
+                        android:textSize="@dimen/consent_minor_textsize" />
+
+                    <TextView
+                        android:id="@+id/minor_dateofbirth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Minor's Date of Birth"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/consent_minor_textsize" />
+
+                </RelativeLayout>
+
+                <View
+                    style="@style/Consent_Form_View_Style"
+                    android:layout_width="match_parent" />
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop">
+
+                    <TextView
+                        android:id="@+id/minor_gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Minor's Gender"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/consent_minor_textsize" />
+
+
+                    <TextView
+                        android:id="@+id/choose_genderTextView"
+                        style="@style/ConsentForm_GenderStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:text="@string/choose_gender" />
+
+                </RelativeLayout>
+
+                <View
+                    style="@style/Consent_Form_View_Style"
+                    android:layout_width="match_parent" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/content2Tv"
                 style="@style/ConsentActivityContentTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
                 android:maxLines="99"
                 android:scrollbars="vertical"
                 android:text="@string/content" />

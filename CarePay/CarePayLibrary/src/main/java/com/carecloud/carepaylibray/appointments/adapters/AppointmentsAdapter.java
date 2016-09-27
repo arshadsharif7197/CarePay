@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
+import com.carecloud.carepaylibray.customdialogs.PendingAppointmentRequestDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -91,9 +93,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
             @Override
             public void onClick(View v) {
                 if (item.isPending()) {
-                    ((AppointmentsActivity) context).showAppointmentsDialog(context, item, 5);
+                    //((AppointmentsActivity) context).showAppointmentsDialog(context, item, 5);
+                    new PendingAppointmentRequestDialog(context, item).show();
                 } else {
-                    ((AppointmentsActivity) context).showAppointmentsDialog(context, item, 1);
+                    //((AppointmentsActivity) context).showAppointmentsDialog(context, item, 1);
+                    new CheckInOfficeNowAppointmentDialog(context, item).show();
                 }
             }
         });

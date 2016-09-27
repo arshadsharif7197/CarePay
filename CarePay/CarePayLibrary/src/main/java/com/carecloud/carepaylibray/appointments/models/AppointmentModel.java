@@ -15,6 +15,19 @@ public class AppointmentModel implements Serializable {
     private String appointmentDate;
     private String placeName;
     private boolean isPending;
+    private String phoneNumber;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setAppointmentId(String appointmentId) {
+        this.appointmentId = appointmentId;
+    }
 
     public boolean isPending() {
         return isPending;
