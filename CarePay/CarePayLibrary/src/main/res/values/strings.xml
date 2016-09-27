@@ -243,5 +243,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="apt_available_hours_title">Available Hours</string>
 
     <string name="checked_in_label">CHECKED-IN</string>
+    <string name="demogr_section_name_label">Name</string>
+    <string name="demogr_section_address_label">Address</string>
 
 </resources>

@@ -33,6 +33,7 @@ import com.smartystreets.api.us_zipcode.City;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypefaceEdittext;
 
 
@@ -86,11 +87,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_address, container, false);
 
+        // used to detect soft keyboard hide/show and thus toggle the next button visible/invisible
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 int heightDiff = view.getRootView().getHeight() - view.getHeight();
-                if (heightDiff > SystemUtil.dpToPx(getActivity(), 250)) { // if more than 200 dp, it's probably a keyboard...
+                if (heightDiff > SystemUtil.dpToPx(getActivity(), 200)) { // if more than 200 dp, it's probably a keyboard...
                     if(isNextVisible) {
                         Log.v(LOG_TAG, "onShown()");
                         nextButton.setVisibility(View.GONE);
@@ -652,6 +654,9 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         setProximaNovaSemiboldTypefaceEdittext(getActivity(), cityEditText);
         setProximaNovaSemiboldTypefaceEdittext(getActivity(), stateAutoCompleteTextView);
         setGothamRoundedMediumTypeface(getActivity(), nextButton);
+
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsAddressNameSectionLabel));
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsAddressAddressSectionLabel));
     }
 
     private boolean checkReadyForNext() {
