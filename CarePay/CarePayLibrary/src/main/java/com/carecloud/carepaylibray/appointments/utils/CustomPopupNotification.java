@@ -1,8 +1,8 @@
 package com.carecloud.carepaylibray.appointments.utils;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,48 +29,44 @@ public class CustomPopupNotification extends PopupWindow {
     private CustomPopupNotification mCustomPopupNotification;
 
     /**
-     * @param context
-     * @param parentView
-     * @param positiveButtonCaption
-     * @param negativeButtonCaption
-     * @param popupMessageText
-     * @param positiveAction
-     * @param negativeAction
+     * @param context the context to inflate custom popup layout
+     * @param parentView a parent view to get the {@link android.view.View#getWindowToken()} token from
+     * @param positiveButtonCaption Sets the string value of the positive action button
+     * @param negativeButtonCaption Sets the string value of the positive action button
+     * @param popupMessageText Sets the string value of the TextView popup message
+     * @param positiveAction callback to be invoked when positive action button is clicked
+     * @param negativeAction callback to be invoked when negative action button is clicked
      */
     public CustomPopupNotification(Context context, View parentView, String positiveButtonCaption,
                                    String negativeButtonCaption, String popupMessageText,
                                    View.OnClickListener positiveAction, View.OnClickListener negativeAction) {
 
         super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.custom_popup_with_action, null),
+                        .inflate(R.layout.custom_popup_with_action, null),
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mCustomPopupNotification = this;
         this.mParentView = parentView;
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            this.setElevation(5.0f);
-        }
+        View popupWindowLayout = this.getContentView();
+        Button popupDismissButton = (Button) popupWindowLayout.findViewById(R.id.popup_dismiss_button);
+        Button popupCheckInButton = (Button) popupWindowLayout.findViewById(R.id.popup_checkin_button);
+        TextView popupMessageLabel = (TextView) popupWindowLayout.findViewById(R.id.popup_message_tv);
+        popupDismissButton.setText(negativeButtonCaption);
+        popupCheckInButton.setText(positiveButtonCaption);
+        popupMessageLabel.setText(popupMessageText);
 
-        View view = this.getContentView();
-        Button popup_dismiss_button = (Button) view.findViewById(R.id.popup_dismiss_button);
-        Button popup_checkin_button = (Button) view.findViewById(R.id.popup_checkin_button);
-        TextView popup_message_tv = (TextView) view.findViewById(R.id.popup_message_tv);
-        popup_dismiss_button.setText(negativeButtonCaption);
-        popup_checkin_button.setText(positiveButtonCaption);
-        popup_message_tv.setText(popupMessageText);
+        SystemUtil.setTypefaceFromAssets(context, "fonts/proximanova_regular.otf", popupMessageLabel);
+        SystemUtil.setTypefaceFromAssets(context, "fonts/gotham_rounded_medium.otf", popupDismissButton);
+        SystemUtil.setTypefaceFromAssets(context, "fonts/gotham_rounded_medium.otf", popupCheckInButton);
 
-        SystemUtil.setTypefaceFromAssets(context, "fonts/proximanova_regular.otf", popup_message_tv);
-        SystemUtil.setTypefaceFromAssets(context, "fonts/gotham_rounded_medium.otf", popup_dismiss_button);
-        SystemUtil.setTypefaceFromAssets(context, "fonts/gotham_rounded_medium.otf", popup_checkin_button);
-
-        popup_dismiss_button.setOnClickListener(negativeAction);
-        popup_checkin_button.setOnClickListener(positiveAction);
+        popupDismissButton.setOnClickListener(negativeAction);
+        popupCheckInButton.setOnClickListener(positiveAction);
     }
 
     /**
-     * @param context
-     * @param parentView
-     * @param popupMessageText
+     * @param context the context to inflate custom popup layout
+     * @param parentView a parent view to get the {@link android.view.View#getWindowToken()} token from
+     * @param popupMessageText Sets the string value of the TextView popup message
      * @param notificationType The notification type to be displayed from CustomPopupNotification class
      */
     public CustomPopupNotification(Context context, View parentView, String popupMessageText, int notificationType) {
@@ -81,51 +77,33 @@ public class CustomPopupNotification extends PopupWindow {
         mCustomPopupNotification = this;
         this.mParentView = parentView;
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            this.setElevation(5.0f);
-        }
         setOutsideTouchable(true);
-        View view = this.getContentView();
-        ImageView popup_iv = (ImageView) view.findViewById(R.id.popup_icon) ;
-        TextView popup_message_tv = (TextView) view.findViewById(R.id.popup_message_tv);
+        View popupWindowLayout = this.getContentView();
+        ImageView popupIcon = (ImageView) popupWindowLayout.findViewById(R.id.popup_icon);
+        TextView popupMessageLabel = (TextView) popupWindowLayout.findViewById(R.id.popup_message_tv);
 
-        switch (notificationType){
+        switch (notificationType) {
             case TYPE_ALERT_NOTIFICATION:
-                if (Build.VERSION.SDK_INT >= 23) {
-                    view.setBackgroundColor(context.getColor(R.color.yellowGreen));
-                    popup_message_tv.setTextColor(context.getColor(R.color.white));
-                }else{
-                    view.setBackgroundColor(context.getResources().getColor(R.color.yellowGreen));
-                    popup_message_tv.setTextColor(context.getResources().getColor(R.color.white));
-                }
-                popup_iv.setImageResource(R.drawable.icn_notification_alert);
+                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.yellowGreen));
+                popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
+                popupIcon.setImageResource(R.drawable.icn_notification_alert);
                 break;
             case TYPE_TIMED_NOTIFICATION:
-                if (Build.VERSION.SDK_INT >= 23) {
-                    view.setBackgroundColor(context.getColor(R.color.charcoal));
-                    popup_message_tv.setTextColor(context.getColor(R.color.glitter));
-                }else{
-                    view.setBackgroundColor(context.getResources().getColor(R.color.charcoal));
-                    popup_message_tv.setTextColor(context.getResources().getColor(R.color.glitter));
-                }
-                popup_iv.setImageResource(R.drawable.icn_notification_basic_green);
+                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.charcoal));
+                popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.glitter));
+                popupIcon.setImageResource(R.drawable.icn_notification_basic_green);
                 break;
             case TYPE_ERROR_NOTIFICATION:
-                if (Build.VERSION.SDK_INT >= 23) {
-                    view.setBackgroundColor(context.getColor(R.color.cardinal));
-                    popup_message_tv.setTextColor(context.getColor(R.color.white));
-                }else{
-                    view.setBackgroundColor(context.getResources().getColor(R.color.cardinal));
-                    popup_message_tv.setTextColor(context.getResources().getColor(R.color.white));
-                }
-                popup_iv.setImageResource(R.drawable.icn_notification_error);
+                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.cardinal));
+                popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
+                popupIcon.setImageResource(R.drawable.icn_notification_error);
                 break;
             default:
         }
 
-        popup_message_tv.setText(popupMessageText);
+        popupMessageLabel.setText(popupMessageText);
 
-        SystemUtil.setTypefaceFromAssets(context, "fonts/proximanova_regular.otf", popup_message_tv);
+        SystemUtil.setTypefaceFromAssets(context, "fonts/proximanova_regular.otf", popupMessageLabel);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
