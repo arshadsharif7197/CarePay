@@ -117,8 +117,6 @@ public class SignupFragment extends Fragment {
 
     private void setClickables(View view) {
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
-        Typeface buttonFontFamily = Typeface.createFromAsset(getResources().getAssets(), "fonts/gotham_rounded_medium.otf");
-        submitButton.setTypeface(buttonFontFamily);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -436,25 +434,26 @@ public class SignupFragment extends Fragment {
     }
 
     private void setTypefaces() {
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), firstNameInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), firstNameText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), firstNameInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), firstNameText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), middleNameInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), middleNameText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), middleNameInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), middleNameText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), lastNameInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), lastNameText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), lastNameInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), lastNameText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), emailInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), emailText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), passwordInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), passwordText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordText);
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), passwordRepeatInputLayout);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), repeatPasswordText);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordRepeatInputLayout);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), repeatPasswordText);
 
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), accountExistTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), accountExistTextView);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), submitButton);
     }
 
     private boolean checkEmail() {

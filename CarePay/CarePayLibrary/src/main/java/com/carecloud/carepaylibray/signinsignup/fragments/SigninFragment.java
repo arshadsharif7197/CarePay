@@ -128,8 +128,8 @@ public class SigninFragment extends Fragment {
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailEditText);
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordEditText);
 
-        SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), emailTextInput);
-        SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), passwordTexInput);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailTextInput);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordTexInput);
 
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signinButton);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signupButton);
