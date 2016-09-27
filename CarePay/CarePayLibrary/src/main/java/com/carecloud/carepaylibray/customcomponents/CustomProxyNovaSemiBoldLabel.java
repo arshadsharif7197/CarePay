@@ -10,7 +10,6 @@ import android.widget.TextView;
  */
 public class CustomProxyNovaSemiBoldLabel extends TextView {
 
-
     public CustomProxyNovaSemiBoldLabel(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 

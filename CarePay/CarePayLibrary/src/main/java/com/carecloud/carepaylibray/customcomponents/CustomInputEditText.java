@@ -17,11 +17,13 @@ import com.carecloud.carepaylibrary.R;
 public class CustomInputEditText extends TextInputLayout {
     private Context context;
     EditText input;
+
     public CustomInputEditText(Context context) {
         super(context);
         this.context=context;
         addViews();
     }
+
     public CustomInputEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context=context;

@@ -34,5 +34,4 @@ public class CustomGothamRoundedBoldLabel extends TextView {
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/gotham_rounded_bold.otf");
         setTypeface(tf);
     }
-
 }

@@ -279,9 +279,9 @@ public class AppointmentsListFragment extends Fragment {
             }
 
             CustomProxyNovaSemiBoldLabel mTextViewSectionTitleToday = (CustomProxyNovaSemiBoldLabel) getActivity().findViewById(R.id.appointments_section_title_Today);
-            TextView mTextViewSectionTitleUpcoming = (TextView) getActivity().findViewById(R.id.appointments_section_title_Upcoming);
+            CustomProxyNovaSemiBoldLabel mTextViewSectionTitleUpcoming = (CustomProxyNovaSemiBoldLabel) getActivity().findViewById(R.id.appointments_section_title_Upcoming);
             //SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleToday );
-            SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleUpcoming );
+            //SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleUpcoming );
 
             AppointmentsAdapter appointmentsAdapter = new AppointmentsAdapter(getActivity(), todayAppointmentsItems);
             appointmentsAdapterUpcoming = new AppointmentsAdapter(getActivity(),upcomingAppointmentsItems);

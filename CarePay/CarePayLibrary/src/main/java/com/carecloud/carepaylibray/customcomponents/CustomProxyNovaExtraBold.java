@@ -11,7 +11,6 @@ import android.widget.TextView;
 public class CustomProxyNovaExtraBold extends TextView {
 
 
-
     public CustomProxyNovaExtraBold(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 

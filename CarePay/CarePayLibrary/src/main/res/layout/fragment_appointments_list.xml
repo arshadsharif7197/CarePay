@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <TextView
+        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
             android:id="@+id/appointments_section_title_Upcoming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

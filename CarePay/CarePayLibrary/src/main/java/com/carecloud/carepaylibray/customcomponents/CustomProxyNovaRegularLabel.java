@@ -32,7 +32,6 @@ public class CustomProxyNovaRegularLabel extends TextView {
     }
 
     private void init() {
-
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/proximanova_regular.otf");
         setTypeface(tf);
     }
