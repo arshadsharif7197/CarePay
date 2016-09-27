@@ -58,6 +58,11 @@ public class SystemUtil {
         view.setTypeface(typeface);
     }
 
+    public static void setProximaNovaExtraboldTypefaceInput(Context context, TextInputLayout view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
+        view.setTypeface(typeface);
+    }
+
     public static void setProximaNovaSemiboldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
@@ -71,7 +76,6 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
         view.setTypeface(typeface);
     }
-
     public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
         view.setTypeface(typeface);
@@ -136,6 +140,7 @@ public class SystemUtil {
         if (textInputLayout == null) {
             return;
         }
+        Typeface editTextTypeface = editText.getTypeface();
 
         boolean error = textInputLayout.isErrorEnabled();
         String hint = (String) textInputLayout.getTag();
@@ -155,7 +160,8 @@ public class SystemUtil {
                 // remove hint from the text input layout
                 textInputLayout.setHint("");
                 // change hint to lower in the edit
-                setProximaNovaRegularTypeface(view.getContext(), editText);
+//                setProximaNovaRegularTypeface(view.getContext(), editText);
+                editText.setTypeface(editTextTypeface);
                 editText.setHint(hint);
             } else { // there is some text in the edit or the error is enabled
                 // keep the hint up
