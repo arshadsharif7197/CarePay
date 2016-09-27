@@ -79,7 +79,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 // Set dummy data for now
                 model.setButtonTitle("REQUEST APPOINTMENT");
-                model.setAppointmentDate("09/22/16 " + selTime.getText().toString() + " UTC");
+                model.setAppointmentDate("09/27/16 " + selTime.getText().toString().replace(" ", ":00 ") + " UTC");
                 model.setAppointmentTime(selTime.getText().toString());
 
                 // Launch dialog of appointment request
