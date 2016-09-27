@@ -55,6 +55,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets
 
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
+ * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
