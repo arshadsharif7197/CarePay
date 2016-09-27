@@ -111,7 +111,6 @@
         <item name="android:hint">@string/CityEditText</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:maxLength">255</item>
-        <item name="android:paddingStart">0dp</item>
     </style>
 
     <style name="SigninSignupClickableTextView">

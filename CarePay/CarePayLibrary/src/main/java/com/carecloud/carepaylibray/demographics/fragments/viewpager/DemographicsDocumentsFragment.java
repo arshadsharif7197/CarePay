@@ -177,6 +177,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsInsuranceSwitch));
         setGothamRoundedMediumTypeface(getActivity(), addCardButton);
+        setGothamRoundedMediumTypeface(getActivity(), nextButton);
     }
 
     @Override
