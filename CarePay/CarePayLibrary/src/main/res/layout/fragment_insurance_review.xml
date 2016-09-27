@@ -6,77 +6,81 @@
 
     <include layout="@layout/review_toolbar" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="17.0dp"
-        android:layout_marginRight="17.0dp"
         android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/review_screen_left_margin"
+        android:layout_marginRight="@dimen/review_screen_right_margin">
 
         <TextView
             android:id="@+id/reviewtitle"
             style="@style/DemographicsFragmentsHeadingStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Review Information" />
+            android:text="@string/review_screen_header"/>
 
         <TextView
             android:id="@+id/reviewSubtitle"
             style="@style/DemographicsFragmentsSubHeadingStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:text="@string/review_subtitle" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="9dp">
+            android:orientation="vertical">
 
             <TextView
-                style="@style/reviewDemographicBlue."
                 android:id="@+id/demographicSubTitle"
+                style="@style/reviewDemographicBlue."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/demographics_title" />
-
+                android:text="@string/review_screen_demographic"/>
 
 
             <TextView
                 android:id="@+id/reviewRaceLabel"
+                style="@style/reviewDemographiclabel."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="RACE"
-                android:textColor="@color/cadet_gray"
-                android:layout_marginTop="16.5dp" />
+                android:layout_marginTop="@dimen/review_header_lablemargin_top"
+                android:text="@string/review_screen_race_lable"/>
 
             <TextView
                 android:id="@+id/reviewRaceEditText"
+                style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Other"
-                android:textColor="@color/charcoal"/>
+                android:text="Other" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
 
 
             <TextView
                 android:id="@+id/reviewEthnicityLabel"
+                style="@style/reviewDemographiclabel."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ETHNICITY"
-                android:textColor="@color/cadet_gray"
-                android:layout_marginTop="16.5dp" />
+                android:text="@string/review_screen_ethnicity"/>
 
             <TextView
-                style="reviewDemographictext"
                 android:id="@+id/reviewEthnicityEditText"
+                style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HISPANIC"
-                android:textColor="@color/charcoal"/>
+                android:text="@string/hispanic" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
 
         </LinearLayout>
 
@@ -92,55 +96,61 @@
                 android:id="@+id/healthInsuranceSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HEALTH INSURANCE"/>
+                android:text="@string/review_screen_healthinsurance"/>
 
 
             <TextView
                 android:id="@+id/reviewCompanyLabel"
+                style="@style/reviewDemographiclabel."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="COMPANY"
-                android:layout_marginTop="16.5dp"
-                android:textColor="@color/cadet_gray"/>
+                android:layout_marginTop="@dimen/review_header_lablemargin_top"
+                android:text="@string/review_screen_company_lable" />
 
             <TextView
                 android:id="@+id/reviewCompanyEditText"
+                style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aetna"
-                android:textColor="@color/charcoal"/>
-
+                android:text="Aetna" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
 
             <TextView
                 android:id="@+id/reviewPlanLabel"
+                style="@style/reviewDemographiclabel."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/cadet_gray"
-                android:text="PLAN"
-                android:layout_marginTop="16.5dp" />
+                android:text="PLAN" />
 
             <TextView
                 android:id="@+id/reviewPlanNoEditText"
+                style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aetna Select"
-                android:textColor="@color/charcoal"/>
+                android:text="Aetna Select" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
 
 
             <TextView
                 android:id="@+id/reviewInsuranceCardNoLabel"
+                style="@style/reviewDemographiclabel."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="INSURANCE POLICY NUMBER"
-                android:textColor="@color/cadet_gray"
-                android:layout_marginTop="16.5dp"/>
+                android:text="@string/review_screen_insurancepolicy_number_lable" />
 
             <TextView
                 android:id="@+id/reviewInsuranceCardNoEditText"
+                style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234567890"
-                android:textColor="@color/charcoal"/>
+                android:text="1234567890" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
 
 
         </LinearLayout>
@@ -167,11 +177,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="14dp"
+                android:layout_marginBottom="30dp"
                 android:background="@drawable/button_background"
                 android:text="I NEED TO UPDATE THIS INFORMATION"
                 android:textColor="@color/bright_cerulean" />
         </LinearLayout>
 
     </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>

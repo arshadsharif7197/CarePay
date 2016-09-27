@@ -104,10 +104,6 @@
     <string name="demogr_docs_add_card">Add Card</string>
     <string name="demogr_docs_remove_card">Remove Card</string>
 
-    <!-- Demographic Screens -->
-
-    <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
-
     <!--Address Fragment-->
 
     <string name="AddressHeadingTextView">Let\'s get you set up!</string>
@@ -194,6 +190,19 @@
     <string name="demogr_next">Next</string>
     <string name="check_in_now">CHECK-IN \nNOW</string>
 
+    <!--<Review Screen>-->
+    <string name="review_screen_header">Review Information</string>
+    <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
+    <string name="review_screen_demographic">DEMOGRAPHIC</string>
+    <string name="review_screen_race_lable">RACE</string>
+    <string name="review_screen_ethnicity">ETHNICITY</string>
+    <string name="review_screen_healthinsurance">HEALTH INSURANCE</string>
+    <string name="review_screen_company_lable">COMPANY</string>
+    <string name="review_screen_plan_lable">PLAN</string>
+    <string name="review_screen_insurancepolicy_number_lable">INSURANCE POLICY NUMBER</string>
+    <string name="review_screen_agreebutton">YES, THESE ARE CORRECT</string>
+    <string name="review_screen_disagreebutton">I NEED TO UPDATE THIS INFORMATION</string>
+    
 
     <!--<Navigation Screen>-->
     <string name="Appointments_title">Appointments</string>
