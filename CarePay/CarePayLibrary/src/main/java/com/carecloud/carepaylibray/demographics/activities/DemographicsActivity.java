@@ -105,6 +105,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
+
+        // b/e
         isStoragePermissionGranted();
         getDemographicInformation();
         setupPager();
@@ -151,7 +153,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
                 demographicModel = response.body();
                 demographicProgressBar.setVisibility(View.GONE);
-                Log.d("sdadad", "adasdasdasd");
+                Log.d(LOG_TAG, "demographics model received");
 
                 if (demographicModel.getPayload().getDemographics()==null) {
 
