@@ -2,15 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/list_apt_padding_right"
-    android:paddingRight="@dimen/list_apt_padding_right">
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/appointment_section_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            android:id="@+id/appointments_section_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_title_indicator_title_padding"
+            android:paddingLeft="@dimen/list_apt_padding_right"
+            android:paddingTop="@dimen/apt_available_hours_list_header_padding_top"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/textview_textsize" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/appointment_item_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/default_title_indicator_title_padding"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,7 +37,9 @@
             android:layout_marginBottom="@dimen/textview_margin"
             android:layout_marginTop="@dimen/textview_margin"
             android:gravity="left"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/list_apt_padding_right"
+            android:paddingRight="@dimen/list_apt_padding_right">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -87,6 +108,12 @@
                 android:textSize="@dimen/button_textsize_medium"
                 android:textStyle="bold" />
         </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            android:layout_marginLeft="@dimen/list_apt_padding_right"
+            android:layout_marginRight="@dimen/list_apt_padding_right"/>
     </LinearLayout>
 
 </RelativeLayout>

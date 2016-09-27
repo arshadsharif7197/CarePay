@@ -233,6 +233,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="apt_popup_message_text">Your appointment with %1$s starts in 2 hours. Want to Check-in early?</string>
     <string name="dismiss">DISMISS</string>
     <string name="checkin_early">CHECK-IN EARLY</string>
+    <string name="check_in_at_office_one">CHECK-IN AT OFFICE</string>
 
 
     <!--Add Appointment-->
