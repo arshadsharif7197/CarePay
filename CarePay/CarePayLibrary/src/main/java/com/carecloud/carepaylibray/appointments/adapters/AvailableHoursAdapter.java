@@ -11,6 +11,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AvailableHoursModel;
+import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
@@ -52,11 +53,11 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
         if (viewType == SECTION_HEADER) {
-            View v1 = inflater.inflate(R.layout.apt_available_hours_list_header_row, viewGroup, false);
-            viewHolder = new ViewHolderSectionHeader(v1);
+            View availableHoursListHeaderRow = inflater.inflate(R.layout.apt_available_hours_list_header_row, viewGroup, false);
+            viewHolder = new ViewHolderSectionHeader(availableHoursListHeaderRow);
         } else {
-            View v2 = inflater.inflate(R.layout.apt_available_hours_list_data_row, viewGroup, false);
-            viewHolder = new ViewHolderTimeSlot(v2);
+            View availableHoursListDataRow = inflater.inflate(R.layout.apt_available_hours_list_data_row, viewGroup, false);
+            viewHolder = new ViewHolderTimeSlot(availableHoursListDataRow);
         }
         return viewHolder;
     }
@@ -84,7 +85,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 // Launch dialog of appointment request
                 AppointmentsActivity baseActivity = new AppointmentsActivity();
                 baseActivity.setAppointmentModel(model);
-                baseActivity.showAppointmentsDialog(context, model, 6);
+                new RequestAppointmentDialog(context,model).show();
             }
         });
     }

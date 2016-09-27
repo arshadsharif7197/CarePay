@@ -59,7 +59,15 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     public void signButtonClicked() {
         Intent intent = new Intent(this, SignatureActivity.class);
         intent.putExtra("consentform", showingForm);
+        if (showingForm == FormId.FORM1)
+            intent.putExtra("Header_Title", "Sign Consent For Medical Care");
+        else if (showingForm == FormId.FORM2)
+            intent.putExtra("Header_Title", "Sign Authorization Form");
+        else
+            intent.putExtra("Header_Title", "Sign HIPPA Confidentiality Agreement");
+
         startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
+
     }
 
     @Override
@@ -143,7 +151,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
             formData.setDate("August 1st, 2016");
         } else if (formName.equals("form2")) {
             formData.setTitle("Authorization Form");
-            formData.setDescription("Please fill in this form about general cardiac symptoms you may have had in the past.");
+            formData.setDescription("Please read this form carefully and completely before signing it.");
             formData.setContent("This form grants temporary authority to a designated adult to provide and arrange for medical care for a minor in the event of an emergency, where the minor is not accompanied by either parents or legal guardians, and it may not be feasible or practical to contact them. This form should be given to the trip leader or shown to the trip leader and then carried by the designated adult.");
             formData.setContent2("I do hereby state that I have legal custody of the aforementioned Minor. I grant my authorization and consent for Dr. Joshua Wellington to administer general first aid treatment for any minor injuries or illnesses experienced by the Minor. If the injury or illness is life threatening or in need of emergency treatment, I authorize the Designated Adult to summon any and all professional emergency personnel to attend, transport, and treat the minor and to issue consent for any X-ray, anesthetic, blood transfusion, medication, or other medical diagnosis, treatment, or hospital care deemed advisable by, and to be rendered under the general supervision of, any licensed physician, surgeon, dentist, hospital, or other medical professional or institution duly licensed to practice in the state in which such treatment is to occur. I agree to assume financial responsibility for all expenses of such care. \n" +
                                          "It is understood that this authorization is given in advance of any such medical treatment, but is given to provide authority and power on the part of the Designated Adult in the exercise of his or her best judgment upon the advice of any such medical or emergency personnel.");

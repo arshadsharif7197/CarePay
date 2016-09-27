@@ -1,0 +1,62 @@
+package com.carecloud.carepaylibray.customdialogs;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+
+import org.w3c.dom.Text;
+
+/**
+ * Created by prem_mourya on 9/22/2016.
+ */
+
+public class EditAppointmentDialog  extends BaseDoctorInfoDialog {
+
+    private LinearLayout rootLayout;
+    private Context context;
+    public EditAppointmentDialog(Context context, AppointmentModel appointmentModel) {
+        super(context, appointmentModel);
+        this.context = context;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        rootLayout = (LinearLayout)getRootView();
+        setActionButton();
+    }
+    private void setActionButton(){
+
+        TextView editAppointmentTextView = (TextView)rootLayout.findViewById(R.id.dialogEditAppointTextView);
+        editAppointmentTextView.setVisibility(View.VISIBLE);
+        editAppointmentTextView.setText(R.string.edit_appointment_dialog);
+        editAppointmentTextView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        int viewId = view.getId();
+        if(viewId == R.id.dialogEditAppointTextView){
+            onEditAppointmnent();
+            cancel();
+        }
+    }
+
+    /**
+     * call check-in at office api.
+     */
+    private void onEditAppointmnent(){
+
+    }
+
+}
