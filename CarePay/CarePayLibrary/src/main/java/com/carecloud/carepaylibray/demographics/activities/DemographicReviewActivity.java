@@ -2,9 +2,14 @@ package com.carecloud.carepaylibray.demographics.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MenuItem;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.DemographicReviewFragment;
+import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 public class DemographicReviewActivity extends AppCompatActivity {
@@ -17,7 +22,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.root_layout, DemographicReviewFragment.newInstance(), DemographicReviewFragment.class.getName())
+                    .replace(R.id.root_layout, ReviewFragment.newInstance(), ReviewFragment.class.getName())
                     .commit();
         }
     }
