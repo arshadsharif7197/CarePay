@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +43,10 @@ import java.util.concurrent.TimeUnit;
 public class AppointmentsListFragment extends Fragment {
 
     private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
-    private ArrayList<AppointmentModel> mAptItems = new ArrayList<>();
     private AppointmentModel aptItem;
-    private AppointmentsAdapter appointmentsAdapter, appointmentsAdapterUpcoming;
-    private ArrayList<AppointmentModel> todayAppointmentsItems = new ArrayList<AppointmentModel>();
-    private ArrayList<AppointmentModel> upcomingAppointmentsItems = new ArrayList<AppointmentModel>();
-    private RecyclerView recyclerViewToday, recyclerViewUpcoming;
+    private AppointmentsAdapter appointmentsAdapterUpcoming;
+    private ArrayList<AppointmentModel> todayAppointmentsItems = new ArrayList<>();
+    private ArrayList<AppointmentModel> upcomingAppointmentsItems = new ArrayList<>();
 
     public static boolean showCheckedInView;
     private PopupNotificationWithAction popup;
@@ -80,7 +79,6 @@ public class AppointmentsListFragment extends Fragment {
                 String appointmentTimeStr = todayAppointmentsItems.get(0).getAppointmentTime();
                 String currentTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
 
-
                 SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
                 Date appointmentDate = format.parse(appointmentTimeStr);
                 Date currentDate = format.parse(currentTime);
@@ -90,13 +88,11 @@ public class AppointmentsListFragment extends Fragment {
 
                 if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES &&
                         differenceInMinutes > 0) {
-                    if (popup == null) {
-                        popup = new PopupNotificationWithAction(getActivity(), getView(), getString(R.string.checkin_early),
-                                getString(R.string.dismiss),
-                                getString(R.string.apt_popup_message_text, todayAppointmentsItems.get(0).getDoctorName()),
-                                positiveActionListener, negativeActionListener);
-                        popup.showPopWindow();
-                    }
+                    popup = new PopupNotificationWithAction(getActivity(), getView(), getString(R.string.checkin_early),
+                            getString(R.string.dismiss),
+                            getString(R.string.apt_popup_message_text, todayAppointmentsItems.get(0).getDoctorName()),
+                            positiveActionListener, negativeActionListener);
+                    popup.showPopWindow();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -133,10 +129,19 @@ public class AppointmentsListFragment extends Fragment {
         final AppointmentModel model = ((AppointmentsActivity) getActivity()).getModel();
 
         if (upcomingAppointmentsItems != null && appointmentsAdapterUpcoming != null) {
-            upcomingAppointmentsItems.add(new AppointmentModel(model.getAppointmentId(),
-                    model.getDoctorName(), model.getAppointmentTime(), model.getAppointmentType(),
-                    model.getAppointmentDay(), model.getAppointmentDate(), true));
+            AppointmentModel newAppointmentEntry = new AppointmentModel();
+            newAppointmentEntry.setAptId(model.getAppointmentId());
+            newAppointmentEntry.setDoctorName(model.getDoctorName());
+            newAppointmentEntry.setAppointmentTime(model.getAppointmentTime());
+            newAppointmentEntry.setAppointmentType(model.getAppointmentType());
+            newAppointmentEntry.setAppointmentDay(model.getAppointmentDay());
+            newAppointmentEntry.setAppointmentDate(model.getAppointmentDate());
+            newAppointmentEntry.setPlaceName(model.getPlaceName());
+            newAppointmentEntry.setPlaceAddress(model.getPlaceAddress());
+            newAppointmentEntry.setPending(true);
+            upcomingAppointmentsItems.add(newAppointmentEntry);
 
+            // Update list with new entry
             appointmentsAdapterUpcoming.notifyDataSetChanged();
         }
     }
@@ -151,11 +156,11 @@ public class AppointmentsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_appointments_list, container, false);
+        final View appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
         aptItem = new AppointmentModel();
         new AsyncListParser().execute();
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,7 +169,7 @@ public class AppointmentsListFragment extends Fragment {
             }
         });
 
-        return view;
+        return appointmentsListView;
     }
 
     private class AsyncListParser extends AsyncTask<String, String, String> {
@@ -183,7 +188,7 @@ public class AppointmentsListFragment extends Fragment {
         protected String doInBackground(String... params) {
 
             try {
-                String json = null;
+                String json;
                 try {
                     InputStream is = getActivity().getAssets().open(CarePayConstants.ASSETS_JSON);
                     int size = is.available();
@@ -195,8 +200,7 @@ public class AppointmentsListFragment extends Fragment {
                     ex.printStackTrace();
                     return null;
                 }
-                return (json.toString());
-                //new FileReader(getContext()).loadJSONFromAsset();
+                return json;
             } catch (Exception e) {
                 e.printStackTrace();
                 return e.toString();
@@ -236,12 +240,8 @@ public class AppointmentsListFragment extends Fragment {
                                 String mCurrentDate = mSimpleDateFormat.format(c.getTime());
 
                                 String mAptDateFormat = mSimpleDateFormat.format(mSimpleDateFormat.parse(mAptDate));
-
-                                Date mCurrentConvertedDate = new Date();
-                                Date mConvertedAptDate = new Date();
-
-                                mCurrentConvertedDate = mSimpleDateFormat.parse(mCurrentDate);
-                                mConvertedAptDate = mSimpleDateFormat.parse(mAptDateFormat);
+                                Date mCurrentConvertedDate = mSimpleDateFormat.parse(mCurrentDate);
+                                Date mConvertedAptDate = mSimpleDateFormat.parse(mAptDateFormat);
                                 aptItem.setAppointmentTime(mAptTime.replaceAll(CarePayConstants.ATTR_UTC,""));
 
                                 JSONObject jsonObjectPhysician= jsonObj_Physician.getJSONObject(CarePayConstants.ATTR_PHYSICIAN);
@@ -274,6 +274,7 @@ public class AppointmentsListFragment extends Fragment {
                 }
 
             } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage());
             }
 
             TextView mTextViewSectionTitleToday = (TextView) getActivity().findViewById(R.id.appointments_section_title_Today);
@@ -281,15 +282,15 @@ public class AppointmentsListFragment extends Fragment {
             SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleToday );
             SystemUtil.setProximaNovaSemiboldTypeface(getContext(),mTextViewSectionTitleUpcoming );
 
-            appointmentsAdapter = new AppointmentsAdapter(getActivity(),todayAppointmentsItems);
+            AppointmentsAdapter appointmentsAdapter = new AppointmentsAdapter(getActivity(), todayAppointmentsItems);
             appointmentsAdapterUpcoming = new AppointmentsAdapter(getActivity(),upcomingAppointmentsItems);
 
-            recyclerViewToday = ((RecyclerView)getActivity().findViewById(R.id.appointments_recycler_view_today));
+            RecyclerView recyclerViewToday = ((RecyclerView) getActivity().findViewById(R.id.appointments_recycler_view_today));
             recyclerViewToday.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerViewToday.addItemDecoration(new DividerItemDecoration(getActivity()));
             recyclerViewToday.setAdapter(appointmentsAdapter);
 
-            recyclerViewUpcoming = ((RecyclerView)getActivity().findViewById(R.id.appointments_recycler_view_upcoming));
+            RecyclerView recyclerViewUpcoming = ((RecyclerView) getActivity().findViewById(R.id.appointments_recycler_view_upcoming));
             recyclerViewUpcoming.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerViewUpcoming.addItemDecoration(new DividerItemDecoration(getActivity()));
             recyclerViewUpcoming.setAdapter(appointmentsAdapterUpcoming);

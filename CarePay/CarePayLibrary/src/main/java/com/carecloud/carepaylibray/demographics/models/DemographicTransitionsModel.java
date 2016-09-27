@@ -8,14 +8,14 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicTransitionsModel {
     @SerializedName("confirm_demographics")
     @Expose
-    private BaseTransitionsModel confirmDemographics;
+    private DemographicTransitionModel  confirmDemographics;
 
     /**
      *
      * @return
      * The confirmDemographics
      */
-    public BaseTransitionsModel getConfirmDemographics() {
+    public DemographicTransitionModel getConfirmDemographics() {
         return confirmDemographics;
     }
 
@@ -24,7 +24,7 @@ public class DemographicTransitionsModel {
      * @param confirmDemographics
      * The confirm_demographics
      */
-    public void setConfirmDemographics(BaseTransitionsModel confirmDemographics) {
+    public void setConfirmDemographics(DemographicTransitionModel confirmDemographics) {
         this.confirmDemographics = confirmDemographics;
     }
 }

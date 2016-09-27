@@ -1,9 +1,6 @@
 package com.carecloud.carepayandroid;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.pm.ActivityInfo;
-import android.os.Bundle;
 
 import com.carecloud.carepayandroid.base.CarePayActivityLifecycleCallbacks;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
