@@ -648,11 +648,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.addressHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.addressSubHeading));
 
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), zipCodeEditText);
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), address1EditText);
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), address2EditText);
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), cityEditText);
-        setProximaNovaSemiboldTypefaceEdittext(getActivity(), stateAutoCompleteTextView);
+        setProximaNovaRegularTypeface(getActivity(), zipCodeEditText);
+        setProximaNovaRegularTypeface(getActivity(), address1EditText);
+        setProximaNovaRegularTypeface(getActivity(), address2EditText);
+        setProximaNovaRegularTypeface(getActivity(), cityEditText);
+        setProximaNovaRegularTypeface(getActivity(), stateAutoCompleteTextView);
         setGothamRoundedMediumTypeface(getActivity(), nextButton);
 
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsAddressNameSectionLabel));
