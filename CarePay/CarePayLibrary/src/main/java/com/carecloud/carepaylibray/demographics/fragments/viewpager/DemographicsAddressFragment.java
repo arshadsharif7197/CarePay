@@ -120,7 +120,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         isStateEmtpy = true;
         isPhoneEmpty = true;
 
-        nextButton.setEnabled(false);
+//        nextButton.setEnabled(false); // TODO: 9/27/2016 uncomment
 
         return view;
     }
@@ -211,10 +211,10 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkReadyForNext()) { // if all valid;
+//                if(checkReadyForNext()) { // if all valid; // TODO: 9/27/2016 uncomment
                     // move to next (plus, eventually, perform backend stuff)
                     ((DemographicsActivity) getActivity()).setCurrentItem(1, true);
-                }
+//                }
             }
         });
 
@@ -375,15 +375,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private void enableNextButton() {
-        Log.v(LOG_TAG, "isFirstNameEmpty=" + isFirstNameEmpty
-                + "\nisLastNameEmpty="+isLastNameEmpty
-                + "\nisAddressEmpty=" + isAddressEmpty
-                + "\nisZipEmpty" + isZipEmpty
-                + "\nisCityEmpty" + isCityEmpty
-                + "\nisStateEmtpy" + isStateEmtpy
-                + "\nisPhoneEmpty=" + isPhoneEmpty);
-        Log.v(LOG_TAG, "state_null=" + stateAbbr);
-
         boolean areAllNonEmpty =
                 !( isFirstNameEmpty
                 || isLastNameEmpty
@@ -392,7 +383,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 || isCityEmpty
                 || isStateEmtpy
                 || isPhoneEmpty );
-        nextButton.setEnabled(areAllNonEmpty);
+//        nextButton.setEnabled(areAllNonEmpty); // TODO: 9/27/2016 uncomment
+        nextButton.setEnabled(true); // TODO: 9/27/2016 remove
     }
 
     private void setEditActionListeners() {

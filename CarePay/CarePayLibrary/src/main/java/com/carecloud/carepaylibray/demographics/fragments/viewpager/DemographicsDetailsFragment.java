@@ -79,7 +79,7 @@ public class DemographicsDetailsFragment extends Fragment
         preferredLanguageTextView.setOnClickListener(this);
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         nextButton.setOnClickListener(this);
-        enableNextButton(false); // 'next' is initially disabled
+//        enableNextButton(false); // 'next' is initially disabled // TODO: 9/27/2016 uncomment
     }
 
     @Override

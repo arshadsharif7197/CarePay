@@ -107,8 +107,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
-        isStoragePermissionGranted();
-        getDemographicInformation();
+//        isStoragePermissionGranted();
+//        getDemographicInformation();
         setupPager();
     }
 
