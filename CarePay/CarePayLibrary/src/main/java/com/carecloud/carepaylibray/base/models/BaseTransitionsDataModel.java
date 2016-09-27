@@ -1,4 +1,6 @@
 package com.carecloud.carepaylibray.base.models;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**
@@ -20,7 +22,11 @@ public class BaseTransitionsDataModel {
     private String type;
     @SerializedName("properties")
     @Expose
-    private Object properties;
+
+
+    private JsonObject properties;
+
+    private Gson gson = new Gson();
 
     /**
      *
@@ -99,16 +105,19 @@ public class BaseTransitionsDataModel {
      * @return
      * The properties
      */
-    public Object getProperties() {
-        return properties;
+
+    public <S>S getProperties(Class<S> convertTo){
+
+        return gson.fromJson(properties, convertTo);
     }
+
 
     /**
      *
      * @param properties
      * The properties
      */
-    public void setProperties(Object properties) {
+    public void setProperties(JsonObject properties) {
         this.properties = properties;
     }
 }
