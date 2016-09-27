@@ -61,6 +61,11 @@ public class SystemUtil {
         view.setTypeface(typeface);
     }
 
+    public static void setProximaNovaExtraboldTypefaceInput(Context context, TextInputLayout view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
+        view.setTypeface(typeface);
+    }
+
     public static void setProximaNovaSemiboldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
@@ -74,7 +79,6 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
         view.setTypeface(typeface);
     }
-
     public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
         view.setTypeface(typeface);
