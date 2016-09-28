@@ -23,7 +23,6 @@ import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
@@ -106,15 +105,16 @@ public class ReviewFragment  extends Fragment implements View.OnClickListener {
                             DemographicPayloadInfoPayloadModel payloadinfomodel=demographics.getPayload();
 
                             if (payloadinfomodel.getPersonalDetails() != null) {
-                                raceTextView.setText( payloadinfomodel.getPersonalDetails().getPrimaryRace());
-                                ethnicityTextView.setText(payloadinfomodel.getPersonalDetails().getEthnicity());
+                                DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel=payloadinfomodel.getPersonalDetails();
+                                raceTextView.setText( demographicPayloadPersonalDetailsModel.getPrimaryRace());
+                                ethnicityTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
                             } else
                                 Log.v(LOG_TAG, "demographic personaldetail  model is null ");
                             if (payloadinfomodel.getInsurances() != null) {
                                 for (DemographicPayloadInsuranceModel demographicPayloadInsuranceModel:demographics.getPayload().getInsurances()) {
-                                    planTextView.setText( payloadinfomodel.getInsurances().get(0).getInsurancePlan());
-                                    companyTextView.setText(payloadinfomodel.getInsurances().get(1).getInsuranceProvider());
-                                    policyNumberTextView.setText(payloadinfomodel.getInsurances().get(2).getInsuranceMemberId());
+                                    planTextView.setText( demographicPayloadInsuranceModel.getInsurancePlan());
+                                    companyTextView.setText(demographicPayloadInsuranceModel.getInsuranceProvider());
+                                    policyNumberTextView.setText(demographicPayloadInsuranceModel.getInsuranceMemberId());
                                 }
                             } else
                                 Log.v(LOG_TAG, "demographic insurance model is null");
