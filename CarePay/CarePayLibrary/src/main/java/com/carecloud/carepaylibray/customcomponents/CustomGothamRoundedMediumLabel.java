@@ -34,5 +34,4 @@ public class CustomGothamRoundedMediumLabel extends TextView {
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/gotham_rounded_medium.otf");
         setTypeface(tf);
     }
-
 }

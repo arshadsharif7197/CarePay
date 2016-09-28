@@ -21,9 +21,11 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
+    private AppointmentModel appointmentModel;
     public PendingAppointmentRequestDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
+        this.appointmentModel = appointmentModel;
     }
 
     @Override

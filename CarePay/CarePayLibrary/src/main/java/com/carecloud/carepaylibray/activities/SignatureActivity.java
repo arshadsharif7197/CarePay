@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class SignatureActivity extends AppCompatActivity {
     private Button agreeBtn, clearBtn;
     private EditText legalFirstNameET, legalLastNameET;
     private Map<Integer, List<String>> stringMap = new HashMap<>();
+    public static boolean isBackButtonClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,4 +148,13 @@ public class SignatureActivity extends AppCompatActivity {
         setGothamRoundedMediumTypeface(this, titleTv);
         setProximaNovaRegularTypeface(this, (TextView) findViewById(R.id.descriptionTv));
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        isBackButtonClicked = true;
+        Intent mIntent = getIntent();
+        setResult(CarePayConstants.SIGNATURE_REQ_CODE,mIntent);
+        finish();
+    }
+
 }

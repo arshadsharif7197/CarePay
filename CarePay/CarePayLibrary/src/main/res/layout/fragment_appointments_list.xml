@@ -7,6 +7,7 @@
     tools:context="com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment">
 
     <LinearLayout
+        android:id="@+id/appointment_section_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -17,38 +18,22 @@
             android:visibility="gone" />
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
-            android:id="@+id/appointments_section_title_Today"
+            android:id="@+id/appointments_sticky_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/default_title_indicator_title_padding"
-            android:paddingLeft="@dimen/layout_margin"
-            android:paddingTop="@dimen/textview_margin"
-            android:text="@string/apt_day_today"
+            android:paddingLeft="@dimen/list_apt_padding_right"
+            android:paddingTop="@dimen/apt_available_hours_list_header_padding_top"
             android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/textview_textsize" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/appointments_recycler_view_today"
+            android:id="@+id/appointments_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/respons_toolbar_elevation"/>
 
-        <TextView
-            android:id="@+id/appointments_section_title_Upcoming"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_title_indicator_title_padding"
-            android:paddingLeft="@dimen/layout_margin"
-            android:paddingTop="@dimen/textview_margin"
-            android:text="@string/apt_day_upcoming"
-            android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/textview_textsize" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/appointments_recycler_view_upcoming"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"

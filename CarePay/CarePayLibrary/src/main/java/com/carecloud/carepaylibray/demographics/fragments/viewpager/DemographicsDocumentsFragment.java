@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -29,14 +30,14 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
  */
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private static final String LOG_TAG             = DemographicsDocumentsFragment.class.getSimpleName();
+    private static final String LOG_TAG = DemographicsDocumentsFragment.class.getSimpleName();
     private FragmentManager          fm;
     private View                     view;
     private ScrollView               detailsScrollView;
     private SwitchCompat             switchCompat;
-    private FrameLayout              insCardContainer1;
-    private FrameLayout              insCardContainer2;
-    private FrameLayout              insCardContainer3;
+    private FrameLayout             insCardContainer1;
+    private FrameLayout             insCardContainer2;
+    private FrameLayout             insCardContainer3;
     private InsuranceScannerFragment extraInsCardFrag1;
     private InsuranceScannerFragment extraInsCardFrag2;
     private boolean                  isSecondCardAdded;
@@ -64,7 +65,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         showAddCardButton(false);
 
         // disable next button
-        enableNextButton(false);
+//        enableNextButton(false); // TODO: 9/27/2016 uncomment
 
         return view;
     }
@@ -176,6 +177,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsInsuranceSwitch));
         setGothamRoundedMediumTypeface(getActivity(), addCardButton);
+        setGothamRoundedMediumTypeface(getActivity(), nextButton);
     }
 
     @Override
@@ -213,12 +215,12 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 showInsuranceCard(insCardContainer1, on);
-                if(isSecondCardAdded) {
+                if (isSecondCardAdded) {
                     showInsuranceCard(insCardContainer2, on);
                 } else {
                     showInsuranceCard(insCardContainer2, false);
                 }
-                if(isThirdCardAdded) {
+                if (isThirdCardAdded) {
                     showInsuranceCard(insCardContainer3, on);
                 } else {
                     showInsuranceCard(insCardContainer3, false);

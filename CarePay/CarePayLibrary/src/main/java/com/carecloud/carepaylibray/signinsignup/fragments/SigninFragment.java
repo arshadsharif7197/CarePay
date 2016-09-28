@@ -56,8 +56,6 @@ public class SigninFragment extends Fragment {
 
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
-    private boolean isValidEmail;
-    private boolean isValidPassword;
 
     private String userName;
 
@@ -79,8 +77,6 @@ public class SigninFragment extends Fragment {
 
         isEmptyEmail = true;
         isEmptyPassword = true;
-        isValidEmail = false;
-        isValidPassword = false;
 
         return view;
     }
@@ -131,10 +127,13 @@ public class SigninFragment extends Fragment {
     private void setTypefaces() {
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailEditText);
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordEditText);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), emailTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), passwordTexInput);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), signinButton);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), signupButton);
+
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailTextInput);
+        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordTexInput);
+
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signinButton);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signupButton);
+
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), changeLanguageTextView);
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), forgotPasswordTextView);
 
@@ -147,7 +146,7 @@ public class SigninFragment extends Fragment {
         emailEditText.setTag(emailTextInput);
 
         passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
-        passwordTexInput.setTag(getString(R.string.signin_signup_password_hint));
+        passwordTexInput.setTag(getString(R.string.password_text));
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         passwordEditText.setTag(passwordTexInput);
 
@@ -177,6 +176,10 @@ public class SigninFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
+                if(!isEmptyEmail) { // clear the error
+                    emailTextInput.setError(null);
+                    emailTextInput.setErrorEnabled(false);
+                }
                 enableSigninButton();
             }
         });
@@ -194,6 +197,10 @@ public class SigninFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
+                if(isEmptyPassword) {
+                    passwordTexInput.setError(null);
+                    passwordTexInput.setErrorEnabled(false);
+                }
                 enableSigninButton();
             }
         });
@@ -204,9 +211,7 @@ public class SigninFragment extends Fragment {
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    isValidEmail = checkEmail();
-                } else {
+                if (b) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
@@ -215,9 +220,7 @@ public class SigninFragment extends Fragment {
         passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    isValidPassword = checkPassword();
-                } else {
+                if (b) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, b);
@@ -230,7 +233,6 @@ public class SigninFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_NEXT) {
-                    isValidEmail = checkEmail();
                     passwordEditText.requestFocus();
                     return true;
                 }
@@ -241,7 +243,6 @@ public class SigninFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE) {
-                    isValidPassword = checkPassword();
                     passwordEditText.clearFocus();
                     parentLayout.requestFocus();
                     SystemUtil.hideSoftKeyboard(getActivity());
@@ -276,7 +277,15 @@ public class SigninFragment extends Fragment {
     }
 
     private boolean areAllValid() {
-        return isValidEmail && isValidPassword;
+        boolean isPasswordValid = checkPassword();
+        if(!isPasswordValid) {
+            passwordEditText.requestFocus();
+        }
+        boolean isEmailValid = checkEmail();
+        if(!isEmailValid) {
+            emailEditText.requestFocus();
+        }
+        return isEmailValid && isPasswordValid;
     }
 
     private void enableSigninButton() {
