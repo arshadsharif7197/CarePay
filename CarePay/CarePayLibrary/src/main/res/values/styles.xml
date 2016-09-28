@@ -167,7 +167,7 @@
     </style>
 
     <style name="ResponsDetailStyle" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/respons_detail_text_size</item>
         <item name="android:textStyle">normal</item>
     </style>
@@ -180,7 +180,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/yellowGreen</item>
+        <item name="android:background">@color/blue_cerulian</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
     </style>
@@ -499,7 +499,7 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/intakeTitleTextSize</item>
-        <item name="android:layout_marginTop">@dimen/intakeTitleTopMargin</item>
+        <!--<item name="android:layout_marginTop">@dimen/margintop</item>-->
     </style>
 
     <style name="InTakeFragmentCaptionStyle">

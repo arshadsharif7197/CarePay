@@ -1,5 +1,5 @@
 package com.carecloud.carepaylibray.base.models;
-import com.carecloud.carepaylibray.demographics.models.DemographicTransitionsDataObjectModel;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;

@@ -1,19 +1,11 @@
 package com.carecloud.carepaylibrary;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
-import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +20,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * Test the renderer for ResponsibilityScreen
