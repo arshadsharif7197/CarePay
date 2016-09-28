@@ -20,9 +20,11 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
+    private AppointmentModel appointmentModel;
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
+        this.appointmentModel = appointmentModel;
     }
 
     @Override
@@ -65,9 +67,10 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         context.startActivity(demographicReviewIntent);
     }
     /**
-     * call check-in at Nowapi.
+     * call check-in at Now api.
      */
     private void onCheckInAtNow(){
-
+        Intent demographicReviewIntent = new Intent(context, DemographicReviewActivity.class);
+        context.startActivity(demographicReviewIntent);
     }
 }

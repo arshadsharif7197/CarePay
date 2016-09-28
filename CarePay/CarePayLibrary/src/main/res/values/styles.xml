@@ -97,6 +97,7 @@
     </style>
 
     <style name="EditTextStyle" parent="android:Widget.EditText">
+        <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">17.0sp</item>
@@ -130,6 +131,13 @@
         <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_right</item>
         <item name="android:layout_gravity">end</item>
         <item name="android:textSize">@dimen/signup_optional_label_text_size</item>
+    </style>
+
+    <style name="CustomToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!-- Responsibility styles -->
@@ -273,6 +281,8 @@
         <item name="android:textSize">13.0sp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginLeft">@dimen/review_subtitlemargin</item>
+        <item name="android:layout_marginRight">@dimen/review_subtitlemargin</item>
     </style>
 
     <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
@@ -292,6 +302,15 @@
         <item name="android:background">@drawable/agree_button_background</item>
     </style>
 
+    <style name="DemographicsSectionLabelStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginBottom">@dimen/demographics_docs_section_margin_top</item>
+        <item name="android:layout_marginStart">3dp</item>
+    </style>
 
     <!-- Signin Signup -->
 
@@ -312,7 +331,6 @@
     <style name="SigninSignupTextInputStyle" parent="TextInputLayoutStyle"/>
 
     <style name="SigninSignupEditStyle" parent="EditTextStyle">
-        <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:imeOptions">actionNext</item>
     </style>
 
@@ -329,19 +347,28 @@
 
     <style name="reviewDemographicBlue." parent="android:Widget.TextView">
         <item name="android:textColor">@color/bright_cerulean</item>
-        <item name="android:textSize">@dimen/respons_detail_text_size</item>
+        <item name="android:textSize">@dimen/review_section_header_textsize</item>
+        <item name="android:layout_marginTop">@dimen/review_section_header</item>
+        <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
-
     <style name="reviewDemographiclabel." parent="android:Widget.TextView">
         <item name="android:textColor">@color/cadet_gray</item>
-        <item name="android:textSize">@dimen/respons_detail_til_label_text_size</item>
+        <item name="android:textSize">@dimen/review_textlable_textsize</item>
+        <item name="android:layout_marginTop">@dimen/review_lablemargintop</item>
+        <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
 
     <style name="reviewDemographictext." parent="android:Widget.TextView">
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/textview_default_textsize</item>
+        <item name="android:layout_marginTop">@dimen/review_texviewmargin_top</item>
+        <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
-
+    <style name="Review_Screen_View_Style">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/light_gray</item>
+        <item name="android:layout_marginTop">@dimen/review_viewmargin_top</item>
+    </style>
 
     <!-- Navigation Screen Theme-->
 
@@ -351,6 +378,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:overScrollMode">never</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

@@ -79,7 +79,7 @@ public class DemographicsDetailsFragment extends Fragment
         preferredLanguageTextView.setOnClickListener(this);
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         nextButton.setOnClickListener(this);
-        enableNextButton(false); // 'next' is initially disabled
+//        enableNextButton(false); // 'next' is initially disabled // TODO: 9/27/2016 uncomment
     }
 
     @Override
@@ -146,11 +146,15 @@ public class DemographicsDetailsFragment extends Fragment
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsSubHeading));
+
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.raceTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.raceListTextView));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+
         setGothamRoundedMediumTypeface(getActivity(), nextButton);
+
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }
