@@ -61,6 +61,7 @@
     <dimen name="demographics_docs_thumbnail_width">100dp</dimen>
     <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
     <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
+    <dimen name="demographics_address_bottom_margin">20dp</dimen>
 
 
     <!-- Demographics Address -->
@@ -106,6 +107,19 @@
     <dimen name="apt_lst_img_elevation">1dp</dimen>
     <dimen name="apt_dl_view_margin">15dp</dimen>
 
+<!--<review screen dimen>-->
+    <dimen name="review_screen_left_margin">17dp</dimen>
+    <dimen name="review_screen_right_margin">17dp</dimen>
+    <dimen name="review_textview_leftmargin">12dp</dimen>
+    <dimen name="review_texviewmargin_top">1.5dp</dimen>
+    <dimen name="review_lablemargintop">9dp</dimen>
+    <dimen name="review_section_header">36dp</dimen>
+    <dimen name="review_header_lablemargin_top">27dp</dimen>
+    <dimen name="review_section_header_textsize">14sp</dimen>
+    <dimen name="review_textlable_textsize">10sp</dimen>
+    <dimen name="review_textview_textsize">17sp</dimen>
+    <dimen name="review_viewmargin_top">7.5dp</dimen>
+    <dimen name="review_subtitlemargin">43dp</dimen>
 
 
     <!-- Default screen margins, per the Android Design guidelines. -->
