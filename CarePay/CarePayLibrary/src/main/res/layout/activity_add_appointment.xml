@@ -4,8 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/add_appointment_toolbar" />
-
     <FrameLayout
         android:id="@+id/add_appointments_frag_holder"
         android:layout_width="match_parent"
