@@ -241,7 +241,8 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="choose_provider_recent_title">RECENT</string>
     <string name="choose_provider_all_title">ALL</string>
     <string name="apt_available_hours_title">Available Hours</string>
-
+    <string name="apt_choose_provider_title">Choose Provider</string>
+    <string name="request_appointment_button_text">REQUEST APPOINTMENT</string>
     <string name="checked_in_label">CHECKED-IN</string>
 
 </resources>

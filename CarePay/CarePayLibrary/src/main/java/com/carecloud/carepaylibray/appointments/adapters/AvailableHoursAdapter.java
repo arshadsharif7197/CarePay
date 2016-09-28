@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AvailableHoursModel;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
@@ -75,17 +76,18 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView selTime = (TextView) v.findViewById(R.id.textview_timeslot);
+                TextView selectedTimeSlot = (TextView) v.findViewById(R.id.textview_timeslot);
 
-                // Set dummy data for now
-                model.setButtonTitle("REQUEST APPOINTMENT");
-                model.setAppointmentDate("09/22/16 " + selTime.getText().toString() + " UTC");
-                model.setAppointmentTime(selTime.getText().toString());
+                if (selectedTimeSlot != null) {
+                    String selectedTimeStr = selectedTimeSlot.getText().toString();
+                    model.setAppointmentDate(AvailableHoursFragment.getAppointmentDate() + " " + selectedTimeStr.replace(" ", ":00 ") + " UTC");
+                    model.setAppointmentTime(selectedTimeStr);
 
-                // Launch dialog of appointment request
-                AppointmentsActivity baseActivity = new AppointmentsActivity();
-                baseActivity.setAppointmentModel(model);
-                new RequestAppointmentDialog(context,model).show();
+                    // Launch dialog of appointment request
+                    AppointmentsActivity baseActivity = new AppointmentsActivity();
+                    baseActivity.setAppointmentModel(model);
+                    new RequestAppointmentDialog(context, model).show();
+                }
             }
         });
     }

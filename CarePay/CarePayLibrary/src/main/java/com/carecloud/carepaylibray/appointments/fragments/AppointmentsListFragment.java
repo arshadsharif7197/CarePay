@@ -48,7 +48,7 @@ public class AppointmentsListFragment extends Fragment {
     private ArrayList<AppointmentModel> todayAppointmentsItems = new ArrayList<>();
     private ArrayList<AppointmentModel> upcomingAppointmentsItems = new ArrayList<>();
 
-    public static boolean showCheckedInView;
+    public static boolean showNewAddedAppointment;
     private PopupNotificationWithAction popup;
 
     @Override
@@ -59,8 +59,8 @@ public class AppointmentsListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (showCheckedInView) {
-            showCheckedInView();
+        if (showNewAddedAppointment) {
+            showNewAddedAppointment();
         }
     }
 
@@ -125,7 +125,7 @@ public class AppointmentsListFragment extends Fragment {
         }
     };
 
-    private void showCheckedInView() {
+    private void showNewAddedAppointment() {
         final AppointmentModel model = ((AppointmentsActivity) getActivity()).getModel();
 
         if (upcomingAppointmentsItems != null && appointmentsAdapterUpcoming != null) {

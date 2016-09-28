@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.customdialogs;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 
 /**
  * Created by prem_mourya on 9/22/2016.
@@ -61,7 +59,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
      */
     private void onRequestAppointment(){
        // String reasonString = reasonEdittext.getText().toString();
-        AppointmentsListFragment.showCheckedInView = true;
+        AppointmentsListFragment.showNewAddedAppointment = true;
         ((AddAppointmentActivity) context).finish();
     }
 
