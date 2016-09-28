@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3582e1"
+    android:background="@color/blue_green"
     android:orientation="vertical"
     android:padding="32dp">
 
@@ -42,8 +42,8 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
             android:id="@+id/queueLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
@@ -74,112 +74,107 @@
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="50dp"
+        android:paddingLeft="220dp"
+        android:paddingRight="220dp"
+        android:paddingTop="50dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" android:background="@drawable/home_main_container_rounded">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:orientation="horizontal">
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/textView4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/top_left_rounded_background"
+                android:drawableTop="@drawable/icn_check_in"
+                android:text="Check-In"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
 
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:paddingTop="10dp"
-                    android:layout_marginRight="1dp"
-                    android:drawableTop="@drawable/icn_check_in"
-                    android:gravity="center"
-                    android:text="Check-In"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:drawableTop="@drawable/icn_payments"
+                android:text="Payments"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
 
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:paddingTop="10dp"
-                    android:layout_marginRight="1dp"
-                    android:drawableTop="@drawable/icn_payments"
-                    android:gravity="center_horizontal"
-                    android:text="Payments"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="190dp"
-                    android:background="#ffffff"
-                    android:paddingTop="10dp"
-                    android:drawableTop="@drawable/icn_appointements"
-                    android:gravity="center"
-                    android:text="Appointments"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/top_right_rounded_background"
+                android:drawableTop="@drawable/icn_appointements"
+                android:text="Appointments"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
 
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:layout_marginTop="1dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:paddingTop="10dp"
-                    android:layout_marginRight="1dp"
-                    android:drawableTop="@drawable/icn_check_out"
-                    android:gravity="center_horizontal"
-                    android:text="Check-Out"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:drawableTop="@drawable/icn_retail"
-                    android:gravity="center_horizontal"
-                    android:text="Retail"
-                    android:layout_marginRight="1dp"
-                    android:paddingTop="10dp"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:drawableTop="@drawable/icn_check_in"
-                    android:gravity="center_horizontal"
-                    android:text="All Activity"
-                    android:paddingTop="10dp"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:id="@+id/queueListLinearLayout"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:background="#acacac">
+            android:layout_height="0dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/textView2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/bottom_left_rounded_background"
+                android:drawableTop="@drawable/icn_checkout"
+                android:text="Check-Out"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:drawableTop="@drawable/icn_retail"
+                android:text="Shop"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/textView3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bottom_right_rounded_background"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
 
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

@@ -33,7 +33,7 @@ public class HomeScreenActivity extends AppCompatActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_screen_activity);
+        setContentView(R.layout.activity_home_screen);
         mGridView = (RecyclerView) findViewById(R.id.home_recycler_view);
         GridLayoutManager manager = new GridLayoutManager(this, 2);
         mGridView.setHasFixedSize(true);
