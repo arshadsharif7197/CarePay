@@ -10,12 +10,11 @@
 
         <Button
             android:id="@+id/checkAtOfficeButton"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
             android:layout_marginTop="@dimen/apt_dl_margin"
             android:background="@drawable/button_blue_border"
-            android:text="@string/check_in_at_office"
+            android:text="@string/check_in_at_office_one"
             android:textColor="@color/blue_cerulian"
             android:textSize="@dimen/apt_dl_textview_size" />
     </LinearLayout>
