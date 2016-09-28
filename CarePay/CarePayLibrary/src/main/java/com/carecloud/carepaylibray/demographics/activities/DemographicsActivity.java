@@ -182,6 +182,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
         demographicPayloadPersonalDetailsModel.setDateOfBirth("02/11/1983");
         demographicPayloadPersonalDetailsModel.setPrimaryRace("Asian");
+        demographicPayloadPersonalDetailsModel.setEthnicity("White");
         demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
 
         DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
