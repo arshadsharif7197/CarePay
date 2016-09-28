@@ -1,7 +1,5 @@
 package com.carecloud.carepaylibray.constants;
 
-import java.util.Locale;
-
 /**
  * Created by Jahirul Bhuiyan on 8/24/2016.
  */

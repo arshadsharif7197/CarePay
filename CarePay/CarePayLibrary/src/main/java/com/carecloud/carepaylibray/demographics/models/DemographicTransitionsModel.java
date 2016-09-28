@@ -1,5 +1,5 @@
 package com.carecloud.carepaylibray.demographics.models;
-import com.carecloud.carepaylibray.base.models.BaseTransitionsModel;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**
