@@ -21,7 +21,7 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeader;
-import com.carecloud.carepaylibray.appointments.utils.PopupNotificationWithAction;
+import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
@@ -51,7 +51,7 @@ public class AppointmentsListFragment extends Fragment {
     private AppointmentsListFragment appointmentsListFragment;
 
     public static boolean showNewAddedAppointment;
-    private PopupNotificationWithAction popup;
+    private CustomPopupNotification popup;
 
     @Override
     public void onStart() {
@@ -90,7 +90,8 @@ public class AppointmentsListFragment extends Fragment {
 
                 if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES &&
                         differenceInMinutes > 0) {
-                    popup = new PopupNotificationWithAction(getActivity(), getView(), getString(R.string.checkin_early),
+
+                    popup = new CustomPopupNotification(getActivity(), getView(), getString(R.string.checkin_early),
                             getString(R.string.dismiss),
                             getString(R.string.apt_popup_message_text, appointmentsItems.get(0).getDoctorName()),
                             positiveActionListener, negativeActionListener);
