@@ -4,17 +4,29 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/optionalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="@dimen/apt_dl_margin"
+        android:gravity="right"
+        android:text="Optional"
+        android:textSize="@dimen/apt_popup_optional" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/reasonTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/apt_dl_margin">
+        android:layout_marginTop="-20dp">
 
         <EditText
             android:id="@+id/reasonEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:hint="Reason for visit"
+            android:imeOptions="flagNoExtractUi"
             android:textColor="@color/blue_cerulian" />
 
     </android.support.design.widget.TextInputLayout>

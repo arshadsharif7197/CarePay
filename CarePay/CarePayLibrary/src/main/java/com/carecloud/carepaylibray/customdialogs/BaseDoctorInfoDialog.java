@@ -5,12 +5,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -62,7 +65,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
         addressHeaderTextView.setText(appointmentModel.getPlaceName());
         addressTextView.setText(appointmentModel.getPlaceAddress());
 
-        SystemUtil.setProximaNovaRegularTypeface(context, dateTextView);
+        SystemUtil.setProximaNovaLightTypeface(context, dateTextView);
         SystemUtil.setGothamRoundedBoldTypeface(context, timeTextView);
         SystemUtil.setProximaNovaRegularTypeface(context, shortNameTextView);
         SystemUtil.setProximaNovaSemiboldTypeface(context, nameTextView);
@@ -75,6 +78,15 @@ public class BaseDoctorInfoDialog extends Dialog implements
         findViewById(R.id.appointDailImageView).setOnClickListener(this);
         addActionlayout=  findViewById(R.id.actionAddLayout);
         rootLayout = findViewById(R.id.rootDialogAppointLayout);
+
+        if(TextUtils.isEmpty(appointmentModel.getPhoneNumber())){
+            //it will change disable icon for call
+            ((ImageView)findViewById(R.id.appointDailImageView)).setImageResource(R.drawable.icn_appointment_card_call);
+        }
+        if(!SystemUtil.isNotEmptyString(appointmentModel.getPlaceAddress())){
+            //it will change disable icon for address
+            ((ImageView)findViewById(R.id.appointLocationImageView)).setImageResource(R.drawable.icn_appointment_card_directions);
+        }
     }
 
     @Override
@@ -85,9 +97,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
         }else  if(viewId == R.id.appointLocationImageView){
             onMapView(appointmentModel.getPlaceName(),appointmentModel.getPlaceAddress());
         }else  if(viewId == R.id.appointDailImageView){
-            if(TextUtils.isEmpty(appointmentModel.getPhoneNumber())){
-                //it will set disabled phoneIcon (currently we do not have disabled phoneIcon)
-            }else {
+            if(!TextUtils.isEmpty(appointmentModel.getPhoneNumber())){
                 onPhoneCall(appointmentModel.getPhoneNumber());
             }
         }
@@ -105,8 +115,6 @@ public class BaseDoctorInfoDialog extends Dialog implements
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             context.startActivity(mapIntent);
-        }else {
-            //it will set disabled mapicon (currently we do not have disabled mapicon)
         }
     }
 
