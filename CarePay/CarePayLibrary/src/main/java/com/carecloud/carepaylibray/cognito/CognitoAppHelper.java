@@ -18,11 +18,13 @@
 package com.carecloud.carepaylibray.cognito;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
@@ -32,6 +34,8 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Chal
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
+import com.carecloud.carepaylibray.activities.LibraryMainActivity;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -335,5 +339,52 @@ public class CognitoAppHelper {
         AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
         continuation.setAuthenticationDetails(authenticationDetails);
         continuation.continueTask();
+    }
+
+    /**
+     * @param successAction The action to be executed on user found
+     * @return Whether the current user has is signed in
+     */
+    public static boolean findCurrentUser(final CognitoActionCallback successAction) {
+        AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+            @Override
+            public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
+                CognitoAppHelper.setCurrSession(userSession);
+                CognitoAppHelper.newDevice(newDevice);
+
+                if(successAction != null) {
+                    successAction.executeAction();
+                }
+            }
+
+            @Override
+            public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String UserId) {
+                Log.v(LOG_TAG, "getAuthenticationDetails()");
+            }
+
+            @Override
+            public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
+                Log.v(LOG_TAG, "getMFACode()");
+            }
+
+            @Override
+            public void authenticationChallenge(ChallengeContinuation continuation) {
+                Log.v(LOG_TAG, "authenticationChallenge()");
+            }
+
+            @Override
+            public void onFailure(Exception exception) {
+                Log.e(LOG_TAG, exception.getLocalizedMessage());
+            }
+        };
+
+        CognitoUser user = CognitoAppHelper.getPool().getCurrentUser();
+        String userName = user.getUserId();
+        if(userName != null) {
+            CognitoAppHelper.setUser(userName);
+            user.getSessionInBackground(authenticationHandler);
+            return true;
+        }
+        return false;
     }
 }

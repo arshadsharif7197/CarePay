@@ -37,6 +37,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
@@ -570,7 +571,14 @@ public class SignupFragment extends Fragment {
         if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
                 // confirmed; (auto)sign-in
-                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+//                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+                CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
+                                        new CognitoActionCallback() {
+                                            @Override
+                                            public void executeAction() {
+                                                launchDemographics();
+                                            }
+                                        });
             }
         }
     }
@@ -584,6 +592,13 @@ public class SignupFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    private void launchDemographics() {
+        // do to Demographics
+        Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     // cognito
@@ -618,19 +633,19 @@ public class SignupFragment extends Fragment {
         startActivityForResult(intent, 10);
     }
 
-    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
-        Log.v(LOG_TAG, "getUserAuthentication()");
-
-        userName = username;
-        if (username != null) {
-            CognitoAppHelper.setUser(username);
-        }
-
-        String password = passwordText.getText().toString();
-        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
-        continuation.setAuthenticationDetails(authenticationDetails);
-        continuation.continueTask();
-    }
+//    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
+//        Log.v(LOG_TAG, "getUserAuthentication()");
+//
+//        userName = username;
+//        if (username != null) {
+//            CognitoAppHelper.setUser(username);
+//        }
+//
+//        String password = passwordText.getText().toString();
+//        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
+//        continuation.setAuthenticationDetails(authenticationDetails);
+//        continuation.continueTask();
+//    }
 
     SignUpHandler signUpHandler = new SignUpHandler() {
         @Override
@@ -639,7 +654,15 @@ public class SignupFragment extends Fragment {
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
                 // auto-confirmed; sign-in
-                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+//                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+                CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
+                                        new CognitoActionCallback() {
+                                            @Override
+                                            public void executeAction() {
+                                                launchDemographics();
+                                            }
+                                        });
+
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed
@@ -657,42 +680,41 @@ public class SignupFragment extends Fragment {
         }
     };
 
-    private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
-        @Override
-        public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-            Log.v(LOG_TAG, "auth success");
-            CognitoAppHelper.setCurrSession(userSession);
-            CognitoAppHelper.newDevice(newDevice);
-
-            progressBar.setVisibility(View.INVISIBLE);
-
-            // do to Demographics
-            Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-
-        }
-
-        @Override
-        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
-            Log.v(LOG_TAG, "getAuthenticationDetails()");
-            getUserAuthentication(authenticationContinuation, userId);
-        }
-
-        @Override
-        public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
-            Log.v(LOG_TAG, "getMFACode()");
-        }
-
-        @Override
-        public void authenticationChallenge(ChallengeContinuation continuation) {
-            Log.v(LOG_TAG, "authenticationChallenge()");
-        }
-
-        @Override
-        public void onFailure(Exception exception) {
-            progressBar.setVisibility(View.INVISIBLE);
-            Log.e(LOG_TAG, exception.getLocalizedMessage());
-        }
-    };
+//    private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+//        @Override
+//        public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
+//            Log.v(LOG_TAG, "auth success");
+//            CognitoAppHelper.setCurrSession(userSession);
+//            CognitoAppHelper.newDevice(newDevice);
+//
+//            progressBar.setVisibility(View.INVISIBLE);
+//
+//            // do to Demographics
+//            Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+//            startActivity(intent);
+//            getActivity().finish();
+//        }
+//
+//        @Override
+//        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
+//            Log.v(LOG_TAG, "getAuthenticationDetails()");
+//            getUserAuthentication(authenticationContinuation, userId);
+//        }
+//
+//        @Override
+//        public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
+//            Log.v(LOG_TAG, "getMFACode()");
+//        }
+//
+//        @Override
+//        public void authenticationChallenge(ChallengeContinuation continuation) {
+//            Log.v(LOG_TAG, "authenticationChallenge()");
+//        }
+//
+//        @Override
+//        public void onFailure(Exception exception) {
+//            progressBar.setVisibility(View.INVISIBLE);
+//            Log.e(LOG_TAG, exception.getLocalizedMessage());
+//        }
+//    };
 }
