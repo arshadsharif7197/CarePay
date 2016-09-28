@@ -8,10 +8,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="respons_title">Responsibility</string>
-    <string name="respons_total_label">Amount for today\'s visit</string>
+    <string name="respons_total_label">Your total patient responsibility</string>
     <string name="respons_previous_balance_label">Previous balance</string>
     <string name="respons_copay_label">Insurance CoPay</string>
-    <string name="respons_pay_label">select payment method</string>
+    <string name="respons_pay_label">Pay at practice</string>
+    <string name="respons_pay_now_label">Pay now</string>
 
     <string name="AL">AL</string>
     <string name="FL">FL</string>

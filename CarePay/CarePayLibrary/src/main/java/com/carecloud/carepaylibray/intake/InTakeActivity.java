@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.intake;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
@@ -85,7 +87,15 @@ public class InTakeActivity extends KeyboardHolderActivity {
         intakeNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moveToNextQuestion();
+                String intakeButtonText = intakeNextButton.getText().toString();
+                /* Based on the below logic user will be navigated to payment screen if he has finished all the consent forms */
+                if(intakeButtonText.equalsIgnoreCase(getString(R.string.intakeNextButtonText))) {
+                    moveToNextQuestion();
+                } else {
+                    Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 

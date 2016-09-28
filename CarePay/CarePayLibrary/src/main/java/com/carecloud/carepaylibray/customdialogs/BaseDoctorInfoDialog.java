@@ -1,12 +1,9 @@
 package com.carecloud.carepaylibray.customdialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,7 +16,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -30,7 +26,8 @@ public class BaseDoctorInfoDialog extends Dialog implements
         View.OnClickListener {
     private Context context;
     private AppointmentModel appointmentModel;
-    private View addActionlayout,rootLayout;
+    private View addActionlayout, rootLayout;
+
     public BaseDoctorInfoDialog(Context context, AppointmentModel appointmentModel) {
         super(context);
         this.context = context;
@@ -46,7 +43,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int)(context.getResources().getDisplayMetrics().widthPixels*0.90);
+        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes((WindowManager.LayoutParams) params);
 
         TextView shortNameTextView = ((TextView) findViewById(R.id.appointShortnameTextView));
@@ -57,8 +54,8 @@ public class BaseDoctorInfoDialog extends Dialog implements
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
-        dateTextView.setText(SystemUtil.onDateParseToString(context,appointmentModel.getAppointmentDate())[0]);
-        timeTextView.setText(SystemUtil.onDateParseToString(context,appointmentModel.getAppointmentDate())[1]);
+        dateTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[0]);
+        timeTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[1]);
         shortNameTextView.setText(SystemUtil.onShortDrName(appointmentModel.getDoctorName()));
         nameTextView.setText(appointmentModel.getDoctorName());
         typeTextView.setText(appointmentModel.getAppointmentType());
@@ -76,28 +73,28 @@ public class BaseDoctorInfoDialog extends Dialog implements
         findViewById(R.id.dialogAppointHeaderTextView).setOnClickListener(this);
         findViewById(R.id.appointLocationImageView).setOnClickListener(this);
         findViewById(R.id.appointDailImageView).setOnClickListener(this);
-        addActionlayout=  findViewById(R.id.actionAddLayout);
+        addActionlayout = findViewById(R.id.actionAddLayout);
         rootLayout = findViewById(R.id.rootDialogAppointLayout);
 
-        if(TextUtils.isEmpty(appointmentModel.getPhoneNumber())){
+        if (TextUtils.isEmpty(appointmentModel.getPhoneNumber())) {
             //it will change disable icon for call
-            ((ImageView)findViewById(R.id.appointDailImageView)).setImageResource(R.drawable.icn_appointment_card_call);
+            ((ImageView) findViewById(R.id.appointDailImageView)).setImageResource(R.drawable.icn_appointment_card_call);
         }
-        if(!SystemUtil.isNotEmptyString(appointmentModel.getPlaceAddress())){
+        if (!SystemUtil.isNotEmptyString(appointmentModel.getPlaceAddress())) {
             //it will change disable icon for address
-            ((ImageView)findViewById(R.id.appointLocationImageView)).setImageResource(R.drawable.icn_appointment_card_directions);
+            ((ImageView) findViewById(R.id.appointLocationImageView)).setImageResource(R.drawable.icn_appointment_card_directions);
         }
     }
 
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if(viewId == R.id.dialogAppointHeaderTextView){
+        if (viewId == R.id.dialogAppointHeaderTextView) {
             cancel();
-        }else  if(viewId == R.id.appointLocationImageView){
-            onMapView(appointmentModel.getPlaceName(),appointmentModel.getPlaceAddress());
-        }else  if(viewId == R.id.appointDailImageView){
-            if(!TextUtils.isEmpty(appointmentModel.getPhoneNumber())){
+        } else if (viewId == R.id.appointLocationImageView) {
+            onMapView(appointmentModel.getPlaceName(), appointmentModel.getPlaceAddress());
+        } else if (viewId == R.id.appointDailImageView) {
+            if (!TextUtils.isEmpty(appointmentModel.getPhoneNumber())) {
                 onPhoneCall(appointmentModel.getPhoneNumber());
             }
         }
@@ -105,12 +102,13 @@ public class BaseDoctorInfoDialog extends Dialog implements
 
     /**
      * show device map view based on address.
+     *
      * @param address the String to evaluate
      */
-    private void onMapView(final String addressName,final String address){
-        if(SystemUtil.isNotEmptyString(address)){
-            String  placeName = SystemUtil.isNotEmptyString(addressName)?addressName:"";
-            String fullAddress =placeName+" "+address;
+    private void onMapView(final String addressName, final String address) {
+        if (SystemUtil.isNotEmptyString(address)) {
+            String placeName = SystemUtil.isNotEmptyString(addressName) ? addressName : "";
+            String fullAddress = placeName + " " + address;
             Uri mapUri = Uri.parse("geo:0,0?q=" + Uri.encode(fullAddress));
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
             mapIntent.setPackage("com.google.android.apps.maps");
@@ -120,20 +118,22 @@ public class BaseDoctorInfoDialog extends Dialog implements
 
     /**
      * show device phone call UI based on phone number.
+     *
      * @param phoneNumber the String to evaluate
      */
-    private void onPhoneCall(final String phoneNumber){
-        try{
+    private void onPhoneCall(final String phoneNumber) {
+        try {
             context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
-        }catch (android.content.ActivityNotFoundException ex){
+        } catch (android.content.ActivityNotFoundException ex) {
 
         }
     }
 
-    protected View getAddActionChildView(){
+    protected View getAddActionChildView() {
         return addActionlayout;
     }
-    protected View getRootView(){
+
+    protected View getRootView() {
         return rootLayout;
     }
 
