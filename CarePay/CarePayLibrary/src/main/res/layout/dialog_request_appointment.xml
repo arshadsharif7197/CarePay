@@ -18,7 +18,7 @@
         android:id="@+id/reasonTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-20dp">
+        android:layout_marginTop="@dimen/optional_text_edit">
 
         <EditText
             android:id="@+id/reasonEditText"

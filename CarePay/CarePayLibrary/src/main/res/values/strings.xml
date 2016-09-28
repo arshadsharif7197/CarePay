@@ -257,4 +257,6 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="demogr_section_name_label">Name</string>
     <string name="demogr_section_address_label">Address</string>
 
+    <string name="choose">Choose</string>
+
 </resources>
