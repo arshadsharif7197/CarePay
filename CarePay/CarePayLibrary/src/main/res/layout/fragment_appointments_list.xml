@@ -19,20 +19,19 @@
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
             android:id="@+id/appointments_sticky_header_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/apt_skicky_header_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_title_indicator_title_padding"
-            android:paddingLeft="@dimen/list_apt_padding_right"
-            android:paddingTop="@dimen/apt_available_hours_list_header_padding_top"
+            android:gravity="center_vertical"
             android:textColor="@color/lightSlateGray"
+            android:background="@color/light_gray"
+            android:paddingLeft="@dimen/list_apt_padding_right"
             android:textSize="@dimen/textview_textsize" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/appointments_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/respons_toolbar_elevation"/>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
