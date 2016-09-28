@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.customdialogs;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,48 +15,46 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by prem_mourya on 9/22/2016.
  */
-
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
     private EditText reasonEdittext;
     private AppointmentModel appointmentModel;
+
     public RequestAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
-        this.appointmentModel=appointmentModel;
+        this.appointmentModel = appointmentModel;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        mainLayout = (LinearLayout)getAddActionChildView();
+        mainLayout = (LinearLayout) getAddActionChildView();
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
-        dateTextView.setText(SystemUtil.onDateParseToString(context,appointmentModel.getAppointmentDate())[1]);
-        timeTextView.setText(SystemUtil.onDateParseToString(context,appointmentModel.getAppointmentDate())[0]);
+        dateTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[1]);
+        timeTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[0]);
         setActionButton();
     }
-    private void setActionButton(){
+
+    private void setActionButton() {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_request_appointment, null);
         reasonEdittext = (EditText) childActionView.findViewById(R.id.reasonEditText);
-        TextView optionaltextView = (TextView)childActionView.findViewById(R.id.optionalTextView);
+        TextView optionaltextView = (TextView) childActionView.findViewById(R.id.optionalTextView);
         Button appointmentRequestButton = (Button) childActionView.findViewById(R.id.requestAppointmentButton);
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
-        SystemUtil.setProximaNovaSemiboldTypeface(context,optionaltextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(context, optionaltextView);
         reasonEdittext.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -73,7 +70,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     public void onClick(View view) {
         super.onClick(view);
         int viewId = view.getId();
-        if(viewId == R.id.requestAppointmentButton){
+        if (viewId == R.id.requestAppointmentButton) {
             onRequestAppointment();
             cancel();
         }
@@ -82,9 +79,9 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     /**
      * call check-in at office api.
      */
-    private void onRequestAppointment(){
-       // String reasonString = reasonEdittext.getText().toString();
-        AppointmentsListFragment.showCheckedInView = true;
+    private void onRequestAppointment() {
+        // String reasonString = reasonEdittext.getText().toString();
+        AppointmentsListFragment.showNewAddedAppointment = true;
         ((AddAppointmentActivity) context).finish();
     }
 
