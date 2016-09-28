@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
-import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
@@ -29,13 +28,8 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicTransitionsDataObjectModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
@@ -50,8 +44,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
-
 
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
@@ -59,16 +51,19 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
-    private TextView title;
-    private int currentPageIndex;
-    private ViewPager viewPager;
-    private DemographicPagerAdapter demographicPagerAdapter;
-    ProgressBar demographicProgressBar;
+    private TextView    titleTextView;
+    private int         currentPageIndex;
+    private ViewPager   viewPager;
+    private ProgressBar demographicProgressBar;
 
     private DemographicModel demographicModel = null;
 
-    public DemographicModel getDemographicModel() {
-        return demographicModel;
+    public DemographicPayloadModel getDemographicPayloadModel() {
+        if(demographicModel != null) {
+            return demographicModel.getPayload();
+
+        }
+        return null;
     }
 
     @Override
@@ -91,12 +86,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         super.onCreate(savedInstanceState);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
-        title = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
-        setTypefaceFromAssets(DemographicsActivity.this, "fonts/gotham_rounded_medium.otf", title);
+        titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
+        SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
         toolbar.setTitle("");
-        title.setText("Address");
+        titleTextView.setText("Address");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
-
         (DemographicsActivity.this).setSupportActionBar(toolbar);
 
         // set the language
@@ -115,7 +109,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     private void setupPager() {
         currentPageIndex = 0;
-        demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
+        DemographicPagerAdapter demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.demographicsViewPager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(demographicPagerAdapter);
@@ -154,17 +148,17 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
                 demographicModel = response.body();
                 demographicProgressBar.setVisibility(View.GONE);
-                Log.d(LOG_TAG, "demographics model received");
+                Log.v(LOG_TAG, "demographic info fetched");
 
             }
 
             @Override
             public void onFailure(Call<DemographicModel> call, Throwable t) {
-
+                demographicProgressBar.setVisibility(View.GONE);
+                Log.e(LOG_TAG, "failed fetching demogr info", t);
             }
         });
     }
-
 
     public void confirmDemographicInformation() {
         DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
@@ -221,16 +215,16 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
-                title.setText("Address");
+                titleTextView.setText("Address");
                 break;
             case 1:
-                title.setText("Details");
+                titleTextView.setText("Details");
                 break;
             case 2:
-                title.setText("Documents");
+                titleTextView.setText("Documents");
                 break;
             case 3:
-                title.setText("More Details");
+                titleTextView.setText("More Details");
                 break;
             default:
                 break;
@@ -244,7 +238,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     /**
      * Adapter for the viewpager
      */
-
 
     class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 

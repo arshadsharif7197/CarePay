@@ -24,6 +24,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -94,13 +96,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 int heightDiff = view.getRootView().getHeight() - view.getHeight();
                 if (heightDiff > SystemUtil.dpToPx(getActivity(), 200)) { // if more than 200 dp, it's probably a keyboard...
                     if(isNextVisible) {
-                        Log.v(LOG_TAG, "onShown()");
                         nextButton.setVisibility(View.GONE);
                         isNextVisible = false;
                     }
                 } else {
                     if(!isNextVisible) {
-                        Log.v(LOG_TAG, "onHidden()");
                         nextButton.setVisibility(View.VISIBLE);
                         isNextVisible = true;
                     }
@@ -222,6 +222,30 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         setFocusChangeListeners();
         setEditActionListeners();
         setTextWachers();
+
+        // populate views
+        populateViewsWithModel();
+
+    }
+
+    private void populateViewsWithModel() {
+        DemographicPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicPayloadModel();
+        DemographicPayloadAddressModel model = null;
+        if(payload != null) {
+            model = payload.getAddress();
+        }
+        if(model != null) {
+            // populate the views
+            // TODO: 9/28/2016 add fields for name as well
+            address1EditText.setText(model.getAddress1());
+            address2EditText.setText(model.getAddress2());
+            zipCodeEditText.setText(model.getZipcode());
+            cityEditText.setText(model.getCity());
+            stateAutoCompleteTextView.setText(model.getState());
+            phoneNumberEditText.setText(model.getPhone());
+        } else {
+            Log.v(LOG_TAG, "demographics address: views populated with defaults");
+        }
     }
 
     private void setTextWachers() {

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -34,6 +35,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private TextView           tvInsuranceNum;
     private TextView           tvPlan;
     private TextView           tvProvider;
+    private Object model;
 
     @Nullable
     @Override
@@ -72,6 +74,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         setTypefaces(view);
 
+        populateViewsFromModel();
+
         return view;
     }
 
@@ -82,6 +86,20 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         tvInsuranceNum.setVisibility(View.VISIBLE);
         tvPlan.setText(plans[0]);
         tvProvider.setText(providers[0]);
+    }
+
+    @Override
+    public void populateViewsFromModel() {
+        if(model != null) {
+            // check the type of the model
+            if(model instanceof DemographicPayloadInsuranceModel) {
+                DemographicPayloadInsuranceModel insuranceModel = (DemographicPayloadInsuranceModel) model;
+                mInsuranceScanHelper.setImageFromCharStream(insuranceModel.getInsurancePhoto());
+                tvInsuranceNum.setText(insuranceModel.getInsuranceMemberId());
+                tvPlan.setText(insuranceModel.getInsurancePlan());
+                tvProvider.setText(insuranceModel.getInsuranceProvider());
+            }
+        }
     }
 
     public void resetViewsContent() {
@@ -118,5 +136,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Override
     public int getImageShape() {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    }
+
+    public void setModel(Object model) {
+        this.model = model;
     }
 }

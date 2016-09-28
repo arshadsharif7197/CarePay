@@ -19,7 +19,12 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+
 import java.util.Arrays;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
@@ -52,7 +57,7 @@ public class DemographicsDetailsFragment extends Fragment
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
-        setTypefaces(view);
+
         return view;
     }
 
@@ -80,6 +85,31 @@ public class DemographicsDetailsFragment extends Fragment
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         nextButton.setOnClickListener(this);
 //        enableNextButton(false); // 'next' is initially disabled // TODO: 9/27/2016 uncomment
+
+        setTypefaces(view);
+
+        populateViewsFromModel();
+    }
+
+    private void populateViewsFromModel() {
+        DemographicPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicPayloadModel();
+        DemographicPayloadPersonalDetailsModel model = null;
+        if(payload != null) {
+            model = payload.getPersonalDetails();
+        }
+        if(model != null) {
+            raceTextView.setText(model.getPrimaryRace());
+            ethnicityTextView.setText(model.getEthnicity());
+            preferredLanguageTextView.setText(model.getPreferredLanguage());
+            String pictureByteStream = model.getProfilePhoto();
+            setPictureFromByteStream(pictureByteStream);
+        } else {
+            Log.v(LOG_TAG, "demographics details: views populated with defaults");
+        }
+    }
+
+    private void setPictureFromByteStream(String pictureByteStream) {
+        // TODO: 9/28/2016 implement
     }
 
     @Override

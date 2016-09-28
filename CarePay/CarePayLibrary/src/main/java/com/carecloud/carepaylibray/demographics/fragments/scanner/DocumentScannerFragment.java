@@ -185,6 +185,10 @@ public abstract class DocumentScannerFragment extends Fragment {
      */
     protected abstract void updateDetailViewsAfterScan();
 
+    /**
+     * Populate the views with the date from model
+     */
+    public abstract void populateViewsFromModel();
 
     /**
      * Set the typefaces

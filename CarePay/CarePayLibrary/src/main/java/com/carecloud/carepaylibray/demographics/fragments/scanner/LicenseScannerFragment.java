@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -34,6 +35,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     private TextView           tvLicenseNum;
     private Button             btnScanLicense;
     private TextView           tvState;
+    private Object             model;
 
     @Nullable
     @Override
@@ -66,6 +68,8 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
         setTypefaces(view);
 
+        populateViewsFromModel();
+
         return view;
     }
 
@@ -74,6 +78,19 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         tvLicenseNum.setText("123456789");
         tvLicenseNum.setVisibility(View.VISIBLE);
         tvState.setText(states[8]);
+    }
+
+    @Override
+    public void populateViewsFromModel() {
+        if (model != null) {
+            // check the type of the model
+            if (model instanceof DemographicPayloadDriversLicenseModel) {
+                DemographicPayloadDriversLicenseModel licenseModel = (DemographicPayloadDriversLicenseModel) model;
+                mLicenseScanHelper.setImageFromCharStream(licenseModel.getLicensePhoto());
+                tvLicenseNum.setText(licenseModel.getLicenseNumber());
+                tvState.setText(licenseModel.getLicenseState());
+            }
+        }
     }
 
     @Override
@@ -96,5 +113,9 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     @Override
     public int getImageShape() {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    }
+
+    public void setModel(Object model) {
+        this.model = model;
     }
 }
