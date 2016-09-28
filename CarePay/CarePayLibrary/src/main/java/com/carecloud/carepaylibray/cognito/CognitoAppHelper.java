@@ -18,20 +18,36 @@
 package com.carecloud.carepaylibray.cognito;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
+import com.carecloud.carepaylibray.activities.LibraryMainActivity;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 public class CognitoAppHelper {
     // App settings
@@ -244,5 +260,132 @@ public class CognitoAppHelper {
                 phoneAvailable = true;
             }
         }
+    }
+
+    /**
+     * Sign in utility
+     * @param context The context
+     * @param username The user name
+     * @param password The password
+     * @param progressBar Optional progress to show
+     * @param successCallback Optional callback executed after a successful signin
+     */
+    public static void signIn(final Context context,
+                              String username,
+                              final String password,
+                              @Nullable final ProgressBar progressBar,
+                              @Nullable final CognitoActionCallback successCallback) {
+        if(progressBar != null) { // show progress if there is one
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        // create the authentication handler
+        AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+            @Override
+            public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
+                Log.v(LOG_TAG, "Auth Success");
+
+                CognitoAppHelper.setCurrSession(cognitoUserSession);
+                CognitoAppHelper.newDevice(device);
+                if(progressBar != null) { // hide the progress (if any)
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+                if(successCallback != null) {
+                    successCallback.executeAction();
+                }
+            }
+
+            @Override
+            public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String username) {
+                Locale.setDefault(Locale.getDefault());
+                getUserAuthentication(authenticationContinuation, username, password);
+            }
+
+            @Override
+            public void getMFACode(MultiFactorAuthenticationContinuation multiFactorAuthenticationContinuation) {
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if(progressBar != null) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+                SystemUtil.showDialogMessage(context,
+                                             "Sign-in failed",
+                                             "Invalid user id or password");// TODO: 9/21/2016 prepare for translation if kept
+                Log.e(LOG_TAG, CognitoAppHelper.formatException(e));
+            }
+
+            @Override
+            public void authenticationChallenge(ChallengeContinuation continuation) {
+                // TODO change the place holder
+            }
+        };
+        // set the username
+        CognitoAppHelper.setUser(username);
+        // perform the authentication
+        CognitoAppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
+    }
+
+    /**
+     * Helper for the authentivation handler
+     * @param continuation Current continuation factor if authentication is done by mutiple-factors
+     * @param username The user name (eg email)
+     * @param password The password
+     */
+    private static void getUserAuthentication(AuthenticationContinuation continuation, String username, String password) {
+        if (username != null) {
+            CognitoAppHelper.setUser(username);
+        }
+        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
+        continuation.setAuthenticationDetails(authenticationDetails);
+        continuation.continueTask();
+    }
+
+    /**
+     * @param successAction The action to be executed on user found
+     * @return Whether the current user has is signed in
+     */
+    public static boolean findCurrentUser(final CognitoActionCallback successAction) {
+        AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+            @Override
+            public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
+                CognitoAppHelper.setCurrSession(userSession);
+                CognitoAppHelper.newDevice(newDevice);
+
+                if(successAction != null) {
+                    successAction.executeAction();
+                }
+            }
+
+            @Override
+            public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String UserId) {
+                Log.v(LOG_TAG, "getAuthenticationDetails()");
+            }
+
+            @Override
+            public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
+                Log.v(LOG_TAG, "getMFACode()");
+            }
+
+            @Override
+            public void authenticationChallenge(ChallengeContinuation continuation) {
+                Log.v(LOG_TAG, "authenticationChallenge()");
+            }
+
+            @Override
+            public void onFailure(Exception exception) {
+                Log.e(LOG_TAG, exception.getLocalizedMessage());
+            }
+        };
+
+        CognitoUser user = CognitoAppHelper.getPool().getCurrentUser();
+        String userName = user.getUserId();
+        if(userName != null) {
+            CognitoAppHelper.setUser(userName);
+            user.getSessionInBackground(authenticationHandler);
+            return true;
+        }
+        return false;
     }
 }
