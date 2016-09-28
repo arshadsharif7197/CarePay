@@ -1,12 +1,10 @@
 package com.carecloud.carepaylibray.customdialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -80,12 +77,12 @@ public class BaseDoctorInfoDialog extends Dialog implements
         rootLayout = findViewById(R.id.rootDialogAppointLayout);
 
         if(TextUtils.isEmpty(appointmentModel.getPhoneNumber())){
-            //it will change disable icon for call
-            ((ImageView)findViewById(R.id.appointDailImageView)).setImageResource(R.drawable.icn_appointment_card_call);
+            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_call);
+            ((ImageView)findViewById(R.id.appointDailImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
         }
         if(!SystemUtil.isNotEmptyString(appointmentModel.getPlaceAddress())){
-            //it will change disable icon for address
-            ((ImageView)findViewById(R.id.appointLocationImageView)).setImageResource(R.drawable.icn_appointment_card_directions);
+            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_directions);
+            ((ImageView)findViewById(R.id.appointLocationImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
         }
     }
 
