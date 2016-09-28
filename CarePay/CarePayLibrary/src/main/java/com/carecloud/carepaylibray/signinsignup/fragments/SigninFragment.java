@@ -29,6 +29,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -306,17 +307,6 @@ public class SigninFragment extends Fragment {
         passwordTexInput.setError(null);
     }
 
-    // cognito
-    private void signInUser() {
-        Log.v(LOG_TAG, "sign in user");
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        userName = emailEditText.getText().toString();
-        CognitoAppHelper.setUser(userName);
-        CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
-    }
-
     private void launchUser() {
 //        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
         Log.v(LOG_TAG, "user " + CognitoAppHelper.getCurrUser() + " signed in");
@@ -326,53 +316,17 @@ public class SigninFragment extends Fragment {
         getActivity().finish();
     }
 
-    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
-        Log.v(LOG_TAG, "getUserAuthentication()");
-
-        userName = username;
-        if (username != null) {
-            CognitoAppHelper.setUser(username);
-        }
-
+    // cognito
+    private void signInUser() {
+        Log.v(LOG_TAG, "sign in user");
+        userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
-        continuation.setAuthenticationDetails(authenticationDetails);
-        continuation.continueTask();
+
+        CognitoAppHelper.signIn(getActivity(), userName, password, progressBar, new CognitoActionCallback() {
+            @Override
+            public void executeAction() {
+                launchUser();
+            }
+        });
     }
-
-    private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
-        @Override
-        public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
-            Log.v(LOG_TAG, "Auth Success");
-
-            CognitoAppHelper.setCurrSession(cognitoUserSession);
-            CognitoAppHelper.newDevice(device);
-            progressBar.setVisibility(View.INVISIBLE);
-            launchUser();
-        }
-
-        @Override
-        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String username) {
-            Locale.setDefault(Locale.getDefault());
-            getUserAuthentication(authenticationContinuation, username);
-        }
-
-        @Override
-        public void getMFACode(MultiFactorAuthenticationContinuation multiFactorAuthenticationContinuation) {
-        }
-
-        @Override
-        public void onFailure(Exception e) {
-            progressBar.setVisibility(View.INVISIBLE);
-            SystemUtil.showDialogMessage(getActivity(),
-                                         "Sign-in failed",
-                                         "Invalid user id or password");// TODO: 9/21/2016 prepare for translation if kept
-            Log.e(LOG_TAG, CognitoAppHelper.formatException(e));
-        }
-
-        @Override
-        public void authenticationChallenge(ChallengeContinuation continuation) {
-            // TODO change the place holder
-        }
-    };
 }
