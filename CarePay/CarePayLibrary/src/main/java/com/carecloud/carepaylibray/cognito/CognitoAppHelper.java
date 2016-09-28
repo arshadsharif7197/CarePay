@@ -19,6 +19,7 @@ package com.carecloud.carepaylibray.cognito;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -272,8 +273,8 @@ public class CognitoAppHelper {
     public static void signIn(final Context context,
                               String username,
                               final String password,
-                              final ProgressBar progressBar,
-                              final CognitoActionCallback successCallback) {
+                              @Nullable final ProgressBar progressBar,
+                              @Nullable final CognitoActionCallback successCallback) {
         if(progressBar != null) { // show progress if there is one
             progressBar.setVisibility(View.VISIBLE);
         }
