@@ -20,8 +20,9 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScanne
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 
 import java.util.List;
 
@@ -35,22 +36,22 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
     private static final String LOG_TAG = DemographicsDocumentsFragment.class.getSimpleName();
-    private FragmentManager          fm;
-    private View                     view;
-    private ScrollView               detailsScrollView;
-    private SwitchCompat             switchCompat;
-    private FrameLayout              insCardContainer1;
-    private FrameLayout              insCardContainer2;
-    private FrameLayout              insCardContainer3;
-    private LicenseScannerFragment   licenseFragment;
-    private InsuranceScannerFragment insuranceFragment;
-    private InsuranceScannerFragment extraInsuranceFrag1;
-    private InsuranceScannerFragment extraInsuranceFrag2;
-    private boolean                  isSecondCardAdded;
-    private boolean                  isThirdCardAdded;
-    private Button                   addCardButton;
-    private Button                   nextButton;
-    private DemographicPayloadDriversLicenseModel modelDriversLicense;
+    private FragmentManager                        fm;
+    private View                                   view;
+    private ScrollView                             detailsScrollView;
+    private SwitchCompat                           switchCompat;
+    private FrameLayout                            insCardContainer1;
+    private FrameLayout                            insCardContainer2;
+    private FrameLayout                            insCardContainer3;
+    private LicenseScannerFragment                 licenseFragment;
+    private InsuranceScannerFragment               insuranceFragment;
+    private InsuranceScannerFragment               extraInsuranceFrag1;
+    private InsuranceScannerFragment               extraInsuranceFrag2;
+    private boolean                                isSecondCardAdded;
+    private boolean                                isThirdCardAdded;
+    private Button                                 addCardButton;
+    private Button                                 nextButton;
+    private DemographicPayloadDriversLicenseModel  modelDriversLicense;
     private List<DemographicPayloadInsuranceModel> insuranceModel;
 
     @Nullable
@@ -82,7 +83,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     }
 
     private void getTheModels() {
-        DemographicPayloadModel payload = ((DemographicsActivity) getActivity()).getDemographicPayloadModel();
+        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
             modelDriversLicense = payload.getDriversLicense();
             insuranceModel = payload.getInsurances();
@@ -177,9 +178,11 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
     private DemographicPayloadInsuranceModel getInsuranceModelForIndex(int i) {
         DemographicPayloadInsuranceModel model = null;
-        int numOfInsurances = insuranceModel.size();
-        if(numOfInsurances > i) { // check if the list has an item at index i
-            model = insuranceModel.get(i);
+        if(insuranceModel != null) {
+            int numOfInsurances = insuranceModel.size();
+            if (numOfInsurances > i) { // check if the list has an item at index i
+                model = insuranceModel.get(i);
+            }
         }
         return model;
     }

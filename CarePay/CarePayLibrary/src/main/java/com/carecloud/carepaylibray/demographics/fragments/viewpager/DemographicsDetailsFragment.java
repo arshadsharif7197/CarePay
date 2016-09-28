@@ -20,8 +20,9 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 
 import java.util.Arrays;
 
@@ -93,7 +94,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void populateViewsFromModel() {
-        DemographicPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicPayloadModel();
+        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
         DemographicPayloadPersonalDetailsModel model = null;
         if(payload != null) {
             model = payload.getPersonalDetails();

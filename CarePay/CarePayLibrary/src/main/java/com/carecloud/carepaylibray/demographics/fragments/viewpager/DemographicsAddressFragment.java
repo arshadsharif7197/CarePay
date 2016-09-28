@@ -25,7 +25,8 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -228,7 +229,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private void populateViewsWithModel() {
-        DemographicPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicPayloadModel();
+        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
         DemographicPayloadAddressModel model = null;
         if(payload != null) {
             model = payload.getAddress();

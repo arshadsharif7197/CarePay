@@ -28,8 +28,11 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
@@ -58,10 +61,15 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     private DemographicModel demographicModel = null;
 
-    public DemographicPayloadModel getDemographicPayloadModel() {
+    public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
         if(demographicModel != null) {
-            return demographicModel.getPayload();
-
+            DemographicPayloadResponseModel response = demographicModel.getPayload();
+            if(response != null) {
+                DemographicPayloadInfoModel infoModel = response.getDemographics();
+                if(infoModel != null) {
+                    return infoModel.getPayload();
+                }
+            }
         }
         return null;
     }
@@ -149,7 +157,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 demographicModel = response.body();
                 demographicProgressBar.setVisibility(View.GONE);
                 Log.v(LOG_TAG, "demographic info fetched");
-
             }
 
             @Override
@@ -208,8 +215,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
             }
         });
-
-
     }
 
     private void setScreenTitle(int position) {
