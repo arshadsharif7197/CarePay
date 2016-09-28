@@ -22,7 +22,6 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScanner
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private Button                                 addCardButton;
     private Button                                 nextButton;
     private DemographicPayloadDriversLicenseModel  modelDriversLicense;
-    private List<DemographicPayloadInsuranceModel> insuranceModel;
+    private List<DemographicPayloadInsuranceModel> insuranceModelList;
 
     @Nullable
     @Override
@@ -86,7 +85,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
             modelDriversLicense = payload.getDriversLicense();
-            insuranceModel = payload.getInsurances();
+            insuranceModelList = payload.getInsurances();
         }
     }
 
@@ -178,10 +177,10 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
     private DemographicPayloadInsuranceModel getInsuranceModelForIndex(int i) {
         DemographicPayloadInsuranceModel model = null;
-        if(insuranceModel != null) {
-            int numOfInsurances = insuranceModel.size();
+        if(insuranceModelList != null) {
+            int numOfInsurances = insuranceModelList.size();
             if (numOfInsurances > i) { // check if the list has an item at index i
-                model = insuranceModel.get(i);
+                model = insuranceModelList.get(i);
             }
         }
         return model;

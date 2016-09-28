@@ -122,15 +122,15 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             // perform log out, of course
             String userName = CognitoAppHelper.getCurrUser();
             if(userName != null) {
-//                Log.v(LOG_TAG, "sign out");
-//                CognitoAppHelper.getPool().getUser().signOut();
-//                CognitoAppHelper.setUser(null);
-//                // update the drawer user id fields
-//                appointmentsDrawerUserIdTextView.setText("");
-//
-//                // go to Sign in screen
-//                Intent intent = new Intent(this, SigninSignupActivity.class);
-//                startActivity(intent);
+                Log.v(LOG_TAG, "sign out");
+                CognitoAppHelper.getPool().getUser().signOut();
+                CognitoAppHelper.setUser(null);
+                // update the drawer user id fields
+                appointmentsDrawerUserIdTextView.setText("");
+
+                // go to Sign in screen
+                Intent intent = new Intent(this, SigninSignupActivity.class);
+                startActivity(intent);
                 finish(); // TODO: 9/27/2016 uncomment
             }
         } else if (id == R.id.nav_purchase) {

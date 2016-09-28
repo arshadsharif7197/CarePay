@@ -150,7 +150,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private void getDemographicInformation() {
         demographicProgressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.fetchDemographicInformation();
+        Call<DemographicModel> call = apptService.fetchDemographics();
         call.enqueue(new Callback<DemographicModel>() {
             @Override
             public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
@@ -192,6 +192,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
         demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
         demographicPayloadModel.setUpdates(updates);
+
         /*DemographicModel demographicPostModel = new DemographicModel();
         demographicPostModel.setPayload(demographicPayloadModel);*/
 
@@ -203,7 +204,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
                 demographicModel = response.body();
                 demographicProgressBar.setVisibility(View.GONE);
-                Log.d("sdadad", "adasdasdasd");
+                Log.d(LOG_TAG, "demogr post succeeded");
 
                 Intent appointmentIntent = new Intent(DemographicsActivity.this, AppointmentsActivity.class);
                 startActivity(appointmentIntent);
@@ -212,7 +213,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
             @Override
             public void onFailure(Call<DemographicModel> call, Throwable t) {
-
+                Log.d(LOG_TAG, "demogr post failed", t);
+                demographicProgressBar.setVisibility(View.GONE);
             }
         });
     }
