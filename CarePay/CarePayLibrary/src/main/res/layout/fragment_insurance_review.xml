@@ -6,6 +6,14 @@
 
     <include layout="@layout/toolbar_review" />
 
+    <ProgressBar
+        android:id="@+id/demographicReviewProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -55,7 +63,7 @@
                 android:text="@string/review_screen_race_lable"/>
 
             <TextView
-                android:id="@+id/reviewRaceEditText"
+                android:id="@+id/reviewRaceTextView"
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,7 +81,7 @@
                 android:text="@string/review_screen_ethnicity"/>
 
             <TextView
-                android:id="@+id/reviewEthnicityEditText"
+                android:id="@+id/reviewEthnicityTextView"
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,7 +116,7 @@
                 android:text="@string/review_screen_company_lable" />
 
             <TextView
-                android:id="@+id/reviewCompanyEditText"
+                android:id="@+id/reviewCompanyTextView"
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,7 +133,7 @@
                 android:text="PLAN" />
 
             <TextView
-                android:id="@+id/reviewPlanNoEditText"
+                android:id="@+id/reviewPlanTextView"
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,7 +151,7 @@
                 android:text="@string/review_screen_insurancepolicy_number_lable" />
 
             <TextView
-                android:id="@+id/reviewInsuranceCardNoEditText"
+                android:id="@+id/reviewInsurancePolicyNoTextView"
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -161,7 +169,7 @@
             android:orientation="vertical">
 
             <Button
-                android:layout_marginTop="34.5dp"
+                android:layout_marginTop="27.0dp"
                 android:id="@+id/YesCorrectButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
