@@ -70,6 +70,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         appointmentsListFragment.setArguments(bundle);
         fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
                 AppointmentsListFragment.class.getSimpleName()).commit();
+        Log.d("Cognito Token", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
     }
 
     @Override
