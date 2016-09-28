@@ -15,6 +15,7 @@ public class AppointmentModel implements Serializable {
     private String appointmentDate;
     private String placeName;
     private boolean isPending;
+    private boolean isCheckedIn;
     private String phoneNumber;
 
     public String getPhoneNumber() {
@@ -35,6 +36,14 @@ public class AppointmentModel implements Serializable {
 
     public void setPending(boolean pending) {
         isPending = pending;
+    }
+
+    public boolean isCheckedIn() {
+        return isCheckedIn;
+    }
+
+    public void setCheckedIn(boolean checkedIn) {
+        isCheckedIn = checkedIn;
     }
 
     public String getPlaceAddress() {

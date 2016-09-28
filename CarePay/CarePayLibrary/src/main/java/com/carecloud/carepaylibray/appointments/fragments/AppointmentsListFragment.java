@@ -49,6 +49,7 @@ public class AppointmentsListFragment extends Fragment {
     private ArrayList<Object> appointmentListWithHeader;
     private RecyclerView appointmentRecyclerView;
     private AppointmentsListFragment appointmentsListFragment;
+    Bundle bundle;
 
     public static boolean showNewAddedAppointment;
     private CustomPopupNotification popup;
@@ -221,6 +222,8 @@ public class AppointmentsListFragment extends Fragment {
         aptItem = new AppointmentModel();
         new AsyncListParser().execute();
 
+        bundle = getArguments();
+
         FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,6 +370,23 @@ public class AppointmentsListFragment extends Fragment {
                 Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
             }
             checkUpcomingAppointmentForReminder();
+
+            /*Logic to add Checked in appointment if exists*/
+            if (bundle != null) {
+                AppointmentModel appointmentModel = (AppointmentModel) bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+
+                if(appointmentModel != null) {
+                    appointmentListWithHeader.add(0, appointmentModel); // adding checked in appointment at the top of the list
+
+                    if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
+                        appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
+                        appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        appointmentRecyclerView.setAdapter(appointmentsAdapter);
+                    } else {
+                        Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
         }
     }
 
