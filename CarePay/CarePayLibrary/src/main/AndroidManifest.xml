@@ -19,11 +19,12 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/NavigationTheme"/>
 
         <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
 

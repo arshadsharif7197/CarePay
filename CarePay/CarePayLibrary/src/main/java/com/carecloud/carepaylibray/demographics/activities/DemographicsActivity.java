@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -106,8 +105,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
-        isStoragePermissionGranted();
-        getDemographicInformation();
+//        isStoragePermissionGranted();
+//        getDemographicInformation();
         setupPager();
     }
 
@@ -154,41 +153,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 demographicProgressBar.setVisibility(View.GONE);
                 Log.d("sdadad", "adasdasdasd");
 
-                if (demographicModel.getPayload().getDemographics()==null) {
-
-                    DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
-                    demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
-                    demographicPayloadAddressModel.setAddress1("#800");
-                    demographicPayloadAddressModel.setCity("Miami");
-                    demographicPayloadAddressModel.setState("FL");
-                    demographicPayloadAddressModel.setZipcode("33127");
-                    demographicPayloadAddressModel.setPhone("18007654222");
-
-                    DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel=new DemographicPayloadPersonalDetailsModel();
-
-                    DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
-
-                    List<String> updates = new ArrayList<String>();
-
-                    DemographicPayloadInfoPayloadModel demographicPayloadInfoPayloadModel = new DemographicPayloadInfoPayloadModel();
-                    demographicPayloadInfoPayloadModel.setAddress(demographicPayloadAddressModel);
-                    demographicPayloadInfoPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
-                    demographicPayloadInfoPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
-                    demographicPayloadInfoPayloadModel.setUpdates(updates);
-
-                    DemographicPayloadInfoMetaDataModel demographicPayloadInfoMetaDataModel=new DemographicPayloadInfoMetaDataModel();
-                    demographicPayloadInfoMetaDataModel.setUsername(CognitoAppHelper.getCurrUser());
-
-                    DemographicPayloadInfoModel demographics=new DemographicPayloadInfoModel();
-                    demographics.setMetadata(demographicPayloadInfoMetaDataModel);
-                    demographics.setPayload(demographicPayloadInfoPayloadModel);
-
-
-                    DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
-                    demographicPayloadModel.setDemographics(demographics);
-                    demographicModel.setPayload(demographicPayloadModel);
-                }
-
             }
 
             @Override
@@ -200,29 +164,55 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
 
     public void confirmDemographicInformation() {
-        if (demographicModel != null) {
-            demographicModel.setMetadata(null);
-            demographicProgressBar.setVisibility(View.VISIBLE);
-            DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
-            Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicModel);
-            call.enqueue(new Callback<DemographicModel>() {
-                @Override
-                public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                    demographicModel = response.body();
-                    demographicProgressBar.setVisibility(View.GONE);
-                    Log.d("sdadad", "adasdasdasd");
+        DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
+        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
+        demographicPayloadAddressModel.setAddress1("#800");
+        demographicPayloadAddressModel.setCity("Miami");
+        demographicPayloadAddressModel.setState("FL");
+        demographicPayloadAddressModel.setZipcode("33127");
+        demographicPayloadAddressModel.setPhone("18007654222");
 
-                    Intent appointmentIntent = new Intent(DemographicsActivity.this, AppointmentsActivity.class);
-                    startActivity(appointmentIntent);
-                    finish();
-                }
+        DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
+        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
+        demographicPayloadPersonalDetailsModel.setMiddleName("I");
+        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
+        demographicPayloadPersonalDetailsModel.setDateOfBirth("02/11/1983");
+        demographicPayloadPersonalDetailsModel.setPrimaryRace("Asian");
+        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
 
-                @Override
-                public void onFailure(Call<DemographicModel> call, Throwable t) {
+        DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
 
-                }
-            });
-        }
+        List<String> updates = new ArrayList<String>();
+        DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
+        demographicPayloadModel.setAddress(demographicPayloadAddressModel);
+        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
+        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
+        demographicPayloadModel.setUpdates(updates);
+        /*DemographicModel demographicPostModel = new DemographicModel();
+        demographicPostModel.setPayload(demographicPayloadModel);*/
+
+        demographicProgressBar.setVisibility(View.VISIBLE);
+        DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
+        Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicPayloadModel);
+        call.enqueue(new Callback<DemographicModel>() {
+            @Override
+            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+                demographicModel = response.body();
+                demographicProgressBar.setVisibility(View.GONE);
+                Log.d("sdadad", "adasdasdasd");
+
+                Intent appointmentIntent = new Intent(DemographicsActivity.this, AppointmentsActivity.class);
+                startActivity(appointmentIntent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<DemographicModel> call, Throwable t) {
+
+            }
+        });
+
+
     }
 
     private void setScreenTitle(int position) {
@@ -255,8 +245,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 
-        final int PAGE_COUNT = 4;
-        private final int[] ICONS = new int[]{
+        final         int   PAGE_COUNT = 4;
+        private final int[] ICONS      = new int[]{
                 R.drawable.signup_step1_indicator,
                 R.drawable.signup_step2_indicator,
                 R.drawable.signup_step3_indicator,
@@ -315,8 +305,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -338,6 +328,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (currentPageIndex == 0) {
+                SystemUtil.hideSoftKeyboard(this);
                 onBackPressed();
             } else {
                 setCurrentItem(currentPageIndex - 1, true);
@@ -345,4 +336,5 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         return true;
     }
+
 }
