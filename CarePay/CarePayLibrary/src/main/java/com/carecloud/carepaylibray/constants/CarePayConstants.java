@@ -1,7 +1,5 @@
 package com.carecloud.carepaylibray.constants;
 
-import java.util.Locale;
-
 /**
  * Created by Jahirul Bhuiyan on 8/24/2016.
  */
@@ -39,4 +37,5 @@ public class CarePayConstants {
     public static final String PREF_LAST_REMINDER_POPUP_APPT_ID = "last_reminder_popup_appt_id";
     public static final String DEFAULT_STRING_PREFERENCES = "-";
     public static final long APPOINTMENT_REMINDER_TIME_IN_MINUTES = 120;
+    public static final long CUSTOM_POPUP_AUTO_DISMISS_DURATION = 5000;
 }

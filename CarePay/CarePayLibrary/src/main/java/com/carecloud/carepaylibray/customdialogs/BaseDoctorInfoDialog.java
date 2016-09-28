@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -76,13 +77,13 @@ public class BaseDoctorInfoDialog extends Dialog implements
         addActionlayout = findViewById(R.id.actionAddLayout);
         rootLayout = findViewById(R.id.rootDialogAppointLayout);
 
-        if (TextUtils.isEmpty(appointmentModel.getPhoneNumber())) {
-            //it will change disable icon for call
-            ((ImageView) findViewById(R.id.appointDailImageView)).setImageResource(R.drawable.icn_appointment_card_call);
+        if(TextUtils.isEmpty(appointmentModel.getPhoneNumber())){
+            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_call);
+            ((ImageView)findViewById(R.id.appointDailImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
         }
-        if (!SystemUtil.isNotEmptyString(appointmentModel.getPlaceAddress())) {
-            //it will change disable icon for address
-            ((ImageView) findViewById(R.id.appointLocationImageView)).setImageResource(R.drawable.icn_appointment_card_directions);
+        if(!SystemUtil.isNotEmptyString(appointmentModel.getPlaceAddress())){
+            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_directions);
+            ((ImageView)findViewById(R.id.appointLocationImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
         }
     }
 

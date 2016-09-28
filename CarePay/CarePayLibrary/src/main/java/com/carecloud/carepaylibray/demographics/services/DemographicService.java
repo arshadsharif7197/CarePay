@@ -1,14 +1,11 @@
 package com.carecloud.carepaylibray.demographics.services;
 
-import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
-import com.carecloud.carepaylibray.googleapis.Models.GoogleAddressModel;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 /**

@@ -26,7 +26,7 @@ public class JsonFormParseSimulator {
         intakeFormModels.add(new IntakeFormModel("General Cardiac Symptoms",
                                                  "Please fill this form about general cardiac symptoms you may have in the past."));
         intakeFormModels.add(new IntakeFormModel("Medical History", "Please fill in the next series of forms about your medical history."));
-        intakeFormModels.add(new IntakeFormModel("Medical History", "Please fill in the next series of forms about your medical history."));
-        intakeFormModels.add(new IntakeFormModel("Review of symptoms", "Give us some information about the symptoms you're having."));
+        //intakeFormModels.add(new IntakeFormModel("Medical History", "Please fill in the next series of forms about your medical history."));
+       // intakeFormModels.add(new IntakeFormModel("Review of symptoms", "Give us some information about the symptoms you're having."));
     }
 }

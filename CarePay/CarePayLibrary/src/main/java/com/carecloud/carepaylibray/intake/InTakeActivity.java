@@ -16,6 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -104,8 +108,10 @@ public class InTakeActivity extends KeyboardHolderActivity {
         FragmentStatePagerAdapter pagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                InTakeFragment fragment = new InTakeFragment();
-                fragment.setFormModel(forms.get(position));
+                InTakeFragment fragment = getSelectedItem(position);
+                if(fragment !=null) {
+                    fragment.setFormModel(forms.get(position));
+                }
                 return fragment;
             }
 
@@ -228,5 +234,22 @@ public class InTakeActivity extends KeyboardHolderActivity {
             moveToPreviousQuestionOrBack();
         }
         return true;
+    }
+
+    /**
+     * This method will be invoked when a page is requested to create
+     */
+    public InTakeFragment getSelectedItem(int position) {
+
+        switch (position) {
+            case 0:
+                return new IntakeReviewvisitFragment();
+            case 1:
+                return new InTakecardiacSymptomsfragment();
+            case 2:
+                return new InTakeMedicalHistoryFragment();
+            default:
+                return null;
+        }
     }
 }

@@ -6,6 +6,8 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <include layout="@layout/add_appointment_toolbar" />
+
     <TextView
         android:id="@+id/choose_provider_section_title_recent"
         style="@style/ChooseProviderSectionTitle"
