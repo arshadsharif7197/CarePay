@@ -633,20 +633,6 @@ public class SignupFragment extends Fragment {
         startActivityForResult(intent, 10);
     }
 
-//    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
-//        Log.v(LOG_TAG, "getUserAuthentication()");
-//
-//        userName = username;
-//        if (username != null) {
-//            CognitoAppHelper.setUser(username);
-//        }
-//
-//        String password = passwordText.getText().toString();
-//        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
-//        continuation.setAuthenticationDetails(authenticationDetails);
-//        continuation.continueTask();
-//    }
-
     SignUpHandler signUpHandler = new SignUpHandler() {
         @Override
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
@@ -654,7 +640,6 @@ public class SignupFragment extends Fragment {
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
                 // auto-confirmed; sign-in
-//                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
                 CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
                                         new CognitoActionCallback() {
                                             @Override
@@ -679,42 +664,4 @@ public class SignupFragment extends Fragment {
             Log.e(LOG_TAG, CognitoAppHelper.formatException(exception));
         }
     };
-
-//    private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
-//        @Override
-//        public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-//            Log.v(LOG_TAG, "auth success");
-//            CognitoAppHelper.setCurrSession(userSession);
-//            CognitoAppHelper.newDevice(newDevice);
-//
-//            progressBar.setVisibility(View.INVISIBLE);
-//
-//            // do to Demographics
-//            Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-//            startActivity(intent);
-//            getActivity().finish();
-//        }
-//
-//        @Override
-//        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
-//            Log.v(LOG_TAG, "getAuthenticationDetails()");
-//            getUserAuthentication(authenticationContinuation, userId);
-//        }
-//
-//        @Override
-//        public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
-//            Log.v(LOG_TAG, "getMFACode()");
-//        }
-//
-//        @Override
-//        public void authenticationChallenge(ChallengeContinuation continuation) {
-//            Log.v(LOG_TAG, "authenticationChallenge()");
-//        }
-//
-//        @Override
-//        public void onFailure(Exception exception) {
-//            progressBar.setVisibility(View.INVISIBLE);
-//            Log.e(LOG_TAG, exception.getLocalizedMessage());
-//        }
-//    };
 }
