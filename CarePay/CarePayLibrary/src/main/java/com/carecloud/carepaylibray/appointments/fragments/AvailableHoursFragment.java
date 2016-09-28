@@ -6,27 +6,34 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AvailableHoursModel;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AvailableHoursFragment extends Fragment {
 
     private AppointmentModel model;
+    private static String appointmentDate;
 
     @Override
     public void onStart() {
@@ -41,12 +48,6 @@ public class AvailableHoursFragment extends Fragment {
         if (bundle != null) {
             model = (AppointmentModel) bundle.getSerializable("DATA");
         }
-
-        getActivity().setTitle(R.string.apt_available_hours_title);
-
-        // Set Navigation icon
-        Drawable backIcon = ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back) ;
-        ((AddAppointmentActivity) getActivity()).setToolbarNavigationIcon(backIcon);
     }
 
     @SuppressLint("DefaultLocale")
@@ -56,16 +57,41 @@ public class AvailableHoursFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View availableHoursListView = inflater.inflate(R.layout.fragment_available_hours_list, container, false);
-        
+
+        // set the toolbar
+        Toolbar toolbar = (Toolbar) availableHoursListView.findViewById(R.id.add_appointment_toolbar);
+        TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
+        titleView.setText(R.string.apt_available_hours_title);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), titleView);
+        toolbar.setTitle("");
+
+        Drawable closeIcon = ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back);
+        toolbar.setNavigationIcon(closeIcon);
+        ((AddAppointmentActivity) getActivity()).setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Launch previous fragment
+                FragmentManager fm = getFragmentManager();
+                ChooseProviderFragment chooseProviderFragment = (ChooseProviderFragment)
+                        fm.findFragmentByTag(ChooseProviderFragment.class.getSimpleName());
+
+                if (chooseProviderFragment == null) {
+                    chooseProviderFragment = new ChooseProviderFragment();
+                }
+
+                fm.beginTransaction().replace(R.id.add_appointments_frag_holder, chooseProviderFragment,
+                        ChooseProviderFragment.class.getSimpleName()).commit();
+            }
+        });
+
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(getActivity());
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        
-        RecyclerView availableHoursRecycleView = (RecyclerView) availableHoursListView.findViewById(R.id.available_hours_recycler_view);
-        availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
-        availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(), getSampleArrayList(), model));
 
         final Button appointmentDatePickerButton = (Button) availableHoursListView.findViewById(R.id.add_appointment_date_pick);
         Calendar calendar = Calendar.getInstance();
+        appointmentDate = new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(calendar.getTime());
         appointmentDatePickerButton.setText(String.format("%1$tA, %1$tb %1$td", calendar));
 
         appointmentDatePickerButton.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +100,10 @@ public class AvailableHoursFragment extends Fragment {
                 setScheduleDate(appointmentDatePickerButton);
             }
         });
+
+        RecyclerView availableHoursRecycleView = (RecyclerView) availableHoursListView.findViewById(R.id.available_hours_recycler_view);
+        availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
+        availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(), getSampleArrayList(), model));
 
         return availableHoursListView;
     }
@@ -90,12 +120,17 @@ public class AvailableHoursFragment extends Fragment {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
+                appointmentDate = new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(calendar.getTime());
                 buttonView.setText(String.format("%1$tA, %1$tb %1$td", calendar));
             }
         }, year, month, day);
 
         appointmentDatePicker.setTitle("Pick a Date");
         appointmentDatePicker.show();
+    }
+
+    public static String getAppointmentDate() {
+        return appointmentDate;
     }
 
     /**

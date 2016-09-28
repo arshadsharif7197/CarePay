@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,9 +21,11 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeader;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.PendingAppointmentRequestDialog;
+import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -67,17 +68,27 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
             String splitStr[]= item.getAppointmentTime().replaceAll("UTC","").split(" ");
             if (splitStr.length > 3) {
                 StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(splitStr[0] + "\n" + splitStr[1] + "\n" + splitStr[2] + " " + splitStr[3]);
+                stringBuilder.append(splitStr[0] + "\n" + splitStr[1].toUpperCase() + "\n" + splitStr[2] + " " + splitStr[3]);
                 Spannable span = new SpannableString(stringBuilder);
                 //span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 span.setSpan(new RelativeSizeSpan(1.75f), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.Feldgrau)), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 SystemUtil.setProximaNovaRegularTypeface(context, holder.time);
-                holder.time.setText(span);
-                holder.time.setTextColor(ContextCompat.getColor(context, R.color.Feldgrau));
+                if(item.isCheckedIn()) {
+                    holder.time.setText(context.getString(R.string.checked_in_label));
+                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                } else {
+                    holder.time.setText(span);
+                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.Feldgrau));
+                }
             } else {
-                holder.time.setText(item.getAppointmentTime().replaceAll("UTC", ""));
-                holder.time.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
+                if(item.isCheckedIn()) {
+                    holder.time.setText(context.getString(R.string.checked_in_label));
+                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                } else {
+                    holder.time.setText(item.getAppointmentTime().replaceAll("UTC", ""));
+                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
+                }
             }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +99,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
                         AppointmentModel item = (AppointmentModel) object;
                         if (item.isPending()) {
                             new PendingAppointmentRequestDialog(context, item).show();
+                        } else if(item.isCheckedIn()) {
+                            new QueueAppointmentDialog(context, item).show();
                         } else {
+                            AppointmentsActivity.model = item; // appointment clicked item saved so that it can be used on Payment
                             new CheckInOfficeNowAppointmentDialog(context, item).show();
                         }
                     }
@@ -100,6 +114,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
                 holder.cellAvtar.setVisibility(View.VISIBLE);
             } else {
                 holder.cellAvtar.setVisibility(View.INVISIBLE);
+            }
+
+            if(item.isCheckedIn()) {
+                holder.appointmentItemLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.checked_in_appointment_bg));
+            } else {
+                holder.appointmentItemLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
             }
 
         } else {
@@ -129,7 +149,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
                     final AppointmentModel item = (AppointmentModel) object;
                     View view = appointmentsListFragment.getView();
                     CustomProxyNovaSemiBoldLabel appointmentStickyHearderTitle = (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.appointments_sticky_header_title);
-                    appointmentStickyHearderTitle.setText(item.getAppointmentHeader());
+
+                    if(item.isCheckedIn()) {
+                        appointmentStickyHearderTitle.setVisibility(View.GONE);
+                    } else {
+                        appointmentStickyHearderTitle.setText(item.getAppointmentHeader());
+                        appointmentStickyHearderTitle.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
