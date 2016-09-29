@@ -89,15 +89,6 @@ public class SigninFragment extends Fragment {
         isEmptyEmail = true;
         isEmptyPassword = true;
 
-        // TODO: 9/27/2016 remove (used just for testing)
-//        emailEditText.setText("sreeni3@example.com");
-//        passwordEditText.setText("Password@123");
-
-        emailEditText.setText("lvictor1979@gmail.com");
-        passwordEditText.setText("Liviu123_");
-
-        signInUser();
-
         return view;
     }
 
@@ -321,38 +312,11 @@ public class SigninFragment extends Fragment {
         passwordTexInput.setError(null);
     }
 
-    private void launchUser(DemographicModel demographicModel) {
-//        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
-        Intent intent = new Intent(getActivity(), DemographicsActivity.class); // TODO: 9/27/2016 remove
-        // pass the object into the gson
-        Gson gson = new Gson();
-        intent.putExtra("demographics_model", gson.toJson(demographicModel, DemographicModel.class));
-        // start demographics
+    private void launchUser() {
+        Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
         startActivity(intent);
-
-        reset();
+//        reset();
         getActivity().finish();
-    }
-
-    private void getDemographicInformation() {
-        progressBar.setVisibility(View.VISIBLE);
-        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.fetchDemographics();
-        call.enqueue(new Callback<DemographicModel>() {
-            @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                DemographicModel demographicModel = response.body();
-                progressBar.setVisibility(View.GONE);
-                Log.v(LOG_TAG, "demographic info fetched");
-                launchUser(demographicModel);
-            }
-
-            @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Log.e(LOG_TAG, "failed fetching demogr info", t);
-            }
-        });
     }
 
     // cognito
@@ -364,8 +328,7 @@ public class SigninFragment extends Fragment {
         CognitoAppHelper.signIn(getActivity(), userName, password, progressBar, new CognitoActionCallback() {
             @Override
             public void executeAction() {
-//                launchUser(); // TODO: 9/28/2016 uncomment
-                getDemographicInformation(); // TODO: 9/28/2016 remove
+                launchUser();
             }
         });
     }

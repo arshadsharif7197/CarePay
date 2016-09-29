@@ -35,12 +35,20 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -574,7 +582,7 @@ public class SignupFragment extends Fragment {
                                         new CognitoActionCallback() {
                                             @Override
                                             public void executeAction() {
-                                                launchDemographics();
+//                                                launchDemographics(); // TODO: 9/29/2016 fix for confirmation or remove
                                             }
                                         });
             }
@@ -592,11 +600,36 @@ public class SignupFragment extends Fragment {
         return false;
     }
 
-    private void launchDemographics() {
+    private void launchDemographics(DemographicModel demographicModel) {
         // do to Demographics
         Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+        // pass the object into the gson
+        Gson gson = new Gson();
+        intent.putExtra("demographics_model", gson.toJson(demographicModel, DemographicModel.class));
+
         startActivity(intent);
         getActivity().finish();
+    }
+
+    private void getDemographicInformation() {
+        progressBar.setVisibility(View.VISIBLE);
+        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
+        Call<DemographicModel> call = apptService.fetchDemographics();
+        call.enqueue(new Callback<DemographicModel>() {
+            @Override
+            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+                DemographicModel demographicModel = response.body();
+                progressBar.setVisibility(View.GONE);
+                Log.v(LOG_TAG, "demographic info fetched");
+                launchDemographics(demographicModel);
+            }
+
+            @Override
+            public void onFailure(Call<DemographicModel> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.e(LOG_TAG, "failed fetching demogr info", t);
+            }
+        });
     }
 
     // cognito
@@ -642,7 +675,7 @@ public class SignupFragment extends Fragment {
                                         new CognitoActionCallback() {
                                             @Override
                                             public void executeAction() {
-                                                launchDemographics();
+                                                getDemographicInformation();
                                             }
                                         });
 

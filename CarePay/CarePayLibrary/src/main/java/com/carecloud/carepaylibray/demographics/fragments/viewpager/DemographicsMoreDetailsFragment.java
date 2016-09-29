@@ -82,52 +82,51 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     public void confirmDemographicInformation() {
         // TODO: 9/29/2016 add progress
 
-        DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
-
-        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
-        demographicPayloadAddressModel.setAddress2("#800 Lejeune");
-        demographicPayloadAddressModel.setCity("Miami");
-        demographicPayloadAddressModel.setState("FL");
-        demographicPayloadAddressModel.setZipcode("33127");
-        demographicPayloadAddressModel.setPhone("18007654222");
-
-        DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
-        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
-        demographicPayloadPersonalDetailsModel.setMiddleName("I");
-        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
-        demographicPayloadPersonalDetailsModel.setDateOfBirth("02/11/1983");
-        demographicPayloadPersonalDetailsModel.setPrimaryRace("Asian");
-        demographicPayloadPersonalDetailsModel.setEthnicity("White");
-        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
-
-        DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
-        demographicPayloadDriversLicenseModel.setLicenseNumber("ER-4T3");
-        demographicPayloadDriversLicenseModel.setLicenseState("OH");
-
-        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel = new DemographicPayloadInsuranceModel();
-        demographicPayloadInsuranceModel.setInsuranceMemberId("2513515464");
-        demographicPayloadInsuranceModel.setInsurancePlan("Aetna");
-        demographicPayloadInsuranceModel.setInsuranceProvider("Aetna Select");
-        List<DemographicPayloadInsuranceModel> insurances = new ArrayList<>();
-        insurances.add(demographicPayloadInsuranceModel);
-        // second card
-        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel2 = new DemographicPayloadInsuranceModel();
-        demographicPayloadInsuranceModel2.setInsuranceMemberId("999999999999");
-        demographicPayloadInsuranceModel2.setInsurancePlan("Elect Choice EPO");
-        demographicPayloadInsuranceModel2.setInsuranceProvider("BlueCross Blue Shield");
-        insurances.add(demographicPayloadInsuranceModel2);
-        // third card
-        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel3 = new DemographicPayloadInsuranceModel();
-        demographicPayloadInsuranceModel3.setInsuranceMemberId("4444444444");
-        demographicPayloadInsuranceModel3.setInsurancePlan("Aetna Value Network HMO");
-        demographicPayloadInsuranceModel3.setInsuranceProvider("GHI");
-        insurances.add(demographicPayloadInsuranceModel3);
+//        DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
+//        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
+//        demographicPayloadAddressModel.setAddress2("#800 Lejeune");
+//        demographicPayloadAddressModel.setCity("Miami");
+//        demographicPayloadAddressModel.setState("FL");
+//        demographicPayloadAddressModel.setZipcode("33127");
+//        demographicPayloadAddressModel.setPhone("18007654222");
+//
+//        DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
+//        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
+//        demographicPayloadPersonalDetailsModel.setMiddleName("I");
+//        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
+//        demographicPayloadPersonalDetailsModel.setDateOfBirth("02/11/1983");
+//        demographicPayloadPersonalDetailsModel.setPrimaryRace("Asian");
+//        demographicPayloadPersonalDetailsModel.setEthnicity("White");
+//        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
+//
+//        DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
+//        demographicPayloadDriversLicenseModel.setLicenseNumber("ER-4T3");
+//        demographicPayloadDriversLicenseModel.setLicenseState("OH");
+//
+//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel = new DemographicPayloadInsuranceModel();
+//        demographicPayloadInsuranceModel.setInsuranceMemberId("2513515464");
+//        demographicPayloadInsuranceModel.setInsurancePlan("Aetna");
+//        demographicPayloadInsuranceModel.setInsuranceProvider("Aetna Select");
+//        List<DemographicPayloadInsuranceModel> insurances = new ArrayList<>();
+//        insurances.add(demographicPayloadInsuranceModel);
+//        // second card
+//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel2 = new DemographicPayloadInsuranceModel();
+//        demographicPayloadInsuranceModel2.setInsuranceMemberId("999999999999");
+//        demographicPayloadInsuranceModel2.setInsurancePlan("Elect Choice EPO");
+//        demographicPayloadInsuranceModel2.setInsuranceProvider("BlueCross Blue Shield");
+//        insurances.add(demographicPayloadInsuranceModel2);
+//        // third card
+//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel3 = new DemographicPayloadInsuranceModel();
+//        demographicPayloadInsuranceModel3.setInsuranceMemberId("4444444444");
+//        demographicPayloadInsuranceModel3.setInsurancePlan("Aetna Value Network HMO");
+//        demographicPayloadInsuranceModel3.setInsuranceProvider("GHI");
+//        insurances.add(demographicPayloadInsuranceModel3);
 
         DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
 //        demographicPayloadModel.setAddress(demographicPayloadAddressModel);
 //        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
 //        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
-        demographicPayloadModel.setInsurances(insurances);
+//        demographicPayloadModel.setInsurances(insurances);
 
         List<String> updates = new ArrayList<String>();
         demographicPayloadModel.setUpdates(updates);
@@ -153,10 +152,10 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadModel.setDriversLicense(licenseModel);
         }
 
-//        List<DemographicPayloadInsuranceModel> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
-//        if(insuranceModelList != null) {
-//            demographicPayloadModel.setInsurances(insuranceModelList);
-//        }
+        List<DemographicPayloadInsuranceModel> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
+        if(insuranceModelList != null) {
+            demographicPayloadModel.setInsurances(insuranceModelList);
+        }
 
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
         Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicPayloadModel);
