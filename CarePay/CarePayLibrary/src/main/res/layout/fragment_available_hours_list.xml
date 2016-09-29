@@ -5,6 +5,8 @@
     android:orientation="vertical"
     tools:context="com.carecloud.carepaylibray.appointments.fragments.AvailableHoursFragment">
 
+    <include layout="@layout/add_appointment_toolbar" />
+
     <Button
         android:id="@+id/add_appointment_date_pick"
         android:layout_width="match_parent"

@@ -16,6 +16,10 @@ public class DemographicPayloadInfoMetaDataModel {
     @Expose
     private String updatedDt;
 
+    @SerializedName("created_dt")
+    @Expose
+    private String createdDt;
+
     /**
      *
      * @return
@@ -68,5 +72,13 @@ public class DemographicPayloadInfoMetaDataModel {
      */
     public void setUpdatedDt(String updatedDt) {
         this.updatedDt = updatedDt;
+    }
+
+    public String getCreatedDt() {
+        return createdDt;
+    }
+
+    public void setCreatedDt(String createdDt) {
+        this.createdDt = createdDt;
     }
 }
