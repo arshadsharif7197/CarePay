@@ -1,9 +1,6 @@
 package com.carecloud.carepaylibray.appointments.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,31 +8,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
-import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -74,8 +61,16 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         if (appointmentsListFragment == null) {
             appointmentsListFragment = new AppointmentsListFragment();
         }
+
+        Intent intent = getIntent();
+        AppointmentModel appointmentModel = (AppointmentModel) intent.getSerializableExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentModel);
+        appointmentsListFragment.setArguments(bundle);
         fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
                 AppointmentsListFragment.class.getSimpleName()).commit();
+        Log.d("Cognito Token", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
     }
 
     @Override
@@ -121,6 +116,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         } else if (id == R.id.nav_payments) {
             Intent intent = new Intent(this, PaymentActivity.class);
             startActivity(intent);
+            AppointmentsActivity.model = null; // appointment clicked item is cleared.
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
@@ -150,7 +146,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
     }
 
 
-    static AppointmentModel model;
+    public static AppointmentModel model;
     public void setAppointmentModel(AppointmentModel model) {
         AppointmentsActivity.model = model;
     }

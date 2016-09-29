@@ -1,9 +1,5 @@
 package com.carecloud.carepaylibray.utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 /**
  * Created by kkannan on 9/13/16.
  */
