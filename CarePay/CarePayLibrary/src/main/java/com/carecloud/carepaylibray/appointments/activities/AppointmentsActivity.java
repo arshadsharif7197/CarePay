@@ -131,7 +131,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
                 // go to Sign in screen
                 Intent intent = new Intent(this, SigninSignupActivity.class);
                 startActivity(intent);
-                finish();
+                finish(); // TODO: 9/27/2016 uncomment
             }
         } else if (id == R.id.nav_purchase) {
 

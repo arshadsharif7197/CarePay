@@ -28,12 +28,17 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -44,24 +49,36 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
-
 
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
+ * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
-    private TextView title;
-    private int currentPageIndex;
-    private ViewPager viewPager;
-    private DemographicPagerAdapter demographicPagerAdapter;
-    ProgressBar demographicProgressBar;
+    private TextView    titleTextView;
+    private int         currentPageIndex;
+    private ViewPager   viewPager;
+    private ProgressBar demographicProgressBar;
 
-    private DemographicModel demographicModel = null;
+    private DemographicModel modelGet = null;
+    private DemographicPayloadAddressModel addressModel;
+    private DemographicPayloadPersonalDetailsModel detailsModel;
+    private DemographicPayloadDriversLicenseModel  modelDriversLicense;
+    private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
 
-    public DemographicModel getDemographicModel() {
-        return demographicModel;
+    public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
+        DemographicPayloadInfoPayloadModel infoModel = null;
+        if (modelGet != null) {
+            DemographicPayloadResponseModel response = modelGet.getPayload();
+            if (response != null) {
+                DemographicPayloadInfoModel infoModelPayload = response.getDemographics();
+                if (infoModelPayload != null) {
+                    infoModel = infoModelPayload.getPayload();
+                }
+            }
+        }
+        return infoModel;
     }
 
     @Override
@@ -84,29 +101,34 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         super.onCreate(savedInstanceState);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
-        title = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
-        setTypefaceFromAssets(DemographicsActivity.this, "fonts/gotham_rounded_medium.otf", title);
+        titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
+        SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
         toolbar.setTitle("");
-        title.setText("Address");
+        titleTextView.setText("Address");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
-
         (DemographicsActivity.this).setSupportActionBar(toolbar);
 
         // set the language
         Intent intent = getIntent();
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
             setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
+        } else if (intent.hasExtra("demographics_model")) {
+            String demographicsModelString = intent.getStringExtra("demographics_model");
+            Gson gson = new Gson();
+            modelGet = gson.fromJson(demographicsModelString, DemographicModel.class);
         }
+        // set the progress bar
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
-//        isStoragePermissionGranted();
-//        getDemographicInformation();
+
+        // b/e
+        isStoragePermissionGranted();
         setupPager();
     }
 
     private void setupPager() {
         currentPageIndex = 0;
-        demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
+        DemographicPagerAdapter demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.demographicsViewPager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(demographicPagerAdapter);
@@ -136,93 +158,19 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         indicator.setViewPager(viewPager);
     }
 
-    private void getDemographicInformation() {
-        demographicProgressBar.setVisibility(View.VISIBLE);
-        DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.fetchDemographicInformation();
-        call.enqueue(new Callback<DemographicModel>() {
-            @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                demographicModel = response.body();
-                demographicProgressBar.setVisibility(View.GONE);
-                Log.d("sdadad", "adasdasdasd");
-
-            }
-
-            @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
-
-            }
-        });
-    }
-
-
-    public void confirmDemographicInformation() {
-        DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
-        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
-        demographicPayloadAddressModel.setAddress1("#800");
-        demographicPayloadAddressModel.setCity("Miami");
-        demographicPayloadAddressModel.setState("FL");
-        demographicPayloadAddressModel.setZipcode("33127");
-        demographicPayloadAddressModel.setPhone("18007654222");
-
-        DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
-        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
-        demographicPayloadPersonalDetailsModel.setMiddleName("I");
-        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
-        demographicPayloadPersonalDetailsModel.setDateOfBirth("02/11/1983");
-        demographicPayloadPersonalDetailsModel.setPrimaryRace("Asian");
-        demographicPayloadPersonalDetailsModel.setEthnicity("White");
-        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
-
-        DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
-
-        List<String> updates = new ArrayList<String>();
-        DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
-        demographicPayloadModel.setAddress(demographicPayloadAddressModel);
-        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
-        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
-        demographicPayloadModel.setUpdates(updates);
-        /*DemographicModel demographicPostModel = new DemographicModel();
-        demographicPostModel.setPayload(demographicPayloadModel);*/
-
-        demographicProgressBar.setVisibility(View.VISIBLE);
-        DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicPayloadModel);
-        call.enqueue(new Callback<DemographicModel>() {
-            @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                demographicModel = response.body();
-                demographicProgressBar.setVisibility(View.GONE);
-                Log.d("sdadad", "adasdasdasd");
-
-                Intent appointmentIntent = new Intent(DemographicsActivity.this, AppointmentsActivity.class);
-                startActivity(appointmentIntent);
-                finish();
-            }
-
-            @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
-
-            }
-        });
-
-
-    }
-
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
-                title.setText("Address");
+                titleTextView.setText("Address");
                 break;
             case 1:
-                title.setText("Details");
+                titleTextView.setText("Details");
                 break;
             case 2:
-                title.setText("Documents");
+                titleTextView.setText("Documents");
                 break;
             case 3:
-                title.setText("More Details");
+                titleTextView.setText("More Details");
                 break;
             default:
                 break;
@@ -233,12 +181,51 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         viewPager.setCurrentItem(item, smoothScroll);
     }
 
+    public DemographicModel getModel() {
+        return modelGet;
+    }
+
+    public DemographicPayloadPersonalDetailsModel getDetailsModel() {
+        return detailsModel;
+    }
+
+    public void setAddressModel(DemographicPayloadAddressModel addressModel) {
+        this.addressModel = addressModel;
+    }
+
+    public DemographicPayloadAddressModel getAddressModel() {
+        return addressModel;
+    }
+
+    public void setDetailsModel(DemographicPayloadPersonalDetailsModel detailsModel) {
+        this.detailsModel = detailsModel;
+    }
+
+    public DemographicPayloadDriversLicenseModel getModelDriversLicense() {
+        return modelDriversLicense;
+    }
+
+    public void setModelDriversLicense(DemographicPayloadDriversLicenseModel modelDriversLicense) {
+        this.modelDriversLicense = modelDriversLicense;
+    }
+
+    public void setModel(DemographicModel modelGet) {
+        this.modelGet = modelGet;
+    }
+
+    public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
+        return insuranceModelList;
+    }
+
+    public void setInsuranceModelList(List<DemographicPayloadInsuranceModel> insuranceModelList) {
+        this.insuranceModelList = insuranceModelList;
+    }
+
     /**
      * Adapter for the viewpager
      */
 
-
-    class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
+    public static class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 
         final         int   PAGE_COUNT = 4;
         private final int[] ICONS      = new int[]{
