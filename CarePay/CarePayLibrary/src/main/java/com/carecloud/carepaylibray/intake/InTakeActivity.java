@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.intake;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
     private ImageView[]            intakeDotsImageView;
     private Button                 intakeNextButton;
     private int                    intakeCurrentPageIndex;
+    public boolean isQuestionAnswered=false;
 
     @Override
     public void replaceFragment(Class fragClass, boolean addToBackStack) {
@@ -85,7 +88,15 @@ public class InTakeActivity extends KeyboardHolderActivity {
         intakeNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moveToNextQuestion();
+                String intakeButtonText = intakeNextButton.getText().toString();
+                /* Based on the below logic user will be navigated to payment screen if he has finished all the consent forms */
+                if(intakeButtonText.equalsIgnoreCase(getString(R.string.intakeNextButtonText))) {
+                    moveToNextQuestion();
+                } else {
+                    Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 
@@ -94,8 +105,10 @@ public class InTakeActivity extends KeyboardHolderActivity {
         FragmentStatePagerAdapter pagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                InTakeFragment fragment = new InTakeFragment();
-                fragment.setFormModel(forms.get(position));
+                InTakeFragment fragment = getSelectedItem(position);
+                if(fragment !=null) {
+                    fragment.setFormModel(forms.get(position));
+                }
                 return fragment;
             }
 
@@ -116,8 +129,10 @@ public class InTakeActivity extends KeyboardHolderActivity {
                 // change next button text if lst fragment
                 if (position == formsViewPager.getAdapter().getCount() - 1) {
                     intakeNextButton.setText(getString(R.string.intakeNextButtonLastText));
+                    setIntakeNextEnabled(isQuestionAnswered);
                 } else {
                     intakeNextButton.setText(getString(R.string.intakeNextButtonText));
+                    setIntakeNextEnabled(true);
                 }
                 // if scrolled next, just enable the next tab dot
                 if(position > intakeCurrentPageIndex) {
@@ -157,6 +172,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
      * Update the title according to the index of the current form
      */
     private void updateTitle() {
+        SystemUtil.hideSoftKeyboard(this);
         // set the title to show the first screen
         formsToolbarTitleTv.setText(String.format(Locale.getDefault(),
                                                   "Intake Form %d of %d", intakeCurrentPageIndex + 1,
@@ -218,5 +234,30 @@ public class InTakeActivity extends KeyboardHolderActivity {
             moveToPreviousQuestionOrBack();
         }
         return true;
+    }
+
+    /**
+     * This method will be invoked when a page is requested to create
+     */
+    public InTakeFragment getSelectedItem(int position) {
+
+        switch (position) {
+            case 0:
+                return new IntakeReviewvisitFragment();
+            case 1:
+                return new InTakecardiacSymptomsfragment();
+            case 2:
+                return new InTakeMedicalHistoryFragment();
+            case 3:
+                return new InTakeMedicalHistoryFragment_Form2();
+            case 4:
+                return new IntakeReviewOfSymptomsFragment();
+            default:
+                return null;
+        }
+    }
+
+    public void setIntakeNextEnabled(boolean isEnabled){
+        intakeNextButton.setEnabled(isEnabled);
     }
 }

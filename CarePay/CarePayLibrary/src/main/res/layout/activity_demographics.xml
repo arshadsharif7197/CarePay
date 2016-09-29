@@ -6,7 +6,7 @@
               android:background="@color/white"
               android:orientation="vertical">
 
-    <include layout="@layout/demographics_toolbar"/>
+    <include layout="@layout/toolbar_demographics"/>
 
     <ProgressBar
         android:id="@+id/demographicProgressBar"

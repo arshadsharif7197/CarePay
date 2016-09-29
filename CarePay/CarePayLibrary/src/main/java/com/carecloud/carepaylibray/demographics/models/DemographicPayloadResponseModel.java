@@ -11,4 +11,13 @@ public class DemographicPayloadResponseModel {
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadInfoModel demographics;
+
+    public DemographicPayloadInfoModel getDemographics() {
+        return demographics;
+    }
+
+    public void setDemographics(DemographicPayloadInfoModel demographics) {
+        this.demographics = demographics;
+    }
+
 }

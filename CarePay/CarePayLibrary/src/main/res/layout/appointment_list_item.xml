@@ -13,12 +13,12 @@
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
             android:id="@+id/appointments_section_header_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/apt_skicky_header_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_title_indicator_title_padding"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
             android:paddingLeft="@dimen/list_apt_padding_right"
-            android:paddingTop="@dimen/apt_available_hours_list_header_padding_top"
             android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/textview_textsize" />
     </LinearLayout>
@@ -27,7 +27,9 @@
         android:id="@+id/appointment_item_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/default_title_indicator_title_padding"
+        android:layout_marginLeft="@dimen/default_title_indicator_title_padding"
+        android:layout_marginRight="@dimen/default_title_indicator_title_padding"
+        android:layout_marginTop="@dimen/default_title_indicator_title_padding"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -43,15 +45,18 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/cellAvtarImageView"
-                    android:elevation="@dimen/apt_lst_img_elevation"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
+                    android:elevation="@dimen/apt_lst_img_elevation"
                     android:src="@drawable/cell_avatar_badge_pending" />
+
                 <TextView
                     android:id="@+id/avtarTextView"
                     android:layout_width="wrap_content"
@@ -61,18 +66,16 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:src="@drawable/icn_placeholder_user_profile_png"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/apt_dl_text_big"
-                    />
+                    android:textSize="@dimen/apt_dl_text_big" />
             </RelativeLayout>
-
 
 
             <LinearLayout
                 android:layout_width="@dimen/apt_dl_zero_ht_wdh"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/textview_margin"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -96,24 +99,88 @@
                     android:textSize="@dimen/textview_textsize" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/time"
+            <LinearLayout
+                android:id="@+id/todayTimeLinearlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:gravity="center"
-                android:paddingRight="@dimen/default_title_indicator_title_padding"
-                android:paddingTop="@dimen/default_title_indicator_title_padding"
-                android:text="time"
-                android:textSize="@dimen/button_textsize_medium"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+                    android:id="@+id/todayTimeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/default_title_indicator_title_padding"
+                    android:paddingTop="@dimen/default_title_indicator_title_padding"
+                    android:textSize="@dimen/button_textsize_medium"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/upcomingDateLinearlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/upcomingDateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/default_title_indicator_title_padding"
+                    android:paddingTop="@dimen/default_title_indicator_title_padding"
+                    android:textColor="@color/Feldgrau"
+                    android:textSize="@dimen/apt_list_upcoming_date_txt_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/upcomingMonthTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/default_title_indicator_title_padding"
+                    android:textColor="@color/cadet_gray"
+                    android:textSize="@dimen/textview_textsize" />
+
+                <TextView
+                    android:id="@+id/separatorTextView"
+                    android:layout_width="62dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/gray"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/default_title_indicator_title_padding"
+                    android:paddingTop="@dimen/default_title_indicator_title_padding"
+                    android:textSize="@dimen/button_textsize_medium" />
+
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/upcomingTimeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/default_title_indicator_title_padding"
+                    android:paddingTop="@dimen/default_title_indicator_title_padding"
+                    android:textColor="@color/cadet_gray"
+                    android:textSize="@dimen/button_textsize_medium" />
+
+            </LinearLayout>
         </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"
             android:layout_marginLeft="@dimen/list_apt_padding_right"
-            android:layout_marginRight="@dimen/list_apt_padding_right"/>
+            android:layout_marginRight="@dimen/list_apt_padding_right"
+            android:background="@color/gray" />
     </LinearLayout>
 
 </RelativeLayout>

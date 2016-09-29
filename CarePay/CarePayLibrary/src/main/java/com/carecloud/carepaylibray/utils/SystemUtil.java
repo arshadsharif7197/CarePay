@@ -8,7 +8,10 @@ package com.carecloud.carepaylibray.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
@@ -37,8 +40,16 @@ public class SystemUtil {
     }
 
     public static String onShortDrName(String fullName) {
-        String stringSplitArr[] = fullName.split(" ");
-        return String.valueOf(stringSplitArr[1].charAt(0)) + String.valueOf(stringSplitArr[2].charAt(0));
+        if(fullName != null && fullName.length()>1) {
+            String stringSplitArr[] = fullName.split(" ");
+            if(stringSplitArr.length >= 3)
+                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase()+String.valueOf(stringSplitArr[stringSplitArr.length-1].charAt(0)).toUpperCase();
+            else if(stringSplitArr.length == 2)
+                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
+            else
+                return "";
+        } else
+            return "";
     }
 
     /* Font utils*/
@@ -160,7 +171,6 @@ public class SystemUtil {
                 // remove hint from the text input layout
                 textInputLayout.setHint("");
                 // change hint to lower in the edit
-//                setProximaNovaRegularTypeface(view.getContext(), editText);
                 editText.setTypeface(editTextTypeface);
                 editText.setHint(hint);
             } else { // there is some text in the edit or the error is enabled
@@ -230,5 +240,14 @@ public class SystemUtil {
     public static float dpToPx(Context context, float valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
+    }
+
+    public static Drawable convertDrawableToGrayScale(Drawable drawable) {
+        if (drawable == null)
+            return null;
+
+        Drawable res = drawable.mutate();
+        res.setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
+        return res;
     }
 }

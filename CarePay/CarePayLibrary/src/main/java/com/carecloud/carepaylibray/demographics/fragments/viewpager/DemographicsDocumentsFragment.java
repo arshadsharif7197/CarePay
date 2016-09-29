@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -65,7 +64,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         showAddCardButton(false);
 
         // disable next button
-        enableNextButton(false);
+//        enableNextButton(false); // TODO: 9/27/2016 uncomment
 
         return view;
     }
