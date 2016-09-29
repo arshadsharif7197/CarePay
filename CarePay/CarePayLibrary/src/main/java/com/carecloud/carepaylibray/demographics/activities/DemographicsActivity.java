@@ -63,6 +63,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     private DemographicModel modelGet = null;
     private DemographicPayloadAddressModel addressModel;
+    private DemographicPayloadPersonalDetailsModel detailsModel;
 
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
         DemographicPayloadInfoPayloadModel infoModel = null;
@@ -182,12 +183,21 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return modelGet;
     }
 
-    public DemographicPayloadAddressModel getAddressModel() {
-        return addressModel;
+    public DemographicPayloadPersonalDetailsModel getDetailsModel() {
+        return detailsModel;
     }
 
     public void setAddressModel(DemographicPayloadAddressModel addressModel) {
         this.addressModel = addressModel;
+    }
+
+
+    public DemographicPayloadAddressModel getAddressModel() {
+        return addressModel;
+    }
+
+    public void setDetailsModel(DemographicPayloadPersonalDetailsModel detailsModel) {
+        this.detailsModel = detailsModel;
     }
 
     public void setModel(DemographicModel modelGet) {
@@ -198,7 +208,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
      * Adapter for the viewpager
      */
 
-    class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
+    public static class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 
         final         int   PAGE_COUNT = 4;
         private final int[] ICONS      = new int[]{

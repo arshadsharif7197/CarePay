@@ -113,6 +113,7 @@ public class DemographicsDetailsFragment extends Fragment
             setPictureFromByteStream(pictureByteStream);
         } else {
             Log.v(LOG_TAG, "demographics details: views populated with defaults");
+            model = new DemographicPayloadPersonalDetailsModel();
         }
     }
 
@@ -137,8 +138,15 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void nextbuttonClick() {
+        // update the model with values from UI
+        model.setPrimaryRace(raceTextView.getText().toString());
+        model.setEthnicity(ethnicityTextView.getText().toString());
+        model.setPreferredLanguage(preferredLanguageTextView.getText().toString());
+
+        ((DemographicsActivity)getActivity()).setDetailsModel(model); // save the updated model in the activity
+
+        // move to next page
         ((DemographicsActivity) getActivity()).setCurrentItem(2, true);
-        // other task may be performed...
     }
 
     private void showAlertDialogWithListview(final String[] raceArray, String title) {

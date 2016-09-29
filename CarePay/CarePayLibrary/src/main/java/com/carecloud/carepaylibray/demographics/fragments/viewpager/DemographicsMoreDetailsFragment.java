@@ -125,9 +125,10 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 
         DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
 //        demographicPayloadModel.setAddress(demographicPayloadAddressModel);
-        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
+//        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
         demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
         demographicPayloadModel.setInsurances(insurances);
+
         List<String> updates = new ArrayList<String>();
         demographicPayloadModel.setUpdates(updates);
 
@@ -142,10 +143,11 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadModel.setAddress(addressModel);
         }
 
-//        DemographicPayloadPersonalDetailsModel detailsModel =
-//                ((DemographicsDetailsFragment)((DemographicPagerAdapter)viewPager.getAdapter()).getItem(1)).getModel();
-//        demographicPayloadModel.setPersonalDetails(detailsModel);
-//
+        DemographicPayloadPersonalDetailsModel detailsModel = ((DemographicsActivity)getActivity()).getDetailsModel();
+        if(detailsModel != null) {
+            demographicPayloadModel.setPersonalDetails(detailsModel);
+        }
+
 //        DemographicsDocumentsFragment docsFrag = ((DemographicsDocumentsFragment)((DemographicPagerAdapter)viewPager.getAdapter()).getItem(2));
 //        demographicPayloadModel.setDriversLicense(docsFrag.getModelDriversLicense());
 //        demographicPayloadModel.setInsurances(docsFrag.getInsuranceModelList());
