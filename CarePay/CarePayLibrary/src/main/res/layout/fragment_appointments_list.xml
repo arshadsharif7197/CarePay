@@ -5,7 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context="com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment">
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/appointment_section_linear_layout"
         android:layout_width="match_parent"
@@ -20,10 +23,6 @@
             android:layout_marginTop="-8dp"
             android:indeterminate="true" />
 
-        <include
-            android:id="@+id/apt_checked_in_view"
-            layout="@layout/apt_checked_in_list_item"
-            android:visibility="gone" />
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
             android:id="@+id/appointments_sticky_header_title"
@@ -38,12 +37,20 @@
             android:textSize="@dimen/textview_textsize"
             android:visibility="gone" />
 
+
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/appointments_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
+            <include
+                android:id="@+id/apt_checked_in_view"
+                layout="@layout/apt_checked_in_list_item"
+                android:visibility="gone" />
 
     </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fab"
