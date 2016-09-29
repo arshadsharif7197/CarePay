@@ -153,9 +153,10 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadModel.setDriversLicense(licenseModel);
         }
 
-//        DemographicsDocumentsFragment docsFrag = ((DemographicsDocumentsFragment)((DemographicPagerAdapter)viewPager.getAdapter()).getItem(2));
-//        demographicPayloadModel.setDriversLicense(docsFrag.getModelDriversLicense());
-//        demographicPayloadModel.setInsurances(docsFrag.getInsuranceModelList());
+//        List<DemographicPayloadInsuranceModel> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
+//        if(insuranceModelList != null) {
+//            demographicPayloadModel.setInsurances(insuranceModelList);
+//        }
 
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
         Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicPayloadModel);

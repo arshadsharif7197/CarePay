@@ -65,6 +65,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private DemographicPayloadAddressModel addressModel;
     private DemographicPayloadPersonalDetailsModel detailsModel;
     private DemographicPayloadDriversLicenseModel  modelDriversLicense;
+    private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
 
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
         DemographicPayloadInfoPayloadModel infoModel = null;
@@ -210,6 +211,14 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     public void setModel(DemographicModel modelGet) {
         this.modelGet = modelGet;
+    }
+
+    public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
+        return insuranceModelList;
+    }
+
+    public void setInsuranceModelList(List<DemographicPayloadInsuranceModel> insuranceModelList) {
+        this.insuranceModelList = insuranceModelList;
     }
 
     /**
