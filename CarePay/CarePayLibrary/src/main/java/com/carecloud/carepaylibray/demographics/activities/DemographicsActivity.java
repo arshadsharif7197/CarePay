@@ -182,6 +182,18 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         demographicPayloadInsuranceModel.setInsuranceProvider("Aetna Select");
         List<DemographicPayloadInsuranceModel> insurances = new ArrayList<>();
         insurances.add(demographicPayloadInsuranceModel);
+        // second card
+        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel2 = new DemographicPayloadInsuranceModel();
+        demographicPayloadInsuranceModel2.setInsuranceMemberId("999999999999");
+        demographicPayloadInsuranceModel2.setInsurancePlan("Elect Choice EPO");
+        demographicPayloadInsuranceModel2.setInsuranceProvider("BlueCross Blue Shield");
+        insurances.add(demographicPayloadInsuranceModel2);
+        // third card
+        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel3 = new DemographicPayloadInsuranceModel();
+        demographicPayloadInsuranceModel3.setInsuranceMemberId("4444444444");
+        demographicPayloadInsuranceModel3.setInsurancePlan("Aetna Value Network HMO");
+        demographicPayloadInsuranceModel3.setInsuranceProvider("GHI");
+        insurances.add(demographicPayloadInsuranceModel3);
 
         List<String> updates = new ArrayList<String>();
         DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
