@@ -32,59 +32,112 @@
         android:id="@+id/howfeelingTextView"
         android:layout_width="wrap_content"
         android:text="HOW ARE YOU FEELING?"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="@dimen/apt_dl_image_radius"
         android:textSize="@dimen/textview_textsize"
         android:textColor="@color/blue_cerulian"
         android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:paddingTop="@dimen/apt_popup_button_margin"
+        android:paddingTop="@dimen/apt_dl_view_margin"
         android:layout_height="wrap_content">
         <CheckBox
-            android:text="Option #01"
+            android:id="@+id/optionHappyCheckBox"
+            android:text="Happy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:button="@null"
             android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
             android:textColor="@color/slateGray"
             android:drawableRight="@drawable/check_box_intake"/>
         <View
             style="@style/Consent_Form_View_Style"
             android:layout_width="match_parent" />
         <CheckBox
-            android:text="Option #02"
+            android:id="@+id/optionSadCheckBox"
+            android:text="Sad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:button="@null"
             android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
             android:textColor="@color/slateGray"
             android:drawableRight="@drawable/check_box_intake"/>
         <View
             style="@style/Consent_Form_View_Style"
             android:layout_width="match_parent" />
         <CheckBox
-            android:text="Option #03"
+            android:id="@+id/optionLethargicCheckBox"
+            android:text="Lethargic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:button="@null"
             android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
             android:textColor="@color/slateGray"
             android:drawableRight="@drawable/check_box_intake"/>
         <View
             style="@style/Consent_Form_View_Style"
             android:layout_width="match_parent" />
         <CheckBox
-            android:text="Option #04"
+            android:id="@+id/optionWorriedCheckBox"
+            android:text="Worried"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:button="@null"
             android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
             android:textColor="@color/slateGray"
             android:drawableRight="@drawable/check_box_intake"/>
         <View
             style="@style/Consent_Form_View_Style"
             android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/optionTiredCheckBox"
+            android:text="Tired"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/optionNoneCheckBox"
+            android:text="None"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+
     </LinearLayout>
     <TextView
         android:id="@+id/anyConcernHeaderTextView"
@@ -92,7 +145,7 @@
         android:text="ANY OTHER MEDICAL CONCERN?"
         android:textSize="@dimen/textview_textsize"
         android:textColor="@color/blue_cerulian"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="@dimen/apt_dl_image_radius"
         android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/optionalTextView"
@@ -100,7 +153,7 @@
         android:text="Optional"
         android:layout_gravity="right"
         android:textSize="@dimen/apt_popup_optional"
-        android:layout_marginTop="@dimen/apt_dl_margin"
+        android:layout_marginTop="@dimen/apt_dl_view_margin"
         android:gravity="right"
         android:layout_height="wrap_content" />
     <android.support.design.widget.TextInputLayout
