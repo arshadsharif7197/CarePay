@@ -186,7 +186,7 @@
     </style>
 
     <style name="ResponsibilityToolbarTextStyle" parent="android:Widget.TextView">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
@@ -468,7 +468,7 @@
     <!-- InTake -->
 
     <style name="InTakeNextButtonStyle" parent="DemographicsNextButtonStyle">
-        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:background">@drawable/button_selector</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_marginBottom">0dp</item>
     </style>
@@ -499,7 +499,7 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/intakeTitleTextSize</item>
-        <!--<item name="android:layout_marginTop">@dimen/margintop</item>-->
+        <item name="android:layout_marginTop">@dimen/consent_top</item>
     </style>
 
     <style name="InTakeFragmentCaptionStyle">
@@ -572,5 +572,12 @@
         <item name="android:textColor">@color/lightSlateGray</item>
         <item name="android:textSize">@dimen/textview_textsize</item>
     </style>
-
+    <style name="intake_Form_View_Style">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">@dimen/consentform_relativeLayout_margin</item>
+        <item name="android:layout_marginRight">@dimen/consentform_relativeLayout_margin</item>
+        <item name="android:layout_marginTop">@dimen/consent_view_margin_top_bottom</item>
+        <item name="android:layout_marginBottom">@dimen/consent_view_margin_top_bottom</item>
+        <item name="android:background">@color/payne_gray</item>
+    </style>
 </resources>

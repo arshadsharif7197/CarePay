@@ -22,6 +22,8 @@ import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragme
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeader;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.PendingAppointmentRequestDialog;
@@ -67,27 +69,27 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
 
             String splitStr[]= item.getAppointmentTime().replaceAll("UTC","").split(" ");
             if (splitStr.length > 3) {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(splitStr[0] + "\n" + splitStr[1].toUpperCase() + "\n" + splitStr[2] + " " + splitStr[3]);
-                Spannable span = new SpannableString(stringBuilder);
-                //span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                span.setSpan(new RelativeSizeSpan(1.75f), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.Feldgrau)), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                SystemUtil.setProximaNovaRegularTypeface(context, holder.time);
                 if(item.isCheckedIn()) {
-                    holder.time.setText(context.getString(R.string.checked_in_label));
-                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                    holder.todayTimeLinearlayout.setVisibility(View.VISIBLE);
+                    holder.upcomingDateLinearlayout.setVisibility(View.GONE);
+                    holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
-                    holder.time.setText(span);
-                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.Feldgrau));
+                    holder.todayTimeLinearlayout.setVisibility(View.GONE);
+                    holder.upcomingDateLinearlayout.setVisibility(View.VISIBLE);
+                    holder.upcomingDateTextView.setText(splitStr[0]);
+                    holder.upcomingMonthTextView.setText(splitStr[1].toUpperCase());
+                    holder.upcomingTimeTextView.setText(splitStr[2] + " " + splitStr[3]);
                 }
             } else {
+                holder.todayTimeLinearlayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateLinearlayout.setVisibility(View.GONE);
                 if(item.isCheckedIn()) {
-                    holder.time.setText(context.getString(R.string.checked_in_label));
-                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                    holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
-                    holder.time.setText(item.getAppointmentTime().replaceAll("UTC", ""));
-                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
+                    holder.todayTimeTextView.setText(item.getAppointmentTime().replaceAll("UTC", ""));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
                 }
             }
 
@@ -167,10 +169,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
     }
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
-        private TextView doctorName, doctorType, time, shortName;
+        private TextView doctorName, doctorType, time, shortName, upcomingDateTextView;
+        private CustomGothamRoundedBoldLabel todayTimeTextView;
+
         private CustomProxyNovaSemiBoldLabel appointmentSectionHeaderTitle;
+        private CustomProxyNovaRegularLabel upcomingMonthTextView, upcomingTimeTextView;
         private ImageView cellAvtar;
-        private LinearLayout appointmentSectionLinearLayout, appointmentItemLinearLayout;
+        private LinearLayout appointmentSectionLinearLayout, appointmentItemLinearLayout, todayTimeLinearlayout, upcomingDateLinearlayout;
 
     AppointmentViewHolder(View itemView) {
         super(itemView);
@@ -180,15 +185,22 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
         Typeface textViewFont_proximanova_regular = Typeface.createFromAsset(itemView.getResources().getAssets(), "fonts/proximanova_regular.otf");
         doctorType = (TextView) itemView.findViewById(R.id.doctor_type);
         doctorType.setTypeface(textViewFont_proximanova_regular);
-        Typeface textViewFont_gotham_rounded_bold = Typeface.createFromAsset(itemView.getResources().getAssets(), "fonts/gotham_rounded_bold.otf");
-        time = (TextView) itemView.findViewById(R.id.time);
-        time.setTypeface(textViewFont_gotham_rounded_bold);
         shortName=(TextView)itemView.findViewById(R.id.avtarTextView);
         cellAvtar =(ImageView) itemView.findViewById(R.id.cellAvtarImageView);
 
         appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
         appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
         appointmentSectionHeaderTitle = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointments_section_header_title);
+
+        todayTimeLinearlayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
+        upcomingDateLinearlayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLinearlayout);
+
+        todayTimeTextView = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.todayTimeTextView);
+        upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
+        Typeface textViewFont_proximanova_light = Typeface.createFromAsset(itemView.getResources().getAssets(), "fonts/proximanova_light.otf");
+        upcomingDateTextView.setTypeface(textViewFont_proximanova_light);
+        upcomingMonthTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingMonthTextView);
+        upcomingTimeTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingTimeTextView);
     }
   }
 }
