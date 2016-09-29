@@ -30,7 +30,7 @@ public class InTakeMedicalHistoryFragment extends InTakeFragment {
     private View mainView;
     private Context context;
     private TextView chooseAllergyTextView;
-    private String[] allergiesArray = {"Milk", "Fish","Dust"};
+    private String[] allergiesArray = {"Penicillin", "Sulfa","Latex","Tree Nuts"};
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -68,6 +68,7 @@ public class InTakeMedicalHistoryFragment extends InTakeFragment {
         ((LinearLayout)mainView.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
 
         SystemUtil.setProximaNovaSemiboldTypeface(this.context,allegiesHaveTextView);
+        SystemUtil.setProximaNovaRegularTypeface(this.context,addUnlistedAllergiesEditText);
     }
     private void showAlertDialogWithListview(final String[] allergiesArray, String title) {
 
@@ -96,4 +97,5 @@ public class InTakeMedicalHistoryFragment extends InTakeFragment {
             }
         });
     }
+
 }

@@ -91,10 +91,19 @@ public class AppointmentsListFragment extends Fragment {
 
                 if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES &&
                         differenceInMinutes > 0) {
-
+                    String appointmentInDuration;
+                    if(differenceInMinutes==CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES){
+                        appointmentInDuration = "2 hours";
+                    } else if(differenceInMinutes==60){
+                        appointmentInDuration = "1 hour";
+                    } else if(differenceInMinutes>60){
+                        appointmentInDuration = " hour and "+(differenceInMinutes-60)+" minutes";
+                    } else {
+                        appointmentInDuration = differenceInMinutes+" minutes";
+                    }
                     popup = new CustomPopupNotification(getActivity(), getView(), getString(R.string.checkin_early),
                             getString(R.string.dismiss),
-                            getString(R.string.apt_popup_message_text, appointmentsItems.get(0).getDoctorName()),
+                            getString(R.string.apt_popup_message_text, appointmentsItems.get(0).getDoctorName(),appointmentInDuration),
                             positiveActionListener, negativeActionListener);
                     popup.showPopWindow();
                 }
