@@ -98,14 +98,11 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Override
     public void populateViewsFromModel() {
         if (model != null) {
+            Log.v(LOG_TAG, "InsuranceScannerFrag - populateFromModel()");
+
             // check the type of the model
             mInsuranceScanHelper.setImageFromCharStream(model.getInsurancePhoto());
             String insNum = model.getInsuranceMemberId();
-            if(StringUtil.isNullOrEmpty(insNum)) {
-                tvInsuranceNum.setVisibility(View.GONE);
-            } else {
-                tvInsuranceNum.setVisibility(View.VISIBLE);
-            }
             tvInsuranceNum.setText(insNum);
             tvPlan.setText(model.getInsurancePlan());
             tvProvider.setText(model.getInsuranceProvider());

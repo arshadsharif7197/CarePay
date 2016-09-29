@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuran
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -141,6 +142,9 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         fm = getChildFragmentManager();
         // add license fragment
         licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
+        if(modelDriversLicense == null) {
+            modelDriversLicense = new DemographicPayloadDriversLicenseModel();
+        }
         if (licenseFragment == null) {
             licenseFragment = new LicenseScannerFragment();
             licenseFragment.setButtonsStatusCallback(this);
@@ -150,6 +154,9 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         // add insurance fragments
         DemographicPayloadInsuranceModel insuranceModel1 = getInsuranceModelAtIndex(0);
+        if(insuranceModel1 == null) {
+            insuranceModel1 = new DemographicPayloadInsuranceModel();
+        }
         insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
         if (insuranceFragment == null) {
             insuranceFragment = new InsuranceScannerFragment();
@@ -161,22 +168,32 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 .commit();
 
         DemographicPayloadInsuranceModel insuranceModel2 = getInsuranceModelAtIndex(1);
+        if(insuranceModel2 == null) {
+            insuranceModel2 = new DemographicPayloadInsuranceModel();
+        } else {
+            isSecondCardAdded = true;
+        }
         extraInsuranceFrag1 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
         if (extraInsuranceFrag1 == null) {
             extraInsuranceFrag1 = new InsuranceScannerFragment();
             extraInsuranceFrag1.setButtonsStatusCallback(this);
-            insuranceFragment.setModel(insuranceModel2); // set the model (if avail)
+            extraInsuranceFrag1.setModel(insuranceModel2); // set the model (if avail)
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance2, extraInsuranceFrag1, "insurance2")
                 .commit();
 
         DemographicPayloadInsuranceModel insuranceModel3 = getInsuranceModelAtIndex(2);
+        if(insuranceModel3 == null) {
+            insuranceModel3 = new DemographicPayloadInsuranceModel();
+        } else {
+            isThirdCardAdded = true;
+        }
         extraInsuranceFrag2 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
         if (extraInsuranceFrag2 == null) {
             extraInsuranceFrag2 = new InsuranceScannerFragment();
             extraInsuranceFrag2.setButtonsStatusCallback(this);
-            insuranceFragment.setModel(insuranceModel3); // set the model (if avail)
+            extraInsuranceFrag2.setModel(insuranceModel3); // set the model (if avail)
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance3, extraInsuranceFrag2, "insurance3")
