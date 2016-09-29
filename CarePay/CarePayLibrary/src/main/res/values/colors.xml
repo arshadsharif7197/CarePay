@@ -59,4 +59,7 @@
     <color name="divider_color">#c4c4c4</color>
 
     <color name="checked_in_appointment_bg">#fffdea</color>
+    <color name="cardinal">#c31e30</color>
+
+    <color name="optionl_gray">#90a4ae</color>
 </resources>

@@ -71,8 +71,8 @@ public class SignatureActivity extends AppCompatActivity {
         agreeBtn = (Button) findViewById(R.id.agreeBtn);
         signaturePad = (SignaturePad) findViewById(R.id.signature_pad);
         clearBtn = (Button) findViewById(R.id.clearBtn);
-        legalFirstNameET = (EditText) findViewById(R.id.legalFirstName);
-        legalLastNameET = (EditText) findViewById(R.id.legalLastName);
+        legalFirstNameET = (EditText) findViewById(R.id.legalFirstNameET);
+        legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
         String headerTitle = getIntent().getExtras().getString("Header_Title");
         titleTv.setText(headerTitle);
 

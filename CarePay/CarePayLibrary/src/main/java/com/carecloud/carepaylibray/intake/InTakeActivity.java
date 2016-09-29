@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.intake;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,7 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
@@ -85,7 +91,15 @@ public class InTakeActivity extends KeyboardHolderActivity {
         intakeNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moveToNextQuestion();
+                String intakeButtonText = intakeNextButton.getText().toString();
+                /* Based on the below logic user will be navigated to payment screen if he has finished all the consent forms */
+                if(intakeButtonText.equalsIgnoreCase(getString(R.string.intakeNextButtonText))) {
+                    moveToNextQuestion();
+                } else {
+                    Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 
@@ -94,8 +108,10 @@ public class InTakeActivity extends KeyboardHolderActivity {
         FragmentStatePagerAdapter pagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                InTakeFragment fragment = new InTakeFragment();
-                fragment.setFormModel(forms.get(position));
+                InTakeFragment fragment = getSelectedItem(position);
+                if(fragment !=null) {
+                    fragment.setFormModel(forms.get(position));
+                }
                 return fragment;
             }
 
@@ -218,5 +234,22 @@ public class InTakeActivity extends KeyboardHolderActivity {
             moveToPreviousQuestionOrBack();
         }
         return true;
+    }
+
+    /**
+     * This method will be invoked when a page is requested to create
+     */
+    public InTakeFragment getSelectedItem(int position) {
+
+        switch (position) {
+            case 0:
+                return new IntakeReviewvisitFragment();
+            case 1:
+                return new InTakecardiacSymptomsfragment();
+            case 2:
+                return new InTakeMedicalHistoryFragment();
+            default:
+                return null;
+        }
     }
 }
