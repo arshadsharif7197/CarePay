@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -227,5 +228,8 @@ public class ImageCaptureHelper {
 
     public void resetTargetView() {
         imageViewTarget.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_camera));
+    }
+
+    public void setImageFromCharStream(String imageCharStream) {
     }
 }
