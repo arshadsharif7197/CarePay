@@ -80,7 +80,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateDetailViewsAfterScan() {
+    protected void updateModelAndViewsAfterScan() {
         btnScanInsurance.setText(R.string.demogr_docs_rescan);
         tvInsuranceNum.setText("98765431");
         tvInsuranceNum.setVisibility(View.VISIBLE);

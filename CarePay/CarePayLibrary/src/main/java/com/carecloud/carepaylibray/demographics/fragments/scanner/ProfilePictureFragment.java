@@ -46,7 +46,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateDetailViewsAfterScan() {
+    protected void updateModelAndViewsAfterScan() {
         // maybe later
     }
 
