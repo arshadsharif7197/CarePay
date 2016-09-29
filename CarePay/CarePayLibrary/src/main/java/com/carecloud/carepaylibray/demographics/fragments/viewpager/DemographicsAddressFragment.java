@@ -96,12 +96,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             public void onGlobalLayout() {
                 int heightDiff = view.getRootView().getHeight() - view.getHeight();
                 if (heightDiff > SystemUtil.dpToPx(getActivity(), 200)) { // if more than 200 dp, it's probably a keyboard...
-                    if(isNextVisible) {
+                    if (isNextVisible) {
                         nextButton.setVisibility(View.GONE);
                         isNextVisible = false;
                     }
                 } else {
-                    if(!isNextVisible) {
+                    if (!isNextVisible) {
                         nextButton.setVisibility(View.VISIBLE);
                         isNextVisible = true;
                     }
@@ -213,8 +213,18 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             @Override
             public void onClick(View view) {
 //                if(checkReadyForNext()) { // if all valid; // TODO: 9/27/2016 uncomment
-                    // move to next (plus, eventually, perform backend stuff)
-                    ((DemographicsActivity) getActivity()).setCurrentItem(1, true);
+
+                // update the model with values from UI
+                model.setAddress1(address1EditText.getText().toString());
+                model.setAddress2(address2EditText.getText().toString());
+                model.setZipcode(zipCodeEditText.getText().toString());
+                model.setCity(cityEditText.getText().toString());
+                model.setState(stateAutoCompleteTextView.getText().toString());
+                model.setPhone(phoneNumberEditText.getText().toString());
+
+                ((DemographicsActivity)getActivity()).setAddressModel(model); // sent the model to the activity
+
+                ((DemographicsActivity) getActivity()).setCurrentItem(1, true);
 //                }
             }
         });
@@ -229,18 +239,24 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     }
 
-    public DemographicPayloadAddressModel getModel() {
-        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
-        if(payload != null) {
+    public DemographicPayloadAddressModel getTheModel() {
+        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
+        if (payload != null) {
             model = payload.getAddress();
+        } else {
+            model = new DemographicPayloadAddressModel();
         }
         return model;
     }
 
-    private void populateViewsWithModel() {
-        getModel();
+    public DemographicPayloadAddressModel getModel() {
+        return model;
+    }
 
-        if(model != null) {
+    private void populateViewsWithModel() {
+        getTheModel();
+
+        if (model != null) {
             // populate the views
             // TODO: 9/28/2016 add fields for name as well
             address1EditText.setText(model.getAddress1());
@@ -251,6 +267,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             phoneNumberEditText.setText(model.getPhone());
         } else {
             Log.v(LOG_TAG, "demographics address: views populated with defaults");
+            model = new DemographicPayloadAddressModel();
         }
     }
 
@@ -416,13 +433,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     private void enableNextButton() {
         boolean areAllNonEmpty =
-                !( isFirstNameEmpty
-                || isLastNameEmpty
-                || isAddressEmpty
-                || isZipEmpty
-                || isCityEmpty
-                || isStateEmtpy
-                || isPhoneEmpty );
+                !(isFirstNameEmpty
+                        || isLastNameEmpty
+                        || isAddressEmpty
+                        || isZipEmpty
+                        || isCityEmpty
+                        || isStateEmtpy
+                        || isPhoneEmpty);
 //        nextButton.setEnabled(areAllNonEmpty); // TODO: 9/27/2016 uncomment
         nextButton.setEnabled(true); // TODO: 9/27/2016 remove
     }
@@ -622,8 +639,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     private boolean checkState() {
         boolean isStateAbbrUnknown = true; // check valid state
-        for(String state : AddressUtil.states) {
-            if(state.equals(stateAbbr)) {
+        for (String state : AddressUtil.states) {
+            if (state.equals(stateAbbr)) {
                 isStateAbbrUnknown = false;
             }
         }

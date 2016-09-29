@@ -62,6 +62,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private ProgressBar demographicProgressBar;
 
     private DemographicModel modelGet = null;
+    private DemographicPayloadAddressModel addressModel;
 
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
         DemographicPayloadInfoPayloadModel infoModel = null;
@@ -154,99 +155,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         indicator.setViewPager(viewPager);
     }
 
-    public void confirmDemographicInformation() {
-        demographicProgressBar.setVisibility(View.VISIBLE);
-
-//        DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
-//        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
-//        demographicPayloadAddressModel.setAddress2("#800 Lejeune");
-//        demographicPayloadAddressModel.setCity("Miami");
-//        demographicPayloadAddressModel.setState("FL");
-//        demographicPayloadAddressModel.setZipcode("33127");
-//        demographicPayloadAddressModel.setPhone("18007654222");
-//
-//        DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
-//        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
-//        demographicPayloadPersonalDetailsModel.setMiddleName("I");
-//        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
-//        demographicPayloadPersonalDetailsModel.setDateOfBirth("02/11/1983");
-//        demographicPayloadPersonalDetailsModel.setPrimaryRace("Asian");
-//        demographicPayloadPersonalDetailsModel.setEthnicity("White");
-//        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
-//
-//        DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
-//        demographicPayloadDriversLicenseModel.setLicenseNumber("ER-4T3");
-//        demographicPayloadDriversLicenseModel.setLicenseState("OH");
-//
-//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel = new DemographicPayloadInsuranceModel();
-//        demographicPayloadInsuranceModel.setInsuranceMemberId("2513515464");
-//        demographicPayloadInsuranceModel.setInsurancePlan("Aetna");
-//        demographicPayloadInsuranceModel.setInsuranceProvider("Aetna Select");
-//        List<DemographicPayloadInsuranceModel> insurances = new ArrayList<>();
-//        insurances.add(demographicPayloadInsuranceModel);
-//        // second card
-//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel2 = new DemographicPayloadInsuranceModel();
-//        demographicPayloadInsuranceModel2.setInsuranceMemberId("999999999999");
-//        demographicPayloadInsuranceModel2.setInsurancePlan("Elect Choice EPO");
-//        demographicPayloadInsuranceModel2.setInsuranceProvider("BlueCross Blue Shield");
-//        insurances.add(demographicPayloadInsuranceModel2);
-//        // third card
-//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel3 = new DemographicPayloadInsuranceModel();
-//        demographicPayloadInsuranceModel3.setInsuranceMemberId("4444444444");
-//        demographicPayloadInsuranceModel3.setInsurancePlan("Aetna Value Network HMO");
-//        demographicPayloadInsuranceModel3.setInsuranceProvider("GHI");
-//        insurances.add(demographicPayloadInsuranceModel3);
-//
-//        List<String> updates = new ArrayList<String>();
-//        DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
-//        demographicPayloadModel.setAddress(demographicPayloadAddressModel);
-//        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
-//        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
-//        demographicPayloadModel.setInsurances(insurances);
-//        demographicPayloadModel.setUpdates(updates);
-
-        /*DemographicModel demographicPostModel = new DemographicModel();
-        demographicPostModel.setPayload(demographicPayloadModel);*/
-
-//        demographicProgressBar.setVisibility(View.VISIBLE);
-
-//        // build a model to post with all updated data
-        DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
-        // obtain the updated models from the pager fragments
-        DemographicPayloadAddressModel addressModel
-                = ((DemographicsAddressFragment)((DemographicPagerAdapter)viewPager.getAdapter()).getItem(0)).getModel();
-        demographicPayloadModel.setAddress(addressModel);
-
-        DemographicPayloadPersonalDetailsModel detailsModel =
-                ((DemographicsDetailsFragment)((DemographicPagerAdapter)viewPager.getAdapter()).getItem(1)).getModel();
-        demographicPayloadModel.setPersonalDetails(detailsModel);
-
-        DemographicsDocumentsFragment docsFrag = ((DemographicsDocumentsFragment)((DemographicPagerAdapter)viewPager.getAdapter()).getItem(2));
-        demographicPayloadModel.setDriversLicense(docsFrag.getModelDriversLicense());
-        demographicPayloadModel.setInsurances(docsFrag.getInsuranceModelList());
-
-        DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicPayloadModel);
-        call.enqueue(new Callback<DemographicModel>() {
-            @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                modelGet = response.body();
-                demographicProgressBar.setVisibility(View.GONE);
-                Log.d(LOG_TAG, "demogr post succeeded");
-
-                Intent appointmentIntent = new Intent(DemographicsActivity.this, AppointmentsActivity.class);
-                startActivity(appointmentIntent);
-                finish();
-            }
-
-            @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
-                Log.d(LOG_TAG, "demogr post failed", t);
-                demographicProgressBar.setVisibility(View.GONE);
-            }
-        });
-    }
-
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
@@ -272,6 +180,14 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     public DemographicModel getModel() {
         return modelGet;
+    }
+
+    public DemographicPayloadAddressModel getAddressModel() {
+        return addressModel;
+    }
+
+    public void setAddressModel(DemographicPayloadAddressModel addressModel) {
+        this.addressModel = addressModel;
     }
 
     public void setModel(DemographicModel modelGet) {
