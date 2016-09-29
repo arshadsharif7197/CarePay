@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.clover.sdk.util.CloverAccount;
@@ -44,7 +42,6 @@ public class CloverPaymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clover_payment);
-
         if (account == null) {
             {
                 account = CloverAccount.getAccount(this);

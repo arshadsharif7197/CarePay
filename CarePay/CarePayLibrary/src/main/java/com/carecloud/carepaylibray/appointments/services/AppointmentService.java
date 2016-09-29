@@ -17,4 +17,7 @@ public interface AppointmentService {
 
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
     Call<AppointmentsResultModel> confirmAppointment(@Body ArrayList<AppointmentModel> appointmentsModel);
+
+    @GET(value = "dev/workflow/carepay/patient_checkin/appointments/practice")
+    Call<AppointmentsResultModel> fetchCheckedInAppointments();
 }
