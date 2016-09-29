@@ -14,31 +14,19 @@
 
         <TextView
             android:id="@+id/textView6"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentTop="true"
             android:background="@drawable/icn_gear" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+        <ImageView
             android:id="@+id/titleHeaderTextview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="175dp"
+            android:layout_height="48dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-5dp"
-            android:includeFontPadding="false"
-            android:text="carepay"
-            android:textColor="#ffffff"
-            android:textSize="48sp" />
-
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/titleHeaderTextview"
-            android:layout_centerHorizontal="true"
-            android:text="Powered by CareCloud"
-            android:textColor="#b7c7cf"
-            android:textSize="15sp" />
+            android:scaleType="fitXY"
+            android:src="@drawable/cp_logo" />
 
 
         <LinearLayout
@@ -170,11 +158,12 @@
                 android:textColor="@color/charcoal"
                 android:textSize="28sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="1dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
@@ -185,10 +174,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/bottom_left_rounded_background"
                 android:drawableTop="@drawable/icn_checkout"
-                android:text="Check-Out"
                 android:gravity="bottom|center_horizontal"
-                android:paddingTop="70dp"
                 android:paddingBottom="20dp"
+                android:paddingTop="70dp"
+                android:text="Check-Out"
                 android:textColor="@color/charcoal"
                 android:textSize="28sp" />
 
@@ -199,10 +188,10 @@
                 android:layout_weight="1"
                 android:background="#ffffff"
                 android:drawableTop="@drawable/icn_retail"
-                android:text="Shop"
                 android:gravity="bottom|center_horizontal"
-                android:paddingTop="70dp"
                 android:paddingBottom="20dp"
+                android:paddingTop="70dp"
+                android:text="Shop"
                 android:textColor="@color/charcoal"
                 android:textSize="28sp" />
 
@@ -213,8 +202,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/bottom_right_rounded_background"
                 android:gravity="bottom|center_horizontal"
-                android:paddingTop="70dp"
                 android:paddingBottom="20dp"
+                android:paddingTop="70dp"
                 android:textColor="@color/charcoal"
                 android:textSize="28sp" />
 

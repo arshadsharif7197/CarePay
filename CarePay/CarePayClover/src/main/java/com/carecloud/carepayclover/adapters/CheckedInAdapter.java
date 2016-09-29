@@ -6,30 +6,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.carecloud.carepayclover.R;
-import com.carecloud.carepayclover.models.AppointmentsCheckedInPayloadAppointmentModel;
-import com.carecloud.carepayclover.models.PatientModel;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentPatientModel;
 
 import java.util.ArrayList;
 
 /**
- * Created by Aditya on 10/20/15.
+ * Created by Jahirul on 09/27/15.
  */
 public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.CartViewHolder> {
 
     private final Context mContext;
 
-    ArrayList<AppointmentsCheckedInPayloadAppointmentModel> mData;
+    ArrayList<Appointment> mData;
 
-    public CheckedInAdapter(Context context, ArrayList<AppointmentsCheckedInPayloadAppointmentModel> data) {
+    public CheckedInAdapter(Context context, ArrayList<Appointment> data) {
         mContext = context;
         mData = data;
         System.out.println("size: " + data.size());
     }
 
-    private AppointmentsCheckedInPayloadAppointmentModel getAppointmentById(String id) {
-        for (AppointmentsCheckedInPayloadAppointmentModel model : mData) {
+    private Appointment getAppointmentById(String id) {
+        for (Appointment model : mData) {
             if (id.equals(model.getPayload().getId()))
                 return model;
         }
@@ -46,8 +45,8 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
 
     @Override
     public void onBindViewHolder(CheckedInAdapter.CartViewHolder holder, final int position) {
-        AppointmentsCheckedInPayloadAppointmentModel mMaster = mData.get(position);
-        PatientModel patientModel=mMaster.getPayload().getPatient();
+        Appointment mMaster = mData.get(position);
+        AppointmentPatientModel patientModel=mMaster.getPayload().getPatient();
         holder.patientNameTextView.setText(patientModel.getFirstName()+" " + patientModel.getLastName());
         holder.patientBalanceTextView.setText("Balance: $"+patientModel.getGenderId());
     }
@@ -60,7 +59,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
         return 0;
     }
 
-    public void setData(ArrayList<AppointmentsCheckedInPayloadAppointmentModel> _data) {
+    public void setData(ArrayList<Appointment> _data) {
         this.mData = _data;
     }
 

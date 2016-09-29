@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class CloverMainActivity extends AppCompatActivity {
@@ -21,9 +19,7 @@ public class CloverMainActivity extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        TextView titleHeaderTextview= (TextView) findViewById(R.id.titleHeaderTextview);
-        String sourceString = "care<b>pay</b>";
-        titleHeaderTextview.setText(Html.fromHtml(sourceString));
+
 
         ((TextView) findViewById(R.id.checkinTextView)).setOnClickListener(new View.OnClickListener() {
             @Override

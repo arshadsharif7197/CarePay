@@ -24,5 +24,6 @@
   <color name="ocean_boat_blue">#087ebd</color>
   <color name="overlay_border_blue">#3AABDD</color>
   <color name="overlay_green">#7ED321</color>
+  <color name="checkin_item_border">#80C8E9</color>
 </resources>
 

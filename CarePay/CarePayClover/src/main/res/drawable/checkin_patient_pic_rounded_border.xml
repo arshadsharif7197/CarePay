@@ -4,7 +4,7 @@
     <size
         android:width="140dp"
         android:height="140dp" />
-    <stroke android:color="@color/white" android:width="10dp"/>
-    <padding android:bottom="10dp"/>
+    <stroke android:color="@color/checkin_item_border" android:width="8dp"/>
+
 
 </shape>
