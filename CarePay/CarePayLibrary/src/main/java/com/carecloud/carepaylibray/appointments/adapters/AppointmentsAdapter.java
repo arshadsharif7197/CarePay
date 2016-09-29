@@ -4,10 +4,6 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +16,8 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
+import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
@@ -69,32 +67,30 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             String splitStr[] = item.getAppointmentTime().split(" ");
             if (splitStr.length > 3) {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(splitStr[0] + "\n" + splitStr[1].toUpperCase() + "\n" + splitStr[2] + " " + splitStr[3]);
-
-                Spannable span = new SpannableString(stringBuilder);
-                span.setSpan(new RelativeSizeSpan(1.75f), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.Feldgrau)), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                SystemUtil.setProximaNovaRegularTypeface(context, holder.time);
-
-                if (item.isCheckedIn()) {
-                    holder.time.setText(context.getString(R.string.checked_in_label));
-                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                if(item.isCheckedIn()) {
+                    holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
+                    holder.upcomingDateLinearLayout.setVisibility(View.GONE);
+                    holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
-                    holder.time.setText(span);
-                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.Feldgrau));
+                    holder.todayTimeLinearLayout.setVisibility(View.GONE);
+                    holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
+                    holder.upcomingDateTextView.setText(splitStr[0]);
+                    SystemUtil.setProximaNovaLightTypeface(context, holder.upcomingDateTextView);
+                    holder.upcomingMonthTextView.setText(splitStr[1].toUpperCase());
+                    holder.upcomingTimeTextView.setText(splitStr[2] + " " + splitStr[3]);
                 }
             } else {
-                if (item.isCheckedIn()) {
-                    holder.time.setText(context.getString(R.string.checked_in_label));
-                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateLinearLayout.setVisibility(View.GONE);
+                if(item.isCheckedIn()) {
+                    holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
-                    holder.time.setText(item.getAppointmentTime());
-                    holder.time.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
+                    holder.todayTimeTextView.setText(item.getAppointmentTime().replaceAll("UTC", ""));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
                 }
             }
-
-            SystemUtil.setProximaNovaRegularTypeface(context, holder.time);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -186,16 +182,18 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
-        private TextView doctorName, doctorType, time, shortName;
-        private CustomProxyNovaSemiBoldLabel appointmentSectionHeaderTitle;
+        private TextView shortName, upcomingDateTextView;
+        private CustomGothamRoundedBoldLabel todayTimeTextView;
+        private CustomProxyNovaSemiBoldLabel appointmentSectionHeaderTitle, doctorName;
+        private CustomProxyNovaRegularLabel upcomingMonthTextView, upcomingTimeTextView, doctorType;
         private ImageView cellAvatar;
-        private LinearLayout appointmentSectionLinearLayout, appointmentItemLinearLayout;
+        private LinearLayout appointmentSectionLinearLayout, appointmentItemLinearLayout,
+                todayTimeLinearLayout, upcomingDateLinearLayout;
 
         AppointmentViewHolder(View itemView) {
             super(itemView);
-            doctorName = (TextView) itemView.findViewById(R.id.doctor_name);
-            doctorType = (TextView) itemView.findViewById(R.id.doctor_type);
-            time = (TextView) itemView.findViewById(R.id.time);
+            doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
+            doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
 
             shortName = (TextView) itemView.findViewById(R.id.avtarTextView);
             cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvtarImageView);
@@ -203,6 +201,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
             appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
             appointmentSectionHeaderTitle = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointments_section_header_title);
+
+            todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
+            upcomingDateLinearLayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLinearlayout);
+
+            todayTimeTextView = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.todayTimeTextView);
+            upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
+
+            upcomingMonthTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingMonthTextView);
+            upcomingTimeTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingTimeTextView);
         }
     }
 }
