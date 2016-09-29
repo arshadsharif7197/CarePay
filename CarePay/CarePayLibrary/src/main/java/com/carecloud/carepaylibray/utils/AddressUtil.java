@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.utils;
 
-import android.content.Context;
 import com.smartystreets.api.Credentials;
 import com.smartystreets.api.SharedCredentials;
 import com.smartystreets.api.exceptions.SmartyException;

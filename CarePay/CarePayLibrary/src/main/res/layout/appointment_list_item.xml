@@ -13,13 +13,13 @@
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
             android:id="@+id/appointments_section_header_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/apt_skicky_header_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_title_indicator_title_padding"
+            android:gravity="center_vertical"
             android:paddingLeft="@dimen/list_apt_padding_right"
-            android:paddingTop="@dimen/apt_available_hours_list_header_padding_top"
             android:textColor="@color/lightSlateGray"
+            android:background="@color/light_gray"
             android:textSize="@dimen/textview_textsize" />
     </LinearLayout>
 
@@ -27,7 +27,9 @@
         android:id="@+id/appointment_item_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/default_title_indicator_title_padding"
+        android:layout_marginTop="@dimen/default_title_indicator_title_padding"
+        android:layout_marginLeft="@dimen/default_title_indicator_title_padding"
+        android:layout_marginRight="@dimen/default_title_indicator_title_padding"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -108,6 +110,7 @@
                 android:textSize="@dimen/button_textsize_medium"
                 android:textStyle="bold" />
         </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"

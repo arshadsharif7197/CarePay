@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.customcomponents;
 /**
  * Created by harshal_patil on 9/26/2016.
  */
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.design.widget.AppBarLayout;
@@ -10,8 +11,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+
 import com.carecloud.carepaylibrary.R;
 
 public class CustomInputEditText extends TextInputLayout {

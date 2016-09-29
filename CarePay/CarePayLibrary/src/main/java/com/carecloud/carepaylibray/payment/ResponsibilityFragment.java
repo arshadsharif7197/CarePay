@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.payment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
@@ -42,6 +48,7 @@ public class ResponsibilityFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+
         setGothamRoundedMediumTypeface(mActivity, title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
@@ -49,7 +56,36 @@ public class ResponsibilityFragment extends Fragment {
 
         setTypefaces(view);
 
+        Button payAtPracticeButton = (Button) view.findViewById(R.id.respons_pay);
+
+        payAtPracticeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                payAndFetchCheckedInAppointment();
+            }
+        });
+
+        Button payNowButton = (Button) view.findViewById(R.id.respons_pay_now);
+        payNowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                payAndFetchCheckedInAppointment();
+            }
+        });
+
         return view;
+    }
+
+    private void payAndFetchCheckedInAppointment() {
+        Intent intent = new Intent(ResponsibilityFragment.this.getActivity(), AppointmentsActivity.class);
+        AppointmentModel appointmentModel = AppointmentsActivity.model;
+        if(appointmentModel!=null) {
+            appointmentModel.setCheckedIn(true);
+        }
+
+        AppointmentsActivity.model = null; // appointment clicked item is cleared once payment is done.
+        intent.putExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE,appointmentModel);
+        startActivity(intent);
     }
 
     /**
