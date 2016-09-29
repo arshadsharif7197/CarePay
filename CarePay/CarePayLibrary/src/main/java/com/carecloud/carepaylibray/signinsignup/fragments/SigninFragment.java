@@ -29,13 +29,22 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import org.parceler.Parcels;
+
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -307,13 +316,35 @@ public class SigninFragment extends Fragment {
         passwordTexInput.setError(null);
     }
 
-    private void launchUser() {
+    private void launchUser(DemographicModel demographicModel) {
 //        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
         Log.v(LOG_TAG, "user " + CognitoAppHelper.getCurrUser() + " signed in");
-        Intent userActivity = new Intent(getActivity(), DemographicsActivity.class); // TODO: 9/27/2016 remove
-        startActivity(userActivity);
+        Intent intent = new Intent(getActivity(), DemographicsActivity.class); // TODO: 9/27/2016 remove
+        intent.putExtra("demographics_model", demographicModel);
+        startActivity(intent);
         reset();
         getActivity().finish();
+    }
+
+    private void getDemographicInformation() {
+        progressBar.setVisibility(View.VISIBLE);
+        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
+        Call<DemographicModel> call = apptService.fetchDemographics();
+        call.enqueue(new Callback<DemographicModel>() {
+            @Override
+            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+                DemographicModel demographicModel = response.body();
+                progressBar.setVisibility(View.GONE);
+                Log.v(LOG_TAG, "demographic info fetched");
+                launchUser(demographicModel);
+            }
+
+            @Override
+            public void onFailure(Call<DemographicModel> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.e(LOG_TAG, "failed fetching demogr info", t);
+            }
+        });
     }
 
     // cognito
@@ -325,7 +356,8 @@ public class SigninFragment extends Fragment {
         CognitoAppHelper.signIn(getActivity(), userName, password, progressBar, new CognitoActionCallback() {
             @Override
             public void executeAction() {
-                launchUser();
+//                launchUser(); // TODO: 9/28/2016 uncomment
+                getDemographicInformation(); // TODO: 9/28/2016 remove
             }
         });
     }

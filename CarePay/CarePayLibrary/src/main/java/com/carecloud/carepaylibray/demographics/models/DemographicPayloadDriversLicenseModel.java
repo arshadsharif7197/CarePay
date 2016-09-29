@@ -1,11 +1,13 @@
 package com.carecloud.carepaylibray.demographics.models;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemographicPayloadDriversLicenseModel {
+public class DemographicPayloadDriversLicenseModel implements Parcelable{
 
     @SerializedName("license_photo")
     @Expose
@@ -16,6 +18,40 @@ public class DemographicPayloadDriversLicenseModel {
     @SerializedName("license_state")
     @Expose
     private String licenseState;
+
+    public DemographicPayloadDriversLicenseModel() {
+
+    }
+
+    protected DemographicPayloadDriversLicenseModel(android.os.Parcel in) {
+        licensePhoto = in.readString();
+        licenseNumber = in.readString();
+        licenseState = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeString(licensePhoto);
+        dest.writeString(licenseNumber);
+        dest.writeString(licenseState);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<DemographicPayloadDriversLicenseModel> CREATOR = new Creator<DemographicPayloadDriversLicenseModel>() {
+        @Override
+        public DemographicPayloadDriversLicenseModel createFromParcel(android.os.Parcel in) {
+            return new DemographicPayloadDriversLicenseModel(in);
+        }
+
+        @Override
+        public DemographicPayloadDriversLicenseModel[] newArray(int size) {
+            return new DemographicPayloadDriversLicenseModel[size];
+        }
+    };
 
     /**
      *

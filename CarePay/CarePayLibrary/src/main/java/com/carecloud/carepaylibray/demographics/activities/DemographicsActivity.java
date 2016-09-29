@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,6 +41,8 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,13 +109,15 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
             setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
+        } else if(intent.hasExtra("demographics_model")) {
+            demographicModel = intent.getParcelableExtra("demographics_model");
         }
+        // set the progress bar
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
 
         // b/e
         isStoragePermissionGranted();
-        getDemographicInformation();
         setupPager();
     }
 
@@ -145,26 +151,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setOnPageChangeListener(pageChangeListener);
         indicator.setViewPager(viewPager);
-    }
-
-    private void getDemographicInformation() {
-        demographicProgressBar.setVisibility(View.VISIBLE);
-        DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.fetchDemographics();
-        call.enqueue(new Callback<DemographicModel>() {
-            @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                demographicModel = response.body();
-                demographicProgressBar.setVisibility(View.GONE);
-                Log.v(LOG_TAG, "demographic info fetched");
-            }
-
-            @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
-                demographicProgressBar.setVisibility(View.GONE);
-                Log.e(LOG_TAG, "failed fetching demogr info", t);
-            }
-        });
     }
 
     public void confirmDemographicInformation() {

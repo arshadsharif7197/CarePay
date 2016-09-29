@@ -1,12 +1,17 @@
 package com.carecloud.carepaylibray.base.models;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+
 /**
  * Created by Jahirul Bhuiyan on 9/20/2016.
  */
-public class BaseTransitionsDataModel {
+public class BaseTransitionsDataModel implements Parcelable {
 
     @SerializedName("name")
     @Expose
@@ -22,11 +27,45 @@ public class BaseTransitionsDataModel {
     private String type;
     @SerializedName("properties")
     @Expose
-
-
     private JsonObject properties;
 
     private Gson gson = new Gson();
+
+    public BaseTransitionsDataModel() {
+
+    }
+
+    protected BaseTransitionsDataModel(Parcel in) {
+        name = in.readString();
+        label = in.readString();
+        action = in.readParcelable(BaseTransitionsActionModel.class.getClassLoader());
+        type = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(label);
+        dest.writeParcelable(action, flags);
+        dest.writeString(type);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<BaseTransitionsDataModel> CREATOR = new Creator<BaseTransitionsDataModel>() {
+        @Override
+        public BaseTransitionsDataModel createFromParcel(Parcel in) {
+            return new BaseTransitionsDataModel(in);
+        }
+
+        @Override
+        public BaseTransitionsDataModel[] newArray(int size) {
+            return new BaseTransitionsDataModel[size];
+        }
+    };
 
     /**
      *

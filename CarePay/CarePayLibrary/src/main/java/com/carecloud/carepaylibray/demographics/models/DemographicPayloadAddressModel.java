@@ -1,12 +1,14 @@
 package com.carecloud.carepaylibray.demographics.models;
 
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemographicPayloadAddressModel{
+public class DemographicPayloadAddressModel implements Parcelable {
 
     @SerializedName("phone")
     @Expose
@@ -29,6 +31,48 @@ public class DemographicPayloadAddressModel{
     @SerializedName("country")
     @Expose
     private String country;
+
+    public DemographicPayloadAddressModel() {
+
+    }
+
+    protected DemographicPayloadAddressModel(android.os.Parcel in) {
+        phone = in.readString();
+        zipcode = in.readString();
+        address1 = in.readString();
+        address2 = in.readString();
+        city = in.readString();
+        state = in.readString();
+        country = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeString(phone);
+        dest.writeString(zipcode);
+        dest.writeString(address1);
+        dest.writeString(address2);
+        dest.writeString(city);
+        dest.writeString(state);
+        dest.writeString(country);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<DemographicPayloadAddressModel> CREATOR = new Creator<DemographicPayloadAddressModel>() {
+        @Override
+        public DemographicPayloadAddressModel createFromParcel(android.os.Parcel in) {
+            return new DemographicPayloadAddressModel(in);
+        }
+
+        @Override
+        public DemographicPayloadAddressModel[] newArray(int size) {
+            return new DemographicPayloadAddressModel[size];
+        }
+    };
 
     /**
      *

@@ -1,9 +1,13 @@
 package com.carecloud.carepaylibray.base.models;
 
+import android.os.Parcelable;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
  */
@@ -81,6 +85,5 @@ public abstract class BaseTransitionsModel {
     public void setData(JsonObject data) {
         this.data = data;
     }
-
 
 }

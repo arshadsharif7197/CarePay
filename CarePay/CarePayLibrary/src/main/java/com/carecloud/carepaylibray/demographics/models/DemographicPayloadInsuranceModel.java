@@ -1,12 +1,15 @@
 package com.carecloud.carepaylibray.demographics.models;
+import android.os.Parcel;
+
 import com.carecloud.carepaylibray.base.models.BasePersonModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemographicPayloadInsuranceModel extends BasePersonModel{
+public class DemographicPayloadInsuranceModel extends BasePersonModel {
 
     @SerializedName("insurance_photo")
     @Expose
@@ -20,6 +23,39 @@ public class DemographicPayloadInsuranceModel extends BasePersonModel{
     @SerializedName("insurance_member_id")
     @Expose
     private String insuranceMemberId;
+
+    public DemographicPayloadInsuranceModel() {
+
+    }
+
+    protected DemographicPayloadInsuranceModel(Parcel in) {
+        super(in);
+        insurancePhoto = in.readString();
+        insuranceProvider = in.readString();
+        insurancePlan = in.readString();
+        insuranceMemberId = in.readString();
+
+    }
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(insurancePhoto);
+        dest.writeString(insuranceProvider);
+        dest.writeString(insurancePlan);
+        dest.writeString(insuranceMemberId);
+    }
+
+    public static final Creator<DemographicPayloadInsuranceModel> CREATOR = new Creator<DemographicPayloadInsuranceModel>() {
+        @Override
+        public DemographicPayloadInsuranceModel createFromParcel(Parcel in) {
+            return new DemographicPayloadInsuranceModel(in);
+        }
+
+        @Override
+        public DemographicPayloadInsuranceModel[] newArray(int size) {
+            return new DemographicPayloadInsuranceModel[size];
+        }
+    };
 
     /**
      *

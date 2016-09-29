@@ -1,14 +1,19 @@
 package com.carecloud.carepaylibray.demographics.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemographicPayloadInfoPayloadModel {
+public class DemographicPayloadInfoPayloadModel implements Parcelable {
 
     @SerializedName("address")
     @Expose
@@ -25,6 +30,44 @@ public class DemographicPayloadInfoPayloadModel {
     @SerializedName("updates")
     @Expose
     private List<String> updates = new ArrayList<String>();
+
+    public DemographicPayloadInfoPayloadModel() {
+
+    }
+
+    protected DemographicPayloadInfoPayloadModel(Parcel in) {
+        address = in.readParcelable(DemographicPayloadAddressModel.class.getClassLoader());
+        personalDetails = in.readParcelable(DemographicPayloadPersonalDetailsModel.class.getClassLoader());
+        driversLicense = in.readParcelable(DemographicPayloadDriversLicenseModel.class.getClassLoader());
+        insurances = in.createTypedArrayList(DemographicPayloadInsuranceModel.CREATOR);
+        updates = in.createStringArrayList();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(address, flags);
+        dest.writeParcelable(personalDetails, flags);
+        dest.writeParcelable(driversLicense, flags);
+        dest.writeTypedList(insurances);
+        dest.writeStringList(updates);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<DemographicPayloadInfoPayloadModel> CREATOR = new Creator<DemographicPayloadInfoPayloadModel>() {
+        @Override
+        public DemographicPayloadInfoPayloadModel createFromParcel(Parcel in) {
+            return new DemographicPayloadInfoPayloadModel(in);
+        }
+
+        @Override
+        public DemographicPayloadInfoPayloadModel[] newArray(int size) {
+            return new DemographicPayloadInfoPayloadModel[size];
+        }
+    };
 
     /**
      *
