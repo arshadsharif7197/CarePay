@@ -173,6 +173,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
      * Update the title according to the index of the current form
      */
     private void updateTitle() {
+        SystemUtil.hideSoftKeyboard(this);
         // set the title to show the first screen
         formsToolbarTitleTv.setText(String.format(Locale.getDefault(),
                                                   "Intake Form %d of %d", intakeCurrentPageIndex + 1,
