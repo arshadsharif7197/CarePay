@@ -55,18 +55,18 @@ import retrofit2.Response;
  * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
-
+    
     private TextView    titleTextView;
     private int         currentPageIndex;
     private ViewPager   viewPager;
     private ProgressBar demographicProgressBar;
-
+    
     private DemographicModel modelGet = null;
     private DemographicPayloadAddressModel addressModel;
     private DemographicPayloadPersonalDetailsModel detailsModel;
     private DemographicPayloadDriversLicenseModel  modelDriversLicense;
     private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
-
+    
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
         DemographicPayloadInfoPayloadModel infoModel = null;
         if (modelGet != null) {
@@ -80,26 +80,26 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         return infoModel;
     }
-
+    
     @Override
     public int getLayoutRes() {
         return R.layout.activity_demographics;
     }
-
+    
     @Override
     public int getContentsHolderId() {
         return R.id.demogr_content_holder;
     }
-
+    
     @Override
     public int getKeyboardHolderId() {
         return R.id.demogr_keyboard_holder;
     }
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
         Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
@@ -107,7 +107,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         titleTextView.setText("Address");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
         (DemographicsActivity.this).setSupportActionBar(toolbar);
-
+        
         // set the language
         Intent intent = getIntent();
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
@@ -120,12 +120,12 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         // set the progress bar
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
-
+        
         // b/e
         isStoragePermissionGranted();
         setupPager();
     }
-
+    
     private void setupPager() {
         currentPageIndex = 0;
         DemographicPagerAdapter demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
@@ -136,7 +136,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
-
+            
             @Override
             public void onPageSelected(int position) {
                 if (position != 0) {
@@ -146,18 +146,18 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 currentPageIndex = position;
                 setScreenTitle(position);
             }
-
+            
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
-
+        
         TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setOnPageChangeListener(pageChangeListener);
         indicator.setViewPager(viewPager);
     }
-
+    
     private void setScreenTitle(int position) {
         switch (position) {
             case 0:
@@ -176,78 +176,78 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 break;
         }
     }
-
+    
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
     }
-
+    
     public DemographicModel getModel() {
         return modelGet;
     }
-
+    
     public DemographicPayloadPersonalDetailsModel getDetailsModel() {
         return detailsModel;
     }
-
+    
     public void setAddressModel(DemographicPayloadAddressModel addressModel) {
         this.addressModel = addressModel;
     }
-
+    
     public DemographicPayloadAddressModel getAddressModel() {
         return addressModel;
     }
-
+    
     public void setDetailsModel(DemographicPayloadPersonalDetailsModel detailsModel) {
         this.detailsModel = detailsModel;
     }
-
+    
     public DemographicPayloadDriversLicenseModel getModelDriversLicense() {
         return modelDriversLicense;
     }
-
+    
     public void setModelDriversLicense(DemographicPayloadDriversLicenseModel modelDriversLicense) {
         this.modelDriversLicense = modelDriversLicense;
     }
-
+    
     public void setModel(DemographicModel modelGet) {
         this.modelGet = modelGet;
     }
-
+    
     public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
         return insuranceModelList;
     }
-
+    
     public void setInsuranceModelList(List<DemographicPayloadInsuranceModel> insuranceModelList) {
         this.insuranceModelList = insuranceModelList;
     }
-
+    
     /**
      * Adapter for the viewpager
      */
-
+    
     public static class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-
+        
         final         int   PAGE_COUNT = 4;
         private final int[] ICONS      = new int[]{
-                R.drawable.signup_step1_indicator,
-                R.drawable.signup_step2_indicator,
-                R.drawable.signup_step3_indicator,
-                R.drawable.signup_step4_indicator
+        R.drawable.signup_step1_indicator,
+        R.drawable.signup_step2_indicator,
+        R.drawable.signup_step3_indicator,
+        R.drawable.signup_step4_indicator
         };
-
+        
         /**
          * Constructor of the class
          */
         public DemographicPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
+        
         /**
          * This method will be invoked when a page is requested to create
          */
         @Override
         public Fragment getItem(int position) {
-
+            
             switch (position) {
                 case 0:
                     return new DemographicsAddressFragment();
@@ -261,7 +261,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                     return null;
             }
         }
-
+        
         /**
          * Returns the number of pages
          */
@@ -269,33 +269,33 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         public int getCount() {
             return PAGE_COUNT;
         }
-
-
+        
+        
         @Override
         public int getIconResId(int index) {
             return ICONS[index];
         }
-
+        
     }
-
+    
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                    checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 //   Log.v(TAG, "Permission is granted");
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
                                                   new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                      Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
     }
-
+    
     /**
      * Returns the fragment in the view pager at a certain index. Used in tests
      *
@@ -305,7 +305,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     public Fragment getFragmentAt(int pos) {
         return ((DemographicPagerAdapter) viewPager.getAdapter()).getItem(pos);
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -318,5 +318,5 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         return true;
     }
-
+    
 }

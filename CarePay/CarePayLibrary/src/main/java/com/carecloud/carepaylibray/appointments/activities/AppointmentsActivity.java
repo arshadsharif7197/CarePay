@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.appointments.activities;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragme
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
@@ -104,6 +106,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -117,6 +120,8 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             startActivity(intent);
             AppointmentsActivity.model = null; // appointment clicked item is cleared.
         } else if (id == R.id.nav_settings) {
+            Intent demographicActivityIntent= new Intent(AppointmentsActivity.this, DemographicsActivity.class);
+            startActivity(demographicActivityIntent);
 
         } else if (id == R.id.nav_logout) {
             // perform log out, of course

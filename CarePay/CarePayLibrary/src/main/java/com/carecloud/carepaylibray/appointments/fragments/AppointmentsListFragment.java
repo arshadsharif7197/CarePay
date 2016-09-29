@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Handler;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +53,7 @@ public class AppointmentsListFragment extends Fragment {
     private AppointmentModel appointmentModel;
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
+    private SwipeRefreshLayout appointmentRefresh;
 
     private AppointmentsAdapter appointmentsAdapter;
     private ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
@@ -236,11 +239,10 @@ public class AppointmentsListFragment extends Fragment {
         final View appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
-
+        appointmentRefresh=(SwipeRefreshLayout)appointmentsListView.findViewById(R.id.swipeRefreshLayout);
+        appointmentRefresh.setRefreshing(false);
         appointmentProgressBar = (ProgressBar) appointmentsListView.findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
-        getAppointmentInformation();
-
         bundle = getArguments();
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
@@ -251,6 +253,8 @@ public class AppointmentsListFragment extends Fragment {
                 startActivity(appointmentIntent);
             }
         });
+        getAppointmentInformation();
+      //  onRefresh();
 
         return appointmentsListView;
     }
@@ -412,6 +416,7 @@ public class AppointmentsListFragment extends Fragment {
                                     appointmentsItems.add(model);
                                 }
                             }
+                            appointmentRefresh.setRefreshing(false);
                         } catch (ParseException ex) {
                             Log.e(LOG_TAG, "Parse Exception caught : " + ex.getMessage());
                         }
@@ -421,8 +426,7 @@ public class AppointmentsListFragment extends Fragment {
 
                 appointmentListWithHeader = getAppointmentListWithHeader();
                 if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-                    appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                            appointmentListWithHeader, appointmentsListFragment);
+                    appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
                     appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     appointmentRecyclerView.setAdapter(appointmentsAdapter);
                 } else {
@@ -448,6 +452,7 @@ public class AppointmentsListFragment extends Fragment {
                         }
                     }
                 }
+
             }
 
             @Override
@@ -456,6 +461,20 @@ public class AppointmentsListFragment extends Fragment {
             }
         });
     }
+  /*  private void onRefresh(){
+        appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (appointmentsResultModel!=(new AppointmentsResultModel())) {
+                    AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
+                    appointmentListWithHeader.remove(appointmentSectionHeaderModel);
+                    appointmentListWithHeader.remove(appointmentModel);
+
+                    getAppointmentInformation();
+                }
+            }
+        });
+    }*/
 
     /*Method to return appointmentListWithHeader*/
     private ArrayList<Object> getAppointmentListWithHeader() {
