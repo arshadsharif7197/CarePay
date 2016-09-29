@@ -113,6 +113,7 @@ public class ResponsibilityFragment extends Fragment {
                 AppointmentsActivity.model = null;
                 intent.putExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE,appointmentModel);
                 startActivity(intent);
+                getActivity().finish();
             }
 
             @Override

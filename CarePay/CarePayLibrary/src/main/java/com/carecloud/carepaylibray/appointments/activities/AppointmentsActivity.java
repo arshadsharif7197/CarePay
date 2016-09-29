@@ -119,6 +119,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             Intent intent = new Intent(this, PaymentActivity.class);
             startActivity(intent);
             AppointmentsActivity.model = null; // appointment clicked item is cleared.
+            finish();
         } else if (id == R.id.nav_settings) {
             Intent demographicActivityIntent= new Intent(AppointmentsActivity.this, DemographicsActivity.class);
             startActivity(demographicActivityIntent);
