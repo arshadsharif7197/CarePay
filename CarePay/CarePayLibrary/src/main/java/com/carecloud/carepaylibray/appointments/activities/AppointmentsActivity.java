@@ -20,7 +20,6 @@ import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragme
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
