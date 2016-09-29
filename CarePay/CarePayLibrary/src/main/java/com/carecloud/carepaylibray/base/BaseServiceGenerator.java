@@ -93,4 +93,34 @@ public class BaseServiceGenerator {
 
         return retrofit.create(serviceClass);
     }
+
+    public  <S> S createServicePractice(Class<S> serviceClass) {
+        httpClient.readTimeout(ResponseConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        httpClient.connectTimeout(ResponseConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        httpClient.writeTimeout(ResponseConstants.WRITE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                Request.Builder requestBuilderWithToken = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Accept", "application/json")
+                        .header("username", "rahul.girase0@gmail.com")
+                        .method(original.method(), original.body());
+                Request request = requestBuilderWithToken.build();
+                return chain.proceed(request);
+
+            }
+        });
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpClient.addInterceptor(interceptor);
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = builder.client(client).build();
+
+        return retrofit.create(serviceClass);
+    }
 }
