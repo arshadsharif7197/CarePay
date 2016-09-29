@@ -37,7 +37,7 @@ public class CheckedInActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.goBackTextview)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CheckedInActivity.this.finish();
+                onBackPressed();
             }
         });
     }
@@ -48,9 +48,11 @@ public class CheckedInActivity extends AppCompatActivity {
         call.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-                CheckedInAdapter CheckedInAdapter = new CheckedInAdapter(CheckedInActivity.this,new ArrayList<Appointment>( response.body().getPayload().getAppointments()));
-                appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(CheckedInActivity.this));
-                appointmentsRecyclerView.setAdapter(CheckedInAdapter);
+                if(response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
+                    CheckedInAdapter CheckedInAdapter = new CheckedInAdapter(CheckedInActivity.this, new ArrayList<Appointment>(response.body().getPayload().getAppointments()));
+                    appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(CheckedInActivity.this));
+                    appointmentsRecyclerView.setAdapter(CheckedInAdapter);
+                }
             }
 
             @Override

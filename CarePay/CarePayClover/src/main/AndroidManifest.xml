@@ -11,7 +11,6 @@
     <uses-permission android:name="clover.permission.ACTION_PAY" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="clover.permission.ACTION_SECURE_PAY" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -44,6 +43,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".CloverMainActivity" />
         </activity>
+        <activity
+            android:name=".RotateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".CheckedInActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CheckedInActivity" />
+        </activity>
+        <activity android:name=".PatientResponsibilityActivity"></activity>
     </application>
 
 </manifest>
