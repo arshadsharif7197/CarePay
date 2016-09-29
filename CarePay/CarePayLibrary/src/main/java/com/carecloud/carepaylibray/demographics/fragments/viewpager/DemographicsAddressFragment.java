@@ -310,10 +310,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isAddressEmpty = StringUtil.isNullOrEmpty(address1EditText.getText().toString());
+                String addr1 = address1EditText.getText().toString();
+                isAddressEmpty = StringUtil.isNullOrEmpty(addr1);
                 if (!isAddressEmpty) {
                     address1TextInputLayout.setError(null);
                     address1TextInputLayout.setErrorEnabled(false);
+                    model.setAddress1(addr1);
                 }
                 enableNextButton();
             }
@@ -331,10 +333,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isZipEmpty = StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString());
+                String zip = zipCodeEditText.getText().toString();
+                isZipEmpty = StringUtil.isNullOrEmpty(zip);
                 if (!isZipEmpty) {
                     zipCodeTextInputLayout.setError(null);
                     zipCodeTextInputLayout.setErrorEnabled(false);
+                    model.setZipcode(zip);
                 }
                 enableNextButton();
             }
@@ -352,10 +356,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isCityEmpty = StringUtil.isNullOrEmpty(cityEditText.getText().toString());
+                String city = cityEditText.getText().toString();
+                isCityEmpty = StringUtil.isNullOrEmpty(city);
                 if (!isCityEmpty) {
                     cityTextInputLayout.setError(null);
                     cityTextInputLayout.setErrorEnabled(false);
+                    model.setCity(city);
                 }
                 enableNextButton();
             }
@@ -372,11 +378,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isStateEmtpy = StringUtil.isNullOrEmpty(stateAutoCompleteTextView.getText().toString());
+                String state = stateAutoCompleteTextView.getText().toString();
+                isStateEmtpy = StringUtil.isNullOrEmpty(state);
                 if (!isStateEmtpy) {
                     stateTextInputLayout.setError(null);
                     stateTextInputLayout.setErrorEnabled(false);
-                    stateAbbr = stateAutoCompleteTextView.getText().toString();
+                    stateAbbr = state;
+                    model.setState(state);
                 }
                 enableNextButton();
             }
@@ -394,10 +402,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isPhoneEmpty = StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString());
+                String phone = phoneNumberEditText.getText().toString();
+                isPhoneEmpty = StringUtil.isNullOrEmpty(phone);
                 if (!isPhoneEmpty) {
                     phNoTextInputLayout.setError(null);
                     phNoTextInputLayout.setErrorEnabled(false);
+                    model.setPhone(phone);
                 }
                 enableNextButton();
             }

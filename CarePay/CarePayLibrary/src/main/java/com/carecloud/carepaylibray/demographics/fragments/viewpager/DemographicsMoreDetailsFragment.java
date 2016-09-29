@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -44,12 +45,13 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ((DemographicsActivity) getActivity()).confirmDemographicInformation(); // post the updates
+                DemographicModel model = ((DemographicsActivity)getActivity()).getModel();
+                ((DemographicsActivity) getActivity()).confirmDemographicInformation(); // post the updates
                 /*
                 Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
                 startActivity(appointmentIntent);
                 getActivity().finish();*/
-                Log.v(LOG_TAG, "demogr_check_point");
+//                Log.v(LOG_TAG, "demogr_check_point");
             }
         });
     }

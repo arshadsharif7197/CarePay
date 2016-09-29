@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,13 +26,9 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.keyboard.Constants;
@@ -42,11 +36,6 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
-
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,14 +53,14 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private ViewPager   viewPager;
     private ProgressBar demographicProgressBar;
 
-    private DemographicModel demographicModel = null;
+    private DemographicModel modelGet = null;
 
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
-        if(demographicModel != null) {
-            DemographicPayloadResponseModel response = demographicModel.getPayload();
-            if(response != null) {
+        if (modelGet != null) {
+            DemographicPayloadResponseModel response = modelGet.getPayload();
+            if (response != null) {
                 DemographicPayloadInfoModel infoModel = response.getDemographics();
-                if(infoModel != null) {
+                if (infoModel != null) {
                     return infoModel.getPayload();
                 }
             }
@@ -110,8 +99,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
             setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
-        } else if(intent.hasExtra("demographics_model")) {
-            demographicModel = intent.getParcelableExtra("demographics_model");
+        } else if (intent.hasExtra("demographics_model")) {
+            modelGet = intent.getParcelableExtra("demographics_model");
         }
         // set the progress bar
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
@@ -155,26 +144,26 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     }
 
     public void confirmDemographicInformation() {
-        DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
-        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
-        demographicPayloadAddressModel.setAddress1("#800");
-        demographicPayloadAddressModel.setCity("Miami");
-        demographicPayloadAddressModel.setState("FL");
-        demographicPayloadAddressModel.setZipcode("33127");
-        demographicPayloadAddressModel.setPhone("18007654222");
-
-        DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
-        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
-        demographicPayloadPersonalDetailsModel.setMiddleName("I");
-        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
-        demographicPayloadPersonalDetailsModel.setDateOfBirth("02/11/1983");
-        demographicPayloadPersonalDetailsModel.setPrimaryRace("Asian");
-        demographicPayloadPersonalDetailsModel.setEthnicity("White");
-        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
-
-        DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
-        demographicPayloadDriversLicenseModel.setLicenseNumber("ER-4T3");
-        demographicPayloadDriversLicenseModel.setLicenseState("OH");
+//        DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
+//        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
+//        demographicPayloadAddressModel.setAddress1("#800");
+//        demographicPayloadAddressModel.setCity("Miami");
+//        demographicPayloadAddressModel.setState("FL");
+//        demographicPayloadAddressModel.setZipcode("33127");
+//        demographicPayloadAddressModel.setPhone("18007654222");
+//
+//        DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
+//        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
+//        demographicPayloadPersonalDetailsModel.setMiddleName("I");
+//        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
+//        demographicPayloadPersonalDetailsModel.setDateOfBirth("02/11/1983");
+//        demographicPayloadPersonalDetailsModel.setPrimaryRace("Asian");
+//        demographicPayloadPersonalDetailsModel.setEthnicity("White");
+//        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
+//
+//        DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
+//        demographicPayloadDriversLicenseModel.setLicenseNumber("ER-4T3");
+//        demographicPayloadDriversLicenseModel.setLicenseState("OH");
 
 //        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel = new DemographicPayloadInsuranceModel();
 //        demographicPayloadInsuranceModel.setInsuranceMemberId("2513515464");
@@ -182,24 +171,32 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 //        List<DemographicPayloadInsuranceModel> insurances = new ArrayList<>();
 //        insurances.add(demographicPayloadInsuranceModel);
 
-        List<String> updates = new ArrayList<String>();
-        DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
-        demographicPayloadModel.setAddress(demographicPayloadAddressModel);
-        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
-        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
+//        List<String> updates = new ArrayList<String>();
+//        DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
+//        demographicPayloadModel.setAddress(demographicPayloadAddressModel);
+//        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
+//        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
 //        demographicPayloadModel.setInsurances(insurances);
-        demographicPayloadModel.setUpdates(updates);
+//        demographicPayloadModel.setUpdates(updates);
 
         /*DemographicModel demographicPostModel = new DemographicModel();
         demographicPostModel.setPayload(demographicPayloadModel);*/
 
         demographicProgressBar.setVisibility(View.VISIBLE);
+
+        // build a model to post with all updated data
+        DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
+        demographicPayloadModel.setAddress(modelGet.getPayload().getDemographics().getPayload().getAddress());
+        demographicPayloadModel.setPersonalDetails(modelGet.getPayload().getDemographics().getPayload().getPersonalDetails());
+        demographicPayloadModel.setDriversLicense(modelGet.getPayload().getDemographics().getPayload().getDriversLicense());
+        demographicPayloadModel.setInsurances(modelGet.getPayload().getDemographics().getPayload().getInsurances());
+
         DemographicService apptService = (new BaseServiceGenerator(this)).createService(DemographicService.class); //, String token, String searchString
         Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicPayloadModel);
         call.enqueue(new Callback<DemographicModel>() {
             @Override
             public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                demographicModel = response.body();
+                modelGet = response.body();
                 demographicProgressBar.setVisibility(View.GONE);
                 Log.d(LOG_TAG, "demogr post succeeded");
 
@@ -237,6 +234,10 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
+    }
+
+    public DemographicModel getModel() {
+        return modelGet;
     }
 
     /**
