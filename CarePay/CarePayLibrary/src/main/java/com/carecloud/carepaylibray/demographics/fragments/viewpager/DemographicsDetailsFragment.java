@@ -167,13 +167,19 @@ public class DemographicsDetailsFragment extends Fragment
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (selectedArray) {
                     case 1:
-                        raceTextView.setText(raceArray[position]);
+                        String race = raceArray[position];
+                        raceTextView.setText(race);
+                        model.setPrimaryRace(race);
                         break;
                     case 2:
-                        ethnicityTextView.setText(ethnicityArray[position]);
+                        String ethnicity = ethnicityArray[position];
+                        ethnicityTextView.setText(ethnicity);
+                        model.setEthnicity(ethnicity);
                         break;
                     case 3:
-                        preferredLanguageTextView.setText(preferredLanguageArray[position]);
+                        String prefLang = preferredLanguageArray[position];
+                        preferredLanguageTextView.setText(prefLang);
+                        model.setPreferredLanguage(prefLang);
                         break;
                 }
                 alert.dismiss();
