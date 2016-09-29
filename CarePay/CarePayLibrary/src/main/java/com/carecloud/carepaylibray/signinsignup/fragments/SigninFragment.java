@@ -93,8 +93,8 @@ public class SigninFragment extends Fragment {
 //        emailEditText.setText("sreeni3@example.com");
 //        passwordEditText.setText("Password@123");
 
-        emailEditText.setText("lsocolovici@yahoo.com");
-        passwordEditText.setText("Cloud123_");
+        emailEditText.setText("lvictor1979@gmail.com");
+        passwordEditText.setText("Liviu123_");
 
         signInUser();
 
@@ -323,7 +323,6 @@ public class SigninFragment extends Fragment {
 
     private void launchUser(DemographicModel demographicModel) {
 //        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
-        Log.v(LOG_TAG, "user " + CognitoAppHelper.getCurrUser() + " signed in");
         Intent intent = new Intent(getActivity(), DemographicsActivity.class); // TODO: 9/27/2016 remove
         // pass the object into the gson
         Gson gson = new Gson();
