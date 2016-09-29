@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
@@ -42,11 +44,12 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((DemographicsActivity) getActivity()).confirmDemographicInformation(); // post the updates
+//                ((DemographicsActivity) getActivity()).confirmDemographicInformation(); // post the updates
                 /*
                 Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
                 startActivity(appointmentIntent);
                 getActivity().finish();*/
+                Log.v(LOG_TAG, "demogr_check_point");
             }
         });
     }

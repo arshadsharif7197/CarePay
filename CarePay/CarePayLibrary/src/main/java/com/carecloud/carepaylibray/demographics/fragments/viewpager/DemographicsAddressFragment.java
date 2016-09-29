@@ -83,6 +83,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private boolean isZipEmpty;
 
     private boolean isNextVisible = false;
+    private DemographicPayloadAddressModel model;
 
     @Nullable
     @Override
@@ -228,12 +229,17 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     }
 
-    private void populateViewsWithModel() {
+    private DemographicPayloadAddressModel getModel() {
         DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
-        DemographicPayloadAddressModel model = null;
         if(payload != null) {
             model = payload.getAddress();
         }
+        return model;
+    }
+
+    private void populateViewsWithModel() {
+        getModel();
+
         if(model != null) {
             // populate the views
             // TODO: 9/28/2016 add fields for name as well

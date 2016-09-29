@@ -59,9 +59,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                              @Nullable final Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
 
-        // fetch the models
-        getTheModels();
-
         // fetch the scroll view
         detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
 
@@ -125,6 +122,9 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
      * Helper to create the nested fragments containing the insurance card details
      */
     private void setCardContainers() {
+        // fetch the models
+        getTheModels();
+
         // fetch nested fragments containers
         insCardContainer1 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance1);
         insCardContainer2 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance2);

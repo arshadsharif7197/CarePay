@@ -89,8 +89,12 @@ public class SigninFragment extends Fragment {
         isEmptyPassword = true;
 
         // TODO: 9/27/2016 remove (used just for testing)
-        emailEditText.setText("lvictor1979@gmail.com");
-        passwordEditText.setText("Liviu123_");
+//        emailEditText.setText("sreeni3@example.com");
+//        passwordEditText.setText("Password@123");
+
+        emailEditText.setText("lsocolovici@yahoo.com");
+        passwordEditText.setText("Cloud123_");
+
         signInUser();
 
         return view;

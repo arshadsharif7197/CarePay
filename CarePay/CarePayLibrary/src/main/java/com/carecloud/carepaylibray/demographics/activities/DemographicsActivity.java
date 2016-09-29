@@ -32,6 +32,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddress
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
@@ -172,12 +173,21 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
 
         DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
+        demographicPayloadDriversLicenseModel.setLicenseNumber("ER-4T3");
+        demographicPayloadDriversLicenseModel.setLicenseState("OH");
+
+//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel = new DemographicPayloadInsuranceModel();
+//        demographicPayloadInsuranceModel.setInsuranceMemberId("2513515464");
+//        demographicPayloadInsuranceModel.setInsurancePlan("Aetna");
+//        List<DemographicPayloadInsuranceModel> insurances = new ArrayList<>();
+//        insurances.add(demographicPayloadInsuranceModel);
 
         List<String> updates = new ArrayList<String>();
         DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
         demographicPayloadModel.setAddress(demographicPayloadAddressModel);
         demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
         demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
+//        demographicPayloadModel.setInsurances(insurances);
         demographicPayloadModel.setUpdates(updates);
 
         /*DemographicModel demographicPostModel = new DemographicModel();

@@ -46,6 +46,7 @@ public class DemographicsDetailsFragment extends Fragment
     private int      selectedArray;
     private TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
     private Button nextButton;
+    private DemographicPayloadPersonalDetailsModel model;
 
     @Nullable
     @Override
@@ -93,12 +94,17 @@ public class DemographicsDetailsFragment extends Fragment
         populateViewsFromModel();
     }
 
-    private void populateViewsFromModel() {
+    private DemographicPayloadPersonalDetailsModel getModel() {
         DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
-        DemographicPayloadPersonalDetailsModel model = null;
         if(payload != null) {
             model = payload.getPersonalDetails();
         }
+        return model;
+    }
+
+    private void populateViewsFromModel() {
+        getModel();
+
         if(model != null) {
             raceTextView.setText(model.getPrimaryRace());
             ethnicityTextView.setText(model.getEthnicity());
