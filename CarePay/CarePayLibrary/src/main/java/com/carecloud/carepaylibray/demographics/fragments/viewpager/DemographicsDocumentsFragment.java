@@ -92,6 +92,14 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         }
     }
 
+    public DemographicPayloadDriversLicenseModel getModelDriversLicense() {
+        return modelDriversLicense;
+    }
+
+    public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
+        return insuranceModelList;
+    }
+
     /**
      * Helper to set the buttons
      */

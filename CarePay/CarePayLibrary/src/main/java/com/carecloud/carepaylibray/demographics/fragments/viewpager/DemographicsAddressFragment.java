@@ -229,7 +229,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     }
 
-    private DemographicPayloadAddressModel getModel() {
+    public DemographicPayloadAddressModel getModel() {
         DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
         if(payload != null) {
             model = payload.getAddress();
@@ -706,6 +706,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         }
         return isPhoneValid && isStateValid && isCityValid;
     }
+
 
     /**
      * Background task to call smarty streets zip code lookup.

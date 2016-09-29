@@ -94,7 +94,7 @@ public class DemographicsDetailsFragment extends Fragment
         populateViewsFromModel();
     }
 
-    private DemographicPayloadPersonalDetailsModel getModel() {
+    public DemographicPayloadPersonalDetailsModel getModel() {
         DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
         if(payload != null) {
             model = payload.getPersonalDetails();
@@ -202,6 +202,7 @@ public class DemographicsDetailsFragment extends Fragment
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }
+
 
     @Override
     public void showAddCardButton(boolean isVisible) {
