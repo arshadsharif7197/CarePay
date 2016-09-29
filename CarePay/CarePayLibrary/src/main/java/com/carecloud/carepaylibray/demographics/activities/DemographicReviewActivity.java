@@ -12,6 +12,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_demographic_review);
 
         if (savedInstanceState == null) {
