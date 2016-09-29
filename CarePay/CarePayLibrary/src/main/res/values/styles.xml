@@ -468,7 +468,7 @@
     <!-- InTake -->
 
     <style name="InTakeNextButtonStyle" parent="DemographicsNextButtonStyle">
-        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:background">@drawable/button_selector</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_marginBottom">0dp</item>
     </style>
