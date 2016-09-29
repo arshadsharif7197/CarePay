@@ -1,8 +1,5 @@
 package com.carecloud.carepaylibray.demographics.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +9,7 @@ import java.util.List;
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
  */
-public class DemographicPayloadModel implements Parcelable {
+public class DemographicPayloadModel {
 
     @SerializedName("address")
     @Expose
@@ -29,44 +26,6 @@ public class DemographicPayloadModel implements Parcelable {
     @SerializedName("updates")
     @Expose
     private List<String> updates = new ArrayList<String>();
-
-    public DemographicPayloadModel() {
-
-    }
-
-    protected DemographicPayloadModel(Parcel in) {
-        address = in.readParcelable(DemographicPayloadAddressModel.class.getClassLoader());
-        personalDetails = in.readParcelable(DemographicPayloadPersonalDetailsModel.class.getClassLoader());
-        driversLicense = in.readParcelable(DemographicPayloadDriversLicenseModel.class.getClassLoader());
-        insurances = in.createTypedArrayList(DemographicPayloadInsuranceModel.CREATOR);
-        updates = in.createStringArrayList();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(address, flags);
-        dest.writeParcelable(personalDetails, flags);
-        dest.writeParcelable(driversLicense, flags);
-        dest.writeTypedList(insurances);
-        dest.writeStringList(updates);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<DemographicPayloadModel> CREATOR = new Creator<DemographicPayloadModel>() {
-        @Override
-        public DemographicPayloadModel createFromParcel(Parcel in) {
-            return new DemographicPayloadModel(in);
-        }
-
-        @Override
-        public DemographicPayloadModel[] newArray(int size) {
-            return new DemographicPayloadModel[size];
-        }
-    };
 
     /**
      *

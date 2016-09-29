@@ -1,16 +1,12 @@
 package com.carecloud.carepaylibray.base.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class BasePersonModel implements Parcelable{
+public class BasePersonModel {
 
     @SerializedName("first_name")
     @Expose
@@ -32,46 +28,6 @@ public class BasePersonModel implements Parcelable{
     @SerializedName("profile_photo")
     @Expose
     private String profilePhoto;
-
-    public BasePersonModel() {
-
-    }
-
-    protected BasePersonModel(Parcel in) {
-        firstName = in.readString();
-        middleName = in.readString();
-        lastName = in.readString();
-        dateOfBirth = in.readString();
-        gender = in.readString();
-        profilePhoto = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(firstName);
-        dest.writeString(middleName);
-        dest.writeString(lastName);
-        dest.writeString(dateOfBirth);
-        dest.writeString(gender);
-        dest.writeString(profilePhoto);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<BasePersonModel> CREATOR = new Creator<BasePersonModel>() {
-        @Override
-        public BasePersonModel createFromParcel(Parcel in) {
-            return new BasePersonModel(in);
-        }
-
-        @Override
-        public BasePersonModel[] newArray(int size) {
-            return new BasePersonModel[size];
-        }
-    };
 
     public String getFirstName() {
         return firstName;

@@ -1,14 +1,10 @@
 package com.carecloud.carepaylibray.demographics.models;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
  */
-public class DemographicLabelsModel implements Parcelable {
+public class DemographicLabelsModel {
     @SerializedName("demographics_update_button")
     @Expose
     private String demographicsUpdateButton;
@@ -33,49 +29,6 @@ public class DemographicLabelsModel implements Parcelable {
     @SerializedName("demographics_add_another_insurance_link")
     @Expose
     private String demographicsAddAnotherInsuranceLink;
-
-    public DemographicLabelsModel() {
-    }
-
-    protected DemographicLabelsModel(Parcel in) {
-        demographicsUpdateButton = in.readString();
-        demographicsUpdateProfilePhotoLink = in.readString();
-        demographicsUpdateEmailAndPasswordLink = in.readString();
-        demographicsAddressSection = in.readString();
-        demographicsDetailsSection = in.readString();
-        demographicsDocumentsSection = in.readString();
-        demographicsUpdatesSection = in.readString();
-        demographicsAddAnotherInsuranceLink = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(demographicsUpdateButton);
-        dest.writeString(demographicsUpdateProfilePhotoLink);
-        dest.writeString(demographicsUpdateEmailAndPasswordLink);
-        dest.writeString(demographicsAddressSection);
-        dest.writeString(demographicsDetailsSection);
-        dest.writeString(demographicsDocumentsSection);
-        dest.writeString(demographicsUpdatesSection);
-        dest.writeString(demographicsAddAnotherInsuranceLink);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<DemographicLabelsModel> CREATOR = new Creator<DemographicLabelsModel>() {
-        @Override
-        public DemographicLabelsModel createFromParcel(Parcel in) {
-            return new DemographicLabelsModel(in);
-        }
-
-        @Override
-        public DemographicLabelsModel[] newArray(int size) {
-            return new DemographicLabelsModel[size];
-        }
-    };
 
     /**
      *

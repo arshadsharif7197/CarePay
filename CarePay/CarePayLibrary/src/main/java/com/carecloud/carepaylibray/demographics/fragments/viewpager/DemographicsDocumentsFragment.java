@@ -19,10 +19,14 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -52,6 +56,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private Button                                 nextButton;
     private DemographicPayloadDriversLicenseModel  modelDriversLicense;
     private List<DemographicPayloadInsuranceModel> insuranceModelList;
+    private DemographicPayloadInfoPayloadModel     payload;
 
     @Nullable
     @Override
@@ -79,7 +84,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     }
 
     private void getTheModels() {
-        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
+        payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
             modelDriversLicense = payload.getDriversLicense();
             insuranceModelList = payload.getInsurances();
@@ -144,40 +149,43 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, licenseFragment, "license").commit();
 
         // add insurance fragments
+        DemographicPayloadInsuranceModel insuranceModel1 = getInsuranceModelAtIndex(0);
         insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
         if (insuranceFragment == null) {
             insuranceFragment = new InsuranceScannerFragment();
             insuranceFragment.setButtonsStatusCallback(this);
-            insuranceFragment.setModel(getInsuranceModelForIndex(0)); // set the model (if avail)
+            insuranceFragment.setModel(insuranceModel1); // set the model (if avail)
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance1")
                 .commit();
 
+        DemographicPayloadInsuranceModel insuranceModel2 = getInsuranceModelAtIndex(1);
         extraInsuranceFrag1 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
         if (extraInsuranceFrag1 == null) {
             extraInsuranceFrag1 = new InsuranceScannerFragment();
             extraInsuranceFrag1.setButtonsStatusCallback(this);
-            insuranceFragment.setModel(getInsuranceModelForIndex(1)); // set the model (if avail)
+            insuranceFragment.setModel(insuranceModel2); // set the model (if avail)
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance2, extraInsuranceFrag1, "insurance2")
                 .commit();
 
+        DemographicPayloadInsuranceModel insuranceModel3 = getInsuranceModelAtIndex(2);
         extraInsuranceFrag2 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
         if (extraInsuranceFrag2 == null) {
             extraInsuranceFrag2 = new InsuranceScannerFragment();
             extraInsuranceFrag2.setButtonsStatusCallback(this);
-            insuranceFragment.setModel(getInsuranceModelForIndex(2)); // set the model (if avail)
+            insuranceFragment.setModel(insuranceModel3); // set the model (if avail)
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance3, extraInsuranceFrag2, "insurance3")
                 .commit();
     }
 
-    private DemographicPayloadInsuranceModel getInsuranceModelForIndex(int i) {
+    private DemographicPayloadInsuranceModel getInsuranceModelAtIndex(int i) {
         DemographicPayloadInsuranceModel model = null;
-        if(insuranceModelList != null) {
+        if (insuranceModelList != null) {
             int numOfInsurances = insuranceModelList.size();
             if (numOfInsurances > i) { // check if the list has an item at index i
                 model = insuranceModelList.get(i);

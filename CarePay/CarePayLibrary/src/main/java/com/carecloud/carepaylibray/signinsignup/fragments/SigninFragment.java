@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import org.parceler.Parcels;
 
@@ -324,8 +325,12 @@ public class SigninFragment extends Fragment {
 //        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
         Log.v(LOG_TAG, "user " + CognitoAppHelper.getCurrUser() + " signed in");
         Intent intent = new Intent(getActivity(), DemographicsActivity.class); // TODO: 9/27/2016 remove
-        intent.putExtra("demographics_model", demographicModel);
+        // pass the object into the gson
+        Gson gson = new Gson();
+        intent.putExtra("demographics_model", gson.toJson(demographicModel, DemographicModel.class));
+        // start demographics
         startActivity(intent);
+
         reset();
         getActivity().finish();
     }

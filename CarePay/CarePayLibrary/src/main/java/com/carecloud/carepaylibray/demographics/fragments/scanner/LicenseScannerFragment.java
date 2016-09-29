@@ -90,17 +90,15 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     public void populateViewsFromModel() {
         if (model != null) {
             // check the type of the model
-            if (model instanceof DemographicPayloadDriversLicenseModel) {
-                mLicenseScanHelper.setImageFromCharStream(model.getLicensePhoto());
-                String licenseNum = model.getLicenseNumber();
-                if(!StringUtil.isNullOrEmpty(licenseNum)) {
-                    tvLicenseNum.setVisibility(View.VISIBLE);
-                } else {
-                    tvLicenseNum.setVisibility(View.GONE);
-                }
-                tvLicenseNum.setText(licenseNum);
-                tvState.setText(model.getLicenseState());
+            mLicenseScanHelper.setImageFromCharStream(model.getLicensePhoto());
+            String licenseNum = model.getLicenseNumber();
+            if (!StringUtil.isNullOrEmpty(licenseNum)) {
+                tvLicenseNum.setVisibility(View.VISIBLE);
+            } else {
+                tvLicenseNum.setVisibility(View.GONE);
             }
+            tvLicenseNum.setText(licenseNum);
+            tvState.setText(model.getLicenseState());
         }
     }
 
