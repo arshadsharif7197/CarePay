@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/titleHeaderTextview"
-        android:layout_width="175dp"
-        android:layout_height="48dp"
+        android:layout_width="173dp"
+        android:layout_height="68dp"
         android:layout_alignParentLeft="true"
         android:scaleType="fitXY"
         android:src="@drawable/cp_logo" />

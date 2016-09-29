@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
+import com.carecloud.carepaylibray.payment.services.PaymentsService;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
@@ -27,6 +29,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class CloverPaymentActivity extends AppCompatActivity {
     public static final int creditCardIntentID = 555;
@@ -35,13 +41,19 @@ public class CloverPaymentActivity extends AppCompatActivity {
     private OrderConnector orderConnector;
     private InventoryConnector inventoryConnector;
     private Order order;
-    public Long amount;
+    public Long amount=new Long(2000);;
     private CloverAuth.AuthResult authResult = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clover_payment);
+        Intent intent = getIntent();
+        if (intent.hasExtra("total_pay")) {
+            double totalAmount = intent.getDoubleExtra("total_pay_balance", 20.00);
+            amount = new Long((long) (totalAmount*100));
+        }
+
         if (account == null) {
             {
                 account = CloverAccount.getAccount(this);
@@ -219,12 +231,6 @@ public class CloverPaymentActivity extends AppCompatActivity {
 
                 final Intent intent = new Intent(Intents.ACTION_SECURE_PAY);
                 try {
-
-                    if(amount == null)
-                    {
-                        amount = new Long(2000);
-                    }
-
                     if (amount != null) {
                         intent.putExtra(Intents.EXTRA_AMOUNT, amount);
                     } else {
@@ -268,9 +274,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_successful, payment.getOrder().getId()), Toast.LENGTH_SHORT).show();
 
                 if (payment != null) {
-
                     postCloverPayment(payment);
-
                 }
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
@@ -280,13 +284,24 @@ public class CloverPaymentActivity extends AppCompatActivity {
 
     private void postCloverPayment(Payment payment) {
         //To DO
+        PaymentsService paymentsService = (new BaseServiceGenerator(this)).createServicePractice(PaymentsService.class);
+        Call<Object> call = paymentsService.updateCarePayPayment(payment.getJSONObject());
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                Intent rotateInIntent = new Intent(CloverPaymentActivity.this, CloverMainActivity.class);
+                rotateInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(rotateInIntent);
+                CloverPaymentActivity.this.finish();
+                Toast.makeText(getApplicationContext(), "CareCloud Payment Success", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, response.toString());
+            }
 
-        finish();
-
-        //Change to This
-//        Intent intent = new Intent(CloverPaymentActivity.this, CloverPaymentActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(intent);
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
     }
 
 
