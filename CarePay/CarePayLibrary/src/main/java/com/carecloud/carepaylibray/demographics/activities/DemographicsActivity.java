@@ -64,6 +64,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private DemographicModel modelGet = null;
     private DemographicPayloadAddressModel addressModel;
     private DemographicPayloadPersonalDetailsModel detailsModel;
+    private DemographicPayloadDriversLicenseModel  modelDriversLicense;
 
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
         DemographicPayloadInfoPayloadModel infoModel = null;
@@ -191,13 +192,20 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         this.addressModel = addressModel;
     }
 
-
     public DemographicPayloadAddressModel getAddressModel() {
         return addressModel;
     }
 
     public void setDetailsModel(DemographicPayloadPersonalDetailsModel detailsModel) {
         this.detailsModel = detailsModel;
+    }
+
+    public DemographicPayloadDriversLicenseModel getModelDriversLicense() {
+        return modelDriversLicense;
+    }
+
+    public void setModelDriversLicense(DemographicPayloadDriversLicenseModel modelDriversLicense) {
+        this.modelDriversLicense = modelDriversLicense;
     }
 
     public void setModel(DemographicModel modelGet) {

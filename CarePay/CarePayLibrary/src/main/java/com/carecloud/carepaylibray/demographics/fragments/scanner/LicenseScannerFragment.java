@@ -78,8 +78,8 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         // TODO: 9/29/2016 implement OCR
         btnScanLicense.setText(R.string.demogr_docs_rescan);
 
-        model.setLicenseNumber("123456789");
-        tvLicenseNum.setText("123456789");
+        model.setLicenseNumber("666666666");
+        tvLicenseNum.setText("666666666");
         tvLicenseNum.setVisibility(View.VISIBLE);
 
         model.setLicenseState(states[8]);

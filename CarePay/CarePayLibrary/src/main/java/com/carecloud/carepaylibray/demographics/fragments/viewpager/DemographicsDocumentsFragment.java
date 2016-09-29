@@ -110,6 +110,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             @Override
             public void onClick(View view) {
                 // move to next tab
+                ((DemographicsActivity)getActivity()).setModelDriversLicense(modelDriversLicense);
+
                 ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
             }
         });

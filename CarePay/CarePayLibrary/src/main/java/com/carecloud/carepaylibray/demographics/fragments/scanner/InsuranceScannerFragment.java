@@ -109,6 +109,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
     }
 
+
     public void resetViewsContent() {
         Log.v(LOG_TAG, "resetViewsContent()");
         btnScanInsurance.setText(R.string.demogr_docs_scan_insurance_label);
