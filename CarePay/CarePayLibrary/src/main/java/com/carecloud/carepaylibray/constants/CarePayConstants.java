@@ -45,5 +45,5 @@ public class CarePayConstants {
     public static final long APPOINTMENT_REMINDER_TIME_IN_MINUTES = 120;
     public static final long CUSTOM_POPUP_AUTO_DISMISS_DURATION = 5000;
 
-    public static final String APPOINTMENT_DATE_TIME_FORMAT = "MM/dd/yy HH:mm:ss a";
+    public static final String APPOINTMENT_DATE_TIME_FORMAT = "MM/dd/yy hh:mm:ss a";
 }
