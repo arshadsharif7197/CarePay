@@ -19,6 +19,16 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
+
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -30,19 +40,27 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
     private static final String LOG_TAG = DemographicsDocumentsFragment.class.getSimpleName();
-    private FragmentManager          fm;
-    private View                     view;
-    private ScrollView               detailsScrollView;
-    private SwitchCompat             switchCompat;
-    private FrameLayout             insCardContainer1;
-    private FrameLayout             insCardContainer2;
-    private FrameLayout             insCardContainer3;
-    private InsuranceScannerFragment extraInsCardFrag1;
-    private InsuranceScannerFragment extraInsCardFrag2;
-    private boolean                  isSecondCardAdded;
-    private boolean                  isThirdCardAdded;
-    private Button                   addCardButton;
-    private Button                   nextButton;
+    private FragmentManager                        fm;
+    private View                                   view;
+    private ScrollView                             detailsScrollView;
+    private SwitchCompat                           switchCompat;
+    private FrameLayout                            insCardContainer1;
+    private FrameLayout                            insCardContainer2;
+    private FrameLayout                            insCardContainer3;
+    private LicenseScannerFragment                 licenseFragment;
+    private InsuranceScannerFragment               insuranceFragment;
+    private InsuranceScannerFragment               extraInsuranceFrag1;
+    private InsuranceScannerFragment               extraInsuranceFrag2;
+    private boolean                                isSecondCardAdded;
+    private boolean                                isThirdCardAdded;
+    private Button                                 addCardButton;
+    private Button                                 nextButton;
+    private DemographicPayloadDriversLicenseModel  modelDriversLicense;
+    private List<DemographicPayloadInsuranceModel> insuranceModelList;
+    private DemographicPayloadInfoPayloadModel     payload;
+    private DemographicPayloadInsuranceModel       insuranceModel1;
+    private DemographicPayloadInsuranceModel       insuranceModel2;
+    private DemographicPayloadInsuranceModel       insuranceModel3;
 
     @Nullable
     @Override
@@ -69,6 +87,22 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         return view;
     }
 
+    private void getTheModels() {
+        payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
+        if (payload != null) {
+            modelDriversLicense = payload.getDriversLicense();
+            insuranceModelList = payload.getInsurances();
+        }
+    }
+
+    public DemographicPayloadDriversLicenseModel getModelDriversLicense() {
+        return modelDriversLicense;
+    }
+
+    public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
+        return insuranceModelList;
+    }
+
     /**
      * Helper to set the buttons
      */
@@ -78,6 +112,22 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((DemographicsActivity) getActivity()).setModelDriversLicense(modelDriversLicense);
+                DemographicPayloadInsuranceModel model = new DemographicPayloadInsuranceModel();
+                // clear the list
+                insuranceModelList.clear();
+                // add non trivial insurance models
+                if (isInsuaranceNonTrivial(insuranceModel1)) {
+                    insuranceModelList.add(insuranceModel1);
+                }
+                if (isInsuaranceNonTrivial(insuranceModel2)) {
+                    insuranceModelList.add(insuranceModel2);
+                }
+                if (isInsuaranceNonTrivial(insuranceModel3)) {
+                    insuranceModelList.add(insuranceModel3);
+                }
+                // set the list in activity
+                ((DemographicsActivity)getActivity()).setInsuranceModelList(insuranceModelList);
                 // move to next tab
                 ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
             }
@@ -101,10 +151,19 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         });
     }
 
+    private boolean isInsuaranceNonTrivial(DemographicPayloadInsuranceModel insModel) {
+        return insModel.getInsurancePlan() != null &&
+                insModel.getInsuranceProvider() != null &&
+                insModel.getInsuranceMemberId() != null;
+    }
+
     /**
      * Helper to create the nested fragments containing the insurance card details
      */
     private void setCardContainers() {
+        // fetch the models
+        getTheModels();
+
         // fetch nested fragments containers
         insCardContainer1 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance1);
         insCardContainer2 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance2);
@@ -115,41 +174,74 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         fm = getChildFragmentManager();
         // add license fragment
-        LicenseScannerFragment licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
+        licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
+        if (modelDriversLicense == null) {
+            modelDriversLicense = new DemographicPayloadDriversLicenseModel();
+        }
         if (licenseFragment == null) {
             licenseFragment = new LicenseScannerFragment();
             licenseFragment.setButtonsStatusCallback(this);
+            licenseFragment.setModel(modelDriversLicense); // set the model
         }
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, licenseFragment, "license").commit();
 
         // add insurance fragments
-        InsuranceScannerFragment insuranceFragment;
+        insuranceModel1 = getInsuranceModelAtIndex(0);
+        if (insuranceModel1 == null) {
+            insuranceModel1 = new DemographicPayloadInsuranceModel();
+        }
         insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
         if (insuranceFragment == null) {
             insuranceFragment = new InsuranceScannerFragment();
             insuranceFragment.setButtonsStatusCallback(this);
+            insuranceFragment.setModel(insuranceModel1); // set the model (if avail)
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance1")
                 .commit();
 
-        extraInsCardFrag1 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
-        if (extraInsCardFrag1 == null) {
-            extraInsCardFrag1 = new InsuranceScannerFragment();
-            extraInsCardFrag1.setButtonsStatusCallback(this);
+        insuranceModel2 = getInsuranceModelAtIndex(1);
+        if (insuranceModel2 == null) {
+            insuranceModel2 = new DemographicPayloadInsuranceModel();
+        } else {
+            isSecondCardAdded = true;
+        }
+        extraInsuranceFrag1 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
+        if (extraInsuranceFrag1 == null) {
+            extraInsuranceFrag1 = new InsuranceScannerFragment();
+            extraInsuranceFrag1.setButtonsStatusCallback(this);
+            extraInsuranceFrag1.setModel(insuranceModel2); // set the model (if avail)
         }
         fm.beginTransaction()
-                .replace(R.id.demographicsDocsInsurance2, extraInsCardFrag1, "insurance2")
+                .replace(R.id.demographicsDocsInsurance2, extraInsuranceFrag1, "insurance2")
                 .commit();
 
-        extraInsCardFrag2 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
-        if (extraInsCardFrag2 == null) {
-            extraInsCardFrag2 = new InsuranceScannerFragment();
-            extraInsCardFrag2.setButtonsStatusCallback(this);
+        insuranceModel3 = getInsuranceModelAtIndex(2);
+        if (insuranceModel3 == null) {
+            insuranceModel3 = new DemographicPayloadInsuranceModel();
+        } else {
+            isThirdCardAdded = true;
+        }
+        extraInsuranceFrag2 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
+        if (extraInsuranceFrag2 == null) {
+            extraInsuranceFrag2 = new InsuranceScannerFragment();
+            extraInsuranceFrag2.setButtonsStatusCallback(this);
+            extraInsuranceFrag2.setModel(insuranceModel3); // set the model (if avail)
         }
         fm.beginTransaction()
-                .replace(R.id.demographicsDocsInsurance3, extraInsCardFrag2, "insurance3")
+                .replace(R.id.demographicsDocsInsurance3, extraInsuranceFrag2, "insurance3")
                 .commit();
+    }
+
+    private DemographicPayloadInsuranceModel getInsuranceModelAtIndex(int i) {
+        DemographicPayloadInsuranceModel model = null;
+        if (insuranceModelList != null) {
+            int numOfInsurances = insuranceModelList.size();
+            if (numOfInsurances > i) { // check if the list has an item at index i
+                model = insuranceModelList.get(i);
+            }
+        }
+        return model;
     }
 
     /**

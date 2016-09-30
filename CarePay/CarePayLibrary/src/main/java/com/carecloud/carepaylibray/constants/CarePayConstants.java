@@ -16,6 +16,7 @@ public class CarePayConstants {
 
     //Appointments Constants
     public static final String ASSETS_JSON = "workflow.json";
+    public static final String APPOINTMENT_JSON = "appointments.json";
     public static final String ATTR_RESPONSE = "response";
     public static final String ATTR_CAPTURE = "capture";
     public static final String ATTR_APPOINTMENTS = "appointments";
@@ -43,4 +44,6 @@ public class CarePayConstants {
     public static final String DEFAULT_STRING_PREFERENCES = "-";
     public static final long APPOINTMENT_REMINDER_TIME_IN_MINUTES = 120;
     public static final long CUSTOM_POPUP_AUTO_DISMISS_DURATION = 5000;
+
+    public static final String APPOINTMENT_DATE_TIME_FORMAT = "MM/dd/yy HH:mm:ss a";
 }
