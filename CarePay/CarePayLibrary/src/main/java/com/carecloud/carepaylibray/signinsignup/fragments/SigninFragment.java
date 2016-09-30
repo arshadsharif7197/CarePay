@@ -29,12 +29,23 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+
+import org.parceler.Parcels;
 
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -136,7 +147,6 @@ public class SigninFragment extends Fragment {
 
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), changeLanguageTextView);
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), forgotPasswordTextView);
-
     }
 
     private void setEditTexts(View view) {
@@ -176,7 +186,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
-                if(!isEmptyEmail) { // clear the error
+                if (!isEmptyEmail) { // clear the error
                     emailTextInput.setError(null);
                     emailTextInput.setErrorEnabled(false);
                 }
@@ -197,7 +207,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
-                if(isEmptyPassword) {
+                if (isEmptyPassword) {
                     passwordTexInput.setError(null);
                     passwordTexInput.setErrorEnabled(false);
                 }
@@ -278,11 +288,11 @@ public class SigninFragment extends Fragment {
 
     private boolean areAllValid() {
         boolean isPasswordValid = checkPassword();
-        if(!isPasswordValid) {
+        if (!isPasswordValid) {
             passwordEditText.requestFocus();
         }
         boolean isEmailValid = checkEmail();
-        if(!isEmailValid) {
+        if (!isEmailValid) {
             emailEditText.requestFocus();
         }
         return isEmailValid && isPasswordValid;
@@ -303,9 +313,9 @@ public class SigninFragment extends Fragment {
     }
 
     private void launchUser() {
-        reset();
-        Intent userActivity = new Intent(getActivity(), AppointmentsActivity.class);
-        startActivity(userActivity);
+        Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
+        startActivity(intent);
+//        reset();
         getActivity().finish();
     }
 

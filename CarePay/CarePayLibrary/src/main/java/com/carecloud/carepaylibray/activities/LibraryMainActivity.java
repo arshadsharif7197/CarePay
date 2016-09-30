@@ -28,7 +28,6 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // init Cognito
-        CognitoAppHelper.init(getApplicationContext());
         super.onCreate(savedInstanceState);
     }
 

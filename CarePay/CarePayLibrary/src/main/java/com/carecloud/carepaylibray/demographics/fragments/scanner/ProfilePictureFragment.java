@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -21,7 +22,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 public class ProfilePictureFragment extends DocumentScannerFragment {
 
     private ImageCaptureHelper imageCaptureHelper;
-    private Button    buttonChangeCurrentPhoto;
+    private Button             buttonChangeCurrentPhoto;
+    private Object             model;
 
     @Nullable
     @Override
@@ -38,12 +40,21 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
             }
         });
 
+        populateViewsFromModel();
+
         return view;
     }
 
     @Override
-    protected void updateDetailViewsAfterScan() {
+    protected void updateModelAndViewsAfterScan() {
         // maybe later
+    }
+
+    @Override
+    public void populateViewsFromModel() {
+        if(model != null) {
+            // TODO: 9/28/2016 populate the views
+        }
     }
 
     @Override
@@ -60,5 +71,9 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     @Override
     public int getImageShape() {
         return ImageCaptureHelper.ROUND_IMAGE;
+    }
+
+    public void setModel(Object model) {
+        this.model = model;
     }
 }

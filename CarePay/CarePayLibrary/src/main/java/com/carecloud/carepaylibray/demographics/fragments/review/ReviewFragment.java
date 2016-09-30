@@ -41,7 +41,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class ReviewFragment  extends Fragment implements View.OnClickListener {
 
     View view;
-    Button testButton;
+    Button correctInformationButton,updateInformationUpdate;
     TextView raceTextView, ethnicityTextView, companyTextView,planTextView,policyNumberTextView;
   DemographicPayloadResponseModel demographicPayloadResponseModel;
     ProgressBar demographicProgressBar;
@@ -130,13 +130,15 @@ public class ReviewFragment  extends Fragment implements View.OnClickListener {
 
     private void initialiseUIFields() {
 
-        testButton = (Button) view.findViewById(R.id.YesCorrectButton);
-        testButton.setOnClickListener(this);
+        correctInformationButton = (Button) view.findViewById(R.id.YesCorrectButton);
+        updateInformationUpdate=(Button)view.findViewById(R.id.needUpdateButton);
+        correctInformationButton.setOnClickListener(this);
+        updateInformationUpdate.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if(view ==testButton){
+        if(view == correctInformationButton || view==updateInformationUpdate){
             Intent intent = new Intent(getActivity(), ConsentActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

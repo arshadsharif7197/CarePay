@@ -72,6 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+        android:layout_marginBottom="@dimen/demographics_docs_section_margin_top"
         android:orientation="vertical">
 
         <TextView
