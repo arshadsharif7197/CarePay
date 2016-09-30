@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/health_insurance_toolbar" />
+    <include layout="@layout/toolbar_health_insurance" />
 
     <LinearLayout
         android:layout_width="match_parent"

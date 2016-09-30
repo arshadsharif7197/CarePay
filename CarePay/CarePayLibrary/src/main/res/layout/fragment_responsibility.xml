@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/respons_root"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/responsibility_toolbar"/>
+    <include layout="@layout/toolbar_responsibility" />
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,27 +31,28 @@
                 <TextView
                     android:id="@+id/respons_total_label"
                     style="@style/ResponsTotalLabelStyle"
-                    android:text="@string/respons_total_label"/>
+                    android:text="@string/respons_total_label" />
 
                 <TextView
                     android:id="@+id/respons_total"
                     style="@style/ResponsTotalStyle"
-                    android:text="$120.00"/>
+                    android:text="$120.00" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="@dimen/respons_detail_left_right_margin"
-                android:layout_marginEnd="@dimen/respons_detail_left_right_margin"
-                android:layout_weight="4"
-                android:gravity="center"
+                android:layout_marginEnd="@dimen/respons_button_margin_left_right"
+                android:layout_marginStart="@dimen/respons_button_margin_left_right"
+                android:layout_marginTop="26dp"
+                android:layout_weight="3"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/respons_detail_margin_bottom"
+                    android:layout_marginTop="@dimen/respons_detail_margin_bottom"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -62,7 +62,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/respons_previous_balance_label"/>
+                        android:text="@string/respons_previous_balance_label" />
 
                     <TextView
                         android:id="@+id/respons_prev_balance"
@@ -71,12 +71,19 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:text="$41.00"/>
+                        android:text="$41.00" />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/respons_detail_margin_bottom"
+                    android:layout_marginTop="@dimen/respons_detail_margin_bottom"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -86,7 +93,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/respons_copay_label"/>
+                        android:text="@string/respons_copay_label" />
 
                     <TextView
                         android:id="@+id/respons_copay"
@@ -95,21 +102,34 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:text="$79.00"/>
+                        android:text="$79.00" />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:orientation="vertical">
 
                 <Button
                     android:id="@+id/respons_pay"
                     style="@style/ResponsButtonStyle"
-                    android:text="@string/respons_pay_label"/>
+                    android:text="@string/respons_pay_label" />
+
+                <Button
+                    android:id="@+id/respons_pay_now"
+                    style="@style/ResponsButtonStyle"
+                    android:layout_marginTop="@dimen/apt_popup_parent_padding"
+                    android:background="@drawable/button_blue_border"
+                    android:text="@string/respons_pay_now_label"
+                    android:textColor="@color/bright_cerulean" />
             </LinearLayout>
 
         </LinearLayout>

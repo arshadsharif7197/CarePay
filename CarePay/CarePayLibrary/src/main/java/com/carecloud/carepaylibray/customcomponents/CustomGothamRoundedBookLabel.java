@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.customcomponents;
 
 import android.content.Context;
 import android.graphics.Typeface;
-
 import android.util.AttributeSet;
 import android.widget.TextView;
 

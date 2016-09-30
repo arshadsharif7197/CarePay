@@ -8,10 +8,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="respons_title">Responsibility</string>
-    <string name="respons_total_label">Amount for today\'s visit</string>
+    <string name="respons_total_label">Your total patient responsibility</string>
     <string name="respons_previous_balance_label">Previous balance</string>
     <string name="respons_copay_label">Insurance CoPay</string>
-    <string name="respons_pay_label">select payment method</string>
+    <string name="respons_pay_label">Pay at practice</string>
+    <string name="respons_pay_now_label">Pay now</string>
 
     <string name="AL">AL</string>
     <string name="FL">FL</string>
@@ -65,7 +66,6 @@
     </string-array>
 
 
-
     <string name="hispanic">Hispanic</string>
     <string name="white_americans">White</string>
     <string name="other">Other</string>
@@ -104,10 +104,6 @@
     <string name="demogr_docs_add_card">Add Card</string>
     <string name="demogr_docs_remove_card">Remove Card</string>
 
-    <!-- Demographic Screens -->
-
-    <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
-
     <!--Address Fragment-->
 
     <string name="AddressHeadingTextView">Let\'s get you set up!</string>
@@ -118,7 +114,6 @@
     <string name="Address2EditText">Address 2</string>
     <string name="CityEditText">City</string>
     <string name="StateEditText">State</string>
-
 
 
     <!--Details Fragment-->
@@ -194,6 +189,19 @@
     <string name="demogr_next">Next</string>
     <string name="check_in_now">CHECK-IN \nNOW</string>
 
+    <!--<Review Screen>-->
+    <string name="review_screen_header">Review Information</string>
+    <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
+    <string name="review_screen_demographic">DEMOGRAPHIC</string>
+    <string name="review_screen_race_lable">RACE</string>
+    <string name="review_screen_ethnicity">ETHNICITY</string>
+    <string name="review_screen_healthinsurance">HEALTH INSURANCE</string>
+    <string name="review_screen_company_lable">COMPANY</string>
+    <string name="review_screen_plan_lable">PLAN</string>
+    <string name="review_screen_insurancepolicy_number_lable">INSURANCE MEMBER ID</string>
+    <string name="review_screen_agreebutton">YES, THESE ARE CORRECT</string>
+    <string name="review_screen_disagreebutton">I NEED TO UPDATE THIS INFORMATION</string>
+
 
     <!--<Navigation Screen>-->
     <string name="Appointments_title">Appointments</string>
@@ -201,7 +209,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
 
-<!--<consent forms>-->
+    <!--<consent forms>-->
     <string name="description">This is description</string>
     <string name="consenttitle">Sign consent for medical care</string>
     <string name="content">A keyboard typically has characters engraved or printed on the keys and each press of a
@@ -217,8 +225,8 @@
 Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere consectetur est at lobortis.</string>
     <string name="hipaa">Sign HIPAA Confidentiality Agreement</string>
     <string name="yes_sig">Yes, This is my signature</string>
-    <string name="hint">Legal Representative Firstname</string>
-    <string name="hint_last">Legal Representative Lastname</string>
+    <string name="hint">Legal Representative First Name</string>
+    <string name="hint_last">Legal Representative Last Name</string>
 
     <string name="pick_date">Pick Date</string>
     <string name="choose_gender">Choose Gender</string>
@@ -230,10 +238,21 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="edit_appointment_dialog">EDIT APPOINTMENT</string>
     <string name="dateFormatString">M/dd/yyyy</string>
 
-    <string name="apt_popup_message_text">Your appointment with %1$s starts in 2 hours. Want to Check-in early?</string>
+    <string name="apt_popup_message_text">Your appointment with %1$s starts in %2$s. Want to Check-in early?</string>
     <string name="dismiss">DISMISS</string>
     <string name="checkin_early">CHECK-IN EARLY</string>
     <string name="check_in_at_office_one">CHECK-IN AT OFFICE</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="not_applicable">N/A</string>
+    <string name="do_you_smoke">Do you smoke?</string>
+    <string name="do_you_have_diabetes">Do you have diabetes?</string>
+    <string name="vascular">VASCULAR</string>
+    <string name="claudation">Claudation</string>
+    <string name="edema">Edema</string>
+    <string name="pulmonary">PULMONARY</string>
+    <string name="snoring">Snoring</string>
+    <string name="dyspnea">Dyspnea</string>
 
 
     <!--Add Appointment-->
@@ -242,9 +261,12 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="choose_provider_recent_title">RECENT</string>
     <string name="choose_provider_all_title">ALL</string>
     <string name="apt_available_hours_title">Available Hours</string>
-
+    <string name="apt_choose_provider_title">Choose Provider</string>
+    <string name="request_appointment_button_text">REQUEST APPOINTMENT</string>
     <string name="checked_in_label">CHECKED-IN</string>
     <string name="demogr_section_name_label">Name</string>
     <string name="demogr_section_address_label">Address</string>
+
+    <string name="choose">Choose</string>
 
 </resources>

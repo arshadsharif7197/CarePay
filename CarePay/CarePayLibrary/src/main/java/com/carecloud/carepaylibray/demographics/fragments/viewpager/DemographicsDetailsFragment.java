@@ -14,12 +14,19 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
+
 import java.util.Arrays;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
@@ -39,6 +46,7 @@ public class DemographicsDetailsFragment extends Fragment
     private int      selectedArray;
     private TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
     private Button nextButton;
+    private DemographicPayloadPersonalDetailsModel model;
 
     @Nullable
     @Override
@@ -52,7 +60,7 @@ public class DemographicsDetailsFragment extends Fragment
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
-        setTypefaces(view);
+
         return view;
     }
 
@@ -79,7 +87,38 @@ public class DemographicsDetailsFragment extends Fragment
         preferredLanguageTextView.setOnClickListener(this);
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         nextButton.setOnClickListener(this);
-        enableNextButton(false); // 'next' is initially disabled
+//        enableNextButton(false); // 'next' is initially disabled // TODO: 9/27/2016 uncomment
+
+        setTypefaces(view);
+
+        populateViewsFromModel();
+    }
+
+    public DemographicPayloadPersonalDetailsModel getModel() {
+        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
+        if(payload != null) {
+            model = payload.getPersonalDetails();
+        }
+        return model;
+    }
+
+    private void populateViewsFromModel() {
+        getModel();
+
+        if(model != null) {
+            raceTextView.setText(model.getPrimaryRace());
+            ethnicityTextView.setText(model.getEthnicity());
+            preferredLanguageTextView.setText(model.getPreferredLanguage());
+            String pictureByteStream = model.getProfilePhoto();
+            setPictureFromByteStream(pictureByteStream);
+        } else {
+            Log.v(LOG_TAG, "demographics details: views populated with defaults");
+            model = new DemographicPayloadPersonalDetailsModel();
+        }
+    }
+
+    private void setPictureFromByteStream(String pictureByteStream) {
+        // TODO: 9/28/2016 implement
     }
 
     @Override
@@ -99,8 +138,15 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void nextbuttonClick() {
+        // update the model with values from UI
+        model.setPrimaryRace(raceTextView.getText().toString());
+        model.setEthnicity(ethnicityTextView.getText().toString());
+        model.setPreferredLanguage(preferredLanguageTextView.getText().toString());
+
+        ((DemographicsActivity)getActivity()).setDetailsModel(model); // save the updated model in the activity
+
+        // move to next page
         ((DemographicsActivity) getActivity()).setCurrentItem(2, true);
-        // other task may be performed...
     }
 
     private void showAlertDialogWithListview(final String[] raceArray, String title) {
@@ -129,13 +175,19 @@ public class DemographicsDetailsFragment extends Fragment
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (selectedArray) {
                     case 1:
-                        raceTextView.setText(raceArray[position]);
+                        String race = raceArray[position];
+                        raceTextView.setText(race);
+                        model.setPrimaryRace(race);
                         break;
                     case 2:
-                        ethnicityTextView.setText(ethnicityArray[position]);
+                        String ethnicity = ethnicityArray[position];
+                        ethnicityTextView.setText(ethnicity);
+                        model.setEthnicity(ethnicity);
                         break;
                     case 3:
-                        preferredLanguageTextView.setText(preferredLanguageArray[position]);
+                        String prefLang = preferredLanguageArray[position];
+                        preferredLanguageTextView.setText(prefLang);
+                        model.setPreferredLanguage(prefLang);
                         break;
                 }
                 alert.dismiss();
@@ -146,14 +198,19 @@ public class DemographicsDetailsFragment extends Fragment
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsHeading));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsSubHeading));
+
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.raceTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.raceListTextView));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+
         setGothamRoundedMediumTypeface(getActivity(), nextButton);
+
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }
+
 
     @Override
     public void showAddCardButton(boolean isVisible) {

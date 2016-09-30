@@ -1,7 +1,5 @@
 package com.carecloud.carepaylibray.constants;
 
-import java.util.Locale;
-
 /**
  * Created by Jahirul Bhuiyan on 8/24/2016.
  */
@@ -18,6 +16,7 @@ public class CarePayConstants {
 
     //Appointments Constants
     public static final String ASSETS_JSON = "workflow.json";
+    public static final String APPOINTMENT_JSON = "appointments.json";
     public static final String ATTR_RESPONSE = "response";
     public static final String ATTR_CAPTURE = "capture";
     public static final String ATTR_APPOINTMENTS = "appointments";
@@ -34,8 +33,12 @@ public class CarePayConstants {
     public static final String DATE_TIME_FORMAT = "dd MMM hh:mm a";
     public static final int SIGNATURE_REQ_CODE = 100;
     public static final String FORM_DATA  = "formdata";
+    public static final String CHECKED_IN_APPOINTMENT_BUNDLE  = "Checked_in_appointment_bundle";
 
     public static final String PREF_LAST_REMINDER_POPUP_APPT_ID = "last_reminder_popup_appt_id";
     public static final String DEFAULT_STRING_PREFERENCES = "-";
     public static final long APPOINTMENT_REMINDER_TIME_IN_MINUTES = 120;
+    public static final long CUSTOM_POPUP_AUTO_DISMISS_DURATION = 5000;
+
+    public static final String APPOINTMENT_DATE_TIME_FORMAT = "MM/dd/yy HH:mm:ss a";
 }

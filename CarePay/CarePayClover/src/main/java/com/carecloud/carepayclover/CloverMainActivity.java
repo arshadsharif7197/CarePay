@@ -1,40 +1,34 @@
 package com.carecloud.carepayclover;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
-import android.widget.LinearLayout;
-
-import com.carecloud.carepaylibray.activities.LibraryMainActivity;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 public class CloverMainActivity extends AppCompatActivity {
 
-    LinearLayout queueListLinearLayout,mainLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_clover);
-        queueListLinearLayout= (LinearLayout) findViewById(R.id.queueListLinearLayout);
-        mainLayout= (LinearLayout) findViewById(R.id.mainLayout);
-        queueListLinearLayout.setVisibility(View.GONE);
+
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        ((TextView) findViewById(R.id.checkinTextView)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent checkedInIntent = new Intent(CloverMainActivity.this, CheckedInActivity.class);
+                checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(checkedInIntent);
+            }
+        });
     }
 
-    public void onQueueClick(View view) {
-        if(queueListLinearLayout.getVisibility()==View.VISIBLE){
-            TranslateAnimation anim = new TranslateAnimation(0f,queueListLinearLayout.getWidth(), 0f, 0f);  // might need to review the docs
-            anim.setDuration(1000);
-            queueListLinearLayout.setVisibility( View.GONE);
-            queueListLinearLayout.setAnimation(anim);
-
-        }else{
-            TranslateAnimation anim = new TranslateAnimation( queueListLinearLayout.getWidth(),0f, 0f, 0f);  // might need to review the docs
-            anim.setDuration(1000);
-            queueListLinearLayout.setVisibility(View.VISIBLE);
-            queueListLinearLayout.setAnimation(anim);
-
-        }
-    }
 }

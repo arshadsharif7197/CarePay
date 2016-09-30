@@ -1,38 +1,36 @@
 package com.carecloud.carepaylibray.appointments.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAddressModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeader;
-import com.carecloud.carepaylibray.appointments.utils.PopupNotificationWithAction;
+import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
+import com.carecloud.carepaylibray.appointments.services.AppointmentService;
+import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,21 +38,32 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Handler;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AppointmentsListFragment extends Fragment {
     private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
-    private AppointmentModel aptItem;
+
+    private AppointmentModel appointmentModel;
+    private AppointmentsResultModel appointmentsResultModel;
+    private ProgressBar appointmentProgressBar;
+    private SwipeRefreshLayout appointmentRefresh;
+
     private AppointmentsAdapter appointmentsAdapter;
-    private ArrayList<AppointmentModel> appointmentsItems = new ArrayList<AppointmentModel>();
+    private ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
     private ArrayList<Object> appointmentListWithHeader;
     private RecyclerView appointmentRecyclerView;
-    private CustomProxyNovaSemiBoldLabel appointmentStickyHearderTitle;
     private AppointmentsListFragment appointmentsListFragment;
+    private Bundle bundle;
 
-    public static boolean showCheckedInView;
-    private PopupNotificationWithAction popup;
+    public static boolean showNewAddedAppointment;
+    private CustomPopupNotification popup;
 
     @Override
     public void onStart() {
@@ -64,8 +73,9 @@ public class AppointmentsListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (showCheckedInView) {
-            showCheckedInView();
+
+        if (showNewAddedAppointment) {
+            showNewAddedAppointment();
         }
     }
 
@@ -74,13 +84,16 @@ public class AppointmentsListFragment extends Fragment {
      * and notify if its within 2 hours
      */
     private void checkUpcomingAppointmentForReminder() {
-        if (appointmentsItems != null && !appointmentsItems.isEmpty() && !appointmentsItems.get(0).getAppointmentId().equalsIgnoreCase(
-                ApplicationPreferences.Instance.readStringFromSharedPref(CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID))) {
+        if (appointmentsItems != null && !appointmentsItems.isEmpty() &&
+                !appointmentsItems.get(0).getAppointmentId().equalsIgnoreCase(
+                        ApplicationPreferences.Instance.readStringFromSharedPref(
+                                CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID))) {
+
             try {
                 String appointmentTimeStr = appointmentsItems.get(0).getAppointmentTime();
-                String currentTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
+                String currentTime = new SimpleDateFormat(CarePayConstants.DATE_FORMAT_AM_PM, Locale.getDefault()).format(new Date());
 
-                SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat(CarePayConstants.DATE_FORMAT_AM_PM, Locale.getDefault());
                 Date appointmentDate = format.parse(appointmentTimeStr);
                 Date currentDate = format.parse(currentTime);
 
@@ -89,9 +102,19 @@ public class AppointmentsListFragment extends Fragment {
 
                 if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES &&
                         differenceInMinutes > 0) {
-                    popup = new PopupNotificationWithAction(getActivity(), getView(), getString(R.string.checkin_early),
+                    String appointmentInDuration;
+                    if (differenceInMinutes == CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES) {
+                        appointmentInDuration = "2 hours";
+                    } else if (differenceInMinutes == 60) {
+                        appointmentInDuration = "1 hour";
+                    } else if (differenceInMinutes > 60) {
+                        appointmentInDuration = " hour and " + (differenceInMinutes - 60) + " minutes";
+                    } else {
+                        appointmentInDuration = differenceInMinutes + " minutes";
+                    }
+                    popup = new CustomPopupNotification(getActivity(), getView(), getString(R.string.checkin_early),
                             getString(R.string.dismiss),
-                            getString(R.string.apt_popup_message_text, appointmentsItems.get(0).getDoctorName()),
+                            getString(R.string.apt_popup_message_text, appointmentsItems.get(0).getDoctorName(), appointmentInDuration),
                             positiveActionListener, negativeActionListener);
                     popup.showPopWindow();
                 }
@@ -125,8 +148,8 @@ public class AppointmentsListFragment extends Fragment {
         }
     };
 
-    private void showCheckedInView() {
-        AppointmentModel model = ((AppointmentsActivity) getActivity()).getModel();
+    private void showNewAddedAppointment() {
+        final AppointmentModel model = ((AppointmentsActivity) getActivity()).getModel();
 
         if (appointmentsItems != null && appointmentsAdapter != null) {
             AppointmentModel newAppointmentEntry = new AppointmentModel();
@@ -146,13 +169,11 @@ public class AppointmentsListFragment extends Fragment {
                 mCurrentDateWithoutTime = mCurrentDateArr[0];
             }
 
-            String mAptDate = "", mAptDateWithoutTime = "";
+            String mAptDateWithoutTime = "";
             if (mAptTime != null) {
-                mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
-
+                String mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
                 String[] mAptDateArr = mAptDate.split(" ");
-                if (mAptDateArr != null)
-                    mAptDateWithoutTime = mAptDateArr[0];
+                mAptDateWithoutTime = mAptDateArr[0];
             }
 
             try {
@@ -160,19 +181,26 @@ public class AppointmentsListFragment extends Fragment {
                 Date mCurrentConvertedDate = mSimpleDateFormat.parse(mCurrentDate);
                 Date mConvertedAptDate = mSimpleDateFormat.parse(mAptDateFormat);
 
-                if (mConvertedAptDate.after(mCurrentConvertedDate) && !mAptDateWithoutTime.equalsIgnoreCase(mCurrentDateWithoutTime)) {
+                if (mConvertedAptDate.after(mCurrentConvertedDate) &&
+                        !mAptDateWithoutTime.equalsIgnoreCase(mCurrentDateWithoutTime)) {
+
                     newAppointmentEntry.setAppointmentDay(CarePayConstants.DAY_UPCOMING);
-                    Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT, Locale.ENGLISH).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
-                    SimpleDateFormat mSimpleDateFormat_Time = new SimpleDateFormat(CarePayConstants.DATE_TIME_FORMAT, Locale.ENGLISH);
+                    Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT,
+                            Locale.ENGLISH).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
+                    SimpleDateFormat mSimpleDateFormat_Time = new SimpleDateFormat(
+                            CarePayConstants.DATE_TIME_FORMAT, Locale.ENGLISH);
                     String mUpcomingDate = mSimpleDateFormat_Time.format(mSourceAptDate);
                     newAppointmentEntry.setAppointmentTime(mUpcomingDate);
+
                 } else if (mConvertedAptDate.before(mCurrentConvertedDate)) {
                     /*skipping this as the appointment was in past.*/
                     return;
                 } else {
                     newAppointmentEntry.setAppointmentDay(CarePayConstants.DAY_TODAY);
-                    Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT, Locale.ENGLISH).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
-                    SimpleDateFormat mSimpleDateFormat_Time = new SimpleDateFormat(CarePayConstants.DATE_FORMAT_AM_PM, Locale.ENGLISH);
+                    Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT,
+                            Locale.ENGLISH).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
+                    SimpleDateFormat mSimpleDateFormat_Time = new SimpleDateFormat(
+                            CarePayConstants.DATE_FORMAT_AM_PM, Locale.ENGLISH);
                     String parsedDate = mSimpleDateFormat_Time.format(mSourceAptDate);
                     newAppointmentEntry.setAppointmentTime(parsedDate);
                 }
@@ -189,14 +217,15 @@ public class AppointmentsListFragment extends Fragment {
             appointmentListWithHeader = getAppointmentListWithHeader();
 
             if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-                appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
+                appointmentsAdapter = new AppointmentsAdapter(getActivity(),
+                        appointmentListWithHeader, appointmentsListFragment);
                 appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 appointmentRecyclerView.setAdapter(appointmentsAdapter);
             } else {
                 Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
             }
         }
-        AppointmentsListFragment.showCheckedInView = false;
+        AppointmentsListFragment.showNewAddedAppointment = false;
     }
 
     @Override
@@ -209,10 +238,12 @@ public class AppointmentsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
-        appointmentStickyHearderTitle = (CustomProxyNovaSemiBoldLabel) appointmentsListView.findViewById(R.id.appointments_sticky_header_title);
         appointmentsListFragment = this;
-        aptItem = new AppointmentModel();
-        new AsyncListParser().execute();
+        appointmentRefresh=(SwipeRefreshLayout)appointmentsListView.findViewById(R.id.swipeRefreshLayout);
+        appointmentRefresh.setRefreshing(false);
+        appointmentProgressBar = (ProgressBar) appointmentsListView.findViewById(R.id.appointmentProgressBar);
+        appointmentProgressBar.setVisibility(View.GONE);
+        bundle = getArguments();
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -222,138 +253,228 @@ public class AppointmentsListFragment extends Fragment {
                 startActivity(appointmentIntent);
             }
         });
+        getAppointmentInformation();
+      //  onRefresh();
 
         return appointmentsListView;
     }
 
-    private class AsyncListParser extends AsyncTask<String, String, String> {
-        ProgressDialog pdLoading = new ProgressDialog(getContext());
+    private void getAppointmentInformation() {
+        appointmentProgressBar.setVisibility(View.VISIBLE);
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        AppointmentService aptService = (new BaseServiceGenerator(getActivity())).createService(AppointmentService.class);
+        Call<AppointmentsResultModel> call = aptService.fetchAppointmentInformation();
+        call.enqueue(new Callback<AppointmentsResultModel>() {
 
-            pdLoading.setMessage("Loading...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
-        }
+            @Override
+            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
+                appointmentsResultModel = response.body();
+                appointmentProgressBar.setVisibility(View.GONE);
 
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                String json;
-                try {
-                    InputStream is = getActivity().getAssets().open(CarePayConstants.ASSETS_JSON);
-                    int size = is.available();
-                    byte[] buffer = new byte[size];
-                    is.read(buffer);
-                    is.close();
-                    json = new String(buffer, "UTF-8");
-                } catch (IOException ex) {
-                    Log.e(LOG_TAG, "IO Exception caught : " + ex.getMessage());
-                    return null;
-                }
-                return json;
-            } catch (Exception ex) {
-                Log.e(LOG_TAG, "Exception caught : " + ex.getMessage());
-                return ex.toString();
-            }
-        }
+                if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
+                        && appointmentsResultModel.getPayload().getAppointments() != null
+                        && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
 
-        @Override
-        protected void onPostExecute(String result) {
-            pdLoading.dismiss();
-            try {
-                JSONArray jsonArray = new JSONArray(result);
-                if (jsonArray != null && jsonArray.length() > 0) {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        // Creating JSONObject from JSONArray
-                        JSONObject jsonObj = jsonArray.getJSONObject(i);
-                        JSONObject jsonObject_Response = jsonObj.getJSONObject(CarePayConstants.ATTR_RESPONSE);
-                        // Getting data from individual JSONObject
-                        if (jsonObject_Response != null) {
-                            for (int j = 0; j < jsonObject_Response.length(); j++) {
-                                JSONObject jsonObj_Capture = jsonObject_Response.getJSONObject(CarePayConstants.ATTR_CAPTURE);
-                                JSONArray jsonArray_Appointments = jsonObj_Capture.getJSONArray(CarePayConstants.ATTR_APPOINTMENTS);
-                                if(jsonArray_Appointments != null && jsonArray_Appointments.length() > 0) {
-                                    for (int k = 0; j < jsonArray_Appointments.length(); k++) {
-                                        JSONObject jsonObj_Physician = jsonArray_Appointments.getJSONObject(k);
-                                        String mAptId = jsonObj_Physician.getString(CarePayConstants.ATTR_APPT_ID);
-                                        aptItem.setAptId(mAptId);
-                                        String mAptTime = jsonObj_Physician.getString(CarePayConstants.ATTR_TIME);
+                    List<Appointment> appointments = appointmentsResultModel.getPayload().getAppointments();
+                    for (Appointment appointment : appointments) {
 
-                                        String mAptDate = "", mAptDateWithoutTime = "";
-                                        if (mAptTime != null) {
-                                            mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
+                        appointmentModel = new AppointmentModel();
 
-                                            String[] mAptDateArr = mAptDate.split(" ");
-                                            if (mAptDateArr != null)
-                                                mAptDateWithoutTime = mAptDateArr[0];
-                                        }
+                        // Appointment Id
+                        String mAptId = appointment.getPayload().getId();
+                        appointmentModel.setAptId(mAptId);
 
-                                        String mAptDay = null;
-                                        try {
-                                            Calendar c = Calendar.getInstance();
-                                            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(CarePayConstants.DATE_FORMAT, Locale.ENGLISH);
-                                            String mCurrentDate = mSimpleDateFormat.format(c.getTime());
+                        // Appointment is pending
+                        boolean isPending = false, isCancelled = false;
+                        if (appointment.getPayload().getAppointmentStatusModel().getId() == 1) {
+                            isPending = true;
+                            appointmentModel.setPending(isPending);
+                        } else if (appointment.getPayload().getAppointmentStatusModel().getId() == 4) {
+                            isCancelled = true;
+                            appointmentModel.setCancelled(isCancelled);
+                        }
 
-                                            String mCurrentDateWithoutTime = "";
-                                            if (mCurrentDate != null) {
-                                                String[] mCurrentDateArr = mCurrentDate.split(" ");
-                                                mCurrentDateWithoutTime = mCurrentDateArr[0];
-                                            }
+                        // Appointment start time
+                        String mAptTime = "";
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
+                        try {
+                            Date aptDate = sdf.parse(appointment.getPayload().getStartTime());
+                            mAptTime = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT,
+                                    Locale.getDefault()).format(aptDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-                                            String mAptDateFormat = mSimpleDateFormat.format(mSimpleDateFormat.parse(mAptDate));
-                                            Date mCurrentConvertedDate = mSimpleDateFormat.parse(mCurrentDate);
-                                            Date mConvertedAptDate = mSimpleDateFormat.parse(mAptDateFormat);
-                                            aptItem.setAppointmentTime(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
+                        String mAptDate = "", mAptDateWithoutTime = "";
+                        if (mAptTime != null) {
+                            mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
+                            String[] mAptDateArr = mAptDate.split(" ");
+                            mAptDateWithoutTime = mAptDateArr[0];
+                        }
 
-                                            JSONObject jsonObjectPhysician = jsonObj_Physician.getJSONObject(CarePayConstants.ATTR_PHYSICIAN);
-                                            String mDoctorName = jsonObjectPhysician.getString(CarePayConstants.ATTR_NAME);
-                                            aptItem.setDoctorName(mDoctorName);
+                        String mAptDay = null;
+                        try {
+                            Calendar c = Calendar.getInstance();
+                            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
+                                    CarePayConstants.DATE_FORMAT, Locale.ENGLISH);
+                            String mCurrentDate = mSimpleDateFormat.format(c.getTime());
 
-                                            String mDoctorType = jsonObjectPhysician.getString(CarePayConstants.ATTR_TYPE);
-                                            aptItem.setAppointmentType(mDoctorType);
-                                            if (mConvertedAptDate.after(mCurrentConvertedDate) && !mAptDateWithoutTime.equalsIgnoreCase(mCurrentDateWithoutTime)) {
-                                                mAptDay = CarePayConstants.DAY_UPCOMING;
-                                                Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT, Locale.ENGLISH).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
-                                                SimpleDateFormat mSimpleDateFormat_Time = new SimpleDateFormat(CarePayConstants.DATE_TIME_FORMAT, Locale.ENGLISH);
-                                                String mUpcomingDate = mSimpleDateFormat_Time.format(mSourceAptDate);
-                                                appointmentsItems.add(new AppointmentModel(mAptId, mDoctorName, mUpcomingDate, mDoctorType, mAptDay, mAptTime));
-                                            } else if (mConvertedAptDate.before(mCurrentConvertedDate)) {
-                                                // skipping this date as this appointment was in past.
-                                            } else {
-                                                mAptDay = CarePayConstants.DAY_TODAY;
-                                                Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT, Locale.ENGLISH).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
-                                                SimpleDateFormat mSimpleDateFormat_Time = new SimpleDateFormat(CarePayConstants.DATE_FORMAT_AM_PM, Locale.ENGLISH);
-                                                String parsedDate = mSimpleDateFormat_Time.format(mSourceAptDate);
-                                                appointmentsItems.add(new AppointmentModel(mAptId, mDoctorName, parsedDate, mDoctorType, mAptDay, mAptTime));
-                                            }
-                                        } catch (ParseException ex) {
-                                            Log.e(LOG_TAG, "Parse Exception caught : " + ex.getMessage());
-                                        }
-                                        aptItem.setAppointmentHeader(mAptDay);
-                                    }
+                            String mCurrentDateWithoutTime = "";
+                            if (mCurrentDate != null) {
+                                String[] mCurrentDateArr = mCurrentDate.split(" ");
+                                mCurrentDateWithoutTime = mCurrentDateArr[0];
+                            }
+
+                            // Appointment Time
+                            String mAptDateFormat = mSimpleDateFormat.format(mSimpleDateFormat.parse(mAptDate));
+                            Date mCurrentConvertedDate = mSimpleDateFormat.parse(mCurrentDate);
+                            Date mConvertedAptDate = mSimpleDateFormat.parse(mAptDateFormat);
+                            appointmentModel.setAppointmentTime(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
+
+                            // Appointment Provider Name
+                            String mDoctorName = appointment.getPayload().getProvider().getName();
+                            appointmentModel.setDoctorName(mDoctorName);
+
+                            // Appointment Provider type
+                            String mDoctorType = appointment.getPayload().getProvider().getSpecialty();
+                            appointmentModel.setAppointmentType(mDoctorType);
+
+                            // Appointment Provider phone
+                            String mPhoneNumber = appointment.getPayload().getProvider().getPhone();
+                            appointmentModel.setPhoneNumber(mPhoneNumber);
+
+                            // Appointment Place
+                            String mPlaceName = appointment.getPayload().getLocation().getName();
+                            appointmentModel.setPlaceName(mPlaceName);
+
+                            // Appointment Place address
+                            AppointmentAddressModel address = appointment.getPayload().getLocation().getAddress();
+                            String line1 = TextUtils.isEmpty(address.getLine1()) ? "" : address.getLine1();
+                            String line2 = TextUtils.isEmpty(address.getLine2()) ? "" : address.getLine2();
+                            String line3 = (address.getLine3() == null) ? "" : address.getLine3().toString();
+                            String city = TextUtils.isEmpty(address.getCity()) ? "" : address.getCity();
+                            String zipCode = TextUtils.isEmpty(address.getZipCode()) ? "" : address.getZipCode();
+                            String countyName = (address.getCountyName() == null) ? "" : address.getCountyName().toString();
+                            String stateName = TextUtils.isEmpty(address.getStateName()) ? "" : address.getStateName();
+
+                            String mPlaceAddress = line1 + " " + line2 + " " + line3 + " " + city
+                                    + " " + stateName + " " + zipCode + " " + countyName;
+                            appointmentModel.setPlaceAddress(mPlaceAddress);
+
+                            if (mConvertedAptDate.after(mCurrentConvertedDate) &&
+                                    !mAptDateWithoutTime.equalsIgnoreCase(mCurrentDateWithoutTime)) {
+                                mAptDay = CarePayConstants.DAY_UPCOMING;
+                                Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT,
+                                        Locale.getDefault()).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
+                                SimpleDateFormat mSimpleDateFormat_Time = new SimpleDateFormat(
+                                        CarePayConstants.DATE_TIME_FORMAT, Locale.getDefault());
+                                String mUpcomingDate = mSimpleDateFormat_Time.format(mSourceAptDate);
+
+                                AppointmentModel model = new AppointmentModel();
+                                model.setAppointmentId(mAptId);
+                                model.setDoctorName(mDoctorName);
+                                model.setAppointmentType(mDoctorType);
+                                model.setAppointmentTime(mUpcomingDate);
+                                model.setAppointmentDay(mAptDay);
+                                model.setAppointmentDate(mAptTime);
+                                model.setPlaceName(mPlaceName);
+                                model.setPlaceAddress(mPlaceAddress);
+                                model.setPending(isPending);
+                                model.setCancelled(isCancelled);
+                                model.setPhoneNumber(mPhoneNumber);
+
+                                // Skip cancelled appointments
+                                if (!isCancelled) {
+                                    appointmentsItems.add(model);
+                                }
+
+                            } else if (mConvertedAptDate.before(mCurrentConvertedDate)) {
+                                // skipping this date as this appointment was in past.
+                                Log.i(LOG_TAG, "Appointment dare already over");
+                            } else {
+                                mAptDay = CarePayConstants.DAY_TODAY;
+                                Date mSourceAptDate = new SimpleDateFormat(CarePayConstants.DATE_FORMAT,
+                                        Locale.getDefault()).parse(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
+                                SimpleDateFormat mSimpleDateFormat_Time = new SimpleDateFormat(
+                                        CarePayConstants.DATE_FORMAT_AM_PM, Locale.getDefault());
+                                String parsedDate = mSimpleDateFormat_Time.format(mSourceAptDate);
+
+                                AppointmentModel model = new AppointmentModel();
+                                model.setAppointmentId(mAptId);
+                                model.setDoctorName(mDoctorName);
+                                model.setAppointmentType(mDoctorType);
+                                model.setAppointmentTime(parsedDate);
+                                model.setAppointmentDay(mAptDay);
+                                model.setAppointmentDate(mAptTime);
+                                model.setPlaceName(mPlaceName);
+                                model.setPlaceAddress(mPlaceAddress);
+                                model.setPending(isPending);
+                                model.setPhoneNumber(mPhoneNumber);
+
+                                // Skip cancelled appointments
+                                if (!isCancelled) {
+                                    appointmentsItems.add(model);
                                 }
                             }
+                            appointmentRefresh.setRefreshing(false);
+                        } catch (ParseException ex) {
+                            Log.e(LOG_TAG, "Parse Exception caught : " + ex.getMessage());
+                        }
+                        appointmentModel.setAppointmentHeader(mAptDay);
+                    }
+                }
+
+                appointmentListWithHeader = getAppointmentListWithHeader();
+                if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
+                    appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
+                    appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    appointmentRecyclerView.setAdapter(appointmentsAdapter);
+                } else {
+                    Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
+                }
+                checkUpcomingAppointmentForReminder();
+
+                /*Logic to add Checked-in appointment if exists*/
+                if (bundle != null) {
+                    AppointmentModel appointmentModel = (AppointmentModel)
+                            bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+
+                    if (appointmentModel != null) {
+                        // adding checked-in appointment at the top of the list
+                        appointmentListWithHeader.add(0, appointmentModel);
+
+                        if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
+                            appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
+                            appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                            appointmentRecyclerView.setAdapter(appointmentsAdapter);
+                        } else {
+                            Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
-            } catch (JSONException ex) {
-                Log.e(LOG_TAG, "JSON Exception caught : " + ex.getMessage());
+
             }
 
-            appointmentListWithHeader = getAppointmentListWithHeader();
-            if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-                appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
-                appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                appointmentRecyclerView.setAdapter(appointmentsAdapter);
-            } else {
-                Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
+            @Override
+            public void onFailure(Call<AppointmentsResultModel> call, Throwable t) {
+
             }
-            checkUpcomingAppointmentForReminder();
-        }
+        });
     }
+  /*  private void onRefresh(){
+        appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (appointmentsResultModel!=(new AppointmentsResultModel())) {
+                    AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
+                    appointmentListWithHeader.remove(appointmentSectionHeaderModel);
+                    appointmentListWithHeader.remove(appointmentModel);
+
+                    getAppointmentInformation();
+                }
+            }
+        });
+    }*/
 
     /*Method to return appointmentListWithHeader*/
     private ArrayList<Object> getAppointmentListWithHeader() {
@@ -361,17 +482,18 @@ public class AppointmentsListFragment extends Fragment {
             /*To sort appointment list based on appointment time*/
             Collections.sort(appointmentsItems, new Comparator<AppointmentModel>() {
                 public int compare(AppointmentModel o1, AppointmentModel o2) {
-                    if(o1.getAppointmentDate() != null && o2.getAppointmentDate() != null) {
+                    if (o1.getAppointmentDate() != null && o2.getAppointmentDate() != null) {
                         String dateO1 = o1.getAppointmentDate().replaceAll(CarePayConstants.ATTR_UTC, "").trim();
                         String dateO2 = o2.getAppointmentDate().replaceAll(CarePayConstants.ATTR_UTC, "").trim();
                         try {
-                            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(CarePayConstants.DATE_FORMAT, Locale.ENGLISH);
+                            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
+                                    CarePayConstants.DATE_FORMAT, Locale.getDefault());
                             Date date1 = mSimpleDateFormat.parse(dateO1);
                             Date date2 = mSimpleDateFormat.parse(dateO2);
                             long time1 = date1.getTime();
                             long time2 = date2.getTime();
 
-                            if(time1 < time2){
+                            if (time1 < time2) {
                                 return -1;
                             } else {
                                 return 1;
@@ -395,16 +517,16 @@ public class AppointmentsListFragment extends Fragment {
 
             /*To create appointment list data structure along with headers*/
             String previousDay = "";
-            appointmentListWithHeader = new ArrayList<Object>();
+            appointmentListWithHeader = new ArrayList<>();
 
             for (AppointmentModel appointmentModel : appointmentsItems) {
                 if (previousDay.equalsIgnoreCase(appointmentModel.getAppointmentDay())) {
                     appointmentListWithHeader.add(appointmentModel);
                 } else {
                     previousDay = appointmentModel.getAppointmentDay();
-                    AppointmentSectionHeader appointmentSectionHeader = new AppointmentSectionHeader();
-                    appointmentSectionHeader.setAppointmentHeader(previousDay);
-                    appointmentListWithHeader.add(appointmentSectionHeader);
+                    AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
+                    appointmentSectionHeaderModel.setAppointmentHeader(previousDay);
+                    appointmentListWithHeader.add(appointmentSectionHeaderModel);
                     appointmentListWithHeader.add(appointmentModel);
                 }
             }

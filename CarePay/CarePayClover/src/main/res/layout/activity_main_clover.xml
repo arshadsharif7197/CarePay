@@ -3,181 +3,210 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3582e1"
+    android:background="@drawable/background"
     android:orientation="vertical"
     android:padding="32dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/textView6"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true"
             android:background="@drawable/icn_gear" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/titleHeaderTextview"
+            android:layout_width="183dp"
+            android:layout_height="68dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/cp_logo" />
 
-            <TextView
-                android:id="@+id/titleHeaderTextview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="carepay"
-                android:textColor="#ffffff"
-                android:textSize="38sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Powered by CareCloud"
-                android:textColor="#b7c7cf"
-                android:textSize="15sp" />
-        </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/alertLayout"
             android:layout_width="wrap_content"
-            android:id="@+id/queueLayout"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/bg_blue_overlay"
             android:gravity="center_vertical"
-            android:onClick="onQueueClick"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/queueTitleTextView"
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                android:id="@+id/alaertTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
                 android:paddingRight="10dp"
-                android:text="Queue"
+                android:text="Alerts"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp" />
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+                android:id="@+id/alertTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/alert_counter_background"
+                android:gravity="center"
+                android:text="12"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/queueLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@+id/alertLayout"
+            android:background="@drawable/bg_blue_overlay"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+                android:id="@+id/queueTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                android:text="Checking In"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+                android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/queue_counter_background"
                 android:gravity="center"
                 android:text="12"
                 android:textColor="#FFFFFF"
-                android:textSize="15sp" />
+                android:textSize="22sp" />
         </LinearLayout>
-    </LinearLayout>
+
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
+        android:layout_weight="1"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingBottom="40dp"
+        android:paddingLeft="220dp"
+        android:paddingRight="220dp"
+        android:paddingTop="40dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" android:background="@drawable/home_main_container_rounded">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:orientation="horizontal">
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/checkinTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/top_left_rounded_background"
+                android:drawableTop="@drawable/icn_check_in"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="20dp"
+                android:paddingTop="70dp"
+                android:text="Check-In"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
 
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:paddingTop="10dp"
-                    android:layout_marginRight="1dp"
-                    android:drawableTop="@drawable/icn_check_in"
-                    android:gravity="center"
-                    android:text="Check-In"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:drawableTop="@drawable/icn_payments"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="20dp"
+                android:paddingTop="70dp"
+                android:text="Payments"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
 
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:paddingTop="10dp"
-                    android:layout_marginRight="1dp"
-                    android:drawableTop="@drawable/icn_payments"
-                    android:gravity="center_horizontal"
-                    android:text="Payments"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="190dp"
-                    android:background="#ffffff"
-                    android:paddingTop="10dp"
-                    android:drawableTop="@drawable/icn_appointements"
-                    android:gravity="center"
-                    android:text="Appointments"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:layout_marginTop="1dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:paddingTop="10dp"
-                    android:layout_marginRight="1dp"
-                    android:drawableTop="@drawable/icn_check_out"
-                    android:gravity="center_horizontal"
-                    android:text="Check-Out"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:drawableTop="@drawable/icn_retail"
-                    android:gravity="center_horizontal"
-                    android:text="Retail"
-                    android:layout_marginRight="1dp"
-                    android:paddingTop="10dp"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:drawableTop="@drawable/icn_check_in"
-                    android:gravity="center_horizontal"
-                    android:text="All Activity"
-                    android:paddingTop="10dp"
-                    android:textColor="#37474f"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/top_right_rounded_background"
+                android:drawableTop="@drawable/icn_appointements"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="20dp"
+                android:paddingTop="70dp"
+                android:text="Appointments"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:id="@+id/queueListLinearLayout"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:background="#acacac">
+            android:layout_height="0dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/textView2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/bottom_left_rounded_background"
+                android:drawableTop="@drawable/icn_checkout"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="20dp"
+                android:paddingTop="70dp"
+                android:text="Check-Out"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:drawableTop="@drawable/icn_retail"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="20dp"
+                android:paddingTop="70dp"
+                android:text="Shop"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/textView3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bottom_right_rounded_background"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="20dp"
+                android:paddingTop="70dp"
+                android:textColor="@color/charcoal"
+                android:textSize="28sp" />
+
 
         </LinearLayout>
     </LinearLayout>

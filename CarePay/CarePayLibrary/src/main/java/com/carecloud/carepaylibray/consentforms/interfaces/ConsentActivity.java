@@ -18,7 +18,6 @@ import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.InTakeActivity;
 
-import static android.R.attr.fragment;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
@@ -44,7 +43,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(toolbar);
 
-        replaceFragment(getForm(), false);
+        replaceFragment(getConsentForm(), false);
     }
 
     private void replaceFragment(Fragment fragment, boolean addToBackStack) {
@@ -76,10 +75,10 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CarePayConstants.SIGNATURE_REQ_CODE) {
-            if (SignatureActivity.isFromBackButton) {
-                SignatureActivity.isFromBackButton = false;
+            if (SignatureActivity.isBackButtonClicked) {
+                SignatureActivity.isBackButtonClicked = false;
             }else {
-                Fragment fragment = getNextForm();
+                Fragment fragment = getNextConsentForm();
                 if (fragment != null) {
                     replaceFragment(fragment, true);
                 } else {
@@ -90,10 +89,10 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         }
     }
 
-    private Fragment getForm() {
+    private Fragment getConsentForm() {
         if (showingForm == FormId.FORM1) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.FORM_DATA, getFormData("form1"));
+            bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form1"));
             ConsentForm1Fragment consentForm1Fragment = new ConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
             title.setText("Consent Form 1 of 3");
@@ -101,14 +100,14 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
             return consentForm1Fragment;
         } else if (showingForm == FormId.FORM2) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.FORM_DATA, getFormData("form2"));
+            bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form2"));
             ConsentForm2Fragment consentForm2Fragment = new ConsentForm2Fragment();
             consentForm2Fragment.setArguments(bundle);
             updateTitle(FormId.FORM2);
             return consentForm2Fragment;
         } else {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.FORM_DATA, getFormData("form3"));
+            bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form3"));
             ConsentForm1Fragment consentForm1Fragment = new ConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
             updateTitle(FormId.FORM3);
@@ -145,7 +144,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         }
     }
 
-    private FormData getFormData(String formName) {
+    private FormData getConsentFormData(String formName) {
         FormData formData = new FormData();
 
         if (formName.equals("form1")) {
@@ -171,10 +170,10 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         return formData;
     }
 
-    private Fragment getNextForm() {
+    private Fragment getNextConsentForm() {
         showingForm = showingForm.next();
         if(showingForm != FormId.NONE) {
-            return getForm();
+            return getConsentForm();
         }
         return null;
     }

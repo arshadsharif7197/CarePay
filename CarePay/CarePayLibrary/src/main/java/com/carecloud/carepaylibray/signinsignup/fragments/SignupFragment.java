@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -22,7 +21,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
@@ -37,11 +35,20 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
+import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -570,7 +577,14 @@ public class SignupFragment extends Fragment {
         if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
                 // confirmed; (auto)sign-in
-                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+//                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+                CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
+                                        new CognitoActionCallback() {
+                                            @Override
+                                            public void executeAction() {
+//                                                launchDemographics(); // TODO: 9/29/2016 fix for confirmation or remove
+                                            }
+                                        });
             }
         }
     }
@@ -584,6 +598,38 @@ public class SignupFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    private void launchDemographics(DemographicModel demographicModel) {
+        // do to Demographics
+        Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+        // pass the object into the gson
+        Gson gson = new Gson();
+        intent.putExtra("demographics_model", gson.toJson(demographicModel, DemographicModel.class));
+
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    private void getDemographicInformation() {
+        progressBar.setVisibility(View.VISIBLE);
+        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
+        Call<DemographicModel> call = apptService.fetchDemographics();
+        call.enqueue(new Callback<DemographicModel>() {
+            @Override
+            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+                DemographicModel demographicModel = response.body();
+                progressBar.setVisibility(View.GONE);
+                Log.v(LOG_TAG, "demographic info fetched");
+                launchDemographics(demographicModel);
+            }
+
+            @Override
+            public void onFailure(Call<DemographicModel> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.e(LOG_TAG, "failed fetching demogr info", t);
+            }
+        });
     }
 
     // cognito
@@ -618,20 +664,6 @@ public class SignupFragment extends Fragment {
         startActivityForResult(intent, 10);
     }
 
-    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
-        Log.v(LOG_TAG, "getUserAuthentication()");
-
-        userName = username;
-        if (username != null) {
-            CognitoAppHelper.setUser(username);
-        }
-
-        String password = passwordText.getText().toString();
-        AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
-        continuation.setAuthenticationDetails(authenticationDetails);
-        continuation.continueTask();
-    }
-
     SignUpHandler signUpHandler = new SignUpHandler() {
         @Override
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
@@ -639,7 +671,14 @@ public class SignupFragment extends Fragment {
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
                 // auto-confirmed; sign-in
-                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
+                CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
+                                        new CognitoActionCallback() {
+                                            @Override
+                                            public void executeAction() {
+                                                getDemographicInformation();
+                                            }
+                                        });
+
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed
@@ -654,45 +693,6 @@ public class SignupFragment extends Fragment {
                                          "Sign up failed!",
                                          "Invalid id or password");
             Log.e(LOG_TAG, CognitoAppHelper.formatException(exception));
-        }
-    };
-
-    private AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
-        @Override
-        public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-            Log.v(LOG_TAG, "auth success");
-            CognitoAppHelper.setCurrSession(userSession);
-            CognitoAppHelper.newDevice(newDevice);
-
-            progressBar.setVisibility(View.INVISIBLE);
-
-            // do to Demographics
-            Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-
-        }
-
-        @Override
-        public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
-            Log.v(LOG_TAG, "getAuthenticationDetails()");
-            getUserAuthentication(authenticationContinuation, userId);
-        }
-
-        @Override
-        public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
-            Log.v(LOG_TAG, "getMFACode()");
-        }
-
-        @Override
-        public void authenticationChallenge(ChallengeContinuation continuation) {
-            Log.v(LOG_TAG, "authenticationChallenge()");
-        }
-
-        @Override
-        public void onFailure(Exception exception) {
-            progressBar.setVisibility(View.INVISIBLE);
-            Log.e(LOG_TAG, exception.getLocalizedMessage());
         }
     };
 }
