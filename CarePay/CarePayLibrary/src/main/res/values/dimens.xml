@@ -106,6 +106,7 @@
     <dimen name="apt_lst_view_ht">0.8px</dimen>
     <dimen name="apt_lst_img_elevation">1dp</dimen>
     <dimen name="apt_dl_view_margin">15dp</dimen>
+    <dimen name="apt_list_upcoming_date_txt_size">25sp</dimen>
 
 <!--<review screen dimen>-->
     <dimen name="review_screen_left_margin">17dp</dimen>
@@ -162,6 +163,12 @@
     <dimen name="intakeCaptionTextSize">13sp</dimen>
     <dimen name="intakeCaptionLeftRightMargin">40dp</dimen>
 
+    <dimen name="intake_medical_history_form_2_padding">17dp</dimen>
+    <dimen name="intake_radio_caption_margin">16dp</dimen>
+    <dimen name="intake_radio_margin">15dp</dimen>
+    <dimen name="intake_radio_caption_text_size">17sp</dimen>
+    <dimen name="intake_radio_option_text_size">14sp</dimen>
+
     <!--Available hours-->
     <dimen name="apt_available_hours_list_header_text">14sp</dimen>
     <dimen name="apt_available_hours_list_row_text">17sp</dimen>
@@ -177,7 +184,7 @@
     <dimen name="apt_popup_icon_margin">8dp</dimen>
     <dimen name="apt_popup_message_margin">10dp</dimen>
     <dimen name="apt_popup_message_text">15sp</dimen>
-    <dimen name="apt_popup_message_text_line_spacing">20sp</dimen>
+    <dimen name="apt_popup_message_text_line_spacing">10sp</dimen>
     <dimen name="apt_popup_button_text">13sp</dimen>
     <dimen name="apt_popup_button_margin">6dp</dimen>
     <dimen name="apt_popup_optional">10sp</dimen>
@@ -216,4 +223,7 @@
     <dimen name="qr_code_header_text_padding">79dp</dimen>
     <dimen name="apt_skicky_header_height">35dp</dimen>
     <dimen name="optional_text_edit">-20dp</dimen>
+
+    <dimen name="checkbox_padding_left_right">3dp</dimen>
+    <dimen name="checkbox_padding_top_bottom">3dp</dimen>
 </resources>

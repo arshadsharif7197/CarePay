@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -30,10 +32,11 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
 
-    private ImageCaptureHelper mLicenseScanHelper;
-    private TextView           tvLicenseNum;
-    private Button             btnScanLicense;
-    private TextView           tvState;
+    private ImageCaptureHelper                    mLicenseScanHelper;
+    private TextView                              tvLicenseNum;
+    private Button                                btnScanLicense;
+    private TextView                              tvState;
+    private DemographicPayloadDriversLicenseModel model;
 
     @Nullable
     @Override
@@ -66,14 +69,37 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
         setTypefaces(view);
 
+        populateViewsFromModel();
+
         return view;
     }
 
-    protected void updateDetailViewsAfterScan() { // license has been scanned
+    protected void updateModelAndViewsAfterScan() { // license has been scanned
+        // TODO: 9/29/2016 implement OCR
         btnScanLicense.setText(R.string.demogr_docs_rescan);
-        tvLicenseNum.setText("123456789");
+
+        model.setLicenseNumber("666666666");
+        tvLicenseNum.setText("666666666");
         tvLicenseNum.setVisibility(View.VISIBLE);
+
+        model.setLicenseState(states[8]);
         tvState.setText(states[8]);
+    }
+
+    @Override
+    public void populateViewsFromModel() {
+        if (model != null) {
+            // check the type of the model
+            mLicenseScanHelper.setImageFromCharStream(model.getLicensePhoto());
+            String licenseNum = model.getLicenseNumber();
+            if (!StringUtil.isNullOrEmpty(licenseNum)) {
+                tvLicenseNum.setVisibility(View.VISIBLE);
+            } else {
+                tvLicenseNum.setVisibility(View.GONE);
+            }
+            tvLicenseNum.setText(licenseNum);
+            tvState.setText(model.getLicenseState());
+        }
     }
 
     @Override
@@ -96,5 +122,9 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     @Override
     public int getImageShape() {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    }
+
+    public void setModel(DemographicPayloadDriversLicenseModel model) {
+        this.model = model;
     }
 }

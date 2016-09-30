@@ -15,7 +15,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by lsoco_user on 9/11/2016.
  * Generic fragment for an intake form
  */
-public class InTakeFragment extends Fragment{
+public class InTakeFragment extends Fragment implements View.OnClickListener{
     private IntakeFormModel form;
 
     @Nullable
@@ -39,4 +39,8 @@ public class InTakeFragment extends Fragment{
         this.form = question;
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }

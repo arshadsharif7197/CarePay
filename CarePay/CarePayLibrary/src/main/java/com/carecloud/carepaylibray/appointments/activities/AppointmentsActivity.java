@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.appointments.activities;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +21,7 @@ import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragme
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
@@ -105,6 +106,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -117,7 +119,10 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             Intent intent = new Intent(this, PaymentActivity.class);
             startActivity(intent);
             AppointmentsActivity.model = null; // appointment clicked item is cleared.
+            finish();
         } else if (id == R.id.nav_settings) {
+            Intent demographicActivityIntent= new Intent(AppointmentsActivity.this, DemographicsActivity.class);
+            startActivity(demographicActivityIntent);
 
         } else if (id == R.id.nav_logout) {
             // perform log out, of course
@@ -132,7 +137,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
                 // go to Sign in screen
                 Intent intent = new Intent(this, SigninSignupActivity.class);
                 startActivity(intent);
-                finish();
+                finish(); // TODO: 9/27/2016 uncomment
             }
         } else if (id == R.id.nav_purchase) {
 
