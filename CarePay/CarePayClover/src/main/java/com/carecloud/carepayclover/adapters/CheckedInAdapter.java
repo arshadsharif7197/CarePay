@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepayclover.CheckedInActivity;
-import com.carecloud.carepayclover.CloverMainActivity;
 import com.carecloud.carepayclover.R;
 import com.carecloud.carepayclover.RotateActivity;
 import com.carecloud.carepaylibray.appointments.models.Appointment;

@@ -1,13 +1,11 @@
 package com.carecloud.carepayclover.notification;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import com.clover.sdk.v1.app.AppNotification;
 import com.clover.sdk.v1.app.AppNotificationReceiver;
-import com.clover.sdk.v3.order.OrderConnector;
 
 public class NotificationReceiver extends AppNotificationReceiver {
     public final static String NOTIFICATION_ACTION = "checkin";
@@ -23,7 +21,7 @@ public class NotificationReceiver extends AppNotificationReceiver {
         // Check Our App Notification
         if (notification.appEvent.contains(NOTIFICATION_ACTION)) {
             Log.d("Push Notification",notification.payload);
-            Intent intent=new Intent("NEW_ORDER_FOUND");
+            Intent intent=new Intent("NEW_CHECKEDIN_NOTIFICATION");
             intent.putExtra("checkedin_notification", notification.payload);
             context.sendBroadcast(intent);
         }
