@@ -87,7 +87,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
-                    holder.todayTimeTextView.setText(item.getAppointmentTime().replaceAll("UTC", ""));
+                    holder.todayTimeTextView.setText(item.getAppointmentTime());
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
                 }
             }
@@ -136,6 +136,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     CustomProxyNovaSemiBoldLabel appointmentStickyHeaderTitle =
                             (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.appointments_sticky_header_title);
                     appointmentStickyHeaderTitle.setText(item.getAppointmentHeader());
+                    appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
                 }
             } else {
                 holder.appointmentSectionLinearLayout.setVisibility(View.VISIBLE);
@@ -150,7 +151,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final RecyclerView appointmentRecyclerView = (RecyclerView) view.findViewById(R.id.appointments_recycler_view);
             appointmentRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     LinearLayoutManager mLayoutManager = (LinearLayoutManager) appointmentRecyclerView.getLayoutManager();
                     int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
 
@@ -166,6 +167,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             if (item.isCheckedIn()) {
                                 appointmentStickyHeaderTitle.setVisibility(View.GONE);
                             } else {
+                                System.out.println("DY :::::: " + 1 + " ---- " + item.getAppointmentHeader());
                                 appointmentStickyHeaderTitle.setText(item.getAppointmentHeader());
                                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
                             }
