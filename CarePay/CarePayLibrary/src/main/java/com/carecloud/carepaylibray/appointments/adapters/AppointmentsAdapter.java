@@ -99,12 +99,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter <AppointmentsAdapt
                     /*Restricted the appointment list item click if it is appointment header type.*/
                     if (object.getClass() == AppointmentModel.class) {
                         AppointmentModel item = (AppointmentModel) object;
+                        AppointmentsActivity.model = item; // appointment clicked item saved so that it can be used on Payment
                         if (item.isPending()) {
                             new PendingAppointmentRequestDialog(context, item).show();
                         } else if(item.isCheckedIn()) {
                             new QueueAppointmentDialog(context, item).show();
                         } else {
-                            AppointmentsActivity.model = item; // appointment clicked item saved so that it can be used on Payment
                             new CheckInOfficeNowAppointmentDialog(context, item).show();
                         }
                     }

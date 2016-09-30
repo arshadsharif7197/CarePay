@@ -16,7 +16,7 @@ public class CheckInAppointmentModel {
     private String url;
     @SerializedName("data")
     @Expose
-    private Data data;
+    private DataModel data;
 
     /**
      * 
@@ -77,7 +77,7 @@ public class CheckInAppointmentModel {
      * @return
      *     The data
      */
-    public Data getData() {
+    public DataModel getData() {
         return data;
     }
 
@@ -86,7 +86,7 @@ public class CheckInAppointmentModel {
      * @param data
      *     The data
      */
-    public void setData(Data data) {
+    public void setData(DataModel data) {
         this.data = data;
     }
 

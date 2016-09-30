@@ -16,7 +16,7 @@ public class TransitionsModel {
     private CheckInAppointmentModel checkInAppointmentModel;
     @SerializedName("update_payment")
     @Expose
-    private UpdatePayment updatePayment;
+    private UpdatePaymentModel updatePayment;
 
     /**
      * 
@@ -77,7 +77,7 @@ public class TransitionsModel {
      * @return
      *     The updatePayment
      */
-    public UpdatePayment getUpdatePayment() {
+    public UpdatePaymentModel getUpdatePayment() {
         return updatePayment;
     }
 
@@ -86,7 +86,7 @@ public class TransitionsModel {
      * @param updatePayment
      *     The update_payment
      */
-    public void setUpdatePayment(UpdatePayment updatePayment) {
+    public void setUpdatePayment(UpdatePaymentModel updatePayment) {
         this.updatePayment = updatePayment;
     }
 

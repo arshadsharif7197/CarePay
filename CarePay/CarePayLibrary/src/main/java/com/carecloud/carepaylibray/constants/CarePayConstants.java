@@ -33,6 +33,11 @@ public class CarePayConstants {
     public static final int SIGNATURE_REQ_CODE = 100;
     public static final String FORM_DATA  = "formdata";
     public static final String CHECKED_IN_APPOINTMENT_BUNDLE  = "Checked_in_appointment_bundle";
+    public static final String INTAKE_BUNDLE  = "intake_bundle";
+    public static final String COPAY  = "Copay";
+    public static final String ACCOUNT  = "Account";
+    public static final String DOLLAR  = "$";
+    public static final String RESPONSIBILITY_FORMATTER  = "#0.00";
 
     public static final String PREF_LAST_REMINDER_POPUP_APPT_ID = "last_reminder_popup_appt_id";
     public static final String DEFAULT_STRING_PREFERENCES = "-";

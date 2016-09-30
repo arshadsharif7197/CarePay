@@ -12,14 +12,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.intake.InTakeActivity;
+import com.carecloud.carepaylibray.intake.activities.IntakeActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by sudhir_pingale on 9/29/2016.
  */
 
-public class InTakeReviewOfSymptomsFragment extends InTakeFragment {
+public class IntakeReviewOfSymptomsFragment extends IntakeFragment {
 
     private View reviewOfSymptomsFormParent;
     private Context context;
@@ -65,32 +65,32 @@ public class InTakeReviewOfSymptomsFragment extends InTakeFragment {
         claudationRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
-                ((InTakeActivity)context).setIntakeNextEnabled(true);
+                ((IntakeActivity)context).isQuestionAnswered = true;
+                ((IntakeActivity)context).setIntakeNextEnabled(true);
             }
         });
 
         edemaRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
-                ((InTakeActivity)context).setIntakeNextEnabled(true);
+                ((IntakeActivity)context).isQuestionAnswered = true;
+                ((IntakeActivity)context).setIntakeNextEnabled(true);
             }
         });
 
         snoringRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
-                ((InTakeActivity)context).setIntakeNextEnabled(true);
+                ((IntakeActivity)context).isQuestionAnswered = true;
+                ((IntakeActivity)context).setIntakeNextEnabled(true);
             }
         });
 
         dyspneaRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
-                ((InTakeActivity)context).setIntakeNextEnabled(true);
+                ((IntakeActivity)context).isQuestionAnswered = true;
+                ((IntakeActivity)context).setIntakeNextEnabled(true);
             }
         });
     }

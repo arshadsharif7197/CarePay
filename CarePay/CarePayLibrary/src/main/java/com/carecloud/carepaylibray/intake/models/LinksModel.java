@@ -7,17 +7,17 @@ public class LinksModel {
 
     @SerializedName("self")
     @Expose
-    private Self self;
+    private SelfModel self;
     @SerializedName("payments")
     @Expose
-    private Payments payments;
+    private PaymentModel payments;
 
     /**
      * 
      * @return
      *     The self
      */
-    public Self getSelf() {
+    public SelfModel getSelf() {
         return self;
     }
 
@@ -26,7 +26,7 @@ public class LinksModel {
      * @param self
      *     The self
      */
-    public void setSelf(Self self) {
+    public void setSelf(SelfModel self) {
         this.self = self;
     }
 
@@ -35,7 +35,7 @@ public class LinksModel {
      * @return
      *     The payments
      */
-    public Payments getPayments() {
+    public PaymentModel getPayments() {
         return payments;
     }
 
@@ -44,7 +44,7 @@ public class LinksModel {
      * @param payments
      *     The payments
      */
-    public void setPayments(Payments payments) {
+    public void setPayments(PaymentModel payments) {
         this.payments = payments;
     }
 

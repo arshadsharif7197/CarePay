@@ -20,7 +20,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by prem_mourya on 9/28/2016.
  */
 
-public class InTakeReviewVisitFragment extends InTakeFragment {
+public class IntakeReviewVisitFragment extends IntakeFragment {
 
     private View mainView;
     private Context context;

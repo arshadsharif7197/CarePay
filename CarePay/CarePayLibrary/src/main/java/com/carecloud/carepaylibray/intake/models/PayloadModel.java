@@ -7,14 +7,14 @@ public class PayloadModel {
 
     @SerializedName("payments")
     @Expose
-    private Payments_ payments;
+    private PaymentsModel payments;
 
     /**
      * 
      * @return
      *     The payments
      */
-    public Payments_ getPayments() {
+    public PaymentsModel getPayments() {
         return payments;
     }
 
@@ -23,7 +23,7 @@ public class PayloadModel {
      * @param payments
      *     The payments
      */
-    public void setPayments(Payments_ payments) {
+    public void setPayments(PaymentsModel payments) {
         this.payments = payments;
     }
 

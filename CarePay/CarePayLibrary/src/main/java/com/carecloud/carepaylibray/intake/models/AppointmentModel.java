@@ -22,7 +22,7 @@ public class AppointmentModel {
     private Boolean visible;
     @SerializedName("validations")
     @Expose
-    private List<Validation> validations = new ArrayList<Validation>();
+    private List<ValidationModel> validations = new ArrayList<ValidationModel>();
 
     /**
      * @return The name
@@ -83,14 +83,14 @@ public class AppointmentModel {
     /**
      * @return The validations
      */
-    public List<Validation> getValidations() {
+    public List<ValidationModel> getValidations() {
         return validations;
     }
 
     /**
      * @param validations The validations
      */
-    public void setValidations(List<Validation> validations) {
+    public void setValidations(List<ValidationModel> validations) {
         this.validations = validations;
     }
 

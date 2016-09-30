@@ -13,7 +13,7 @@ public class MetadataModel {
     private LinksModel links;
     @SerializedName("transitions")
     @Expose
-    private Transitions transitions;
+    private TransitionsModel transitions;
 
     /**
      * 
@@ -56,7 +56,7 @@ public class MetadataModel {
      * @return
      *     The transitions
      */
-    public Transitions getTransitions() {
+    public TransitionsModel getTransitions() {
         return transitions;
     }
 
@@ -65,7 +65,7 @@ public class MetadataModel {
      * @param transitions
      *     The transitions
      */
-    public void setTransitions(Transitions transitions) {
+    public void setTransitions(TransitionsModel transitions) {
         this.transitions = transitions;
     }
 

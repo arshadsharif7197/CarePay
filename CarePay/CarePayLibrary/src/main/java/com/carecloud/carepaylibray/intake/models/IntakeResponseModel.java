@@ -7,10 +7,10 @@ public class IntakeResponseModel {
 
     @SerializedName("metadata")
     @Expose
-    private Metadata metadata;
+    private MetadataModel metadata;
     @SerializedName("payload")
     @Expose
-    private Payload payload;
+    private PayloadModel payload;
     @SerializedName("state")
     @Expose
     private String state;
@@ -20,7 +20,7 @@ public class IntakeResponseModel {
      * @return
      *     The metadata
      */
-    public Metadata getMetadata() {
+    public MetadataModel getMetadata() {
         return metadata;
     }
 
@@ -29,7 +29,7 @@ public class IntakeResponseModel {
      * @param metadata
      *     The metadata
      */
-    public void setMetadata(Metadata metadata) {
+    public void setMetadata(MetadataModel metadata) {
         this.metadata = metadata;
     }
 
@@ -38,7 +38,7 @@ public class IntakeResponseModel {
      * @return
      *     The payload
      */
-    public Payload getPayload() {
+    public PayloadModel getPayload() {
         return payload;
     }
 
@@ -47,7 +47,7 @@ public class IntakeResponseModel {
      * @param payload
      *     The payload
      */
-    public void setPayload(Payload payload) {
+    public void setPayload(PayloadModel payload) {
         this.payload = payload;
     }
 
