@@ -1,12 +1,16 @@
 package com.carecloud.carepayclover;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CloverMainActivity extends AppCompatActivity {
 
@@ -29,6 +33,23 @@ public class CloverMainActivity extends AppCompatActivity {
                 startActivity(checkedInIntent);
             }
         });
+        registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_ORDER_FOUND"));
+    }
+    BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            /*if (!merchantId.isEmpty()) {
+                orderId=intent.getExtras().getString("checkedin_notification");
+                requestForOrder();
+            }
+
+            Toast.makeText(POS_MainActivity.this, "New order created", Toast.LENGTH_LONG).show();*/
+        }
+    };
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(newCheckedInReceiver);
     }
 
 }
