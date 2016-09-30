@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +16,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
+import com.carecloud.carepaylibray.intake.JsonFormParseSimulator;
+import com.carecloud.carepaylibray.intake.fragments.InTakeCardiacSymptomsFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeMedicalHistoryFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeMedicalHistoryFragmentForm2;
+import com.carecloud.carepaylibray.intake.fragments.InTakeReviewOfSymptomsFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeReviewVisitFragment;
+import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
+import com.carecloud.carepaylibray.intake.services.InTakeService;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InTakeActivity extends KeyboardHolderActivity {
 
@@ -93,10 +109,24 @@ public class InTakeActivity extends KeyboardHolderActivity {
                 if(intakeButtonText.equalsIgnoreCase(getString(R.string.intakeNextButtonText))) {
                     moveToNextQuestion();
                 } else {
-                    Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
-                    startActivity(intent);
-                }
+                    /*InTake API call to fetch payment information*/
+                    InTakeService apptService = (new BaseServiceGenerator(InTakeActivity.this)).createService(InTakeService.class); //, String token, String searchString
+                    Call<AppointmentModel> call = apptService.confirmInTakeInformation(AppointmentsActivity.model);
+                    call.enqueue(new Callback<AppointmentModel>() {
+                        @Override
+                        public void onResponse(Call<AppointmentModel> call, Response<AppointmentModel> response) {
+//                            demographicModel = response.body();
+//                            demographicProgressBar.setVisibility(View.GONE);
+                            Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
+                            startActivity(intent);
+                        }
 
+                        @Override
+                        public void onFailure(Call<AppointmentModel> call, Throwable t) {
+
+                        }
+                    });
+                }
             }
         });
 
@@ -243,15 +273,15 @@ public class InTakeActivity extends KeyboardHolderActivity {
 
         switch (position) {
             case 0:
-                return new IntakeReviewvisitFragment();
+                return new InTakeReviewVisitFragment();
             case 1:
-                return new InTakecardiacSymptomsfragment();
+                return new InTakeCardiacSymptomsFragment();
             case 2:
                 return new InTakeMedicalHistoryFragment();
             case 3:
-                return new InTakeMedicalHistoryFragment_Form2();
+                return new InTakeMedicalHistoryFragmentForm2();
             case 4:
-                return new IntakeReviewOfSymptomsFragment();
+                return new InTakeReviewOfSymptomsFragment();
             default:
                 return null;
         }

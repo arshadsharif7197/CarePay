@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,13 +11,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.intake.activities.IntakeActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by sudhir_pingale on 9/29/2016.
  */
 
-public class InTakeMedicalHistoryFragment_Form2 extends InTakeFragment {
+public class IntakeMedicalHistoryFormTwoFragment extends IntakeFragment {
 
     private View madicalHistoryForm2Parent;
     private Context context;
@@ -56,14 +57,14 @@ public class InTakeMedicalHistoryFragment_Form2 extends InTakeFragment {
         doYouSmokeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
+                ((IntakeActivity)context).isQuestionAnswered = true;
             }
         });
 
         doYouHaveDiabetesRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
+                ((IntakeActivity)context).isQuestionAnswered = true;
             }
         });
     }

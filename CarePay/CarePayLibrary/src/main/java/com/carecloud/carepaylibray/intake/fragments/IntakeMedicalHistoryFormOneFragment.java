@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,7 +25,7 @@ import java.util.Arrays;
  * Created by prem_mourya on 9/28/2016.
  */
 
-public class InTakeMedicalHistoryFragment extends InTakeFragment {
+public class IntakeMedicalHistoryFormOneFragment extends IntakeFragment {
 
     private View mainView;
     private Context context;
