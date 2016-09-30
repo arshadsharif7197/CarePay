@@ -3,9 +3,11 @@ package com.carecloud.carepayclover.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepayclover.CheckedInActivity;
@@ -14,6 +16,8 @@ import com.carecloud.carepayclover.R;
 import com.carecloud.carepayclover.RotateActivity;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentPatientModel;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -54,7 +58,9 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
         AppointmentPatientModel patientModel=mMaster.getPayload().getPatient();
         holder.patientNameTextView.setText(patientModel.getFirstName()+" " + patientModel.getLastName());
         holder.patientBalanceTextView.setText("Balance: $20.00");//+ String.format("%.2f",(Integer.parseInt( patientModel.getGenderId())*2)));
+        Picasso.with(context).load(patientModel.getPhoto()).transform(new CircleImageTransform()).resize(160,160).into(holder.patientPicImageView);
         holder.container.setTag(patientModel);
+        Log.d("PatientPhoto",patientModel.getPhoto());
     }
 
     @Override
@@ -77,6 +83,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
     public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public View container;
         public TextView patientNameTextView,patientBalanceTextView,paymentTextview,assistTextview;
+        ImageView patientPicImageView;
         public CartViewHolder(View view) {
             super(view);
             container = view;
@@ -85,6 +92,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
             patientBalanceTextView= (TextView) view.findViewById(R.id.patientBalanceTextView);
             paymentTextview= (TextView) view.findViewById(R.id.paymentTextview);
             assistTextview= (TextView) view.findViewById(R.id.assistTextview);
+            patientPicImageView= (ImageView) view.findViewById(R.id.patientPicImageView);
             paymentTextview.setOnClickListener(this);
         }
 
