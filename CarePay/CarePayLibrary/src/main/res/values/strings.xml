@@ -198,7 +198,7 @@
     <string name="review_screen_healthinsurance">HEALTH INSURANCE</string>
     <string name="review_screen_company_lable">COMPANY</string>
     <string name="review_screen_plan_lable">PLAN</string>
-    <string name="review_screen_insurancepolicy_number_lable">INSURANCE POLICY NUMBER</string>
+    <string name="review_screen_insurancepolicy_number_lable">INSURANCE MEMBER ID</string>
     <string name="review_screen_agreebutton">YES, THESE ARE CORRECT</string>
     <string name="review_screen_disagreebutton">I NEED TO UPDATE THIS INFORMATION</string>
 
@@ -225,8 +225,8 @@
 Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere consectetur est at lobortis.</string>
     <string name="hipaa">Sign HIPAA Confidentiality Agreement</string>
     <string name="yes_sig">Yes, This is my signature</string>
-    <string name="hint">Legal Representative Firstname</string>
-    <string name="hint_last">Legal Representative Lastname</string>
+    <string name="hint">Legal Representative First Name</string>
+    <string name="hint_last">Legal Representative Last Name</string>
 
     <string name="pick_date">Pick Date</string>
     <string name="choose_gender">Choose Gender</string>

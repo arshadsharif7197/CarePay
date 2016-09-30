@@ -161,7 +161,7 @@ public abstract class DocumentScannerFragment extends Fragment {
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
                 imageCaptureHelper.onCaptureImageResult(data, getImageShape());
             }
-            updateDetailViewsAfterScan();
+            updateModelAndViewsAfterScan();
         }
     }
 
@@ -183,8 +183,12 @@ public abstract class DocumentScannerFragment extends Fragment {
     /**
      * Updates the number the button label and the number textview accoring to doc scanned (license or insurance)
      */
-    protected abstract void updateDetailViewsAfterScan();
+    protected abstract void updateModelAndViewsAfterScan();
 
+    /**
+     * Populate the views with the date from model
+     */
+    public abstract void populateViewsFromModel();
 
     /**
      * Set the typefaces

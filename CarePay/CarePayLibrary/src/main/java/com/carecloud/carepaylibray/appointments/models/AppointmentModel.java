@@ -13,10 +13,23 @@ public class AppointmentModel implements Serializable {
     private String appointmentType;
     private String appointmentDay;
     private String appointmentDate;
+    private String buttonTitle;
+
     private String placeName;
+    private String placeAddress;
+    private String phoneNumber;
+
     private boolean isPending;
     private boolean isCheckedIn;
-    private String phoneNumber;
+    private boolean isCancelled;
+
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        isCancelled = cancelled;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -62,8 +75,6 @@ public class AppointmentModel implements Serializable {
         this.placeName = placeName;
     }
 
-    private String placeAddress;
-
     public String getButtonTitle() {
         return buttonTitle;
     }
@@ -71,8 +82,6 @@ public class AppointmentModel implements Serializable {
     public void setButtonTitle(String buttonTitle) {
         this.buttonTitle = buttonTitle;
     }
-
-    private String buttonTitle;
 
     public String getAppointmentDate() {
         return appointmentDate;
@@ -90,7 +99,6 @@ public class AppointmentModel implements Serializable {
         this.appointmentDay = aptDay;
     }
 
-
     public AppointmentModel(String aptId,String doctorName, String aptTime, String aptType, String aptDay,String aptDate) {
         this.appointmentId = aptId;
         this.doctorName = doctorName;
@@ -98,7 +106,6 @@ public class AppointmentModel implements Serializable {
         this.appointmentType = aptType;
         this.appointmentDay = aptDay;
         this.appointmentDate = aptDate;
-
     }
 
     public AppointmentModel(String aptId, String doctorName, String aptTime, String aptType, String aptDay, String aptDate, boolean isPending) {
@@ -155,8 +162,4 @@ public class AppointmentModel implements Serializable {
     public void setAppointmentHeader(String aptHeader) {
         this.appointmentDay = aptHeader;
     }
-
-    private String appointmentHeader;
-
-
 }

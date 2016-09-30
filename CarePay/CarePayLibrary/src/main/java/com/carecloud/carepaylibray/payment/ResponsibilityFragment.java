@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +16,18 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.services.AppointmentService;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -33,7 +41,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class ResponsibilityFragment extends Fragment {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
-    AppCompatActivity mActivity;
+
+    private AppCompatActivity mActivity;
+    private AppointmentsResultModel appointmentsModel = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,15 +87,40 @@ public class ResponsibilityFragment extends Fragment {
     }
 
     private void payAndFetchCheckedInAppointment() {
-        Intent intent = new Intent(ResponsibilityFragment.this.getActivity(), AppointmentsActivity.class);
         AppointmentModel appointmentModel = AppointmentsActivity.model;
-        if(appointmentModel!=null) {
-            appointmentModel.setCheckedIn(true);
-        }
+        ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
+        appointmentModel.getAppointmentId();
+        appointmentModel.getDoctorName();
+        appointmentModel.getAppointmentType();
+        appointmentsItems.add(appointmentModel);
 
-        AppointmentsActivity.model = null; // appointment clicked item is cleared once payment is done.
-        intent.putExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE,appointmentModel);
-        startActivity(intent);
+        AppointmentService aptService = (new BaseServiceGenerator(getActivity()).createService(AppointmentService.class));
+        Call<AppointmentsResultModel> call = aptService.confirmAppointment(appointmentsItems);
+        call.enqueue(new Callback<AppointmentsResultModel>() {
+            @Override
+            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
+                appointmentsModel = new AppointmentsResultModel();
+                appointmentsModel  = response.body();
+
+                Log.d(LOG_TAG, response.isSuccessful()+"");
+                Intent intent = new Intent(ResponsibilityFragment.this.getActivity(), AppointmentsActivity.class);
+                AppointmentModel appointmentModel = AppointmentsActivity.model;
+                if(appointmentModel!=null) {
+                    appointmentModel.setCheckedIn(true);
+                }
+
+                // appointment clicked item is cleared once payment is done.
+                AppointmentsActivity.model = null;
+                intent.putExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE,appointmentModel);
+                startActivity(intent);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(Call<AppointmentsResultModel> call, Throwable t) {
+
+            }
+        });
     }
 
     /**
