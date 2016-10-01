@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -209,27 +211,22 @@ public class SystemUtil {
      */
     public static String[] onDateParseToString(Context context,String dateStr) {
         String stringDate[] = dateStr.split(" ");
-        String formateDate[] = new String[2];
+        String formatDate[] = new String[2];
         try {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(context.getString(R.string.dateFormatString), Locale.ENGLISH);
-            Date appointdate = sdf.parse(stringDate[0]);
-            formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
-                    + DateUtil.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
-            formateDate[1] = stringDate[1] + " " + stringDate[2];
+            SimpleDateFormat sdf = new SimpleDateFormat(context.getString(R.string.dateFormatString), Locale.getDefault());
+            Date appointDate = sdf.parse(stringDate[0]);
+            formatDate[0] = DateFormat.format("EEEE, MMMM", appointDate) + " "
+                    + DateUtil.getDayOrdinal(Integer.parseInt(DateFormat.format("dd", appointDate).toString()));
+            formatDate[1] = stringDate[1] + " " + stringDate[2];
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage());
         }
-        return formateDate;
+        return formatDate;
     }
 
-    public static boolean isNotEmptyString(String string){
-        if (string != null && !string.isEmpty() && !string.equals("null")){
-            return true;
-        }
-        return false;
+    public static boolean isNotEmptyString(String string) {
+        return string != null && !string.isEmpty() && !string.equals("null");
     }
-
-
 
     /**
      * Utility to convert dp to pixels
