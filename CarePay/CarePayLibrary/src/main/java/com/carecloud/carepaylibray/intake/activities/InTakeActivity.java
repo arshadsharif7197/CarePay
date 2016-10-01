@@ -29,7 +29,7 @@ import com.carecloud.carepaylibray.intake.fragments.IntakeMedicalHistoryFormTwoF
 import com.carecloud.carepaylibray.intake.fragments.IntakeReviewOfSymptomsFragment;
 import com.carecloud.carepaylibray.intake.fragments.IntakeReviewVisitFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
-import com.carecloud.carepaylibray.intake.services.InTakeService;
+import com.carecloud.carepaylibray.intake.services.IntakeService;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -115,7 +115,7 @@ public class IntakeActivity extends KeyboardHolderActivity {
                 } else {
                     intakeProgressBar.setVisibility(View.VISIBLE);
                     /*InTake API call to fetch payment information*/
-                    InTakeService apptService = (new BaseServiceGenerator(IntakeActivity.this)).createService(InTakeService.class); //, String token, String searchString
+                    IntakeService apptService = (new BaseServiceGenerator(IntakeActivity.this)).createService(IntakeService.class); //, String token, String searchString
                     Call<IntakeResponseModel> call = apptService.confirmInTakeInformation();
                     call.enqueue(new Callback<IntakeResponseModel>() {
                         @Override
