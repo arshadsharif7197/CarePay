@@ -1,4 +1,6 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.utils;
+
+import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
 
 import java.util.ArrayList;
 import java.util.List;
