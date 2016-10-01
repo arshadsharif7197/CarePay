@@ -254,6 +254,7 @@ public class AppointmentPatientModel {
                 }
             }
         }
+        // TODO: using for demo. will remove this after the demo
         if(total==0.00)
             total=20.00;
         return total;
@@ -268,6 +269,7 @@ public class AppointmentPatientModel {
                 }
             }
         }
+        // TODO: using for demo. will remove this after the demo
         if(total==0.00)
             total=20.00;
         return total;
