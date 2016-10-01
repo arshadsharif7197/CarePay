@@ -33,13 +33,19 @@ public class CheckedInActivity extends AppCompatActivity {
         appointmentsRecyclerView = (RecyclerView) findViewById(com.carecloud.carepaylibrary.R.id.appointments_recycler_view);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getDemographicInformation();
+
         ((TextView)findViewById(R.id.goBackTextview)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getDemographicInformation();
     }
 
     private void getDemographicInformation() {
