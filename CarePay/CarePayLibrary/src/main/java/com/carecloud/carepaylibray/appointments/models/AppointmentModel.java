@@ -18,10 +18,19 @@ public class AppointmentModel implements Serializable {
     private String placeName;
     private String placeAddress;
     private String phoneNumber;
+    private String photo;
 
     private boolean isPending;
     private boolean isCheckedIn;
     private boolean isCancelled;
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public boolean isCancelled() {
         return isCancelled;

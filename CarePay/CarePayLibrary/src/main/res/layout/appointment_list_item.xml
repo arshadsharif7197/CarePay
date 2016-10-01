@@ -18,8 +18,8 @@
             android:layout_gravity="center_vertical"
             android:background="@color/light_gray"
             android:gravity="center_vertical"
-            android:paddingStart="@dimen/list_apt_padding_right"
             android:paddingEnd="0dp"
+            android:paddingStart="@dimen/list_apt_padding_right"
             android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/textview_textsize" />
     </LinearLayout>
@@ -45,31 +45,43 @@
             android:paddingRight="@dimen/list_apt_padding_right">
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
                 android:layout_gravity="center"
                 android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/cellAvtarImageView"
+                    android:id="@+id/cellAvatarImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:elevation="@dimen/apt_lst_img_elevation"
                     android:src="@drawable/cell_avatar_badge_pending" />
 
-                <TextView
-                    android:id="@+id/avtarTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:background="@drawable/round_list_tv"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:src="@drawable/icn_placeholder_user_profile_png"
-                    android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/apt_dl_text_big" />
-            </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
+                    <ImageView
+                        android:id="@+id/providerPicImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:visibility="gone" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                        android:id="@+id/avatarTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:background="@drawable/round_list_tv"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:src="@drawable/icn_placeholder_user_profile_png"
+                        android:textColor="@color/lightSlateGray"
+                        android:textSize="@dimen/apt_dl_text_big" />
+                </RelativeLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="@dimen/apt_dl_zero_ht_wdh"
@@ -102,10 +114,10 @@
                 android:id="@+id/todayTimeLinearlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
                     android:id="@+id/todayTimeTextView"
@@ -113,20 +125,20 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:paddingStart="0dp"
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
+                    android:paddingStart="0dp"
                     android:paddingTop="@dimen/default_title_indicator_title_padding"
-                    android:textSize="@dimen/button_textsize_medium"/>
+                    android:textSize="@dimen/button_textsize_medium" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/upcomingDateLinearlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/upcomingDateTextView"
@@ -134,8 +146,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:paddingStart="0dp"
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
+                    android:paddingStart="0dp"
                     android:paddingTop="@dimen/default_title_indicator_title_padding"
                     android:textColor="@color/Feldgrau"
                     android:textSize="@dimen/apt_list_upcoming_date_txt_size" />
@@ -146,10 +158,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:paddingStart="0dp"
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
+                    android:paddingStart="0dp"
                     android:textColor="@color/cadet_gray"
-                    android:textSize="@dimen/textview_textsize" />
+                    android:textSize="@dimen/apt_list_upcoming_month_txt_size" />
 
                 <TextView
                     android:id="@+id/separatorTextView"
@@ -158,8 +170,8 @@
                     android:layout_gravity="center"
                     android:background="@color/gray"
                     android:gravity="center"
-                    android:paddingStart="0dp"
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
+                    android:paddingStart="0dp"
                     android:paddingTop="@dimen/default_title_indicator_title_padding"
                     android:textSize="@dimen/button_textsize_medium" />
 
@@ -167,10 +179,10 @@
                     android:id="@+id/upcomingTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|right"
+                    android:layout_gravity="center_vertical|end"
                     android:gravity="center"
-                    android:paddingStart="0dp"
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
+                    android:paddingStart="0dp"
                     android:paddingTop="@dimen/default_title_indicator_title_padding"
                     android:textColor="@color/cadet_gray"
                     android:textSize="@dimen/button_textsize_medium" />

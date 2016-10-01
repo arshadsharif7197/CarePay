@@ -358,6 +358,10 @@ public class AppointmentsListFragment extends Fragment {
                             String mPhoneNumber = appointment.getPayload().getProvider().getPhone();
                             appointmentModel.setPhoneNumber(mPhoneNumber);
 
+                            // Appointment Provider photo
+                            String mDoctorPhoto = appointment.getPayload().getProvider().getPhoto();
+                            appointmentModel.setPhoto(mDoctorPhoto);
+
                             // Appointment Place
                             String mPlaceName = appointment.getPayload().getLocation().getName();
                             appointmentModel.setPlaceName(mPlaceName);
@@ -389,6 +393,7 @@ public class AppointmentsListFragment extends Fragment {
                                 model.setAppointmentId(mAptId);
                                 model.setDoctorName(mDoctorName);
                                 model.setAppointmentType(mDoctorType);
+                                model.setPhoto(mDoctorPhoto);
                                 model.setAppointmentTime(mUpcomingDate);
                                 model.setAppointmentDay(mAptDay);
                                 model.setAppointmentDate(mAptTime);
@@ -418,6 +423,7 @@ public class AppointmentsListFragment extends Fragment {
                                 model.setAppointmentId(mAptId);
                                 model.setDoctorName(mDoctorName);
                                 model.setAppointmentType(mDoctorType);
+                                model.setPhoto(mDoctorPhoto);
                                 model.setAppointmentTime(parsedDate);
                                 model.setAppointmentDay(mAptDay);
                                 model.setAppointmentDate(mAptTime);
