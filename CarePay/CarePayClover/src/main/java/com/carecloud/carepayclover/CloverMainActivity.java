@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 public class CloverMainActivity extends AppCompatActivity {
-
+public static int count;
 TextView checkedInCounterTextview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ TextView checkedInCounterTextview;
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int count=Integer.parseInt(checkedInCounterTextview.getText().toString())+1;
+            count=Integer.parseInt(checkedInCounterTextview.getText().toString())+1;
             checkedInCounterTextview.setText(String.valueOf( count));
         }
     };
@@ -51,6 +51,8 @@ TextView checkedInCounterTextview;
         super.onDestroy();
         unregisterReceiver(newCheckedInReceiver);
     }
+
+
 
    /* private class LongOperation extends AsyncTask<String, Void, String> {
         @Override
