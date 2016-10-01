@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.demographics.fragments.review;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -13,31 +14,63 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Arrays;
 
+import static com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView;
+import static com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity.model;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
-public class DemographicReviewFragment extends Fragment implements View.OnClickListener {
+
+public class    DemographicReviewFragment extends Fragment implements View.OnClickListener  {
 
     Button buttonAddDemographicInfo;
     View view;
 
     String[] raceDataArray;
     String[] ethnicityDataArray;
+    String[] prefferedLangauge;
+    String[] genderSelect;
     int selectedDataArray;
-    TextView raceDataTextView, ethnicityDataTextView;
+    TextView raceDataTextView, ethnicityDataTextView,selectGender,selectlangauge;
+    private TextInputLayout firstNameInputLayout;
+    private TextInputLayout middleNameInputLayout;
+    private TextInputLayout lastNameInputLayout;
+    private TextInputLayout phNoTextInputLayout;
+    private TextInputLayout address1TextInputLayout;
+    private TextInputLayout address2TextInputLayout;
+    private TextInputLayout cityTextInputLayout;
+    private TextInputLayout stateTextInputLayout;
+    private TextInputLayout zipCodeTextInputLayout;
 
-    public static DemographicReviewFragment newInstance() {
+    private EditText phoneNumberEditText;
+    private EditText zipCodeEditText;
+    private EditText address1EditText;
+    private EditText address2EditText;
+    private EditText emailEditText;
+    private EditText dobEditText;
+    private EditText stateEditText;
+
+    private EditText cityEditText;
+    private EditText firstNameText;
+    private EditText middleNameText;
+    private EditText lastNameText;
+
+    public static DemographicReviewFragment newInstance()  {
         return new DemographicReviewFragment();
     }
 
@@ -73,12 +106,30 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
     private void initialiseUIFields() {
+        phoneNumberEditText=(EditText)view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+        firstNameText=(EditText)view.findViewById(R.id.reviewdemogrFirstNameEdit);
+        firstNameText=(EditText)view.findViewById(R.id.reviewdemogrLastNameEdit);
+        firstNameText=(EditText)view.findViewById(R.id.reviewdemogrMiddleNameEdit);
+        emailEditText=(EditText)view.findViewById(R.id.reviewdemogrEmailEdit);
+        dobEditText=(EditText)view.findViewById(R.id.revewidemogrDOBEdit);
+        address1EditText=(EditText)view.findViewById(R.id.addressEditTextId);
+        address2EditText=(EditText)view.findViewById(R.id.addressEditText2Id);
+        zipCodeEditText=(EditText)view.findViewById(R.id.zipCodeId);
+        cityEditText=(EditText)view.findViewById(R.id.cityId);
+        stateEditText=(EditText)view.findViewById(R.id.stateAutoCompleteTextView);
+
         buttonAddDemographicInfo = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         buttonAddDemographicInfo.setOnClickListener(this);
+
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
         raceDataTextView.setOnClickListener(this);
         ethnicityDataTextView = (TextView) view.findViewById(R.id.ethnicityListDataTextView);
         ethnicityDataTextView.setOnClickListener(this);
+        selectGender=(TextView)view.findViewById(R.id.choose_genderTextView);
+        selectGender.setOnClickListener(this);
+        selectlangauge=(TextView)view.findViewById(R.id.preferredLanguageListTextView);
+        selectlangauge.setOnClickListener(this);
+
 
 
     }
@@ -93,19 +144,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         } else if (view == ethnicityDataTextView) {
             selectedDataArray = 2;
             showAlertDialogWithListview(ethnicityDataArray, "Select Ethnicity");
-
         }
     }
 
-    private void openNewFragment() {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment fragment = HealthInsuranceReviewFragment.newInstance();
-        transaction.replace(R.id.root_layout, fragment, HealthInsuranceReviewFragment.class.getName());
-        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-        transaction.addToBackStack("DemographicReviewFragment -> HealthInsuranceReviewFragment");
 
-        transaction.commit();
-    }
+
 
 
     private void showAlertDialogWithListview(final String[] raceArray, String title) {
@@ -145,10 +188,16 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
         });
     }
-
+    private void openNewFragment() {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment fragment = ReviewFragment.newInstance();
+        transaction.replace(R.id.root_layout, fragment, DemographicReviewFragment.class.getName());
+        transaction.addToBackStack("DemographicReviewFragment -> ReviewFragment");
+        transaction.commit();
+    }
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsReviewHeading));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsReviewSubHeading));
+      //  setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsReviewSubHeading));
 
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.raceDataTextView));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.raceListDataTextView));

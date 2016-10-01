@@ -2,9 +2,11 @@ package com.carecloud.carepaylibray.consentforms.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.icu.text.DateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,10 @@ import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.consentforms.interfaces.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.Date;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -31,7 +37,9 @@ public class ConsentForm1Fragment extends Fragment {
     private Button signButton;
     private IFragmentCallback fragmentCallback;
     private ScrollView consentFormScrollView;
+    Date date = new Date();
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +53,13 @@ public class ConsentForm1Fragment extends Fragment {
         consentFormScrollView =(ScrollView)view.findViewById(R.id.consentform_scrollView);
         signButton = (Button) view.findViewById(R.id.signButton);
         signButton.setEnabled(false);
+
+        String stringDate = DateFormat.getDateInstance().format(date);
+        String[] Month= stringDate.split(" ");
+       String [] DayInt= Month[1].split(",");
+        int Day=Integer.parseInt(DayInt[0]);
+        String dayString=DateUtil.getDayOrdinal(Day);
+        dateTextView.setText(Month[0]+" "+ dayString+", "+Month[2]);
         setTypefaces(view);
         return view;
     }
@@ -79,7 +94,7 @@ public class ConsentForm1Fragment extends Fragment {
         titleTextView.setText(formData.getTitle());
         descriptionTextView.setText(formData.getDescription());
         contentTextView.setText(formData.getContent());
-        dateTextView.setText(formData.getDate());
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

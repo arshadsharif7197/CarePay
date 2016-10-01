@@ -1,9 +1,11 @@
 package com.carecloud.carepaylibray.consentforms.fragments;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.icu.text.DateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,10 +29,12 @@ import com.carecloud.carepaylibray.consentforms.interfaces.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -50,8 +54,10 @@ public class ConsentForm2Fragment extends Fragment {
     private ScrollView consentFormScrollView;
     private EditText minorFirstNameEditText, minorLastNameEditText;
     private String[] gender = {"Male", "Female"};
+    Date date=new Date();
 
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,6 +79,13 @@ public class ConsentForm2Fragment extends Fragment {
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
         dobTextView = (TextView) view.findViewById(R.id.dobET);
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
+        String stringDate = DateFormat.getDateInstance().format(date);
+        String[] Month= stringDate.split(" ");
+        String [] DayInt= Month[1].split(",");
+        int Day=Integer.parseInt(DayInt[0]);
+
+        String dayString= DateUtil.getDayOrdinal(Day);
+        dateTextView.setText(Month[0]+" "+ dayString+", "+Month[2]);
         setTypefaces(view);
         setTextListeners();
         onClickListners();
