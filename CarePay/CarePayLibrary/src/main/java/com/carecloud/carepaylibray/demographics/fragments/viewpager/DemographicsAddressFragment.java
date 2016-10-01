@@ -26,7 +26,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -143,7 +142,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         hint = getString(R.string.middlename_text);
         middleNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressMiddleNameTextInputLayout);
         middleNameInputLayout.setTag(hint);
-        middleNameText = (EditText) view.findViewById(R.id.demogrAddressMiddleNameEditText);
+        middleNameText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEditText);
         middleNameText.setTag(middleNameInputLayout);
 
         // set the label
@@ -704,7 +703,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         setProximaNovaRegularTypeface(getActivity(), stateAutoCompleteTextView);
         setGothamRoundedMediumTypeface(getActivity(), nextButton);
 
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsAddressNameSectionLabel));
+        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.reviewdemoPersonalInfoLabel));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsAddressAddressSectionLabel));
     }
 

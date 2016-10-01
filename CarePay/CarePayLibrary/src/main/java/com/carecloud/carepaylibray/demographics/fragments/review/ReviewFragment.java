@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.demographics.fragments.review;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -185,8 +187,6 @@ public class ReviewFragment  extends Fragment implements View.OnClickListener {
         });
     }
 
-
-
     private void initialiseUIFields() {
 
         correctInformationButton = (Button) view.findViewById(R.id.YesCorrectButton);
@@ -204,10 +204,14 @@ public class ReviewFragment  extends Fragment implements View.OnClickListener {
             getActivity().finish();
         }
         if(view==updateInformationUpdate){
-            Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            getActivity().finish();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            Fragment fragment = DemographicReviewFragment.newInstance();
+            transaction.replace(R.id.root_layout, fragment, ReviewFragment.class.getName());
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+            transaction.addToBackStack("ReviewFragment -> DemographicReviewFragment");
+
+            transaction.commit();
+
         }
     }
     @Override
