@@ -17,6 +17,7 @@ import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragme
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
@@ -110,7 +111,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     }
                 }
             });
-            holder.shortName.setText(SystemUtil.onShortDrName(item.getDoctorName()));
+
+//            if (TextUtils.isEmpty(item.getPhoto())) {
+                holder.shortName.setText(SystemUtil.onShortDrName(item.getDoctorName()));
+//            } else {
+//                Picasso.with(context).load(item.getPhoto()).transform(new CircleImageTransform()).resize(58, 58).into(holder.profileImage);
+//                holder.profileImage.setVisibility(View.VISIBLE);
+//            }
 
             if (item.isPending()) {
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
@@ -184,11 +191,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
-        private TextView shortName, upcomingDateTextView;
+        private TextView upcomingDateTextView;
+        private CustomGothamRoundedMediumLabel shortName;
         private CustomGothamRoundedBoldLabel todayTimeTextView;
         private CustomProxyNovaSemiBoldLabel appointmentSectionHeaderTitle, doctorName;
         private CustomProxyNovaRegularLabel upcomingMonthTextView, upcomingTimeTextView, doctorType;
-        private ImageView cellAvatar;
+        private ImageView cellAvatar, profileImage;
         private LinearLayout appointmentSectionLinearLayout, appointmentItemLinearLayout,
                 todayTimeLinearLayout, upcomingDateLinearLayout;
 
@@ -197,8 +205,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
             doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
 
-            shortName = (TextView) itemView.findViewById(R.id.avtarTextView);
-            cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvtarImageView);
+            shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
+            cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
+            profileImage = (ImageView) itemView.findViewById(R.id.providerPicImageView);
 
             appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
             appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
