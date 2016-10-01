@@ -137,11 +137,11 @@ public class ResponsibilityFragment extends Fragment {
                 appointmentsModel = new AppointmentsResultModel();
                 appointmentsModel  = response.body();
 
-                Log.d(LOG_TAG, response.isSuccessful()+"");
                 Intent intent = new Intent(ResponsibilityFragment.this.getActivity(), AppointmentsActivity.class);
                 AppointmentModel appointmentModel = AppointmentsActivity.model;
                 if(appointmentModel!=null) {
                     appointmentModel.setCheckedIn(true);
+                    appointmentModel.setPending(false);
                 }
 
                 // appointment clicked item is cleared once payment is done.
