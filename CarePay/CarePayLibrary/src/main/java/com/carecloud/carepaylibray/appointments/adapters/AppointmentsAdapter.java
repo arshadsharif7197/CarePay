@@ -78,8 +78,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateTextView.setText(splitStr[0]);
                     SystemUtil.setProximaNovaLightTypeface(context, holder.upcomingDateTextView);
-                    holder.upcomingMonthTextView.setText(splitStr[1].toUpperCase());
-                    holder.upcomingTimeTextView.setText(splitStr[2] + " " + splitStr[3]);
+                    holder.upcomingMonthTextView.setText(splitStr[2].toUpperCase() + " " + splitStr[1]);
+                    holder.upcomingTimeTextView.setText(splitStr[3] + " " + splitStr[4]);
                 }
             } else {
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
@@ -211,12 +211,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
             appointmentSectionHeaderTitle = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointments_section_header_title);
 
+            // Today
             todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
-            upcomingDateLinearLayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLinearlayout);
-
             todayTimeTextView = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.todayTimeTextView);
-            upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
 
+            // Upcoming
+            upcomingDateLinearLayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLinearlayout);
+            upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
             upcomingMonthTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingMonthTextView);
             upcomingTimeTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingTimeTextView);
         }
