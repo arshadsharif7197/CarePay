@@ -37,6 +37,10 @@ public class AppointmentPatientModel {
     @Expose
     private Object primaryPhoneNumber;
 
+    @SerializedName("photo")
+    @Expose
+    private String photo;
+
     /**
      * 
      * @return
@@ -217,4 +221,11 @@ public class AppointmentPatientModel {
         this.primaryPhoneNumber = primaryPhoneNumber;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 }

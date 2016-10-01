@@ -83,7 +83,7 @@ public class DemographicsDetailsFragment extends Fragment
         raceTextView.setOnClickListener(this);
         ethnicityTextView = (TextView) view.findViewById(R.id.ethnicityListTextView);
         ethnicityTextView.setOnClickListener(this);
-        preferredLanguageTextView = (TextView) view.findViewById(R.id.preferredLanguageListTextView);
+        preferredLanguageTextView = (TextView) view.findViewById(R.id.preferredLanguageTextView);
         preferredLanguageTextView.setOnClickListener(this);
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         nextButton.setOnClickListener(this);
