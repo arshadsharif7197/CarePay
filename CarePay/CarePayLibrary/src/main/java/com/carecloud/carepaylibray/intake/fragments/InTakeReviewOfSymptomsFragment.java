@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.fragments;
 
 
 import android.content.Context;
@@ -12,13 +12,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.intake.activities.InTakeActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by sudhir_pingale on 9/29/2016.
  */
 
-public class IntakeReviewOfSymptomsFragment extends InTakeFragment {
+public class InTakeReviewOfSymptomsFragment extends InTakeFragment {
 
     private View reviewOfSymptomsFormParent;
     private Context context;

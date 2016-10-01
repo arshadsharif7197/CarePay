@@ -21,6 +21,9 @@ public class AppointmentProviderModel {
     @SerializedName("phone")
     @Expose
     private String phone;
+    @SerializedName("photo")
+    @Expose
+    private String photo;
 
     /**
      * 
@@ -110,6 +113,20 @@ public class AppointmentProviderModel {
      */
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    /**
+     * @return The photo
+     */
+    public String getPhoto() {
+        return photo;
+    }
+
+    /**
+     * @param photo The photo
+     */
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
 }

@@ -21,14 +21,15 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-
+import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -41,8 +42,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class ResponsibilityFragment extends Fragment {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
-
     private AppCompatActivity mActivity;
+    private String copayStr = "", previousBalanceStr = "";
+    private TextView responseTotal, responseCopay, responsePreviousBalance;
     private AppointmentsResultModel appointmentsModel = null;
 
     @Override
@@ -83,6 +85,39 @@ public class ResponsibilityFragment extends Fragment {
             }
         });
 
+        responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        responseCopay = (TextView) view.findViewById(R.id.respons_prev_balance);
+        responsePreviousBalance = (TextView) view.findViewById(R.id.respons_copay);
+
+        Bundle bundle = getArguments();
+        if(bundle != null) {
+            ArrayList<PayloadPaymentModel> paymentList = (ArrayList<PayloadPaymentModel>) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+
+            if(paymentList != null && paymentList.size() > 0) {
+                for(PayloadPaymentModel payment : paymentList) {
+                    if(payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                        copayStr = payment.getTotal();
+                    } else if(payment.getBalanceType().equalsIgnoreCase(CarePayConstants.ACCOUNT)) {
+                        previousBalanceStr = payment.getTotal();
+                    }
+                }
+
+                try {
+                    double copay = Double.parseDouble(copayStr);
+                    double previousBalance = Double.parseDouble(previousBalanceStr);
+                    double total = copay + previousBalance;
+
+                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+
+                    responseTotal.setText(CarePayConstants.DOLLAR + formatter.format(total));
+                    responseCopay.setText(CarePayConstants.DOLLAR + copayStr);
+                    responsePreviousBalance.setText(CarePayConstants.DOLLAR + previousBalanceStr);
+
+                } catch(NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
         return view;
     }
 
