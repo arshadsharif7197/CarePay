@@ -106,7 +106,7 @@ public class BaseServiceGenerator {
                 Request.Builder requestBuilderWithToken = original.newBuilder()
                         .header("Content-Type", "application/json")
                         .header("Accept", "application/json")
-                        .header("username", "rahul.girase0@gmail.com")
+                        .header("username", "shughes@carecloud.com")
                         .method(original.method(), original.body());
                 Request request = requestBuilderWithToken.build();
                 return chain.proceed(request);
