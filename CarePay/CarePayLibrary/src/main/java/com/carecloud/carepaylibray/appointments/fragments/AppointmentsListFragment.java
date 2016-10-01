@@ -311,33 +311,43 @@ public class AppointmentsListFragment extends Fragment {
 
                         // Appointment start time
                         String mAptTime = "";
+                        String mAptDate = "", mAptDateWithoutTime = "";
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
                         try {
                             Date aptDate = sdf.parse(appointment.getPayload().getStartTime());
                             mAptTime = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT,
                                     Locale.getDefault()).format(aptDate);
+                            mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
+                            mAptDateWithoutTime= new SimpleDateFormat("yyyy-MM-dd",
+                                    Locale.getDefault()).format(aptDate);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        String mAptDate = "", mAptDateWithoutTime = "";
+                        /*//String mAptDate = "", mAptDateWithoutTime = "";
                         if (mAptTime != null) {
                             mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
                             String[] mAptDateArr = mAptDate.split(" ");
                             mAptDateWithoutTime = mAptDateArr[0];
-                        }
+                            mAptDateWithoutTime= new SimpleDateFormat("MM-dd-yyyy",
+                                    Locale.getDefault()).format(mAptTime);
+                        }*/
 
                         String mAptDay = null;
                         try {
                             Calendar c = Calendar.getInstance();
+                            c.set(Calendar.HOUR_OF_DAY,0);
+                            c.set(Calendar.MINUTE,0);
+                            c.set(Calendar.SECOND,0);
                             SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-                                    CarePayConstants.DATE_FORMAT, Locale.ENGLISH);
+                                    "yyyy-MM-dd", Locale.US);
                             String mCurrentDate = mSimpleDateFormat.format(c.getTime());
 
                             String mCurrentDateWithoutTime = "";
                             if (mCurrentDate != null) {
                                 String[] mCurrentDateArr = mCurrentDate.split(" ");
                                 mCurrentDateWithoutTime = mCurrentDateArr[0];
+                                mCurrentDateWithoutTime=mCurrentDate;
                             }
 
                             // Appointment Time
