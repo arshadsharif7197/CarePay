@@ -20,8 +20,6 @@ import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.consentforms.interfaces.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Date;
 
