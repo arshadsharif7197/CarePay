@@ -104,7 +104,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             Log.v(LOG_TAG, "InsuranceScannerFrag - populateFromModel()");
 
             // check the type of the model
-            mInsuranceScanHelper.setImageFromCharStream(model.getInsurancePhoto());
+        //    mInsuranceScanHelper.setImageFromCharStream(model.getProfilePhoto(0));
             String insNum = model.getInsuranceMemberId();
             tvInsuranceNum.setText(insNum);
             tvPlan.setText(model.getInsurancePlan());

@@ -19,7 +19,7 @@
 
         <activity
             android:name="com.carecloud.carepaylibray.demographics.activities.DemographicsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustResize"/>
 
         <activity
@@ -38,7 +38,7 @@
             android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity
@@ -62,7 +62,7 @@
             android:theme="@style/NavigationTheme"/>
 
         <activity android:name="com.carecloud.carepaylibray.cognito.SignUpConfirmActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustResize"/>
 
     </application>

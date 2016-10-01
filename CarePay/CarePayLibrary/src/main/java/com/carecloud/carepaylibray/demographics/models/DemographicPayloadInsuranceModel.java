@@ -3,14 +3,17 @@ import com.carecloud.carepaylibray.base.models.BasePersonModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
 public class DemographicPayloadInsuranceModel extends BasePersonModel{
 
-    @SerializedName("insurance_photo")
+    @SerializedName("insurance_photos")
     @Expose
-    private String insurancePhoto;
+    private List<InsurancePhotoModel> insurancePhotos = new ArrayList<InsurancePhotoModel>();
     @SerializedName("insurance_provider")
     @Expose
     private String insuranceProvider;
@@ -21,23 +24,7 @@ public class DemographicPayloadInsuranceModel extends BasePersonModel{
     @Expose
     private String insuranceMemberId;
 
-    /**
-     *
-     * @return
-     * The insurancePhoto
-     */
-    public String getInsurancePhoto() {
-        return insurancePhoto;
-    }
 
-    /**
-     *
-     * @param insurancePhoto
-     * The insurance_photo
-     */
-    public void setInsurancePhoto(String insurancePhoto) {
-        this.insurancePhoto = insurancePhoto;
-    }
 
     /**
      *
@@ -46,6 +33,14 @@ public class DemographicPayloadInsuranceModel extends BasePersonModel{
      */
     public String getInsuranceProvider() {
         return insuranceProvider;
+    }
+
+    public List<InsurancePhotoModel> getInsurancePhotos() {
+        return insurancePhotos;
+    }
+
+    public void setInsurancePhotos(List<InsurancePhotoModel> insurancePhotos) {
+        this.insurancePhotos = insurancePhotos;
     }
 
     /**
