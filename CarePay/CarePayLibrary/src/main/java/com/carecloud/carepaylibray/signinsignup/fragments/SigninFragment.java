@@ -27,6 +27,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Auth
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
@@ -34,6 +35,11 @@ import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -41,6 +47,8 @@ import com.google.gson.Gson;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -328,8 +336,42 @@ public class SigninFragment extends Fragment {
         CognitoAppHelper.signIn(getActivity(), userName, password, progressBar, new CognitoActionCallback() {
             @Override
             public void executeAction() {
-                launchUser();
+              //  launchUser();
+                getDemographicInformation();
+            }
+        });
+
+    }
+    private void getDemographicInformation() {
+        progressBar.setVisibility(View.VISIBLE);
+        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
+        Call<DemographicModel> call = apptService.fetchDemographics();
+        call.enqueue(new Callback<DemographicModel>() {
+            @Override
+            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+                DemographicModel demographicModel = response.body();
+                progressBar.setVisibility(View.GONE);
+                Log.v(LOG_TAG, "demographic info fetched");
+                launchAppointments(demographicModel);
+            }
+
+            @Override
+            public void onFailure(Call<DemographicModel> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.e(LOG_TAG, "failed fetching demogr info", t);
             }
         });
     }
+    private void launchAppointments(DemographicModel demographicModel) {
+        // do to Demographics
+        Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
+        // pass the object into the gson
+        Gson gson = new Gson();
+        intent.putExtra("demographics_model", gson.toJson(demographicModel, DemographicModel.class));
+
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+
 }

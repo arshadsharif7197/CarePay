@@ -81,7 +81,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if (selectedTimeSlot != null) {
                     String selectedTimeStr = selectedTimeSlot.getText().toString();
                     model.setAppointmentDate(AvailableHoursFragment.getAppointmentDate()
-                            + " " + selectedTimeStr.replace(" ", ":00 ") + " UTC");
+                            + " " + selectedTimeStr.replace(" ", ":00 "));
                     model.setAppointmentTime(selectedTimeStr);
 
                     // Launch dialog of appointment request

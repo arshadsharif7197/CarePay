@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/checkin_patient_pic_rounded_border"
         android:layout_marginTop="18dp"
-        android:padding="20dp"
+        android:padding="12dp"
         android:src="@drawable/icn_placeholder_user_profile" />
 
     <LinearLayout

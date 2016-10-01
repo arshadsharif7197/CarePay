@@ -34,9 +34,9 @@ public class PatientResponsibilityActivity extends AppCompatActivity {
             insuranceCoPay = intent.getDoubleExtra("insurance_co_pay_balance", 5.00);
         }
 
-        responsTotalTextView.setText("$"+totalAmount);
-        responsPrevBalanceTextView.setText("$"+previousBalance);
-        responsCoPayTTextView.setText("$"+insuranceCoPay);
+        responsTotalTextView.setText(String.format( "$%.2f", totalAmount ));
+        responsPrevBalanceTextView.setText(String.format( "$%.2f", previousBalance ));
+        responsCoPayTTextView.setText(String.format( "$%.2f", insuranceCoPay ));
 
         responsPayButton.setOnClickListener(new View.OnClickListener() {
             @Override

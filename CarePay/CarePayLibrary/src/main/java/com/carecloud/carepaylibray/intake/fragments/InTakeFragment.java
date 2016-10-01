@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
