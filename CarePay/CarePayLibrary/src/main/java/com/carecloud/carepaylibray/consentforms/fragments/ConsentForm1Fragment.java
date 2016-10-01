@@ -55,11 +55,7 @@ public class ConsentForm1Fragment extends Fragment {
         signButton.setEnabled(false);
 
         String stringDate = DateFormat.getDateInstance().format(date);
-        String[] Month= stringDate.split(" ");
-       String [] DayInt= Month[1].split(",");
-        int Day=Integer.parseInt(DayInt[0]);
-        String dayString=DateUtil.getDayOrdinal(Day);
-        dateTextView.setText(Month[0]+" "+ dayString+", "+Month[2]);
+        dateTextView.setText(stringDate);
         setTypefaces(view);
         return view;
     }

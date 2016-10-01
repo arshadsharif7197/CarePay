@@ -80,12 +80,7 @@ public class ConsentForm2Fragment extends Fragment {
         dobTextView = (TextView) view.findViewById(R.id.dobET);
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
         String stringDate = DateFormat.getDateInstance().format(date);
-        String[] Month= stringDate.split(" ");
-        String [] DayInt= Month[1].split(",");
-        int Day=Integer.parseInt(DayInt[0]);
-
-        String dayString= DateUtil.getDayOrdinal(Day);
-        dateTextView.setText(Month[0]+" "+ dayString+", "+Month[2]);
+        dateTextView.setText(stringDate);
         setTypefaces(view);
         setTextListeners();
         onClickListners();
