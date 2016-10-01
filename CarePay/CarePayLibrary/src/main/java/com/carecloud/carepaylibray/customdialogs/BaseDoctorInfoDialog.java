@@ -114,7 +114,6 @@ public class BaseDoctorInfoDialog extends Dialog implements
      */
     private void onMapView(final String addressName, final String address) {
         if (SystemUtil.isNotEmptyString(address)) {
-            String placeName = SystemUtil.isNotEmptyString(addressName) ? addressName : "";
             Uri mapUri = Uri.parse("geo:0,0?q=" + Uri.encode(address));
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
             mapIntent.setPackage("com.google.android.apps.maps");
