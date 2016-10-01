@@ -1,10 +1,12 @@
 package com.carecloud.carepaylibray.appointments.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,8 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
@@ -21,9 +23,9 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAddressModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
@@ -51,6 +53,8 @@ public class AppointmentsListFragment extends Fragment {
     private AppointmentModel appointmentModel;
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
+    private SwipeRefreshLayout appointmentRefresh;
+    private LinearLayout noAppointmentView;
 
     private AppointmentsAdapter appointmentsAdapter;
     private ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
@@ -80,6 +84,7 @@ public class AppointmentsListFragment extends Fragment {
      * This function will check today's appointment
      * and notify if its within 2 hours
      */
+    @SuppressLint("StringFormatMatches")
     private void checkUpcomingAppointmentForReminder() {
         if (appointmentsItems != null && !appointmentsItems.isEmpty() &&
                 !appointmentsItems.get(0).getAppointmentId().equalsIgnoreCase(
@@ -213,14 +218,20 @@ public class AppointmentsListFragment extends Fragment {
 
             appointmentListWithHeader = getAppointmentListWithHeader();
 
-            if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-                appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                        appointmentListWithHeader, appointmentsListFragment);
+            if (appointmentListWithHeader != null) {
+                appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
                 appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 appointmentRecyclerView.setAdapter(appointmentsAdapter);
-            } else {
-                Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
             }
+
+            if (appointmentsAdapter.getItemCount() == 0) {
+                noAppointmentView.setVisibility(View.VISIBLE);
+                appointmentRefresh.setVisibility(View.GONE);
+            } else {
+                noAppointmentView.setVisibility(View.GONE);
+                appointmentRefresh.setVisibility(View.VISIBLE);
+            }
+
         }
         AppointmentsListFragment.showNewAddedAppointment = false;
     }
@@ -237,11 +248,14 @@ public class AppointmentsListFragment extends Fragment {
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
 
+        appointmentRefresh = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
+//        appointmentRefresh.setRefreshing(false);
+
         appointmentProgressBar = (ProgressBar) appointmentsListView.findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
-        getAppointmentInformation();
-
         bundle = getArguments();
+
+        noAppointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.no_appointment_layout);
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -251,6 +265,8 @@ public class AppointmentsListFragment extends Fragment {
                 startActivity(appointmentIntent);
             }
         });
+        getAppointmentInformation();
+      //  onRefresh();
 
         return appointmentsListView;
     }
@@ -270,6 +286,9 @@ public class AppointmentsListFragment extends Fragment {
                 if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
                         && appointmentsResultModel.getPayload().getAppointments() != null
                         && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
+
+                    noAppointmentView.setVisibility(View.GONE);
+                    appointmentRefresh.setVisibility(View.VISIBLE);
 
                     List<Appointment> appointments = appointmentsResultModel.getPayload().getAppointments();
                     for (Appointment appointment : appointments) {
@@ -412,6 +431,7 @@ public class AppointmentsListFragment extends Fragment {
                                     appointmentsItems.add(model);
                                 }
                             }
+//                            appointmentRefresh.setRefreshing(false);
                         } catch (ParseException ex) {
                             Log.e(LOG_TAG, "Parse Exception caught : " + ex.getMessage());
                         }
@@ -420,34 +440,27 @@ public class AppointmentsListFragment extends Fragment {
                 }
 
                 appointmentListWithHeader = getAppointmentListWithHeader();
-                if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
+                if (appointmentListWithHeader != null) {
+                    if (bundle != null) {
+                        AppointmentModel appointmentModel = (AppointmentModel)
+                                bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+
+                        if (appointmentModel != null) {
+                            // adding checked-in appointment at the top of the list
+                            appointmentListWithHeader.add(0, appointmentModel);
+                        }
+                    }
+
                     appointmentsAdapter = new AppointmentsAdapter(getActivity(),
                             appointmentListWithHeader, appointmentsListFragment);
                     appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     appointmentRecyclerView.setAdapter(appointmentsAdapter);
                 } else {
-                    Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
+                    noAppointmentView.setVisibility(View.VISIBLE);
+                    appointmentRefresh.setVisibility(View.GONE);
                 }
+
                 checkUpcomingAppointmentForReminder();
-
-                /*Logic to add Checked-in appointment if exists*/
-                if (bundle != null) {
-                    AppointmentModel appointmentModel = (AppointmentModel)
-                            bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
-
-                    if (appointmentModel != null) {
-                        // adding checked-in appointment at the top of the list
-                        appointmentListWithHeader.add(0, appointmentModel);
-
-                        if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-                            appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
-                            appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            appointmentRecyclerView.setAdapter(appointmentsAdapter);
-                        } else {
-                            Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
             }
 
             @Override
@@ -456,6 +469,20 @@ public class AppointmentsListFragment extends Fragment {
             }
         });
     }
+  /*  private void onRefresh(){
+        appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (appointmentsResultModel!=(new AppointmentsResultModel())) {
+                    AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
+                    appointmentListWithHeader.remove(appointmentSectionHeaderModel);
+                    appointmentListWithHeader.remove(appointmentModel);
+
+                    getAppointmentInformation();
+                }
+            }
+        });
+    }*/
 
     /*Method to return appointmentListWithHeader*/
     private ArrayList<Object> getAppointmentListWithHeader() {

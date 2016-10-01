@@ -193,14 +193,32 @@
     <string name="review_screen_header">Review Information</string>
     <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
     <string name="review_screen_demographic">DEMOGRAPHIC</string>
-    <string name="review_screen_race_lable">RACE</string>
-    <string name="review_screen_ethnicity">ETHNICITY</string>
+    <string name="review_race_label">RACE</string>
+    <string name="review_ethnicity_label">ETHNICITY</string>
     <string name="review_screen_healthinsurance">HEALTH INSURANCE</string>
     <string name="review_screen_company_lable">COMPANY</string>
-    <string name="review_screen_plan_lable">PLAN</string>
-    <string name="review_screen_insurancepolicy_number_lable">INSURANCE POLICY NUMBER</string>
+    <string name="review_plan_label">PLAN</string>
+    <string name="review_screen_insurancepolicy_number_lable">INSURANCE MEMBER ID</string>
     <string name="review_screen_agreebutton">YES, THESE ARE CORRECT</string>
     <string name="review_screen_disagreebutton">I NEED TO UPDATE THIS INFORMATION</string>
+    <string name="review_firstname_label">FIRST NAME</string>
+    <string name="review_lastname_label">LAST NAME</string>
+    <string name="review_middlename_label">MIDDLE NAME</string>
+    <string name="review_email_label">EMAIL</string>
+    <string name="review_dateofbirth_label">DOB</string>
+    <string name="review_phone_number_label">PHONE NUMBER</string>
+    <string name="review_address_lable">ADDRESS</string>
+    <string name="review_address1_label">ADDRESS 1</string>
+    <string name="review_address2_label">ADDRESS 2</string>
+    <string name="review_driverlicense_label">DRIVER LICENSE</string>
+    <string name="review_prefferedlanguage_label">PREFERRED LANGUAGE</string>
+    <string name="review_gender_label">GENDER</string>
+    <string name="review_city_label">CITY</string>
+    <string name="review_state_label">STATE</string>
+    <string name="review_zipcode_label">ZIPCODE</string>
+    <string name="review_country_label">COUNTRY</string>
+
+
 
 
     <!--<Navigation Screen>-->
@@ -221,12 +239,12 @@
     <string name="tiltle1_3">Sign consent for medical care</string>
     <string name="consentname">Consent for Medical Care</string>
     <string name="consentdescrption">Please fill in this form about general cardiac symptoms you may have had in the past.</string>
-    <string name="constentcontent">I,Bruno O. Barros, understand that I have a condition thar requires medical treatment. Lorem ipsum dolor sit amet. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas sed diam eget risus varius blandit sit amet non magna.
+    <string name="constentcontent">I,Sarah Hughes, understand that I have a condition thar requires medical treatment. Lorem ipsum dolor sit amet. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas sed diam eget risus varius blandit sit amet non magna.
 Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere consectetur est at lobortis.</string>
     <string name="hipaa">Sign HIPAA Confidentiality Agreement</string>
     <string name="yes_sig">Yes, This is my signature</string>
-    <string name="hint">Legal Representative Firstname</string>
-    <string name="hint_last">Legal Representative Lastname</string>
+    <string name="hint">Legal Representative First Name</string>
+    <string name="hint_last">Legal Representative Last Name</string>
 
     <string name="pick_date">Pick Date</string>
     <string name="choose_gender">Choose Gender</string>
@@ -268,5 +286,9 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="demogr_section_address_label">Address</string>
 
     <string name="choose">Choose</string>
+
+    <string name="no_apt_title">No appointments yet</string>
+    <string name="no_apt_desc">We\'ll list all your appointments here, so you can quickly check important details and even make early-check-ins in some cases.</string>
+
 
 </resources>
