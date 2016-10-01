@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.models;
 
 /**
  * Created by lsoco_user on 9/11/2016.

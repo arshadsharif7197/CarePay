@@ -56,7 +56,13 @@ public class BaseDoctorInfoDialog extends Dialog implements
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
         dateTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[0]);
-        timeTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[1]);
+
+        String timeStr = SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[1];
+        if(timeStr != null && timeStr.trim().length() > 9){
+            timeStr = timeStr.substring(0,timeStr.lastIndexOf(":"))+" "+timeStr.trim().split(" ")[1];
+        }
+        timeTextView.setText(timeStr);
+
         shortNameTextView.setText(SystemUtil.onShortDrName(appointmentModel.getDoctorName()));
         nameTextView.setText(appointmentModel.getDoctorName());
         typeTextView.setText(appointmentModel.getAppointmentType());

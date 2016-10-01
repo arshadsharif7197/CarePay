@@ -1,15 +1,16 @@
 package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -57,24 +58,19 @@ public class RecentProviderAdapter extends RecyclerView.Adapter<RecentProviderAd
 
     static class ProviderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView doctorName, doctorType, shortName;
+        private CustomGothamRoundedMediumLabel shortName;
+        private CustomProxyNovaSemiBoldLabel doctorName;
+        private CustomProxyNovaRegularLabel doctorType;
 
         ProviderViewHolder(View itemView) {
             super(itemView);
 
             // Set doctor name
-            Typeface textViewFont_proximanova_semibold = Typeface.createFromAsset(
-                    itemView.getResources().getAssets(), "fonts/proximanova_semibold.otf");
-            doctorName = (TextView) itemView.findViewById(R.id.doctor_name);
-            doctorName.setTypeface(textViewFont_proximanova_semibold);
-
+            doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
             // Set doctor type
-            Typeface textViewFont_proximanova_regular = Typeface.createFromAsset(
-                    itemView.getResources().getAssets(), "fonts/proximanova_regular.otf");
-            doctorType = (TextView) itemView.findViewById(R.id.doctor_type);
-            doctorType.setTypeface(textViewFont_proximanova_regular);
-
-            shortName = (TextView) itemView.findViewById(R.id.avtarTextView);
+            doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
+            // set doctor short name
+            shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
         }
     }
 
