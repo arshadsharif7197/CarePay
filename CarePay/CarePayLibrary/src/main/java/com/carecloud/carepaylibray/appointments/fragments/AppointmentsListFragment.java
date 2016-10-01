@@ -250,7 +250,7 @@ public class AppointmentsListFragment extends Fragment {
 
         appointmentRefresh = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
 //        appointmentRefresh.setRefreshing(false);
-
+        onRefresh();
         appointmentProgressBar = (ProgressBar) appointmentsListView.findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
         bundle = getArguments();
@@ -485,10 +485,13 @@ public class AppointmentsListFragment extends Fragment {
             }
         });
     }
-  /*  private void onRefresh(){
+    private void onRefresh(){
         appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                appointmentsItems.clear();
+                getAppointmentInformation();
+                appointmentRefresh.setRefreshing(false);
                 if (appointmentsResultModel!=(new AppointmentsResultModel())) {
                     AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
                     appointmentListWithHeader.remove(appointmentSectionHeaderModel);
@@ -498,7 +501,7 @@ public class AppointmentsListFragment extends Fragment {
                 }
             }
         });
-    }*/
+    }
 
     /*Method to return appointmentListWithHeader*/
     private ArrayList<Object> getAppointmentListWithHeader() {
