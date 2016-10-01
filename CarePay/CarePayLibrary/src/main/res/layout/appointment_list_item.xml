@@ -161,7 +161,7 @@
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
                     android:paddingStart="0dp"
                     android:textColor="@color/cadet_gray"
-                    android:textSize="@dimen/textview_textsize" />
+                    android:textSize="@dimen/apt_list_upcoming_month_txt_size" />
 
                 <TextView
                     android:id="@+id/separatorTextView"
@@ -179,7 +179,7 @@
                     android:id="@+id/upcomingTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|right"
+                    android:layout_gravity="center_vertical|end"
                     android:gravity="center"
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
                     android:paddingStart="0dp"
