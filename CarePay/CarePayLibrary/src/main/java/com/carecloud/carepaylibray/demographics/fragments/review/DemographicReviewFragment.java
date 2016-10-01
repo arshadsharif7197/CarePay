@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.demographics.fragments.review;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,15 +64,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private DemographicPayloadResponseModel demographicPayloadResponseModel;
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
     private DemographicPayloadAddressModel demographicPayloadAddressModel;
-    private TextInputLayout firstNameInputLayout;
-    private TextInputLayout middleNameInputLayout;
-    private TextInputLayout lastNameInputLayout;
-    private TextInputLayout phNoTextInputLayout;
-    private TextInputLayout address1TextInputLayout;
-    private TextInputLayout address2TextInputLayout;
-    private TextInputLayout cityTextInputLayout;
-    private TextInputLayout stateTextInputLayout;
-    private TextInputLayout zipCodeTextInputLayout;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -119,7 +110,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         initViewFromModels();
 
         //getDemographicInformation();
-
+       // phoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         raceDataArray = getResources().getStringArray(R.array.Race);
         ethnicityDataArray = getResources().getStringArray(R.array.Ethnicity);
         prefferedLangaugeArray = getResources().getStringArray(R.array.Language);
@@ -244,11 +235,14 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             //Personal Details
             firstNameText.setText(demographicPayloadPersonalDetailsModel.getFirstName());
             lastNameText.setText(demographicPayloadPersonalDetailsModel.getLastName());
+
             String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
+            if(datetime!=null){
             String[] date = datetime.split("T");
+
             String dob = date[0];
             String time = date[1];
-            dobEditText.setText(dob);
+            dobEditText.setText(dob);}
             selectGender.setText(demographicPayloadPersonalDetailsModel.getGender());
             selectlangauge.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
             raceDataTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
@@ -262,7 +256,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             cityEditText.setText(demographicPayloadAddressModel.getCity());
             stateEditText.setText(demographicPayloadAddressModel.getState());
             zipCodeEditText.setText(demographicPayloadAddressModel.getZipcode());
-            phoneNumberEditText.setText(demographicPayloadAddressModel.getPhone());
+            String phonenumber=PhoneNumberUtils.formatNumber(demographicPayloadAddressModel.getPhone());
+            phoneNumberEditText.setText(phonenumber);
         }
 }
 

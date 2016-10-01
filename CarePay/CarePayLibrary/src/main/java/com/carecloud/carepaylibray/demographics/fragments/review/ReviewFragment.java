@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -179,7 +180,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     cityTextView.setText(demographicPayloadAddressModel.getCity());
                                     stateTextView.setText(demographicPayloadAddressModel.getState());
                                     zipcodeTextView.setText(demographicPayloadAddressModel.getZipcode());
-                                    phoneNumberTextView.setText(demographicPayloadAddressModel.getPhone());
+                                    String phonenumber= PhoneNumberUtils.formatNumber(demographicPayloadAddressModel.getPhone());
+                                    phoneNumberTextView.setText(phonenumber);
                                 }
 
 
