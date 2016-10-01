@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,15 +13,34 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
+import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
+import com.carecloud.carepaylibray.intake.utils.JsonFormParseSimulator;
+import com.carecloud.carepaylibray.intake.fragments.InTakeCardiacSymptomsFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeFragment;
+import com.carecloud.carepaylibray.intake.fragments.IntakeMedicalHistoryFormOneFragment;
+import com.carecloud.carepaylibray.intake.fragments.IntakeMedicalHistoryFormTwoFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeReviewOfSymptomsFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeReviewVisitFragment;
+import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
+import com.carecloud.carepaylibray.intake.services.InTakeService;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InTakeActivity extends KeyboardHolderActivity {
 
@@ -32,6 +51,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
     private TextView               formsToolbarTitleTv;
     private ImageView[]            intakeDotsImageView;
     private Button                 intakeNextButton;
+    private ProgressBar            intakeProgressBar;
     private int                    intakeCurrentPageIndex;
     public boolean isQuestionAnswered=false;
 
@@ -93,10 +113,31 @@ public class InTakeActivity extends KeyboardHolderActivity {
                 if(intakeButtonText.equalsIgnoreCase(getString(R.string.intakeNextButtonText))) {
                     moveToNextQuestion();
                 } else {
-                    Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
-                    startActivity(intent);
-                }
+                    intakeProgressBar.setVisibility(View.VISIBLE);
+                    /*InTake API call to fetch payment information*/
+                    InTakeService apptService = (new BaseServiceGenerator(InTakeActivity.this)).createService(InTakeService.class); //, String token, String searchString
+                    Call<IntakeResponseModel> call = apptService.confirmInTakeInformation();
+                    call.enqueue(new Callback<IntakeResponseModel>() {
+                        @Override
+                        public void onResponse(Call<IntakeResponseModel> call, Response<IntakeResponseModel> response) {
+                            intakeProgressBar.setVisibility(View.GONE);
+                            IntakeResponseModel intakeResponseModel = response.body();
 
+                            if(intakeResponseModel != null && intakeResponseModel.getPayload() != null && intakeResponseModel.getPayload().getPayments() != null
+                                    && intakeResponseModel.getPayload().getPayments().getPayload() != null) {
+                                Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
+                                ArrayList<PayloadPaymentModel> paymentList = intakeResponseModel.getPayload().getPayments().getPayload();
+                                intent.putExtra(CarePayConstants.INTAKE_BUNDLE, paymentList);
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<IntakeResponseModel> call, Throwable t) {
+                            intakeProgressBar.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
         });
 
@@ -157,6 +198,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_blue));
         setCurrentItem(intakeCurrentPageIndex);
         updateTitle();
+        intakeProgressBar = (ProgressBar) findViewById(R.id.intakeProgressBar);
     }
 
     /**
@@ -243,15 +285,15 @@ public class InTakeActivity extends KeyboardHolderActivity {
 
         switch (position) {
             case 0:
-                return new IntakeReviewvisitFragment();
+                return new InTakeReviewVisitFragment();
             case 1:
-                return new InTakecardiacSymptomsfragment();
+                return new InTakeCardiacSymptomsFragment();
             case 2:
-                return new InTakeMedicalHistoryFragment();
+                return new IntakeMedicalHistoryFormOneFragment();
             case 3:
-                return new InTakeMedicalHistoryFragment_Form2();
+                return new IntakeMedicalHistoryFormTwoFragment();
             case 4:
-                return new IntakeReviewOfSymptomsFragment();
+                return new InTakeReviewOfSymptomsFragment();
             default:
                 return null;
         }

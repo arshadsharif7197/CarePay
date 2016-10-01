@@ -11,7 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/intake_radio_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/layout_margin">
 
         <TextView
             android:id="@+id/vascularRadioCaptionTextView"
@@ -175,7 +176,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/intake_radio_margin"
         android:layout_marginTop="@dimen/intakeTitleTopMargin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/layout_margin">
 
         <TextView
             android:id="@+id/pulmonaryRadioCaptionTextView"

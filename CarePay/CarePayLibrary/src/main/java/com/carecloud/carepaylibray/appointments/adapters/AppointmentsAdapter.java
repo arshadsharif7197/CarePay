@@ -96,19 +96,18 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*Restricted the appointment list item click if it is appointment header type.*/
-                    if (object.getClass() == AppointmentModel.class) {
-                        AppointmentModel item = (AppointmentModel) object;
-                        if (item.isPending()) {
-                            new CheckInOfficeNowAppointmentDialog(context, item).show();
-                        } else if (item.isCheckedIn()) {
-                            new QueueAppointmentDialog(context, item).show();
-                        } else {
-                            // appointment clicked item saved so that it can be used on Payment
-                            AppointmentsActivity.model = item;
-                            new CheckInOfficeNowAppointmentDialog(context, item).show();
-                        }
+                /*Restricted the appointment list item click if it is appointment header type.*/
+                if (object.getClass() == AppointmentModel.class) {
+                    AppointmentModel item = (AppointmentModel) object;
+                    AppointmentsActivity.model = item; // appointment clicked item saved so that it can be used on Payment
+                    if (item.isPending()) {
+                        new CheckInOfficeNowAppointmentDialog(context, item).show();
+                    } else if (item.isCheckedIn()) {
+                        new QueueAppointmentDialog(context, item).show();
+                    } else {
+                        new CheckInOfficeNowAppointmentDialog(context, item).show();
                     }
+                }
                 }
             });
 
@@ -174,7 +173,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             if (item.isCheckedIn()) {
                                 appointmentStickyHeaderTitle.setVisibility(View.GONE);
                             } else {
-                                System.out.println("DY :::::: " + 1 + " ---- " + item.getAppointmentHeader());
                                 appointmentStickyHeaderTitle.setText(item.getAppointmentHeader());
                                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
                             }
