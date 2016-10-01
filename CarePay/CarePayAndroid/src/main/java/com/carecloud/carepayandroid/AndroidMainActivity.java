@@ -13,7 +13,7 @@ public class AndroidMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_android);
 //        Intent intent = new Intent(this, LibraryMainActivity.class);
-//        Intent intent = new Intent(this, IntakeActivity.class);
+//        Intent intent = new Intent(this, InTakeActivity.class);
 //        Intent intent = new Intent(this, PaymentActivity.class);
 //        Intent intent = new Intent(this, AppointmentsActivity.class);
 //        Intent intent = new Intent(this, ConsentActivity.class);

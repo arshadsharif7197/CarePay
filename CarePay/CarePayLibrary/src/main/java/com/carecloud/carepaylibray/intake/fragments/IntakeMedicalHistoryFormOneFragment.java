@@ -25,7 +25,7 @@ import java.util.Arrays;
  * Created by prem_mourya on 9/28/2016.
  */
 
-public class IntakeMedicalHistoryFormOneFragment extends IntakeFragment {
+public class IntakeMedicalHistoryFormOneFragment extends InTakeFragment {
 
     private View mainView;
     private Context context;

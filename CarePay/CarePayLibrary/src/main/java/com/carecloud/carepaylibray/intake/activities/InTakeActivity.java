@@ -22,14 +22,14 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.intake.utils.JsonFormParseSimulator;
-import com.carecloud.carepaylibray.intake.fragments.IntakeCardiacSymptomsFragment;
-import com.carecloud.carepaylibray.intake.fragments.IntakeFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeCardiacSymptomsFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeFragment;
 import com.carecloud.carepaylibray.intake.fragments.IntakeMedicalHistoryFormOneFragment;
 import com.carecloud.carepaylibray.intake.fragments.IntakeMedicalHistoryFormTwoFragment;
-import com.carecloud.carepaylibray.intake.fragments.IntakeReviewOfSymptomsFragment;
-import com.carecloud.carepaylibray.intake.fragments.IntakeReviewVisitFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeReviewOfSymptomsFragment;
+import com.carecloud.carepaylibray.intake.fragments.InTakeReviewVisitFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
-import com.carecloud.carepaylibray.intake.services.IntakeService;
+import com.carecloud.carepaylibray.intake.services.InTakeService;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -42,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class IntakeActivity extends KeyboardHolderActivity {
+public class InTakeActivity extends KeyboardHolderActivity {
 
     private JsonFormParseSimulator formsParseSimulator;
     private List<IntakeFormModel>  forms;
@@ -115,7 +115,7 @@ public class IntakeActivity extends KeyboardHolderActivity {
                 } else {
                     intakeProgressBar.setVisibility(View.VISIBLE);
                     /*InTake API call to fetch payment information*/
-                    IntakeService apptService = (new BaseServiceGenerator(IntakeActivity.this)).createService(IntakeService.class); //, String token, String searchString
+                    InTakeService apptService = (new BaseServiceGenerator(InTakeActivity.this)).createService(InTakeService.class); //, String token, String searchString
                     Call<IntakeResponseModel> call = apptService.confirmInTakeInformation();
                     call.enqueue(new Callback<IntakeResponseModel>() {
                         @Override
@@ -125,7 +125,7 @@ public class IntakeActivity extends KeyboardHolderActivity {
 
                             if(intakeResponseModel != null && intakeResponseModel.getPayload() != null && intakeResponseModel.getPayload().getPayments() != null
                                     && intakeResponseModel.getPayload().getPayments().getPayload() != null) {
-                                Intent intent = new Intent(IntakeActivity.this, PaymentActivity.class);
+                                Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
                                 ArrayList<PayloadPaymentModel> paymentList = intakeResponseModel.getPayload().getPayments().getPayload();
                                 intent.putExtra(CarePayConstants.INTAKE_BUNDLE, paymentList);
                                 startActivity(intent);
@@ -146,7 +146,7 @@ public class IntakeActivity extends KeyboardHolderActivity {
         FragmentStatePagerAdapter pagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                IntakeFragment fragment = getSelectedItem(position);
+                InTakeFragment fragment = getSelectedItem(position);
                 if(fragment !=null) {
                     fragment.setFormModel(forms.get(position));
                 }
@@ -178,10 +178,10 @@ public class IntakeActivity extends KeyboardHolderActivity {
                 // if scrolled next, just enable the next tab dot
                 if(position > intakeCurrentPageIndex) {
                     ImageView tabDot = intakeDotsImageView[position];
-                    tabDot.setImageDrawable(ContextCompat.getDrawable(IntakeActivity.this, R.drawable.circle_indicator_blue));
+                    tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_blue));
                 } else if(position < intakeCurrentPageIndex){ // scrolled to prev
                     ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
-                    tabDot.setImageDrawable(ContextCompat.getDrawable(IntakeActivity.this, R.drawable.circle_indicator_gray));
+                    tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_gray));
                 }
                 intakeCurrentPageIndex = position;
                 // update the title
@@ -195,7 +195,7 @@ public class IntakeActivity extends KeyboardHolderActivity {
         intakeCurrentPageIndex = 0;
         // enable first tab dot
         ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
-        tabDot.setImageDrawable(ContextCompat.getDrawable(IntakeActivity.this, R.drawable.circle_indicator_blue));
+        tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_blue));
         setCurrentItem(intakeCurrentPageIndex);
         updateTitle();
         intakeProgressBar = (ProgressBar) findViewById(R.id.intakeProgressBar);
@@ -247,7 +247,7 @@ public class IntakeActivity extends KeyboardHolderActivity {
         }
         setCurrentItem(intakeCurrentPageIndex);
         ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
-        tabDot.setImageDrawable(ContextCompat.getDrawable(IntakeActivity.this, R.drawable.circle_indicator_blue));
+        tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_blue));
 
     }
 
@@ -261,7 +261,7 @@ public class IntakeActivity extends KeyboardHolderActivity {
         } else {
             // disable the previous dot
             ImageView tabDot = intakeDotsImageView[intakeCurrentPageIndex];
-            tabDot.setImageDrawable(ContextCompat.getDrawable(IntakeActivity.this, R.drawable.circle_indicator_gray));
+            tabDot.setImageDrawable(ContextCompat.getDrawable(InTakeActivity.this, R.drawable.circle_indicator_gray));
 
             // just get back to HomeActivity for now
             --intakeCurrentPageIndex;
@@ -281,19 +281,19 @@ public class IntakeActivity extends KeyboardHolderActivity {
     /**
      * This method will be invoked when a page is requested to create
      */
-    public IntakeFragment getSelectedItem(int position) {
+    public InTakeFragment getSelectedItem(int position) {
 
         switch (position) {
             case 0:
-                return new IntakeReviewVisitFragment();
+                return new InTakeReviewVisitFragment();
             case 1:
-                return new IntakeCardiacSymptomsFragment();
+                return new InTakeCardiacSymptomsFragment();
             case 2:
                 return new IntakeMedicalHistoryFormOneFragment();
             case 3:
                 return new IntakeMedicalHistoryFormTwoFragment();
             case 4:
-                return new IntakeReviewOfSymptomsFragment();
+                return new InTakeReviewOfSymptomsFragment();
             default:
                 return null;
         }

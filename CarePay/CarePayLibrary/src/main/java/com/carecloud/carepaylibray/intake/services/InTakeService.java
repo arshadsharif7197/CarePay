@@ -9,7 +9,7 @@ import retrofit2.http.POST;
  * Created by arpit_jain1 on 9/29/2016.
  */
 
-public interface IntakeService {
+public interface InTakeService {
     @POST(value = "dev/workflow/carepay/patient_checkin/intake_forms/confirm")
     Call<IntakeResponseModel> confirmInTakeInformation();
 }

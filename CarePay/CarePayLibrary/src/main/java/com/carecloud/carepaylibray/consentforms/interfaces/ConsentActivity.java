@@ -16,7 +16,7 @@ import com.carecloud.carepaylibray.activities.SignatureActivity;
 import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm1Fragment;
 import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.intake.activities.IntakeActivity;
+import com.carecloud.carepaylibray.intake.activities.InTakeActivity;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
@@ -82,7 +82,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
                 if (fragment != null) {
                     replaceFragment(fragment, true);
                 } else {
-                    startActivity(new Intent(ConsentActivity.this, IntakeActivity.class));
+                    startActivity(new Intent(ConsentActivity.this, InTakeActivity.class));
                     finish();
                 }
             }

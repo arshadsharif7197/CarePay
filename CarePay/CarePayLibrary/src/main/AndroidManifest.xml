@@ -58,7 +58,7 @@
             android:theme="@style/NavigationTheme"/>
 
         <activity
-            android:name="com.carecloud.carepaylibray.intake.activities.IntakeActivity"
+            android:name="com.carecloud.carepaylibray.intake.activities.InTakeActivity"
             android:theme="@style/NavigationTheme"/>
 
         <activity android:name="com.carecloud.carepaylibray.cognito.SignUpConfirmActivity"
