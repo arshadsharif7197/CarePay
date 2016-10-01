@@ -7,6 +7,14 @@
 
 
     <include layout="@layout/toolbar_demographics_review"/>
+    <ProgressBar
+        android:id="@+id/demographicReviewProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true"/>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -91,9 +99,9 @@
             style="@style/SigninSignupTextInputStyle">
 
             <EditText
-                android:id="@+id/reviewdemogrEmailEdit"
+                 android:id="@+id/reviewdemogrEmailEdit"
                 style="@style/SigninSignupEditStyle"
-                android:hint="@string/review_email_label"
+                android:hint="Email"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
                 android:nextFocusForward="@+id/reviewdemogrDOBEdit"/>
@@ -106,7 +114,7 @@
             <EditText
                 android:id="@+id/revewidemogrDOBEdit"
                 style="@style/SigninSignupEditStyle"
-                android:hint="@string/review_dateofbirth_label"
+                android:hint="Date Of Birth"
                 android:imeOptions="actionNext"
                 android:nextFocusForward="@+id/revewidemoPhoneNumberEdit"/>
         </android.support.design.widget.TextInputLayout>
@@ -117,7 +125,7 @@
             <EditText
                 android:id="@+id/reviewgrdemoPhoneNumberEdit"
                 style="@style/SigninSignupEditStyle"
-                android:hint="@string/review_phone_number_label"
+                android:hint="Phone Number"
                 android:inputType="phone"
                 android:imeOptions="actionDone" />
         </android.support.design.widget.TextInputLayout>
@@ -129,32 +137,27 @@
             style="@style/DemographicsSectionLabelStyle"/>
 
 
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
             android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop">
+            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/gender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:id="@+id/genderTextView"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:text="Gender"
-                android:textColor="@color/charcoal"
-                android:textSize="@dimen/consent_minor_textsize" />
+                style="@style/DemographicsDocsLabelStyle"/>
 
             <TextView
-                android:id="@+id/choose_genderTextView"
-                style="@style/ConsentForm_GenderStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="@string/choose_gender" />
-
-        </RelativeLayout>
+                android:text="@string/demogr_tv_choose_label"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:id="@+id/chooseGenderTextView"
+                android:layout_width="wrap_content"/>
+        </LinearLayout>
 
         <View
             style="@style/Consent_Form_View_Style"
@@ -220,16 +223,17 @@
 
             <TextView
                 android:id="@+id/preferredLanguageTextView"
-                style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/languageLabel"/>
+                android:text="Preffred Language"
+                style="@style/DemographicsDocsLabelStyle"/>
 
             <TextView
-                android:id="@+id/preferredLanguageListTextView"
+                android:text="@string/demogr_tv_choose_label"
                 style="@style/DemographicsDocsClickableTextStyle"
-                android:text="@string/chooseTextView"
-                android:textColor="@color/bright_cerulean"/>
+                android:id="@+id/preferredLanguageListTextView"
+                android:layout_width="wrap_content"/>
+
         </LinearLayout>
         <View
             style="@style/Consent_Form_View_Style"

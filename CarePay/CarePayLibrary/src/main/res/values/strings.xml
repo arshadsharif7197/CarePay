@@ -48,6 +48,8 @@
 
     <string name="English">English</string>
     <string name="Spanish">Spanish</string>
+    <string name="Male">Male</string>
+    <string name="Female">Female</string>
 
     <string-array name="Language">
         <item>@string/English</item>
@@ -77,6 +79,12 @@
         <item>@string/other</item>
         <item>@string/decline_to_answer</item>
     </string-array>
+
+    <string-array name="Gender">
+        <item>@string/Male</item>
+        <item>@string/Female</item>
+    </string-array>
+
 
     <string-array name="UpdatesMode">
         <item>Mobile Notifications</item>
