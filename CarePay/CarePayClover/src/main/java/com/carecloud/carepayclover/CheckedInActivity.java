@@ -48,7 +48,8 @@ public class CheckedInActivity extends AppCompatActivity {
         call.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-                if(response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
+
+                if(response.code()==200 && response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
                     CheckedInAdapter CheckedInAdapter = new CheckedInAdapter(CheckedInActivity.this, new ArrayList<Appointment>(response.body().getPayload().getAppointments()));
                     appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(CheckedInActivity.this));
                     appointmentsRecyclerView.setAdapter(CheckedInAdapter);
