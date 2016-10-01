@@ -7,9 +7,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.carecloud.carepaylibray.intake.InTakeActivity">
+    tools:context="com.carecloud.carepaylibray.intake.activities.InTakeActivity">
 
     <include layout="@layout/toolbar_intake"/>
+
+    <ProgressBar
+        android:id="@+id/intakeProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"

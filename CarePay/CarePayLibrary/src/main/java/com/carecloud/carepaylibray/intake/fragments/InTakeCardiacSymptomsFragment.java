@@ -1,15 +1,13 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,7 +18,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by prem_mourya on 9/28/2016.
  */
 
-public class InTakecardiacSymptomsfragment extends InTakeFragment {
+public class InTakeCardiacSymptomsFragment extends InTakeFragment {
 
     private View mainView;
     private Context context;
