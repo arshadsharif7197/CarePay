@@ -182,7 +182,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     address2TextView.setText(demographicPayloadAddressModel.getAddress2());
                                     cityTextView.setText(demographicPayloadAddressModel.getCity());
                                     stateTextView.setText(demographicPayloadAddressModel.getState());
-                                    zipcodeTextView.setText(demographicPayloadAddressModel.getZipcode());
+                                    zipcodeTextView.setText(StringUtil.formatZipCode(demographicPayloadAddressModel.getZipcode()));
                                     phoneNumberTextView.setText(StringUtil.formatPhoneNumber(demographicPayloadAddressModel.getPhone()));
 
                                 }
