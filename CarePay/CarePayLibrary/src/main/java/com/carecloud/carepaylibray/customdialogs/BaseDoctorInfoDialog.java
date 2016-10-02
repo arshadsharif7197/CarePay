@@ -45,7 +45,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-        getWindow().setAttributes((WindowManager.LayoutParams) params);
+        getWindow().setAttributes(params);
 
         TextView shortNameTextView = ((TextView) findViewById(R.id.appointShortnameTextView));
         TextView nameTextView = ((TextView) findViewById(R.id.appointNameTextView));
@@ -55,13 +55,9 @@ public class BaseDoctorInfoDialog extends Dialog implements
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
-        dateTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[0]);
-
-        String timeStr = SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[1];
-        if(timeStr != null && timeStr.trim().length() > 9){
-            timeStr = timeStr.substring(0,timeStr.lastIndexOf(":"))+" "+timeStr.trim().split(" ")[1];
-        }
-        timeTextView.setText(timeStr);
+        String[] fmtDateAndTime = SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate());
+        dateTextView.setText(fmtDateAndTime[0]);
+        timeTextView.setText(fmtDateAndTime[1]);
 
         shortNameTextView.setText(SystemUtil.onShortDrName(appointmentModel.getDoctorName()));
         nameTextView.setText(appointmentModel.getDoctorName());

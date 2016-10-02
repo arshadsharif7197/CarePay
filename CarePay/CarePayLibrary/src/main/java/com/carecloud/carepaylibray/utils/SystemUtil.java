@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,11 +43,11 @@ public class SystemUtil {
     }
 
     public static String onShortDrName(String fullName) {
-        if(fullName != null && fullName.length()>1) {
+        if (fullName != null && fullName.length() > 1) {
             String stringSplitArr[] = fullName.split(" ");
-            if(stringSplitArr.length >= 3)
-                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase()+String.valueOf(stringSplitArr[stringSplitArr.length-1].charAt(0)).toUpperCase();
-            else if(stringSplitArr.length == 2)
+            if (stringSplitArr.length >= 3)
+                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase() + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
+            else if (stringSplitArr.length == 2)
                 return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
             else
                 return "";
@@ -80,6 +81,7 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
+
     public static void setProximaNovaSemiboldTextInputLayout(Context context, TextInputLayout view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
@@ -89,10 +91,12 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
         view.setTypeface(typeface);
     }
+
     public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
         view.setTypeface(typeface);
     }
+
     public static void setGothamRoundedBoldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_bold.otf");
         view.setTypeface(typeface);
@@ -102,6 +106,7 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
+
     public static void setProximaNovaLightTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_light.otf");
         view.setTypeface(typeface);
@@ -110,8 +115,9 @@ public class SystemUtil {
 
     /**
      * Set the type face of a text input layout
+     *
      * @param context The context
-     * @param layout The layout
+     * @param layout  The layout
      */
     public static void setProximaNovaRegularTypefaceLayout(Context context, TextInputLayout layout) {
         Typeface proximaNovaRegular = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/proximanova_regular.otf");
@@ -130,6 +136,7 @@ public class SystemUtil {
 
     /**
      * Shows the soft keyboard
+     *
      * @param activity The activity
      */
     public static void showSoftKeyboard(Activity activity) {
@@ -140,7 +147,8 @@ public class SystemUtil {
     /**
      * Handles the change from normal to caps of the hint in a view wrapped by a text input layout;
      * The view has to have the input text layout set as tag; the input text layout the hint (as tag)
-     * @param view The edit view
+     *
+     * @param view     The edit view
      * @param hasFocus When the view gains the focus
      */
     public static void handleHintChange(View view, boolean hasFocus) {
@@ -184,9 +192,10 @@ public class SystemUtil {
 
     /**
      * Shows a message dialog
+     *
      * @param context The context
-     * @param title The title
-     * @param body The message
+     * @param title   The title
+     * @param body    The message
      */
     public static void showDialogMessage(Context context, String title, String body) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -206,18 +215,35 @@ public class SystemUtil {
     }
 
     /**
-     * convert date string in to month and day.
+     * convert date string in to month and day; and time into hh:mm am/pm
+     *
      * @param dateStr the String to evaluate
      */
-    public static String[] onDateParseToString(Context context,String dateStr) {
-        String stringDate[] = dateStr.split(" ");
+    public static String[] onDateParseToString(Context context, String dateStr) {
+        String fmt = "yyyy-MM-dd'T'hh:mm:ssZ";
         String formatDate[] = new String[2];
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(context.getString(R.string.dateFormatString), Locale.getDefault());
-            Date appointDate = sdf.parse(stringDate[0]);
-            formatDate[0] = DateFormat.format("EEEE, MMMM", appointDate) + " "
-                    + DateUtil.getDayOrdinal(Integer.parseInt(DateFormat.format("dd", appointDate).toString()));
-            formatDate[1] = stringDate[1] + " " + stringDate[2];
+            // change date format
+            SimpleDateFormat inDateFormat = new SimpleDateFormat(fmt, Locale.getDefault());
+            SimpleDateFormat outDateFormat = new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
+            Date date = inDateFormat.parse(dateStr);
+            String newDateStr = formatDate[0] = outDateFormat.format(date);
+            char lastDayDigit = formatDate[0].charAt(formatDate[0].length() - 1);
+            if(lastDayDigit == '1') {
+                formatDate[0] = newDateStr + "st";
+            } else if(lastDayDigit == '2') {
+                formatDate[0] = newDateStr + "nd";
+            } else if(lastDayDigit == '3') {
+                formatDate[0] = newDateStr + "rd";
+            } else {
+                formatDate[0] = newDateStr + "th";
+            }
+
+            // change time format
+            SimpleDateFormat inTimeFormat = new SimpleDateFormat(fmt, Locale.getDefault());
+            Date time = inTimeFormat.parse(dateStr);
+            SimpleDateFormat outTimeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+            formatDate[1] = outTimeFormat.format(time);
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage());
         }
@@ -230,7 +256,8 @@ public class SystemUtil {
 
     /**
      * Utility to convert dp to pixels
-     * @param context The context
+     *
+     * @param context   The context
      * @param valueInDp The dps
      * @return The pxs
      */
