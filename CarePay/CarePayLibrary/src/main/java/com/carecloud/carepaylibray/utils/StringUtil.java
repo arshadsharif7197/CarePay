@@ -79,11 +79,9 @@ public class StringUtil {
         phoneNumberString.append(phn);
         if (phoneNumberString.length() > 0)
         {
-            if (phoneNumberString.length() == 5 )
-                phoneNumberString.append("-");
             if (phoneNumberString.length() > 5)
             {
-                if (Character.isDigit(phoneNumberString.charAt(3)))
+                if (Character.isDigit(phoneNumberString.charAt(5)))
                     phoneNumberString.insert(5, "-");
             }
 
