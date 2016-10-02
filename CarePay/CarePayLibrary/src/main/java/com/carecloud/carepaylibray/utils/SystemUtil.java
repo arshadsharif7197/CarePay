@@ -42,19 +42,6 @@ public class SystemUtil {
         return sizeInInches >= 6.5;
     }
 
-    public static String onShortDrName(String fullName) {
-        if (fullName != null && fullName.length() > 1) {
-            String stringSplitArr[] = fullName.split(" ");
-            if (stringSplitArr.length >= 3)
-                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase() + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
-            else if (stringSplitArr.length == 2)
-                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
-            else
-                return "";
-        } else
-            return "";
-    }
-
     /* Font utils*/
 
     public static void setTypefaceFromAssets(Context context, String pathToFontInAssets, TextView view) {
@@ -212,42 +199,6 @@ public class SystemUtil {
                 });
         AlertDialog userDialog = builder.create();
         userDialog.show();
-    }
-
-    /**
-     * convert date string in to month and day; and time into hh:mm am/pm
-     *
-     * @param dateStr the String to evaluate
-     */
-    public static String[] onDateParseToString(Context context, String dateStr) {
-        String fmt = "yyyy-MM-dd'T'hh:mm:ssZ";
-        String formatDate[] = new String[2];
-        try {
-            // change date format
-            SimpleDateFormat inDateFormat = new SimpleDateFormat(fmt, Locale.getDefault());
-            SimpleDateFormat outDateFormat = new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
-            Date date = inDateFormat.parse(dateStr);
-            String newDateStr = formatDate[0] = outDateFormat.format(date);
-            char lastDayDigit = formatDate[0].charAt(formatDate[0].length() - 1);
-            if(lastDayDigit == '1') {
-                formatDate[0] = newDateStr + "st";
-            } else if(lastDayDigit == '2') {
-                formatDate[0] = newDateStr + "nd";
-            } else if(lastDayDigit == '3') {
-                formatDate[0] = newDateStr + "rd";
-            } else {
-                formatDate[0] = newDateStr + "th";
-            }
-
-            // change time format
-            SimpleDateFormat inTimeFormat = new SimpleDateFormat(fmt, Locale.getDefault());
-            Date time = inTimeFormat.parse(dateStr);
-            SimpleDateFormat outTimeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-            formatDate[1] = outTimeFormat.format(time);
-        } catch (Exception ex) {
-            Log.e(LOG_TAG, ex.getMessage());
-        }
-        return formatDate;
     }
 
     public static boolean isNotEmptyString(String string) {

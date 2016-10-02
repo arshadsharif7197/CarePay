@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -55,11 +57,11 @@ public class BaseDoctorInfoDialog extends Dialog implements
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
-        String[] fmtDateAndTime = SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate());
+        String[] fmtDateAndTime = DateUtil.onDateParseToString(context, appointmentModel.getAppointmentDate());
         dateTextView.setText(fmtDateAndTime[0]);
         timeTextView.setText(fmtDateAndTime[1]);
 
-        shortNameTextView.setText(SystemUtil.onShortDrName(appointmentModel.getDoctorName()));
+        shortNameTextView.setText(StringUtil.onShortDrName(appointmentModel.getDoctorName()));
         nameTextView.setText(appointmentModel.getDoctorName());
         typeTextView.setText(appointmentModel.getAppointmentType());
         addressHeaderTextView.setText(appointmentModel.getPlaceName());
