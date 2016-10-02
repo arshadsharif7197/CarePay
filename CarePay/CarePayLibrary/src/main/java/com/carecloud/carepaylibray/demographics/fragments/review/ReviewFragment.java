@@ -37,6 +37,9 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadRespons
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.api.services.drive.Drive;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,6 +64,9 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
     private DemographicPayloadAddressModel demographicPayloadAddressModel;
     private DemographicPayloadInsuranceModel demographicPayloadInsuranceModel;
+    private List<DemographicPayloadInsuranceModel> insurances ;
+   private DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel;
+
 
 
     public static ReviewFragment newInstance() {
@@ -69,7 +75,11 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     public ReviewFragment() {
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        getDemographicInformation();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_insurance_review, container, false);
@@ -112,12 +122,12 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 getActivity().finish();
             }
         });
-
-        getDemographicInformation();
         initialiseUIFields();
         setTypefaces(view);
         return view;
     }
+
+
 
     private void getDemographicInformation() {
         demographicProgressBar.setVisibility(View.VISIBLE);
@@ -164,16 +174,21 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     ethnicityTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
                                 }
 
-                            } else
+                            } else {
                                 Log.v(LOG_TAG, "demographic personaldetail  model is null ");
-                            if (payloadinfomodel.getInsurances() != null) {
-                                for (DemographicPayloadInsuranceModel demographicPayloadInsuranceModel : demographics.getPayload().getInsurances()) {
-                                    planTextView.setText(demographicPayloadInsuranceModel.getInsurancePlan());
-                                    companyTextView.setText(demographicPayloadInsuranceModel.getInsuranceProvider());
-                                    policyNumberTextView.setText(demographicPayloadInsuranceModel.getInsuranceMemberId());
-                                }
-                            } else
+                            }
+
+                            insurances = payloadinfomodel.getInsurances();
+                            if (insurances != null && insurances.size() >0) {
+                                    DemographicPayloadInsuranceModel demographicPayloadInsuranceModel = insurances.get(0);
+                                    if(demographicPayloadInsuranceModel != null) {
+                                        planTextView.setText(demographicPayloadInsuranceModel.getInsurancePlan());
+                                        companyTextView.setText(demographicPayloadInsuranceModel.getInsuranceProvider());
+                                        policyNumberTextView.setText(demographicPayloadInsuranceModel.getInsuranceMemberId());
+                                    }
+                            } else {
                                 Log.v(LOG_TAG, "demographic insurance model is null");
+                            }
 
                             if (payloadinfomodel.getAddress() != null) {
                                 demographicPayloadAddressModel = payloadinfomodel.getAddress();
@@ -184,16 +199,18 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     stateTextView.setText(demographicPayloadAddressModel.getState());
                                     zipcodeTextView.setText(StringUtil.formatZipCode(demographicPayloadAddressModel.getZipcode()));
                                     phoneNumberTextView.setText(StringUtil.formatPhoneNumber(demographicPayloadAddressModel.getPhone()));
-
                                 }
-
-
-                            } else
+                            } else {
                                 Log.v(LOG_TAG, "demographic Address model is null");
-                            if (payloadinfomodel.getDriversLicense() != null) {
-                                DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = payloadinfomodel.getDriversLicense();
-                                driverLicenseTextView.setText(demographicPayloadDriversLicenseModel.getLicenseNumber());
                             }
+
+                            if (payloadinfomodel.getDriversLicense() != null) {
+                              demographicPayloadDriversLicenseModel = payloadinfomodel.getDriversLicense();
+                                driverLicenseTextView.setText(demographicPayloadDriversLicenseModel.getLicenseNumber());
+                            } else {
+                                Log.v(LOG_TAG, "demographic Driver License model is null");
+                            }
+
                         }
                     }
                 }
@@ -226,6 +243,9 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         if (view == updateInformationUpdate) {
             ((DemographicReviewActivity) getActivity()).setDemographicPayloadAddressModel(demographicPayloadAddressModel);
             ((DemographicReviewActivity) getActivity()).setDemographicPayloadPersonalDetailsModel(demographicPayloadPersonalDetailsModel);
+            ((DemographicReviewActivity) getActivity()).setInsurances(insurances);
+            ((DemographicReviewActivity) getActivity()).setDemographicPayloadDriversLicenseModel(demographicPayloadDriversLicenseModel);
+
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment fragment = DemographicReviewFragment.newInstance();
