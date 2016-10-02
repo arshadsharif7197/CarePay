@@ -52,7 +52,6 @@ public class StringUtil {
         return false;
     }
 
-
     public static String formatPhoneNumber(String phn)
     {
         StringBuilder  phoneNumberString = new StringBuilder();
@@ -83,5 +82,18 @@ public class StringUtil {
 
 
         return phoneNumberString.toString();
+    }
+
+    public static String onShortDrName(String fullName) {
+        if (fullName != null && fullName.length() > 1) {
+            String stringSplitArr[] = fullName.split(" ");
+            if (stringSplitArr.length >= 3)
+                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase() + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
+            else if (stringSplitArr.length == 2)
+                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
+            else
+                return "";
+        } else
+            return "";
     }
 }
