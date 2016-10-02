@@ -51,4 +51,26 @@ public class StringUtil {
         }
         return false;
     }
+
+
+    public static String formatPhoneNumber(String phn)
+    {
+        StringBuilder  phoneNumberString = new StringBuilder();
+        phoneNumberString.append(phn);
+        if (phoneNumberString.length() > 0)
+        {
+            if (phoneNumberString.length() == 3 || phoneNumberString.length() == 7)
+                phoneNumberString.append("-");
+            if (phoneNumberString.length() > 3)
+            {
+                if (Character.isDigit(phoneNumberString.charAt(3)))
+                    phoneNumberString.insert(3, "-");
+            }
+            if (phoneNumberString.length() > 7) {
+                if (Character.isDigit(phoneNumberString.charAt(7)))
+                    phoneNumberString.insert(7, "-");
+            }
+        }
+        return phoneNumberString.toString();
+    }
 }
