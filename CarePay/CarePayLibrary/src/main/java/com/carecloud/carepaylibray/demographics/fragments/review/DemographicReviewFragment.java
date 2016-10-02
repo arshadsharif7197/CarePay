@@ -257,7 +257,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             address2EditText.setText(demographicPayloadAddressModel.getAddress2());
             cityEditText.setText(demographicPayloadAddressModel.getCity());
             stateEditText.setText(demographicPayloadAddressModel.getState());
-            zipCodeEditText.setText(demographicPayloadAddressModel.getZipcode());
+            zipCodeEditText.setText(StringUtil.formatZipCode(demographicPayloadAddressModel.getZipcode()));
             phoneNumberEditText.setText(StringUtil.formatPhoneNumber(demographicPayloadAddressModel.getPhone()));
             phoneNumberEditText.addTextChangedListener(new TextWatcher() {
 

@@ -73,4 +73,21 @@ public class StringUtil {
         }
         return phoneNumberString.toString();
     }
+    public static String formatZipCode(String phn)
+    {
+        StringBuilder  phoneNumberString = new StringBuilder();
+        phoneNumberString.append(phn);
+        if (phoneNumberString.length() > 0)
+        {
+            if (phoneNumberString.length() == 5 )
+                phoneNumberString.append("-");
+            if (phoneNumberString.length() > 5)
+            {
+                if (Character.isDigit(phoneNumberString.charAt(3)))
+                    phoneNumberString.insert(5, "-");
+            }
+
+        }
+        return phoneNumberString.toString();
+    }
 }
