@@ -7,15 +7,19 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+
+import java.util.List;
 
 
 public class DemographicReviewActivity extends AppCompatActivity {
 
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
     private DemographicPayloadAddressModel demographicPayloadAddressModel;
-    private DemographicPayloadInsuranceModel demographicPayloadInsuranceModel;
+    private List<DemographicPayloadInsuranceModel> insurances;
+    private DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,11 +50,21 @@ public class DemographicReviewActivity extends AppCompatActivity {
     public void setDemographicPayloadAddressModel(DemographicPayloadAddressModel demographicPayloadAddressModel) {
         this.demographicPayloadAddressModel = demographicPayloadAddressModel;
     }
-    public DemographicPayloadInsuranceModel getDemographicPayloadInsuranceModel() {
-        return demographicPayloadInsuranceModel;
+
+
+    public void setInsurances(List<DemographicPayloadInsuranceModel> insurances) {
+        this.insurances = insurances;
     }
 
-    public void setDemographicPayloadInsuranceModel(DemographicPayloadInsuranceModel demographicPayloadInsuranceModel) {
-        this.demographicPayloadInsuranceModel = demographicPayloadInsuranceModel;
+    public List<DemographicPayloadInsuranceModel> getInsurances() {
+        return insurances;
+    }
+
+    public DemographicPayloadDriversLicenseModel getDemographicPayloadDriversLicenseModel() {
+        return demographicPayloadDriversLicenseModel;
+    }
+
+    public void setDemographicPayloadDriversLicenseModel(DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel) {
+        this.demographicPayloadDriversLicenseModel = demographicPayloadDriversLicenseModel;
     }
 }

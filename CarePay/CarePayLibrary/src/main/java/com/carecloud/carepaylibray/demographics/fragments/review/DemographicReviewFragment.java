@@ -29,9 +29,11 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActi
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
@@ -40,6 +42,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,6 +69,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private DemographicPayloadResponseModel demographicPayloadResponseModel;
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
     private DemographicPayloadAddressModel demographicPayloadAddressModel;
+    private List<DemographicPayloadInsuranceModel> insurances;
+    private DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -197,7 +202,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             demographicPayloadAddressModel.setAddress1(address1);
         }
         String phoneNumber = phoneNumberEditText.getText().toString();
-        if(!StringUtil.isNullOrEmpty(firstName)) {
+        if(!StringUtil.isNullOrEmpty(phoneNumber)) {
             demographicPayloadAddressModel.setPhone(phoneNumber);
         }
         // TODO: 10/1/16 for all address fields
@@ -209,6 +214,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         DemographicPayloadModel postPayloadModel = new DemographicPayloadModel();
         postPayloadModel.setAddress(demographicPayloadAddressModel);
         postPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
+        postPayloadModel.setInsurances(insurances);
+        postPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
 
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
         Call<DemographicModel> call = apptService.confirmDemographicInformation(postPayloadModel);
@@ -232,6 +239,9 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
         demographicPayloadAddressModel = ((DemographicReviewActivity)getActivity()).getDemographicPayloadAddressModel();
         demographicPayloadPersonalDetailsModel = ((DemographicReviewActivity)getActivity()).getDemographicPayloadPersonalDetailsModel();
+        insurances = ((DemographicReviewActivity)getActivity()).getInsurances();
+        demographicPayloadDriversLicenseModel= ((DemographicReviewActivity)getActivity()).getDemographicPayloadDriversLicenseModel();
+
 
         if(demographicPayloadAddressModel != null) {
             //Personal Details
@@ -249,6 +259,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             selectlangauge.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
             raceDataTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
             ethnicityDataTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
+
         }
 
         if(demographicPayloadPersonalDetailsModel != null) {
