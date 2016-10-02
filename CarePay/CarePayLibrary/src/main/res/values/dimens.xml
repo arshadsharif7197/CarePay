@@ -106,7 +106,8 @@
     <dimen name="apt_lst_view_ht">0.8px</dimen>
     <dimen name="apt_lst_img_elevation">1dp</dimen>
     <dimen name="apt_dl_view_margin">15dp</dimen>
-    <dimen name="apt_list_upcoming_date_txt_size">25sp</dimen>
+    <dimen name="apt_list_upcoming_date_txt_size">22sp</dimen>
+    <dimen name="apt_list_upcoming_month_txt_size">12sp</dimen>
 
 <!--<review screen dimen>-->
     <dimen name="review_screen_left_margin">17dp</dimen>
@@ -226,4 +227,12 @@
 
     <dimen name="checkbox_padding_left_right">3dp</dimen>
     <dimen name="checkbox_padding_top_bottom">3dp</dimen>
+
+    <dimen name="no_apt_place_holder_icon_margin_top">72dp</dimen>
+    <dimen name="no_apt_message_title_margin_top">23dp</dimen>
+    <dimen name="no_apt_message_title_margin_left">69dp</dimen>
+    <dimen name="no_apt_message_title_margin_right">68dp</dimen>
+    <dimen name="no_apt_message_desc_margin_top">5dp</dimen>
+    <dimen name="no_apt_message_desc_margin">32dp</dimen>
+
 </resources>

@@ -52,6 +52,16 @@
                 android:value=".CheckedInActivity" />
         </activity>
         <activity android:name=".PatientResponsibilityActivity"></activity>
+
+        <receiver
+            android:name=".notification.NotificationReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.clover.sdk.app.intent.action.APP_NOTIFICATION" >
+                </action>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

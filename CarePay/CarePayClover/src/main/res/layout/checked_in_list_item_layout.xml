@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/checkin_patient_pic_rounded_border"
         android:layout_marginTop="18dp"
-        android:padding="20dp"
+        android:padding="12dp"
         android:src="@drawable/icn_placeholder_user_profile" />
 
     <LinearLayout
@@ -52,7 +52,7 @@
                 android:background="@drawable/bg_green_overlay"
                 android:gravity="center"
                 android:includeFontPadding="false"
-
+                android:layout_marginRight="20dp"
                 android:text="Payment"
                 android:textColor="#ffffff"
                 android:textSize="22sp" />
@@ -61,7 +61,6 @@
                 android:id="@+id/assistTextview"
                 android:layout_width="160dp"
                 android:layout_height="53dp"
-                android:layout_marginLeft="20dp"
                 android:background="@drawable/bg_blue_overlay"
                 android:gravity="center"
                 android:includeFontPadding="false"

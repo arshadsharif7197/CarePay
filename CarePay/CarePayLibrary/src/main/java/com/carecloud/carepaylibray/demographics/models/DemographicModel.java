@@ -12,11 +12,11 @@ public class DemographicModel {
     @Expose
     private DemographicPayloadResponseModel payload;
 
-    @SerializedName("state")
-    @Expose
-    private String state;
+     @SerializedName("state")
+     @Expose
+     private String state;
 
-    /**
+     /**
      *
      * @return
      * The metadata

@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,13 +11,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.intake.activities.InTakeActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by sudhir_pingale on 9/29/2016.
  */
 
-public class InTakeMedicalHistoryFragment_Form2 extends InTakeFragment {
+public class IntakeMedicalHistoryFormTwoFragment extends InTakeFragment {
 
     private View madicalHistoryForm2Parent;
     private Context context;

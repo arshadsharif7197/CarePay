@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.appointments.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,8 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
@@ -22,9 +23,9 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAddressModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
@@ -41,7 +42,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +54,7 @@ public class AppointmentsListFragment extends Fragment {
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
     private SwipeRefreshLayout appointmentRefresh;
+    private LinearLayout noAppointmentView;
 
     private AppointmentsAdapter appointmentsAdapter;
     private ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
@@ -83,6 +84,7 @@ public class AppointmentsListFragment extends Fragment {
      * This function will check today's appointment
      * and notify if its within 2 hours
      */
+    @SuppressLint("StringFormatMatches")
     private void checkUpcomingAppointmentForReminder() {
         if (appointmentsItems != null && !appointmentsItems.isEmpty() &&
                 !appointmentsItems.get(0).getAppointmentId().equalsIgnoreCase(
@@ -216,14 +218,20 @@ public class AppointmentsListFragment extends Fragment {
 
             appointmentListWithHeader = getAppointmentListWithHeader();
 
-            if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-                appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                        appointmentListWithHeader, appointmentsListFragment);
+            if (appointmentListWithHeader != null) {
+                appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
                 appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 appointmentRecyclerView.setAdapter(appointmentsAdapter);
-            } else {
-                Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
             }
+
+            if (appointmentsAdapter.getItemCount() == 0) {
+                noAppointmentView.setVisibility(View.VISIBLE);
+                appointmentRefresh.setVisibility(View.GONE);
+            } else {
+                noAppointmentView.setVisibility(View.GONE);
+                appointmentRefresh.setVisibility(View.VISIBLE);
+            }
+
         }
         AppointmentsListFragment.showNewAddedAppointment = false;
     }
@@ -239,11 +247,15 @@ public class AppointmentsListFragment extends Fragment {
         final View appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
-        appointmentRefresh=(SwipeRefreshLayout)appointmentsListView.findViewById(R.id.swipeRefreshLayout);
-        appointmentRefresh.setRefreshing(false);
+
+        appointmentRefresh = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
+//        appointmentRefresh.setRefreshing(false);
+        onRefresh();
         appointmentProgressBar = (ProgressBar) appointmentsListView.findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
         bundle = getArguments();
+
+        noAppointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.no_appointment_layout);
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -275,6 +287,9 @@ public class AppointmentsListFragment extends Fragment {
                         && appointmentsResultModel.getPayload().getAppointments() != null
                         && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
 
+                    noAppointmentView.setVisibility(View.GONE);
+                    appointmentRefresh.setVisibility(View.VISIBLE);
+
                     List<Appointment> appointments = appointmentsResultModel.getPayload().getAppointments();
                     for (Appointment appointment : appointments) {
 
@@ -296,33 +311,43 @@ public class AppointmentsListFragment extends Fragment {
 
                         // Appointment start time
                         String mAptTime = "";
+                        String mAptDate = "", mAptDateWithoutTime = "";
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
                         try {
                             Date aptDate = sdf.parse(appointment.getPayload().getStartTime());
                             mAptTime = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT,
                                     Locale.getDefault()).format(aptDate);
+                            mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
+                            mAptDateWithoutTime= new SimpleDateFormat("yyyy-MM-dd",
+                                    Locale.getDefault()).format(aptDate);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        String mAptDate = "", mAptDateWithoutTime = "";
+                        /*//String mAptDate = "", mAptDateWithoutTime = "";
                         if (mAptTime != null) {
                             mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
                             String[] mAptDateArr = mAptDate.split(" ");
                             mAptDateWithoutTime = mAptDateArr[0];
-                        }
+                            mAptDateWithoutTime= new SimpleDateFormat("MM-dd-yyyy",
+                                    Locale.getDefault()).format(mAptTime);
+                        }*/
 
                         String mAptDay = null;
                         try {
                             Calendar c = Calendar.getInstance();
+                            c.set(Calendar.HOUR_OF_DAY,0);
+                            c.set(Calendar.MINUTE,0);
+                            c.set(Calendar.SECOND,0);
                             SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-                                    CarePayConstants.DATE_FORMAT, Locale.ENGLISH);
+                                    "yyyy-MM-dd", Locale.US);
                             String mCurrentDate = mSimpleDateFormat.format(c.getTime());
 
                             String mCurrentDateWithoutTime = "";
                             if (mCurrentDate != null) {
                                 String[] mCurrentDateArr = mCurrentDate.split(" ");
                                 mCurrentDateWithoutTime = mCurrentDateArr[0];
+                                mCurrentDateWithoutTime=mCurrentDate;
                             }
 
                             // Appointment Time
@@ -342,6 +367,10 @@ public class AppointmentsListFragment extends Fragment {
                             // Appointment Provider phone
                             String mPhoneNumber = appointment.getPayload().getProvider().getPhone();
                             appointmentModel.setPhoneNumber(mPhoneNumber);
+
+                            // Appointment Provider photo
+                            String mDoctorPhoto = appointment.getPayload().getProvider().getPhoto();
+                            appointmentModel.setPhoto(mDoctorPhoto);
 
                             // Appointment Place
                             String mPlaceName = appointment.getPayload().getLocation().getName();
@@ -374,6 +403,7 @@ public class AppointmentsListFragment extends Fragment {
                                 model.setAppointmentId(mAptId);
                                 model.setDoctorName(mDoctorName);
                                 model.setAppointmentType(mDoctorType);
+                                model.setPhoto(mDoctorPhoto);
                                 model.setAppointmentTime(mUpcomingDate);
                                 model.setAppointmentDay(mAptDay);
                                 model.setAppointmentDate(mAptTime);
@@ -403,6 +433,7 @@ public class AppointmentsListFragment extends Fragment {
                                 model.setAppointmentId(mAptId);
                                 model.setDoctorName(mDoctorName);
                                 model.setAppointmentType(mDoctorType);
+                                model.setPhoto(mDoctorPhoto);
                                 model.setAppointmentTime(parsedDate);
                                 model.setAppointmentDay(mAptDay);
                                 model.setAppointmentDate(mAptTime);
@@ -416,7 +447,7 @@ public class AppointmentsListFragment extends Fragment {
                                     appointmentsItems.add(model);
                                 }
                             }
-                            appointmentRefresh.setRefreshing(false);
+//                            appointmentRefresh.setRefreshing(false);
                         } catch (ParseException ex) {
                             Log.e(LOG_TAG, "Parse Exception caught : " + ex.getMessage());
                         }
@@ -425,34 +456,27 @@ public class AppointmentsListFragment extends Fragment {
                 }
 
                 appointmentListWithHeader = getAppointmentListWithHeader();
-                if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-                    appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
+                if (appointmentListWithHeader != null) {
+                    if (bundle != null) {
+                        AppointmentModel appointmentModel = (AppointmentModel)
+                                bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+
+                        if (appointmentModel != null) {
+                            // adding checked-in appointment at the top of the list
+                            appointmentListWithHeader.add(0, appointmentModel);
+                        }
+                    }
+
+                    appointmentsAdapter = new AppointmentsAdapter(getActivity(),
+                            appointmentListWithHeader, appointmentsListFragment);
                     appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     appointmentRecyclerView.setAdapter(appointmentsAdapter);
                 } else {
-                    Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
+                    noAppointmentView.setVisibility(View.VISIBLE);
+                    appointmentRefresh.setVisibility(View.GONE);
                 }
+
                 checkUpcomingAppointmentForReminder();
-
-                /*Logic to add Checked-in appointment if exists*/
-                if (bundle != null) {
-                    AppointmentModel appointmentModel = (AppointmentModel)
-                            bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
-
-                    if (appointmentModel != null) {
-                        // adding checked-in appointment at the top of the list
-                        appointmentListWithHeader.add(0, appointmentModel);
-
-                        if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-                            appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
-                            appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            appointmentRecyclerView.setAdapter(appointmentsAdapter);
-                        } else {
-                            Toast.makeText(getActivity(), "Appointment does not exist!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-
             }
 
             @Override
@@ -461,10 +485,13 @@ public class AppointmentsListFragment extends Fragment {
             }
         });
     }
-  /*  private void onRefresh(){
+    private void onRefresh(){
         appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                appointmentsItems.clear();
+                getAppointmentInformation();
+                appointmentRefresh.setRefreshing(false);
                 if (appointmentsResultModel!=(new AppointmentsResultModel())) {
                     AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
                     appointmentListWithHeader.remove(appointmentSectionHeaderModel);
@@ -474,7 +501,7 @@ public class AppointmentsListFragment extends Fragment {
                 }
             }
         });
-    }*/
+    }
 
     /*Method to return appointmentListWithHeader*/
     private ArrayList<Object> getAppointmentListWithHeader() {
