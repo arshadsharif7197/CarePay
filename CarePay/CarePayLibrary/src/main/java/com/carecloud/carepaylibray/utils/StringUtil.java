@@ -77,15 +77,11 @@ public class StringUtil {
     {
         StringBuilder  phoneNumberString = new StringBuilder();
         phoneNumberString.append(phn);
-        if (phoneNumberString.length() > 0)
-        {
-            if (phoneNumberString.length() > 5)
-            {
-                if (Character.isDigit(phoneNumberString.charAt(5)))
-                    phoneNumberString.insert(5, "-");
+            if (phoneNumberString.length() > 0 && phoneNumberString.length() > 5 && Character.isDigit(phoneNumberString.charAt(5))) {
+                phoneNumberString.insert(5, "-");
             }
 
-        }
+
         return phoneNumberString.toString();
     }
 }
