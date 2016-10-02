@@ -9,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -33,6 +35,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuran
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import retrofit2.Call;
@@ -180,8 +183,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     cityTextView.setText(demographicPayloadAddressModel.getCity());
                                     stateTextView.setText(demographicPayloadAddressModel.getState());
                                     zipcodeTextView.setText(demographicPayloadAddressModel.getZipcode());
-                                    String phonenumber= PhoneNumberUtils.formatNumber(demographicPayloadAddressModel.getPhone());
-                                    phoneNumberTextView.setText(phonenumber);
+                                    phoneNumberTextView.setText(StringUtil.formatPhoneNumber(demographicPayloadAddressModel.getPhone()));
+
                                 }
 
 
@@ -202,6 +205,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
+
 
     private void initialiseUIFields() {
 

@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -256,8 +258,37 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             cityEditText.setText(demographicPayloadAddressModel.getCity());
             stateEditText.setText(demographicPayloadAddressModel.getState());
             zipCodeEditText.setText(demographicPayloadAddressModel.getZipcode());
-            String phonenumber=PhoneNumberUtils.formatNumber(demographicPayloadAddressModel.getPhone());
-            phoneNumberEditText.setText(phonenumber);
+            phoneNumberEditText.setText(StringUtil.formatPhoneNumber(demographicPayloadAddressModel.getPhone()));
+            phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+
+                int length_before = 0;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    length_before = s.length();
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (length_before < s.length()) {
+                        if (s.length() == 3 || s.length() == 7)
+                            s.append("-");
+                        if (s.length() > 3) {
+                            if (Character.isDigit(s.charAt(3)))
+                                s.insert(3, "-");
+                        }
+                        if (s.length() > 7) {
+                            if (Character.isDigit(s.charAt(7)))
+                                s.insert(7, "-");
+                        }
+                    }
+                }
+            });
         }
 }
 
@@ -385,6 +416,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         transaction.commit();
 
     }
+
+
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsReviewHeading));
