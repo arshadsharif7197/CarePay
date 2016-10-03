@@ -142,8 +142,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 if (demographicModel != null) {
 
                     demographicPayloadResponseModel = demographicModel.getPayload();
-
-                    Log.d("sdadad", "adasdasdasd");
                     if (demographicPayloadResponseModel != null) {
                          demographics = demographicPayloadResponseModel.getDemographics();
 
@@ -276,7 +274,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         if (view == correctInformationButton) {
             Intent intent = new Intent(getActivity(), ConsentActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             getActivity().finish();
         }
@@ -292,7 +290,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             ((DemographicReviewActivity) getActivity())
                     .setDemographicPayloadDriversLicenseModel(
                             demographicPayloadDriversLicenseModel);
-
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment fragment = DemographicReviewFragment.newInstance();

@@ -75,7 +75,7 @@ public class DateUtil {
         String dayString = String.valueOf(day);
         String ordinal = getDayOrdinal(dayString.charAt(dayString.length() - 1));
 
-        return String.format(Locale.getDefault(), "%s,%s%s %d", monthString, dayString, ordinal, year);
+        return String.format(Locale.getDefault(), "%s, %s%s %d", monthString, dayString, ordinal, year);
     }
 
     private static String getMonthAsString(int month) {
