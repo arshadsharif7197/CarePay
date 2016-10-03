@@ -106,7 +106,8 @@
     <dimen name="apt_lst_view_ht">0.8px</dimen>
     <dimen name="apt_lst_img_elevation">1dp</dimen>
     <dimen name="apt_dl_view_margin">15dp</dimen>
-    <dimen name="apt_list_upcoming_date_txt_size">25sp</dimen>
+    <dimen name="apt_list_upcoming_date_txt_size">22sp</dimen>
+    <dimen name="apt_list_upcoming_month_txt_size">12sp</dimen>
 
 <!--<review screen dimen>-->
     <dimen name="review_screen_left_margin">17dp</dimen>

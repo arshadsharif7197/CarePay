@@ -23,6 +23,8 @@ import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.google.gson.JsonObject;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -86,8 +88,8 @@ public class ResponsibilityFragment extends Fragment {
         });
 
         responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        responseCopay = (TextView) view.findViewById(R.id.respons_prev_balance);
-        responsePreviousBalance = (TextView) view.findViewById(R.id.respons_copay);
+        responseCopay = (TextView) view.findViewById(R.id.respons_copay);
+        responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
 
         Bundle bundle = getArguments();
         if(bundle != null) {
@@ -122,26 +124,28 @@ public class ResponsibilityFragment extends Fragment {
     }
 
     private void payAndFetchCheckedInAppointment() {
-        AppointmentModel appointmentModel = AppointmentsActivity.model;
+        /*AppointmentModel appointmentModel = AppointmentsActivity.model;
         ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
         appointmentModel.getAppointmentId();
         appointmentModel.getDoctorName();
         appointmentModel.getAppointmentType();
-        appointmentsItems.add(appointmentModel);
+        appointmentsItems.add(appointmentModel);*/
+//TODO need to chages the actual model
+        String body= "{\"appointment_id\": \""+ AppointmentsActivity.model.getAppointmentId() +"\"}";
 
         AppointmentService aptService = (new BaseServiceGenerator(getActivity()).createService(AppointmentService.class));
-        Call<AppointmentsResultModel> call = aptService.confirmAppointment(appointmentsItems);
-        call.enqueue(new Callback<AppointmentsResultModel>() {
+        Call<JsonObject> call = aptService.confirmAppointment(body);
+        call.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-                appointmentsModel = new AppointmentsResultModel();
-                appointmentsModel  = response.body();
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+               /* appointmentsModel = new AppointmentsResultModel();
+                appointmentsModel  = response.body();*/
 
-                Log.d(LOG_TAG, response.isSuccessful()+"");
                 Intent intent = new Intent(ResponsibilityFragment.this.getActivity(), AppointmentsActivity.class);
                 AppointmentModel appointmentModel = AppointmentsActivity.model;
                 if(appointmentModel!=null) {
                     appointmentModel.setCheckedIn(true);
+                    appointmentModel.setPending(false);
                 }
 
                 // appointment clicked item is cleared once payment is done.
@@ -152,7 +156,7 @@ public class ResponsibilityFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable t) {
+            public void onFailure(Call<JsonObject> call, Throwable t) {
 
             }
         });

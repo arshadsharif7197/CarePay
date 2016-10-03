@@ -4,6 +4,9 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppointmentPatientModel {
 
     @SerializedName("id")
@@ -40,6 +43,9 @@ public class AppointmentPatientModel {
     @SerializedName("photo")
     @Expose
     private String photo;
+    @SerializedName("responsibility")
+    @Expose
+    private List<PatientResponsibilityModel> responsibility = new ArrayList<PatientResponsibilityModel>();
 
     /**
      * 
@@ -227,5 +233,57 @@ public class AppointmentPatientModel {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public List<PatientResponsibilityModel> getResponsibility() {
+        return responsibility;
+    }
+
+    public void setResponsibility(List<PatientResponsibilityModel> responsibility) {
+        this.responsibility = responsibility;
+    }
+
+    public double getTotalBalance(){
+        double total=0.00;
+        if (responsibility!=null && responsibility.size()>0){
+            for (PatientResponsibilityModel patientResponsibilityModel:responsibility){
+                if(patientResponsibilityModel.getBalanceType().equalsIgnoreCase("Account")){
+                    total=total+patientResponsibilityModel.getTotal();
+                }else if(patientResponsibilityModel.getBalanceType().equalsIgnoreCase("Copay")){
+                    total=total+patientResponsibilityModel.getTotal();
+                }
+            }
+        }
+        // TODO: using for demo. will remove this after the demo
+        if(total==0.00)
+            total=20.00;
+        return total;
+    }
+
+    public double getResponsibilityAccount(){
+        double total=0.00;
+        if (responsibility!=null && responsibility.size()>0){
+            for (PatientResponsibilityModel patientResponsibilityModel:responsibility){
+                if(patientResponsibilityModel.getBalanceType().equalsIgnoreCase("Account")){
+                    return patientResponsibilityModel.getTotal();
+                }
+            }
+        }
+        // TODO: using for demo. will remove this after the demo
+        if(total==0.00)
+            total=20.00;
+        return total;
+    }
+
+    public double getResponsibilityCopay(){
+        double total=0.00;
+        if (responsibility!=null && responsibility.size()>0){
+            for (PatientResponsibilityModel patientResponsibilityModel:responsibility){
+                if(patientResponsibilityModel.getBalanceType().equalsIgnoreCase("Copay")){
+                    return patientResponsibilityModel.getTotal();
+                }
+            }
+        }
+        return total;
     }
 }
