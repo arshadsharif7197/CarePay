@@ -23,4 +23,7 @@ public interface DemographicService {
 
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
     Call<ResponseBody> confirmDemographicInformation(@Body DemographicPayloadModel demographicModel);
+
+    @POST(value = "dev/workflow/carepay/patient_checkin/demographics")
+    Call<ResponseBody> updateDemographicInformation(@Body DemographicPayloadModel demographicModel);
 }

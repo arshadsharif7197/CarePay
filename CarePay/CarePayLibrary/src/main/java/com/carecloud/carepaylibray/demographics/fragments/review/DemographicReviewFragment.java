@@ -216,7 +216,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).
                 createService(DemographicService.class); //, String token, String searchString
-        Call<ResponseBody> call = apptService.confirmDemographicInformation(postPayloadModel);
+        Call<ResponseBody> call = apptService.updateDemographicInformation(postPayloadModel);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
