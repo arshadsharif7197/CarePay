@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -23,7 +24,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -37,19 +40,6 @@ public class SystemUtil {
         float heightInInches = metrics.heightPixels / metrics.ydpi;
         double sizeInInches = Math.sqrt(Math.pow(widthInInches, 2) + Math.pow(heightInInches, 2));
         return sizeInInches >= 6.5;
-    }
-
-    public static String onShortDrName(String fullName) {
-        if(fullName != null && fullName.length()>1) {
-            String stringSplitArr[] = fullName.split(" ");
-            if(stringSplitArr.length >= 3)
-                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase()+String.valueOf(stringSplitArr[stringSplitArr.length-1].charAt(0)).toUpperCase();
-            else if(stringSplitArr.length == 2)
-                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
-            else
-                return "";
-        } else
-            return "";
     }
 
     /* Font utils*/
@@ -78,6 +68,7 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
+
     public static void setProximaNovaSemiboldTextInputLayout(Context context, TextInputLayout view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
@@ -87,10 +78,12 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
         view.setTypeface(typeface);
     }
+
     public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
         view.setTypeface(typeface);
     }
+
     public static void setGothamRoundedBoldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_bold.otf");
         view.setTypeface(typeface);
@@ -100,6 +93,7 @@ public class SystemUtil {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
+
     public static void setProximaNovaLightTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_light.otf");
         view.setTypeface(typeface);
@@ -108,8 +102,9 @@ public class SystemUtil {
 
     /**
      * Set the type face of a text input layout
+     *
      * @param context The context
-     * @param layout The layout
+     * @param layout  The layout
      */
     public static void setProximaNovaRegularTypefaceLayout(Context context, TextInputLayout layout) {
         Typeface proximaNovaRegular = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/proximanova_regular.otf");
@@ -128,6 +123,7 @@ public class SystemUtil {
 
     /**
      * Shows the soft keyboard
+     *
      * @param activity The activity
      */
     public static void showSoftKeyboard(Activity activity) {
@@ -138,7 +134,8 @@ public class SystemUtil {
     /**
      * Handles the change from normal to caps of the hint in a view wrapped by a text input layout;
      * The view has to have the input text layout set as tag; the input text layout the hint (as tag)
-     * @param view The edit view
+     *
+     * @param view     The edit view
      * @param hasFocus When the view gains the focus
      */
     public static void handleHintChange(View view, boolean hasFocus) {
@@ -182,9 +179,10 @@ public class SystemUtil {
 
     /**
      * Shows a message dialog
+     *
      * @param context The context
-     * @param title The title
-     * @param body The message
+     * @param title   The title
+     * @param body    The message
      */
     public static void showDialogMessage(Context context, String title, String body) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -203,37 +201,14 @@ public class SystemUtil {
         userDialog.show();
     }
 
-    /**
-     * convert date string in to month and day.
-     * @param dateStr the String to evaluate
-     */
-    public static String[] onDateParseToString(Context context,String dateStr) {
-        String stringDate[] = dateStr.split(" ");
-        String formateDate[] = new String[2];
-        try {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(context.getString(R.string.dateFormatString), Locale.ENGLISH);
-            Date appointdate = sdf.parse(stringDate[0]);
-            formateDate[0] = android.text.format.DateFormat.format("MMMM", appointdate) + " "
-                    + DateUtil.getDayOrdinal(Integer.parseInt(android.text.format.DateFormat.format("dd", appointdate).toString()));
-            formateDate[1] = stringDate[1] + " " + stringDate[2];
-        } catch (Exception ex) {
-            Log.e(LOG_TAG, ex.getMessage());
-        }
-        return formateDate;
+    public static boolean isNotEmptyString(String string) {
+        return string != null && !string.isEmpty() && !string.equals("null");
     }
-
-    public static boolean isNotEmptyString(String string){
-        if (string != null && !string.isEmpty() && !string.equals("null")){
-            return true;
-        }
-        return false;
-    }
-
-
 
     /**
      * Utility to convert dp to pixels
-     * @param context The context
+     *
+     * @param context   The context
      * @param valueInDp The dps
      * @return The pxs
      */

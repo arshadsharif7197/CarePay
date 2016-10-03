@@ -39,7 +39,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/demographicsAddressNameSectionLabel"
+                android:id="@+id/reviewdemoPersonalInfoLabel"
                 android:text="@string/demogr_section_name_label"
                 style="@style/DemographicsSectionLabelStyle"/>
 
@@ -63,7 +63,7 @@
                     style="@style/SigninSignupTextInputStyle">
 
                     <EditText
-                        android:id="@+id/demogrAddressMiddleNameEditText"
+                        android:id="@+id/reviewdemogrMiddleNameEditText"
                         style="@style/SigninSignupEditStyle"
                         android:hint="@string/middlename_text"
                         android:imeOptions="actionNext"

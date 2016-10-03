@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.intake;
+package com.carecloud.carepaylibray.intake.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,7 +20,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by prem_mourya on 9/28/2016.
  */
 
-public class IntakeReviewvisitFragment extends InTakeFragment {
+public class InTakeReviewVisitFragment extends InTakeFragment {
 
     private View mainView;
     private Context context;

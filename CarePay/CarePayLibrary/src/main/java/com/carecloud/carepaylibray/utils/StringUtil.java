@@ -51,4 +51,49 @@ public class StringUtil {
         }
         return false;
     }
+
+    public static String formatPhoneNumber(String phn)
+    {
+        StringBuilder  phoneNumberString = new StringBuilder();
+        phoneNumberString.append(phn);
+        if (phoneNumberString.length() > 0)
+        {
+            if (phoneNumberString.length() == 3 || phoneNumberString.length() == 7)
+                phoneNumberString.append("-");
+            if (phoneNumberString.length() > 3)
+            {
+                if (Character.isDigit(phoneNumberString.charAt(3)))
+                    phoneNumberString.insert(3, "-");
+            }
+            if (phoneNumberString.length() > 7) {
+                if (Character.isDigit(phoneNumberString.charAt(7)))
+                    phoneNumberString.insert(7, "-");
+            }
+        }
+        return phoneNumberString.toString();
+    }
+    public static String formatZipCode(String phn)
+    {
+        StringBuilder  phoneNumberString = new StringBuilder();
+        phoneNumberString.append(phn);
+            if (phoneNumberString.length() > 0 && phoneNumberString.length() > 5 && Character.isDigit(phoneNumberString.charAt(5))) {
+                phoneNumberString.insert(5, "-");
+            }
+
+
+        return phoneNumberString.toString();
+    }
+
+    public static String onShortDrName(String fullName) {
+        if (fullName != null && fullName.length() > 1) {
+            String stringSplitArr[] = fullName.split(" ");
+            if (stringSplitArr.length >= 3)
+                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase() + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
+            else if (stringSplitArr.length == 2)
+                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
+            else
+                return "";
+        } else
+            return "";
+    }
 }

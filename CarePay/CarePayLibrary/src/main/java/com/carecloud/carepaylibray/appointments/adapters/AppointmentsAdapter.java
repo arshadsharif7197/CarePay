@@ -17,10 +17,12 @@ import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragme
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -77,8 +79,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateTextView.setText(splitStr[0]);
                     SystemUtil.setProximaNovaLightTypeface(context, holder.upcomingDateTextView);
-                    holder.upcomingMonthTextView.setText(splitStr[1].toUpperCase());
-                    holder.upcomingTimeTextView.setText(splitStr[2] + " " + splitStr[3]);
+                    holder.upcomingMonthTextView.setText(splitStr[2].toUpperCase() + " " + splitStr[1]);
+                    holder.upcomingTimeTextView.setText(splitStr[3] + " " + splitStr[4]);
                 }
             } else {
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
@@ -87,7 +89,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
-                    holder.todayTimeTextView.setText(item.getAppointmentTime().replaceAll("UTC", ""));
+                    holder.todayTimeTextView.setText(item.getAppointmentTime());
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
                 }
             }
@@ -95,22 +97,27 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*Restricted the appointment list item click if it is appointment header type.*/
-                    if (object.getClass() == AppointmentModel.class) {
-                        AppointmentModel item = (AppointmentModel) object;
-                        if (item.isPending()) {
-                            new CheckInOfficeNowAppointmentDialog(context, item).show();
-                        } else if (item.isCheckedIn()) {
-                            new QueueAppointmentDialog(context, item).show();
-                        } else {
-                            // appointment clicked item saved so that it can be used on Payment
-                            AppointmentsActivity.model = item;
-                            new CheckInOfficeNowAppointmentDialog(context, item).show();
-                        }
+                /*Restricted the appointment list item click if it is appointment header type.*/
+                if (object.getClass() == AppointmentModel.class) {
+                    AppointmentModel item = (AppointmentModel) object;
+                    AppointmentsActivity.model = item; // appointment clicked item saved so that it can be used on Payment
+                    if (item.isPending()) {
+                        new CheckInOfficeNowAppointmentDialog(context, item).show();
+                    } else if (item.isCheckedIn()) {
+                        new QueueAppointmentDialog(context, item).show();
+                    } else {
+                        new CheckInOfficeNowAppointmentDialog(context, item).show();
                     }
                 }
+                }
             });
-            holder.shortName.setText(SystemUtil.onShortDrName(item.getDoctorName()));
+
+//            if (TextUtils.isEmpty(item.getPhoto())) {
+                holder.shortName.setText(StringUtil.onShortDrName(item.getDoctorName()));
+//            } else {
+//                Picasso.with(context).load(item.getPhoto()).transform(new CircleImageTransform()).resize(58, 58).into(holder.profileImage);
+//                holder.profileImage.setVisibility(View.VISIBLE);
+//            }
 
             if (item.isPending()) {
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
@@ -136,6 +143,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     CustomProxyNovaSemiBoldLabel appointmentStickyHeaderTitle =
                             (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.appointments_sticky_header_title);
                     appointmentStickyHeaderTitle.setText(item.getAppointmentHeader());
+                    appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
                 }
             } else {
                 holder.appointmentSectionLinearLayout.setVisibility(View.VISIBLE);
@@ -150,7 +158,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final RecyclerView appointmentRecyclerView = (RecyclerView) view.findViewById(R.id.appointments_recycler_view);
             appointmentRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     LinearLayoutManager mLayoutManager = (LinearLayoutManager) appointmentRecyclerView.getLayoutManager();
                     int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
 
@@ -182,11 +190,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
-        private TextView shortName, upcomingDateTextView;
+        private TextView upcomingDateTextView;
+        private CustomGothamRoundedMediumLabel shortName;
         private CustomGothamRoundedBoldLabel todayTimeTextView;
         private CustomProxyNovaSemiBoldLabel appointmentSectionHeaderTitle, doctorName;
         private CustomProxyNovaRegularLabel upcomingMonthTextView, upcomingTimeTextView, doctorType;
-        private ImageView cellAvatar;
+        private ImageView cellAvatar, profileImage;
         private LinearLayout appointmentSectionLinearLayout, appointmentItemLinearLayout,
                 todayTimeLinearLayout, upcomingDateLinearLayout;
 
@@ -195,19 +204,21 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
             doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
 
-            shortName = (TextView) itemView.findViewById(R.id.avtarTextView);
-            cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvtarImageView);
+            shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
+            cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
+            profileImage = (ImageView) itemView.findViewById(R.id.providerPicImageView);
 
             appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
             appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
             appointmentSectionHeaderTitle = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointments_section_header_title);
 
+            // Today
             todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
-            upcomingDateLinearLayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLinearlayout);
-
             todayTimeTextView = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.todayTimeTextView);
-            upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
 
+            // Upcoming
+            upcomingDateLinearLayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLinearlayout);
+            upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
             upcomingMonthTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingMonthTextView);
             upcomingTimeTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingTimeTextView);
         }

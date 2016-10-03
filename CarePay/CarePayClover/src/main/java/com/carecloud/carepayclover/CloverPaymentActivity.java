@@ -50,7 +50,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_clover_payment);
         Intent intent = getIntent();
         if (intent.hasExtra("total_pay")) {
-            double totalAmount = intent.getDoubleExtra("total_pay_balance", 20.00);
+            double totalAmount = intent.getDoubleExtra("total_pay", 20.00);
             amount = new Long((long) (totalAmount*100));
         }
 
