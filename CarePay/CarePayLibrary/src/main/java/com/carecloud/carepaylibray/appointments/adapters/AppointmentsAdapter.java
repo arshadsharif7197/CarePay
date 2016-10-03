@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             });
 
 //            if (TextUtils.isEmpty(item.getPhoto())) {
-                holder.shortName.setText(SystemUtil.onShortDrName(item.getDoctorName()));
+                holder.shortName.setText(StringUtil.onShortDrName(item.getDoctorName()));
 //            } else {
 //                Picasso.with(context).load(item.getPhoto()).transform(new CircleImageTransform()).resize(58, 58).into(holder.profileImage);
 //                holder.profileImage.setVisibility(View.VISIBLE);

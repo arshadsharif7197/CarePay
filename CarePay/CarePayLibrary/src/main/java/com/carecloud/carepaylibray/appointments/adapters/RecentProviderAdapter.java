@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class RecentProviderAdapter extends RecyclerView.Adapter<RecentProviderAd
         holder.doctorType.setText(item.getAppointmentType());
 
         SystemUtil.setGothamRoundedMediumTypeface(context, holder.shortName);
-        holder.shortName.setText(SystemUtil.onShortDrName(item.getDoctorName()));
+        holder.shortName.setText(StringUtil.onShortDrName(item.getDoctorName()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

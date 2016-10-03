@@ -33,7 +33,7 @@ public class CheckedInActivity extends AppCompatActivity {
         appointmentsRecyclerView = (RecyclerView) findViewById(com.carecloud.carepaylibrary.R.id.appointments_recycler_view);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getDemographicInformation();
+
         ((TextView)findViewById(R.id.goBackTextview)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,13 +42,20 @@ public class CheckedInActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getDemographicInformation();
+    }
+
     private void getDemographicInformation() {
         AppointmentService apptService = (new BaseServiceGenerator(this)).createServicePractice(AppointmentService.class); //, String token, String searchString
         Call<AppointmentsResultModel> call = apptService.fetchCheckedInAppointments();
         call.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-                if(response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
+
+                if(response.code()==200 && response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
                     CheckedInAdapter CheckedInAdapter = new CheckedInAdapter(CheckedInActivity.this, new ArrayList<Appointment>(response.body().getPayload().getAppointments()));
                     appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(CheckedInActivity.this));
                     appointmentsRecyclerView.setAdapter(CheckedInAdapter);
