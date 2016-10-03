@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.consentforms.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.icu.text.DateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -52,8 +51,6 @@ public class ConsentForm1Fragment extends Fragment {
         signButton = (Button) view.findViewById(R.id.signButton);
         signButton.setEnabled(false);
 
-        String stringDate = DateFormat.getDateInstance().format(date);
-        dateTextView.setText(stringDate);
         setTypefaces(view);
         return view;
     }
@@ -88,6 +85,7 @@ public class ConsentForm1Fragment extends Fragment {
         titleTextView.setText(formData.getTitle());
         descriptionTextView.setText(formData.getDescription());
         contentTextView.setText(formData.getContent());
+        dateTextView.setText(formData.getDate());
 
 
 
