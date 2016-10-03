@@ -160,8 +160,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             postUpdates();
             // hide the keyboard
             SystemUtil.hideSoftKeyboard(getActivity());
-            // open demographics review
-            //openNewFragment();
+
         } else if (view == raceDataTextView) {
             selectedDataArray = 1;
             showAlertDialogWithListview(genderSelectArray, "Select Gender");
@@ -169,6 +168,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         } else if (view == ethnicityDataTextView) {
             selectedDataArray = 2;
             showAlertDialogWithListview(raceDataArray, "Select Race");
+
         } else if (view == selectlangauge) {
             selectedDataArray = 3;
             showAlertDialogWithListview(ethnicityDataArray, "Select Ethnicity");
@@ -188,6 +188,16 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if(!StringUtil.isNullOrEmpty(firstName)) {
             demographicPayloadPersonalDetailsModel.setFirstName(firstName);
         }
+        String lastName = lastNameText.getText().toString();
+        if(!StringUtil.isNullOrEmpty(lastName)) {
+            demographicPayloadPersonalDetailsModel.setLastName(lastName);
+        }
+        String dateOfBirth = dobEditText.getText().toString();
+        if(!StringUtil.isNullOrEmpty(dateOfBirth)) {
+            demographicPayloadPersonalDetailsModel.setDateOfBirth(dateOfBirth);
+        }
+
+
 
         // TODO: 10/1/16 for all personal
 
@@ -197,6 +207,10 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         String address1 = address1EditText.getText().toString();
         if(!StringUtil.isNullOrEmpty(address1)) {
             demographicPayloadAddressModel.setAddress1(address1);
+        }
+        String address2 = address2EditText.getText().toString();
+        if(!StringUtil.isNullOrEmpty(address2)) {
+            demographicPayloadAddressModel.setAddress1(address2);
         }
         String phoneNumber = phoneNumberEditText.getText().toString();
         if(!StringUtil.isNullOrEmpty(phoneNumber)) {
@@ -231,8 +245,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d(LOG_TAG, "demogr post failed", t);
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.d(LOG_TAG, "demogr post failed", throwable);
                 demographicProgressBar.setVisibility(View.GONE);
                 Toast.makeText(getActivity() ,"demo post failed", Toast.LENGTH_SHORT).show();
             }

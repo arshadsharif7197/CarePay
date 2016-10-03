@@ -130,8 +130,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     private void getDemographicInformation() {
         demographicProgressBar.setVisibility(View.VISIBLE);
-        DemographicService apptService = (new BaseServiceGenerator(getActivity()))                  //, String token, String searchString
-                .createService(DemographicService.class);
+        DemographicService apptService = (new BaseServiceGenerator(getActivity()))
+                .createService(DemographicService.class);                                              // String token, String searchString
         Call<DemographicModel> call = apptService.fetchDemographics();
         call.enqueue(new Callback<DemographicModel>() {
             @Override
@@ -199,11 +199,11 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     address2TextView.setText(demographicPayloadAddressModel.getAddress2());
                                     cityTextView.setText(demographicPayloadAddressModel.getCity());
                                     stateTextView.setText(demographicPayloadAddressModel.getState());
-                                    String zipcode=StringUtil.formatZipCode
-                                            (demographicPayloadAddressModel.getZipcode());
+                                    String zipcode=StringUtil.formatZipCode(
+                                            demographicPayloadAddressModel.getZipcode());
                                     zipcodeTextView.setText(zipcode);
-                                    String phoneNumber=StringUtil.formatPhoneNumber
-                                            (demographicPayloadAddressModel.getPhone());
+                                    String phoneNumber=StringUtil.formatPhoneNumber(
+                                            demographicPayloadAddressModel.getPhone());
                                     phoneNumberTextView.setText(phoneNumber);
                                 }
                             } else {
@@ -212,7 +212,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
                             if (payloadinfomodel.getDriversLicense() != null) {
                                 demographicPayloadDriversLicenseModel = payloadinfomodel.getDriversLicense();
-                                driverLicenseTextView.setText(demographicPayloadDriversLicenseModel.getLicenseNumber());
+                                driverLicenseTextView.setText(
+                                        demographicPayloadDriversLicenseModel.getLicenseNumber());
                             } else {
                                 Log.v(LOG_TAG, "demographic Driver License model is null");
                             }
