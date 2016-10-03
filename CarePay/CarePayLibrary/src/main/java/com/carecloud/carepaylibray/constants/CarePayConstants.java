@@ -22,7 +22,7 @@ public class CarePayConstants {
     public static final String ATTR_APPOINTMENTS = "appointments";
     public static final String ATTR_APPT_ID= "appointment_id";
     public static final String ATTR_TIME = "time";
-    public static final String DATE_FORMAT = "MM/dd/yy hh:mm:ss a";
+    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String DAY_UPCOMING = "UPCOMING";
     public static final String DAY_TODAY = "TODAY";
     public static final String ATTR_PHYSICIAN = "physician";
@@ -30,7 +30,7 @@ public class CarePayConstants {
     public static final String ATTR_TYPE = "type";
     public static final String ATTR_UTC = "UTC";
     public static final String DATE_FORMAT_AM_PM = "hh:mm a";
-    public static final String DATE_TIME_FORMAT = "dd MMM hh:mm a";
+    public static final String DATE_TIME_FORMAT = "EEE dd MMM hh:mm a";
     public static final int SIGNATURE_REQ_CODE = 100;
     public static final String FORM_DATA  = "formdata";
     public static final String CHECKED_IN_APPOINTMENT_BUNDLE  = "Checked_in_appointment_bundle";
@@ -45,5 +45,5 @@ public class CarePayConstants {
     public static final long APPOINTMENT_REMINDER_TIME_IN_MINUTES = 120;
     public static final long CUSTOM_POPUP_AUTO_DISMISS_DURATION = 5000;
 
-    public static final String APPOINTMENT_DATE_TIME_FORMAT = "MM/dd/yy hh:mm:ss a";
+    public static final String APPOINTMENT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 }

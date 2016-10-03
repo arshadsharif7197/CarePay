@@ -43,6 +43,7 @@
             android:text="@string/moreDetailsSubHeadingTextView"/>
     </LinearLayout>
 
+
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
         android:layout_width="match_parent"

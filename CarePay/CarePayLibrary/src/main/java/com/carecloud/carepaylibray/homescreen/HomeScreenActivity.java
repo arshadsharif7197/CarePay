@@ -113,6 +113,7 @@ public class HomeScreenActivity extends AppCompatActivity
         } else if (mLanguage.getValue().equalsIgnoreCase("Responsibility")) {
 
             Intent responsibiltyintent = new Intent(getApplicationContext(), PaymentActivity.class);
+            responsibiltyintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(responsibiltyintent);
         }
     }

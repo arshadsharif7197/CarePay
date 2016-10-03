@@ -7,21 +7,41 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-public class CloverMainActivity extends AppCompatActivity {
+import com.carecloud.carepayclover.adapters.CheckedInAdapter;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.services.AppointmentService;
+import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class CloverMainActivity extends AppCompatActivity {
+public static int count;
 TextView checkedInCounterTextview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_clover);
         checkedInCounterTextview= (TextView) findViewById(R.id.checkedInCounterTextview);
-
+        getDemographicInformation();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        /*getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);*/
         ((TextView) findViewById(R.id.checkinTextView)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -35,7 +55,7 @@ TextView checkedInCounterTextview;
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int count=Integer.parseInt(checkedInCounterTextview.getText().toString())+1;
+            count=Integer.parseInt(checkedInCounterTextview.getText().toString())+1;
             checkedInCounterTextview.setText(String.valueOf( count));
         }
     };
@@ -44,6 +64,27 @@ TextView checkedInCounterTextview;
         super.onDestroy();
         unregisterReceiver(newCheckedInReceiver);
     }
+
+    private void getDemographicInformation() {
+        AppointmentService apptService = (new BaseServiceGenerator(this)).createServicePractice(AppointmentService.class); //, String token, String searchString
+        Call<AppointmentsResultModel> call = apptService.fetchCheckedInAppointments();
+        call.enqueue(new Callback<AppointmentsResultModel>() {
+            @Override
+            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
+
+                if(response.code()==200 && response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
+                    checkedInCounterTextview.setText(String.valueOf( response.body().getPayload().getAppointments().size()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AppointmentsResultModel> call, Throwable t) {
+
+            }
+        });
+    }
+
+
 
    /* private class LongOperation extends AsyncTask<String, Void, String> {
         @Override
