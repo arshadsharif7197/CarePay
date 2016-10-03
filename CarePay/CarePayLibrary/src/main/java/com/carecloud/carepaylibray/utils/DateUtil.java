@@ -109,7 +109,7 @@ public class DateUtil {
 
 
     public static Date getDateInRawFormatFromString(String datetime) {
-        SimpleDateFormat formatter = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault());
         try {
             return formatter.parse(datetime);
         } catch (ParseException e) {
