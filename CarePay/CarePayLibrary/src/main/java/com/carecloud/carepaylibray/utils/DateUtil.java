@@ -4,13 +4,17 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.google.api.client.util.DateTime;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.content.Context.CAMERA_SERVICE;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 /**
@@ -41,8 +45,9 @@ public class DateUtil {
      *
      * @param dateStr the String to evaluate
      */
-    public static String[] parseStringToDateTime(Context context, String dateStr) {
-        String fmt = "yyyy-MM-dd'T'hh:mm:ssZ";
+    public static String[] parseStringToDateTime(String dateStr) {
+        String fmt = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+
         String formatDate[] = new String[2];
         try {
             // change date format
@@ -92,6 +97,23 @@ public class DateUtil {
             case Calendar.OCTOBER: return "October";
             case Calendar.NOVEMBER: return "November";
             case Calendar.DECEMBER: return "December";
+        }
+        return null;
+    }
+
+    public static String formatToDateOfBirth(Context context, Date date) {
+        String dobFormat = context.getString(R.string.dateFormatString);
+        SimpleDateFormat formatter = new SimpleDateFormat(dobFormat, Locale.getDefault());
+        return formatter.format(date);
+    }
+
+
+    public static Date getDateInRawFormatFromString(String datetime) {
+        SimpleDateFormat formatter = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
+        try {
+            return formatter.parse(datetime);
+        } catch (ParseException e) {
+            Log.e(LOG_TAG, "Date util parse error", e);
         }
         return null;
     }

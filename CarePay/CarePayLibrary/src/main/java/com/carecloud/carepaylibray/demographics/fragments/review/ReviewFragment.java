@@ -31,9 +31,11 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuran
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -104,6 +106,31 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_insurance_review, container, false);
+
+        demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
+        ethnicityTextView = (TextView) view.findViewById(R.id.reviewEthnicityTextView);
+        raceTextView = (TextView) view.findViewById(R.id.reviewRaceTextView);
+        firstnameTextView = (TextView) view.findViewById(R.id.reviewFirstNameTextView);
+
+        lastNameTextView = (TextView) view.findViewById(R.id.reviewLastNameTextView);
+        emailTextView = (TextView) view.findViewById(R.id.reviewEmailTextView);
+        dobTExtView = (TextView) view.findViewById(R.id.reviewDOBTextView);
+        phoneNumberTextView = (TextView) view.findViewById(R.id.reviewPhoneNumberTextView);
+        genderTextView = (TextView) view.findViewById(R.id.reviewGenderTextView);
+        prefferedLanguageTextView = (TextView) view.findViewById(R.id.reviewPreferedLangugaeTextView);
+        driverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
+
+        address1TextView = (TextView) view.findViewById(R.id.reviewAddress1TextView);
+        address2TextView = (TextView) view.findViewById(R.id.reviewAddress2TextView);
+        cityTextView = (TextView) view.findViewById(R.id.reviewCityTextView);
+        stateTextView = (TextView) view.findViewById(R.id.reviewStateTextView);
+        zipcodeTextView = (TextView) view.findViewById(R.id.reviewZipcodeTextView);
+
+        planTextView = (TextView) view.findViewById(R.id.reviewPlanTextView);
+        companyTextView = (TextView) view.findViewById(R.id.reviewCompanyTextView);
+        policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView);
+
+
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.review_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
@@ -128,7 +155,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
      * get demographic information from the models
      * String token, String searchString
      */
-
     private void getDemographicInformation() {
         demographicProgressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(getActivity()))
@@ -162,22 +188,18 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     lastNameTextView.setText(demographicPayloadPersonalDetailsModel.getLastName());
                                     String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
                                     if (datetime != null) {
-                                        String[] date = datetime.split("T");
-                                        String dob = date[0];
-                                        String time = date[1];
-                                        dobTExtView.setText(dob);
-                                        genderTextView.setText(demographicPayloadPersonalDetailsModel.getGender());
-                                    } else{
-                                        Log.v(LOG_TAG,"Date of birth is missing");
+                                        Date dob = DateUtil.getDateInRawFormatFromString(datetime);
+                                        String dateOfBirthString = DateUtil.formatToDateOfBirth(getActivity(), dob);
+                                        dobTExtView.setText(dateOfBirthString);
                                     }
-                                    prefferedLanguageTextView.setText(
-                                            demographicPayloadPersonalDetailsModel.getPreferredLanguage());
+                                    genderTextView.setText(demographicPayloadPersonalDetailsModel.getGender());
+                                    prefferedLanguageTextView.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
                                     raceTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
                                     ethnicityTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
                                 }
 
                             } else {
-                                Log.v(LOG_TAG, "demographic personaldetail  model is null ");
+                                Log.v(LOG_TAG, "demographic personal detail  model is null ");
                             }
 
                             insurances = payloadinfomodel.getInsurances();
