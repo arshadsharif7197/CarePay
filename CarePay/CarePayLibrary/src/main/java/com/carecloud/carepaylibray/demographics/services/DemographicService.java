@@ -2,7 +2,9 @@ package com.carecloud.carepaylibray.demographics.services;
 
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.google.gson.JsonObject;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -20,5 +22,5 @@ public interface DemographicService {
 
 
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
-    Call<DemographicModel> confirmDemographicInformation(@Body DemographicPayloadModel demographicModel);
+    Call<ResponseBody> confirmDemographicInformation(@Body DemographicPayloadModel demographicModel);
 }
