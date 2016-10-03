@@ -240,14 +240,14 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
     private  void initViewFromModels(){
 
-        demographicPayloadAddressModel = ((DemographicReviewActivity)getActivity()).
-                getDemographicPayloadAddressModel();
-        demographicPayloadPersonalDetailsModel = ((DemographicReviewActivity)getActivity()).
-                getDemographicPayloadPersonalDetailsModel();
-        insurances = ((DemographicReviewActivity)getActivity()).
-                getInsurances();
-        demographicPayloadDriversLicenseModel= ((DemographicReviewActivity)getActivity()).
-                getDemographicPayloadDriversLicenseModel();
+        demographicPayloadAddressModel = ((DemographicReviewActivity)getActivity())
+                .getDemographicPayloadAddressModel();
+        demographicPayloadPersonalDetailsModel = ((DemographicReviewActivity)getActivity())
+                .getDemographicPayloadPersonalDetailsModel();
+        insurances = ((DemographicReviewActivity)getActivity())
+                .getInsurances();
+        demographicPayloadDriversLicenseModel= ((DemographicReviewActivity)getActivity())
+                .getDemographicPayloadDriversLicenseModel();
 
 
         if(demographicPayloadAddressModel != null) {

@@ -199,9 +199,11 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     address2TextView.setText(demographicPayloadAddressModel.getAddress2());
                                     cityTextView.setText(demographicPayloadAddressModel.getCity());
                                     stateTextView.setText(demographicPayloadAddressModel.getState());
-                                    String zipcode=StringUtil.formatZipCode(demographicPayloadAddressModel.getZipcode());
+                                    String zipcode=StringUtil.formatZipCode
+                                            (demographicPayloadAddressModel.getZipcode());
                                     zipcodeTextView.setText(zipcode);
-                                    String phoneNumber=StringUtil.formatPhoneNumber(demographicPayloadAddressModel.getPhone());
+                                    String phoneNumber=StringUtil.formatPhoneNumber
+                                            (demographicPayloadAddressModel.getPhone());
                                     phoneNumberTextView.setText(phoneNumber);
                                 }
                             } else {
@@ -265,7 +267,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     /**
      *
-     * @param view
+     * @param view on click listener
      */
     @Override
     public void onClick(View view) {
@@ -276,20 +278,21 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             getActivity().finish();
         }
         if (view == updateInformationUpdate) {
-            ((DemographicReviewActivity) getActivity()).
-                    setDemographicPayloadAddressModel(demographicPayloadAddressModel);
-            ((DemographicReviewActivity) getActivity()).
-                    setDemographicPayloadPersonalDetailsModel(demographicPayloadPersonalDetailsModel);
-            ((DemographicReviewActivity) getActivity()).
-                    setInsurances(insurances);
-            ((DemographicReviewActivity) getActivity()).
-                    setDemographicPayloadDriversLicenseModel(demographicPayloadDriversLicenseModel);
+            ((DemographicReviewActivity) getActivity())
+                    .setDemographicPayloadAddressModel(demographicPayloadAddressModel);
+            ((DemographicReviewActivity) getActivity())
+                    .setDemographicPayloadPersonalDetailsModel(demographicPayloadPersonalDetailsModel);
+            ((DemographicReviewActivity) getActivity())
+                    .setInsurances(insurances);
+            ((DemographicReviewActivity) getActivity())
+                    .setDemographicPayloadDriversLicenseModel(demographicPayloadDriversLicenseModel);
 
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment fragment = DemographicReviewFragment.newInstance();
             transaction.replace(R.id.root_layout, fragment, ReviewFragment.class.getName());
-            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
+                    R.anim.enter_from_left, R.anim.exit_to_right);
             transaction.addToBackStack("ReviewFragment -> DemographicReviewFragment");
             transaction.commit();
         }
