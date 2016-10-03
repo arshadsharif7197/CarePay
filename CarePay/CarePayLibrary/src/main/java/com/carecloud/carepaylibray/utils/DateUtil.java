@@ -64,13 +64,8 @@ public class DateUtil {
         return formatDate;
     }
 
-    /** .
-     *
-     * @return returns formatted date
-     */
     public static String formatCurrentDateAsMonthDayYear() {
-        // Create a calendar object that will convert the date
-        // and time value in milliseconds to date.
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
@@ -80,8 +75,7 @@ public class DateUtil {
         String dayString = String.valueOf(day);
         String ordinal = getDayOrdinal(dayString.charAt(dayString.length() - 1));
 
-        return String.format(Locale.getDefault(), "%s, %s%s %d",
-                monthString, dayString, ordinal, year);
+        return String.format(Locale.getDefault(), "%s,%s%s %d", monthString, dayString, ordinal, year);
     }
 
     private static String getMonthAsString(int month) {

@@ -62,7 +62,6 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         if (appointmentsListFragment == null) {
             appointmentsListFragment = new AppointmentsListFragment();
         }
-
         Intent intent = getIntent();
         AppointmentModel appointmentModel = (AppointmentModel) intent.getSerializableExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
 
