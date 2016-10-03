@@ -64,7 +64,10 @@ public class DateUtil {
         return formatDate;
     }
 
-
+    /** .
+     *
+     * @return returns formatted date
+     */
     public static String formatCurrentDateAsMonthDayYear() {
         // Create a calendar object that will convert the date
         // and time value in milliseconds to date.

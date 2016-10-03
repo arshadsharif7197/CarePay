@@ -124,14 +124,15 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    /**
+    /** .
      * get demographic information from the models
+     * String token, String searchString
      */
 
     private void getDemographicInformation() {
         demographicProgressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(getActivity()))
-                .createService(DemographicService.class);                                              // String token, String searchString
+                .createService(DemographicService.class);
         Call<DemographicModel> call = apptService.fetchDemographics();
         call.enqueue(new Callback<DemographicModel>() {
             @Override
@@ -171,7 +172,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     } else{
                                         Log.v(LOG_TAG,"Date of birth is missing");
                                     }
-                                    prefferedLanguageTextView.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
+                                    prefferedLanguageTextView.setText(
+                                            demographicPayloadPersonalDetailsModel.getPreferredLanguage());
                                     raceTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
                                     ethnicityTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
                                 }
@@ -230,7 +232,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    /**
+    /** .
      * Initializing the view
      */
 
@@ -280,13 +282,16 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         }
         if (view == updateInformationUpdate) {
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadAddressModel(demographicPayloadAddressModel);
+                    .setDemographicPayloadAddressModel(
+                            demographicPayloadAddressModel);
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadPersonalDetailsModel(demographicPayloadPersonalDetailsModel);
+                    .setDemographicPayloadPersonalDetailsModel(
+                            demographicPayloadPersonalDetailsModel);
             ((DemographicReviewActivity) getActivity())
                     .setInsurances(insurances);
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadDriversLicenseModel(demographicPayloadDriversLicenseModel);
+                    .setDemographicPayloadDriversLicenseModel(
+                            demographicPayloadDriversLicenseModel);
 
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

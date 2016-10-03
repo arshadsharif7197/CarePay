@@ -228,8 +228,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         postPayloadModel.setInsurances(insurances);
         postPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
 
-        DemographicService apptService = (new BaseServiceGenerator(getActivity())).
-                createService(DemographicService.class); //, String token, String searchString
+        DemographicService apptService = (new BaseServiceGenerator(getActivity()))
+                .createService(DemographicService.class); // String token, String searchString
         Call<ResponseBody> call = apptService.updateDemographicInformation(postPayloadModel);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
