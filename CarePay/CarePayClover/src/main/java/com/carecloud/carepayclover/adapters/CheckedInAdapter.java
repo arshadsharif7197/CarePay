@@ -27,6 +27,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
     private Context context;
 
     ArrayList<Appointment> mData;
+    int counter;
 
     public CheckedInAdapter(Context context, ArrayList<Appointment> data) {
         this.context = context;
@@ -55,9 +56,9 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
         Appointment mMaster = mData.get(position);
         AppointmentPatientModel patientModel=mMaster.getPayload().getPatient();
         holder.patientNameTextView.setText(patientModel.getFirstName()+" " + patientModel.getLastName());
-        holder.patientBalanceTextView.setText("Balance: $20.00");//+ String.format("%.2f",(Integer.parseInt( patientModel.getGenderId())*2)));
+        holder.patientBalanceTextView.setText(String.format( "Balance: $%.2f", patientModel.getTotalBalance() ));
         Picasso.with(context).load(patientModel.getPhoto()).transform(new CircleImageTransform()).resize(160,160).into(holder.patientPicImageView);
-        holder.container.setTag(patientModel);
+        holder.paymentTextview.setTag(patientModel);
         Log.d("PatientPhoto",patientModel.getPhoto());
     }
 
@@ -98,14 +99,14 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
         public void onClick(View view) {
             int viewId=view.getId();
             if(viewId==R.id.paymentTextview) {
-                Appointment model = (Appointment) view.getRootView().getTag();
+                AppointmentPatientModel model = (AppointmentPatientModel) view.getTag();
                 Intent rotateInIntent = new Intent(context, RotateActivity.class);
                 rotateInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 rotateInIntent.putExtra("rotate_title","Ready to pay");//Sent!
                 rotateInIntent.putExtra("rotate_sub_title","Please flip screen towards patient");//attendant
-                rotateInIntent.putExtra("total_pay_balance",20.00);
-                rotateInIntent.putExtra("previous_balance",15.00);
-                rotateInIntent.putExtra("insurance_co_pay_balance",5.00);
+                rotateInIntent.putExtra("total_pay_balance",model.getTotalBalance() );
+                rotateInIntent.putExtra("previous_balance", model.getResponsibilityAccount());
+                rotateInIntent.putExtra("insurance_co_pay_balance",model.getResponsibilityCopay());
                 context.startActivity(rotateInIntent);
             }
         }

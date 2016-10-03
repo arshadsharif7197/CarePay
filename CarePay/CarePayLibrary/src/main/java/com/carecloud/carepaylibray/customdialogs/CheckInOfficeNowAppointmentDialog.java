@@ -18,9 +18,10 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActi
 
 public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
-    private LinearLayout mainLayout;
-    private Context context;
+    private LinearLayout     mainLayout;
+    private Context          context;
     private AppointmentModel appointmentModel;
+
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
@@ -30,10 +31,11 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainLayout = (LinearLayout)getAddActionChildView();
+        mainLayout = (LinearLayout) getAddActionChildView();
         setActionButton();
     }
-    private void setActionButton(){
+
+    private void setActionButton() {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_checkin_office_now_appointment, null);
@@ -50,10 +52,10 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     public void onClick(View view) {
         super.onClick(view);
         int viewId = view.getId();
-        if(viewId == R.id.checkOfficeButton){
+        if (viewId == R.id.checkOfficeButton) {
             onCheckInAtOffice();
             cancel();
-        }else if(viewId == R.id.checkOfficeNowButton){
+        } else if (viewId == R.id.checkOfficeNowButton) {
             onCheckInAtNow();
             cancel();
         }
@@ -62,14 +64,15 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     /**
      * call check-in at office api.
      */
-    private void onCheckInAtOffice(){
+    private void onCheckInAtOffice() {
         Intent demographicReviewIntent = new Intent(context, DemographicReviewActivity.class);
         context.startActivity(demographicReviewIntent);
     }
+
     /**
      * call check-in at Now api.
      */
-    private void onCheckInAtNow(){
+    private void onCheckInAtNow() {
         Intent demographicReviewIntent = new Intent(context, DemographicReviewActivity.class);
         context.startActivity(demographicReviewIntent);
     }
