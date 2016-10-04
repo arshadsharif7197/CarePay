@@ -311,7 +311,9 @@ public class AppointmentsListFragment extends Fragment {
 
                         // Appointment start time
                         String mAptTime = "";
-                        String mAptDate = "", mAptDateWithoutTime = "";
+                        String mAptDate = "";
+                        String mAptDateWithoutTime = "";
+
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
                         try {
                             Date aptDate = sdf.parse(appointment.getPayload().getStartTime());
@@ -485,6 +487,7 @@ public class AppointmentsListFragment extends Fragment {
             }
         });
     }
+
     private void onRefresh(){
         appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

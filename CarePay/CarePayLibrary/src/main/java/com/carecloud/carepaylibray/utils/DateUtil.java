@@ -38,12 +38,11 @@ public class DateUtil {
         this.date = new Date();
     }
 
-    public DateUtil setDate(String dateString) {
+    public DateUtil setDateRaw(String dateString) {
         try {
             if (instance != null) {
                 SimpleDateFormat formatter = new SimpleDateFormat(instance.format, Locale.getDefault());
-                Date date = formatter.parse(dateString);
-                instance.setDate(date);
+                instance.setDate(formatter.parse(dateString));
             }
         } catch (ParseException e) {
             Log.v(LOG_TAG, DateUtil.class.getSimpleName() + " exception ", e);
@@ -72,7 +71,7 @@ public class DateUtil {
      * @param dayLastDigit the last digit of the day (as char)
      * @return return a ordinal String with day
      */
-    public String getDayOrdinal(char dayLastDigit) {
+    private String getDayOrdinal(char dayLastDigit) {
         if (dayLastDigit == '1') {
             return "st";
         } else if (dayLastDigit == '2') {
@@ -85,32 +84,26 @@ public class DateUtil {
     }
 
     /**
-     * convert date string in to month and day; and time into hh:mm am/pm
-     *
-     * @param dateStr the String to evaluate
+     * Format the date as DayOfWeek, Month day th (eg Monday, October 10th)
+     * @return A string containing the formatted date
      */
-    public String[] parseStringToDateTime(String dateStr) {
-        String fmt = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+    public String getDateAsDayMonthDayOrdinal() {
+        // create a formatter
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
+        // format the date as Day_of_week, Month day th
+        String newDateString =  formatter.format(getDate());
+        // add the ordinal return
+        char lastDigit = newDateString.charAt(newDateString.length() - 1);
+        return newDateString  + getDayOrdinal(lastDigit);
+    }
 
-        String formatDate[] = new String[2];
-        try {
-            // change date format
-            SimpleDateFormat inDateFormat = new SimpleDateFormat(fmt, Locale.getDefault());
-            SimpleDateFormat outDateFormat = new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
-            Date date = inDateFormat.parse(dateStr);
-            String newDateStr = formatDate[0] = outDateFormat.format(date);
-            char lastDayDigit = formatDate[0].charAt(formatDate[0].length() - 1);
-            formatDate[0] = newDateStr + getDayOrdinal(lastDayDigit);
-
-            // change time format
-            SimpleDateFormat inTimeFormat = new SimpleDateFormat(fmt, Locale.getDefault());
-            Date time = inTimeFormat.parse(dateStr);
-            SimpleDateFormat outTimeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-            formatDate[1] = outTimeFormat.format(time);
-        } catch (Exception ex) {
-            Log.e(LOG_TAG, ex.getMessage());
-        }
-        return formatDate;
+    /**
+     * Return the time as 12-hour
+     * @return A string contains the formatted time
+     */
+    public String getTime12Hour() {
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        return formatter.format(date);
     }
 
     /**

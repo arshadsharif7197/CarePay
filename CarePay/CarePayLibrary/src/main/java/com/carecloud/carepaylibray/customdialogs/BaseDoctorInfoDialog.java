@@ -57,10 +57,9 @@ public class BaseDoctorInfoDialog extends Dialog implements
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
-        String[] fmtDateAndTime = DateUtil.getInstance().parseStringToDateTime(
-                appointmentModel.getAppointmentDate());
-        dateTextView.setText(fmtDateAndTime[0]);
-        timeTextView.setText(fmtDateAndTime[1]);
+        DateUtil.getInstance().setDateRaw(appointmentModel.getAppointmentDate());
+        dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+        timeTextView.setText(DateUtil.getInstance().getTime12Hour());
 
         shortNameTextView.setText(StringUtil.onShortDrName(appointmentModel.getDoctorName()));
         nameTextView.setText(appointmentModel.getDoctorName());
