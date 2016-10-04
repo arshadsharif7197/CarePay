@@ -22,10 +22,12 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuran
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -158,10 +160,10 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         }
 
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.confirmDemographicInformation(demographicPayloadModel);
-        call.enqueue(new Callback<DemographicModel>() {
+        Call<ResponseBody> call = apptService.confirmDemographicInformation(demographicPayloadModel);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 // TODO: 9/29/2016 progress
                 Log.d(LOG_TAG, "demogr post succeeded");
 
@@ -171,7 +173,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             }
 
             @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d(LOG_TAG, "demogr post failed", t);
                 // TODO: 9/29/2016 progres
             }
