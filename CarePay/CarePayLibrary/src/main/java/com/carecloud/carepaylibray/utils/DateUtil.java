@@ -111,7 +111,8 @@ public class DateUtil {
      * @return The formatted date as string
      */
     public static String formatToDateOfBirth(Context context, Date date) {
-        String dobFormat = context.getString(R.string.dateFormatString);
+//        String dobFormat = context.getString(R.string.dateFormatString);
+        String dobFormat = "MM-dd-yyyy";
         SimpleDateFormat formatter = new SimpleDateFormat(dobFormat, Locale.getDefault());
         return formatter.format(date);
     }
@@ -119,12 +120,25 @@ public class DateUtil {
 
     public static Date getDateInRawFormatFromString(String datetime) {
         // TODO: 10/3/2016 make it work for the general format
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
         try {
             return formatter.parse(datetime);
         } catch (ParseException e) {
             Log.e(LOG_TAG, "Date util parse error", e);
         }
         return null;
+    }
+
+    public static String convertToRawFromDateOfBirthFormat(String dateOfBirth) {
+        SimpleDateFormat in = new SimpleDateFormat("yyyy/mm/dd", Locale.getDefault());
+        Date date = null;
+        try {
+            date = in.parse(dateOfBirth);
+        } catch (ParseException e) {
+            Log.e(LOG_TAG, "convertToRawFromDateOfBirthFormat() ", e);
+        }
+        SimpleDateFormat out = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
+
+        return out.format(date);
     }
 }
