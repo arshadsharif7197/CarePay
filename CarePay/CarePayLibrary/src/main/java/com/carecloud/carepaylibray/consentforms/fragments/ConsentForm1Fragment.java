@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -26,14 +27,12 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 
-
-
 public class ConsentForm1Fragment extends Fragment {
 
     private TextView titleTextView, descriptionTextView, contentTextView, dateTextView;
-    private Button signButton;
+    private Button            signButton;
     private IFragmentCallback fragmentCallback;
-    private ScrollView consentFormScrollView;
+    private ScrollView        consentFormScrollView;
     Date date = new Date();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -47,7 +46,7 @@ public class ConsentForm1Fragment extends Fragment {
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
         contentTextView = (TextView) view.findViewById(R.id.contentTv);
         dateTextView = (TextView) view.findViewById(R.id.dateTv);
-        consentFormScrollView =(ScrollView)view.findViewById(R.id.consentform_scrollView);
+        consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
         signButton = (Button) view.findViewById(R.id.signButton);
         signButton.setEnabled(false);
 
@@ -80,29 +79,15 @@ public class ConsentForm1Fragment extends Fragment {
             signButton.setOnClickListener(clickListener);
         }
 
-        FormData formData = (FormData)getArguments().getSerializable(CarePayConstants.FORM_DATA);
+        FormData formData = (FormData) getArguments().getSerializable(CarePayConstants.FORM_DATA);
 
         titleTextView.setText(formData.getTitle());
         descriptionTextView.setText(formData.getDescription());
         contentTextView.setText(formData.getContent());
         dateTextView.setText(formData.getDate());
 
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            consentFormScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    View view = (View) consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
-                    int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
-
-                    if (diff==0){
-                        signButton.setEnabled(true);
-                    }
-
-                }
-            });
-        }
+        // enable next button on scrolling all the way to the bottom
+        setEnableNextButtonOnFullScroll();
     }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -116,10 +101,25 @@ public class ConsentForm1Fragment extends Fragment {
     };
 
     private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(),(TextView) view.findViewById(R.id.titleTv));
-        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.descriptionTv));
-        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.contentTv));
-        setProximaNovaRegularTypeface(getActivity(),(TextView) view.findViewById(R.id.dateTv));
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.titleTv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.descriptionTv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.contentTv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.dateTv));
 
+    }
+
+    private void setEnableNextButtonOnFullScroll() {
+        // enable next button on scrolling all the way to the bottom
+        consentFormScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                View view = consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
+                int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
+
+                if (diff == 0) {
+                    signButton.setEnabled(true);
+                }
+            }
+        });
     }
 }
