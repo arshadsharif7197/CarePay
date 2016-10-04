@@ -40,7 +40,7 @@ public class SigninSignupActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.set(1979, 6, 20);
         Date date = calendar.getTime();
-        Log.v(LOG_TAG, "DOB: " + DateUtil.formatToDateOfBirth(this, date));
+        Log.v(LOG_TAG, "DOB: " + DateUtil.getInstance().formatToDateOfBirth(this, date));
     }
 
     @Override

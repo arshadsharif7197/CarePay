@@ -41,7 +41,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         mainLayout = (LinearLayout) getAddActionChildView();
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
-        String[] timeDateString = DateUtil.parseStringToDateTime(appointmentModel.getAppointmentDate());
+        String[] timeDateString = DateUtil.getInstance().parseStringToDateTime(appointmentModel.getAppointmentDate());
         dateTextView.setText(timeDateString[0]);
         timeTextView.setText(timeDateString[1]);
         setActionButton();

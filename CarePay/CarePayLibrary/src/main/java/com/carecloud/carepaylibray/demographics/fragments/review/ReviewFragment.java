@@ -169,7 +169,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     if (datetime != null) {
                                         // TODO: 10/4/2016 convert from raw format
                                         Date dob = DateUtil.getDateInRawFormatFromString(datetime);
-                                        String dateOfBirthString = DateUtil.formatToDateOfBirth(getActivity(), dob);
+                                        String dateOfBirthString = DateUtil.getInstance().formatToDateOfBirth(getActivity(), dob);
                                         dobTExtView.setText(dateOfBirthString);
                                     }
                                     genderTextView.setText(demographicPayloadPersonalDetailsModel.getGender());
@@ -179,7 +179,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                 }
 
                             } else {
-                                Log.v(LOG_TAG, "demographic personal detail  model is null ");
+                                Log.v(LOG_TAG, "demographic personal detail  model is null");
                             }
 
                             insurances = payloadinfomodel.getInsurances();

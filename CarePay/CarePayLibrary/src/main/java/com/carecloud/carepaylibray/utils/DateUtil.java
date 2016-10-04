@@ -4,7 +4,6 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.google.api.client.util.DateTime;
 
@@ -18,21 +17,67 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 /**
  * Created by kkannan on 9/13/16.
+ * Helper class to format the date
+ *
+ * @link (to be assigned)
  */
 public class DateUtil {
 
+    private String format = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+    private        Date     date;
+    private static DateUtil instance;
+
+    public static DateUtil getInstance() {
+        if (instance == null) {
+            instance = new DateUtil();
+        }
+        return instance;
+    }
+
+    private DateUtil() {
+        this.date = new Date();
+    }
+
+    public DateUtil setDate(String dateString) {
+        try {
+            if (instance != null) {
+                SimpleDateFormat formatter = new SimpleDateFormat(instance.format, Locale.getDefault());
+                Date date = formatter.parse(dateString);
+                instance.setDate(date);
+            }
+        } catch (ParseException e) {
+            Log.v(LOG_TAG, DateUtil.class.getSimpleName() + " exception ", e);
+        }
+        return instance;
+    }
+
+    public static DateUtil setFormat(String format) {
+        if(instance != null) {
+            instance.format = format;
+        }
+        return instance;
+    }
+
+    private void setDate(Date date) {
+        this.date = date;
+    }
+
+    private Date getDate() {
+        return date;
+    }
+
     /**
      * get days as a ordinal string
+     *
      * @param dayLastDigit the last digit of the day (as char)
      * @return return a ordinal String with day
      */
-    public static String getDayOrdinal(char dayLastDigit)
-    {
-        if(dayLastDigit == '1') {
-             return "st";
-        } else if(dayLastDigit == '2') {
+    public String getDayOrdinal(char dayLastDigit) {
+        if (dayLastDigit == '1') {
+            return "st";
+        } else if (dayLastDigit == '2') {
             return "nd";
-        } else if(dayLastDigit == '3') {
+        } else if (dayLastDigit == '3') {
             return "rd";
         } else {
             return "th";
@@ -44,7 +89,7 @@ public class DateUtil {
      *
      * @param dateStr the String to evaluate
      */
-    public static String[] parseStringToDateTime(String dateStr) {
+    public String[] parseStringToDateTime(String dateStr) {
         String fmt = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
 
         String formatDate[] = new String[2];
@@ -72,8 +117,9 @@ public class DateUtil {
      * Format current date as Month, Day(ordinal) YYYY
      * @return The formatted date as string
      */
-    public static String formatCurrentDateAsMonthDayYear() {
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
+    public String formatCurrentDateAsMonthDayYear() {
+        // Create a calendar object that will convert the date
+        // and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
@@ -83,23 +129,36 @@ public class DateUtil {
         String dayString = String.valueOf(day);
         String ordinal = getDayOrdinal(dayString.charAt(dayString.length() - 1));
 
-        return String.format(Locale.getDefault(), "%s, %s%s %d", monthString, dayString, ordinal, year);
+        return String.format(Locale.getDefault(), "%s, %s%s %d",
+                             monthString, dayString, ordinal, year);
     }
 
-    private static String getMonthAsString(int month) {
-        switch(month) {
-            case Calendar.JANUARY: return "January";
-            case Calendar.FEBRUARY: return "February";
-            case Calendar.MARCH: return "March";
-            case Calendar.APRIL: return "April";
-            case Calendar.MAY: return "May";
-            case Calendar.JUNE: return "June";
-            case Calendar.JULY: return "July";
-            case Calendar.AUGUST: return "August";
-            case Calendar.SEPTEMBER: return "September";
-            case Calendar.OCTOBER: return "October";
-            case Calendar.NOVEMBER: return "November";
-            case Calendar.DECEMBER: return "December";
+    private String getMonthAsString(int month) {
+        switch (month) {
+            case Calendar.JANUARY:
+                return "January";
+            case Calendar.FEBRUARY:
+                return "February";
+            case Calendar.MARCH:
+                return "March";
+            case Calendar.APRIL:
+                return "April";
+            case Calendar.MAY:
+                return "May";
+            case Calendar.JUNE:
+                return "June";
+            case Calendar.JULY:
+                return "July";
+            case Calendar.AUGUST:
+                return "August";
+            case Calendar.SEPTEMBER:
+                return "September";
+            case Calendar.OCTOBER:
+                return "October";
+            case Calendar.NOVEMBER:
+                return "November";
+            case Calendar.DECEMBER:
+                return "December";
         }
         return null;
     }
@@ -110,7 +169,7 @@ public class DateUtil {
      * @param date The date
      * @return The formatted date as string
      */
-    public static String formatToDateOfBirth(Context context, Date date) {
+    public String formatToDateOfBirth(Context context, Date date) {
 //        String dobFormat = context.getString(R.string.dateFormatString);
         String dobFormat = "MM-dd-yyyy";
         SimpleDateFormat formatter = new SimpleDateFormat(dobFormat, Locale.getDefault());

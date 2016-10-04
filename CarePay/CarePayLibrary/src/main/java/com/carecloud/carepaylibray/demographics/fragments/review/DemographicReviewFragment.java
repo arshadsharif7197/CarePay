@@ -271,7 +271,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             lastNameText.setText(demographicPayloadPersonalDetailsModel.getLastName());
 
             String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
-            dobEditText.setText(DateUtil.formatToDateOfBirth(getActivity(), DateUtil.getDateInRawFormatFromString(datetime)));
+            dobEditText.setText(DateUtil.getInstance().formatToDateOfBirth(getActivity(), DateUtil.getDateInRawFormatFromString(datetime)));
         }
 
         selectGender.setText(demographicPayloadPersonalDetailsModel.getGender());
