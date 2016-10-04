@@ -16,7 +16,7 @@ import android.widget.EditText;
 import com.carecloud.carepaylibrary.R;
 
 public class CustomInputEditText extends TextInputLayout {
-    private Context context;
+    Context context;
     EditText input;
 
     public CustomInputEditText(Context context) {
