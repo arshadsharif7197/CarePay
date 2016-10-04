@@ -15,6 +15,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -40,8 +41,9 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         mainLayout = (LinearLayout) getAddActionChildView();
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
-        dateTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[1]);
-        timeTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[0]);
+        String[] timeDateString = DateUtil.parseStringToDateTime(context, appointmentModel.getAppointmentDate());
+        dateTextView.setText(timeDateString[0]);
+        timeTextView.setText(timeDateString[1]);
         setActionButton();
     }
 

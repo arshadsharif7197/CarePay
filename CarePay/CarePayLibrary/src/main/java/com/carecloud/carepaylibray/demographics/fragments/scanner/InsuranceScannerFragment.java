@@ -12,7 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
+
+import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -29,11 +34,12 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private static final String[] plans     = {"Aetna Select", "Aetna Value Network HMO", "Elect Choice EPO", "HMO"};
     private static final String[] providers = {"Aetna", "BlueCross Blue Shield", "Cigna", "GHI", "HIP"};
 
-    private ImageCaptureHelper mInsuranceScanHelper;
-    private Button             btnScanInsurance;
-    private TextView           tvInsuranceNum;
-    private TextView           tvPlan;
-    private TextView           tvProvider;
+    private ImageCaptureHelper               mInsuranceScanHelper;
+    private Button                           btnScanInsurance;
+    private TextView                         tvInsuranceNum;
+    private TextView                         tvPlan;
+    private TextView                         tvProvider;
+    private DemographicPayloadInsuranceModel model;
 
     @Nullable
     @Override
@@ -72,17 +78,40 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         setTypefaces(view);
 
+        populateViewsFromModel();
+
         return view;
     }
 
     @Override
-    protected void updateDetailViewsAfterScan() {
+    protected void updateModelAndViewsAfterScan() {
         btnScanInsurance.setText(R.string.demogr_docs_rescan);
+
+        model.setInsuranceMemberId("98765431");
         tvInsuranceNum.setText("98765431");
         tvInsuranceNum.setVisibility(View.VISIBLE);
+
+        model.setInsurancePlan(plans[0]);
         tvPlan.setText(plans[0]);
+
+        model.setInsuranceProvider(providers[0]);
         tvProvider.setText(providers[0]);
     }
+
+    @Override
+    public void populateViewsFromModel() {
+        if (model != null) {
+            Log.v(LOG_TAG, "InsuranceScannerFrag - populateFromModel()");
+
+            // check the type of the model
+        //    mInsuranceScanHelper.setImageFromCharStream(model.getProfilePhoto(0));
+            String insNum = model.getInsuranceMemberId();
+            tvInsuranceNum.setText(insNum);
+            tvPlan.setText(model.getInsurancePlan());
+            tvProvider.setText(model.getInsuranceProvider());
+        }
+    }
+
 
     public void resetViewsContent() {
         Log.v(LOG_TAG, "resetViewsContent()");
@@ -118,5 +147,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Override
     public int getImageShape() {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    }
+
+    public void setModel(DemographicPayloadInsuranceModel model) {
+        this.model = model;
     }
 }

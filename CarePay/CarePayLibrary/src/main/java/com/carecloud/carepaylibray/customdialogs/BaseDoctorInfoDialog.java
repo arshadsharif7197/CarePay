@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -45,7 +47,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-        getWindow().setAttributes((WindowManager.LayoutParams) params);
+        getWindow().setAttributes(params);
 
         TextView shortNameTextView = ((TextView) findViewById(R.id.appointShortnameTextView));
         TextView nameTextView = ((TextView) findViewById(R.id.appointNameTextView));
@@ -55,9 +57,12 @@ public class BaseDoctorInfoDialog extends Dialog implements
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
-        dateTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[0]);
-        timeTextView.setText(SystemUtil.onDateParseToString(context, appointmentModel.getAppointmentDate())[1]);
-        shortNameTextView.setText(SystemUtil.onShortDrName(appointmentModel.getDoctorName()));
+        String[] fmtDateAndTime = DateUtil.parseStringToDateTime(
+                context, appointmentModel.getAppointmentDate());
+        dateTextView.setText(fmtDateAndTime[0]);
+        timeTextView.setText(fmtDateAndTime[1]);
+
+        shortNameTextView.setText(StringUtil.onShortDrName(appointmentModel.getDoctorName()));
         nameTextView.setText(appointmentModel.getDoctorName());
         typeTextView.setText(appointmentModel.getAppointmentType());
         addressHeaderTextView.setText(appointmentModel.getPlaceName());
@@ -108,9 +113,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
      */
     private void onMapView(final String addressName, final String address) {
         if (SystemUtil.isNotEmptyString(address)) {
-            String placeName = SystemUtil.isNotEmptyString(addressName) ? addressName : "";
-            String fullAddress = placeName + " " + address;
-            Uri mapUri = Uri.parse("geo:0,0?q=" + Uri.encode(fullAddress));
+            Uri mapUri = Uri.parse("geo:0,0?q=" + Uri.encode(address));
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             context.startActivity(mapIntent);

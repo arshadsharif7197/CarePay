@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/reviewlayout"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar_review" />
@@ -20,7 +21,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:layout_marginLeft="@dimen/review_screen_left_margin"
@@ -40,7 +41,123 @@
             android:layout_height="wrap_content"
             android:text="@string/review_subtitle" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/reviewpersonalInformationLabel"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PERSONAL INFORMATION"/>
+
+
+            <TextView
+                android:id="@+id/reviewFirstNameLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/review_header_lablemargin_top"
+                android:text="@string/review_firstname_label"/>
+
+            <TextView
+                android:id="@+id/reviewFirstNameTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+            <TextView
+                android:id="@+id/reviewMiddleNameLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/review_middlename_label"/>
+
+            <TextView
+                android:id="@+id/reviewMiddelNameTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+
+
+            <TextView
+                android:id="@+id/reviewLastNameLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/review_lastname_label"/>
+
+            <TextView
+                android:id="@+id/reviewLastNameTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+            <TextView
+                android:id="@+id/reviewEmailLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/review_email_label"/>
+
+            <TextView
+                android:id="@+id/reviewEmailTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+            <TextView
+                android:id="@+id/reviewDOBLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/review_dateofbirth_label"/>
+
+            <TextView
+                android:id="@+id/reviewDOBTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+            <TextView
+                android:id="@+id/reviewPhoneNumberLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/review_header_lablemargin_top"
+                android:text="@string/review_phone_number_label"/>
+
+            <TextView
+                android:id="@+id/reviewPhoneNumberTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +169,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/review_screen_demographic"/>
+            <TextView
+                android:id="@+id/reviewGenderLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/review_header_lablemargin_top"
+                android:text="@string/review_gender_label"/>
 
+            <TextView
+                android:id="@+id/reviewGenderTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
 
             <TextView
                 android:id="@+id/reviewRaceLabel"
@@ -60,38 +193,222 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/review_header_lablemargin_top"
-                android:text="@string/review_screen_race_lable"/>
+                android:text="@string/review_race_label"/>
 
             <TextView
                 android:id="@+id/reviewRaceTextView"
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Other" />
+                android:text="" />
             <View
                 style="@style/Review_Screen_View_Style"
                 android:layout_width="match_parent" />
-
 
             <TextView
                 android:id="@+id/reviewEthnicityLabel"
                 style="@style/reviewDemographiclabel."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/review_screen_ethnicity"/>
+                android:text="@string/review_ethnicity_label"/>
 
             <TextView
                 android:id="@+id/reviewEthnicityTextView"
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hispanic" />
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+            <TextView
+                android:id="@+id/reviewPreferedLanguageLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/review_header_lablemargin_top"
+                android:text="@string/review_prefferedlanguage_label"/>
+
+            <TextView
+                android:id="@+id/reviewPreferedLangugaeTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+            <TextView
+                android:id="@+id/reviewDriverLicenseLabel"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/review_header_lablemargin_top"
+                android:text="@string/review_driverlicense_label"/>
+
+            <TextView
+                android:id="@+id/reviewDriverLicenseTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
             <View
                 style="@style/Review_Screen_View_Style"
                 android:layout_width="match_parent" />
 
         </LinearLayout>
 
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/reviewAddress"
+            style="@style/reviewDemographicBlue."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/review_address_lable"/>
+
+
+        <TextView
+            android:id="@+id/reviewAddress1label"
+            style="@style/reviewDemographiclabel."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/review_header_lablemargin_top"
+            android:text="@string/review_address1_label"/>
+
+        <TextView
+            android:id="@+id/reviewAddress1TextView"
+            style="@style/reviewDemographictext."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+        <View
+            style="@style/Review_Screen_View_Style"
+            android:layout_width="match_parent" />
+
+            <TextView
+                android:id="@+id/reviewAddress2label"
+                style="@style/reviewDemographiclabel."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/review_header_lablemargin_top"
+                android:text="@string/review_address2_label"/>
+
+            <TextView
+                android:id="@+id/reviewAddress2TextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/reviewCityLabel"
+                    style="@style/reviewDemographiclabel."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/review_city_label"/>
+
+
+                <TextView
+                    android:id="@+id/reviewStateLabel"
+                    style="@style/reviewDemographiclabel."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/review_state_label"
+                    android:layout_alignBaseline="@+id/reviewCityLabel"
+                    android:layout_alignBottom="@+id/reviewCityLabel"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="35dp" />
+            </RelativeLayout>
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/reviewCityTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="" />
+            <TextView
+                android:id="@+id/reviewStateTextView"
+                style="@style/reviewDemographictext."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_alignBaseline="@+id/reviewCityTextView"
+                android:layout_alignBottom="@+id/reviewCityTextView"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="35dp"/>
+           </RelativeLayout>
+
+            <View
+            style="@style/Review_Screen_View_Style"
+            android:layout_width="match_parent" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/reviewZipcodeLabel"
+                    style="@style/reviewDemographiclabel."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/review_zipcode_label"/>
+
+
+                <TextView
+                    android:id="@+id/reviewCountryLabel"
+                    style="@style/reviewDemographiclabel."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/review_country_label"
+                    android:layout_alignBaseline="@+id/reviewZipcodeLabel"
+                    android:layout_alignBottom="@+id/reviewZipcodeLabel"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="35dp" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/reviewZipcodeTextView"
+                    style="@style/reviewDemographictext."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="" />
+                <TextView
+                    android:id="@+id/reviewCountryTextView"
+                    style="@style/reviewDemographictext."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_alignBaseline="@+id/reviewZipcodeTextView"
+                    android:layout_alignBottom="@+id/reviewZipcodeTextView"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="35dp"/>
+            </RelativeLayout>
+
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+
+
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -120,7 +437,7 @@
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aetna" />
+                android:text="" />
             <View
                 style="@style/Review_Screen_View_Style"
                 android:layout_width="match_parent" />
@@ -130,14 +447,14 @@
                 style="@style/reviewDemographiclabel."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PLAN" />
+                android:text="@string/review_plan_label" />
 
             <TextView
                 android:id="@+id/reviewPlanTextView"
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aetna Select" />
+                android:text="" />
             <View
                 style="@style/Review_Screen_View_Style"
                 android:layout_width="match_parent" />
@@ -155,7 +472,7 @@
                 style="@style/reviewDemographictext."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234567890" />
+                android:text="" />
             <View
                 style="@style/Review_Screen_View_Style"
                 android:layout_width="match_parent" />

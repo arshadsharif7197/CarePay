@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class SignatureActivity extends AppCompatActivity {
@@ -31,6 +34,7 @@ public class SignatureActivity extends AppCompatActivity {
     private SwitchCompat switchButton;
     private Button agreeBtn, clearBtn;
     private EditText legalFirstNameET, legalLastNameET;
+    private TextInputLayout legalFirstName,legalLastName;
     private Map<Integer, List<String>> stringMap = new HashMap<>();
     public static boolean isBackButtonClicked = false;
 
@@ -50,6 +54,7 @@ public class SignatureActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTypefaces();
         onClickListeners();
+        setTextListeners();
     }
 
     private void initViews() {
@@ -71,10 +76,13 @@ public class SignatureActivity extends AppCompatActivity {
         agreeBtn = (Button) findViewById(R.id.agreeBtn);
         signaturePad = (SignaturePad) findViewById(R.id.signature_pad);
         clearBtn = (Button) findViewById(R.id.clearBtn);
+        legalFirstName=(TextInputLayout)findViewById(R.id.legalFirstName);
+        legalLastName=(TextInputLayout)findViewById(R.id.legalLastName);
         legalFirstNameET = (EditText) findViewById(R.id.legalFirstNameET);
         legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
         String headerTitle = getIntent().getExtras().getString("Header_Title");
         titleTv.setText(headerTitle);
+
 
     }
 
@@ -121,6 +129,51 @@ public class SignatureActivity extends AppCompatActivity {
         });
 
 
+    }
+    private void setTextListeners() {
+      legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                String hint = "Legal Representative First Name";
+                String hintCaps = hint.toUpperCase();
+                if (hasFocus) {
+                    // change hint to all caps
+                    legalFirstName.setHint(hintCaps);
+                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(),legalFirstName);
+                } else {
+                    if (StringUtil.isNullOrEmpty(legalFirstNameET.getText().toString())) {
+                        // change hint to lower
+                        legalFirstName.setHint(hint);
+
+                    } else {
+                       legalFirstNameET.setHint(hint);
+                    }
+                }
+            }
+
+        });
+        legalLastNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                String hint = "Legal Representative Last Name";
+                String hintCaps = hint.toUpperCase();
+                if (hasFocus) {
+                    // change hint to all caps
+                    legalLastName.setHint(hintCaps);
+                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(),legalLastName);
+                } else {
+                    if (StringUtil.isNullOrEmpty(legalLastNameET.getText().toString())) {
+                        // change hint to lower
+                        legalLastName.setHint(hint);
+
+                    } else {
+                      legalLastNameET.setHint(hint);
+                    }
+                }
+
+            }
+
+        });
     }
 
     private void clearSignature() {

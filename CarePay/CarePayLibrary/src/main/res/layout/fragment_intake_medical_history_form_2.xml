@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/apt_available_hours_list_padding"
+    android:paddingRight="@dimen/apt_available_hours_list_padding"
+    android:paddingTop="@dimen/margintop">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="@dimen/intake_radio_margin"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/layout_margin">
+
+        <TextView
+            android:id="@+id/yesRadioOptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/intake_radio_caption_margin"
+            android:text="@string/yes"
+            android:textColor="@color/bright_cerulean"
+            android:textSize="@dimen/intake_radio_option_text_size" />
+
+        <TextView
+            android:id="@+id/noRadioOptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no"
+            android:textColor="@color/bright_cerulean"
+            android:textSize="@dimen/intake_radio_option_text_size" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioGroup
+            android:id="@+id/doYouSmokeRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/intake_radio_caption_margin"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/doYouSmokeOptionYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/intake_radio_margin"
+                android:background="@drawable/cell_radio"
+                android:button="@null" />
+
+            <RadioButton
+                android:id="@+id/doYouSmokeOptionNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/intake_radio_margin"
+                android:background="@drawable/cell_radio"
+                android:button="@null" />
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/doYouSmokeRadioGroup"
+            android:background="@color/cadet_gray" />
+
+        <TextView
+            android:id="@+id/doYouSmokeRadioCaptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/intake_radio_caption_margin"
+            android:layout_marginRight="@dimen/intake_radio_caption_margin"
+            android:layout_marginStart="16dp"
+            android:text="@string/do_you_smoke"
+            android:textColor="@color/slateGray"
+            android:textSize="@dimen/intake_radio_caption_text_size" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioGroup
+            android:id="@+id/doYouHaveDiabetesRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/intake_radio_caption_margin"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/doYouHaveDiabetesOptionYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/intake_radio_margin"
+                android:background="@drawable/cell_radio"
+                android:button="@null" />
+
+            <RadioButton
+                android:id="@+id/doYouHaveDiabetesOptionNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/intake_radio_margin"
+                android:background="@drawable/cell_radio"
+                android:button="@null" />
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/doYouHaveDiabetesRadioGroup"
+            android:background="@color/cadet_gray" />
+
+        <TextView
+            android:id="@+id/doYouHaveDiabetesRadioCaptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/intake_radio_caption_margin"
+            android:layout_marginRight="@dimen/intake_radio_caption_margin"
+            android:layout_marginStart="16dp"
+            android:text="@string/do_you_have_diabetes"
+            android:textColor="@color/slateGray"
+            android:textSize="@dimen/intake_radio_caption_text_size" />
+    </RelativeLayout>
+</LinearLayout>

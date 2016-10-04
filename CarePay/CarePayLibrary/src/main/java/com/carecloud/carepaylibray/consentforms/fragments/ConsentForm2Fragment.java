@@ -1,9 +1,11 @@
 package com.carecloud.carepaylibray.consentforms.fragments;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.icu.text.DateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,6 +33,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -50,8 +53,10 @@ public class ConsentForm2Fragment extends Fragment {
     private ScrollView consentFormScrollView;
     private EditText minorFirstNameEditText, minorLastNameEditText;
     private String[] gender = {"Male", "Female"};
+    Date date=new Date();
 
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -263,9 +268,12 @@ public class ConsentForm2Fragment extends Fragment {
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.descriptionTv));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.contentTv));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.content2Tv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.dateTv));
+
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.minor_information));
         setProximaNovaRegularTypeface(getActivity(), minorFirstNameEditText);
         setProximaNovaRegularTypeface(getActivity(), minorLastNameEditText);
+
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.dobET));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.choose_genderTextView));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.minor_dateofbirth));
