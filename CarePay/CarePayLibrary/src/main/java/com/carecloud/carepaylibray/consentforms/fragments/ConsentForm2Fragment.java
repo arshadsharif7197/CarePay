@@ -78,8 +78,6 @@ public class ConsentForm2Fragment extends Fragment {
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
         dobTextView = (TextView) view.findViewById(R.id.dobET);
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
-        String stringDate = DateFormat.getDateInstance().format(date);
-        dateTextView.setText(stringDate);
         setTypefaces(view);
         setTextListeners();
         onClickListners();
@@ -270,9 +268,12 @@ public class ConsentForm2Fragment extends Fragment {
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.descriptionTv));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.contentTv));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.content2Tv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.dateTv));
+
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.minor_information));
         setProximaNovaRegularTypeface(getActivity(), minorFirstNameEditText);
         setProximaNovaRegularTypeface(getActivity(), minorLastNameEditText);
+
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.dobET));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.choose_genderTextView));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.minor_dateofbirth));
