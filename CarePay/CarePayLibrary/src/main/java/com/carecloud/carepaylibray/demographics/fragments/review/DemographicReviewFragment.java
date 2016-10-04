@@ -195,7 +195,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         }
         String dateOfBirth = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
-//            dateOfBirth = DateUtil.convertToRawFromDateOfBirthFormat(dateOfBirth);
+            dateOfBirth = DateUtil.getInstance().convertToRawFromDateOfBirthFormat(dateOfBirth);
             demographicPayloadPersonalDetailsModel.setDateOfBirth(dateOfBirth);
         }
 
@@ -271,7 +271,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             lastNameText.setText(demographicPayloadPersonalDetailsModel.getLastName());
 
             String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
-            dobEditText.setText(DateUtil.getInstance().formatToDateOfBirth(getActivity(), DateUtil.getDateInRawFormatFromString(datetime)));
+            dobEditText.setText(DateUtil.getInstance().setDateRaw(datetime).formatToDateOfBirth());
         }
 
         selectGender.setText(demographicPayloadPersonalDetailsModel.getGender());

@@ -34,13 +34,6 @@ public class SigninSignupActivity extends AppCompatActivity {
                     .replace(R.id.layoutSigninSignup, new SigninFragment(), SigninFragment.class.getSimpleName())
                     .commit();
         }
-
-        // test
-        SimpleDateFormat formatter = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(1979, 6, 20);
-        Date date = calendar.getTime();
-        Log.v(LOG_TAG, "DOB: " + DateUtil.getInstance().formatToDateOfBirth(this, date));
     }
 
     @Override

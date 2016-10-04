@@ -167,9 +167,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     lastNameTextView.setText(demographicPayloadPersonalDetailsModel.getLastName());
                                     String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
                                     if (datetime != null) {
-                                        // TODO: 10/4/2016 convert from raw format
-                                        Date dob = DateUtil.getDateInRawFormatFromString(datetime);
-                                        String dateOfBirthString = DateUtil.getInstance().formatToDateOfBirth(getActivity(), dob);
+                                        String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).formatToDateOfBirth();
                                         dobTExtView.setText(dateOfBirthString);
                                     }
                                     genderTextView.setText(demographicPayloadPersonalDetailsModel.getGender());
