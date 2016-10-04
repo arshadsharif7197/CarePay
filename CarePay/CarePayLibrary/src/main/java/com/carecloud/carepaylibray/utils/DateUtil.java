@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static android.content.Context.CAMERA_SERVICE;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 /**
@@ -69,6 +68,10 @@ public class DateUtil {
         return formatDate;
     }
 
+    /**
+     * Format current date as Month, Day(ordinal) YYYY
+     * @return The formatted date as string
+     */
     public static String formatCurrentDateAsMonthDayYear() {
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
@@ -101,6 +104,12 @@ public class DateUtil {
         return null;
     }
 
+    /**
+     * Format dat as mm/dd/yyyy
+     * @param context The context
+     * @param date The date
+     * @return The formatted date as string
+     */
     public static String formatToDateOfBirth(Context context, Date date) {
         String dobFormat = context.getString(R.string.dateFormatString);
         SimpleDateFormat formatter = new SimpleDateFormat(dobFormat, Locale.getDefault());
@@ -109,6 +118,7 @@ public class DateUtil {
 
 
     public static Date getDateInRawFormatFromString(String datetime) {
+        // TODO: 10/3/2016 make it work for the general format
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault());
         try {
             return formatter.parse(datetime);
