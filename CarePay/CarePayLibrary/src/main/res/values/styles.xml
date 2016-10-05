@@ -580,4 +580,23 @@
         <item name="android:layout_marginBottom">@dimen/consent_view_margin_top_bottom</item>
         <item name="android:background">@color/payne_gray</item>
     </style>
+
+    <!-- Payment -->
+
+    <style name="PaymentMethodLabelStyle">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/radio_button_selector</item>
+        <item name="android:textSize">@dimen/payment_method_layout_lable_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
+    <style name="PaymentButtonStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_button_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center</item>
+    </style>
 </resources>
