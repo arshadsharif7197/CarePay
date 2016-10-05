@@ -235,4 +235,14 @@
     <dimen name="no_apt_message_desc_margin_top">5dp</dimen>
     <dimen name="no_apt_message_desc_margin">32dp</dimen>
 
+    <!--Payment dialogs-->
+    <dimen name="payment_header_height">156dp</dimen>
+    <dimen name="payment_header_margin">17dp</dimen>
+    <dimen name="payment_header_top_margin">16dp</dimen>
+    <dimen name="payment_header_amount_size">60sp</dimen>
+    <dimen name="payment_side_margin">19dp</dimen>
+    <dimen name="payment_button_margin_top">20dp</dimen>
+    <dimen name="largealert_height">176dp</dimen>
+    <dimen name="payment_header_icon_size">77dp</dimen>
+
 </resources>
