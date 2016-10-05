@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -201,6 +202,7 @@ public class SignatureActivity extends AppCompatActivity {
         setGothamRoundedMediumTypeface(this, titleTv);
         setProximaNovaRegularTypeface(this, (TextView) findViewById(R.id.descriptionTv));
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -210,4 +212,12 @@ public class SignatureActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
 }
