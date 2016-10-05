@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -54,7 +55,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class DemographicReviewFragment extends Fragment implements View.OnClickListener {
 
     private Button buttonAddDemographicInfo;
-    private View view;
+    private View   view;
 
     private String[] raceDataArray;
     private String[] ethnicityDataArray;
@@ -62,12 +63,12 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private String[] genderSelectArray;
     int selectedDataArray;
     private TextView raceDataTextView, ethnicityDataTextView, selectGender, selectlangauge;
-    private ProgressBar demographicProgressBar;
-    private DemographicPayloadResponseModel demographicPayloadResponseModel;
+    private ProgressBar                            demographicProgressBar;
+    private DemographicPayloadResponseModel        demographicPayloadResponseModel;
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
-    private DemographicPayloadAddressModel demographicPayloadAddressModel;
+    private DemographicPayloadAddressModel         demographicPayloadAddressModel;
     private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel;
+    private DemographicPayloadDriversLicenseModel  demographicPayloadDriversLicenseModel;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -180,40 +181,40 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
     private void updateModels() {
-        if(demographicPayloadPersonalDetailsModel == null) {
+        if (demographicPayloadPersonalDetailsModel == null) {
             demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
         }
 
         String firstName = firstNameText.getText().toString();
-        if(!StringUtil.isNullOrEmpty(firstName)) {
+        if (!StringUtil.isNullOrEmpty(firstName)) {
             demographicPayloadPersonalDetailsModel.setFirstName(firstName);
         }
         String lastName = lastNameText.getText().toString();
-        if(!StringUtil.isNullOrEmpty(lastName)) {
+        if (!StringUtil.isNullOrEmpty(lastName)) {
             demographicPayloadPersonalDetailsModel.setLastName(lastName);
         }
         String dateOfBirth = dobEditText.getText().toString();
-        if(!StringUtil.isNullOrEmpty(dateOfBirth)) {
+        if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
+//            dateOfBirth = DateUtil.convertToRawFromDateOfBirthFormat(dateOfBirth);
             demographicPayloadPersonalDetailsModel.setDateOfBirth(dateOfBirth);
         }
 
 
-
         // TODO: 10/1/16 for all personal
 
-        if(demographicPayloadAddressModel == null) {
+        if (demographicPayloadAddressModel == null) {
             demographicPayloadAddressModel = new DemographicPayloadAddressModel();
         }
         String address1 = address1EditText.getText().toString();
-        if(!StringUtil.isNullOrEmpty(address1)) {
+        if (!StringUtil.isNullOrEmpty(address1)) {
             demographicPayloadAddressModel.setAddress1(address1);
         }
         String address2 = address2EditText.getText().toString();
-        if(!StringUtil.isNullOrEmpty(address2)) {
+        if (!StringUtil.isNullOrEmpty(address2)) {
             demographicPayloadAddressModel.setAddress1(address2);
         }
         String phoneNumber = phoneNumberEditText.getText().toString();
-        if(!StringUtil.isNullOrEmpty(phoneNumber)) {
+        if (!StringUtil.isNullOrEmpty(phoneNumber)) {
             demographicPayloadAddressModel.setPhone(phoneNumber);
         }
         // TODO: 10/1/16 for all address fields
@@ -234,8 +235,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-               Log.v(LOG_TAG,"" + response.code());
-                if(response.code()==200) {
+                Log.v(LOG_TAG, "" + response.code());
+                if (response.code() == 200) {
                     demographicProgressBar.setVisibility(View.GONE);
 
                     Log.d(LOG_TAG, "demogr post succeeded");
@@ -248,44 +249,37 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.d(LOG_TAG, "demogr post failed", throwable);
                 demographicProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getActivity() ,"demo post failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "demo post failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
-    private  void initViewFromModels(){
 
-        demographicPayloadAddressModel = ((DemographicReviewActivity)getActivity())
+    private void initViewFromModels() {
+        demographicPayloadAddressModel = ((DemographicReviewActivity) getActivity())
                 .getDemographicPayloadAddressModel();
-        demographicPayloadPersonalDetailsModel = ((DemographicReviewActivity)getActivity())
+
+        demographicPayloadPersonalDetailsModel = ((DemographicReviewActivity) getActivity())
                 .getDemographicPayloadPersonalDetailsModel();
-        insurances = ((DemographicReviewActivity)getActivity())
+        insurances = ((DemographicReviewActivity) getActivity())
                 .getInsurances();
-        demographicPayloadDriversLicenseModel= ((DemographicReviewActivity)getActivity())
+        demographicPayloadDriversLicenseModel = ((DemographicReviewActivity) getActivity())
                 .getDemographicPayloadDriversLicenseModel();
 
-
-        if(demographicPayloadAddressModel != null) {
+        if (demographicPayloadAddressModel != null) {
             //Personal Details
             firstNameText.setText(demographicPayloadPersonalDetailsModel.getFirstName());
             lastNameText.setText(demographicPayloadPersonalDetailsModel.getLastName());
 
             String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
-            if(datetime!=null) {
-            String[] date = datetime.split("T");
-
-            String dob = date[0];
-            String time = date[1];
-            dobEditText.setText(dob);
-            }
-
-            selectGender.setText(demographicPayloadPersonalDetailsModel.getGender());
-            selectlangauge.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
-            raceDataTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
-            ethnicityDataTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
-
+            dobEditText.setText(DateUtil.formatToDateOfBirth(getActivity(), DateUtil.getDateInRawFormatFromString(datetime)));
         }
 
-        if(demographicPayloadPersonalDetailsModel != null) {
+        selectGender.setText(demographicPayloadPersonalDetailsModel.getGender());
+        selectlangauge.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
+        raceDataTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
+        ethnicityDataTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
+
+        if (demographicPayloadPersonalDetailsModel != null) {
             //Address
             address1EditText.setText(demographicPayloadAddressModel.getAddress1());
             address2EditText.setText(demographicPayloadAddressModel.getAddress2());
@@ -324,7 +318,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                 }
             });
         }
-}
+    }
 
     private void showAlertDialogWithListview(final String[] raceArray, String title) {
         Log.e("raceArray==", raceArray.toString());
@@ -376,7 +370,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private void openNewFragment() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         Fragment fragment = fm.findFragmentByTag(DemographicReviewFragment.class.getName());
-        if(fragment == null) {
+        if (fragment == null) {
             fragment = ReviewFragment.newInstance();
         }
         FragmentTransaction transaction = fm.beginTransaction();
@@ -386,40 +380,38 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     }
 
-
-
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.detailsReviewHeading));
+                                       (TextView) view.findViewById(R.id.detailsReviewHeading));
 
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel));
+                                       (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demographicsLabel));
+                                       (TextView) view.findViewById(R.id.demographicsLabel));
 
 
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.raceDataTextView));
+                                      (TextView) view.findViewById(R.id.raceDataTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.raceListDataTextView));
+                                       (TextView) view.findViewById(R.id.raceListDataTextView));
 
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.genderTextView));
+                                      (TextView) view.findViewById(R.id.genderTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.chooseGenderTextView));
+                                       (TextView) view.findViewById(R.id.chooseGenderTextView));
 
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.preferredLanguageListTextView));
+                                       (TextView) view.findViewById(R.id.preferredLanguageListTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.preferredLanguageTextView));
+                                      (TextView) view.findViewById(R.id.preferredLanguageTextView));
 
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demographicsAddressAddressSectionLabel));
+                                       (TextView) view.findViewById(R.id.demographicsAddressAddressSectionLabel));
 
 
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.ethnicityDataTextView));
+                                      (TextView) view.findViewById(R.id.ethnicityDataTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.ethnicityListDataTextView));
+                                       (TextView) view.findViewById(R.id.ethnicityListDataTextView));
     }
 }
