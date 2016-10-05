@@ -35,7 +35,6 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -167,7 +166,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     lastNameTextView.setText(demographicPayloadPersonalDetailsModel.getLastName());
                                     String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
                                     if (datetime != null) {
-                                        String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).formatToDateOfBirth();
+                                        String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy();
                                         dobTExtView.setText(dateOfBirthString);
                                     }
                                     genderTextView.setText(demographicPayloadPersonalDetailsModel.getGender());

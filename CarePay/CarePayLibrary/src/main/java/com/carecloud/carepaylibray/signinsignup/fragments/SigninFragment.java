@@ -20,36 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -96,6 +77,28 @@ public class SigninFragment extends Fragment {
 
         isEmptyEmail = true;
         isEmptyPassword = true;
+
+        // test
+//        String rawDate = "2016-10-13T18:16:30-04:00";
+//        DateUtil instance = DateUtil.getInstance().setDateRaw(rawDate);
+//        Log.v(LOG_TAG, "raw: " + rawDate);
+//        Log.v(LOG_TAG, "with instance: " + instance.getDayLiteral());
+//        Log.v(LOG_TAG, "with getInstacne(): " + DateUtil.getInstance().getDayLiteral());
+//        Log.v(LOG_TAG, DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+//        Log.v(LOG_TAG, DateUtil.getInstance().getCrtDateAsMonthLiteralDayOrdinalYear());
+//        Log.v(LOG_TAG, DateUtil.getInstance().getDateAsMMddyyyy());
+//        Log.v(LOG_TAG, DateUtil.getInstance().getTime12Hour()); // done
+//        Log.v(LOG_TAG, DateUtil.getDateRaw(DateUtil.getInstance().getDate()));
+//
+//        DateUtil.getInstance().setToCurrent();
+//        Log.v(LOG_TAG, "raw: " + rawDate);
+//        Log.v(LOG_TAG, "with instance: " + instance.getDayLiteral());
+//        Log.v(LOG_TAG, "with getInstacne(): " + DateUtil.getInstance().getDayLiteral());
+//        Log.v(LOG_TAG, DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+//        Log.v(LOG_TAG, DateUtil.getInstance().getCrtDateAsMonthLiteralDayOrdinalYear());
+//        Log.v(LOG_TAG, DateUtil.getInstance().getDateAsMMddyyyy());
+//        Log.v(LOG_TAG, DateUtil.getInstance().getTime12Hour()); // done
+//        Log.v(LOG_TAG, DateUtil.getDateRaw(DateUtil.getInstance().getDate()));
 
         return view;
     }
