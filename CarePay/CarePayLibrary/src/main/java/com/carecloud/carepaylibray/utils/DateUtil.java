@@ -22,19 +22,19 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class DateUtil {
 
-    private String format = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
     private static DateUtil instance;
-    private        Date     date;
-    private        int      day;
-    private        int      month; // Attention! 0-indexed month
-    private        int      year;
-    private        int      hour12;
-    private        int      minute;
-    private        String   dayLiteral;
-    private        String   monthLiteral;
-    private        String   dayLiteralAbbr;
-    private        String   monthLiteralAbbr;
-    private        String   amPm;
+    private String format = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+    private Date   date;
+    private int    day;
+    private int    month; // Attention! 0-indexed month
+    private int    year;
+    private int    hour12;
+    private int    minute;
+    private String dayLiteral;
+    private String monthLiteral;
+    private String dayLiteralAbbr;
+    private String monthLiteralAbbr;
+    private String amPm;
 
     /**
      * Returns the instance of this singleton
@@ -63,13 +63,14 @@ public class DateUtil {
             Date newDate = formatter.parse(dateString);
             setDate(newDate);
         } catch (ParseException e) {
-//            Log.e(LOG_TAG, DateUtil.class.getSimpleName() + " exception ", e);
+            e.printStackTrace();
         }
         return this;
     }
 
     /**
      * Reset the current reference to the current date
+     *
      * @return The instance
      */
     public DateUtil setToCurrent() {
@@ -84,7 +85,7 @@ public class DateUtil {
      *
      * @param format The new format
      */
-    public static void setFormat(String format) {
+    public void setFormat(String format) {
         if (format != null) {
             instance.format = format;
         }
@@ -106,18 +107,18 @@ public class DateUtil {
      * @return A string contains the formatted time
      */
     public String getTime12Hour() {
-        return String.format(Locale.getDefault(), "%2d:%02d %s", hour12, minute, amPm);
+        return String.format(Locale.getDefault(), "%d:%02d %s", hour12, minute, amPm);
     }
 
     /**
-     * Format current date as Month, Day(ordinal) YYYY ()
+     * Format current date as Month, Day(ordinal) YYYY (eg October 3rd, 2016)
      *
      * @return The formatted date as string
      */
-    public String getCrtDateAsMonthLiteralDayOrdinalYear() {
+    public String getDateAsMonthLiteralDayOrdinalYear() {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         return String.format(Locale.getDefault(), "%s %s%s, %d",
-                             monthLiteral, dayLiteral, ordinal, year);
+                             monthLiteral, day, ordinal, year);
     }
 
     /**
@@ -133,7 +134,7 @@ public class DateUtil {
      * Transform a date formatted as MM-dd-yyyy into the format set in the class
      * (default "yyyy-MM-dd'T'HH:mm:ssZ")
      *
-     * @param dateString dateString
+     * @param date The date to be formatted
      * @return The string
      */
     public static String getDateRaw(Date date) {
@@ -143,6 +144,7 @@ public class DateUtil {
 
     /**
      * Creates a date from a string formatted as MM-dd-yyyy
+     *
      * @param dateString The date (as string)
      */
     public static Date parseFromDateAsMMddyyyy(String dateString) {
@@ -154,6 +156,22 @@ public class DateUtil {
             e.printStackTrace();
         }
         return date;
+    }
+
+    /**
+     * Compare the date with another date
+     *
+     * @param date
+     * @return
+     */
+    public int compareTo(Date date) {
+        if (this.date.before(date)) {
+            return -1;
+        }
+        if (this.date.after(date)) {
+            return 1;
+        }
+        return 0;
     }
 
     public String getFormat() {
@@ -207,6 +225,7 @@ public class DateUtil {
 
     /**
      * Get the date the util works on
+     *
      * @return The date
      */
     public Date getDate() {
@@ -217,13 +236,14 @@ public class DateUtil {
         this.date = new Date();
     }
 
-    private void setDate(Date date) {
+    public void setDate(Date date) {
         this.date = date;
         updateFields();
     }
 
     /**
      * Get the ordinal suffix
+     *
      * @param number the last digit of the day (as char)
      * @return return a ordinal String with day
      */
@@ -243,7 +263,7 @@ public class DateUtil {
                 return "nd";
             }
         } else if (dayLastDigit == 3) {
-            if(lastTwoDigits == 13) {
+            if (lastTwoDigits == 13) {
                 return "th"; // if last two digits are 13, use 'th'
             } else {
                 return "rd"; // else use 'rd'
@@ -270,4 +290,28 @@ public class DateUtil {
         }
     }
 
+    public boolean isToday() {
+        Calendar calendar = Calendar.getInstance();
+        int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int crtMonth = calendar.get(Calendar.MONTH);
+        int crtYear = calendar.get(Calendar.YEAR);
+
+        return crtDay == day && crtMonth == month && crtYear == year;
+    }
+
+    public boolean isYesterdayOrBefore() {
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
+        // check if crt date is after the date in the util and the days differ
+        return compareTo(today) == -1 && crtDay != day;
+    }
+
+    public boolean isTomorrowOrAfter() {
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
+        // check if crt date is before the date in the util and the days differ
+        return compareTo(today) == 1 && crtDay != day;
+    }
 }

@@ -78,28 +78,6 @@ public class SigninFragment extends Fragment {
         isEmptyEmail = true;
         isEmptyPassword = true;
 
-        // test
-//        String rawDate = "2016-10-13T18:16:30-04:00";
-//        DateUtil instance = DateUtil.getInstance().setDateRaw(rawDate);
-//        Log.v(LOG_TAG, "raw: " + rawDate);
-//        Log.v(LOG_TAG, "with instance: " + instance.getDayLiteral());
-//        Log.v(LOG_TAG, "with getInstacne(): " + DateUtil.getInstance().getDayLiteral());
-//        Log.v(LOG_TAG, DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
-//        Log.v(LOG_TAG, DateUtil.getInstance().getCrtDateAsMonthLiteralDayOrdinalYear());
-//        Log.v(LOG_TAG, DateUtil.getInstance().getDateAsMMddyyyy());
-//        Log.v(LOG_TAG, DateUtil.getInstance().getTime12Hour()); // done
-//        Log.v(LOG_TAG, DateUtil.getDateRaw(DateUtil.getInstance().getDate()));
-//
-//        DateUtil.getInstance().setToCurrent();
-//        Log.v(LOG_TAG, "raw: " + rawDate);
-//        Log.v(LOG_TAG, "with instance: " + instance.getDayLiteral());
-//        Log.v(LOG_TAG, "with getInstacne(): " + DateUtil.getInstance().getDayLiteral());
-//        Log.v(LOG_TAG, DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
-//        Log.v(LOG_TAG, DateUtil.getInstance().getCrtDateAsMonthLiteralDayOrdinalYear());
-//        Log.v(LOG_TAG, DateUtil.getInstance().getDateAsMMddyyyy());
-//        Log.v(LOG_TAG, DateUtil.getInstance().getTime12Hour()); // done
-//        Log.v(LOG_TAG, DateUtil.getDateRaw(DateUtil.getInstance().getDate()));
-
         return view;
     }
 

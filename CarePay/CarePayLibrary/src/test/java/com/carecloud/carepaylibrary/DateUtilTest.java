@@ -1,10 +1,13 @@
 package com.carecloud.carepaylibrary;
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,11 +18,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Tests for the DateUtil
  */
 public class DateUtilTest {
-    final String[] weekDays = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-    final String[] weekDaysAbbrs = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-    final String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-    final String[] monthsAbbr = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    final String[] amPm = {"AM", "PM"};
+
+    final private String[] weekDays      = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    final private String[] weekDaysAbbrs = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    final private String[] months        = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    final private String[] monthsAbbr    = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    final private String[] amPm          = {"AM", "PM"};
+    final private String   rawDate       = "2016-10-03T16:30:00-04:00";
+
+    @BeforeClass
+    public static void setFormatforTests() {
+        DateUtil.getInstance().setFormat(CarePayConstants.RAW_DATE_FORMAT_FOR_TESTS);
+    }
 
     @Test
     public void hasDefaultAllFieldsValid() {
@@ -37,10 +47,11 @@ public class DateUtilTest {
     }
 
     @Test
-    public void hasSetAllFieldsValid() {
+    public void hasSetDateAllFieldsValid() {
         // test set date
-        String rawDate = "2016-10-03T18:16:30-04:00";
+
         DateUtil.getInstance().setDateRaw(rawDate);
+
         assertThat("invalid day", DateUtil.getInstance().getDay(), is(3));
         assertThat("invalid month", DateUtil.getInstance().getMonth(), is(Calendar.OCTOBER));
         assertThat("invalid year", DateUtil.getInstance().getYear(), is(2016));
@@ -51,5 +62,102 @@ public class DateUtilTest {
         assertThat("invalid am or pm", DateUtil.getInstance().getAmPm(), is("PM"));
         assertThat("invalid hour", DateUtil.getInstance().getHour12(), is(4));
         assertThat("invalid minute", DateUtil.getInstance().getMinute(), is(30));
+    }
+
+    @Test
+    public void doesResetTheDate() {
+        DateUtil.getInstance().setDateRaw(rawDate); // set to some date
+        DateUtil.getInstance().setToCurrent(); // reset to current
+        // check
+        hasDefaultAllFieldsValid();
+    }
+
+    @Test
+    public void doesFormatDateAsMonthLiteralDayOrdinalYear() {
+        String dateString = DateUtil
+                .getInstance()
+                .setDateRaw(rawDate)
+                .getDateAsMonthLiteralDayOrdinalYear();
+        assertThat("error date as month literal", dateString, is("October 3rd, 2016"));
+    }
+
+    @Test
+    public void doesFormatDateAsDayMonthDayOrdinal() {
+        String dateString = DateUtil
+                .getInstance()
+                .setDateRaw(rawDate)
+                .getDateAsDayMonthDayOrdinal();
+        assertThat("error date as day month...", dateString, is("Monday, October 3rd"));
+
+    }
+
+    @Test
+    public void doesFormatTime12Hour() {
+        String dateString = DateUtil
+                .getInstance()
+                .setDateRaw(rawDate)
+                .getTime12Hour();
+        assertThat("error time 12-hour...", dateString, is("4:30 PM"));
+    }
+
+    @Test
+    public void doesFormatDateAsMMddyyyy() {
+        String dateString = DateUtil
+                .getInstance()
+                .setDateRaw(rawDate)
+                .getDateAsMMddyyyy();
+        assertThat("error format MM-dd-yyyy...", dateString, is("10-03-2016"));
+    }
+
+    @Test
+    public void doesReturnRawDate() {
+        DateUtil.getInstance().setDateRaw(rawDate); // set some date
+        String dateString = DateUtil.getDateRaw(DateUtil.getInstance().getDate()); // generate raw
+        assertThat("error convert back to raw", dateString, is(rawDate));
+    }
+
+    @Test
+    public void doesCompare() {
+        DateUtil.getInstance().setDateRaw(rawDate);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, Calendar.JANUARY); // generate a date before
+        Date dateAhead = calendar.getTime();
+
+        assertThat("error compare (before)", DateUtil.getInstance().compareTo(dateAhead), is(1));
+
+        calendar.set(Calendar.DAY_OF_MONTH, 23);
+        calendar.set(Calendar.MONTH, Calendar.OCTOBER);
+        Date dateAfter = calendar.getTime();
+
+        assertThat("error compare (after)", DateUtil.getInstance().compareTo(dateAfter), is(-1));
+
+    }
+
+    @Test
+    public void isToday() {
+        DateUtil.getInstance().setToCurrent();
+        assertThat("error test today", DateUtil.getInstance().isToday(), is(true));
+    }
+
+    @Test
+    public void isYesterdayOrBefore() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.roll(Calendar.DAY_OF_MONTH, -1); // move the calendar to yesterday
+        Date yesterday = calendar.getTime();
+
+        DateUtil.getInstance().setDate(yesterday);
+        assertThat("error test yesterday", DateUtil.getInstance().isYesterdayOrBefore(), is(true));
+    }
+
+    @Test
+    public void isTomorrowOrLater() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.roll(Calendar.DAY_OF_MONTH, 1); // move the calendar to tomorrow
+        Date yesterday = calendar.getTime();
+
+        DateUtil.getInstance().setDate(yesterday);
+        assertThat("error test tommorrow", DateUtil.getInstance().isTomorrowOrAfter(), is(true));
+
     }
 }

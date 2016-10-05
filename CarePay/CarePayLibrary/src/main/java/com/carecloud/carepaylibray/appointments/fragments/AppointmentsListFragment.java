@@ -361,7 +361,7 @@ public class AppointmentsListFragment extends Fragment {
                         String mAptTime = "";
                         String mAptDate = "";
                         String mAptDateWithoutTime = "";
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
+                        SimpleDateFormat sdf = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
 
                         try {
                             Date aptDate = sdf.parse(appointment.getPayload().getStartTime());
