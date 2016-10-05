@@ -30,7 +30,7 @@
             android:layout_gravity="right"
             android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
             android:gravity="right"
-            android:text="@string/edit_appointment_dialog"
+            android:text="@string/cancel_appointment_dialog"
             android:textColor="@color/white"
             android:textSize="@dimen/textview_textsize"
             android:visibility="gone" />

@@ -262,8 +262,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <!-- Intake -->
     <string name="intakeNextButtonLastText">Finish intake forms</string>
     <string name="intakeNextButtonText">Next Question</string>
-    <string name="edit_appointment_dialog">EDIT APPOINTMENT</string>
-    <string name="dateFormatString">M/dd/yyyy</string>
+    <string name="cancel_appointment_dialog">CANCEL APPOINTMENT</string>
 
     <string name="apt_popup_message_text">Your appointment with %1$s starts in %2$s. Want to Check-in early?</string>
     <string name="dismiss">DISMISS</string>

@@ -20,7 +20,7 @@ import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivit
 import com.carecloud.carepaylibray.appointments.adapters.AllProviderAdapter;
 import com.carecloud.carepaylibray.appointments.adapters.RecentProviderAdapter;
 import com.carecloud.carepaylibray.appointments.dialog.VisitTypeDialog;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -28,8 +28,8 @@ import java.util.ArrayList;
 public class ChooseProviderFragment extends Fragment implements AllProviderAdapter.OnAllListItemClickListener,
         RecentProviderAdapter.OnRecentListItemClickListener, VisitTypeDialog.OnDialogListItemClickListener {
 
-    private ArrayList<AppointmentModel> recentProviderItems = new ArrayList<>();
-    private ArrayList<AppointmentModel> allProviderItems = new ArrayList<>();
+    private ArrayList<Appointment> recentProviderItems = new ArrayList<>();
+    private ArrayList<Appointment> allProviderItems = new ArrayList<>();
 
     @Override
     public void onStart() {
@@ -67,42 +67,42 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
         });
 
         /// DUMMY DATA START
-        AppointmentModel appointmentModel = new AppointmentModel();
-        appointmentModel.setDoctorName("Dr. Ellie Burton");
-        appointmentModel.setAppointmentType("Family Physician");
-        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        appointmentModel.setAptId("1234");
-        appointmentModel.setPlaceName("Mercy Hospital");
-        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
+        Appointment appointmentModel = new Appointment();
+//        appointmentModel.setDoctorName("Dr. Ellie Burton");
+//        appointmentModel.setAppointmentType("Family Physician");
+//        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
+//        appointmentModel.setAptId("1234");
+//        appointmentModel.setPlaceName("Mercy Hospital");
+//        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
         recentProviderItems.add(appointmentModel);
         allProviderItems.add(appointmentModel);
 
-        appointmentModel = new AppointmentModel();
-        appointmentModel.setDoctorName("Dr. Joshua Wellington");
-        appointmentModel.setAppointmentType("Neurologist");
-        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        appointmentModel.setAptId("1234");
-        appointmentModel.setPlaceName("Mercy Hospital");
-        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
+        appointmentModel = new Appointment();
+//        appointmentModel.setDoctorName("Dr. Joshua Wellington");
+//        appointmentModel.setAppointmentType("Neurologist");
+//        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
+//        appointmentModel.setAptId("1234");
+//        appointmentModel.setPlaceName("Mercy Hospital");
+//        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
         recentProviderItems.add(appointmentModel);
         allProviderItems.add(appointmentModel);
 
-        appointmentModel = new AppointmentModel();
-        appointmentModel.setDoctorName("Dr. George Diaz");
-        appointmentModel.setAppointmentType("Urologist");
-        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        appointmentModel.setAptId("1234");
-        appointmentModel.setPlaceName("Mercy Hospital");
-        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
+        appointmentModel = new Appointment();
+//        appointmentModel.setDoctorName("Dr. George Diaz");
+//        appointmentModel.setAppointmentType("Urologist");
+//        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
+//        appointmentModel.setAptId("1234");
+//        appointmentModel.setPlaceName("Mercy Hospital");
+//        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
         allProviderItems.add(appointmentModel);
 
-        appointmentModel = new AppointmentModel();
-        appointmentModel.setDoctorName("Dr. Helena S. Harley");
-        appointmentModel.setAppointmentType("Pediatry");
-        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        appointmentModel.setAptId("1234");
-        appointmentModel.setPlaceName("Mercy Hospital");
-        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
+        appointmentModel = new Appointment();
+//        appointmentModel.setDoctorName("Dr. Helena S. Harley");
+//        appointmentModel.setAppointmentType("Pediatry");
+//        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
+//        appointmentModel.setAptId("1234");
+//        appointmentModel.setPlaceName("Mercy Hospital");
+//        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
         allProviderItems.add(appointmentModel);
         /// DUMMY DATA END
 
@@ -121,25 +121,25 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
         return chooseProviderView;
     }
 
-    private void loadVisitTypeScreen(AppointmentModel model) {
+    private void loadVisitTypeScreen(Appointment model) {
         VisitTypeDialog visitTypeDialog = new VisitTypeDialog(getActivity(), model, this);
         visitTypeDialog.show();
     }
 
     @Override
     public void onAllListItemClickListener(int position) {
-        AppointmentModel model = allProviderItems.get(position);
+        Appointment model = allProviderItems.get(position);
         loadVisitTypeScreen(model);
     }
 
     @Override
     public void onRecentListItemClickListener(int position) {
-        AppointmentModel model = recentProviderItems.get(position);
+        Appointment model = recentProviderItems.get(position);
         loadVisitTypeScreen(model);
     }
 
     @Override
-    public void onDialogListItemClickListener(AppointmentModel model) {
+    public void onDialogListItemClickListener(Appointment model) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         AvailableHoursFragment visitTypeFragment = (AvailableHoursFragment)
                 fragmentManager.findFragmentByTag(AvailableHoursFragment.class.getSimpleName());

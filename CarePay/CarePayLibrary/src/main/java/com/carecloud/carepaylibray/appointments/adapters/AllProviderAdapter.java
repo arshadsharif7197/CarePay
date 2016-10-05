@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentProviderModel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 
@@ -20,9 +20,9 @@ public class AllProviderAdapter extends RecyclerView.Adapter<AllProviderAdapter.
 
     private Context context;
     private OnAllListItemClickListener listener;
-    private ArrayList<AppointmentModel> providerItems;
+    private ArrayList<Appointment> providerItems;
 
-    public AllProviderAdapter(Context context, ArrayList<AppointmentModel> providerItems,
+    public AllProviderAdapter(Context context, ArrayList<Appointment> providerItems,
                               OnAllListItemClickListener listener) {
         this.context = context;
         this.listener = listener;
@@ -38,18 +38,20 @@ public class AllProviderAdapter extends RecyclerView.Adapter<AllProviderAdapter.
 
     @Override
     public void onBindViewHolder(final ProviderViewHolder holder, int position) {
-        final AppointmentModel item = providerItems.get(position);
+        if (providerItems != null && providerItems.get(position).getPayload() != null) {
+            AppointmentProviderModel provider = providerItems.get(position).getPayload().getProvider();
 
-        holder.doctorName.setText(item.getDoctorName());
-        holder.doctorType.setText(item.getAppointmentType());
-        holder.shortName.setText(StringUtil.onShortDrName(item.getDoctorName()));
+            holder.doctorName.setText(provider.getName());
+            holder.doctorType.setText(provider.getSpecialty());
+            holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onAllListItemClickListener(holder.getAdapterPosition());
-            }
-        });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onAllListItemClickListener(holder.getAdapterPosition());
+                }
+            });
+        }
     }
 
     @Override

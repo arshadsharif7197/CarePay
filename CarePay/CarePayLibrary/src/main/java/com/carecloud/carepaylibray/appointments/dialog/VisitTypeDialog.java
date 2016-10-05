@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class VisitTypeDialog extends Dialog {
     String[] items = {"Follow-up", "Annual Physical", "New Patient", "Existing Patient",
             "Back Pain", "Asthma", "Chest Pain"};
 
-    public VisitTypeDialog(Context context, final AppointmentModel model, final OnDialogListItemClickListener listener) {
+    public VisitTypeDialog(Context context, final Appointment model, final OnDialogListItemClickListener listener) {
         super(context);
 
         // This is the layout XML file that describes your Dialog layout
@@ -47,7 +47,7 @@ public class VisitTypeDialog extends Dialog {
         visitTypeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                model.setAppointmentType(adapterView.getItemAtPosition(i).toString());
+//                model.setNewAppointmentVisitType(adapterView.getItemAtPosition(i).toString());
                 listener.onDialogListItemClickListener(model);
                 dismiss();
             }
@@ -55,7 +55,7 @@ public class VisitTypeDialog extends Dialog {
     }
 
     public interface OnDialogListItemClickListener {
-        void onDialogListItemClickListener(AppointmentModel model);
+        void onDialogListItemClickListener(Appointment model);
     }
 
     private class VisitTypeListAdapter extends BaseAdapter {

@@ -10,11 +10,12 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AvailableHoursFragment;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.Date;
 import java.util.List;
 
 public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -22,11 +23,11 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     // The items to display in your RecyclerView
     private List<Object> items;
     private Context context;
-    private AppointmentModel model;
+    private Appointment model;
     private final int SECTION_HEADER = 0;
 
     // Provide a suitable constructor (depends on the kind of data set)
-    public AvailableHoursAdapter(Context context, List<Object> items, AppointmentModel model) {
+    public AvailableHoursAdapter(Context context, List<Object> items, Appointment model) {
         this.context = context;
         this.items = items;
         this.model = model;
@@ -80,9 +81,10 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 if (selectedTimeSlot != null) {
                     String selectedTimeStr = selectedTimeSlot.getText().toString();
-                    model.setAppointmentDate(AvailableHoursFragment.getAppointmentDate()
-                            + " " + selectedTimeStr.replace(" ", ":00 "));
-                    model.setAppointmentTime(selectedTimeStr);
+                    String newAppointmentDate = AvailableHoursFragment.getAppointmentDate() + " " + selectedTimeStr;
+                    newAppointmentDate = SystemUtil.parseDateToString(new Date(newAppointmentDate));
+//                    model.setNewAppointmentDate(newAppointmentDate);
+//                    model.setNewAppointmentTime(selectedTimeStr);
 
                     // Launch dialog of appointment request
                     AppointmentsActivity baseActivity = new AppointmentsActivity();

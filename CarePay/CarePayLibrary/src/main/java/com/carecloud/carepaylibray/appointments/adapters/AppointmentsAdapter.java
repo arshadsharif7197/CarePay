@@ -14,8 +14,10 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadModel;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
@@ -25,7 +27,8 @@ import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by harshal_patil on 9/8/2016.
@@ -33,10 +36,10 @@ import java.util.ArrayList;
 public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
 
     private Context context;
-    private ArrayList<Object> appointmentItems;
+    private List<Object> appointmentItems;
     private AppointmentsListFragment appointmentsListFragment;
 
-    public AppointmentsAdapter(Context context, ArrayList<Object> appointmentItems,
+    public AppointmentsAdapter(Context context, List<Object> appointmentItems,
                                AppointmentsListFragment appointmentsListFragment) {
 
         this.context = context;
@@ -55,21 +58,33 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         final Object object = appointmentItems.get(position);
         View view = appointmentsListFragment.getView();
 
-        if (object.getClass() == AppointmentModel.class) {
+        if (object.getClass() == Appointment.class) {
             holder.appointmentSectionLinearLayout.setVisibility(View.GONE);
             holder.appointmentItemLinearLayout.setVisibility(View.VISIBLE);
 
-            final AppointmentModel item = (AppointmentModel) object;
+            final AppointmentsPayloadModel item = ((Appointment) object).getPayload();
 
-            holder.doctorName.setText(item.getDoctorName());
+            holder.doctorName.setText(item.getProvider().getName());
             SystemUtil.setProximaNovaSemiboldTypeface(context, holder.doctorName);
 
-            holder.doctorType.setText(item.getAppointmentType());
+            holder.doctorType.setText(item.getProvider().getSpecialty());
             SystemUtil.setProximaNovaRegularTypeface(context, holder.doctorType);
 
-            String splitStr[] = item.getAppointmentTime().split(" ");
-            if (splitStr.length > 3) {
-                if(item.isCheckedIn()) {
+            String upcomingStartTime = item.getStartTime();
+            // Upcoming appointment date
+            Date upcomingStartDate = SystemUtil.parseStringToDate(upcomingStartTime);
+            String appointmentDate = SystemUtil.parseDateToString(CarePayConstants.DATE_TIME_FORMAT, upcomingStartDate);
+
+            // Today's appointment date
+            Date todayDate = SystemUtil.parseStringToDate(upcomingStartTime);
+            String todayDateStr = SystemUtil.parseTimeToString(todayDate);
+
+            final boolean isPending = item.getAppointmentStatusModel().getId() == 1;
+            final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
+
+            String splitStr[] = appointmentDate.split(" ");
+            if (splitStr.length > 4) {
+                if(isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                     holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
@@ -85,11 +100,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             } else {
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                if(item.isCheckedIn()) {
+                if(isCheckedIn) {
                     holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
-                    holder.todayTimeTextView.setText(item.getAppointmentTime());
+                    holder.todayTimeTextView.setText(todayDateStr);
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
                 }
             }
@@ -97,42 +112,44 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                /*Restricted the appointment list item click if it is appointment header type.*/
-                if (object.getClass() == AppointmentModel.class) {
-                    AppointmentModel item = (AppointmentModel) object;
-                    AppointmentsActivity.model = item; // appointment clicked item saved so that it can be used on Payment
-                    if (item.isPending()) {
-                        new CheckInOfficeNowAppointmentDialog(context, item).show();
-                    } else if (item.isCheckedIn()) {
-                        new QueueAppointmentDialog(context, item).show();
-                    } else {
-                        new CheckInOfficeNowAppointmentDialog(context, item).show();
+                    // Restricted the appointment list item click if it is appointment header type.
+                    if (object.getClass() == Appointment.class) {
+
+                        // appointment clicked item saved so that it can be used on Payment
+                        Appointment item = ((Appointment) object);
+                        AppointmentsActivity.model = item;
+
+                        if (isPending) {
+                            new CheckInOfficeNowAppointmentDialog(context, item).show();
+                        } else if (isCheckedIn) {
+                            new QueueAppointmentDialog(context, item).show();
+                        } else {
+                            new CheckInOfficeNowAppointmentDialog(context, item).show();
+                        }
                     }
-                }
                 }
             });
 
 //            if (TextUtils.isEmpty(item.getPhoto())) {
-                holder.shortName.setText(StringUtil.onShortDrName(item.getDoctorName()));
+                holder.shortName.setText(StringUtil.onShortDrName(item.getProvider().getName()));
 //            } else {
 //                Picasso.with(context).load(item.getPhoto()).transform(new CircleImageTransform()).resize(58, 58).into(holder.profileImage);
 //                holder.profileImage.setVisibility(View.VISIBLE);
 //            }
 
-            if (item.isPending()) {
+            if (isPending) {
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
             } else {
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
             }
 
-            if (item.isCheckedIn()) {
+            if (isCheckedIn) {
                 holder.appointmentItemLinearLayout.setBackgroundColor(
                         ContextCompat.getColor(context, R.color.checked_in_appointment_bg));
             } else {
                 holder.appointmentItemLinearLayout.setBackgroundColor(
                         ContextCompat.getColor(context, R.color.white));
             }
-
         } else {
             AppointmentSectionHeaderModel item = (AppointmentSectionHeaderModel) object;
             if (position == 0) {
@@ -152,8 +169,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             }
         }
 
-        /*OnScrollListener for RecyclerView to get first visible element in the list
-            and then change the sticky header accordingly*/
+        // OnScrollListener for RecyclerView to get first visible element in the list and then change the sticky header accordingly
         if (view != null) {
             final RecyclerView appointmentRecyclerView = (RecyclerView) view.findViewById(R.id.appointments_recycler_view);
             appointmentRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -163,18 +179,19 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
 
                     Object object = appointmentItems.get(firstVisibleItemPosition);
-                    if (object.getClass() == AppointmentModel.class) {
-                        final AppointmentModel item = (AppointmentModel) object;
+                    if (object.getClass() == Appointment.class) {
+                        Appointment item = (Appointment) object;
                         View view = appointmentsListFragment.getView();
 
                         if (view != null) {
                             CustomProxyNovaSemiBoldLabel appointmentStickyHeaderTitle =
                                     (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.appointments_sticky_header_title);
 
-                            if (item.isCheckedIn()) {
+                            boolean isCheckedIn = item.getPayload().getAppointmentStatusModel().getId() == 2;
+                            if (isCheckedIn) {
                                 appointmentStickyHeaderTitle.setVisibility(View.GONE);
                             } else {
-                                appointmentStickyHeaderTitle.setText(item.getAppointmentHeader());
+                                //appointmentStickyHeaderTitle.setText(item.getAppointmentHeader());
                                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
                             }
                         }

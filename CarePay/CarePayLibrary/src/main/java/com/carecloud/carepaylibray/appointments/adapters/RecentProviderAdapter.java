@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentProviderModel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
@@ -20,9 +21,9 @@ public class RecentProviderAdapter extends RecyclerView.Adapter<RecentProviderAd
 
     private Context context;
     private OnRecentListItemClickListener listener;
-    private ArrayList<AppointmentModel> providerItems;
+    private ArrayList<Appointment> providerItems;
 
-    public RecentProviderAdapter(Context context, ArrayList<AppointmentModel> providerItems,
+    public RecentProviderAdapter(Context context, ArrayList<Appointment> providerItems,
                                  OnRecentListItemClickListener listener) {
         this.context = context;
         this.listener = listener;
@@ -37,19 +38,21 @@ public class RecentProviderAdapter extends RecyclerView.Adapter<RecentProviderAd
 
     @Override
     public void onBindViewHolder(final ProviderViewHolder holder, int position) {
-        final AppointmentModel item = providerItems.get(position);
-        holder.doctorName.setText(item.getDoctorName());
-        holder.doctorType.setText(item.getAppointmentType());
+        if (providerItems != null && providerItems.get(position).getPayload() != null) {
+            AppointmentProviderModel provider = providerItems.get(position).getPayload().getProvider();
+            holder.doctorName.setText(provider.getName());
+            holder.doctorType.setText(provider.getSpecialty());
 
-        SystemUtil.setGothamRoundedMediumTypeface(context, holder.shortName);
-        holder.shortName.setText(StringUtil.onShortDrName(item.getDoctorName()));
+            SystemUtil.setGothamRoundedMediumTypeface(context, holder.shortName);
+            holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onRecentListItemClickListener(holder.getAdapterPosition());
-            }
-        });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onRecentListItemClickListener(holder.getAdapterPosition());
+                }
+            });
+        }
     }
 
     @Override

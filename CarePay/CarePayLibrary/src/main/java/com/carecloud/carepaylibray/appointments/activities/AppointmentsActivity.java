@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
@@ -64,7 +64,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         }
 
         Intent intent = getIntent();
-        AppointmentModel appointmentModel = (AppointmentModel) intent.getSerializableExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+        Appointment appointmentModel = (Appointment) intent.getSerializableExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentModel);
@@ -151,12 +151,12 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
     }
 
 
-    public static AppointmentModel model;
-    public void setAppointmentModel(AppointmentModel model) {
+    public static Appointment model;
+    public void setAppointmentModel(Appointment model) {
         AppointmentsActivity.model = model;
     }
 
-    public AppointmentModel getModel() {
+    public Appointment getModel() {
         return AppointmentsActivity.model;
     }
 }

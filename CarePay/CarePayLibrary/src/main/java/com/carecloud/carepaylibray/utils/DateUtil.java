@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -32,13 +34,13 @@ public class DateUtil {
      * @param dateStr the String to evaluate
      */
     public static String[] onDateParseToString(Context context, String dateStr) {
-        String fmt = "yyyy-MM-dd'T'hh:mm:ssZ";
         String formatDate[] = new String[2];
         try {
             // change date format
-            SimpleDateFormat inDateFormat = new SimpleDateFormat(fmt, Locale.getDefault());
+            SimpleDateFormat inDateFormat = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
             SimpleDateFormat outDateFormat = new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
             Date date = inDateFormat.parse(dateStr);
+
             String newDateStr = formatDate[0] = outDateFormat.format(date);
             char lastDayDigit = formatDate[0].charAt(formatDate[0].length() - 1);
             if(lastDayDigit == '1') {
@@ -52,7 +54,7 @@ public class DateUtil {
             }
 
             // change time format
-            SimpleDateFormat inTimeFormat = new SimpleDateFormat(fmt, Locale.getDefault());
+            SimpleDateFormat inTimeFormat = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
             Date time = inTimeFormat.parse(dateStr);
             SimpleDateFormat outTimeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
             formatDate[1] = outTimeFormat.format(time);

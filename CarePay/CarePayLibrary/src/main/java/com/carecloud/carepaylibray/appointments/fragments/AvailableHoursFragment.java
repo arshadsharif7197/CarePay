@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AvailableHoursAdapter;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -32,7 +32,7 @@ import java.util.Locale;
 
 public class AvailableHoursFragment extends Fragment {
 
-    private AppointmentModel model;
+    private Appointment model;
     private static String appointmentDate;
 
     @Override
@@ -46,7 +46,7 @@ public class AvailableHoursFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            model = (AppointmentModel) bundle.getSerializable("DATA");
+            model = (Appointment) bundle.getSerializable("DATA");
         }
     }
 

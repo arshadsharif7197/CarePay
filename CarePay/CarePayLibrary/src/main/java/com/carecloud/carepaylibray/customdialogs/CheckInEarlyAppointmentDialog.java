@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.customdialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,21 +9,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-
-/**
- * Created by prem_mourya on 9/22/2016.
- */
+import com.carecloud.carepaylibray.appointments.models.Appointment;
 
 public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
-    private AppointmentModel appointmentModel;
-    public CheckInEarlyAppointmentDialog(Context context, AppointmentModel appointmentModel) {
+
+    public CheckInEarlyAppointmentDialog(Context context, Appointment appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
-        this.appointmentModel = appointmentModel;
     }
 
     @Override
@@ -32,12 +28,13 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
         setActionButton();
     }
 
+    @SuppressLint("InflateParams")
     private void setActionButton() {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_checkin_early_appointment, null);
-        Button checkin = (Button) childActionView.findViewById(R.id.checkinEarlyButton);
-        checkin.setOnClickListener(this);
+        Button checkIn = (Button) childActionView.findViewById(R.id.checkinEarlyButton);
+        checkIn.setOnClickListener(this);
 
         mainLayout.addView(childActionView);
     }

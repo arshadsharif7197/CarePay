@@ -10,21 +10,16 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-
-/**
- * Created by prem_mourya on 9/27/2016.
- */
 
 public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
-    private AppointmentModel appointmentModel;
-    public QrCodeViewDialog(Context context,AppointmentModel appointmentModel){
+
+    public QrCodeViewDialog(Context context) {
         super(context);
         this.context = context;
-        this.appointmentModel = appointmentModel;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,18 +30,18 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-        getWindow().setAttributes((WindowManager.LayoutParams) params);
+        getWindow().setAttributes(params);
         (findViewById(R.id.qrcodeCancelButton)).setOnClickListener(this);
         (findViewById(R.id.dialogQRHeaderTextView)).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-            int viewId = view.getId();
-            if(viewId == R.id.dialogQRHeaderTextView){
-                cancel();
-            }else if(viewId == R.id.qrcodeCancelButton){
-                cancel();
-            }
+        int viewId = view.getId();
+        if (viewId == R.id.dialogQRHeaderTextView) {
+            cancel();
+        } else if (viewId == R.id.qrcodeCancelButton) {
+            cancel();
+        }
     }
 }
