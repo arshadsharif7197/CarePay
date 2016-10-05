@@ -2,8 +2,12 @@ package com.carecloud.carepaylibray.customcomponents;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.carecloud.carepaylibrary.R;
 
 
 /**
@@ -30,7 +34,16 @@ public class CustomGothamRoundedBookLabel extends TextView {
     }
 
     private void init() {
+        ViewGroup.LayoutParams layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.setLayoutParams(layoutParams);
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/gotham_rounded_book.otf");
-        setTypeface(tf);
+        this.setTypeface(tf);
+        //this.setGravity(TEXT_ALIGNMENT_CENTER);
+        if (Build.VERSION.SDK_INT < 23) {
+            this.setTextAppearance(context, R.style.DefaultTextAppearance);
+        } else{
+            this.setTextAppearance(R.style.DefaultTextAppearance);
+        }
+        this.setClickable(false);
     }
 }

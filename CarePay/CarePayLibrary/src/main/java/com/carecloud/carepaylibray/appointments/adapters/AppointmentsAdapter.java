@@ -203,6 +203,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             super(itemView);
             doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
             doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
+            doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
 
             shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
             cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
@@ -211,7 +212,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
             appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
             appointmentSectionHeaderTitle = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointments_section_header_title);
-
+            appointmentSectionHeaderTitle.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.light_gray));
             // Today
             todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
             todayTimeTextView = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.todayTimeTextView);
