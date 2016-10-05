@@ -580,4 +580,20 @@
         <item name="android:layout_marginBottom">@dimen/consent_view_margin_top_bottom</item>
         <item name="android:background">@color/payne_gray</item>
     </style>
+    <style name="DefaultTextAppearanceProxyNovaSemiBoldLabel">
+        <item name="android:textColor">@color/bright_cerulean</item>
+    </style>
+    <style name="DefaultTextAppearanceProxyNovaRegularLabel">
+        <item name="android:textColor">@color/lightSlateGray</item>
+    </style>
+    <style name="DefaultTextAppearanceGothamRoundedBoldLabel">
+        <item name="android:textColor">@color/bermudagrey</item>
+    </style>
+    <style name="DefaultTextAppearance">
+        <item name="android:textColor">@color/charcoal</item>
+    </style>
+    <style name="DefaultTextAppearanceGothamRoundedMediumLabel">
+        <item name="android:textColor">@color/lightSlateGray</item>
+    </style>
+
 </resources>
