@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -71,13 +72,22 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             SystemUtil.setProximaNovaRegularTypeface(context, holder.doctorType);
 
             String upcomingStartTime = item.getStartTime();
-            // Upcoming appointment date
-            Date upcomingStartDate = SystemUtil.parseStringToDate(upcomingStartTime);
-            String appointmentDate = SystemUtil.parseDateToString(CarePayConstants.DATE_TIME_FORMAT, upcomingStartDate);
+            // Date of Upcoming appointment
+            Date upcomingStartDate = DateUtil.parseStringToDate(upcomingStartTime);
+            String appointmentDate = DateUtil.parseDateToString(CarePayConstants.DATE_TIME_FORMAT, upcomingStartDate);
 
-            // Today's appointment date
-            Date todayDate = SystemUtil.parseStringToDate(upcomingStartTime);
-            String todayDateStr = SystemUtil.parseTimeToString(todayDate);
+            // Date of Today's appointment
+            Date todayDate = DateUtil.parseStringToDate(upcomingStartTime);
+            String todayDateStr = DateUtil.parseTimeToString(todayDate);
+
+            // Today
+            String todayStr = DateUtil.parseDateToString(new Date());
+            Date todayWithoutTime = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, todayStr);
+            Date appointmentWithoutTime = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, upcomingStartTime);
+
+            if (!appointmentWithoutTime.after(todayWithoutTime)) {
+                appointmentDate = todayDateStr;
+            }
 
             final boolean isPending = item.getAppointmentStatusModel().getId() == 1;
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
@@ -220,6 +230,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             super(itemView);
             doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
             doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
+            doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
 
             shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
             cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
@@ -228,7 +239,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
             appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
             appointmentSectionHeaderTitle = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointments_section_header_title);
-
+            appointmentSectionHeaderTitle.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.light_gray));
             // Today
             todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
             todayTimeTextView = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.todayTimeTextView);

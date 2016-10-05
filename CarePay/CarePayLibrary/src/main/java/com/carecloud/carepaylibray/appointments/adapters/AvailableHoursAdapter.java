@@ -13,6 +13,7 @@ import com.carecloud.carepaylibray.appointments.fragments.AvailableHoursFragment
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursModel;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Date;
@@ -82,7 +83,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if (selectedTimeSlot != null) {
                     String selectedTimeStr = selectedTimeSlot.getText().toString();
                     String newAppointmentDate = AvailableHoursFragment.getAppointmentDate() + " " + selectedTimeStr;
-                    newAppointmentDate = SystemUtil.parseDateToString(new Date(newAppointmentDate));
+                    newAppointmentDate = DateUtil.parseDateToString(new Date(newAppointmentDate));
 //                    model.setNewAppointmentDate(newAppointmentDate);
 //                    model.setNewAppointmentTime(selectedTimeStr);
 

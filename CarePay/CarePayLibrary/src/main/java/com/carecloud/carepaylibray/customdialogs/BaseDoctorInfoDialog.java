@@ -59,7 +59,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
-        String[] fmtDateAndTime = DateUtil.onDateParseToString(context, payload.getStartTime());
+        String[] fmtDateAndTime = DateUtil.parseStringToDateTime(payload.getStartTime());
         dateTextView.setText(fmtDateAndTime[0]);
         timeTextView.setText(fmtDateAndTime[1]);
 

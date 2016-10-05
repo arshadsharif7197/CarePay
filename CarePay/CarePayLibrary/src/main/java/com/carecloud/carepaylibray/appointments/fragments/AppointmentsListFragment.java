@@ -28,7 +28,7 @@ import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,11 +88,11 @@ public class AppointmentsListFragment extends Fragment {
             try {
                 // Get appointment date/time in required format
                 String appointmentTimeStr = appointmentsItems.get(0).getPayload().getStartTime();
-                Date appointmentTime = SystemUtil.parseStringToTime(appointmentTimeStr);
+                Date appointmentTime = DateUtil.parseStringToDate(appointmentTimeStr);
 
                 // Get current date/time in required format
-                String currentTime = SystemUtil.parseTimeToString(new Date());
-                Date currentDate = SystemUtil.parseStringToTime(currentTime);
+                String currentTime = DateUtil.parseDateToString(new Date());
+                Date currentDate = DateUtil.parseStringToDate(currentTime);
 
                 if (appointmentTime != null && currentDate != null) {
                     long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
@@ -275,7 +275,7 @@ public class AppointmentsListFragment extends Fragment {
 
                     // Sort appointment list as per Today and Upcoming
                     appointmentListWithHeader = getAppointmentListWithHeader();
-                    if (appointmentListWithHeader != null) {
+                    if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
                         if (bundle != null) {
                             Appointment appointmentModel = (Appointment)
                                     bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
@@ -285,14 +285,16 @@ public class AppointmentsListFragment extends Fragment {
                                 appointmentListWithHeader.add(0, appointmentModel);
                             }
                         }
+
+                        appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
+                        appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        appointmentRecyclerView.setAdapter(appointmentsAdapter);
+                    } else {
+                        showNoAppointmentScreen();
                     }
-                    appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
-                    appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    appointmentRecyclerView.setAdapter(appointmentsAdapter);
                 } else {
                     // Show no appointment screen
-                    noAppointmentView.setVisibility(View.VISIBLE);
-                    appointmentRefresh.setVisibility(View.GONE);
+                    showNoAppointmentScreen();
                 }
 
                 checkUpcomingAppointmentForReminder();
@@ -303,6 +305,11 @@ public class AppointmentsListFragment extends Fragment {
 
             }
         });
+    }
+
+    private void showNoAppointmentScreen() {
+        noAppointmentView.setVisibility(View.VISIBLE);
+        appointmentRefresh.setVisibility(View.GONE);
     }
 
     private void onRefresh() {
@@ -334,8 +341,8 @@ public class AppointmentsListFragment extends Fragment {
                     String dateO1 = o1.getPayload().getStartTime();
                     String dateO2 = o2.getPayload().getStartTime();
 
-                    Date date1 = SystemUtil.parseStringToDate(dateO1);
-                    Date date2 = SystemUtil.parseStringToDate(dateO2);
+                    Date date1 = DateUtil.parseStringToDate(dateO1);
+                    Date date2 = DateUtil.parseStringToDate(dateO2);
 
                     long time1 = 0, time2 = 0;
                     if (date1 != null) {
@@ -370,20 +377,22 @@ public class AppointmentsListFragment extends Fragment {
                     appointmentListWithHeader.add(appointmentModel);
                 } else {
                     // Current date
-                    String currentDate = SystemUtil.parseDateToString(CarePayConstants.DATE_FORMAT, new Date());
-                    Date currentConvertedDate = SystemUtil.parseDateToString(CarePayConstants.DATE_FORMAT, currentDate);
+                    String currentDate = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, new Date());
+                    Date currentConvertedDate = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, currentDate);
 
                     // Appointment start date
                     String appointmentTime = appointmentModel.getPayload().getStartTime();
-                    Date appointmentDate = SystemUtil.parseStringToDate(appointmentTime);
-                    String appointmentDateWithoutTime = SystemUtil.parseDateToString(CarePayConstants.DATE_FORMAT, appointmentDate);
-                    Date convertedAppointmentDate = SystemUtil.parseDateToString(CarePayConstants.DATE_FORMAT, appointmentDateWithoutTime);
+                    Date appointmentDate = DateUtil.parseStringToDate(appointmentTime);
+
+                    String appointmentDateWithoutTime = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, appointmentDate);
+                    Date convertedAppointmentDate = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, appointmentDateWithoutTime);
 
                     if (convertedAppointmentDate.after(currentConvertedDate) &&
                                 !appointmentDateWithoutTime.equalsIgnoreCase(currentDate)) {
                         previousDay = CarePayConstants.DAY_UPCOMING;
                     } else if (convertedAppointmentDate.before(currentConvertedDate)) {
                         // Do nothing
+                        continue;
                     } else {
                         previousDay = CarePayConstants.DAY_TODAY;
                     }

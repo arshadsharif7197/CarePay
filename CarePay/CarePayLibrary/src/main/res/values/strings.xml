@@ -298,5 +298,18 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="no_apt_title">No appointments yet</string>
     <string name="no_apt_desc">We\'ll list all your appointments here, so you can quickly check important details and even make early-check-ins in some cases.</string>
 
+    <!--<months string date util>-->
+    <string name="January">January</string>
+    <string name="February">February</string>
+    <string name="March">March</string>
+    <string name="April">April</string>
+    <string name="June">June</string>
+    <string name="July">July</string>
+    <string name="August">August</string>
+    <string name="September">September</string>
+    <string name="October">October</string>
+    <string name="November">November</string>
+    <string name="December">December</string>
+
 
 </resources>

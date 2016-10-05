@@ -56,22 +56,21 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
             appointmentsDrawerUserIdTextView.setText("");
         }
 
+        Intent intent = getIntent();
+        Appointment appointmentModel = (Appointment) intent.getSerializableExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+
         FragmentManager fm = getSupportFragmentManager();
         AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment)
                 fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
         if (appointmentsListFragment == null) {
             appointmentsListFragment = new AppointmentsListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentModel);
+            appointmentsListFragment.setArguments(bundle);
         }
 
-        Intent intent = getIntent();
-        Appointment appointmentModel = (Appointment) intent.getSerializableExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentModel);
-        appointmentsListFragment.setArguments(bundle);
         fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
-                AppointmentsListFragment.class.getSimpleName()).commit();
-        Log.d("Cognito Token", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+                                      AppointmentsListFragment.class.getSimpleName()).commit();
     }
 
     @Override
