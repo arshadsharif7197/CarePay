@@ -35,7 +35,6 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -167,9 +166,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     lastNameTextView.setText(demographicPayloadPersonalDetailsModel.getLastName());
                                     String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
                                     if (datetime != null) {
-                                        // TODO: 10/4/2016 convert from raw format
-                                        Date dob = DateUtil.getDateInRawFormatFromString(datetime);
-                                        String dateOfBirthString = DateUtil.formatToDateOfBirth(getActivity(), dob);
+                                        String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy();
                                         dobTExtView.setText(dateOfBirthString);
                                     }
                                     genderTextView.setText(demographicPayloadPersonalDetailsModel.getGender());
@@ -179,7 +176,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                 }
 
                             } else {
-                                Log.v(LOG_TAG, "demographic personal detail  model is null ");
+                                Log.v(LOG_TAG, "demographic personal detail  model is null");
                             }
 
                             insurances = payloadinfomodel.getInsurances();
