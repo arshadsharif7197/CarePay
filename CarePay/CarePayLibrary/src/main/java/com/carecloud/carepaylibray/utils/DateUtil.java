@@ -4,8 +4,11 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.google.api.client.util.DateTime;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,8 +44,9 @@ public class DateUtil {
      *
      * @param dateStr the String to evaluate
      */
-    public static String[] parseStringToDateTime(Context context, String dateStr) {
-        String fmt = "yyyy-MM-dd'T'hh:mm:ssZ";
+    public static String[] parseStringToDateTime(String dateStr) {
+        String fmt = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+
         String formatDate[] = new String[2];
         try {
             // change date format
@@ -64,13 +68,12 @@ public class DateUtil {
         return formatDate;
     }
 
-    /** .
-     *
-     * @return returns formatted date
+    /**
+     * Format current date as Month, Day(ordinal) YYYY
+     * @return The formatted date as string
      */
     public static String formatCurrentDateAsMonthDayYear() {
-        // Create a calendar object that will convert the date
-        // and time value in milliseconds to date.
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
@@ -80,8 +83,7 @@ public class DateUtil {
         String dayString = String.valueOf(day);
         String ordinal = getDayOrdinal(dayString.charAt(dayString.length() - 1));
 
-        return String.format(Locale.getDefault(), "%s, %s%s %d",
-                monthString, dayString, ordinal, year);
+        return String.format(Locale.getDefault(), "%s, %s%s %d", monthString, dayString, ordinal, year);
     }
 
     private static String getMonthAsString(int month) {
@@ -100,5 +102,43 @@ public class DateUtil {
             case Calendar.DECEMBER: return "December";
         }
         return null;
+    }
+
+    /**
+     * Format dat as mm/dd/yyyy
+     * @param context The context
+     * @param date The date
+     * @return The formatted date as string
+     */
+    public static String formatToDateOfBirth(Context context, Date date) {
+//        String dobFormat = context.getString(R.string.dateFormatString);
+        String dobFormat = "MM-dd-yyyy";
+        SimpleDateFormat formatter = new SimpleDateFormat(dobFormat, Locale.getDefault());
+        return formatter.format(date);
+    }
+
+
+    public static Date getDateInRawFormatFromString(String datetime) {
+        // TODO: 10/3/2016 make it work for the general format
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        try {
+            return formatter.parse(datetime);
+        } catch (ParseException e) {
+            Log.e(LOG_TAG, "Date util parse error", e);
+        }
+        return null;
+    }
+
+    public static String convertToRawFromDateOfBirthFormat(String dateOfBirth) {
+        SimpleDateFormat in = new SimpleDateFormat("yyyy/mm/dd", Locale.getDefault());
+        Date date = null;
+        try {
+            date = in.parse(dateOfBirth);
+        } catch (ParseException e) {
+            Log.e(LOG_TAG, "convertToRawFromDateOfBirthFormat() ", e);
+        }
+        SimpleDateFormat out = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
+
+        return out.format(date);
     }
 }
