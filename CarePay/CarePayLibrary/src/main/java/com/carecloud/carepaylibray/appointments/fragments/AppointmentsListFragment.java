@@ -57,7 +57,6 @@ public class AppointmentsListFragment extends Fragment {
     private AppointmentsListFragment appointmentsListFragment;
     private Bundle bundle;
 
-    public static boolean showNewAddedAppointment;
     private CustomPopupNotification popup;
 
     @Override
@@ -68,10 +67,6 @@ public class AppointmentsListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (showNewAddedAppointment) {
-            showNewAddedAppointment();
-        }
     }
 
     /**
@@ -152,71 +147,6 @@ public class AppointmentsListFragment extends Fragment {
             //TODO: Go for next flow
         }
     };
-
-    private void showNewAddedAppointment() {
-        final Appointment model = ((AppointmentsActivity) getActivity()).getModel();
-
-//        if (appointmentsItems != null && appointmentsAdapter != null) {
-//            AppointmentModel newAppointmentEntry = new AppointmentModel();
-//            newAppointmentEntry.setAptId(model.getAppointmentId());
-//            newAppointmentEntry.setDoctorName(model.getDoctorName());
-//            newAppointmentEntry.setAppointmentType(model.getAppointmentType());
-//
-//            // Get current time/date in required format
-//            String currentDate = SystemUtil.parseDateToString(new Date());
-//            // Get appointment time/date in required format
-//            String appointmentDate = model.getAppointmentDate();
-//
-//            Date currentConvertedDate = SystemUtil.parseStringToDate(currentDate);
-//            Date convertedAptDate = SystemUtil.parseStringToDate(appointmentDate);
-//
-//            if (currentConvertedDate != null && convertedAptDate != null) {
-//                if (convertedAptDate.after(currentConvertedDate) &&
-//                        !appointmentDate.equalsIgnoreCase(currentDate)) {
-//
-//                    newAppointmentEntry.setAppointmentDay(CarePayConstants.DAY_UPCOMING);
-//
-//                    // Set appointment upcoming time
-//                    String mUpcomingDate = SystemUtil.parseDateToString(CarePayConstants.DATE_TIME_FORMAT, convertedAptDate);
-//                    newAppointmentEntry.setAppointmentTime(mUpcomingDate);
-//
-//                } else if (convertedAptDate.before(currentConvertedDate)) {
-//                    //Do nothing as the appointment was in past.
-//                    return;
-//                } else {
-//                    newAppointmentEntry.setAppointmentDay(CarePayConstants.DAY_TODAY);
-//
-//                    // Set appointment today time
-//                    String parsedDate = SystemUtil.parseDateToString(CarePayConstants.TIME_FORMAT_AM_PM, convertedAptDate);
-//                    newAppointmentEntry.setAppointmentTime(parsedDate);
-//                }
-//            }
-//
-//            newAppointmentEntry.setAppointmentDate(model.getAppointmentDate());
-//            newAppointmentEntry.setPlaceName(model.getPlaceName());
-//            newAppointmentEntry.setPlaceAddress(model.getPlaceAddress());
-//            newAppointmentEntry.setPending(true);
-//            appointmentsItems.add(newAppointmentEntry);
-//
-//            appointmentListWithHeader = getAppointmentListWithHeader();
-//
-//            if (appointmentListWithHeader != null) {
-//                appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
-//                appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//                appointmentRecyclerView.setAdapter(appointmentsAdapter);
-//            }
-//
-//            if (appointmentsAdapter.getItemCount() == 0) {
-//                noAppointmentView.setVisibility(View.VISIBLE);
-//                appointmentRefresh.setVisibility(View.GONE);
-//            } else {
-//                noAppointmentView.setVisibility(View.GONE);
-//                appointmentRefresh.setVisibility(View.VISIBLE);
-//            }
-//
-//        }
-        AppointmentsListFragment.showNewAddedAppointment = false;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -404,10 +334,14 @@ public class AppointmentsListFragment extends Fragment {
                         previousDay = CarePayConstants.DAY_TODAY;
                     }
 
-                    AppointmentSectionHeaderModel appointmentSectionHeaderModel
-                            = new AppointmentSectionHeaderModel();
-                    appointmentSectionHeaderModel.setAppointmentHeader(previousDay);
-                    appointmentListWithHeader.add(appointmentSectionHeaderModel);
+                    // If appointment is checked-in, don't add header
+                    if (appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
+                        AppointmentSectionHeaderModel appointmentSectionHeaderModel
+                                = new AppointmentSectionHeaderModel();
+                        appointmentSectionHeaderModel.setAppointmentHeader(previousDay);
+                        appointmentListWithHeader.add(appointmentSectionHeaderModel);
+                    }
+
                     appointmentListWithHeader.add(appointmentModel);
                 }
             }

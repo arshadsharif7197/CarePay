@@ -85,7 +85,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
      * call check-in at office api.
      */
     private void onRequestAppointment() {
-        AppointmentsListFragment.showNewAddedAppointment = true;
         ((AddAppointmentActivity) context).finish();
     }
 }
