@@ -76,12 +76,12 @@ public class AppointmentsListFragment extends Fragment {
 
     /**
      * This function will check today's appointment
-     * and notify if its within 2 hours
+     * and notify if its within 2 hours.
      */
     @SuppressLint("StringFormatMatches")
     private void checkUpcomingAppointmentForReminder() {
-        if (appointmentsItems != null && !appointmentsItems.isEmpty() &&
-                !appointmentsItems.get(0).getPayload().getId().equalsIgnoreCase(
+        if (appointmentsItems != null && !appointmentsItems.isEmpty()
+                && !appointmentsItems.get(0).getPayload().getId().equalsIgnoreCase(
                         ApplicationPreferences.Instance.readStringFromSharedPref(
                                 CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID))) {
 
@@ -98,7 +98,8 @@ public class AppointmentsListFragment extends Fragment {
                     long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
                     long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
 
-                    if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES && differenceInMinutes > 0) {
+                    if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES
+                            && differenceInMinutes > 0) {
 
                         String appointmentInDuration;
                         if (differenceInMinutes == CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES) {
@@ -112,8 +113,8 @@ public class AppointmentsListFragment extends Fragment {
                         }
 
                         String doctorName = appointmentsItems.get(0).getPayload().getProvider().getName();
-                        popup = new CustomPopupNotification(getActivity(), getView(), getString(R.string.checkin_early),
-                                getString(R.string.dismiss),
+                        popup = new CustomPopupNotification(getActivity(), getView(),
+                                getString(R.string.checkin_early), getString(R.string.dismiss),
                                 getString(R.string.apt_popup_message_text, doctorName, appointmentInDuration),
                                 positiveActionListener, negativeActionListener);
                         popup.showPopWindow();
@@ -132,7 +133,8 @@ public class AppointmentsListFragment extends Fragment {
             popup.dismiss();
             popup = null;
 
-            ApplicationPreferences.Instance.writeStringToSharedPref(CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
+            ApplicationPreferences.Instance.writeStringToSharedPref(
+                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
         }
     };
@@ -143,7 +145,8 @@ public class AppointmentsListFragment extends Fragment {
             popup.dismiss();
             popup = null;
 
-            ApplicationPreferences.Instance.writeStringToSharedPref(CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
+            ApplicationPreferences.Instance.writeStringToSharedPref(
+                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
 
             //TODO: Go for next flow
@@ -286,7 +289,8 @@ public class AppointmentsListFragment extends Fragment {
                             }
                         }
 
-                        appointmentsAdapter = new AppointmentsAdapter(getActivity(), appointmentListWithHeader, appointmentsListFragment);
+                        appointmentsAdapter = new AppointmentsAdapter(getActivity(),
+                                appointmentListWithHeader, appointmentsListFragment);
                         appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         appointmentRecyclerView.setAdapter(appointmentsAdapter);
                     } else {
@@ -320,7 +324,8 @@ public class AppointmentsListFragment extends Fragment {
                 appointmentRefresh.setRefreshing(false);
 
                 if (appointmentsResultModel != (new AppointmentsResultModel())) {
-                    AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
+                    AppointmentSectionHeaderModel appointmentSectionHeaderModel
+                            = new AppointmentSectionHeaderModel();
                     appointmentListWithHeader.remove(appointmentSectionHeaderModel);
 //                    appointmentListWithHeader.remove(appointmentModel);
                     appointmentListWithHeader.clear();
@@ -384,8 +389,10 @@ public class AppointmentsListFragment extends Fragment {
                     String appointmentTime = appointmentModel.getPayload().getStartTime();
                     Date appointmentDate = DateUtil.parseStringToDate(appointmentTime);
 
-                    String appointmentDateWithoutTime = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, appointmentDate);
-                    Date convertedAppointmentDate = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, appointmentDateWithoutTime);
+                    String appointmentDateWithoutTime = DateUtil.parseDateToString(
+                            CarePayConstants.DATE_FORMAT, appointmentDate);
+                    Date convertedAppointmentDate = DateUtil.parseDateToString(
+                            CarePayConstants.DATE_FORMAT, appointmentDateWithoutTime);
 
                     if (convertedAppointmentDate.after(currentConvertedDate) &&
                                 !appointmentDateWithoutTime.equalsIgnoreCase(currentDate)) {
@@ -397,7 +404,8 @@ public class AppointmentsListFragment extends Fragment {
                         previousDay = CarePayConstants.DAY_TODAY;
                     }
 
-                    AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
+                    AppointmentSectionHeaderModel appointmentSectionHeaderModel
+                            = new AppointmentSectionHeaderModel();
                     appointmentSectionHeaderModel.setAppointmentHeader(previousDay);
                     appointmentListWithHeader.add(appointmentSectionHeaderModel);
                     appointmentListWithHeader.add(appointmentModel);
