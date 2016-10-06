@@ -40,6 +40,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     private List<Object> appointmentItems;
     private AppointmentsListFragment appointmentsListFragment;
 
+    /**
+     * Constructor.
+     * @param context: context
+     * @param appointmentItems: appointment list
+     * @param appointmentsListFragment: Screen instance
+     */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
                                AppointmentsListFragment appointmentsListFragment) {
 
@@ -92,7 +98,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final boolean isPending = item.getAppointmentStatusModel().getId() == 1;
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
 
-            String splitStr[] = appointmentDate.split(" ");
+            String[] splitStr = appointmentDate.split(" ");
             if (splitStr.length > 4) {
                 if(isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
@@ -122,7 +128,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View appointmentListItem) {
                     // Restricted the appointment list item click if it is appointment header type.
                     if (object.getClass() == Appointment.class) {
 
@@ -187,8 +193,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointmentRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    LinearLayoutManager mLayoutManager = (LinearLayoutManager) appointmentRecyclerView.getLayoutManager();
-                    int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+                    LinearLayoutManager recycleViewManager = (LinearLayoutManager) appointmentRecyclerView.getLayoutManager();
+                    int firstVisibleItemPosition = recycleViewManager.findFirstVisibleItemPosition();
 
                     if (appointmentItems.size() > firstVisibleItemPosition) {
                         Object object = appointmentItems.get(firstVisibleItemPosition);
@@ -230,8 +236,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 CarePayConstants.DATE_FORMAT, appointmentDateWithoutTime);
 
         String previousDay = "";
-        if (convertedAppointmentDate.after(currentConvertedDate) &&
-                !appointmentDateWithoutTime.equalsIgnoreCase(currentDate)) {
+        if (convertedAppointmentDate.after(currentConvertedDate)
+                && !appointmentDateWithoutTime.equalsIgnoreCase(currentDate)) {
             previousDay = CarePayConstants.DAY_UPCOMING;
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
             // Do nothing
@@ -249,13 +255,19 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
         private CustomProxyNovaLightLabel upcomingDateTextView;
-        private CustomGothamRoundedMediumLabel appointmentSectionHeaderTitle, shortName;
+        private CustomGothamRoundedMediumLabel appointmentSectionHeaderTitle;
+        private CustomGothamRoundedMediumLabel shortName;
         private CustomGothamRoundedBoldLabel todayTimeTextView;
         private CustomProxyNovaSemiBoldLabel doctorName;
-        private CustomProxyNovaRegularLabel upcomingMonthTextView, upcomingTimeTextView, doctorType;
-        private ImageView cellAvatar, profileImage;
-        private LinearLayout appointmentSectionLinearLayout, appointmentItemLinearLayout,
-                todayTimeLinearLayout, upcomingDateLinearLayout;
+        private CustomProxyNovaRegularLabel upcomingMonthTextView;
+        private CustomProxyNovaRegularLabel upcomingTimeTextView;
+        private CustomProxyNovaRegularLabel doctorType;
+        private ImageView cellAvatar;
+        private ImageView profileImage;
+        private LinearLayout appointmentSectionLinearLayout;
+        private LinearLayout appointmentItemLinearLayout;
+        private LinearLayout todayTimeLinearLayout;
+        private LinearLayout upcomingDateLinearLayout;
 
         AppointmentViewHolder(View itemView) {
             super(itemView);
