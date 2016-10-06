@@ -67,6 +67,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.doctorType.setText(item.getAppointmentType());
             SystemUtil.setProximaNovaRegularTypeface(context, holder.doctorType);
 
+            // TODO: 10/5/2016 refactor
             String splitStr[] = item.getAppointmentTime().split(" ");
             if (splitStr.length > 3) {
                 if(item.isCheckedIn()) {
@@ -77,8 +78,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
                     holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
-                    holder.upcomingDateTextView.setText(splitStr[0]);
                     SystemUtil.setProximaNovaLightTypeface(context, holder.upcomingDateTextView);
+
+                    holder.upcomingDateTextView.setText(splitStr[0]);
                     holder.upcomingMonthTextView.setText(splitStr[2].toUpperCase() + " " + splitStr[1]);
                     holder.upcomingTimeTextView.setText(splitStr[3] + " " + splitStr[4]);
                 }
@@ -203,6 +205,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             super(itemView);
             doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
             doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
+            doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
 
             shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
             cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
@@ -211,7 +214,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
             appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
             appointmentSectionHeaderTitle = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointments_section_header_title);
-
+            appointmentSectionHeaderTitle.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.light_gray));
             // Today
             todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
             todayTimeTextView = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.todayTimeTextView);

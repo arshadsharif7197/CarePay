@@ -10,24 +10,24 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 
 /**
- * Created by harshal_patil on 22/09/16.
+ * Created by harshal_patil on 10/3/2016.
  */
-public class CustomProxyNovaSemiBoldLabel extends TextView {
-    private Context context;
-    public CustomProxyNovaSemiBoldLabel(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+public class CustomProxyNovaLightLabel extends TextView {
+
+    Context context;
+    public CustomProxyNovaLightLabel(Context context) {
+        super(context);
         this.context=context;
-        init();
     }
 
-    public CustomProxyNovaSemiBoldLabel(Context context, AttributeSet attrs) {
+    public CustomProxyNovaLightLabel(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context=context;
         init();
     }
 
-    public CustomProxyNovaSemiBoldLabel(Context context) {
-        super(context);
+    public CustomProxyNovaLightLabel(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         this.context=context;
         init();
     }
@@ -35,13 +35,13 @@ public class CustomProxyNovaSemiBoldLabel extends TextView {
     private void init() {
         ViewGroup.LayoutParams layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(layoutParams);
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/proximanova_semibold.otf");
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/proximanova_light.otf");
         this.setTypeface(tf);
-        //this.setGravity(TEXT_ALIGNMENT_CENTER);
+       // this.setGravity(TEXT_ALIGNMENT_CENTER);
         if (Build.VERSION.SDK_INT < 23) {
-            this.setTextAppearance(context, R.style.DefaultTextAppearanceProxyNovaSemiBoldLabel);
+            this.setTextAppearance(context, R.style.DefaultTextAppearance);
         } else{
-            this.setTextAppearance(R.style.DefaultTextAppearanceProxyNovaSemiBoldLabel);
+            this.setTextAppearance(R.style.DefaultTextAppearance);
         }
         this.setClickable(false);
     }
