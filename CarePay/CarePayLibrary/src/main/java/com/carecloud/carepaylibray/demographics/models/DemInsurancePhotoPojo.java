@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Rahul on 9/30/16.
  */
 
-public class InsurancePhotoModel {
+public class DemInsurancePhotoPojo {
     @SerializedName("insurance_photo")
     @Expose
     private String insurancePhoto;

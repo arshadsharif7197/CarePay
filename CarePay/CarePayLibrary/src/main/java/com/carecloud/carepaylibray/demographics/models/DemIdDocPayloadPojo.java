@@ -11,7 +11,7 @@ import java.util.List;
 public class DemIdDocPayloadPojo {
 
     @SerializedName("identity_document_photos") @Expose
-    private List<DemographicsIdPhotoModel> idDocPhothos;
+    private List<DemIdDocPhotoPojo> idDocPhothos;
 
     @SerializedName("identity_document_number") @Expose
     private String idNumber;
@@ -22,11 +22,11 @@ public class DemIdDocPayloadPojo {
     @SerializedName("identity_document_country") @Expose
     private String idCountry;
 
-    public List<DemographicsIdPhotoModel> getIdDocPhothos() {
+    public List<DemIdDocPhotoPojo> getIdDocPhothos() {
         return idDocPhothos;
     }
 
-    public void setIdDocPhothos(List<DemographicsIdPhotoModel> idDocPhothos) {
+    public void setIdDocPhothos(List<DemIdDocPhotoPojo> idDocPhothos) {
         this.idDocPhothos = idDocPhothos;
     }
 

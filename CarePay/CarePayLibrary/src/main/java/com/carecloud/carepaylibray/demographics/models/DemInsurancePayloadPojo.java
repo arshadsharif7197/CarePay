@@ -13,7 +13,7 @@ import java.util.List;
 public class DemInsurancePayloadPojo extends BasePersonModel {
 
     @SerializedName("insurance_photos") @Expose
-    private List<InsurancePhotoModel> insurancePhotos = new ArrayList<>();
+    private List<DemInsurancePhotoPojo> insurancePhotos = new ArrayList<>();
 
     @SerializedName("insurance_provider") @Expose
     private  String insuranceProvider;
@@ -31,11 +31,11 @@ public class DemInsurancePayloadPojo extends BasePersonModel {
         return insuranceProvider;
     }
 
-    public List<InsurancePhotoModel> getInsurancePhotos() {
+    public List<DemInsurancePhotoPojo> getInsurancePhotos() {
         return insurancePhotos;
     }
 
-    public void setInsurancePhotos(List<InsurancePhotoModel> insurancePhotos) {
+    public void setInsurancePhotos(List<DemInsurancePhotoPojo> insurancePhotos) {
         this.insurancePhotos = insurancePhotos;
     }
 
