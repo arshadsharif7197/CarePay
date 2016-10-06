@@ -21,7 +21,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicUpdateModel;
+import com.carecloud.carepaylibray.demographics.models.DemUpdatePojo;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 //        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
 //        demographicPayloadModel.setInsurances(insurances);
 
-        List<DemographicUpdateModel> updates = new ArrayList<>();
+        List<DemUpdatePojo> updates = new ArrayList<>();
         demographicPayloadModel.setUpdates(updates);
 
         /*DemographicModel demographicPostModel = new DemographicModel();

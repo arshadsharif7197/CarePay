@@ -28,7 +28,7 @@ public class DemographicPayloadInfoPayloadModel {
 
     @SerializedName("updates")
     @Expose
-    private List<DemographicUpdateModel> updates = new ArrayList<>();
+    private List<DemUpdatePojo> updates = new ArrayList<>();
 
     /**
      *
@@ -107,7 +107,7 @@ public class DemographicPayloadInfoPayloadModel {
      * @return
      * The updates
      */
-    public List<DemographicUpdateModel> getUpdates() {
+    public List<DemUpdatePojo> getUpdates() {
         return updates;
     }
 
@@ -116,7 +116,7 @@ public class DemographicPayloadInfoPayloadModel {
      * @param updates
      * The updates
      */
-    public void setUpdates(List<DemographicUpdateModel> updates) {
+    public void setUpdates(List<DemUpdatePojo> updates) {
         this.updates = updates;
     }
 }
