@@ -1,0 +1,53 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.carecloud.carepaylibray.payment.fragments.ChooseCreditCardFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar_responsibility" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar_layout"
+            android:padding="@dimen/payment_method_parent_layout_padding">
+
+            <RadioGroup
+                android:id="@+id/chooseCreditCardRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/addNewCardButton"
+                style="@style/PaymentButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+                android:background="@drawable/button_blue_border"
+                android:text="@string/add_new_credit_card"
+                android:textColor="@color/bright_cerulean" />
+
+            <Button
+                android:id="@+id/nextButton"
+                style="@style/PaymentButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/addNewCardButton"
+                android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+                android:background="@drawable/button_selector"
+                android:text="@string/next" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>
