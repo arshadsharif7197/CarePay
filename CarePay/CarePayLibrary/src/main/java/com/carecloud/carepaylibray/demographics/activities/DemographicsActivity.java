@@ -12,30 +12,24 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
-import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -45,10 +39,6 @@ import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -65,7 +55,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private DemographicModel modelGet = null;
     private DemographicPayloadAddressModel         addressModel;
     private DemographicPayloadPersonalDetailsModel detailsModel;
-    private DemographicPayloadIdDocumentModel      modelDriversLicense;
+    private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
     private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
     
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
@@ -202,12 +192,12 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         this.detailsModel = detailsModel;
     }
     
-    public DemographicPayloadIdDocumentModel getModelDriversLicense() {
-        return modelDriversLicense;
+    public DemographicPayloadIdDocumentModel getDemPayloadIdDocPojo() {
+        return demPayloadIdDocPojo;
     }
     
-    public void setModelDriversLicense(DemographicPayloadIdDocumentModel modelDriversLicense) {
-        this.modelDriversLicense = modelDriversLicense;
+    public void setDemPayloadIdDocPojo(DemographicPayloadIdDocumentModel demPayloadIdDocPojo) {
+        this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
     
     public void setModel(DemographicModel modelGet) {

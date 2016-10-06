@@ -17,14 +17,12 @@ import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicUpdateModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,9 +149,9 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadModel.setPersonalDetails(detailsModel);
         }
 
-        DemographicPayloadIdDocumentModel licenseModel = ((DemographicsActivity)getActivity()).getModelDriversLicense();
-        if(licenseModel != null) {
-            demographicPayloadModel.setDriversLicense(licenseModel);
+        DemographicPayloadIdDocumentModel idDocPojo = ((DemographicsActivity)getActivity()).getDemPayloadIdDocPojo();
+        if(idDocPojo != null) {
+            demographicPayloadModel.setDriversLicense(idDocPojo);
         }
 
         List<DemographicPayloadInsuranceModel> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();

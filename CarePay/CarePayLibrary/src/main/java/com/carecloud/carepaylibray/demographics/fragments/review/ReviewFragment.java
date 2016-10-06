@@ -23,7 +23,6 @@ import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
@@ -68,7 +67,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private TextView companyTextView;
     private TextView planTextView;
     private TextView policyNumberTextView;
-    private TextView middleNameTextView;
     private TextView address1TextView;
     private TextView address2TextView;
     private TextView cityTextView;
@@ -85,7 +83,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private DemographicPayloadAddressModel         demographicPayloadAddressModel;
     private DemographicPayloadInsuranceModel       demographicPayloadInsuranceModel;
     private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadIdDocumentModel      demographicPayloadDriversLicenseModel;
+    private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
 
 
     public static ReviewFragment newInstance() {
@@ -211,9 +209,9 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                             }
 
                             if (payloadinfomodel.getIdDocument() != null) {
-                                demographicPayloadDriversLicenseModel = payloadinfomodel.getIdDocument();
+                                demPayloadIdDocPojo = payloadinfomodel.getIdDocument();
                                 driverLicenseTextView.setText(
-                                        demographicPayloadDriversLicenseModel.getIdNumber());
+                                        demPayloadIdDocPojo.getIdNumber());
                             } else {
                                 Log.v(LOG_TAG, "demographic Driver License model is null");
                             }
@@ -288,8 +286,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             ((DemographicReviewActivity) getActivity())
                     .setInsurances(insurances);
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadDriversLicenseModel(
-                            demographicPayloadDriversLicenseModel);
+                    .setDemPayloadIdDocPojo(
+                            demPayloadIdDocPojo);
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment fragment = DemographicReviewFragment.newInstance();

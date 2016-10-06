@@ -28,7 +28,6 @@ import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
@@ -65,7 +64,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     int selectedDataArray;
     private TextView raceDataTextView, ethnicityDataTextView, selectGender, selectlangauge;
     private ProgressBar                            demographicProgressBar;
-    private DemographicPayloadResponseModel        demographicPayloadResponseModel;
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
     private DemographicPayloadAddressModel         demographicPayloadAddressModel;
     private List<DemographicPayloadInsuranceModel> insurances;
@@ -79,7 +77,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private EditText dobEditText;
     private EditText stateEditText;
 
-    private EditText driverLicense;
     private EditText cityEditText;
     private EditText firstNameText;
     private EditText middleNameText;
@@ -265,7 +262,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         insurances = ((DemographicReviewActivity) getActivity())
                 .getInsurances();
         demographicPayloadDriversLicenseModel = ((DemographicReviewActivity) getActivity())
-                .getDemographicPayloadDriversLicenseModel();
+                .getDemPayloadIdDocPojo();
 
         if (demographicPayloadAddressModel != null) {
             //Personal Details

@@ -19,16 +19,10 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 
-import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -56,7 +50,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private boolean                                isThirdCardAdded;
     private Button                                 addCardButton;
     private Button                                 nextButton;
-    private DemographicPayloadIdDocumentModel      modelDriversLicense;
+    private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
     private List<DemographicPayloadInsuranceModel> insuranceModelList;
     private DemographicPayloadInfoPayloadModel     payload;
     private DemographicPayloadInsuranceModel       insuranceModel1;
@@ -91,13 +85,13 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private void getTheModels() {
         payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
-            modelDriversLicense = payload.getIdDocument();
+            demPayloadIdDocPojo = payload.getIdDocument();
             insuranceModelList = payload.getInsurances();
         }
     }
 
-    public DemographicPayloadIdDocumentModel getModelDriversLicense() {
-        return modelDriversLicense;
+    public DemographicPayloadIdDocumentModel getDemPayloadIdDocPojo() {
+        return demPayloadIdDocPojo;
     }
 
     public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
@@ -113,7 +107,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((DemographicsActivity) getActivity()).setModelDriversLicense(modelDriversLicense);
+                ((DemographicsActivity) getActivity()).setDemPayloadIdDocPojo(demPayloadIdDocPojo);
                 DemographicPayloadInsuranceModel model = new DemographicPayloadInsuranceModel();
                 // clear the list
                 insuranceModelList.clear();
@@ -176,13 +170,13 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         fm = getChildFragmentManager();
         // add license fragment
         licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
-        if (modelDriversLicense == null) {
-            modelDriversLicense = new DemographicPayloadIdDocumentModel();
+        if (demPayloadIdDocPojo == null) {
+            demPayloadIdDocPojo = new DemographicPayloadIdDocumentModel();
         }
         if (licenseFragment == null) {
             licenseFragment = new LicenseScannerFragment();
             licenseFragment.setButtonsStatusCallback(this);
-            licenseFragment.setModel(modelDriversLicense); // set the model
+            licenseFragment.setModel(demPayloadIdDocPojo); // set the model
         }
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, licenseFragment, "license").commit();
 

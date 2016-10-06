@@ -5,9 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
@@ -18,9 +16,9 @@ import java.util.List;
 public class DemographicReviewActivity extends AppCompatActivity {
 
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
-    private DemographicPayloadAddressModel demographicPayloadAddressModel;
+    private DemographicPayloadAddressModel         demographicPayloadAddressModel;
     private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadIdDocumentModel demographicPayloadDriversLicenseModel;
+    private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,11 +59,11 @@ public class DemographicReviewActivity extends AppCompatActivity {
         return insurances;
     }
 
-    public DemographicPayloadIdDocumentModel getDemographicPayloadDriversLicenseModel() {
-        return demographicPayloadDriversLicenseModel;
+    public DemographicPayloadIdDocumentModel getDemPayloadIdDocPojo() {
+        return demPayloadIdDocPojo;
     }
 
-    public void setDemographicPayloadDriversLicenseModel(DemographicPayloadIdDocumentModel demographicPayloadDriversLicenseModel) {
-        this.demographicPayloadDriversLicenseModel = demographicPayloadDriversLicenseModel;
+    public void setDemPayloadIdDocPojo(DemographicPayloadIdDocumentModel demPayloadIdDocPojo) {
+        this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
 }
