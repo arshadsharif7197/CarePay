@@ -9,20 +9,6 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemPersDetailsPayloadPojo extends BasePersonModel {
 
-    @SerializedName("first_name") @Expose
-    private String firstName;
-
-    @SerializedName("middle_name") @Expose
-    private String middleName;
-
-    @SerializedName("last_name") @Expose
-    private String lastName;
-
-    @SerializedName("date_of_birth") @Expose
-    private String dateOfBirth;
-
-    @SerializedName("gender") @Expose
-    private String gender;
 
     @SerializedName("primary_race") @Expose
     private String primaryRace;
@@ -92,55 +78,5 @@ public class DemPersDetailsPayloadPojo extends BasePersonModel {
      */
     public void setPreferredLanguage(String preferredLanguage) {
         this.preferredLanguage = preferredLanguage;
-    }
-
-    @Override
-    public String getFirstName() {
-        return firstName;
-    }
-
-    @Override
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    @Override
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    @Override
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    @Override
-    public String getLastName() {
-        return lastName;
-    }
-
-    @Override
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    @Override
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    @Override
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    @Override
-    public String getGender() {
-        return gender;
-    }
-
-    @Override
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 }
