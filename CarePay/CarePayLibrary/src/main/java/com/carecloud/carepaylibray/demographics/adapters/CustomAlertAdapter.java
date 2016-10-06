@@ -24,8 +24,6 @@ public class CustomAlertAdapter extends BaseAdapter {
         this.listarray = list;
     }
 
-
-
     @Override
     public int getCount() {
 
