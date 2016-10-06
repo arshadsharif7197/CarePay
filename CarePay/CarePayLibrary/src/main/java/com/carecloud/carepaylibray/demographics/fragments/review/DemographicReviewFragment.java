@@ -29,8 +29,8 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActi
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -62,11 +62,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private String[] genderSelectArray;
     int selectedDataArray;
     private TextView raceDataTextView, ethnicityDataTextView, selectGender, selectlangauge;
-    private ProgressBar                            demographicProgressBar;
-    private DemPersDetailsPayloadPojo              demPersDetailsPayloadPojo;
-    private DemAddressPayloadPojo                  demAddressPayloadPojo;
-    private List<DemographicPayloadInsuranceModel> insurances;
-    private DemIdDocPayloadPojo                    demographicPayloadDriversLicenseModel;
+    private ProgressBar                   demographicProgressBar;
+    private DemPersDetailsPayloadPojo     demPersDetailsPayloadPojo;
+    private DemAddressPayloadPojo         demAddressPayloadPojo;
+    private List<DemInsurancePayloadPojo> insurances;
+    private DemIdDocPayloadPojo           demographicPayloadDriversLicenseModel;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;

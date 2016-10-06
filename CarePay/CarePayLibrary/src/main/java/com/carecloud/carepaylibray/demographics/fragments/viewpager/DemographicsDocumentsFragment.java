@@ -20,8 +20,8 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScanne
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 
 import java.util.List;
 
@@ -44,18 +44,18 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private FrameLayout                            insCardContainer3;
     private LicenseScannerFragment                 licenseFragment;
     private InsuranceScannerFragment               insuranceFragment;
-    private InsuranceScannerFragment               extraInsuranceFrag1;
-    private InsuranceScannerFragment               extraInsuranceFrag2;
-    private boolean                                isSecondCardAdded;
-    private boolean                                isThirdCardAdded;
-    private Button                                 addCardButton;
-    private Button                                 nextButton;
-    private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
-    private List<DemographicPayloadInsuranceModel> insuranceModelList;
-    private DemographicPayloadInfoPayloadModel     payload;
-    private DemographicPayloadInsuranceModel       insuranceModel1;
-    private DemographicPayloadInsuranceModel       insuranceModel2;
-    private DemographicPayloadInsuranceModel       insuranceModel3;
+    private InsuranceScannerFragment           extraInsuranceFrag1;
+    private InsuranceScannerFragment           extraInsuranceFrag2;
+    private boolean                            isSecondCardAdded;
+    private boolean                            isThirdCardAdded;
+    private Button                             addCardButton;
+    private Button                             nextButton;
+    private DemIdDocPayloadPojo                demPayloadIdDocPojo;
+    private List<DemInsurancePayloadPojo>      insuranceModelList;
+    private DemographicPayloadInfoPayloadModel payload;
+    private DemInsurancePayloadPojo            insuranceModel1;
+    private DemInsurancePayloadPojo            insuranceModel2;
+    private DemInsurancePayloadPojo            insuranceModel3;
 
     @Nullable
     @Override
@@ -94,7 +94,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         return demPayloadIdDocPojo;
     }
 
-    public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
+    public List<DemInsurancePayloadPojo> getInsuranceModelList() {
         return insuranceModelList;
     }
 
@@ -108,7 +108,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             @Override
             public void onClick(View view) {
                 ((DemographicsActivity) getActivity()).setDemPayloadIdDocPojo(demPayloadIdDocPojo);
-                DemographicPayloadInsuranceModel model = new DemographicPayloadInsuranceModel();
+                DemInsurancePayloadPojo model = new DemInsurancePayloadPojo();
                 // clear the list
                 insuranceModelList.clear();
                 // add non trivial insurance models
@@ -146,7 +146,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         });
     }
 
-    private boolean isInsuaranceNonTrivial(DemographicPayloadInsuranceModel insModel) {
+    private boolean isInsuaranceNonTrivial(DemInsurancePayloadPojo insModel) {
         return insModel.getInsurancePlan() != null &&
                 insModel.getInsuranceProvider() != null &&
                 insModel.getInsuranceMemberId() != null;
@@ -183,7 +183,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // add insurance fragments
         insuranceModel1 = getInsuranceModelAtIndex(0);
         if (insuranceModel1 == null) {
-            insuranceModel1 = new DemographicPayloadInsuranceModel();
+            insuranceModel1 = new DemInsurancePayloadPojo();
         }
         insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
         if (insuranceFragment == null) {
@@ -197,7 +197,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         insuranceModel2 = getInsuranceModelAtIndex(1);
         if (insuranceModel2 == null) {
-            insuranceModel2 = new DemographicPayloadInsuranceModel();
+            insuranceModel2 = new DemInsurancePayloadPojo();
         } else {
             isSecondCardAdded = true;
         }
@@ -213,7 +213,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         insuranceModel3 = getInsuranceModelAtIndex(2);
         if (insuranceModel3 == null) {
-            insuranceModel3 = new DemographicPayloadInsuranceModel();
+            insuranceModel3 = new DemInsurancePayloadPojo();
         } else {
             isThirdCardAdded = true;
         }
@@ -228,8 +228,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 .commit();
     }
 
-    private DemographicPayloadInsuranceModel getInsuranceModelAtIndex(int i) {
-        DemographicPayloadInsuranceModel model = null;
+    private DemInsurancePayloadPojo getInsuranceModelAtIndex(int i) {
+        DemInsurancePayloadPojo model = null;
         if (insuranceModelList != null) {
             int numOfInsurances = insuranceModelList.size();
             if (numOfInsurances > i) { // check if the list has an item at index i

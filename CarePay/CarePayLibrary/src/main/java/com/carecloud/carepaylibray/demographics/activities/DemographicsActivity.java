@@ -23,11 +23,11 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.keyboard.Constants;
@@ -56,7 +56,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private DemAddressPayloadPojo     addressModel;
     private DemPersDetailsPayloadPojo detailsModel;
     private DemIdDocPayloadPojo       demPayloadIdDocPojo;
-    private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
+    private List<DemInsurancePayloadPojo> insuranceModelList = new ArrayList<>();
     
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
         DemographicPayloadInfoPayloadModel infoModel = null;
@@ -204,11 +204,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         this.modelGet = modelGet;
     }
     
-    public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
+    public List<DemInsurancePayloadPojo> getInsuranceModelList() {
         return insuranceModelList;
     }
     
-    public void setInsuranceModelList(List<DemographicPayloadInsuranceModel> insuranceModelList) {
+    public void setInsuranceModelList(List<DemInsurancePayloadPojo> insuranceModelList) {
         this.insuranceModelList = insuranceModelList;
     }
     

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemographicPayloadInsuranceModel extends BasePersonModel {
+public class DemInsurancePayloadPojo extends BasePersonModel {
 
     @SerializedName("insurance_photos") @Expose
     private List<InsurancePhotoModel> insurancePhotos = new ArrayList<>();

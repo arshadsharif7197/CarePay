@@ -22,13 +22,13 @@ import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -75,15 +75,15 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     private ProgressBar demographicProgressBar;
 
-    private DemographicPayloadResponseModel        demographicPayloadResponseModel;
-    private DemographicPayloadInfoModel            demographics;
-    private DemographicPayloadInfoMetaDataModel    metadamodel;
-    private DemographicPayloadInfoPayloadModel     payloadinfomodel;
-    private DemPersDetailsPayloadPojo              demPersDetailsPayloadPojo;
-    private DemAddressPayloadPojo                  demAddressPayloadPojo;
-    private DemographicPayloadInsuranceModel       demographicPayloadInsuranceModel;
-    private List<DemographicPayloadInsuranceModel> insurances;
-    private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
+    private DemographicPayloadResponseModel     demographicPayloadResponseModel;
+    private DemographicPayloadInfoModel         demographics;
+    private DemographicPayloadInfoMetaDataModel metadamodel;
+    private DemographicPayloadInfoPayloadModel  payloadinfomodel;
+    private DemPersDetailsPayloadPojo           demPersDetailsPayloadPojo;
+    private DemAddressPayloadPojo               demAddressPayloadPojo;
+    private DemInsurancePayloadPojo             demInsurancePayloadPojo;
+    private List<DemInsurancePayloadPojo>       insurances;
+    private DemIdDocPayloadPojo                 demPayloadIdDocPojo;
 
 
     public static ReviewFragment newInstance() {
@@ -180,11 +180,11 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
                             insurances = payloadinfomodel.getInsurances();
                             if (insurances != null && insurances.size() > 0) {
-                                demographicPayloadInsuranceModel = insurances.get(0);
-                                if (demographicPayloadInsuranceModel != null) {
-                                    planTextView.setText(demographicPayloadInsuranceModel.getInsurancePlan());
-                                    companyTextView.setText(demographicPayloadInsuranceModel.getInsuranceProvider());
-                                    policyNumberTextView.setText(demographicPayloadInsuranceModel.getInsuranceMemberId());
+                                demInsurancePayloadPojo = insurances.get(0);
+                                if (demInsurancePayloadPojo != null) {
+                                    planTextView.setText(demInsurancePayloadPojo.getInsurancePlan());
+                                    companyTextView.setText(demInsurancePayloadPojo.getInsuranceProvider());
+                                    policyNumberTextView.setText(demInsurancePayloadPojo.getInsuranceMemberId());
                                 }
                             } else {
                                 Log.v(LOG_TAG, "demographic insurance model is null");

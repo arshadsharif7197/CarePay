@@ -16,9 +16,9 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicUpdateModel;
@@ -105,20 +105,20 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 //        demographicPayloadDriversLicenseModel.setLicenseNumber("ER-4T3");
 //        demographicPayloadDriversLicenseModel.setLicenseState("OH");
 //
-//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel = new DemographicPayloadInsuranceModel();
+//        DemInsurancePayloadPojo demographicPayloadInsuranceModel = new DemInsurancePayloadPojo();
 //        demographicPayloadInsuranceModel.setInsuranceMemberId("2513515464");
 //        demographicPayloadInsuranceModel.setInsurancePlan("Aetna");
 //        demographicPayloadInsuranceModel.setInsuranceProvider("Aetna Select");
-//        List<DemographicPayloadInsuranceModel> insurances = new ArrayList<>();
+//        List<DemInsurancePayloadPojo> insurances = new ArrayList<>();
 //        insurances.add(demographicPayloadInsuranceModel);
 //        // second card
-//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel2 = new DemographicPayloadInsuranceModel();
+//        DemInsurancePayloadPojo demographicPayloadInsuranceModel2 = new DemInsurancePayloadPojo();
 //        demographicPayloadInsuranceModel2.setInsuranceMemberId("999999999999");
 //        demographicPayloadInsuranceModel2.setInsurancePlan("Elect Choice EPO");
 //        demographicPayloadInsuranceModel2.setInsuranceProvider("BlueCross Blue Shield");
 //        insurances.add(demographicPayloadInsuranceModel2);
 //        // third card
-//        DemographicPayloadInsuranceModel demographicPayloadInsuranceModel3 = new DemographicPayloadInsuranceModel();
+//        DemInsurancePayloadPojo demographicPayloadInsuranceModel3 = new DemInsurancePayloadPojo();
 //        demographicPayloadInsuranceModel3.setInsuranceMemberId("4444444444");
 //        demographicPayloadInsuranceModel3.setInsurancePlan("Aetna Value Network HMO");
 //        demographicPayloadInsuranceModel3.setInsuranceProvider("GHI");
@@ -154,7 +154,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadModel.setDriversLicense(idDocPojo);
         }
 
-        List<DemographicPayloadInsuranceModel> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
+        List<DemInsurancePayloadPojo> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
         if(insuranceModelList != null) {
             demographicPayloadModel.setInsurances(insuranceModelList);
         }

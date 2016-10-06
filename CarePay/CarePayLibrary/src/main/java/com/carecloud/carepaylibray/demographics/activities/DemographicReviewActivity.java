@@ -8,17 +8,17 @@ import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 
 import java.util.List;
 
 
 public class DemographicReviewActivity extends AppCompatActivity {
 
-    private DemPersDetailsPayloadPojo              demPersDetailsPayloadPojo;
-    private DemAddressPayloadPojo                  demAddressPayloadPojo;
-    private List<DemographicPayloadInsuranceModel> insurances;
-    private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
+    private DemPersDetailsPayloadPojo     demPersDetailsPayloadPojo;
+    private DemAddressPayloadPojo         demAddressPayloadPojo;
+    private List<DemInsurancePayloadPojo> insurances;
+    private DemIdDocPayloadPojo           demPayloadIdDocPojo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,11 +51,11 @@ public class DemographicReviewActivity extends AppCompatActivity {
     }
 
 
-    public void setInsurances(List<DemographicPayloadInsuranceModel> insurances) {
+    public void setInsurances(List<DemInsurancePayloadPojo> insurances) {
         this.insurances = insurances;
     }
 
-    public List<DemographicPayloadInsuranceModel> getInsurances() {
+    public List<DemInsurancePayloadPojo> getInsurances() {
         return insurances;
     }
 

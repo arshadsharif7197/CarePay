@@ -24,7 +24,7 @@ public class DemographicPayloadInfoPayloadModel {
 
     @SerializedName("insurances")
     @Expose
-    private List<DemographicPayloadInsuranceModel> insurances = new ArrayList<DemographicPayloadInsuranceModel>();
+    private List<DemInsurancePayloadPojo> insurances = new ArrayList<DemInsurancePayloadPojo>();
 
     @SerializedName("updates")
     @Expose
@@ -89,7 +89,7 @@ public class DemographicPayloadInfoPayloadModel {
      * @return
      * The insurances
      */
-    public List<DemographicPayloadInsuranceModel> getInsurances() {
+    public List<DemInsurancePayloadPojo> getInsurances() {
         return insurances;
     }
 
@@ -98,7 +98,7 @@ public class DemographicPayloadInfoPayloadModel {
      * @param insurances
      * The insurances
      */
-    public void setInsurances(List<DemographicPayloadInsuranceModel> insurances) {
+    public void setInsurances(List<DemInsurancePayloadPojo> insurances) {
         this.insurances = insurances;
     }
 
