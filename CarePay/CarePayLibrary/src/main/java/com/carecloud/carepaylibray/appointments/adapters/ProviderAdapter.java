@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentProviderModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadModel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
@@ -17,17 +17,17 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 
-public class AllProviderAdapter extends RecyclerView.Adapter<AllProviderAdapter.ProviderViewHolder> {
+public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.ProviderViewHolder> {
 
     private Context context;
     private OnAllListItemClickListener listener;
-    private ArrayList<Appointment> providerItems;
+    private ArrayList<Appointment> appointmentArrayList;
 
-    public AllProviderAdapter(Context context, ArrayList<Appointment> providerItems,
-                              OnAllListItemClickListener listener) {
+    public ProviderAdapter(Context context, ArrayList<Appointment> appointmentArrayList,
+                           OnAllListItemClickListener listener) {
         this.context = context;
         this.listener = listener;
-        this.providerItems = providerItems;
+        this.appointmentArrayList = appointmentArrayList;
     }
 
     @Override
@@ -39,25 +39,30 @@ public class AllProviderAdapter extends RecyclerView.Adapter<AllProviderAdapter.
 
     @Override
     public void onBindViewHolder(final ProviderViewHolder holder, int position) {
-        if (providerItems != null && providerItems.get(position).getPayload() != null) {
-            AppointmentProviderModel provider = providerItems.get(position).getPayload().getProvider();
 
-            holder.doctorName.setText(provider.getName());
-            holder.doctorType.setText(provider.getSpecialty());
-            holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));
+        if (appointmentArrayList != null) {
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onAllListItemClickListener(holder.getAdapterPosition());
-                }
-            });
+            AppointmentsPayloadModel payload = appointmentArrayList.get(position).getPayload();
+            if (payload != null) {
+
+                AppointmentProviderModel provider = payload.getProvider();
+                holder.doctorName.setText(provider.getName());
+                holder.doctorType.setText(provider.getSpecialty());
+                holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onAllListItemClickListener(holder.getAdapterPosition());
+                    }
+                });
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return providerItems.size();
+        return appointmentArrayList.size();
     }
 
     static class ProviderViewHolder extends RecyclerView.ViewHolder {

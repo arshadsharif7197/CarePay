@@ -17,16 +17,15 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
-import com.carecloud.carepaylibray.appointments.adapters.AllProviderAdapter;
-import com.carecloud.carepaylibray.appointments.adapters.RecentProviderAdapter;
+import com.carecloud.carepaylibray.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepaylibray.appointments.dialog.VisitTypeDialog;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 
-public class ChooseProviderFragment extends Fragment implements AllProviderAdapter.OnAllListItemClickListener,
-        RecentProviderAdapter.OnRecentListItemClickListener, VisitTypeDialog.OnDialogListItemClickListener {
+public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnAllListItemClickListener,
+        VisitTypeDialog.OnDialogListItemClickListener {
 
     private ArrayList<Appointment> recentProviderItems = new ArrayList<>();
     private ArrayList<Appointment> allProviderItems = new ArrayList<>();
@@ -107,14 +106,16 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
         /// DUMMY DATA END
 
         // Load and display Recent provider
-        RecentProviderAdapter recentProviderAdapter = new RecentProviderAdapter(getActivity(), recentProviderItems, this);
-        RecyclerView recyclerViewRecent = ((RecyclerView) chooseProviderView.findViewById(R.id.choose_provider_recycler_view_recent));
+        ProviderAdapter recentProviderAdapter = new ProviderAdapter(getActivity(), recentProviderItems, this);
+        RecyclerView recyclerViewRecent = ((RecyclerView)
+                chooseProviderView.findViewById(R.id.choose_provider_recycler_view_recent));
         recyclerViewRecent.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewRecent.setAdapter(recentProviderAdapter);
 
         // Load and display All provider
-        AllProviderAdapter allProviderAdapter = new AllProviderAdapter(getActivity(), allProviderItems, this);
-        RecyclerView recyclerViewAll = ((RecyclerView) chooseProviderView.findViewById(R.id.choose_provider_recycler_view_all));
+        ProviderAdapter allProviderAdapter = new ProviderAdapter(getActivity(), allProviderItems, this);
+        RecyclerView recyclerViewAll = ((RecyclerView)
+                chooseProviderView.findViewById(R.id.choose_provider_recycler_view_all));
         recyclerViewAll.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewAll.setAdapter(allProviderAdapter);
 
@@ -129,12 +130,6 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
     @Override
     public void onAllListItemClickListener(int position) {
         Appointment model = allProviderItems.get(position);
-        loadVisitTypeScreen(model);
-    }
-
-    @Override
-    public void onRecentListItemClickListener(int position) {
-        Appointment model = recentProviderItems.get(position);
         loadVisitTypeScreen(model);
     }
 

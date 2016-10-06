@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -196,4 +197,13 @@ public class AppointmentAddressModel {
         this.stateName = stateName;
     }
 
+    public String getPlaceAddressString() {
+        return StringUtil.isNullOrEmpty(line1) ? "" : line1.concat(" ")
+                .concat(StringUtil.isNullOrEmpty(line2) ? "" : line2.concat(" "))
+                .concat(line3 == null ? "" : line3.toString().concat(" "))
+                .concat(StringUtil.isNullOrEmpty(city) ? "" : city.concat(" "))
+                .concat(StringUtil.isNullOrEmpty(stateName) ? "" : stateName.concat(" "))
+                .concat(StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode.concat(" "))
+                .concat(countyName == null ? "" : countyName.toString());
+    }
 }

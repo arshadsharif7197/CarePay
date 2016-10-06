@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAddressModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -72,7 +71,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
         addressHeaderTextView.setText(placeName);
 
         // Appointment Place address
-        placeAddress = getPlaceAddressString(payload.getLocation().getAddress());
+        placeAddress = payload.getLocation().getAddress().getPlaceAddressString();
         addressTextView.setText(placeAddress);
 
         SystemUtil.setProximaNovaLightTypeface(context, dateTextView);
@@ -101,20 +100,6 @@ public class BaseDoctorInfoDialog extends Dialog implements
             ((ImageView) findViewById(R.id.appointLocationImageView))
                     .setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
         }
-    }
-
-    private String getPlaceAddressString(AppointmentAddressModel address) {
-
-        String line1 = TextUtils.isEmpty(address.getLine1()) ? "" : address.getLine1();
-        String line2 = TextUtils.isEmpty(address.getLine2()) ? "" : address.getLine2();
-        String line3 = (address.getLine3() == null) ? "" : address.getLine3().toString();
-        String city = TextUtils.isEmpty(address.getCity()) ? "" : address.getCity();
-        String zipCode = TextUtils.isEmpty(address.getZipCode()) ? "" : address.getZipCode();
-        String countyName = (address.getCountyName() == null) ? "" : address.getCountyName().toString();
-        String stateName = TextUtils.isEmpty(address.getStateName()) ? "" : address.getStateName();
-
-        return line1 + " " + line2 + " " + line3 + " " + city + " " + stateName
-                + " " + zipCode + " " + countyName;
     }
 
     @Override
