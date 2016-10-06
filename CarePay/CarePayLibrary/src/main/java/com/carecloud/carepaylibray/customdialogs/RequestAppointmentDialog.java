@@ -14,21 +14,17 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
-import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
     private Context context;
     private LinearLayout mainLayout;
-    private Appointment appointmentModel;
 
     public RequestAppointmentDialog(Context context, Appointment appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
-        this.appointmentModel = appointmentModel;
     }
 
     @Override
@@ -37,12 +33,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mainLayout = (LinearLayout) getAddActionChildView();
-        TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
-        TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
-
-        String[] timeDateString = DateUtil.parseStringToDateTime(appointmentModel.getPayload().getStartTime());
-        dateTextView.setText(timeDateString[0]);
-        timeTextView.setText(timeDateString[1]);
         setActionButton();
     }
 

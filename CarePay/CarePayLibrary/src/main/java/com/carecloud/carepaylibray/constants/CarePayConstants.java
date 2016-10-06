@@ -46,5 +46,6 @@ public class CarePayConstants {
     public static final String TIME_FORMAT_AM_PM = "hh:mm a";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String DATE_TIME_FORMAT = "EEE dd MMM hh:mm a";
-    public static final String APPOINTMENT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String APPOINTMENT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssz";
+    public static final String RAW_DATE_FORMAT_FOR_TESTS = "yyyy-MM-dd'T'HH:mm:ssX";
 }

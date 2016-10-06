@@ -22,8 +22,8 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class BaseDoctorInfoDialog extends Dialog implements
-        View.OnClickListener {
+public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener {
+
     private Context context;
     private AppointmentsPayloadModel payload;
     private View addActionLayout, rootLayout;
@@ -58,9 +58,9 @@ public class BaseDoctorInfoDialog extends Dialog implements
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
-        String[] fmtDateAndTime = DateUtil.parseStringToDateTime(payload.getStartTime());
-        dateTextView.setText(fmtDateAndTime[0]);
-        timeTextView.setText(fmtDateAndTime[1]);
+        DateUtil.getInstance().setDateRaw(payload.getStartTime());
+        dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+        timeTextView.setText(DateUtil.getInstance().getTime12Hour());
 
         shortNameTextView.setText(StringUtil.onShortDrName(payload.getProvider().getName()));
         nameTextView.setText(payload.getProvider().getName());

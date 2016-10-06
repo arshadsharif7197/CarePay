@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
-import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
@@ -340,9 +339,10 @@ public class AppointmentsListFragment extends Fragment {
                                 = new AppointmentSectionHeaderModel();
                         appointmentSectionHeaderModel.setAppointmentHeader(previousDay);
                         appointmentListWithHeader.add(appointmentSectionHeaderModel);
+                        appointmentListWithHeader.add(appointmentModel);
+                    } else {
+                        appointmentListWithHeader.add(0, appointmentModel);
                     }
-
-                    appointmentListWithHeader.add(appointmentModel);
                 }
             }
         }
