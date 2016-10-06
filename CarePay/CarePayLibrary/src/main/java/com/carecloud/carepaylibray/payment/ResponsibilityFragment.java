@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -76,8 +77,8 @@ public class ResponsibilityFragment extends Fragment {
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                PaymentMethodFragment fragment = (PaymentMethodFragment) fm.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
+                FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+                PaymentMethodFragment fragment = (PaymentMethodFragment) fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new PaymentMethodFragment();
                 }
@@ -85,8 +86,10 @@ public class ResponsibilityFragment extends Fragment {
                 //Bundle bundle = new Bundle();
                 //bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
                 //fragment.setArguments(bundle);
-                fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
-                        PaymentMethodFragment.class.getSimpleName()).commit();
+                FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+                fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+                fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
+                fragmentTransaction.commit();
             }
         });
 

@@ -599,4 +599,20 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
     </style>
+
+    <style name="DefaultTextAppearanceProxyNovaSemiBoldLabel">
+        <item name="android:textColor">@color/bright_cerulean</item>
+    </style>
+    <style name="DefaultTextAppearanceProxyNovaRegularLabel">
+        <item name="android:textColor">@color/lightSlateGray</item>
+    </style>
+    <style name="DefaultTextAppearanceGothamRoundedBoldLabel">
+        <item name="android:textColor">@color/bermudagrey</item>
+    </style>
+    <style name="DefaultTextAppearance">
+        <item name="android:textColor">@color/charcoal</item>
+    </style>
+    <style name="DefaultTextAppearanceGothamRoundedMediumLabel">
+        <item name="android:textColor">@color/lightSlateGray</item>
+    </style>
 </resources>

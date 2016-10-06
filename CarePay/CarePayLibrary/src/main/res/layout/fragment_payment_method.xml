@@ -8,132 +8,38 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
-        <RelativeLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/payment_method_parent_layout_padding">
+
+        <RadioGroup
+            android:id="@+id/paymentMethodsRadioGroup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/payment_method_parent_layout_padding">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"></RadioGroup>
 
-            <RadioGroup
-                android:id="@+id/paymentMethodsRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-                <RadioButton
-                    android:id="@+id/creditCardRadioButton"
-                    style="@style/PaymentMethodLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
-                    android:button="@null"
-                    android:background="@null"
-                    android:drawableLeft="@drawable/payment_credit_card_button_selector"
-                    android:drawablePadding="@dimen/payment_method_layout_label_drawable_padding"
-                    android:drawableRight="@drawable/check_box_intake"
-                    android:gravity="center_vertical"
-                    android:text="@string/credit_card" />
+        <Button
+            android:id="@+id/createPaymentPlanButton"
+            style="@style/PaymentButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+            android:background="@drawable/button_blue_border"
+            android:text="@string/create_payment_plan_instead"
+            android:textColor="@color/bright_cerulean" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/cadet_gray" />
+        <Button
+            android:id="@+id/paymentChoiceButton"
+            style="@style/PaymentButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/createPaymentPlanButton"
+            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+            android:background="@drawable/button_selector"
+            android:text="@string/choose_payment_method" />
 
-                <RadioButton
-                    android:id="@+id/cashRadioButton"
-                    style="@style/PaymentMethodLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
-                    android:button="@null"
-                    android:drawableLeft="@drawable/payment_cash_button_selector"
-                    android:drawablePadding="@dimen/payment_method_layout_label_drawable_padding"
-                    android:drawableRight="@drawable/check_box_intake"
-                    android:gravity="center_vertical"
-                    android:text="@string/cash" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/cadet_gray" />
-
-                <RadioButton
-                    android:id="@+id/checkRadioButton"
-                    style="@style/PaymentMethodLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
-                    android:button="@null"
-                    android:background="@null"
-                    android:drawableLeft="@drawable/payment_check_button_selector"
-                    android:drawablePadding="@dimen/payment_method_layout_label_drawable_padding"
-                    android:drawableRight="@drawable/check_box_intake"
-                    android:gravity="center_vertical"
-                    android:text="@string/check" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/cadet_gray" />
-
-                <RadioButton
-                    android:id="@+id/paypalRadioButton"
-                    style="@style/PaymentMethodLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
-                    android:button="@null"
-                    android:drawableLeft="@drawable/payment_paypal_button_selector"
-                    android:drawablePadding="@dimen/payment_method_layout_label_drawable_padding"
-                    android:drawableRight="@drawable/check_box_intake"
-                    android:gravity="center_vertical"
-                    android:text="@string/paypal" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/cadet_gray" />
-
-                <RadioButton
-                    android:id="@+id/applePayRadioButton"
-                    style="@style/PaymentMethodLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
-                    android:button="@null"
-                    android:drawableLeft="@drawable/payment_apple_button_selector"
-                    android:drawablePadding="@dimen/payment_method_layout_label_drawable_padding"
-                    android:drawableRight="@drawable/check_box_intake"
-                    android:gravity="center_vertical"
-                    android:text="@string/apple_pay" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/cadet_gray" />
-
-            </RadioGroup>
-
-            <Button
-                android:id="@+id/makePartialPaymentButton"
-                style="@style/PaymentButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                android:background="@drawable/button_blue_border"
-                android:text="@string/create_payment_plan_instead"
-                android:textColor="@color/bright_cerulean" />
-
-            <Button
-                android:id="@+id/paymentChoiceButton"
-                style="@style/PaymentButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/makePartialPaymentButton"
-                android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                android:text="@string/choose_payment_method"
-                android:background="@drawable/button_selector"
-                />
-
-        </RelativeLayout>
+    </RelativeLayout>
 </LinearLayout>
