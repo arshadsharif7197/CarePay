@@ -309,10 +309,60 @@ public class AppointmentsListFragment extends Fragment {
                             appointmentModel.setCancelled(isCancelled);
                         }
 
+                        // Appointment Provider Name
+                        String mDoctorName = appointment.getPayload().getProvider().getName();
+                        appointmentModel.setDoctorName(mDoctorName);
+
+                        // Appointment Provider type
+                        String mDoctorType = appointment.getPayload().getProvider().getSpecialty();
+                        appointmentModel.setAppointmentType(mDoctorType);
+
+                        // Appointment Provider phone
+                        String mPhoneNumber = appointment.getPayload().getProvider().getPhone();
+                        appointmentModel.setPhoneNumber(mPhoneNumber);
+
+                        // Appointment Provider photo
+                        String mDoctorPhoto = appointment.getPayload().getProvider().getPhoto();
+                        appointmentModel.setPhoto(mDoctorPhoto);
+
+                        // Appointment Place
+                        String mPlaceName = appointment.getPayload().getLocation().getName();
+                        appointmentModel.setPlaceName(mPlaceName);
+
+                        // Appointment Place address
+                        AppointmentAddressModel address = appointment.getPayload().getLocation().getAddress();
+                        String line1 = TextUtils.isEmpty(address.getLine1()) ? "" : address.getLine1();
+                        String line2 = TextUtils.isEmpty(address.getLine2()) ? "" : address.getLine2();
+                        String line3 = (address.getLine3() == null) ? "" : address.getLine3().toString();
+                        String city = TextUtils.isEmpty(address.getCity()) ? "" : address.getCity();
+                        String zipCode = TextUtils.isEmpty(address.getZipCode()) ? "" : address.getZipCode();
+                        String countyName = (address.getCountyName() == null) ? "" : address.getCountyName().toString();
+                        String stateName = TextUtils.isEmpty(address.getStateName()) ? "" : address.getStateName();
+
+                        String mPlaceAddress = line1 + " " + line2 + " " + line3 + " " + city
+                                + " " + stateName + " " + zipCode + " " + countyName;
+                        appointmentModel.setPlaceAddress(mPlaceAddress);
+
+                        AppointmentModel model = new AppointmentModel();
+
+                        model.setAppointmentId(mAptId);
+                        model.setDoctorName(mDoctorName);
+                        model.setAppointmentType(mDoctorType);
+                        model.setPhoto(mDoctorPhoto);
+                        model.setPlaceName(mPlaceName);
+                        model.setPlaceAddress(mPlaceAddress);
+                        model.setPending(isPending);
+                        model.setCancelled(isCancelled);
+                        model.setPhoneNumber(mPhoneNumber);
+
+
+                        /***************************************************************************************/
                         // Appointment start time
                         String mAptTime = "";
-                        String mAptDate = "", mAptDateWithoutTime = "";
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
+                        String mAptDate = "";
+                        String mAptDateWithoutTime = "";
+                        SimpleDateFormat sdf = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
+
                         try {
                             Date aptDate = sdf.parse(appointment.getPayload().getStartTime());
                             mAptTime = new SimpleDateFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT,
@@ -324,17 +374,10 @@ public class AppointmentsListFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        /*//String mAptDate = "", mAptDateWithoutTime = "";
-                        if (mAptTime != null) {
-                            mAptDate = mAptTime.replaceAll(CarePayConstants.ATTR_UTC, "");
-                            String[] mAptDateArr = mAptDate.split(" ");
-                            mAptDateWithoutTime = mAptDateArr[0];
-                            mAptDateWithoutTime= new SimpleDateFormat("MM-dd-yyyy",
-                                    Locale.getDefault()).format(mAptTime);
-                        }*/
-
                         String mAptDay = null;
+
                         try {
+
                             Calendar c = Calendar.getInstance();
                             c.set(Calendar.HOUR_OF_DAY,0);
                             c.set(Calendar.MINUTE,0);
@@ -356,39 +399,6 @@ public class AppointmentsListFragment extends Fragment {
                             Date mConvertedAptDate = mSimpleDateFormat.parse(mAptDateFormat);
                             appointmentModel.setAppointmentTime(mAptTime.replaceAll(CarePayConstants.ATTR_UTC, ""));
 
-                            // Appointment Provider Name
-                            String mDoctorName = appointment.getPayload().getProvider().getName();
-                            appointmentModel.setDoctorName(mDoctorName);
-
-                            // Appointment Provider type
-                            String mDoctorType = appointment.getPayload().getProvider().getSpecialty();
-                            appointmentModel.setAppointmentType(mDoctorType);
-
-                            // Appointment Provider phone
-                            String mPhoneNumber = appointment.getPayload().getProvider().getPhone();
-                            appointmentModel.setPhoneNumber(mPhoneNumber);
-
-                            // Appointment Provider photo
-                            String mDoctorPhoto = appointment.getPayload().getProvider().getPhoto();
-                            appointmentModel.setPhoto(mDoctorPhoto);
-
-                            // Appointment Place
-                            String mPlaceName = appointment.getPayload().getLocation().getName();
-                            appointmentModel.setPlaceName(mPlaceName);
-
-                            // Appointment Place address
-                            AppointmentAddressModel address = appointment.getPayload().getLocation().getAddress();
-                            String line1 = TextUtils.isEmpty(address.getLine1()) ? "" : address.getLine1();
-                            String line2 = TextUtils.isEmpty(address.getLine2()) ? "" : address.getLine2();
-                            String line3 = (address.getLine3() == null) ? "" : address.getLine3().toString();
-                            String city = TextUtils.isEmpty(address.getCity()) ? "" : address.getCity();
-                            String zipCode = TextUtils.isEmpty(address.getZipCode()) ? "" : address.getZipCode();
-                            String countyName = (address.getCountyName() == null) ? "" : address.getCountyName().toString();
-                            String stateName = TextUtils.isEmpty(address.getStateName()) ? "" : address.getStateName();
-
-                            String mPlaceAddress = line1 + " " + line2 + " " + line3 + " " + city
-                                    + " " + stateName + " " + zipCode + " " + countyName;
-                            appointmentModel.setPlaceAddress(mPlaceAddress);
 
                             if (mConvertedAptDate.after(mCurrentConvertedDate) &&
                                     !mAptDateWithoutTime.equalsIgnoreCase(mCurrentDateWithoutTime)) {
@@ -399,24 +409,9 @@ public class AppointmentsListFragment extends Fragment {
                                         CarePayConstants.DATE_TIME_FORMAT, Locale.getDefault());
                                 String mUpcomingDate = mSimpleDateFormat_Time.format(mSourceAptDate);
 
-                                AppointmentModel model = new AppointmentModel();
-                                model.setAppointmentId(mAptId);
-                                model.setDoctorName(mDoctorName);
-                                model.setAppointmentType(mDoctorType);
-                                model.setPhoto(mDoctorPhoto);
                                 model.setAppointmentTime(mUpcomingDate);
                                 model.setAppointmentDay(mAptDay);
                                 model.setAppointmentDate(mAptTime);
-                                model.setPlaceName(mPlaceName);
-                                model.setPlaceAddress(mPlaceAddress);
-                                model.setPending(isPending);
-                                model.setCancelled(isCancelled);
-                                model.setPhoneNumber(mPhoneNumber);
-
-                                // Skip cancelled appointments
-                                if (!isCancelled) {
-                                    appointmentsItems.add(model);
-                                }
 
                             } else if (mConvertedAptDate.before(mCurrentConvertedDate)) {
                                 // skipping this date as this appointment was in past.
@@ -429,31 +424,25 @@ public class AppointmentsListFragment extends Fragment {
                                         CarePayConstants.DATE_FORMAT_AM_PM, Locale.getDefault());
                                 String parsedDate = mSimpleDateFormat_Time.format(mSourceAptDate);
 
-                                AppointmentModel model = new AppointmentModel();
-                                model.setAppointmentId(mAptId);
-                                model.setDoctorName(mDoctorName);
-                                model.setAppointmentType(mDoctorType);
-                                model.setPhoto(mDoctorPhoto);
                                 model.setAppointmentTime(parsedDate);
                                 model.setAppointmentDay(mAptDay);
                                 model.setAppointmentDate(mAptTime);
-                                model.setPlaceName(mPlaceName);
-                                model.setPlaceAddress(mPlaceAddress);
-                                model.setPending(isPending);
-                                model.setPhoneNumber(mPhoneNumber);
-
-                                // Skip cancelled appointments
-                                if (!isCancelled) {
-                                    appointmentsItems.add(model);
-                                }
                             }
 //                            appointmentRefresh.setRefreshing(false);
                         } catch (ParseException ex) {
                             Log.e(LOG_TAG, "Parse Exception caught : " + ex.getMessage());
                         }
+
                         appointmentModel.setAppointmentHeader(mAptDay);
+
+                        // Skip cancelled appointments
+                        if (!isCancelled) {
+                            appointmentsItems.add(model);
+                        }
+
                     }
                 }
+                /*******************************************************************************************************/
 
                 appointmentListWithHeader = getAppointmentListWithHeader();
                 if (appointmentListWithHeader != null) {
@@ -485,6 +474,7 @@ public class AppointmentsListFragment extends Fragment {
             }
         });
     }
+
     private void onRefresh(){
         appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
