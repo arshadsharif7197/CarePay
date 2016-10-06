@@ -12,7 +12,7 @@ public class DemographicPayloadInfoModel {
     private DemographicPayloadInfoMetaDataModel metadata;
     @SerializedName("payload")
     @Expose
-    private DemographicPayloadInfoPayloadModel payload;
+    private DemPayloadPojo payload;
 
     /**
      *
@@ -37,7 +37,7 @@ public class DemographicPayloadInfoModel {
      * @return
      * The payload
      */
-    public DemographicPayloadInfoPayloadModel getPayload() {
+    public DemPayloadPojo getPayload() {
         return payload;
     }
 
@@ -46,7 +46,7 @@ public class DemographicPayloadInfoModel {
      * @param payload
      * The payload
      */
-    public void setPayload(DemographicPayloadInfoPayloadModel payload) {
+    public void setPayload(DemPayloadPojo payload) {
         this.payload = payload;
     }
 }

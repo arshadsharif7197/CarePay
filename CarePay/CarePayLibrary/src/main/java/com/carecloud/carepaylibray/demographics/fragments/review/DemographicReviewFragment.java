@@ -31,7 +31,7 @@ import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -221,11 +221,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     private void postUpdates() {
         demographicProgressBar.setVisibility(View.VISIBLE);
-        DemographicPayloadModel postPayloadModel = new DemographicPayloadModel();
+        DemPayloadPojo postPayloadModel = new DemPayloadPojo();
         postPayloadModel.setAddress(demAddressPayloadPojo);
         postPayloadModel.setPersonalDetails(demPersDetailsPayloadPojo);
         postPayloadModel.setInsurances(insurances);
-        postPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
+        postPayloadModel.setIdDocument(demographicPayloadDriversLicenseModel);
 
         DemographicService apptService = (new BaseServiceGenerator(getActivity()))
                 .createService(DemographicService.class); // String token, String searchString

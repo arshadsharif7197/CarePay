@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
@@ -239,7 +240,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     public DemAddressPayloadPojo getTheModel() {
-        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
+        DemPayloadPojo payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
             model = payload.getAddress();
         } else {

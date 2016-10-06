@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
@@ -58,8 +59,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private DemIdDocPayloadPojo       demPayloadIdDocPojo;
     private List<DemInsurancePayloadPojo> insuranceModelList = new ArrayList<>();
     
-    public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
-        DemographicPayloadInfoPayloadModel infoModel = null;
+    public DemPayloadPojo getDemographicInfoPayloadModel() {
+        DemPayloadPojo infoModel = null;
         if (modelGet != null) {
             DemographicPayloadResponseModel response = modelGet.getPayload();
             if (response != null) {

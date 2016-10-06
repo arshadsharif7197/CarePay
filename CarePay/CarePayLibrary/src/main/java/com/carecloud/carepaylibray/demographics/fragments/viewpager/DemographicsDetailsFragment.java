@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 
@@ -94,7 +95,8 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     public DemPersDetailsPayloadPojo getModel() {
-        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
+        DemPayloadPojo payload
+                = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
         if(payload != null) {
             model = payload.getPersonalDetails();
         }

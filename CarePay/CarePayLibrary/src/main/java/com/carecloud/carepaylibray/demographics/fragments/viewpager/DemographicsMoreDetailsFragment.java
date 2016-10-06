@@ -19,7 +19,7 @@ import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemUpdatePojo;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
@@ -124,43 +124,43 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 //        demographicPayloadInsuranceModel3.setInsuranceProvider("GHI");
 //        insurances.add(demographicPayloadInsuranceModel3);
 
-        DemographicPayloadModel demographicPayloadModel = new DemographicPayloadModel();
-//        demographicPayloadModel.setAddress(demographicPayloadAddressModel);
-//        demographicPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
-//        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
-//        demographicPayloadModel.setInsurances(insurances);
+        DemPayloadPojo demPayloadPojo = new DemPayloadPojo();
+//        demPayloadPojo.setAddress(demographicPayloadAddressModel);
+//        demPayloadPojo.setPersonalDetails(demographicPayloadPersonalDetailsModel);
+//        demPayloadPojo.setIdDocument(demographicPayloadDriversLicenseModel);
+//        demPayloadPojo.setInsurances(insurances);
 
         List<DemUpdatePojo> updates = new ArrayList<>();
-        demographicPayloadModel.setUpdates(updates);
+        demPayloadPojo.setUpdates(updates);
 
         /*DemographicModel demographicPostModel = new DemographicModel();
-        demographicPostModel.setPayload(demographicPayloadModel);*/
+        demographicPostModel.setPayload(demPayloadPojo);*/
 
         // TODO: 9/29/2016 progress
 
         // obtain the updated models from the pager fragments
         DemAddressPayloadPojo addressModel = ((DemographicsActivity)getActivity()).getAddressModel();
         if(addressModel != null) {
-            demographicPayloadModel.setAddress(addressModel);
+            demPayloadPojo.setAddress(addressModel);
         }
 
         DemPersDetailsPayloadPojo detailsModel = ((DemographicsActivity)getActivity()).getDetailsModel();
         if(detailsModel != null) {
-            demographicPayloadModel.setPersonalDetails(detailsModel);
+            demPayloadPojo.setPersonalDetails(detailsModel);
         }
 
         DemIdDocPayloadPojo idDocPojo = ((DemographicsActivity)getActivity()).getDemPayloadIdDocPojo();
         if(idDocPojo != null) {
-            demographicPayloadModel.setDriversLicense(idDocPojo);
+            demPayloadPojo.setIdDocument(idDocPojo);
         }
 
         List<DemInsurancePayloadPojo> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
         if(insuranceModelList != null) {
-            demographicPayloadModel.setInsurances(insuranceModelList);
+            demPayloadPojo.setInsurances(insuranceModelList);
         }
 
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<ResponseBody> call = apptService.confirmDemographicInformation(demographicPayloadModel);
+        Call<ResponseBody> call = apptService.confirmDemographicInformation(demPayloadPojo);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

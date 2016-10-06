@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
  */
-public class DemographicPayloadModel {
+public class DemPayloadPojo {
 
     @SerializedName("address")
     @Expose
@@ -21,7 +21,7 @@ public class DemographicPayloadModel {
 
     @SerializedName("identity_document")
     @Expose
-    private DemIdDocPayloadPojo driversLicense;
+    private DemIdDocPayloadPojo idDocument;
 
     @SerializedName("insurances")
     @Expose
@@ -70,19 +70,19 @@ public class DemographicPayloadModel {
     /**
      *
      * @return
-     * The driversLicense
+     * The idDocument
      */
-    public DemIdDocPayloadPojo getDriversLicense() {
-        return driversLicense;
+    public DemIdDocPayloadPojo getIdDocument() {
+        return idDocument;
     }
 
     /**
      *
-     * @param driversLicense
+     * @param idDocument
      * The drivers_license
      */
-    public void setDriversLicense(DemIdDocPayloadPojo driversLicense) {
-        this.driversLicense = driversLicense;
+    public void setIdDocument(DemIdDocPayloadPojo idDocument) {
+        this.idDocument = idDocument;
     }
 
     /**

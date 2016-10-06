@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScann
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 
 import java.util.List;
@@ -44,18 +45,18 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private FrameLayout                            insCardContainer3;
     private LicenseScannerFragment                 licenseFragment;
     private InsuranceScannerFragment               insuranceFragment;
-    private InsuranceScannerFragment           extraInsuranceFrag1;
-    private InsuranceScannerFragment           extraInsuranceFrag2;
-    private boolean                            isSecondCardAdded;
-    private boolean                            isThirdCardAdded;
-    private Button                             addCardButton;
-    private Button                             nextButton;
-    private DemIdDocPayloadPojo                demPayloadIdDocPojo;
-    private List<DemInsurancePayloadPojo>      insuranceModelList;
-    private DemographicPayloadInfoPayloadModel payload;
-    private DemInsurancePayloadPojo            insuranceModel1;
-    private DemInsurancePayloadPojo            insuranceModel2;
-    private DemInsurancePayloadPojo            insuranceModel3;
+    private InsuranceScannerFragment      extraInsuranceFrag1;
+    private InsuranceScannerFragment      extraInsuranceFrag2;
+    private boolean                       isSecondCardAdded;
+    private boolean                       isThirdCardAdded;
+    private Button                        addCardButton;
+    private Button                        nextButton;
+    private DemIdDocPayloadPojo           demPayloadIdDocPojo;
+    private List<DemInsurancePayloadPojo> insuranceModelList;
+    private DemPayloadPojo                payload;
+    private DemInsurancePayloadPojo       insuranceModel1;
+    private DemInsurancePayloadPojo       insuranceModel2;
+    private DemInsurancePayloadPojo       insuranceModel3;
 
     @Nullable
     @Override
