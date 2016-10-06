@@ -19,9 +19,9 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
 
 import java.util.List;
 
@@ -42,17 +42,17 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private FrameLayout                            insCardContainer1;
     private FrameLayout                            insCardContainer2;
     private FrameLayout                            insCardContainer3;
-    private LicenseScannerFragment                 licenseFragment;
-    private InsuranceScannerFragment               insuranceFragment;
+    private LicenseScannerFragment        licenseFragment;
+    private InsuranceScannerFragment      insuranceFragment;
     private InsuranceScannerFragment      extraInsuranceFrag1;
     private InsuranceScannerFragment      extraInsuranceFrag2;
     private boolean                       isSecondCardAdded;
     private boolean                       isThirdCardAdded;
     private Button                        addCardButton;
     private Button                        nextButton;
-    private DemIdDocPayloadPojo           demPayloadIdDocPojo;
+    private DemIdDocPayloadDto            demPayloadIdDocPojo;
     private List<DemInsurancePayloadPojo> insuranceModelList;
-    private DemPayloadPojo                payload;
+    private DemPayloadDto                 payload;
     private DemInsurancePayloadPojo       insuranceModel1;
     private DemInsurancePayloadPojo       insuranceModel2;
     private DemInsurancePayloadPojo       insuranceModel3;
@@ -90,7 +90,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         }
     }
 
-    public DemIdDocPayloadPojo getDemPayloadIdDocPojo() {
+    public DemIdDocPayloadDto getDemPayloadIdDocPojo() {
         return demPayloadIdDocPojo;
     }
 
@@ -171,7 +171,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // add license fragment
         licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
         if (demPayloadIdDocPojo == null) {
-            demPayloadIdDocPojo = new DemIdDocPayloadPojo();
+            demPayloadIdDocPojo = new DemIdDocPayloadDto();
         }
         if (licenseFragment == null) {
             licenseFragment = new LicenseScannerFragment();

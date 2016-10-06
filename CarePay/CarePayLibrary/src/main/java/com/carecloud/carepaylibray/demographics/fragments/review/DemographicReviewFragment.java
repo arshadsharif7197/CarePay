@@ -27,11 +27,11 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -63,10 +63,10 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     int selectedDataArray;
     private TextView raceDataTextView, ethnicityDataTextView, selectGender, selectlangauge;
     private ProgressBar                   demographicProgressBar;
-    private DemPersDetailsPayloadPojo     demPersDetailsPayloadPojo;
-    private DemAddressPayloadPojo         demAddressPayloadPojo;
+    private DemPersDetailsPayloadDto      demPersDetailsPayloadDto;
+    private DemAddressPayloadDto          demAddressPayloadDto;
     private List<DemInsurancePayloadPojo> insurances;
-    private DemIdDocPayloadPojo           demographicPayloadDriversLicenseModel;
+    private DemIdDocPayloadDto            demographicPayloadDriversLicenseModel;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -178,42 +178,42 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
     private void updateModels() {
-        if (demPersDetailsPayloadPojo == null) {
-            demPersDetailsPayloadPojo = new DemPersDetailsPayloadPojo();
+        if (demPersDetailsPayloadDto == null) {
+            demPersDetailsPayloadDto = new DemPersDetailsPayloadDto();
         }
 
         String firstName = firstNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(firstName)) {
-            demPersDetailsPayloadPojo.setFirstName(firstName);
+            demPersDetailsPayloadDto.setFirstName(firstName);
         }
         String lastName = lastNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(lastName)) {
-            demPersDetailsPayloadPojo.setLastName(lastName);
+            demPersDetailsPayloadDto.setLastName(lastName);
         }
         String dateOfBirth = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
-            demPersDetailsPayloadPojo.setDateOfBirth(
+            demPersDetailsPayloadDto.setDateOfBirth(
                     DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
         }
 
 
         // TODO: 10/1/16 for all personal
 
-        if (demAddressPayloadPojo == null) {
-            demAddressPayloadPojo = new DemAddressPayloadPojo();
+        if (demAddressPayloadDto == null) {
+            demAddressPayloadDto = new DemAddressPayloadDto();
         }
         String address1 = address1EditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(address1)) {
-            demAddressPayloadPojo.setAddress1(address1);
+            demAddressPayloadDto.setAddress1(address1);
         }
         String address2 = address2EditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(address2)) {
-            demAddressPayloadPojo.setAddress1(address2);
+            demAddressPayloadDto.setAddress1(address2);
         }
         String phoneNumber = phoneNumberEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(phoneNumber)) {
-            demAddressPayloadPojo.setPhone(phoneNumber);
+            demAddressPayloadDto.setPhone(phoneNumber);
         }
         // TODO: 10/1/16 for all address fields
 
@@ -221,9 +221,9 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     private void postUpdates() {
         demographicProgressBar.setVisibility(View.VISIBLE);
-        DemPayloadPojo postPayloadModel = new DemPayloadPojo();
-        postPayloadModel.setAddress(demAddressPayloadPojo);
-        postPayloadModel.setPersonalDetails(demPersDetailsPayloadPojo);
+        DemPayloadDto postPayloadModel = new DemPayloadDto();
+        postPayloadModel.setAddress(demAddressPayloadDto);
+        postPayloadModel.setPersonalDetails(demPersDetailsPayloadDto);
         postPayloadModel.setInsurances(insurances);
         postPayloadModel.setIdDocument(demographicPayloadDriversLicenseModel);
 
@@ -253,38 +253,38 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
     private void initViewFromModels() {
-        demAddressPayloadPojo = ((DemographicReviewActivity) getActivity())
-                .getDemAddressPayloadPojo();
+        demAddressPayloadDto = ((DemographicReviewActivity) getActivity())
+                .getDemAddressPayloadDto();
 
-        demPersDetailsPayloadPojo = ((DemographicReviewActivity) getActivity())
-                .getDemPersDetailsPayloadPojo();
+        demPersDetailsPayloadDto = ((DemographicReviewActivity) getActivity())
+                .getDemPersDetailsPayloadDto();
         insurances = ((DemographicReviewActivity) getActivity())
                 .getInsurances();
         demographicPayloadDriversLicenseModel = ((DemographicReviewActivity) getActivity())
                 .getDemPayloadIdDocPojo();
 
-        if (demAddressPayloadPojo != null) {
+        if (demAddressPayloadDto != null) {
             //Personal Details
-            firstNameText.setText(demPersDetailsPayloadPojo.getFirstName());
-            lastNameText.setText(demPersDetailsPayloadPojo.getLastName());
+            firstNameText.setText(demPersDetailsPayloadDto.getFirstName());
+            lastNameText.setText(demPersDetailsPayloadDto.getLastName());
 
-            String datetime = demPersDetailsPayloadPojo.getDateOfBirth();
+            String datetime = demPersDetailsPayloadDto.getDateOfBirth();
             dobEditText.setText(DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy());
         }
 
-        selectGender.setText(demPersDetailsPayloadPojo.getGender());
-        selectlangauge.setText(demPersDetailsPayloadPojo.getPreferredLanguage());
-        raceDataTextView.setText(demPersDetailsPayloadPojo.getPrimaryRace());
-        ethnicityDataTextView.setText(demPersDetailsPayloadPojo.getEthnicity());
+        selectGender.setText(demPersDetailsPayloadDto.getGender());
+        selectlangauge.setText(demPersDetailsPayloadDto.getPreferredLanguage());
+        raceDataTextView.setText(demPersDetailsPayloadDto.getPrimaryRace());
+        ethnicityDataTextView.setText(demPersDetailsPayloadDto.getEthnicity());
 
-        if (demPersDetailsPayloadPojo != null) {
+        if (demPersDetailsPayloadDto != null) {
             //Address
-            address1EditText.setText(demAddressPayloadPojo.getAddress1());
-            address2EditText.setText(demAddressPayloadPojo.getAddress2());
-            cityEditText.setText(demAddressPayloadPojo.getCity());
-            stateEditText.setText(demAddressPayloadPojo.getState());
-            zipCodeEditText.setText(StringUtil.formatZipCode(demAddressPayloadPojo.getZipcode()));
-            phoneNumberEditText.setText(StringUtil.formatPhoneNumber(demAddressPayloadPojo.getPhone()));
+            address1EditText.setText(demAddressPayloadDto.getAddress1());
+            address2EditText.setText(demAddressPayloadDto.getAddress2());
+            cityEditText.setText(demAddressPayloadDto.getCity());
+            stateEditText.setText(demAddressPayloadDto.getState());
+            zipCodeEditText.setText(StringUtil.formatZipCode(demAddressPayloadDto.getZipcode()));
+            phoneNumberEditText.setText(StringUtil.formatPhoneNumber(demAddressPayloadDto.getPhone()));
             phoneNumberEditText.addTextChangedListener(new TextWatcher() {
 
                 int length_before = 0;

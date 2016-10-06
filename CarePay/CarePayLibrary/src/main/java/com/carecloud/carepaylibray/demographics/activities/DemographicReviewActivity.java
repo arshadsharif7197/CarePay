@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
-import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.List;
 
 public class DemographicReviewActivity extends AppCompatActivity {
 
-    private DemPersDetailsPayloadPojo     demPersDetailsPayloadPojo;
-    private DemAddressPayloadPojo         demAddressPayloadPojo;
+    private DemPersDetailsPayloadDto      demPersDetailsPayloadDto;
+    private DemAddressPayloadDto          demAddressPayloadDto;
     private List<DemInsurancePayloadPojo> insurances;
-    private DemIdDocPayloadPojo           demPayloadIdDocPojo;
+    private DemIdDocPayloadDto            demPayloadIdDocPojo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,20 +34,20 @@ public class DemographicReviewActivity extends AppCompatActivity {
         }
     }
 
-    public DemPersDetailsPayloadPojo getDemPersDetailsPayloadPojo() {
-        return demPersDetailsPayloadPojo;
+    public DemPersDetailsPayloadDto getDemPersDetailsPayloadDto() {
+        return demPersDetailsPayloadDto;
     }
 
-    public void setDemPersDetailsPayloadPojo(DemPersDetailsPayloadPojo demPersDetailsPayloadPojo) {
-        this.demPersDetailsPayloadPojo = demPersDetailsPayloadPojo;
+    public void setDemPersDetailsPayloadDto(DemPersDetailsPayloadDto demPersDetailsPayloadDto) {
+        this.demPersDetailsPayloadDto = demPersDetailsPayloadDto;
     }
 
-    public DemAddressPayloadPojo getDemAddressPayloadPojo() {
-        return demAddressPayloadPojo;
+    public DemAddressPayloadDto getDemAddressPayloadDto() {
+        return demAddressPayloadDto;
     }
 
-    public void setDemAddressPayloadPojo(DemAddressPayloadPojo demAddressPayloadPojo) {
-        this.demAddressPayloadPojo = demAddressPayloadPojo;
+    public void setDemAddressPayloadDto(DemAddressPayloadDto demAddressPayloadDto) {
+        this.demAddressPayloadDto = demAddressPayloadDto;
     }
 
 
@@ -59,11 +59,11 @@ public class DemographicReviewActivity extends AppCompatActivity {
         return insurances;
     }
 
-    public DemIdDocPayloadPojo getDemPayloadIdDocPojo() {
+    public DemIdDocPayloadDto getDemPayloadIdDocPojo() {
         return demPayloadIdDocPojo;
     }
 
-    public void setDemPayloadIdDocPojo(DemIdDocPayloadPojo demPayloadIdDocPojo) {
+    public void setDemPayloadIdDocPojo(DemIdDocPayloadDto demPayloadIdDocPojo) {
         this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
 }

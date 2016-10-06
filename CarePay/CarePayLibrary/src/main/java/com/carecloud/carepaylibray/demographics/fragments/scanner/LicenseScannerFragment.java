@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -32,11 +32,11 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
 
-    private ImageCaptureHelper  mLicenseScanHelper;
-    private TextView            tvLicenseNum;
-    private Button              btnScanLicense;
-    private TextView            tvState;
-    private DemIdDocPayloadPojo model;
+    private ImageCaptureHelper mLicenseScanHelper;
+    private TextView           tvLicenseNum;
+    private Button             btnScanLicense;
+    private TextView           tvState;
+    private DemIdDocPayloadDto model;
 
     @Nullable
     @Override
@@ -124,7 +124,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
     }
 
-    public void setModel(DemIdDocPayloadPojo model) {
+    public void setModel(DemIdDocPayloadDto model) {
         this.model = model;
     }
 }

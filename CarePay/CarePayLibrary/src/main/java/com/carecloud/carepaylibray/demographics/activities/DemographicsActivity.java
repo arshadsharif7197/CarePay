@@ -22,13 +22,13 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
-import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
-import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
@@ -53,13 +53,13 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private ProgressBar demographicProgressBar;
     
     private DemographicModel modelGet = null;
-    private DemAddressPayloadPojo     addressModel;
-    private DemPersDetailsPayloadPojo detailsModel;
-    private DemIdDocPayloadPojo       demPayloadIdDocPojo;
+    private DemAddressPayloadDto     addressModel;
+    private DemPersDetailsPayloadDto detailsModel;
+    private DemIdDocPayloadDto       demPayloadIdDocPojo;
     private List<DemInsurancePayloadPojo> insuranceModelList = new ArrayList<>();
     
-    public DemPayloadPojo getDemographicInfoPayloadModel() {
-        DemPayloadPojo infoModel = null;
+    public DemPayloadDto getDemographicInfoPayloadModel() {
+        DemPayloadDto infoModel = null;
         if (modelGet != null) {
             DemographicPayloadResponseModel response = modelGet.getPayload();
             if (response != null) {
@@ -176,27 +176,27 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return modelGet;
     }
     
-    public DemPersDetailsPayloadPojo getDetailsModel() {
+    public DemPersDetailsPayloadDto getDetailsModel() {
         return detailsModel;
     }
     
-    public void setAddressModel(DemAddressPayloadPojo addressModel) {
+    public void setAddressModel(DemAddressPayloadDto addressModel) {
         this.addressModel = addressModel;
     }
     
-    public DemAddressPayloadPojo getAddressModel() {
+    public DemAddressPayloadDto getAddressModel() {
         return addressModel;
     }
     
-    public void setDetailsModel(DemPersDetailsPayloadPojo detailsModel) {
+    public void setDetailsModel(DemPersDetailsPayloadDto detailsModel) {
         this.detailsModel = detailsModel;
     }
     
-    public DemIdDocPayloadPojo getDemPayloadIdDocPojo() {
+    public DemIdDocPayloadDto getDemPayloadIdDocPojo() {
         return demPayloadIdDocPojo;
     }
     
-    public void setDemPayloadIdDocPojo(DemIdDocPayloadPojo demPayloadIdDocPojo) {
+    public void setDemPayloadIdDocPojo(DemIdDocPayloadDto demPayloadIdDocPojo) {
         this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
     

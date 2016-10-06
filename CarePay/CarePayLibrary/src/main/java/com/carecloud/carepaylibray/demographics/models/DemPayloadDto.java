@@ -9,19 +9,19 @@ import java.util.List;
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
  */
-public class DemPayloadPojo {
+public class DemPayloadDto {
 
     @SerializedName("address")
     @Expose
-    private DemAddressPayloadPojo address;
+    private DemAddressPayloadDto address;
 
     @SerializedName("personal_details")
     @Expose
-    private DemPersDetailsPayloadPojo personalDetails;
+    private DemPersDetailsPayloadDto personalDetails;
 
     @SerializedName("identity_document")
     @Expose
-    private DemIdDocPayloadPojo idDocument;
+    private DemIdDocPayloadDto idDocument;
 
     @SerializedName("insurances")
     @Expose
@@ -29,14 +29,14 @@ public class DemPayloadPojo {
 
     @SerializedName("updates")
     @Expose
-    private List<DemUpdatePojo> updates = new ArrayList<>();
+    private List<DemUpdateDto> updates = new ArrayList<>();
 
     /**
      *
      * @return
      * The address
      */
-    public DemAddressPayloadPojo getAddress() {
+    public DemAddressPayloadDto getAddress() {
         return address;
     }
 
@@ -45,7 +45,7 @@ public class DemPayloadPojo {
      * @param address
      * The address
      */
-    public void setAddress(DemAddressPayloadPojo address) {
+    public void setAddress(DemAddressPayloadDto address) {
         this.address = address;
     }
 
@@ -54,7 +54,7 @@ public class DemPayloadPojo {
      * @return
      * The personalDetails
      */
-    public DemPersDetailsPayloadPojo getPersonalDetails() {
+    public DemPersDetailsPayloadDto getPersonalDetails() {
         return personalDetails;
     }
 
@@ -63,7 +63,7 @@ public class DemPayloadPojo {
      * @param personalDetails
      * The personal_details
      */
-    public void setPersonalDetails(DemPersDetailsPayloadPojo personalDetails) {
+    public void setPersonalDetails(DemPersDetailsPayloadDto personalDetails) {
         this.personalDetails = personalDetails;
     }
 
@@ -72,7 +72,7 @@ public class DemPayloadPojo {
      * @return
      * The idDocument
      */
-    public DemIdDocPayloadPojo getIdDocument() {
+    public DemIdDocPayloadDto getIdDocument() {
         return idDocument;
     }
 
@@ -81,7 +81,7 @@ public class DemPayloadPojo {
      * @param idDocument
      * The drivers_license
      */
-    public void setIdDocument(DemIdDocPayloadPojo idDocument) {
+    public void setIdDocument(DemIdDocPayloadDto idDocument) {
         this.idDocument = idDocument;
     }
 
@@ -103,11 +103,11 @@ public class DemPayloadPojo {
         this.insurances = insurances;
     }
 
-    public List<DemUpdatePojo> getUpdates() {
+    public List<DemUpdateDto> getUpdates() {
         return updates;
     }
 
-    public void setUpdates(List<DemUpdatePojo> updates) {
+    public void setUpdates(List<DemUpdateDto> updates) {
         this.updates = updates;
     }
 }

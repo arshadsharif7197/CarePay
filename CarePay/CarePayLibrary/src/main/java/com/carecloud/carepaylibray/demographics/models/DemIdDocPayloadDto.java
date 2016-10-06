@@ -8,10 +8,10 @@ import java.util.List;
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemIdDocPayloadPojo {
+public class DemIdDocPayloadDto {
 
     @SerializedName("identity_document_photos") @Expose
-    private List<DemIdDocPhotoPojo> idDocPhothos;
+    private List<DemIdDocPhotoDto> idDocPhothos;
 
     @SerializedName("identity_document_number") @Expose
     private String idNumber;
@@ -22,11 +22,11 @@ public class DemIdDocPayloadPojo {
     @SerializedName("identity_document_country") @Expose
     private String idCountry;
 
-    public List<DemIdDocPhotoPojo> getIdDocPhothos() {
+    public List<DemIdDocPhotoDto> getIdDocPhothos() {
         return idDocPhothos;
     }
 
-    public void setIdDocPhothos(List<DemIdDocPhotoPojo> idDocPhothos) {
+    public void setIdDocPhothos(List<DemIdDocPhotoDto> idDocPhothos) {
         this.idDocPhothos = idDocPhothos;
     }
 

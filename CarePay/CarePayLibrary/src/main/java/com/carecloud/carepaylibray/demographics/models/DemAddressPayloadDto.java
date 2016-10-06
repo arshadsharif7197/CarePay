@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemAddressPayloadPojo {
+public class DemAddressPayloadDto {
 
     @SerializedName("phone") @Expose private    String phone;
     @SerializedName("zipcode") @Expose private  String zipcode;

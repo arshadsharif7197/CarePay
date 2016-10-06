@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by lsoco_user on 10/1/2016.
  */
-public class DemIdDocPhotoPojo {
+public class DemIdDocPhotoDto {
 
     @SerializedName("identity_document_photo") @Expose
     private String idDocPhoto;

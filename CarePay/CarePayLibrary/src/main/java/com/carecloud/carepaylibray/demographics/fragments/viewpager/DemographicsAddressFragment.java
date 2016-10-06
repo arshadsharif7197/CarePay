@@ -24,8 +24,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -82,7 +82,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private boolean isZipEmpty;
 
     private boolean isNextVisible = false;
-    private DemAddressPayloadPojo model;
+    private DemAddressPayloadDto model;
 
     @Nullable
     @Override
@@ -238,17 +238,17 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     }
 
-    public DemAddressPayloadPojo getTheModel() {
-        DemPayloadPojo payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
+    public DemAddressPayloadDto getTheModel() {
+        DemPayloadDto payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
             model = payload.getAddress();
         } else {
-            model = new DemAddressPayloadPojo();
+            model = new DemAddressPayloadDto();
         }
         return model;
     }
 
-    public DemAddressPayloadPojo getModel() {
+    public DemAddressPayloadDto getModel() {
         return model;
     }
 
@@ -266,7 +266,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             phoneNumberEditText.setText(model.getPhone());
         } else {
             Log.v(LOG_TAG, "demographics address: views populated with defaults");
-            model = new DemAddressPayloadPojo();
+            model = new DemAddressPayloadDto();
         }
     }
 

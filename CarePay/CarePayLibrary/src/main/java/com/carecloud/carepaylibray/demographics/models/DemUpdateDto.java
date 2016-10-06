@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by lsoco_user on 10/1/2016.
  */
-public class DemUpdatePojo {
+public class DemUpdateDto {
 
     @SerializedName("update") @Expose private String update;
 

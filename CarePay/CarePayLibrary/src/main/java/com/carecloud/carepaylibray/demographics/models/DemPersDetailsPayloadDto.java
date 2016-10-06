@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemPersDetailsPayloadPojo extends BasePersonModel {
+public class DemPersDetailsPayloadDto extends BasePersonModel {
 
 
     @SerializedName("primary_race") @Expose
