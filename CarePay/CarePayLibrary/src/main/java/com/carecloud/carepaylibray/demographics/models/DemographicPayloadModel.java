@@ -17,7 +17,7 @@ public class DemographicPayloadModel {
 
     @SerializedName("personal_details")
     @Expose
-    private DemographicPayloadPersonalDetailsModel personalDetails;
+    private DemPersDetailsPayloadPojo personalDetails;
 
     @SerializedName("identity_document")
     @Expose
@@ -54,7 +54,7 @@ public class DemographicPayloadModel {
      * @return
      * The personalDetails
      */
-    public DemographicPayloadPersonalDetailsModel getPersonalDetails() {
+    public DemPersDetailsPayloadPojo getPersonalDetails() {
         return personalDetails;
     }
 
@@ -63,7 +63,7 @@ public class DemographicPayloadModel {
      * @param personalDetails
      * The personal_details
      */
-    public void setPersonalDetails(DemographicPayloadPersonalDetailsModel personalDetails) {
+    public void setPersonalDetails(DemPersDetailsPayloadPojo personalDetails) {
         this.personalDetails = personalDetails;
     }
 

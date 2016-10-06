@@ -22,13 +22,13 @@ import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -79,7 +79,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private DemographicPayloadInfoModel            demographics;
     private DemographicPayloadInfoMetaDataModel    metadamodel;
     private DemographicPayloadInfoPayloadModel     payloadinfomodel;
-    private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
+    private DemPersDetailsPayloadPojo              demPersDetailsPayloadPojo;
     private DemAddressPayloadPojo                  demAddressPayloadPojo;
     private DemographicPayloadInsuranceModel       demographicPayloadInsuranceModel;
     private List<DemographicPayloadInsuranceModel> insurances;
@@ -158,20 +158,20 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                             }
 
                             if (payloadinfomodel.getPersonalDetails() != null) {
-                                demographicPayloadPersonalDetailsModel = payloadinfomodel.getPersonalDetails();
+                                demPersDetailsPayloadPojo = payloadinfomodel.getPersonalDetails();
 
-                                if (demographicPayloadPersonalDetailsModel != null) {
-                                    firstnameTextView.setText(demographicPayloadPersonalDetailsModel.getFirstName());
-                                    lastNameTextView.setText(demographicPayloadPersonalDetailsModel.getLastName());
-                                    String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
+                                if (demPersDetailsPayloadPojo != null) {
+                                    firstnameTextView.setText(demPersDetailsPayloadPojo.getFirstName());
+                                    lastNameTextView.setText(demPersDetailsPayloadPojo.getLastName());
+                                    String datetime = demPersDetailsPayloadPojo.getDateOfBirth();
                                     if (datetime != null) {
                                         String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy();
                                         dobTExtView.setText(dateOfBirthString);
                                     }
-                                    genderTextView.setText(demographicPayloadPersonalDetailsModel.getGender());
-                                    prefferedLanguageTextView.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
-                                    raceTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
-                                    ethnicityTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
+                                    genderTextView.setText(demPersDetailsPayloadPojo.getGender());
+                                    prefferedLanguageTextView.setText(demPersDetailsPayloadPojo.getPreferredLanguage());
+                                    raceTextView.setText(demPersDetailsPayloadPojo.getPrimaryRace());
+                                    ethnicityTextView.setText(demPersDetailsPayloadPojo.getEthnicity());
                                 }
 
                             } else {
@@ -281,8 +281,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                     .setDemAddressPayloadPojo(
                             demAddressPayloadPojo);
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadPersonalDetailsModel(
-                            demographicPayloadPersonalDetailsModel);
+                    .setDemPersDetailsPayloadPojo(
+                            demPersDetailsPayloadPojo);
             ((DemographicReviewActivity) getActivity())
                     .setInsurances(insurances);
             ((DemographicReviewActivity) getActivity())

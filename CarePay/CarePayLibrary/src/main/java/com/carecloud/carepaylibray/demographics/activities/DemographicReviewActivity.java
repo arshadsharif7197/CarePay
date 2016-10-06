@@ -7,15 +7,15 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 
 import java.util.List;
 
 
 public class DemographicReviewActivity extends AppCompatActivity {
 
-    private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
+    private DemPersDetailsPayloadPojo              demPersDetailsPayloadPojo;
     private DemAddressPayloadPojo                  demAddressPayloadPojo;
     private List<DemographicPayloadInsuranceModel> insurances;
     private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
@@ -34,12 +34,12 @@ public class DemographicReviewActivity extends AppCompatActivity {
         }
     }
 
-    public DemographicPayloadPersonalDetailsModel getDemographicPayloadPersonalDetailsModel() {
-        return demographicPayloadPersonalDetailsModel;
+    public DemPersDetailsPayloadPojo getDemPersDetailsPayloadPojo() {
+        return demPersDetailsPayloadPojo;
     }
 
-    public void setDemographicPayloadPersonalDetailsModel(DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel) {
-        this.demographicPayloadPersonalDetailsModel = demographicPayloadPersonalDetailsModel;
+    public void setDemPersDetailsPayloadPojo(DemPersDetailsPayloadPojo demPersDetailsPayloadPojo) {
+        this.demPersDetailsPayloadPojo = demPersDetailsPayloadPojo;
     }
 
     public DemAddressPayloadPojo getDemAddressPayloadPojo() {

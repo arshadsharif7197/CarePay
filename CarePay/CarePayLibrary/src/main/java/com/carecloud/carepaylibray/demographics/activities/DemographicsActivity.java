@@ -28,7 +28,7 @@ import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
@@ -53,9 +53,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private ProgressBar demographicProgressBar;
     
     private DemographicModel modelGet = null;
-    private DemAddressPayloadPojo                  addressModel;
-    private DemographicPayloadPersonalDetailsModel detailsModel;
-    private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
+    private DemAddressPayloadPojo     addressModel;
+    private DemPersDetailsPayloadPojo detailsModel;
+    private DemIdDocPayloadPojo       demPayloadIdDocPojo;
     private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
     
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
@@ -176,7 +176,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return modelGet;
     }
     
-    public DemographicPayloadPersonalDetailsModel getDetailsModel() {
+    public DemPersDetailsPayloadPojo getDetailsModel() {
         return detailsModel;
     }
     
@@ -188,7 +188,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return addressModel;
     }
     
-    public void setDetailsModel(DemographicPayloadPersonalDetailsModel detailsModel) {
+    public void setDetailsModel(DemPersDetailsPayloadPojo detailsModel) {
         this.detailsModel = detailsModel;
     }
     

@@ -20,7 +20,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicUpdateModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 
@@ -92,7 +92,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 //        demographicPayloadAddressModel.setZipcode("33127");
 //        demographicPayloadAddressModel.setPhone("18007654222");
 //
-//        DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
+//        DemPersDetailsPayloadPojo demographicPayloadPersonalDetailsModel = new DemPersDetailsPayloadPojo();
 //        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
 //        demographicPayloadPersonalDetailsModel.setMiddleName("I");
 //        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
@@ -144,7 +144,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadModel.setAddress(addressModel);
         }
 
-        DemographicPayloadPersonalDetailsModel detailsModel = ((DemographicsActivity)getActivity()).getDetailsModel();
+        DemPersDetailsPayloadPojo detailsModel = ((DemographicsActivity)getActivity()).getDetailsModel();
         if(detailsModel != null) {
             demographicPayloadModel.setPersonalDetails(detailsModel);
         }

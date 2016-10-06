@@ -29,9 +29,9 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActi
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -63,7 +63,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     int selectedDataArray;
     private TextView raceDataTextView, ethnicityDataTextView, selectGender, selectlangauge;
     private ProgressBar                            demographicProgressBar;
-    private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
+    private DemPersDetailsPayloadPojo              demPersDetailsPayloadPojo;
     private DemAddressPayloadPojo                  demAddressPayloadPojo;
     private List<DemographicPayloadInsuranceModel> insurances;
     private DemIdDocPayloadPojo                    demographicPayloadDriversLicenseModel;
@@ -178,22 +178,22 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
     private void updateModels() {
-        if (demographicPayloadPersonalDetailsModel == null) {
-            demographicPayloadPersonalDetailsModel = new DemographicPayloadPersonalDetailsModel();
+        if (demPersDetailsPayloadPojo == null) {
+            demPersDetailsPayloadPojo = new DemPersDetailsPayloadPojo();
         }
 
         String firstName = firstNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(firstName)) {
-            demographicPayloadPersonalDetailsModel.setFirstName(firstName);
+            demPersDetailsPayloadPojo.setFirstName(firstName);
         }
         String lastName = lastNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(lastName)) {
-            demographicPayloadPersonalDetailsModel.setLastName(lastName);
+            demPersDetailsPayloadPojo.setLastName(lastName);
         }
         String dateOfBirth = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
-            demographicPayloadPersonalDetailsModel.setDateOfBirth(
+            demPersDetailsPayloadPojo.setDateOfBirth(
                     DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
         }
 
@@ -223,7 +223,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         demographicProgressBar.setVisibility(View.VISIBLE);
         DemographicPayloadModel postPayloadModel = new DemographicPayloadModel();
         postPayloadModel.setAddress(demAddressPayloadPojo);
-        postPayloadModel.setPersonalDetails(demographicPayloadPersonalDetailsModel);
+        postPayloadModel.setPersonalDetails(demPersDetailsPayloadPojo);
         postPayloadModel.setInsurances(insurances);
         postPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
 
@@ -256,8 +256,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         demAddressPayloadPojo = ((DemographicReviewActivity) getActivity())
                 .getDemAddressPayloadPojo();
 
-        demographicPayloadPersonalDetailsModel = ((DemographicReviewActivity) getActivity())
-                .getDemographicPayloadPersonalDetailsModel();
+        demPersDetailsPayloadPojo = ((DemographicReviewActivity) getActivity())
+                .getDemPersDetailsPayloadPojo();
         insurances = ((DemographicReviewActivity) getActivity())
                 .getInsurances();
         demographicPayloadDriversLicenseModel = ((DemographicReviewActivity) getActivity())
@@ -265,19 +265,19 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
         if (demAddressPayloadPojo != null) {
             //Personal Details
-            firstNameText.setText(demographicPayloadPersonalDetailsModel.getFirstName());
-            lastNameText.setText(demographicPayloadPersonalDetailsModel.getLastName());
+            firstNameText.setText(demPersDetailsPayloadPojo.getFirstName());
+            lastNameText.setText(demPersDetailsPayloadPojo.getLastName());
 
-            String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
+            String datetime = demPersDetailsPayloadPojo.getDateOfBirth();
             dobEditText.setText(DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy());
         }
 
-        selectGender.setText(demographicPayloadPersonalDetailsModel.getGender());
-        selectlangauge.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
-        raceDataTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
-        ethnicityDataTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
+        selectGender.setText(demPersDetailsPayloadPojo.getGender());
+        selectlangauge.setText(demPersDetailsPayloadPojo.getPreferredLanguage());
+        raceDataTextView.setText(demPersDetailsPayloadPojo.getPrimaryRace());
+        ethnicityDataTextView.setText(demPersDetailsPayloadPojo.getEthnicity());
 
-        if (demographicPayloadPersonalDetailsModel != null) {
+        if (demPersDetailsPayloadPojo != null) {
             //Address
             address1EditText.setText(demAddressPayloadPojo.getAddress1());
             address2EditText.setText(demAddressPayloadPojo.getAddress2());
