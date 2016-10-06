@@ -22,7 +22,6 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScanne
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 
 import java.util.Arrays;
 

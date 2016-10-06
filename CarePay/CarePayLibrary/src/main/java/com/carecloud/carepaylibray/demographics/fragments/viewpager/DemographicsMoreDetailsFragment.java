@@ -101,10 +101,6 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 //        demographicPayloadPersonalDetailsModel.setEthnicity("White");
 //        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
 //
-//        DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel = new DemographicPayloadDriversLicenseModel();
-//        demographicPayloadDriversLicenseModel.setLicenseNumber("ER-4T3");
-//        demographicPayloadDriversLicenseModel.setLicenseState("OH");
-//
 //        DemInsurancePayloadPojo demographicPayloadInsuranceModel = new DemInsurancePayloadPojo();
 //        demographicPayloadInsuranceModel.setInsuranceMemberId("2513515464");
 //        demographicPayloadInsuranceModel.setInsurancePlan("Aetna");

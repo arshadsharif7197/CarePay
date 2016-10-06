@@ -22,7 +22,6 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScanner
 import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 
 import java.util.List;
 
