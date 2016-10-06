@@ -28,7 +28,7 @@ import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
@@ -66,7 +66,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
     private DemAddressPayloadPojo                  demAddressPayloadPojo;
     private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadIdDocumentModel      demographicPayloadDriversLicenseModel;
+    private DemIdDocPayloadPojo                    demographicPayloadDriversLicenseModel;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;

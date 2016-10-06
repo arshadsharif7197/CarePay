@@ -23,7 +23,7 @@ import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
@@ -83,7 +83,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private DemAddressPayloadPojo                  demAddressPayloadPojo;
     private DemographicPayloadInsuranceModel       demographicPayloadInsuranceModel;
     private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
+    private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
 
 
     public static ReviewFragment newInstance() {

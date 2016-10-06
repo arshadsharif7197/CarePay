@@ -21,7 +21,7 @@ public class DemographicPayloadModel {
 
     @SerializedName("identity_document")
     @Expose
-    private DemographicPayloadIdDocumentModel driversLicense;
+    private DemIdDocPayloadPojo driversLicense;
 
     @SerializedName("insurances")
     @Expose
@@ -72,7 +72,7 @@ public class DemographicPayloadModel {
      * @return
      * The driversLicense
      */
-    public DemographicPayloadIdDocumentModel getDriversLicense() {
+    public DemIdDocPayloadPojo getDriversLicense() {
         return driversLicense;
     }
 
@@ -81,7 +81,7 @@ public class DemographicPayloadModel {
      * @param driversLicense
      * The drivers_license
      */
-    public void setDriversLicense(DemographicPayloadIdDocumentModel driversLicense) {
+    public void setDriversLicense(DemIdDocPayloadPojo driversLicense) {
         this.driversLicense = driversLicense;
     }
 

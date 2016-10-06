@@ -17,7 +17,7 @@ import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
@@ -149,7 +149,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadModel.setPersonalDetails(detailsModel);
         }
 
-        DemographicPayloadIdDocumentModel idDocPojo = ((DemographicsActivity)getActivity()).getDemPayloadIdDocPojo();
+        DemIdDocPayloadPojo idDocPojo = ((DemographicsActivity)getActivity()).getDemPayloadIdDocPojo();
         if(idDocPojo != null) {
             demographicPayloadModel.setDriversLicense(idDocPojo);
         }

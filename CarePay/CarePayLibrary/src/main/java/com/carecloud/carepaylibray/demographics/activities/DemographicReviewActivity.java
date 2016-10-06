@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 
@@ -18,7 +18,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
     private DemAddressPayloadPojo                  demAddressPayloadPojo;
     private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
+    private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,11 +59,11 @@ public class DemographicReviewActivity extends AppCompatActivity {
         return insurances;
     }
 
-    public DemographicPayloadIdDocumentModel getDemPayloadIdDocPojo() {
+    public DemIdDocPayloadPojo getDemPayloadIdDocPojo() {
         return demPayloadIdDocPojo;
     }
 
-    public void setDemPayloadIdDocPojo(DemographicPayloadIdDocumentModel demPayloadIdDocPojo) {
+    public void setDemPayloadIdDocPojo(DemIdDocPayloadPojo demPayloadIdDocPojo) {
         this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
 }

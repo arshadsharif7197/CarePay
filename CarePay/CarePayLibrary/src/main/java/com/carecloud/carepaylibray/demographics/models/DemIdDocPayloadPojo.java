@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemographicPayloadIdDocumentModel {
+public class DemIdDocPayloadPojo {
 
     @SerializedName("identity_document_photos") @Expose
     private List<DemographicsIdPhotoModel> idDocPhothos;

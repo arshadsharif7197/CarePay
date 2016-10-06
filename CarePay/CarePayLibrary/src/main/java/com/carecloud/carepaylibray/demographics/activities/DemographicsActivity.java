@@ -24,7 +24,7 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
@@ -55,7 +55,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private DemographicModel modelGet = null;
     private DemAddressPayloadPojo                  addressModel;
     private DemographicPayloadPersonalDetailsModel detailsModel;
-    private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
+    private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
     private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
     
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
@@ -192,11 +192,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         this.detailsModel = detailsModel;
     }
     
-    public DemographicPayloadIdDocumentModel getDemPayloadIdDocPojo() {
+    public DemIdDocPayloadPojo getDemPayloadIdDocPojo() {
         return demPayloadIdDocPojo;
     }
     
-    public void setDemPayloadIdDocPojo(DemographicPayloadIdDocumentModel demPayloadIdDocPojo) {
+    public void setDemPayloadIdDocPojo(DemIdDocPayloadPojo demPayloadIdDocPojo) {
         this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
     

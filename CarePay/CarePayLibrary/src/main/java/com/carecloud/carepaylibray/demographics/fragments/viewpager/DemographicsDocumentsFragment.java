@@ -19,7 +19,7 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 
@@ -50,7 +50,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private boolean                                isThirdCardAdded;
     private Button                                 addCardButton;
     private Button                                 nextButton;
-    private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
+    private DemIdDocPayloadPojo                    demPayloadIdDocPojo;
     private List<DemographicPayloadInsuranceModel> insuranceModelList;
     private DemographicPayloadInfoPayloadModel     payload;
     private DemographicPayloadInsuranceModel       insuranceModel1;
@@ -90,7 +90,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         }
     }
 
-    public DemographicPayloadIdDocumentModel getDemPayloadIdDocPojo() {
+    public DemIdDocPayloadPojo getDemPayloadIdDocPojo() {
         return demPayloadIdDocPojo;
     }
 
@@ -171,7 +171,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // add license fragment
         licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
         if (demPayloadIdDocPojo == null) {
-            demPayloadIdDocPojo = new DemographicPayloadIdDocumentModel();
+            demPayloadIdDocPojo = new DemIdDocPayloadPojo();
         }
         if (licenseFragment == null) {
             licenseFragment = new LicenseScannerFragment();
