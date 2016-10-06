@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScann
 import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
@@ -55,7 +56,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private boolean                                isThirdCardAdded;
     private Button                                 addCardButton;
     private Button                                 nextButton;
-    private DemographicPayloadDriversLicenseModel  modelDriversLicense;
+    private DemographicPayloadIdDocumentModel      modelDriversLicense;
     private List<DemographicPayloadInsuranceModel> insuranceModelList;
     private DemographicPayloadInfoPayloadModel     payload;
     private DemographicPayloadInsuranceModel       insuranceModel1;
@@ -90,12 +91,12 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private void getTheModels() {
         payload = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
-            modelDriversLicense = payload.getDriversLicense();
+            modelDriversLicense = payload.getIdDocument();
             insuranceModelList = payload.getInsurances();
         }
     }
 
-    public DemographicPayloadDriversLicenseModel getModelDriversLicense() {
+    public DemographicPayloadIdDocumentModel getModelDriversLicense() {
         return modelDriversLicense;
     }
 
@@ -176,7 +177,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // add license fragment
         licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
         if (modelDriversLicense == null) {
-            modelDriversLicense = new DemographicPayloadDriversLicenseModel();
+            modelDriversLicense = new DemographicPayloadIdDocumentModel();
         }
         if (licenseFragment == null) {
             licenseFragment = new LicenseScannerFragment();

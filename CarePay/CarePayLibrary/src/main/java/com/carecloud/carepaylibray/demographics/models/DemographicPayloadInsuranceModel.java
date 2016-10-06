@@ -1,4 +1,5 @@
 package com.carecloud.carepaylibray.demographics.models;
+
 import com.carecloud.carepaylibray.base.models.BasePersonModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,27 +10,22 @@ import java.util.List;
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  */
-public class DemographicPayloadInsuranceModel extends BasePersonModel{
+public class DemographicPayloadInsuranceModel extends BasePersonModel {
 
-    @SerializedName("insurance_photos")
-    @Expose
-    private List<InsurancePhotoModel> insurancePhotos = new ArrayList<InsurancePhotoModel>();
-    @SerializedName("insurance_provider")
-    @Expose
-    private String insuranceProvider;
-    @SerializedName("insurance_plan")
-    @Expose
+    @SerializedName("insurance_photos") @Expose
+    private List<InsurancePhotoModel> insurancePhotos = new ArrayList<>();
+
+    @SerializedName("insurance_provider") @Expose
+    private  String insuranceProvider;
+
+    @SerializedName("insurance_plan") @Expose
     private String insurancePlan;
-    @SerializedName("insurance_member_id")
-    @Expose
+
+    @SerializedName("insurance_member_id") @Expose
     private String insuranceMemberId;
 
-
-
     /**
-     *
-     * @return
-     * The insuranceProvider
+     * @return The insuranceProvider
      */
     public String getInsuranceProvider() {
         return insuranceProvider;
@@ -44,45 +40,35 @@ public class DemographicPayloadInsuranceModel extends BasePersonModel{
     }
 
     /**
-     *
-     * @param insuranceProvider
-     * The insurance_provider
+     * @param insuranceProvider The insurance_provider
      */
     public void setInsuranceProvider(String insuranceProvider) {
         this.insuranceProvider = insuranceProvider;
     }
 
     /**
-     *
-     * @return
-     * The insurancePlan
+     * @return The insurancePlan
      */
     public String getInsurancePlan() {
         return insurancePlan;
     }
 
     /**
-     *
-     * @param insurancePlan
-     * The insurance_plan
+     * @param insurancePlan The insurance_plan
      */
     public void setInsurancePlan(String insurancePlan) {
         this.insurancePlan = insurancePlan;
     }
 
     /**
-     *
-     * @return
-     * The insuranceMemberId
+     * @return The insuranceMemberId
      */
     public String getInsuranceMemberId() {
         return insuranceMemberId;
     }
 
     /**
-     *
-     * @param insuranceMemberId
-     * The insurance_member_id
+     * @param insuranceMemberId The insurance_member_id
      */
     public void setInsuranceMemberId(String insuranceMemberId) {
         this.insuranceMemberId = insuranceMemberId;

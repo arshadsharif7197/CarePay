@@ -14,18 +14,22 @@ public class DemographicPayloadModel {
     @SerializedName("address")
     @Expose
     private DemographicPayloadAddressModel address;
+
     @SerializedName("personal_details")
     @Expose
     private DemographicPayloadPersonalDetailsModel personalDetails;
-    @SerializedName("drivers_license")
+
+    @SerializedName("identity_document")
     @Expose
-    private DemographicPayloadDriversLicenseModel driversLicense;
+    private DemographicPayloadIdDocumentModel driversLicense;
+
     @SerializedName("insurances")
     @Expose
     private List<DemographicPayloadInsuranceModel> insurances = new ArrayList<DemographicPayloadInsuranceModel>();
+
     @SerializedName("updates")
     @Expose
-    private List<String> updates = new ArrayList<String>();
+    private List<DemographicUpdateModel> updates = new ArrayList<>();
 
     /**
      *
@@ -68,7 +72,7 @@ public class DemographicPayloadModel {
      * @return
      * The driversLicense
      */
-    public DemographicPayloadDriversLicenseModel getDriversLicense() {
+    public DemographicPayloadIdDocumentModel getDriversLicense() {
         return driversLicense;
     }
 
@@ -77,7 +81,7 @@ public class DemographicPayloadModel {
      * @param driversLicense
      * The drivers_license
      */
-    public void setDriversLicense(DemographicPayloadDriversLicenseModel driversLicense) {
+    public void setDriversLicense(DemographicPayloadIdDocumentModel driversLicense) {
         this.driversLicense = driversLicense;
     }
 
@@ -99,21 +103,11 @@ public class DemographicPayloadModel {
         this.insurances = insurances;
     }
 
-    /**
-     *
-     * @return
-     * The updates
-     */
-    public List<String> getUpdates() {
+    public List<DemographicUpdateModel> getUpdates() {
         return updates;
     }
 
-    /**
-     *
-     * @param updates
-     * The updates
-     */
-    public void setUpdates(List<String> updates) {
+    public void setUpdates(List<DemographicUpdateModel> updates) {
         this.updates = updates;
     }
 }

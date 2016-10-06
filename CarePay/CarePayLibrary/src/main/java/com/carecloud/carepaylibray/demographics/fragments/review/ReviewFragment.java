@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActi
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
@@ -84,7 +85,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private DemographicPayloadAddressModel         demographicPayloadAddressModel;
     private DemographicPayloadInsuranceModel       demographicPayloadInsuranceModel;
     private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadDriversLicenseModel  demographicPayloadDriversLicenseModel;
+    private DemographicPayloadIdDocumentModel      demographicPayloadDriversLicenseModel;
 
 
     public static ReviewFragment newInstance() {
@@ -209,10 +210,10 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                 Log.v(LOG_TAG, "demographic Address model is null");
                             }
 
-                            if (payloadinfomodel.getDriversLicense() != null) {
-                                demographicPayloadDriversLicenseModel = payloadinfomodel.getDriversLicense();
+                            if (payloadinfomodel.getIdDocument() != null) {
+                                demographicPayloadDriversLicenseModel = payloadinfomodel.getIdDocument();
                                 driverLicenseTextView.setText(
-                                        demographicPayloadDriversLicenseModel.getLicenseNumber());
+                                        demographicPayloadDriversLicenseModel.getIdNumber());
                             } else {
                                 Log.v(LOG_TAG, "demographic Driver License model is null");
                             }

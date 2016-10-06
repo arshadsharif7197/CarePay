@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
@@ -62,9 +63,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private ProgressBar demographicProgressBar;
     
     private DemographicModel modelGet = null;
-    private DemographicPayloadAddressModel addressModel;
+    private DemographicPayloadAddressModel         addressModel;
     private DemographicPayloadPersonalDetailsModel detailsModel;
-    private DemographicPayloadDriversLicenseModel  modelDriversLicense;
+    private DemographicPayloadIdDocumentModel      modelDriversLicense;
     private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
     
     public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
@@ -201,11 +202,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         this.detailsModel = detailsModel;
     }
     
-    public DemographicPayloadDriversLicenseModel getModelDriversLicense() {
+    public DemographicPayloadIdDocumentModel getModelDriversLicense() {
         return modelDriversLicense;
     }
     
-    public void setModelDriversLicense(DemographicPayloadDriversLicenseModel modelDriversLicense) {
+    public void setModelDriversLicense(DemographicPayloadIdDocumentModel modelDriversLicense) {
         this.modelDriversLicense = modelDriversLicense;
     }
     

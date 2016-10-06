@@ -13,18 +13,22 @@ public class DemographicPayloadInfoPayloadModel {
     @SerializedName("address")
     @Expose
     private DemographicPayloadAddressModel address;
+
     @SerializedName("personal_details")
     @Expose
     private DemographicPayloadPersonalDetailsModel personalDetails;
-    @SerializedName("drivers_license")
+
+    @SerializedName("identity_document")
     @Expose
-    private DemographicPayloadDriversLicenseModel driversLicense;
+    private DemographicPayloadIdDocumentModel idDocument;
+
     @SerializedName("insurances")
     @Expose
     private List<DemographicPayloadInsuranceModel> insurances = new ArrayList<DemographicPayloadInsuranceModel>();
+
     @SerializedName("updates")
     @Expose
-    private List<String> updates = new ArrayList<String>();
+    private List<DemographicUpdateModel> updates = new ArrayList<>();
 
     /**
      *
@@ -65,19 +69,19 @@ public class DemographicPayloadInfoPayloadModel {
     /**
      *
      * @return
-     * The driversLicense
+     * The idDocument
      */
-    public DemographicPayloadDriversLicenseModel getDriversLicense() {
-        return driversLicense;
+    public DemographicPayloadIdDocumentModel getIdDocument() {
+        return idDocument;
     }
 
     /**
      *
-     * @param driversLicense
+     * @param idDocument
      * The drivers_license
      */
-    public void setDriversLicense(DemographicPayloadDriversLicenseModel driversLicense) {
-        this.driversLicense = driversLicense;
+    public void setIdDocument(DemographicPayloadIdDocumentModel idDocument) {
+        this.idDocument = idDocument;
     }
 
     /**
@@ -103,7 +107,7 @@ public class DemographicPayloadInfoPayloadModel {
      * @return
      * The updates
      */
-    public List<String> getUpdates() {
+    public List<DemographicUpdateModel> getUpdates() {
         return updates;
     }
 
@@ -112,7 +116,7 @@ public class DemographicPayloadInfoPayloadModel {
      * @param updates
      * The updates
      */
-    public void setUpdates(List<String> updates) {
+    public void setUpdates(List<DemographicUpdateModel> updates) {
         this.updates = updates;
     }
 }

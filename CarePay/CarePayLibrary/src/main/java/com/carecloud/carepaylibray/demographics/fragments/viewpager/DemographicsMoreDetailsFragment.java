@@ -18,9 +18,11 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicUpdateModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.google.gson.JsonObject;
 
@@ -130,7 +132,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 //        demographicPayloadModel.setDriversLicense(demographicPayloadDriversLicenseModel);
 //        demographicPayloadModel.setInsurances(insurances);
 
-        List<String> updates = new ArrayList<String>();
+        List<DemographicUpdateModel> updates = new ArrayList<>();
         demographicPayloadModel.setUpdates(updates);
 
         /*DemographicModel demographicPostModel = new DemographicModel();
@@ -149,7 +151,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadModel.setPersonalDetails(detailsModel);
         }
 
-        DemographicPayloadDriversLicenseModel licenseModel = ((DemographicsActivity)getActivity()).getModelDriversLicense();
+        DemographicPayloadIdDocumentModel licenseModel = ((DemographicsActivity)getActivity()).getModelDriversLicense();
         if(licenseModel != null) {
             demographicPayloadModel.setDriversLicense(licenseModel);
         }

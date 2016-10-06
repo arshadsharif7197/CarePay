@@ -8,6 +8,7 @@ import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 
@@ -19,7 +20,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
     private DemographicPayloadAddressModel demographicPayloadAddressModel;
     private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel;
+    private DemographicPayloadIdDocumentModel demographicPayloadDriversLicenseModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,11 +61,11 @@ public class DemographicReviewActivity extends AppCompatActivity {
         return insurances;
     }
 
-    public DemographicPayloadDriversLicenseModel getDemographicPayloadDriversLicenseModel() {
+    public DemographicPayloadIdDocumentModel getDemographicPayloadDriversLicenseModel() {
         return demographicPayloadDriversLicenseModel;
     }
 
-    public void setDemographicPayloadDriversLicenseModel(DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel) {
+    public void setDemographicPayloadDriversLicenseModel(DemographicPayloadIdDocumentModel demographicPayloadDriversLicenseModel) {
         this.demographicPayloadDriversLicenseModel = demographicPayloadDriversLicenseModel;
     }
 }
