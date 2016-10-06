@@ -21,8 +21,8 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
@@ -80,7 +80,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private DemographicPayloadInfoMetaDataModel    metadamodel;
     private DemographicPayloadInfoPayloadModel     payloadinfomodel;
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
-    private DemographicPayloadAddressModel         demographicPayloadAddressModel;
+    private DemAddressPayloadPojo                  demAddressPayloadPojo;
     private DemographicPayloadInsuranceModel       demographicPayloadInsuranceModel;
     private List<DemographicPayloadInsuranceModel> insurances;
     private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
@@ -191,17 +191,17 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                             }
 
                             if (payloadinfomodel.getAddress() != null) {
-                                demographicPayloadAddressModel = payloadinfomodel.getAddress();
-                                if (demographicPayloadAddressModel != null) {
-                                    address1TextView.setText(demographicPayloadAddressModel.getAddress1());
-                                    address2TextView.setText(demographicPayloadAddressModel.getAddress2());
-                                    cityTextView.setText(demographicPayloadAddressModel.getCity());
-                                    stateTextView.setText(demographicPayloadAddressModel.getState());
+                                demAddressPayloadPojo = payloadinfomodel.getAddress();
+                                if (demAddressPayloadPojo != null) {
+                                    address1TextView.setText(demAddressPayloadPojo.getAddress1());
+                                    address2TextView.setText(demAddressPayloadPojo.getAddress2());
+                                    cityTextView.setText(demAddressPayloadPojo.getCity());
+                                    stateTextView.setText(demAddressPayloadPojo.getState());
                                     String zipcode = StringUtil.formatZipCode(
-                                            demographicPayloadAddressModel.getZipcode());
+                                            demAddressPayloadPojo.getZipcode());
                                     zipcodeTextView.setText(zipcode);
                                     String phoneNumber = StringUtil.formatPhoneNumber(
-                                            demographicPayloadAddressModel.getPhone());
+                                            demAddressPayloadPojo.getPhone());
                                     phoneNumberTextView.setText(phoneNumber);
                                 }
                             } else {
@@ -278,8 +278,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             getActivity().finish();
         } else if (view == updateInformationUpdate) {
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadAddressModel(
-                            demographicPayloadAddressModel);
+                    .setDemAddressPayloadPojo(
+                            demAddressPayloadPojo);
             ((DemographicReviewActivity) getActivity())
                     .setDemographicPayloadPersonalDetailsModel(
                             demographicPayloadPersonalDetailsModel);

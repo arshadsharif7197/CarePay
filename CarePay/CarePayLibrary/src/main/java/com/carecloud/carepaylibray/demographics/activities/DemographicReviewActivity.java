@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
@@ -16,7 +16,7 @@ import java.util.List;
 public class DemographicReviewActivity extends AppCompatActivity {
 
     private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
-    private DemographicPayloadAddressModel         demographicPayloadAddressModel;
+    private DemAddressPayloadPojo                  demAddressPayloadPojo;
     private List<DemographicPayloadInsuranceModel> insurances;
     private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
 
@@ -42,12 +42,12 @@ public class DemographicReviewActivity extends AppCompatActivity {
         this.demographicPayloadPersonalDetailsModel = demographicPayloadPersonalDetailsModel;
     }
 
-    public DemographicPayloadAddressModel getDemographicPayloadAddressModel() {
-        return demographicPayloadAddressModel;
+    public DemAddressPayloadPojo getDemAddressPayloadPojo() {
+        return demAddressPayloadPojo;
     }
 
-    public void setDemographicPayloadAddressModel(DemographicPayloadAddressModel demographicPayloadAddressModel) {
-        this.demographicPayloadAddressModel = demographicPayloadAddressModel;
+    public void setDemAddressPayloadPojo(DemAddressPayloadPojo demAddressPayloadPojo) {
+        this.demAddressPayloadPojo = demAddressPayloadPojo;
     }
 
 

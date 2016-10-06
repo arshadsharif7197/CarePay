@@ -13,7 +13,7 @@ public class DemographicPayloadModel {
 
     @SerializedName("address")
     @Expose
-    private DemographicPayloadAddressModel address;
+    private DemAddressPayloadPojo address;
 
     @SerializedName("personal_details")
     @Expose
@@ -36,7 +36,7 @@ public class DemographicPayloadModel {
      * @return
      * The address
      */
-    public DemographicPayloadAddressModel getAddress() {
+    public DemAddressPayloadPojo getAddress() {
         return address;
     }
 
@@ -45,7 +45,7 @@ public class DemographicPayloadModel {
      * @param address
      * The address
      */
-    public void setAddress(DemographicPayloadAddressModel address) {
+    public void setAddress(DemAddressPayloadPojo address) {
         this.address = address;
     }
 

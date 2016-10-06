@@ -15,8 +15,8 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
@@ -84,7 +84,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     public void confirmDemographicInformation() {
         // TODO: 9/29/2016 add progress
 
-//        DemographicPayloadAddressModel demographicPayloadAddressModel = new DemographicPayloadAddressModel();
+//        DemAddressPayloadPojo demographicPayloadAddressModel = new DemAddressPayloadPojo();
 //        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
 //        demographicPayloadAddressModel.setAddress2("#800 Lejeune");
 //        demographicPayloadAddressModel.setCity("Miami");
@@ -139,7 +139,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         // TODO: 9/29/2016 progress
 
         // obtain the updated models from the pager fragments
-        DemographicPayloadAddressModel addressModel = ((DemographicsActivity)getActivity()).getAddressModel();
+        DemAddressPayloadPojo addressModel = ((DemographicsActivity)getActivity()).getAddressModel();
         if(addressModel != null) {
             demographicPayloadModel.setAddress(addressModel);
         }

@@ -22,8 +22,8 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadIdDocumentModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
@@ -53,7 +53,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private ProgressBar demographicProgressBar;
     
     private DemographicModel modelGet = null;
-    private DemographicPayloadAddressModel         addressModel;
+    private DemAddressPayloadPojo                  addressModel;
     private DemographicPayloadPersonalDetailsModel detailsModel;
     private DemographicPayloadIdDocumentModel      demPayloadIdDocPojo;
     private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
@@ -180,11 +180,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return detailsModel;
     }
     
-    public void setAddressModel(DemographicPayloadAddressModel addressModel) {
+    public void setAddressModel(DemAddressPayloadPojo addressModel) {
         this.addressModel = addressModel;
     }
     
-    public DemographicPayloadAddressModel getAddressModel() {
+    public DemAddressPayloadPojo getAddressModel() {
         return addressModel;
     }
     
