@@ -144,18 +144,6 @@ public class ResponsibilityFragment extends Fragment {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
                 //TODO: Redirect to AppointmentsActivity on Success
-//                Intent intent = new Intent(ResponsibilityFragment.this.getActivity(), AppointmentsActivity.class);
-//                Appointment appointmentModel = AppointmentsActivity.model;
-//                if (appointmentModel != null) {
-//                    appointmentModel.setCheckedIn(true);
-//                    appointmentModel.setPending(false);
-//                }
-//
-//                // appointment clicked item is cleared once payment is done.
-//                AppointmentsActivity.model = null;
-//                intent.putExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentModel);
-//                startActivity(intent);
-//                getActivity().finish();
             }
 
             @Override

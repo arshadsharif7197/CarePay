@@ -67,41 +67,17 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
         /// DUMMY DATA START
         Appointment appointmentModel = new Appointment();
-//        appointmentModel.setDoctorName("Dr. Ellie Burton");
-//        appointmentModel.setAppointmentType("Family Physician");
-//        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-//        appointmentModel.setAptId("1234");
-//        appointmentModel.setPlaceName("Mercy Hospital");
-//        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
         recentProviderItems.add(appointmentModel);
         allProviderItems.add(appointmentModel);
 
         appointmentModel = new Appointment();
-//        appointmentModel.setDoctorName("Dr. Joshua Wellington");
-//        appointmentModel.setAppointmentType("Neurologist");
-//        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-//        appointmentModel.setAptId("1234");
-//        appointmentModel.setPlaceName("Mercy Hospital");
-//        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
         recentProviderItems.add(appointmentModel);
         allProviderItems.add(appointmentModel);
 
         appointmentModel = new Appointment();
-//        appointmentModel.setDoctorName("Dr. George Diaz");
-//        appointmentModel.setAppointmentType("Urologist");
-//        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-//        appointmentModel.setAptId("1234");
-//        appointmentModel.setPlaceName("Mercy Hospital");
-//        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
         allProviderItems.add(appointmentModel);
 
         appointmentModel = new Appointment();
-//        appointmentModel.setDoctorName("Dr. Helena S. Harley");
-//        appointmentModel.setAppointmentType("Pediatry");
-//        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-//        appointmentModel.setAptId("1234");
-//        appointmentModel.setPlaceName("Mercy Hospital");
-//        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
         allProviderItems.add(appointmentModel);
         /// DUMMY DATA END
 
