@@ -20,9 +20,8 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
 
 import java.util.Arrays;
 
@@ -45,8 +44,8 @@ public class DemographicsDetailsFragment extends Fragment
     private String[] preferredLanguageArray;
     private int      selectedArray;
     private TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
-    private Button nextButton;
-    private DemographicPayloadPersonalDetailsModel model;
+    private Button                   nextButton;
+    private DemPersDetailsPayloadDto model;
 
     @Nullable
     @Override
@@ -94,8 +93,9 @@ public class DemographicsDetailsFragment extends Fragment
         populateViewsFromModel();
     }
 
-    public DemographicPayloadPersonalDetailsModel getModel() {
-        DemographicPayloadInfoPayloadModel payload = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
+    public DemPersDetailsPayloadDto getModel() {
+        DemPayloadDto payload
+                = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
         if(payload != null) {
             model = payload.getPersonalDetails();
         }
@@ -113,7 +113,7 @@ public class DemographicsDetailsFragment extends Fragment
             setPictureFromByteStream(pictureByteStream);
         } else {
             Log.v(LOG_TAG, "demographics details: views populated with defaults");
-            model = new DemographicPayloadPersonalDetailsModel();
+            model = new DemPersDetailsPayloadDto();
         }
     }
 

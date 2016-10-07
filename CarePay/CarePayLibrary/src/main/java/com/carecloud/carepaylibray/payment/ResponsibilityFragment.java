@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,22 +17,24 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.payment.fragments.PaymentMethodFragment;
 import com.google.gson.JsonObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -70,20 +73,31 @@ public class ResponsibilityFragment extends Fragment {
 
         setTypefaces(view);
 
-        Button payAtPracticeButton = (Button) view.findViewById(R.id.respons_pay);
-
-        payAtPracticeButton.setOnClickListener(new View.OnClickListener() {
+        Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
+        payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                payAndFetchCheckedInAppointment();
+                FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+                PaymentMethodFragment fragment = (PaymentMethodFragment) fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new PaymentMethodFragment();
+                }
+
+                //Bundle bundle = new Bundle();
+                //bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
+                //fragment.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+                fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+                fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
+                fragmentTransaction.commit();
             }
         });
 
-        Button payNowButton = (Button) view.findViewById(R.id.respons_pay_now);
-        payNowButton.setOnClickListener(new View.OnClickListener() {
+        Button makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
+        makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                payAndFetchCheckedInAppointment();
+
             }
         });
 
@@ -174,7 +188,7 @@ public class ResponsibilityFragment extends Fragment {
         setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay_label));
         setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
         setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay));
-        setGothamRoundedMediumTypeface(mActivity, (Button) view.findViewById(R.id.respons_pay));
+        setGothamRoundedMediumTypeface(mActivity, (Button) view.findViewById(R.id.pay_total_amount_button));
     }
 
     /**
