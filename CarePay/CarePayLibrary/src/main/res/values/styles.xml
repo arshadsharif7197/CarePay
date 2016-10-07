@@ -342,6 +342,14 @@
         <item name="android:textColor">@color/blue_cerulian</item>
     </style>
 
+    <style name="SignupInstructionsStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/signup_button_textsize</item>
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:layout_marginTop">@dimen/sign_up_margin_top</item>
+    </style>
 
     <!-- Demographics Review Screens Style>-->
 

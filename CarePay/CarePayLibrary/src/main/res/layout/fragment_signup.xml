@@ -69,6 +69,11 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"/>
             </android.support.design.widget.TextInputLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                android:text="@string/signup_password_format_instructions"
+                style="@style/SignupInstructionsStyle"/>
+
         </LinearLayout>
     </ScrollView>
 
