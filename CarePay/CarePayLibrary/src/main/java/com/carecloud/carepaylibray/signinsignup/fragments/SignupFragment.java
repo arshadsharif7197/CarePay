@@ -689,10 +689,11 @@ public class SignupFragment extends Fragment {
         @Override
         public void onFailure(Exception exception) {
             progressBar.setVisibility(View.INVISIBLE);
+            String errorMsg = CognitoAppHelper.formatException(exception);
+
             SystemUtil.showDialogMessage(getActivity(),
                                          "Sign up failed!",
-                                         "Invalid id or password");
-            Log.e(LOG_TAG, CognitoAppHelper.formatException(exception));
+                                         errorMsg);
         }
     };
 }
