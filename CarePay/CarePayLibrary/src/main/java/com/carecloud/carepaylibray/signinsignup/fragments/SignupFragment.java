@@ -23,16 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
@@ -81,7 +74,6 @@ public class SignupFragment extends Fragment {
     private boolean         isLastNameEmpty;
     private boolean         isEmailEmpty;
     private boolean         isPasswordEmpty;
-    private boolean         isPasswordValid;
     private boolean         isRepeatPasswordEmpty;
 
     private Button   submitButton;
@@ -483,7 +475,7 @@ public class SignupFragment extends Fragment {
     private boolean checkPassword() {
         String passwordString = passwordText.getText().toString();
         isPasswordEmpty = StringUtil.isNullOrEmpty(passwordString);
-        isPasswordValid = StringUtil.isValidPassword(passwordString);
+        boolean isPasswordValid = StringUtil.isValidPassword(passwordString);
 
         passwordInputLayout.setErrorEnabled(isPasswordEmpty || !isPasswordValid);
         String error;

@@ -27,7 +27,6 @@ import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -40,6 +39,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 /**
  * Created by harish_revuri on 9/7/2016.
+ * The fragment corresponding to SignUp screen.
  */
 public class SigninFragment extends Fragment {
 
@@ -56,8 +56,6 @@ public class SigninFragment extends Fragment {
 
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
-
-    private String userName;
 
     @Nullable
     @Override
@@ -301,23 +299,15 @@ public class SigninFragment extends Fragment {
         passwordTexInput.setError(null);
     }
 
-    private void launchUser() {
-        Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
-        startActivity(intent);
-//        reset();
-        getActivity().finish();
-    }
-
     // cognito
     private void signInUser() {
         Log.v(LOG_TAG, "sign in user");
-        userName = emailEditText.getText().toString();
+        String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
         CognitoAppHelper.signIn(getActivity(), userName, password, progressBar, new CognitoActionCallback() {
             @Override
             public void executeAction() {
-              //  launchUser();
                 getDemographicInformation();
             }
         });
@@ -353,6 +343,4 @@ public class SigninFragment extends Fragment {
         startActivity(intent);
         getActivity().finish();
     }
-
-
 }
