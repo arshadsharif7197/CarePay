@@ -316,12 +316,10 @@ public class AppointmentsListFragment extends Fragment {
                         && appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
                     appointmentListWithHeader.add(appointmentModel);
                 } else {
-                    previousDay = getSectionHeaderTitle(appointmentModel.getPayload().getStartTime());
-
                     // If appointment is checked-in, don't add header
                     if (appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
-                        AppointmentSectionHeaderModel appointmentSectionHeaderModel
-                                = new AppointmentSectionHeaderModel();
+                        previousDay = getSectionHeaderTitle(appointmentModel.getPayload().getStartTime());
+                        AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
                         appointmentSectionHeaderModel.setAppointmentHeader(previousDay);
                         appointmentListWithHeader.add(appointmentSectionHeaderModel);
                         appointmentListWithHeader.add(appointmentModel);
