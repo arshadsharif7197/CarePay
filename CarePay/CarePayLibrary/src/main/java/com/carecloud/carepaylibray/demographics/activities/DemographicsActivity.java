@@ -12,29 +12,24 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
-import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -44,10 +39,6 @@ import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -62,13 +53,13 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private ProgressBar demographicProgressBar;
     
     private DemographicModel modelGet = null;
-    private DemographicPayloadAddressModel addressModel;
-    private DemographicPayloadPersonalDetailsModel detailsModel;
-    private DemographicPayloadDriversLicenseModel  modelDriversLicense;
-    private List<DemographicPayloadInsuranceModel> insuranceModelList = new ArrayList<>();
+    private DemAddressPayloadDto     addressModel;
+    private DemPersDetailsPayloadDto detailsModel;
+    private DemIdDocPayloadDto       demPayloadIdDocPojo;
+    private List<DemInsurancePayloadPojo> insuranceModelList = new ArrayList<>();
     
-    public DemographicPayloadInfoPayloadModel getDemographicInfoPayloadModel() {
-        DemographicPayloadInfoPayloadModel infoModel = null;
+    public DemPayloadDto getDemographicInfoPayloadModel() {
+        DemPayloadDto infoModel = null;
         if (modelGet != null) {
             DemographicPayloadResponseModel response = modelGet.getPayload();
             if (response != null) {
@@ -185,39 +176,39 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return modelGet;
     }
     
-    public DemographicPayloadPersonalDetailsModel getDetailsModel() {
+    public DemPersDetailsPayloadDto getDetailsModel() {
         return detailsModel;
     }
     
-    public void setAddressModel(DemographicPayloadAddressModel addressModel) {
+    public void setAddressModel(DemAddressPayloadDto addressModel) {
         this.addressModel = addressModel;
     }
     
-    public DemographicPayloadAddressModel getAddressModel() {
+    public DemAddressPayloadDto getAddressModel() {
         return addressModel;
     }
     
-    public void setDetailsModel(DemographicPayloadPersonalDetailsModel detailsModel) {
+    public void setDetailsModel(DemPersDetailsPayloadDto detailsModel) {
         this.detailsModel = detailsModel;
     }
     
-    public DemographicPayloadDriversLicenseModel getModelDriversLicense() {
-        return modelDriversLicense;
+    public DemIdDocPayloadDto getDemPayloadIdDocPojo() {
+        return demPayloadIdDocPojo;
     }
     
-    public void setModelDriversLicense(DemographicPayloadDriversLicenseModel modelDriversLicense) {
-        this.modelDriversLicense = modelDriversLicense;
+    public void setDemPayloadIdDocPojo(DemIdDocPayloadDto demPayloadIdDocPojo) {
+        this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
     
     public void setModel(DemographicModel modelGet) {
         this.modelGet = modelGet;
     }
     
-    public List<DemographicPayloadInsuranceModel> getInsuranceModelList() {
+    public List<DemInsurancePayloadPojo> getInsuranceModelList() {
         return insuranceModelList;
     }
     
-    public void setInsuranceModelList(List<DemographicPayloadInsuranceModel> insuranceModelList) {
+    public void setInsuranceModelList(List<DemInsurancePayloadPojo> insuranceModelList) {
         this.insuranceModelList = insuranceModelList;
     }
     
