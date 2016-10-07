@@ -49,7 +49,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 /**
  * Created by harish_revuri on 9/7/2016.
- * Signup screen
+ * Signup screen.
  */
 public class SignupFragment extends Fragment {
 
@@ -418,18 +418,23 @@ public class SignupFragment extends Fragment {
         isRepeatPasswordEmpty = true;
     }
 
+    /**
+     * Receives the result from the confirm email activity; (just in case we need confirmation)
+     * @param requestCode The request code.
+     * @param resultCode The result code.
+     * @param data The passed data.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
                 // confirmed; (auto)sign-in
-//                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
                 CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
                                         new CognitoActionCallback() {
                                             @Override
                                             public void executeAction() {
-//                                                launchDemographics(); // TODO: 9/29/2016 fix for confirmation or remove
+                                                getDemographicInformation();
                                             }
                                         });
             }
