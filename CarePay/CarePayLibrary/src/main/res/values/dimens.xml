@@ -190,23 +190,6 @@
     <dimen name="apt_popup_button_margin">6dp</dimen>
     <dimen name="apt_popup_optional">10sp</dimen>
 
-    <!--Payment dialogs-->
-    <dimen name="payment_header_height">156dp</dimen>
-    <dimen name="payment_header_margin">17dp</dimen>
-    <dimen name="payment_header_top_margin">16dp</dimen>
-    <dimen name="payment_header_amount_size">60sp</dimen>
-    <dimen name="payment_side_margin">19dp</dimen>
-    <dimen name="payment_button_margin_top">20dp</dimen>
-    <dimen name="largealert_height">176dp</dimen>
-    <dimen name="payment_header_icon_size">77dp</dimen>
-    <dimen name="payment_amount_size">38sp</dimen>
-    <dimen name="payment_text_balance_size">17sp</dimen>
-    <dimen name="provider_margin_top">9dp</dimen>
-    <dimen name="addess_payment_margin_top">14dp</dimen>
-    <dimen name="payment_header_amount_month_size">20dp</dimen>
-    <dimen name="payment_option_section_margin">50dp</dimen>
-
-
     <!-- Cognito -->
     <dimen name="activity_intra_group_separation">10dp</dimen>
     <dimen name="activity_inter_group_separation">30dp</dimen>
@@ -252,8 +235,11 @@
     <dimen name="no_apt_message_desc_margin_top">5dp</dimen>
     <dimen name="no_apt_message_desc_margin">32dp</dimen>
 
-
-
-
-
+    <!-- Payment -->
+    <dimen name="payment_method_parent_layout_padding">17dp</dimen>
+    <dimen name="payment_method_layout_label_text_size">17sp</dimen>
+    <dimen name="payment_method_layout_lable_text_size">17sp</dimen>
+    <dimen name="payment_method_layout_label_drawable_padding">8dp</dimen>
+    <dimen name="payment_method_layout_label_margin_top">26dp</dimen>
+    <dimen name="payment_method_layout_checkbox_margin">13dp</dimen>
 </resources>
