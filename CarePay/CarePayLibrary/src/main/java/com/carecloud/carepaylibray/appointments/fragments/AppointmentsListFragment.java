@@ -101,7 +101,7 @@ public class AppointmentsListFragment extends Fragment {
                         } else if (differenceInMinutes == 60) {
                             appointmentInDuration = "1 hour";
                         } else if (differenceInMinutes > 60) {
-                            appointmentInDuration = " hour and " + (differenceInMinutes - 60) + " minutes";
+                            appointmentInDuration = "an hour and " + (differenceInMinutes - 60) + " minutes";
                         } else {
                             appointmentInDuration = differenceInMinutes + " minutes";
                         }
@@ -308,23 +308,27 @@ public class AppointmentsListFragment extends Fragment {
             });
 
             // To create appointment list data structure along with headers
-            String previousDay = "";
+            String headerTitle = "";
             appointmentListWithHeader = new ArrayList<>();
 
             for (Appointment appointmentModel : appointmentsItems) {
-                if (previousDay.equalsIgnoreCase(getSectionHeaderTitle(appointmentModel.getPayload().getStartTime()))
+                String title = getSectionHeaderTitle(appointmentModel.getPayload().getStartTime());
+                if (headerTitle.equalsIgnoreCase(title)
                         && appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
                     appointmentListWithHeader.add(appointmentModel);
                 } else {
-                    // If appointment is checked-in, don't add header
-                    if (appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
-                        previousDay = getSectionHeaderTitle(appointmentModel.getPayload().getStartTime());
-                        AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
-                        appointmentSectionHeaderModel.setAppointmentHeader(previousDay);
-                        appointmentListWithHeader.add(appointmentSectionHeaderModel);
-                        appointmentListWithHeader.add(appointmentModel);
-                    } else {
-                        appointmentListWithHeader.add(0, appointmentModel);
+                    headerTitle = getSectionHeaderTitle(appointmentModel.getPayload().getStartTime());
+
+                    if (!headerTitle.equals(CarePayConstants.DAY_OVER)) {
+                        // If appointment is checked-in, don't add header
+                        if (appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
+                            AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
+                            appointmentSectionHeaderModel.setAppointmentHeader(headerTitle);
+                            appointmentListWithHeader.add(appointmentSectionHeaderModel);
+                            appointmentListWithHeader.add(appointmentModel);
+                        } else {
+                            appointmentListWithHeader.add(0, appointmentModel);
+                        }
                     }
                 }
             }
@@ -334,6 +338,7 @@ public class AppointmentsListFragment extends Fragment {
 
     private String getSectionHeaderTitle(String appointmentRawDate) {
         // Current date
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
         Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
@@ -341,16 +346,16 @@ public class AppointmentsListFragment extends Fragment {
         String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
         Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
-        String previousDay = "";
+        String headerText;
         if (convertedAppointmentDate.after(currentConvertedDate)
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            previousDay = CarePayConstants.DAY_UPCOMING;
+            headerText = CarePayConstants.DAY_UPCOMING;
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            // Do nothing
+            headerText = CarePayConstants.DAY_OVER;
         } else {
-            previousDay = CarePayConstants.DAY_TODAY;
+            headerText = CarePayConstants.DAY_TODAY;
         }
 
-        return previousDay;
+        return headerText;
     }
 }

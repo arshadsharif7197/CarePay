@@ -24,6 +24,7 @@ public class CarePayConstants {
     public static final String ATTR_TIME = "time";
     public static final String DAY_UPCOMING = "UPCOMING";
     public static final String DAY_TODAY = "TODAY";
+    public static final String DAY_OVER = "OVER";
     public static final String ATTR_PHYSICIAN = "physician";
     public static final String ATTR_NAME = "name";
     public static final String ATTR_TYPE = "type";

@@ -216,6 +216,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private String getSectionHeaderTitle(String appointmentRawDate) {
         // Current date
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
         Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
