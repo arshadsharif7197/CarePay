@@ -46,7 +46,8 @@ public class ResponsibilityScreenTest {
         onView(withId(R.id.respons_prev_balance)).check(matches(isDescendantOfA(withId(R.id.respons_root))));
         onView(withId(R.id.respons_copay_label)).check(matches(isDescendantOfA(withId(R.id.respons_root))));
         onView(withId(R.id.respons_copay)).check(matches(isDescendantOfA(withId(R.id.respons_root))));
-        onView(withId(R.id.respons_pay)).check(matches(isDescendantOfA(withId(R.id.respons_root))));
+        onView(withId(R.id.pay_total_amount_button)).check(matches(isDescendantOfA(withId(R.id.respons_root))));
+        onView(withId(R.id.make_partial_payment_button)).check(matches(isDescendantOfA(withId(R.id.respons_root))));
     }
 
     @Test

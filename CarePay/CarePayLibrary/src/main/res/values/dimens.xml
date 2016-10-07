@@ -235,4 +235,11 @@
     <dimen name="no_apt_message_desc_margin_top">5dp</dimen>
     <dimen name="no_apt_message_desc_margin">32dp</dimen>
 
+    <!-- Payment -->
+    <dimen name="payment_method_parent_layout_padding">17dp</dimen>
+    <dimen name="payment_method_layout_label_text_size">17sp</dimen>
+    <dimen name="payment_method_layout_lable_text_size">17sp</dimen>
+    <dimen name="payment_method_layout_label_drawable_padding">8dp</dimen>
+    <dimen name="payment_method_layout_label_margin_top">26dp</dimen>
+    <dimen name="payment_method_layout_checkbox_margin">13dp</dimen>
 </resources>

@@ -1,8 +1,5 @@
 package com.carecloud.carepaylibray.utils;
 
-import android.util.Log;
-
-import com.carecloud.carepaylibray.consentforms.interfaces.FormData;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
 import java.text.DateFormatSymbols;
@@ -11,8 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 /**
  * Created by kkannan on 9/13/16.

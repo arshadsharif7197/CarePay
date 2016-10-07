@@ -160,4 +160,23 @@ public class DateUtilTest {
         assertThat("error test tommorrow", DateUtil.getInstance().isTomorrowOrAfter(), is(true));
 
     }
+
+
+    @Test
+    public void doesChangeTheFormat() {
+        DateUtil.getInstance()
+                .setFormat("MM/dd/yy'T'HH:mm:ssX"); // change the format
+        DateUtil.getInstance().setDateRaw("10/03/16T16:30:00-04:00"); // set a date in the new format
+
+        assertThat("invalid day", DateUtil.getInstance().getDay(), is(3));
+        assertThat("invalid month", DateUtil.getInstance().getMonth(), is(Calendar.OCTOBER));
+        assertThat("invalid year", DateUtil.getInstance().getYear(), is(2016));
+        assertThat("invalid day literal", DateUtil.getInstance().getDayLiteral(), is("Monday"));
+        assertThat("invalid month literal", DateUtil.getInstance().getMonthLiteral(), is("October"));
+        assertThat("invalid day abbr", DateUtil.getInstance().getDayLiteralAbbr(), is("Mon"));
+        assertThat("invalid month abbr", DateUtil.getInstance().getMonthLiteralAbbr(), is("Oct"));
+        assertThat("invalid am or pm", DateUtil.getInstance().getAmPm(), is("PM"));
+        assertThat("invalid hour", DateUtil.getInstance().getHour12(), is(4));
+        assertThat("invalid minute", DateUtil.getInstance().getMinute(), is(30));
+    }
 }
