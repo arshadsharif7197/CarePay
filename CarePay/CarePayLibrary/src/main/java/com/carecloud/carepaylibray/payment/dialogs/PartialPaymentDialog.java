@@ -26,23 +26,26 @@ import org.json.JSONObject;
  * Created by prem_mourya on 10/4/2016.
  */
 
-public class PartialPaymentDialog extends Dialog implements View.OnClickListener,TextWatcher {
+public class PartialPaymentDialog extends Dialog implements View.OnClickListener, TextWatcher {
 
     private Context context;
     private JSONObject paymentModel;
     private EditText enterPartialAmountEditText;
-    private CustomProxyNovaSemiBoldLabel partialPaymentTotalAmounttTitle;
+    private CustomProxyNovaSemiBoldLabel partialPaymentTotalAmountTitle;
     private CustomGothamRoundedMediumLabel amountSymbolTextView;
-    private CustomGothamRoundedBookLabel partialPaymentPayingToaday;
+    private CustomGothamRoundedBookLabel partialPaymentPayingToday;
     private Button payPartialButton;
-    private double fullAmount= 108.00;
-    private String amountMsg= "Pending amount: ";
-    private String amountSymbol="$";
-    public PartialPaymentDialog(Context context,JSONObject paymentModel){
+    //changes are needed when model will come
+    private double fullAmount = 108.00;
+    private String amountMsg = "Pending amount: ";
+    private String amountSymbol = "$";
+
+    public PartialPaymentDialog(Context context, JSONObject paymentModel) {
         super(context);
         this.context = context;
         this.paymentModel = paymentModel;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,26 +59,26 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         getWindow().setAttributes(params);
 
         findViewById(R.id.dialogCloseImageView).setOnClickListener(this);
-        enterPartialAmountEditText = (EditText)findViewById(R.id.enterPartialAmountEditText);
-        partialPaymentTotalAmounttTitle = (CustomProxyNovaSemiBoldLabel)findViewById(R.id.partialPaymentTotalAmounttTitle);
-        payPartialButton = (Button)findViewById(R.id.payPartialButton);
-        amountSymbolTextView = (CustomGothamRoundedMediumLabel)findViewById(R.id.amountSymbolTextView);
-        partialPaymentPayingToaday = (CustomGothamRoundedBookLabel)findViewById(R.id.partialPaymentPayingToaday);
+        enterPartialAmountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
+        partialPaymentTotalAmountTitle = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.partialPaymentTotalAmountTitle);
+        payPartialButton = (Button) findViewById(R.id.payPartialButton);
+        amountSymbolTextView = (CustomGothamRoundedMediumLabel) findViewById(R.id.amountSymbolTextView);
+        partialPaymentPayingToday = (CustomGothamRoundedBookLabel) findViewById(R.id.partialPaymentPayingToday);
         enterPartialAmountEditText.addTextChangedListener(this);
-        partialPaymentTotalAmounttTitle.setText(amountMsg+amountSymbol+fullAmount);
-        partialPaymentTotalAmounttTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
-        partialPaymentTotalAmounttTitle.setTextColor(context.getResources().getColor(R.color.payne_gray));
+        partialPaymentTotalAmountTitle.setText(amountMsg + amountSymbol + fullAmount);
+        partialPaymentTotalAmountTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        partialPaymentTotalAmountTitle.setTextColor(context.getResources().getColor(R.color.payne_gray));
         payPartialButton.setOnClickListener(this);
         payPartialButton.setEnabled(false);
         amountSymbolTextView.setText(amountSymbol);
-        amountSymbolTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,60);
+        amountSymbolTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
         amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white_transparent));
-        partialPaymentPayingToaday.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-        partialPaymentPayingToaday.setTextColor(context.getResources().getColor(R.color.glitter));
-        SystemUtil.setGothamRoundedMediumTypeface(context,enterPartialAmountEditText);
+        partialPaymentPayingToday.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
+        SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
     }
 
-    private void onSettingStyle(){
+    private void onSettingStyle() {
 
     }
 
@@ -84,13 +87,14 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         int viewId = v.getId();
         if (viewId == R.id.dialogCloseImageView) {
             cancel();
-        }else if(viewId == R.id.payPartialButton){
-           onPaymentClick();
+        } else if (viewId == R.id.payPartialButton) {
+            onPaymentClick();
         }
     }
 
     @Override
-    public void afterTextChanged(Editable s) {    }
+    public void afterTextChanged(Editable s) {
+    }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -99,30 +103,31 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-       String  amountEditText = enterPartialAmountEditText.getText().toString();
+        String amountEditText = enterPartialAmountEditText.getText().toString();
         onPendingAmountValidation(amountEditText);
     }
-    private void onPendingAmountValidation(String amountEditText){
-        if(amountEditText !=null && amountEditText.length() > 0) {
-            if(amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")){
-                amountEditText="0.";
+
+    private void onPendingAmountValidation(String amountEditText) {
+        if (amountEditText != null && amountEditText.length() > 0) {
+            if (amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")) {
+                amountEditText = "0.";
             }
             double amountPay = Double.parseDouble(amountEditText);
-            if((0.0 < amountPay)&& ( amountPay <= fullAmount)){
-                partialPaymentTotalAmounttTitle.setText(amountMsg+amountSymbol+(double) Math.round((fullAmount - amountPay) * 100) / 100);
+            if ((amountPay > 0) && (amountPay <= fullAmount)) {
+                partialPaymentTotalAmountTitle.setText(amountMsg + amountSymbol + (double) Math.round((fullAmount - amountPay) * 100) / 100);
                 payPartialButton.setEnabled(true);
-            }else{
+            } else {
                 payPartialButton.setEnabled(false);
-                partialPaymentTotalAmounttTitle.setText(amountMsg+amountSymbol+fullAmount);
+                partialPaymentTotalAmountTitle.setText(amountMsg + amountSymbol + fullAmount);
             }
-        }else{
+        } else {
             amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white_transparent));
             payPartialButton.setEnabled(false);
-            partialPaymentTotalAmounttTitle.setText(amountMsg+amountSymbol+fullAmount);
+            partialPaymentTotalAmountTitle.setText(amountMsg + amountSymbol + fullAmount);
         }
     }
 
-    private void onPaymentClick(){
+    private void onPaymentClick() {
 
     }
 }
