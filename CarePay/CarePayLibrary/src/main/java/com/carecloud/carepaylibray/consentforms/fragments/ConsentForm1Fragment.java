@@ -16,8 +16,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
-import com.carecloud.carepaylibray.consentforms.interfaces.FormData;
+import com.carecloud.carepaylibray.consentforms.ConsentActivity;
+import com.carecloud.carepaylibray.consentforms.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 

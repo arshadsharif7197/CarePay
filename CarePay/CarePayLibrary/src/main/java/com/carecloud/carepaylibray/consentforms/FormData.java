@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.consentforms.interfaces;
+package com.carecloud.carepaylibray.consentforms;
 
 import java.io.Serializable;
 

@@ -19,16 +19,16 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
-import com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity;
+import com.carecloud.carepaylibray.consentforms.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -67,7 +67,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private TextView companyTextView;
     private TextView planTextView;
     private TextView policyNumberTextView;
-    private TextView middleNameTextView;
     private TextView address1TextView;
     private TextView address2TextView;
     private TextView cityTextView;
@@ -76,15 +75,15 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     private ProgressBar demographicProgressBar;
 
-    private DemographicPayloadResponseModel        demographicPayloadResponseModel;
-    private DemographicPayloadInfoModel            demographics;
-    private DemographicPayloadInfoMetaDataModel    metadamodel;
-    private DemographicPayloadInfoPayloadModel     payloadinfomodel;
-    private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
-    private DemographicPayloadAddressModel         demographicPayloadAddressModel;
-    private DemographicPayloadInsuranceModel       demographicPayloadInsuranceModel;
-    private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadDriversLicenseModel  demographicPayloadDriversLicenseModel;
+    private DemographicPayloadResponseModel     demographicPayloadResponseModel;
+    private DemographicPayloadInfoModel         demographics;
+    private DemographicPayloadInfoMetaDataModel metadamodel;
+    private DemPayloadDto                       payloadinfomodel;
+    private DemPersDetailsPayloadDto            demPersDetailsPayloadDto;
+    private DemAddressPayloadDto                demAddressPayloadDto;
+    private DemInsurancePayloadPojo             demInsurancePayloadPojo;
+    private List<DemInsurancePayloadPojo>       insurances;
+    private DemIdDocPayloadDto                  demPayloadIdDocPojo;
 
 
     public static ReviewFragment newInstance() {
@@ -159,20 +158,20 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                             }
 
                             if (payloadinfomodel.getPersonalDetails() != null) {
-                                demographicPayloadPersonalDetailsModel = payloadinfomodel.getPersonalDetails();
+                                demPersDetailsPayloadDto = payloadinfomodel.getPersonalDetails();
 
-                                if (demographicPayloadPersonalDetailsModel != null) {
-                                    firstnameTextView.setText(demographicPayloadPersonalDetailsModel.getFirstName());
-                                    lastNameTextView.setText(demographicPayloadPersonalDetailsModel.getLastName());
-                                    String datetime = demographicPayloadPersonalDetailsModel.getDateOfBirth();
+                                if (demPersDetailsPayloadDto != null) {
+                                    firstnameTextView.setText(demPersDetailsPayloadDto.getFirstName());
+                                    lastNameTextView.setText(demPersDetailsPayloadDto.getLastName());
+                                    String datetime = demPersDetailsPayloadDto.getDateOfBirth();
                                     if (datetime != null) {
                                         String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy();
                                         dobTExtView.setText(dateOfBirthString);
                                     }
-                                    genderTextView.setText(demographicPayloadPersonalDetailsModel.getGender());
-                                    prefferedLanguageTextView.setText(demographicPayloadPersonalDetailsModel.getPreferredLanguage());
-                                    raceTextView.setText(demographicPayloadPersonalDetailsModel.getPrimaryRace());
-                                    ethnicityTextView.setText(demographicPayloadPersonalDetailsModel.getEthnicity());
+                                    genderTextView.setText(demPersDetailsPayloadDto.getGender());
+                                    prefferedLanguageTextView.setText(demPersDetailsPayloadDto.getPreferredLanguage());
+                                    raceTextView.setText(demPersDetailsPayloadDto.getPrimaryRace());
+                                    ethnicityTextView.setText(demPersDetailsPayloadDto.getEthnicity());
                                 }
 
                             } else {
@@ -181,38 +180,38 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
                             insurances = payloadinfomodel.getInsurances();
                             if (insurances != null && insurances.size() > 0) {
-                                demographicPayloadInsuranceModel = insurances.get(0);
-                                if (demographicPayloadInsuranceModel != null) {
-                                    planTextView.setText(demographicPayloadInsuranceModel.getInsurancePlan());
-                                    companyTextView.setText(demographicPayloadInsuranceModel.getInsuranceProvider());
-                                    policyNumberTextView.setText(demographicPayloadInsuranceModel.getInsuranceMemberId());
+                                demInsurancePayloadPojo = insurances.get(0);
+                                if (demInsurancePayloadPojo != null) {
+                                    planTextView.setText(demInsurancePayloadPojo.getInsurancePlan());
+                                    companyTextView.setText(demInsurancePayloadPojo.getInsuranceProvider());
+                                    policyNumberTextView.setText(demInsurancePayloadPojo.getInsuranceMemberId());
                                 }
                             } else {
                                 Log.v(LOG_TAG, "demographic insurance model is null");
                             }
 
                             if (payloadinfomodel.getAddress() != null) {
-                                demographicPayloadAddressModel = payloadinfomodel.getAddress();
-                                if (demographicPayloadAddressModel != null) {
-                                    address1TextView.setText(demographicPayloadAddressModel.getAddress1());
-                                    address2TextView.setText(demographicPayloadAddressModel.getAddress2());
-                                    cityTextView.setText(demographicPayloadAddressModel.getCity());
-                                    stateTextView.setText(demographicPayloadAddressModel.getState());
+                                demAddressPayloadDto = payloadinfomodel.getAddress();
+                                if (demAddressPayloadDto != null) {
+                                    address1TextView.setText(demAddressPayloadDto.getAddress1());
+                                    address2TextView.setText(demAddressPayloadDto.getAddress2());
+                                    cityTextView.setText(demAddressPayloadDto.getCity());
+                                    stateTextView.setText(demAddressPayloadDto.getState());
                                     String zipcode = StringUtil.formatZipCode(
-                                            demographicPayloadAddressModel.getZipcode());
+                                            demAddressPayloadDto.getZipcode());
                                     zipcodeTextView.setText(zipcode);
                                     String phoneNumber = StringUtil.formatPhoneNumber(
-                                            demographicPayloadAddressModel.getPhone());
+                                            demAddressPayloadDto.getPhone());
                                     phoneNumberTextView.setText(phoneNumber);
                                 }
                             } else {
                                 Log.v(LOG_TAG, "demographic Address model is null");
                             }
 
-                            if (payloadinfomodel.getDriversLicense() != null) {
-                                demographicPayloadDriversLicenseModel = payloadinfomodel.getDriversLicense();
+                            if (payloadinfomodel.getIdDocument() != null) {
+                                demPayloadIdDocPojo = payloadinfomodel.getIdDocument();
                                 driverLicenseTextView.setText(
-                                        demographicPayloadDriversLicenseModel.getLicenseNumber());
+                                        demPayloadIdDocPojo.getIdNumber());
                             } else {
                                 Log.v(LOG_TAG, "demographic Driver License model is null");
                             }
@@ -279,16 +278,16 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             getActivity().finish();
         } else if (view == updateInformationUpdate) {
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadAddressModel(
-                            demographicPayloadAddressModel);
+                    .setDemAddressPayloadDto(
+                            demAddressPayloadDto);
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadPersonalDetailsModel(
-                            demographicPayloadPersonalDetailsModel);
+                    .setDemPersDetailsPayloadDto(
+                            demPersDetailsPayloadDto);
             ((DemographicReviewActivity) getActivity())
                     .setInsurances(insurances);
             ((DemographicReviewActivity) getActivity())
-                    .setDemographicPayloadDriversLicenseModel(
-                            demographicPayloadDriversLicenseModel);
+                    .setDemPayloadIdDocPojo(
+                            demPayloadIdDocPojo);
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment fragment = DemographicReviewFragment.newInstance();
