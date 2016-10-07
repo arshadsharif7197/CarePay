@@ -30,10 +30,7 @@ import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
-
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -264,9 +261,8 @@ public class AppointmentsListFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent appointmentIntent = new Intent(getActivity(), AddAppointmentActivity.class);
-                startActivity(appointmentIntent);*/
-                new PaymentAmountReceiptDialog(getContext(),new JSONObject()).show();
+                Intent appointmentIntent = new Intent(getActivity(), AddAppointmentActivity.class);
+                startActivity(appointmentIntent);
             }
         });
         getAppointmentInformation();
