@@ -69,8 +69,6 @@ public class SignupFragment extends Fragment {
     private EditText        firstNameText;
     private EditText        middleNameText;
     private EditText        lastNameText;
-    private boolean         isFirstNameEmpty;
-    private boolean         isLastNameEmpty;
 
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
@@ -78,8 +76,12 @@ public class SignupFragment extends Fragment {
     private EditText        emailText;
     private EditText        passwordText;
     private EditText        repeatPasswordText;
+
+    private boolean         isFirstNameEmpty;
+    private boolean         isLastNameEmpty;
     private boolean         isEmailEmpty;
     private boolean         isPasswordEmpty;
+    private boolean         isPasswordValid;
     private boolean         isRepeatPasswordEmpty;
 
     private Button   submitButton;
@@ -479,11 +481,22 @@ public class SignupFragment extends Fragment {
     }
 
     private boolean checkPassword() {
-        isPasswordEmpty = StringUtil.isNullOrEmpty(passwordText.getText().toString());
-        String error = (isPasswordEmpty ? getString(R.string.signin_signup_error_empty_password) : null);
-        passwordInputLayout.setErrorEnabled(isPasswordEmpty);
+        String passwordString = passwordText.getText().toString();
+        isPasswordEmpty = StringUtil.isNullOrEmpty(passwordString);
+        isPasswordValid = StringUtil.isValidPassword(passwordString);
+
+        passwordInputLayout.setErrorEnabled(isPasswordEmpty || !isPasswordValid);
+        String error;
+        if(isPasswordEmpty) {
+            error = getString(R.string.signin_signup_error_empty_password);
+        } else if(!isPasswordValid) {
+            error = getString(R.string.signup_error_passwords_invalid);
+        } else {
+            error = null;
+        }
         passwordInputLayout.setError(error);
-        return !isPasswordEmpty;
+
+        return !isPasswordEmpty && isPasswordValid;
     }
 
     private boolean checkPasswordsMatch() {
@@ -678,7 +691,6 @@ public class SignupFragment extends Fragment {
                                                 getDemographicInformation();
                                             }
                                         });
-
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed

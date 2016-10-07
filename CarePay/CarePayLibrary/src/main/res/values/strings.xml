@@ -169,6 +169,7 @@
     <string name="signin_signup_error_empty_password">Password is empty</string>
     <string name="signin_signup_error_empty_repeat_password">Repeat password is empty</string>
     <string name="signup_error_passwords_unmatched">Passwords do not match</string>
+    <string name="signup_error_passwords_invalid">Invalid password</string>
 
     <!--MoreDetails Fragment-->
     <string name="PlaceHolderIcon">PlaceHolder Icon</string>
