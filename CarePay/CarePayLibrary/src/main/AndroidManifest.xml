@@ -33,7 +33,7 @@
             android:theme="@style/NavigationTheme"/>
 
         <activity
-            android:name="com.carecloud.carepaylibray.consentforms.interfaces.ConsentActivity"
+            android:name="com.carecloud.carepaylibray.consentforms.ConsentActivity"
             android:theme="@style/NavigationTheme"
             android:windowSoftInputMode="adjustPan"/>
 
