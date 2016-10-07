@@ -23,11 +23,11 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     private JSONObject jsonObject;
     private Context context;
     private View rootView;
-    private LinearLayout addChildDyanmicLayou;
-    private CustomProxyNovaRegularLabel prevoiusTitletextView;
-    private CustomProxyNovaRegularLabel previousBalanceAmounttextView;
-    private CustomProxyNovaRegularLabel insurnceCoPayTitletextView;
-    private CustomProxyNovaRegularLabel insurnceCoPayAmounttextView;
+    private LinearLayout addChildDynamicLayout;
+    private CustomProxyNovaRegularLabel previousTitleTextView;
+    private CustomProxyNovaRegularLabel previousBalanceAmountTextView;
+    private CustomProxyNovaRegularLabel insuranceCoPayTitleTextView;
+    private CustomProxyNovaRegularLabel insuranceCoPayAmountTextView;
     private Button payNowButton;
 
     public PaymentAmountInfoDialog(Context context, JSONObject jsonObject) {
@@ -40,7 +40,7 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.rootView = getRootView();
-        this.addChildDyanmicLayou = (LinearLayout) this.rootView.findViewById(R.id.addChildDyanmicLayout);
+        this.addChildDynamicLayout = (LinearLayout) this.rootView.findViewById(R.id.addChildDynamicLayout);
         onInitialization();
     }
 
@@ -48,21 +48,21 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_payment_info, null);
-        prevoiusTitletextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.prevoiusTitletextView);
-        previousBalanceAmounttextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.previousBalanceAmounttextView);
-        insurnceCoPayTitletextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.insurnceCoPayTitletextView);
-        insurnceCoPayAmounttextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.insurnceCoPayAmounttextView);
+        previousTitleTextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.previousTitleTextView);
+        previousBalanceAmountTextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.previousBalanceAmountTextView);
+        insuranceCoPayTitleTextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.insuranceCoPayTitleTextView);
+        insuranceCoPayAmountTextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.insuranceCoPayAmountTextView);
         payNowButton = (Button) childActionView.findViewById(R.id.payNowButton);
         onSettingStyle();
         onSetListener();
-        this.addChildDyanmicLayou.addView(childActionView);
+        this.addChildDynamicLayout.addView(childActionView);
     }
 
     private void onSettingStyle() {
-        prevoiusTitletextView.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        previousBalanceAmounttextView.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        insurnceCoPayTitletextView.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        insurnceCoPayAmounttextView.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
+        previousTitleTextView.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
+        previousBalanceAmountTextView.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
+        insuranceCoPayTitleTextView.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
+        insuranceCoPayAmountTextView.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
     }
 
     private void onSetListener() {

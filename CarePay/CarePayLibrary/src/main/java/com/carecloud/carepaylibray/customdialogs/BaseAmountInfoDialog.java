@@ -112,8 +112,10 @@ public class BaseAmountInfoDialog extends Dialog implements
         if(viewId == R.id.dialogCloseHeader){
             cancel();
         }else if(viewId == R.id.paymentLocationImageView){
+            //address will add after model come
             onMapView("","");
         }else if(viewId == R.id.paymentDailImageView){
+            //phoneCall will add after model come
             onPhoneCall("");
         }
     }

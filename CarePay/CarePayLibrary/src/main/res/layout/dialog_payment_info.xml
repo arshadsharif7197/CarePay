@@ -10,7 +10,7 @@
         android:orientation="horizontal">
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
-            android:id="@+id/prevoiusTitletextView"
+            android:id="@+id/previousTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/payment_option_section_margin"
             android:ellipsize="none"
@@ -22,7 +22,7 @@
             android:textSize="@dimen/payment_text_balance_size" />
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
-            android:id="@+id/previousBalanceAmounttextView"
+            android:id="@+id/previousBalanceAmountTextView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/payment_option_section_margin"
             android:layout_gravity="right"
@@ -46,7 +46,7 @@
         android:orientation="horizontal">
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
-            android:id="@+id/insurnceCoPayTitletextView"
+            android:id="@+id/insuranceCoPayTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/payment_option_section_margin"
             android:ellipsize="none"
@@ -58,7 +58,7 @@
             android:textSize="@dimen/payment_text_balance_size" />
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
-            android:id="@+id/insurnceCoPayAmounttextView"
+            android:id="@+id/insuranceCoPayAmountTextView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/payment_option_section_margin"
             android:layout_gravity="right"

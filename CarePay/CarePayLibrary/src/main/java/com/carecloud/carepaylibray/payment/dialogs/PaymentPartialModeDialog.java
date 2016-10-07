@@ -49,7 +49,7 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.rootView = getRootView();
-        this.addChildDyanmicLayout = (LinearLayout) this.rootView.findViewById(R.id.addChildDyanmicLayout);
+        this.addChildDyanmicLayout = (LinearLayout) this.rootView.findViewById(R.id.addChildDynamicLayout);
         onInitialization();
     }
 

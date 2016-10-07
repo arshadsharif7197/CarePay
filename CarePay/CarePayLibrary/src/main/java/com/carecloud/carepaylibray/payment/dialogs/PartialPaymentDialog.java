@@ -77,11 +77,6 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
         SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
     }
-
-    private void onSettingStyle() {
-
-    }
-
     @Override
     public void onClick(View v) {
         int viewId = v.getId();

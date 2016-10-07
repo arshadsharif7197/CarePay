@@ -258,4 +258,12 @@
     <dimen name="addess_payment_margin_top">14dp</dimen>
     <dimen name="payment_header_amount_month_size">20dp</dimen>
     <dimen name="payment_option_section_margin">50dp</dimen>
+    <dimen name="payment_receipt_layout_margin">24dp</dimen>
+    <dimen name="payment_receipt_header_size">11sp</dimen>
+    <dimen name="payment_receipt_type_size">14sp</dimen>
+    <dimen name="payment_receipt_provider_size">20sp</dimen>
+    <dimen name="payment_receipt_margin">20dp</dimen>
+    <dimen name="payment_receipt_margin_top">12dp</dimen>
+    <dimen name="payment_receipt_margin_layout_top">48dp</dimen>
+    <dimen name="payment_receipt_margin_bottom">23dp</dimen>
 </resources>
