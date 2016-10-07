@@ -82,11 +82,11 @@ public class AppointmentsListFragment extends Fragment {
             try {
                 // Get appointment date/time in required format
                 String appointmentTimeStr = appointmentsItems.get(0).getPayload().getStartTime();
-                Date appointmentTime = DateUtil.parseStringToDate(appointmentTimeStr);
+                Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
 
                 // Get current date/time in required format
-                String currentTime = DateUtil.parseDateToString(new Date());
-                Date currentDate = DateUtil.parseStringToDate(currentTime);
+                String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
+                Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
 
                 if (appointmentTime != null && currentDate != null) {
                     long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
@@ -275,8 +275,8 @@ public class AppointmentsListFragment extends Fragment {
                     String dateO1 = o1.getPayload().getStartTime();
                     String dateO2 = o2.getPayload().getStartTime();
 
-                    Date date1 = DateUtil.parseStringToDate(dateO1);
-                    Date date2 = DateUtil.parseStringToDate(dateO2);
+                    Date date1 = DateUtil.getInstance().setDateRaw(dateO1).getDate();
+                    Date date2 = DateUtil.getInstance().setDateRaw(dateO2).getDate();
 
                     long time1 = 0, time2 = 0;
                     if (date1 != null) {
@@ -298,7 +298,12 @@ public class AppointmentsListFragment extends Fragment {
             // To sort appointment list based on today or tomorrow
             Collections.sort(appointmentsItems, new Comparator<Appointment>() {
                 public int compare(Appointment o1, Appointment o2) {
-                    return o2.getPayload().getStartTime().compareTo(o1.getPayload().getStartTime());
+                    String date01 = o1.getPayload().getStartTime();
+
+                    String date02 = o2.getPayload().getStartTime();
+                    Date date2 = DateUtil.getInstance().setDateRaw(date02).getDate();
+                    DateUtil.getInstance().setDateRaw(date01);
+                    return DateUtil.getInstance().compareTo(date2);
                 }
             });
 
@@ -307,31 +312,11 @@ public class AppointmentsListFragment extends Fragment {
             appointmentListWithHeader = new ArrayList<>();
 
             for (Appointment appointmentModel : appointmentsItems) {
-                if (previousDay.equalsIgnoreCase(appointmentModel.getPayload().getStartTime())) {
+                if (previousDay.equalsIgnoreCase(getSectionHeaderTitle(appointmentModel.getPayload().getStartTime()))
+                        && appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
                     appointmentListWithHeader.add(appointmentModel);
                 } else {
-                    // Current date
-                    String currentDate = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, new Date());
-                    Date currentConvertedDate = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, currentDate);
-
-                    // Appointment start date
-                    String appointmentTime = appointmentModel.getPayload().getStartTime();
-                    Date appointmentDate = DateUtil.parseStringToDate(appointmentTime);
-
-                    String appointmentDateWithoutTime = DateUtil.parseDateToString(
-                            CarePayConstants.DATE_FORMAT, appointmentDate);
-                    Date convertedAppointmentDate = DateUtil.parseDateToString(
-                            CarePayConstants.DATE_FORMAT, appointmentDateWithoutTime);
-
-                    if (convertedAppointmentDate.after(currentConvertedDate) &&
-                                !appointmentDateWithoutTime.equalsIgnoreCase(currentDate)) {
-                        previousDay = CarePayConstants.DAY_UPCOMING;
-                    } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-                        // Do nothing
-                        continue;
-                    } else {
-                        previousDay = CarePayConstants.DAY_TODAY;
-                    }
+                    previousDay = getSectionHeaderTitle(appointmentModel.getPayload().getStartTime());
 
                     // If appointment is checked-in, don't add header
                     if (appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
@@ -347,5 +332,27 @@ public class AppointmentsListFragment extends Fragment {
             }
         }
         return appointmentListWithHeader;
+    }
+
+    private String getSectionHeaderTitle(String appointmentRawDate) {
+        // Current date
+        String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
+        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
+
+        // Appointment date
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
+        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
+
+        String previousDay = "";
+        if (convertedAppointmentDate.after(currentConvertedDate)
+                && !appointmentDate.equalsIgnoreCase(currentDate)) {
+            previousDay = CarePayConstants.DAY_UPCOMING;
+        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
+            // Do nothing
+        } else {
+            previousDay = CarePayConstants.DAY_TODAY;
+        }
+
+        return previousDay;
     }
 }

@@ -5,21 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
+import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 
 import java.util.List;
 
 
 public class DemographicReviewActivity extends AppCompatActivity {
 
-    private DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel;
-    private DemographicPayloadAddressModel demographicPayloadAddressModel;
-    private List<DemographicPayloadInsuranceModel> insurances;
-    private DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel;
+    private DemPersDetailsPayloadDto      demPersDetailsPayloadDto;
+    private DemAddressPayloadDto          demAddressPayloadDto;
+    private List<DemInsurancePayloadPojo> insurances;
+    private DemIdDocPayloadDto            demPayloadIdDocPojo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,36 +34,36 @@ public class DemographicReviewActivity extends AppCompatActivity {
         }
     }
 
-    public DemographicPayloadPersonalDetailsModel getDemographicPayloadPersonalDetailsModel() {
-        return demographicPayloadPersonalDetailsModel;
+    public DemPersDetailsPayloadDto getDemPersDetailsPayloadDto() {
+        return demPersDetailsPayloadDto;
     }
 
-    public void setDemographicPayloadPersonalDetailsModel(DemographicPayloadPersonalDetailsModel demographicPayloadPersonalDetailsModel) {
-        this.demographicPayloadPersonalDetailsModel = demographicPayloadPersonalDetailsModel;
+    public void setDemPersDetailsPayloadDto(DemPersDetailsPayloadDto demPersDetailsPayloadDto) {
+        this.demPersDetailsPayloadDto = demPersDetailsPayloadDto;
     }
 
-    public DemographicPayloadAddressModel getDemographicPayloadAddressModel() {
-        return demographicPayloadAddressModel;
+    public DemAddressPayloadDto getDemAddressPayloadDto() {
+        return demAddressPayloadDto;
     }
 
-    public void setDemographicPayloadAddressModel(DemographicPayloadAddressModel demographicPayloadAddressModel) {
-        this.demographicPayloadAddressModel = demographicPayloadAddressModel;
+    public void setDemAddressPayloadDto(DemAddressPayloadDto demAddressPayloadDto) {
+        this.demAddressPayloadDto = demAddressPayloadDto;
     }
 
 
-    public void setInsurances(List<DemographicPayloadInsuranceModel> insurances) {
+    public void setInsurances(List<DemInsurancePayloadPojo> insurances) {
         this.insurances = insurances;
     }
 
-    public List<DemographicPayloadInsuranceModel> getInsurances() {
+    public List<DemInsurancePayloadPojo> getInsurances() {
         return insurances;
     }
 
-    public DemographicPayloadDriversLicenseModel getDemographicPayloadDriversLicenseModel() {
-        return demographicPayloadDriversLicenseModel;
+    public DemIdDocPayloadDto getDemPayloadIdDocPojo() {
+        return demPayloadIdDocPojo;
     }
 
-    public void setDemographicPayloadDriversLicenseModel(DemographicPayloadDriversLicenseModel demographicPayloadDriversLicenseModel) {
-        this.demographicPayloadDriversLicenseModel = demographicPayloadDriversLicenseModel;
+    public void setDemPayloadIdDocPojo(DemIdDocPayloadDto demPayloadIdDocPojo) {
+        this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
 }

@@ -77,29 +77,21 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.doctorType.setText(item.getProvider().getSpecialty());
             SystemUtil.setProximaNovaRegularTypeface(context, holder.doctorType);
 
-            String upcomingStartTime = item.getStartTime();
             // Date of Upcoming appointment
-            Date upcomingStartDate = DateUtil.parseStringToDate(upcomingStartTime);
-            String appointmentDate = DateUtil.parseDateToString(CarePayConstants.DATE_TIME_FORMAT, upcomingStartDate);
+            String upcomingStartTime = item.getStartTime();
+            DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
+            DateUtil.getInstance().setDateRaw(upcomingStartTime);
+            String time12Hour = DateUtil.getInstance().getTime12Hour();
 
-            // Date of Today's appointment
-            Date todayDate = DateUtil.parseStringToDate(upcomingStartTime);
-            String todayDateStr = DateUtil.parseTimeToString(todayDate);
-
-            // Today
-            String todayStr = DateUtil.parseDateToString(new Date());
-            Date todayWithoutTime = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, todayStr);
-            Date appointmentWithoutTime = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, upcomingStartTime);
-
-            if (!appointmentWithoutTime.after(todayWithoutTime)) {
-                appointmentDate = todayDateStr;
-            }
+            DateUtil.getInstance().setFormat("EEE dd MMM");
+            String dayLiteralAbbr = DateUtil.getInstance().getDayLiteralAbbr();
+            String monthLiteralAbbr = DateUtil.getInstance().getMonthLiteralAbbr();
+            int day = DateUtil.getInstance().getDay();
 
             final boolean isPending = item.getAppointmentStatusModel().getId() == 1;
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
 
-            String[] splitStr = appointmentDate.split(" ");
-            if (splitStr.length > 4) {
+            if (getSectionHeaderTitle(upcomingStartTime).equals(CarePayConstants.DAY_UPCOMING)) {
                 if(isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
@@ -110,9 +102,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
                     SystemUtil.setProximaNovaLightTypeface(context, holder.upcomingDateTextView);
 
-                    holder.upcomingDateTextView.setText(splitStr[0]);
-                    holder.upcomingMonthTextView.setText(splitStr[2].toUpperCase() + " " + splitStr[1]);
-                    holder.upcomingTimeTextView.setText(splitStr[3] + " " + splitStr[4]);
+                    holder.upcomingDateTextView.setText(dayLiteralAbbr);
+                    holder.upcomingMonthTextView.setText(monthLiteralAbbr.toUpperCase() + " " + day);
+                    holder.upcomingTimeTextView.setText(time12Hour);
                 }
             } else {
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
@@ -121,7 +113,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
-                    holder.todayTimeTextView.setText(todayDateStr);
+                    holder.todayTimeTextView.setText(time12Hour);
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
                 }
             }
@@ -222,22 +214,18 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         }
     }
 
-    private String getSectionHeaderTitle(String appointmentTime) {
+    private String getSectionHeaderTitle(String appointmentRawDate) {
         // Current date
-        String currentDate = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, new Date());
-        Date currentConvertedDate = DateUtil.parseDateToString(CarePayConstants.DATE_FORMAT, currentDate);
+        String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
+        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
-        // Appointment start date
-        Date appointmentDate = DateUtil.parseStringToDate(appointmentTime);
-
-        String appointmentDateWithoutTime = DateUtil.parseDateToString(
-                CarePayConstants.DATE_FORMAT, appointmentDate);
-        Date convertedAppointmentDate = DateUtil.parseDateToString(
-                CarePayConstants.DATE_FORMAT, appointmentDateWithoutTime);
+        // Appointment date
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
+        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         String previousDay = "";
         if (convertedAppointmentDate.after(currentConvertedDate)
-                && !appointmentDateWithoutTime.equalsIgnoreCase(currentDate)) {
+                && !appointmentDate.equalsIgnoreCase(currentDate)) {
             previousDay = CarePayConstants.DAY_UPCOMING;
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
             // Do nothing

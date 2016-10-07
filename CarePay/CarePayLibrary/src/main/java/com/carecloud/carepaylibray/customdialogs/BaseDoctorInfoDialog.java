@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadModel;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -58,6 +59,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
         TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
 
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         DateUtil.getInstance().setDateRaw(payload.getStartTime());
         dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
         timeTextView.setText(DateUtil.getInstance().getTime12Hour());

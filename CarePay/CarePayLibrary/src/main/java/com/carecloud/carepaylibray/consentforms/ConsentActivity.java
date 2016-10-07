@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.consentforms.interfaces;
+package com.carecloud.carepaylibray.consentforms;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,10 +15,12 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.activities.SignatureActivity;
 import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm1Fragment;
 import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm2Fragment;
+import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.activities.InTakeActivity;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
@@ -39,7 +41,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
-        setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", title);
+        setGothamRoundedMediumTypeface(this, title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(toolbar);
@@ -147,6 +149,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     private FormData getConsentFormData(String formName) {
         FormData formData = new FormData();
 
+        DateUtil.getInstance().setToCurrent(); // set the date to current
         if (formName.equals("form1")) {
             formData.setTitle("Consent for Medical Care");
             formData.setDescription("Please fill in this form about general cardiac symptoms you may have had in the past.");

@@ -81,9 +81,10 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 TextView selectedTimeSlot = (TextView) v.findViewById(R.id.textview_timeslot);
 
                 if (selectedTimeSlot != null) {
-                    String selectedTimeStr = selectedTimeSlot.getText().toString();
-                    String newAppointmentDate = AvailableHoursFragment.getAppointmentDate() + " " + selectedTimeStr;
-                    newAppointmentDate = DateUtil.parseDateToString(new Date(newAppointmentDate));
+                    //TODO: Select time slot and pass to next screen
+//                    String selectedTimeStr = selectedTimeSlot.getText().toString();
+//                    String newAppointmentDate = AvailableHoursFragment.getAppointmentDate() + " " + selectedTimeStr;
+//                    newAppointmentDate = DateUtil.getDateRaw(new Date(newAppointmentDate));
 //                    model.setNewAppointmentDate(newAppointmentDate);
 //                    model.setNewAppointmentTime(selectedTimeStr);
 

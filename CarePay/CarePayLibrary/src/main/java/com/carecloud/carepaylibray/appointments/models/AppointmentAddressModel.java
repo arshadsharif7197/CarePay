@@ -198,12 +198,20 @@ public class AppointmentAddressModel {
     }
 
     public String getPlaceAddressString() {
-        return StringUtil.isNullOrEmpty(line1) ? "" : line1.concat(" ")
-                .concat(StringUtil.isNullOrEmpty(line2) ? "" : line2.concat(" "))
-                .concat(line3 == null ? "" : line3.toString().concat(" "))
-                .concat(StringUtil.isNullOrEmpty(city) ? "" : city.concat(" "))
-                .concat(StringUtil.isNullOrEmpty(stateName) ? "" : stateName.concat(" "))
-                .concat(StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode.concat(" "))
-                .concat(countyName == null ? "" : countyName.toString());
+        StringBuilder address = new StringBuilder();
+        address.append(StringUtil.isNullOrEmpty(line1) ? "" : line1);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(line2) ? "" : line2);
+        address.append(" ");
+        address.append(line3 == null ? "" : line3);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(city) ? "" : city);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(stateName) ? "" : stateName);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode);
+        address.append(" ");
+        address.append(countyName == null ? "" : countyName);
+        return address.toString();
     }
 }
