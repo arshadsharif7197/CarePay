@@ -1,12 +1,12 @@
 package com.carecloud.carepaylibray.appointments.models;
 
-public class AppointmentAvailableHoursModel {
+public class AppointmentAvailableHoursDto {
     private String mDay;
     private String mMonth;
     private String mDate;
     private String mTimeSlot;
 
-    public AppointmentAvailableHoursModel(String day, String month, String date, String timeSlot) {
+    public AppointmentAvailableHoursDto(String day, String month, String date, String timeSlot) {
         this.mDay = day;
         this.mMonth = month;
         this.mDate = date;

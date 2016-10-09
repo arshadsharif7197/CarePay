@@ -10,7 +10,7 @@ public class Appointment implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentsMetadataModel metadata;
+    private AppointmentsMetadataDto metadata;
     @SerializedName("payload")
     @Expose
     private AppointmentsPayloadModel payload;
@@ -20,7 +20,7 @@ public class Appointment implements Serializable {
      * @return
      *     The metadata
      */
-    public AppointmentsMetadataModel getMetadata() {
+    public AppointmentsMetadataDto getMetadata() {
         return metadata;
     }
 
@@ -29,7 +29,7 @@ public class Appointment implements Serializable {
      * @param metadata
      *     The metadata
      */
-    public void setMetadata(AppointmentsMetadataModel metadata) {
+    public void setMetadata(AppointmentsMetadataDto metadata) {
         this.metadata = metadata;
     }
 

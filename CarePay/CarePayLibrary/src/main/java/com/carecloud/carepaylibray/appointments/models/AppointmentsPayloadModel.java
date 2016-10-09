@@ -11,16 +11,16 @@ public class AppointmentsPayloadModel {
     private String id;
     @SerializedName("appointment_status")
     @Expose
-    private AppointmentStatusModel appointmentStatusModel;
+    private AppointmentStatusDto appointmentStatusModel;
     @SerializedName("patient")
     @Expose
-    private AppointmentPatientModel patient;
+    private AppointmentPatientDto patient;
     @SerializedName("location")
     @Expose
-    private AppointmentLocationModel location;
+    private AppointmentLocationDto location;
     @SerializedName("cancellation_details")
     @Expose
-    private AppointmentCancellationDetailsModel cancellationDetails;
+    private AppointmentCancellationDetailsDto cancellationDetails;
     @SerializedName("chief_complaint")
     @Expose
     private Object chiefComplaint;
@@ -95,10 +95,10 @@ public class AppointmentsPayloadModel {
     private Object encounterId;
     @SerializedName("provider")
     @Expose
-    private AppointmentProviderModel provider;
+    private AppointmentProviderDto provider;
     @SerializedName("resource")
     @Expose
-    private AppointmentResourceModel resource;
+    private AppointmentResourceDto resource;
 
     /**
      * 
@@ -123,7 +123,7 @@ public class AppointmentsPayloadModel {
      * @return
      *     The appointmentStatusModel
      */
-    public AppointmentStatusModel getAppointmentStatusModel() {
+    public AppointmentStatusDto getAppointmentStatusModel() {
         return appointmentStatusModel;
     }
 
@@ -132,7 +132,7 @@ public class AppointmentsPayloadModel {
      * @param appointmentStatusModel
      *     The appointment_status
      */
-    public void setAppointmentStatusModel(AppointmentStatusModel appointmentStatusModel) {
+    public void setAppointmentStatusModel(AppointmentStatusDto appointmentStatusModel) {
         this.appointmentStatusModel = appointmentStatusModel;
     }
 
@@ -141,7 +141,7 @@ public class AppointmentsPayloadModel {
      * @return
      *     The patient
      */
-    public AppointmentPatientModel getPatient() {
+    public AppointmentPatientDto getPatient() {
         return patient;
     }
 
@@ -150,7 +150,7 @@ public class AppointmentsPayloadModel {
      * @param patient
      *     The patient
      */
-    public void setPatient(AppointmentPatientModel patient) {
+    public void setPatient(AppointmentPatientDto patient) {
         this.patient = patient;
     }
 
@@ -159,7 +159,7 @@ public class AppointmentsPayloadModel {
      * @return
      *     The location
      */
-    public AppointmentLocationModel getLocation() {
+    public AppointmentLocationDto getLocation() {
         return location;
     }
 
@@ -168,7 +168,7 @@ public class AppointmentsPayloadModel {
      * @param location
      *     The location
      */
-    public void setLocation(AppointmentLocationModel location) {
+    public void setLocation(AppointmentLocationDto location) {
         this.location = location;
     }
 
@@ -177,7 +177,7 @@ public class AppointmentsPayloadModel {
      * @return
      *     The cancellationDetails
      */
-    public AppointmentCancellationDetailsModel getCancellationDetails() {
+    public AppointmentCancellationDetailsDto getCancellationDetails() {
         return cancellationDetails;
     }
 
@@ -186,7 +186,7 @@ public class AppointmentsPayloadModel {
      * @param cancellationDetails
      *     The cancellation_details
      */
-    public void setCancellationDetails(AppointmentCancellationDetailsModel cancellationDetails) {
+    public void setCancellationDetails(AppointmentCancellationDetailsDto cancellationDetails) {
         this.cancellationDetails = cancellationDetails;
     }
 
@@ -627,7 +627,7 @@ public class AppointmentsPayloadModel {
      * @return
      *     The provider
      */
-    public AppointmentProviderModel getProvider() {
+    public AppointmentProviderDto getProvider() {
         return provider;
     }
 
@@ -636,7 +636,7 @@ public class AppointmentsPayloadModel {
      * @param provider
      *     The provider
      */
-    public void setProvider(AppointmentProviderModel provider) {
+    public void setProvider(AppointmentProviderDto provider) {
         this.provider = provider;
     }
 
@@ -645,7 +645,7 @@ public class AppointmentsPayloadModel {
      * @return
      *     The resource
      */
-    public AppointmentResourceModel getResource() {
+    public AppointmentResourceDto getResource() {
         return resource;
     }
 
@@ -654,7 +654,7 @@ public class AppointmentsPayloadModel {
      * @param resource
      *     The resource
      */
-    public void setResource(AppointmentResourceModel resource) {
+    public void setResource(AppointmentResourceDto resource) {
         this.resource = resource;
     }
 

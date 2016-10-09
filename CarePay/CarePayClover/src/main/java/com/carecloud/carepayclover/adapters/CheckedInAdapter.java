@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.carecloud.carepayclover.R;
 import com.carecloud.carepayclover.RotateActivity;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentPatientModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentPatientDto;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.squareup.picasso.Picasso;
 
@@ -54,7 +54,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
     @Override
     public void onBindViewHolder(CheckedInAdapter.CartViewHolder holder, final int position) {
         Appointment mMaster = mData.get(position);
-        AppointmentPatientModel patientModel=mMaster.getPayload().getPatient();
+        AppointmentPatientDto patientModel=mMaster.getPayload().getPatient();
         holder.patientNameTextView.setText(patientModel.getFirstName()+" " + patientModel.getLastName());
         holder.patientBalanceTextView.setText(String.format( "Balance: $%.2f", patientModel.getTotalBalance() ));
         Picasso.with(context).load(patientModel.getPhoto()).transform(new CircleImageTransform()).resize(160,160).into(holder.patientPicImageView);
@@ -99,7 +99,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
         public void onClick(View view) {
             int viewId=view.getId();
             if(viewId==R.id.paymentTextview) {
-                AppointmentPatientModel model = (AppointmentPatientModel) view.getTag();
+                AppointmentPatientDto model = (AppointmentPatientDto) view.getTag();
                 Intent rotateInIntent = new Intent(context, RotateActivity.class);
                 rotateInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 rotateInIntent.putExtra("rotate_title","Ready to pay");//Sent!

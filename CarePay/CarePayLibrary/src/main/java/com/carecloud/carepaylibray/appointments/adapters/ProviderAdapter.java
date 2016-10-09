@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProviderModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDto;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadModel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
@@ -45,7 +45,7 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
             AppointmentsPayloadModel payload = appointmentArrayList.get(position).getPayload();
             if (payload != null) {
 
-                AppointmentProviderModel provider = payload.getProvider();
+                AppointmentProviderDto provider = payload.getProvider();
                 holder.doctorName.setText(provider.getName());
                 holder.doctorType.setText(provider.getSpecialty());
                 holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));

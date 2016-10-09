@@ -8,14 +8,14 @@ public class AppointmentResourcesModel {
 
     @SerializedName("resource")
     @Expose
-    private AppointmentResourcesItemModel resource;
+    private AppointmentResourcesItemDto resource;
 
     /**
      * 
      * @return
      *     The resource
      */
-    public AppointmentResourcesItemModel getResource() {
+    public AppointmentResourcesItemDto getResource() {
         return resource;
     }
 
@@ -24,7 +24,7 @@ public class AppointmentResourcesModel {
      * @param resource
      *     The resource
      */
-    public void setResource(AppointmentResourcesItemModel resource) {
+    public void setResource(AppointmentResourcesItemDto resource) {
         this.resource = resource;
     }
 

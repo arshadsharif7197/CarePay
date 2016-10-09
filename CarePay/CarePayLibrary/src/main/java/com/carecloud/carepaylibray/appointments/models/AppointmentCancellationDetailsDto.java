@@ -4,7 +4,7 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppointmentCancellationDetailsModel {
+public class AppointmentCancellationDetailsDto {
 
     @SerializedName("id")
     @Expose

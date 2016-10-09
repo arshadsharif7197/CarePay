@@ -14,10 +14,10 @@ public class AppointmentPayloadModel {
     private List<Appointment> appointments = new ArrayList<>();
     @SerializedName("providers")
     @Expose
-    private List<AppointmentProvidersModel> providers = new ArrayList<>();
+    private List<AppointmentProvidersDto> providers = new ArrayList<>();
     @SerializedName("locations")
     @Expose
-    private List<AppointmentLocationsModel> locations = new ArrayList<>();
+    private List<AppointmentLocationsDto> locations = new ArrayList<>();
     @SerializedName("resources")
     @Expose
     private List<AppointmentResourcesModel> resources = new ArrayList<>();
@@ -45,7 +45,7 @@ public class AppointmentPayloadModel {
      * @return
      *     The providers
      */
-    public List<AppointmentProvidersModel> getProviders() {
+    public List<AppointmentProvidersDto> getProviders() {
         return providers;
     }
 
@@ -54,7 +54,7 @@ public class AppointmentPayloadModel {
      * @param providers
      *     The providers
      */
-    public void setProviders(List<AppointmentProvidersModel> providers) {
+    public void setProviders(List<AppointmentProvidersDto> providers) {
         this.providers = providers;
     }
 
@@ -63,7 +63,7 @@ public class AppointmentPayloadModel {
      * @return
      *     The locations
      */
-    public List<AppointmentLocationsModel> getLocations() {
+    public List<AppointmentLocationsDto> getLocations() {
         return locations;
     }
 
@@ -72,7 +72,7 @@ public class AppointmentPayloadModel {
      * @param locations
      *     The locations
      */
-    public void setLocations(List<AppointmentLocationsModel> locations) {
+    public void setLocations(List<AppointmentLocationsDto> locations) {
         this.locations = locations;
     }
 

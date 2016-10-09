@@ -22,7 +22,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDto;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.SimpleDateFormat;
@@ -139,19 +139,19 @@ public class AvailableHoursFragment extends Fragment {
     private ArrayList<Object> getSampleArrayList() {
         ArrayList<Object> items = new ArrayList<>();
         items.add("TOMORROW");
-        items.add(new AppointmentAvailableHoursModel("Thursday", "September", "22", "01:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Thursday", "September", "22", "02:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Thursday", "September", "22", "03:00 PM"));
-        items.add(new AppointmentAvailableHoursModel("Thursday", "September", "22", "04:30 PM"));
+        items.add(new AppointmentAvailableHoursDto("Thursday", "September", "22", "01:30 PM"));
+        items.add(new AppointmentAvailableHoursDto("Thursday", "September", "22", "02:30 PM"));
+        items.add(new AppointmentAvailableHoursDto("Thursday", "September", "22", "03:00 PM"));
+        items.add(new AppointmentAvailableHoursDto("Thursday", "September", "22", "04:30 PM"));
         items.add("FRIDAY, September 23rd");
-        items.add(new AppointmentAvailableHoursModel("Friday", "September", "23", "01:00 PM"));
-        items.add(new AppointmentAvailableHoursModel("Friday", "September", "23", "02:00 PM"));
-        items.add(new AppointmentAvailableHoursModel("Friday", "September", "23", "03:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Friday", "September", "23", "04:00 PM"));
+        items.add(new AppointmentAvailableHoursDto("Friday", "September", "23", "01:00 PM"));
+        items.add(new AppointmentAvailableHoursDto("Friday", "September", "23", "02:00 PM"));
+        items.add(new AppointmentAvailableHoursDto("Friday", "September", "23", "03:30 PM"));
+        items.add(new AppointmentAvailableHoursDto("Friday", "September", "23", "04:00 PM"));
         items.add("MONDAY, September 26th");
-        items.add(new AppointmentAvailableHoursModel("Monday", "September", "26", "01:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Monday", "September", "26", "02:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Monday", "September", "26", "03:00 PM"));
+        items.add(new AppointmentAvailableHoursDto("Monday", "September", "26", "01:30 PM"));
+        items.add(new AppointmentAvailableHoursDto("Monday", "September", "26", "02:30 PM"));
+        items.add(new AppointmentAvailableHoursDto("Monday", "September", "26", "03:00 PM"));
         return items;
     }
 }

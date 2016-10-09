@@ -9,14 +9,11 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDto;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.Date;
 import java.util.List;
 
 public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -42,7 +39,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof AppointmentAvailableHoursModel) {
+        if (items.get(position) instanceof AppointmentAvailableHoursDto) {
             return 1;
         } else if (items.get(position) instanceof String) {
             return SECTION_HEADER;
@@ -72,7 +69,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             vhSectionHeader.getTextView().setText(items.get(position).toString());
         } else {
             ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
-            vhTimeSlot.getTextView().setText(((AppointmentAvailableHoursModel) items.get(position)).getmTimeSlot());
+            vhTimeSlot.getTextView().setText(((AppointmentAvailableHoursDto) items.get(position)).getmTimeSlot());
         }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
