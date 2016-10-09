@@ -120,8 +120,8 @@
     <string name="AddressSubHeadingTextView">First, tell us your address \u0026 contact information</string>
     <string name="PhoneNumberEditText">Phone Number</string>
     <string name="ZipCodeEditText">Zip Code</string>
-    <string name="Address1EditText">Address 1</string>
-    <string name="Address2EditText">Address 2</string>
+    <string name="Address1EditText">Address Line 1</string>
+    <string name="Address2EditText">Address Line 2</string>
     <string name="CityEditText">City</string>
     <string name="StateEditText">State</string>
 
