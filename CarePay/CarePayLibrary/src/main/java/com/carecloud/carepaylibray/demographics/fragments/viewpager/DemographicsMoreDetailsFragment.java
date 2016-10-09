@@ -1,10 +1,8 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
@@ -22,17 +18,10 @@ import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemUpdateDto;
-import com.carecloud.carepaylibray.demographics.services.DemographicService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
@@ -147,7 +136,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demPayloadDto.setPersonalDetails(detailsModel);
         }
 
-        DemIdDocPayloadDto idDocPojo = ((DemographicsActivity)getActivity()).getDemPayloadIdDocPojo();
+        DemIdDocPayloadDto idDocPojo = ((DemographicsActivity)getActivity()).getIdDocModel();
         if(idDocPojo != null) {
             demPayloadDto.setIdDocument(idDocPojo);
         }

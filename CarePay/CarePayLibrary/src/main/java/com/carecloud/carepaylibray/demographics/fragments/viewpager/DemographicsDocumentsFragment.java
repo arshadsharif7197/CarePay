@@ -114,7 +114,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((DemographicsActivity) getActivity()).setDemPayloadIdDocPojo(demPayloadIdDocPojo);
+                ((DemographicsActivity) getActivity()).setIdDocModel(demPayloadIdDocPojo);
                 DemInsurancePayloadPojo model = new DemInsurancePayloadPojo();
                 // clear the list
                 insuranceModelList.clear();
