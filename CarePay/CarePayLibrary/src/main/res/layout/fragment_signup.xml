@@ -34,7 +34,9 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/emailTextInputLayout"
-                style="@style/SigninSignupTextInputStyle">
+                style="@style/SigninSignupTextInputStyle"
+                android:theme="@style/EditTextHintStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/emailEditText"
@@ -49,7 +51,9 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/createPasswordTextInputLayout"
                 style="@style/SigninSignupTextInputStyle"
-                app:passwordToggleEnabled="false">
+                app:passwordToggleEnabled="false"
+                android:theme="@style/EditTextHintStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/createPasswordEditText"
@@ -64,7 +68,9 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/repeatPasswordTextInputLayout"
                 style="@style/SigninSignupTextInputStyle"
-                app:passwordToggleEnabled="false">
+                app:passwordToggleEnabled="false"
+                android:theme="@style/EditTextHintStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/repeatPasswordEditText"

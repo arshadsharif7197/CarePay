@@ -422,24 +422,23 @@ public class SignupFragment extends Fragment {
 
     /**
      * Receives the result from the confirm email activity; (just in case we need confirmation)
+     *
      * @param requestCode The request code.
-     * @param resultCode The result code.
-     * @param data The passed data.
+     * @param resultCode  The result code.
+     * @param data        The passed data.
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10) {
-            if (resultCode == RESULT_OK) {
-                // confirmed; (auto)sign-in
-                CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
-                                        new CognitoActionCallback() {
-                                            @Override
-                                            public void executeAction() {
-                                                getDemographicInformation();
-                                            }
-                                        });
-            }
+        if (requestCode == 10 && resultCode == RESULT_OK) {
+            // confirmed; (auto)sign-in
+            CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
+                                    new CognitoActionCallback() {
+                                        @Override
+                                        public void executeAction() {
+                                            getDemographicInformation();
+                                        }
+                                    });
         }
     }
 

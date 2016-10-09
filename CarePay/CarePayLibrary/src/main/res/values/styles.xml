@@ -53,6 +53,20 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="EditTextHintStyle" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
+
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/payne_gray</item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/payne_gray</item> <!-- hint and underlying bar when focus -->
+    </style>
+
+    <style name="FloatingLabelStyle">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/payne_gray</item>
+    </style>
+
     <!-- Custom Keyboard -->
 
     <style name="keyboard_1_style">
@@ -87,8 +101,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="errorTextAppearance">@style/errorTextAppearance</item>
-        <item name="android:layout_marginStart">14dp</item>
-        <item name="android:paddingStart">0dp</item>
     </style>
 
     <style name="AlertListTextView" parent="android:Widget.TextView">
@@ -106,8 +118,8 @@
         <item name="android:maxLines">1</item>
         <item name="android:fontFamily">proximanova_regular</item>
         <item name="android:singleLine">true</item>
-        <item name="android:layout_marginStart">@dimen/input_text_layout_start_margin</item>
-        <item name="android:layout_marginEnd">@dimen/input_text_layout_end_margin</item>
+        <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
+        <item name="android:paddingBottom">@dimen/edit_padding_bottom</item>
     </style>
 
     <style name="CityEditTextStyle" parent="EditTextStyle">
@@ -355,6 +367,7 @@
         <item name="android:textColor">@color/cadet_gray</item>
         <item name="android:layout_marginTop">@dimen/sign_up_margin_top</item>
         <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">0dp</item>
     </style>
 
     <!-- Demographics Review Screens Style>-->
@@ -629,4 +642,5 @@
     <style name="DefaultTextAppearanceGothamRoundedMediumLabel">
         <item name="android:textColor">@color/lightSlateGray</item>
     </style>
+
 </resources>

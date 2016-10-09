@@ -42,7 +42,9 @@
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/signInEmailTextInputLayout"
-            style="@style/TextInputLayoutStyle">
+            style="@style/TextInputLayoutStyle"
+            android:theme="@style/EditTextHintStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <EditText
                 android:id="@+id/signinEmailEditText"
@@ -55,7 +57,9 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/passwordTextInputLayout"
             style="@style/TextInputLayoutStyle"
-            app:passwordToggleEnabled="false">
+            app:passwordToggleEnabled="false"
+            android:theme="@style/EditTextHintStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <EditText
                 android:id="@+id/passwordEditText"
@@ -86,7 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:baselineAligned="false">
 
         <LinearLayout
