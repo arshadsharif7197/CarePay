@@ -32,6 +32,7 @@
     <dimen name="signup_details_container_height">360dp</dimen>
     <dimen name="signup_optional_label_text_size">10.0sp</dimen>
     <dimen name="signup_optional_label_margin_right">14dp</dimen>
+    <dimen name="sign_up_margin_top">17dp</dimen>
 
     <!-- Responsibility -->
     <dimen name="respons_total_label_text_size">21sp</dimen>
