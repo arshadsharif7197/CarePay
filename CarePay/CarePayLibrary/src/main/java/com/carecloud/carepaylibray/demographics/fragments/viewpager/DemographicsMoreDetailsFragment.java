@@ -38,6 +38,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 
 /**
  * Created by lsoco_user on 9/2/2016.
+ * Screen for demographics onboarding confirmation
  */
 public class DemographicsMoreDetailsFragment extends Fragment implements View.OnClickListener {
     View view;
@@ -84,6 +85,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     public void confirmDemographicInformation() {
         // TODO: 9/29/2016 add progress
 
+        // TODO: 10/9/2016 remove
 //        DemAddressPayloadDto demographicPayloadAddressModel = new DemAddressPayloadDto();
 //        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
 //        demographicPayloadAddressModel.setAddress2("#800 Lejeune");
@@ -155,24 +157,25 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demPayloadDto.setInsurances(insuranceModelList);
         }
 
-        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<ResponseBody> call = apptService.confirmDemographicInformation(demPayloadDto);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                // TODO: 9/29/2016 progress
-                Log.d(LOG_TAG, "demogr post succeeded");
-
-                Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
-                startActivity(appointmentIntent);
-                getActivity().finish();
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d(LOG_TAG, "demogr post failed", t);
-                // TODO: 9/29/2016 progres
-            }
-        });
+        // TODO: 10/9/2016 uncomment (just testing now)
+//        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
+//        Call<ResponseBody> call = apptService.confirmDemographicInformation(demPayloadDto);
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                // TODO: 9/29/2016 progress
+//                Log.d(LOG_TAG, "demogr post succeeded");
+//
+//                Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
+//                startActivity(appointmentIntent);
+//                getActivity().finish();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                Log.d(LOG_TAG, "demogr post failed", t);
+//                // TODO: 9/29/2016 progres
+//            }
+//        });
     }
 }

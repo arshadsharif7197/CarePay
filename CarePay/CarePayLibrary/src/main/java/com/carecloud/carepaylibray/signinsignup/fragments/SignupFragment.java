@@ -104,6 +104,11 @@ public class SignupFragment extends Fragment {
 
         parentLayout.clearFocus();
 
+        // TODO: 10/9/2016 remove (for test only)
+        emailText.setText("lvictor1979@gmail.com");
+        passwordText.setText("test123");
+        repeatPasswordText.setText("test123");
+
         return view;
     }
 
@@ -112,10 +117,14 @@ public class SignupFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (areAllValid()) {
+                // TODO: 10/9/2016 uncomment
+                // if (areAllValid()) {
                     // request user registration ony if all fiels are valid
-                    registerUser();
-                }
+//                    registerUser();
+                //}
+                // TODO: 10/9/2016 remove
+                Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+                startActivity(intent);
             }
         });
         submitButton.setEnabled(false);
@@ -493,18 +502,32 @@ public class SignupFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        userName = emailText.getText().toString();
-        if (userName.length() > 0) {
-            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
-            // add more attributes here is needed...
-        }
-        String password = passwordText.getText().toString();
+        // TODO: 10/9/2016 remove (just for test)
+        CognitoAppHelper.signIn(getActivity(), emailText.getText().toString(),
+                                passwordText.getText().toString(),
+                                progressBar,
+                                new CognitoActionCallback() {
+                                    @Override
+                                    public void executeAction() {
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        Intent intent = new Intent(getActivity(), DemographicsActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
 
-        CognitoAppHelper.getPool().signUpInBackground(userName,
-                                                      password,
-                                                      userAttributes,
-                                                      null,
-                                                      signUpHandler);
+        // TODO: 10/9/2016 uncomment
+//        userName = emailText.getText().toString();
+//        if (userName.length() > 0) {
+//            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
+//            // add more attributes here is needed...
+//        }
+//        String password = passwordText.getText().toString();
+//
+//        CognitoAppHelper.getPool().signUpInBackground(userName,
+//                                                      password,
+//                                                      userAttributes,
+//                                                      null,
+//                                                      signUpHandler);
     }
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
