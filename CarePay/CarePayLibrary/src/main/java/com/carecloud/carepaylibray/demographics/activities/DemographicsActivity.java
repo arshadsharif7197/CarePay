@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,7 +36,6 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.viewpagerindicator.IconPagerAdapter;
-import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +51,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private int         currentPageIndex;
     private ViewPager   viewPager;
     private ProgressBar demographicProgressBar;
+    private ImageView   tabImageView;
     
     private DemographicModel modelGet = null;
     private DemAddressPayloadDto     addressModel;
@@ -111,7 +112,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         // set the progress bar
         demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
-        
+
+        tabImageView = (ImageView) findViewById(R.id.demographicsOnboardingTab);
+
         // b/e
         isStoragePermissionGranted();
         setupPager();
@@ -135,7 +138,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                     SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
                 }
                 currentPageIndex = position;
-                setScreenTitle(position);
+                setScreenHeader(position);
             }
             
             @Override
@@ -143,24 +146,24 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             }
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
-        
-        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
-        indicator.setOnPageChangeListener(pageChangeListener);
-        indicator.setViewPager(viewPager);
     }
-    
-    private void setScreenTitle(int position) {
+
+    private void setScreenHeader(int position) {
         switch (position) {
             case 0:
+                tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_1));
                 titleTextView.setText("Address");
                 break;
             case 1:
+                tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_2));
                 titleTextView.setText("Details");
                 break;
             case 2:
+                tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_3));
                 titleTextView.setText("Documents");
                 break;
             case 3:
+                tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_4));
                 titleTextView.setText("More Details");
                 break;
             default:
@@ -215,17 +218,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     /**
      * Adapter for the viewpager
      */
-    
-    public static class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-        
+    public static class DemographicPagerAdapter extends FragmentPagerAdapter {
         final         int   PAGE_COUNT = 4;
-        private final int[] ICONS      = new int[]{
-        R.drawable.signup_step1_indicator,
-        R.drawable.signup_step2_indicator,
-        R.drawable.signup_step3_indicator,
-        R.drawable.signup_step4_indicator
-        };
-        
+
         /**
          * Constructor of the class
          */
@@ -260,13 +255,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         public int getCount() {
             return PAGE_COUNT;
         }
-        
-        
-        @Override
-        public int getIconResId(int index) {
-            return ICONS[index];
-        }
-        
     }
     
     public boolean isStoragePermissionGranted() {
