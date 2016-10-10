@@ -23,6 +23,7 @@ import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
 import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
 import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -66,8 +67,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         // fetch the scroll view
         detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
 
-        setButtons();
         setCardContainers();
+        setButtons();
         setSwitch();
 
         // set the fonts
@@ -88,6 +89,12 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             demPayloadIdDocPojo = payload.getIdDocument();
             insuranceModelList = payload.getInsurances();
         }
+        if(demPayloadIdDocPojo == null) {
+            demPayloadIdDocPojo = new DemIdDocPayloadDto();
+        }
+        if(insuranceModelList == null) {
+            insuranceModelList = new ArrayList<>();
+        }
     }
 
     public DemIdDocPayloadDto getDemPayloadIdDocPojo() {
@@ -107,7 +114,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((DemographicsActivity) getActivity()).setDemPayloadIdDocPojo(demPayloadIdDocPojo);
+                ((DemographicsActivity) getActivity()).setIdDocModel(demPayloadIdDocPojo);
                 DemInsurancePayloadPojo model = new DemInsurancePayloadPojo();
                 // clear the list
                 insuranceModelList.clear();

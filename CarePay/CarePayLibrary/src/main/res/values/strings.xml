@@ -120,8 +120,8 @@
     <string name="AddressSubHeadingTextView">First, tell us your address \u0026 contact information</string>
     <string name="PhoneNumberEditText">Phone Number</string>
     <string name="ZipCodeEditText">Zip Code</string>
-    <string name="Address1EditText">Address 1</string>
-    <string name="Address2EditText">Address 2</string>
+    <string name="Address1EditText">Address Line 1</string>
+    <string name="Address2EditText">Address Line 2</string>
     <string name="CityEditText">City</string>
     <string name="StateEditText">State</string>
 
@@ -171,7 +171,7 @@
     <string name="signup_error_passwords_unmatched">Passwords do not match</string>
     <string name="signup_error_passwords_invalid">Invalid password</string>
     <string name="signup_password_format_instructions">Passwords need to have at least 8 characters,
-        one number, one special character and one upper letter</string>
+        one number, one special character ($@!%*?&amp;_-) and one upper letter</string>
 
     <!--MoreDetails Fragment-->
     <string name="PlaceHolderIcon">PlaceHolder Icon</string>
