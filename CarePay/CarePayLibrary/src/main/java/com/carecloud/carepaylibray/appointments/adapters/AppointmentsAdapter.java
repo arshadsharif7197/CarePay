@@ -67,6 +67,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.doctorType.setText(item.getAppointmentType());
             SystemUtil.setProximaNovaRegularTypeface(context, holder.doctorType);
 
+            // TODO: 10/5/2016 refactor
             String splitStr[] = item.getAppointmentTime().split(" ");
             if (splitStr.length > 3) {
                 if(item.isCheckedIn()) {
@@ -77,8 +78,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
                     holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
-                    holder.upcomingDateTextView.setText(splitStr[0]);
                     SystemUtil.setProximaNovaLightTypeface(context, holder.upcomingDateTextView);
+
+                    holder.upcomingDateTextView.setText(splitStr[0]);
                     holder.upcomingMonthTextView.setText(splitStr[2].toUpperCase() + " " + splitStr[1]);
                     holder.upcomingTimeTextView.setText(splitStr[3] + " " + splitStr[4]);
                 }

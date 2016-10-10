@@ -45,9 +45,11 @@ public class CarePayConstants {
     public static final long APPOINTMENT_REMINDER_TIME_IN_MINUTES = 120;
     public static final long CUSTOM_POPUP_AUTO_DISMISS_DURATION = 5000;
 
-    public static final String APPOINTMENT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String ADD_APPOINTMENT_BUNDLE = "add_appointment_bundle";
     public static final String ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE = "add_appointment_calendar_date_bundle";
     public static final String ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE = "add_appointment_calendar_start_date_bundle";
     public static final String ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE = "add_appointment_calendar_end_date_bundle";
+
+    public static final String APPOINTMENT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssz";
+    public static final String RAW_DATE_FORMAT_FOR_TESTS = "yyyy-MM-dd'T'HH:mm:ssX";
 }

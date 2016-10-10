@@ -13,6 +13,8 @@
     <string name="respons_copay_label">Insurance CoPay</string>
     <string name="respons_pay_label">Pay at practice</string>
     <string name="respons_pay_now_label">Pay now</string>
+    <string name="pay_total_amount">PAY TOTAL AMOUNT</string>
+    <string name="make_partial_payment">MAKE PARTIAL PAYMENT</string>
 
     <string name="AL">AL</string>
     <string name="FL">FL</string>
@@ -167,6 +169,9 @@
     <string name="signin_signup_error_empty_password">Password is empty</string>
     <string name="signin_signup_error_empty_repeat_password">Repeat password is empty</string>
     <string name="signup_error_passwords_unmatched">Passwords do not match</string>
+    <string name="signup_error_passwords_invalid">Invalid password</string>
+    <string name="signup_password_format_instructions">Passwords need to have at least 8 characters,
+        one number, one special character and one upper letter</string>
 
     <!--MoreDetails Fragment-->
     <string name="PlaceHolderIcon">PlaceHolder Icon</string>
@@ -226,8 +231,6 @@
     <string name="review_state_label">STATE</string>
     <string name="review_zipcode_label">ZIPCODE</string>
     <string name="review_country_label">COUNTRY</string>
-
-
 
 
     <!--<Navigation Screen>-->
@@ -299,6 +302,12 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="no_apt_title">No appointments yet</string>
     <string name="no_apt_desc">We\'ll list all your appointments here, so you can quickly check important details and even make early-check-ins in some cases.</string>
 
+    <!--add appointment calendar screen-->
+    <string name="date_range_apply_button_label">Apply</string>
+    <string name="edit_range_button_label">Edit range</string>
+    <string name="edit_date_range_button_label">Edit date range</string>
+    <string name="pick_a_date_label">Pick a date</string>
+
     <!--<months string date util>-->
     <string name="January">January</string>
     <string name="February">February</string>
@@ -312,11 +321,19 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="November">November</string>
     <string name="December">December</string>
 
-    <string name="date_range_apply_button_label">Apply</string>
-    <string name="edit_range_button_label">Edit range</string>
-    <string name="edit_date_range_button_label">Edit date range</string>
-    <string name="pick_a_date_label">Pick a date</string>
-
-
-
+    <!-- Payment flow -->
+    <string name="payment_method">Payment Method</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="cash">Cash</string>
+    <string name="check">Check</string>
+    <string name="paypal">Paypal</string>
+    <string name="apple_pay">Apple Pay</string>
+    <string name="choose_payment_method">CHOOSE PAYMENT METHOD</string>
+    <string name="choose_credit_card">CHOOSE CREDIT CARD</string>
+    <string name="create_payment_plan_instead">CREATE PAYMENT PLAN INSTEAD</string>
+    <string name="pay_using_apple_pay">PAY USING APPLE PAY</string>
+    <string name="pay_using_paypal">PAY USING PAYPAL</string>
+    <string name="scan_check">SCAN CHECK</string>
+    <string name="next">NEXT</string>
+    <string name="add_new_credit_card">ADD NEW CREDIT CARD</string>
 </resources>

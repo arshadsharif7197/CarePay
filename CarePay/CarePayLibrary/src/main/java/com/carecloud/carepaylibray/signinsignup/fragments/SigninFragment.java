@@ -20,36 +20,16 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadAddressModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDriversLicenseModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInsuranceModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadPersonalDetailsModel;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +39,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 /**
  * Created by harish_revuri on 9/7/2016.
+ * The fragment corresponding to SignUp screen.
  */
 public class SigninFragment extends Fragment {
 
@@ -75,8 +56,6 @@ public class SigninFragment extends Fragment {
 
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
-
-    private String userName;
 
     @Nullable
     @Override
@@ -320,23 +299,15 @@ public class SigninFragment extends Fragment {
         passwordTexInput.setError(null);
     }
 
-    private void launchUser() {
-        Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
-        startActivity(intent);
-//        reset();
-        getActivity().finish();
-    }
-
     // cognito
     private void signInUser() {
         Log.v(LOG_TAG, "sign in user");
-        userName = emailEditText.getText().toString();
+        String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
         CognitoAppHelper.signIn(getActivity(), userName, password, progressBar, new CognitoActionCallback() {
             @Override
             public void executeAction() {
-              //  launchUser();
                 getDemographicInformation();
             }
         });
@@ -372,6 +343,4 @@ public class SigninFragment extends Fragment {
         startActivity(intent);
         getActivity().finish();
     }
-
-
 }

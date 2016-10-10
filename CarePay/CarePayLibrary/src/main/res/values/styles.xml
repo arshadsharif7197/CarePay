@@ -83,10 +83,12 @@
 
     <style name="TextInputLayoutStyle" parent="TextAppearence.App.TextInputLayout">
         <item name="android:textColor">@color/bright_cerulean</item>
-        <item name="android:textSize">15.0sp</item>
+        <item name="android:textSize">10.0sp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="errorTextAppearance">@style/errorTextAppearance</item>
+        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:paddingStart">0dp</item>
     </style>
 
     <style name="AlertListTextView" parent="android:Widget.TextView">
@@ -104,6 +106,8 @@
         <item name="android:maxLines">1</item>
         <item name="android:fontFamily">proximanova_regular</item>
         <item name="android:singleLine">true</item>
+        <item name="android:layout_marginStart">@dimen/input_text_layout_start_margin</item>
+        <item name="android:layout_marginEnd">@dimen/input_text_layout_end_margin</item>
     </style>
 
     <style name="CityEditTextStyle" parent="EditTextStyle">
@@ -115,7 +119,7 @@
 
     <style name="SigninSignupClickableTextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/signup_clickable_textview_height</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/blue_cerulian</item>
@@ -297,6 +301,7 @@
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:fontFamily">GothamRounded-Medium</item>
         <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
         <item name="android:background">@drawable/agree_button_background</item>
@@ -342,6 +347,15 @@
         <item name="android:textColor">@color/blue_cerulian</item>
     </style>
 
+    <style name="SignupInstructionsStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/signup_button_textsize</item>
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:layout_marginTop">@dimen/sign_up_margin_top</item>
+        <item name="android:padding">0dp</item>
+    </style>
 
     <!-- Demographics Review Screens Style>-->
 
@@ -580,6 +594,26 @@
         <item name="android:layout_marginBottom">@dimen/consent_view_margin_top_bottom</item>
         <item name="android:background">@color/payne_gray</item>
     </style>
+
+    <!-- Payment -->
+
+    <style name="PaymentMethodLabelStyle">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/radio_button_selector</item>
+        <item name="android:textSize">@dimen/payment_method_layout_lable_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
+    <style name="PaymentButtonStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_button_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="DefaultTextAppearanceProxyNovaSemiBoldLabel">
         <item name="android:textColor">@color/bright_cerulean</item>
     </style>
@@ -595,5 +629,4 @@
     <style name="DefaultTextAppearanceGothamRoundedMediumLabel">
         <item name="android:textColor">@color/lightSlateGray</item>
     </style>
-
 </resources>
