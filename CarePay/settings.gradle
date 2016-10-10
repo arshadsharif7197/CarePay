@@ -1,1 +1,1 @@
-include ':CarePayLibrary', ':CarePayClover', ':CarePayAndroid'
+include ':CarePayLibrary', ':CarePayClover', ':CarePayAndroid', ':CarePayServiceLibrary', ':CarePayComponentLibrary', ':CarePayPatient', ':CarePayPracticeLibrary', ':CarePayPracticeClover', ':CarePayPracticeTablet'
