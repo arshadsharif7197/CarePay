@@ -9,7 +9,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,16 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
@@ -56,21 +51,12 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 /**
  * Created by harish_revuri on 9/7/2016.
- * Signup screen
+ * Signup screen.
  */
 public class SignupFragment extends Fragment {
 
     private LinearLayout parentLayout;
     private ProgressBar  progressBar;
-
-    private TextInputLayout firstNameInputLayout;
-    private TextInputLayout middleNameInputLayout;
-    private TextInputLayout lastNameInputLayout;
-    private EditText        firstNameText;
-    private EditText        middleNameText;
-    private EditText        lastNameText;
-    private boolean         isFirstNameEmpty;
-    private boolean         isLastNameEmpty;
 
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
@@ -78,9 +64,10 @@ public class SignupFragment extends Fragment {
     private EditText        emailText;
     private EditText        passwordText;
     private EditText        repeatPasswordText;
-    private boolean         isEmailEmpty;
-    private boolean         isPasswordEmpty;
-    private boolean         isRepeatPasswordEmpty;
+
+    private boolean isEmailEmpty;
+    private boolean isPasswordEmpty;
+    private boolean isRepeatPasswordEmpty;
 
     private Button   submitButton;
     private TextView accountExistTextView;
@@ -111,8 +98,6 @@ public class SignupFragment extends Fragment {
 
         setEditTexts(view);
 
-        isFirstNameEmpty = false;  // init false because hidden
-        isLastNameEmpty = false;  // init false because hidden
         isEmailEmpty = true;
         isPasswordEmpty = true;
         isRepeatPasswordEmpty = true;
@@ -154,27 +139,8 @@ public class SignupFragment extends Fragment {
     }
 
     private void setEditTexts(View view) {
-        String hint = getString(R.string.firstname_text);
-        firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.firstNameTextInputLayout);
-        firstNameInputLayout.setTag(hint);
-        firstNameText = (EditText) view.findViewById(R.id.firstNameEditText);
-        firstNameText.setTag(firstNameInputLayout);
 
-        hint = getString(R.string.middlename_text);
-        middleNameInputLayout = (TextInputLayout) view.findViewById(R.id.middleNameTextInputLayout);
-        middleNameInputLayout.setTag(hint);
-        middleNameText = (EditText) view.findViewById(R.id.middleNameEditText);
-        middleNameText.setTag(middleNameInputLayout);
-
-        // set the label
-        TextView optionalLabel = (TextView) view.findViewById(R.id.signupOptionalLabel);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), optionalLabel);
-
-        hint = getString(R.string.lastname_text);
-        lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.lastNameTextInputLayout);
-        lastNameInputLayout.setTag(hint);
-        lastNameText = (EditText) view.findViewById(R.id.lastNameEditText);
-        lastNameText.setTag(lastNameInputLayout);
+        String hint;
 
         hint = getString(R.string.signin_signup_email_hint);
         emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
@@ -204,49 +170,6 @@ public class SignupFragment extends Fragment {
     }
 
     private void setTextWatchers() {
-        firstNameText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isFirstNameEmpty = StringUtil.isNullOrEmpty(firstNameText.getText().toString());
-                if (!isFirstNameEmpty) {
-                    firstNameInputLayout.setError(null);
-                    firstNameInputLayout.setErrorEnabled(false);
-                }
-                enableSignupButton();
-            }
-        });
-
-        lastNameText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isLastNameEmpty = StringUtil.isNullOrEmpty(lastNameText.getText().toString());
-                if (!isLastNameEmpty) {
-                    lastNameInputLayout.setError(null);
-                    lastNameInputLayout.setErrorEnabled(false);
-                }
-                enableSignupButton();
-            }
-        });
 
         emailText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -318,34 +241,6 @@ public class SignupFragment extends Fragment {
      * Set listener to capture focus change and toggle the hint text to caps on/off
      */
     public void setChangeFocusListeners() {
-        firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) { // show the keyboard
-                    firstNameText.requestFocus();
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, b);
-            }
-        });
-        middleNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                SystemUtil.handleHintChange(view, b);
-                if (b) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-            }
-        });
-        lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, b);
-            }
-        });
         emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -376,36 +271,6 @@ public class SignupFragment extends Fragment {
     }
 
     private void setActionListeners() {
-        firstNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
-                    middleNameText.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-        middleNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) { // no validations for middle name
-                    lastNameText.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-        lastNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
-                    emailText.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
         emailText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -441,15 +306,6 @@ public class SignupFragment extends Fragment {
     }
 
     private void setTypefaces() {
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), firstNameInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), firstNameText);
-
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), middleNameInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), middleNameText);
-
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), lastNameInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), lastNameText);
-
         SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailInputLayout);
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailText);
 
@@ -479,11 +335,22 @@ public class SignupFragment extends Fragment {
     }
 
     private boolean checkPassword() {
-        isPasswordEmpty = StringUtil.isNullOrEmpty(passwordText.getText().toString());
-        String error = (isPasswordEmpty ? getString(R.string.signin_signup_error_empty_password) : null);
-        passwordInputLayout.setErrorEnabled(isPasswordEmpty);
+        String passwordString = passwordText.getText().toString();
+        isPasswordEmpty = StringUtil.isNullOrEmpty(passwordString);
+        boolean isPasswordValid = StringUtil.isValidPassword(passwordString);
+
+        passwordInputLayout.setErrorEnabled(isPasswordEmpty || !isPasswordValid);
+        String error;
+        if (isPasswordEmpty) {
+            error = getString(R.string.signin_signup_error_empty_password);
+        } else if (!isPasswordValid) {
+            error = getString(R.string.signup_error_passwords_invalid);
+        } else {
+            error = null;
+        }
         passwordInputLayout.setError(error);
-        return !isPasswordEmpty;
+
+        return !isPasswordEmpty && isPasswordValid;
     }
 
     private boolean checkPasswordsMatch() {
@@ -526,29 +393,13 @@ public class SignupFragment extends Fragment {
     }
 
     private void enableSignupButton() {
-        boolean areAllNonEmpty =
-                !(isFirstNameEmpty ||
-                        isLastNameEmpty ||
-                        isEmailEmpty ||
-                        isPasswordEmpty ||
-                        isRepeatPasswordEmpty);
+        boolean areAllNonEmpty = !(isEmailEmpty ||
+                isPasswordEmpty ||
+                isRepeatPasswordEmpty);
         submitButton.setEnabled(areAllNonEmpty);
     }
 
     private void reset() {
-        firstNameText.clearFocus();
-        firstNameText.setText("");
-        firstNameInputLayout.setErrorEnabled(false);
-        firstNameInputLayout.setError(null);
-
-        middleNameText.clearFocus();
-        middleNameText.setText("");
-
-        lastNameText.clearFocus();
-        lastNameText.setText("");
-        lastNameInputLayout.setEnabled(false);
-        lastNameInputLayout.setError(null);
-
         emailText.clearFocus();
         emailText.setText("");
         emailInputLayout.setErrorEnabled(false);
@@ -564,25 +415,28 @@ public class SignupFragment extends Fragment {
         passwordRepeatInputLayout.setErrorEnabled(false);
         passwordRepeatInputLayout.setError(null);
 
-        isFirstNameEmpty = false; // init false because hidden
-        isLastNameEmpty = false; // init false because hidden
         isEmailEmpty = true;
         isPasswordEmpty = true;
         isRepeatPasswordEmpty = true;
     }
 
+    /**
+     * Receives the result from the confirm email activity; (just in case we need confirmation)
+     * @param requestCode The request code.
+     * @param resultCode The result code.
+     * @param data The passed data.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
                 // confirmed; (auto)sign-in
-//                CognitoAppHelper.getPool().getUser(userName).getSessionInBackground(authenticationHandler);
                 CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
                                         new CognitoActionCallback() {
                                             @Override
                                             public void executeAction() {
-//                                                launchDemographics(); // TODO: 9/29/2016 fix for confirmation or remove
+                                                getDemographicInformation();
                                             }
                                         });
             }
@@ -678,7 +532,6 @@ public class SignupFragment extends Fragment {
                                                 getDemographicInformation();
                                             }
                                         });
-
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed
@@ -689,10 +542,11 @@ public class SignupFragment extends Fragment {
         @Override
         public void onFailure(Exception exception) {
             progressBar.setVisibility(View.INVISIBLE);
+            String errorMsg = CognitoAppHelper.formatException(exception);
+
             SystemUtil.showDialogMessage(getActivity(),
                                          "Sign up failed!",
-                                         "Invalid id or password");
-            Log.e(LOG_TAG, CognitoAppHelper.formatException(exception));
+                                         errorMsg);
         }
     };
 }
