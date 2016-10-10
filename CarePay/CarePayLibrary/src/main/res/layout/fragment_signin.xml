@@ -68,7 +68,7 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
@@ -85,15 +85,15 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/bottomContainerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        >
+        <LinearLayout
+            android:id="@+id/bottomContainerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="1">
 
         <TextView
             android:id="@+id/changeLanguageText"
