@@ -38,12 +38,13 @@ public class DemographicsDetailsFragment extends Fragment
         implements View.OnClickListener,
                    DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private View     view;
-    private String[] raceArray;
-    private String[] ethnicityArray;
-    private String[] preferredLanguageArray;
-    private int      selectedArray;
-    private TextView raceTextView, ethnicityTextView, preferredLanguageTextView;
+    private View                     view;
+    private String[]                 raceArray;
+    private String[]                 ethnicityArray;
+    private String[]                 preferredLanguageArray;
+    private int                      selectedArray;
+    private TextView                 raceTextView;
+    private TextView                 ethnicityTextView;
     private Button                   nextButton;
     private DemPersDetailsPayloadDto model;
 
@@ -82,8 +83,6 @@ public class DemographicsDetailsFragment extends Fragment
         raceTextView.setOnClickListener(this);
         ethnicityTextView = (TextView) view.findViewById(R.id.ethnicityListTextView);
         ethnicityTextView.setOnClickListener(this);
-        preferredLanguageTextView = (TextView) view.findViewById(R.id.preferredLanguageTextView);
-        preferredLanguageTextView.setOnClickListener(this);
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         nextButton.setOnClickListener(this);
 //        enableNextButton(false); // 'next' is initially disabled // TODO: 9/27/2016 uncomment
@@ -95,8 +94,8 @@ public class DemographicsDetailsFragment extends Fragment
 
     public DemPersDetailsPayloadDto getModel() {
         DemPayloadDto payload
-                = ((DemographicsActivity)getActivity()).getDemographicInfoPayloadModel();
-        if(payload != null) {
+                = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
+        if (payload != null) {
             model = payload.getPersonalDetails();
         }
         return model;
@@ -105,10 +104,9 @@ public class DemographicsDetailsFragment extends Fragment
     private void populateViewsFromModel() {
         getModel();
 
-        if(model != null) {
+        if (model != null) {
             raceTextView.setText(model.getPrimaryRace());
             ethnicityTextView.setText(model.getEthnicity());
-            preferredLanguageTextView.setText(model.getPreferredLanguage());
             String pictureByteStream = model.getProfilePhoto();
             setPictureFromByteStream(pictureByteStream);
         } else {
@@ -129,9 +127,6 @@ public class DemographicsDetailsFragment extends Fragment
         } else if (view == ethnicityTextView) {
             selectedArray = 2;
             showAlertDialogWithListview(ethnicityArray, "Select Ethnicity");
-        } else if (view == preferredLanguageTextView) {
-            selectedArray = 3;
-            showAlertDialogWithListview(preferredLanguageArray, "Select Preferred Language");
         } else if (view == nextButton) {
             nextbuttonClick();
         }
@@ -141,9 +136,8 @@ public class DemographicsDetailsFragment extends Fragment
         // update the model with values from UI
         model.setPrimaryRace(raceTextView.getText().toString());
         model.setEthnicity(ethnicityTextView.getText().toString());
-        model.setPreferredLanguage(preferredLanguageTextView.getText().toString());
 
-        ((DemographicsActivity)getActivity()).setDetailsModel(model); // save the updated model in the activity
+        ((DemographicsActivity) getActivity()).setDetailsModel(model); // save the updated model in the activity
 
         // move to next page
         ((DemographicsActivity) getActivity()).setCurrentItem(2, true);
@@ -184,11 +178,6 @@ public class DemographicsDetailsFragment extends Fragment
                         ethnicityTextView.setText(ethnicity);
                         model.setEthnicity(ethnicity);
                         break;
-                    case 3:
-                        String prefLang = preferredLanguageArray[position];
-                        preferredLanguageTextView.setText(prefLang);
-                        model.setPreferredLanguage(prefLang);
-                        break;
                 }
                 alert.dismiss();
             }
@@ -207,8 +196,6 @@ public class DemographicsDetailsFragment extends Fragment
 
         setGothamRoundedMediumTypeface(getActivity(), nextButton);
 
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageTextView));
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.preferredLanguageListTextView));
     }
 
 
