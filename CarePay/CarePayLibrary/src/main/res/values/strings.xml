@@ -171,7 +171,7 @@
     <string name="signup_error_passwords_unmatched">Passwords do not match</string>
     <string name="signup_error_passwords_invalid">Invalid password</string>
     <string name="signup_password_format_instructions">Passwords need to have at least 8 characters,
-        one number, one special character and one upper letter</string>
+        one number, one special character ($@!%*?&amp;_-)and one upper letter</string>
 
     <!--MoreDetails Fragment-->
     <string name="PlaceHolderIcon">PlaceHolder Icon</string>

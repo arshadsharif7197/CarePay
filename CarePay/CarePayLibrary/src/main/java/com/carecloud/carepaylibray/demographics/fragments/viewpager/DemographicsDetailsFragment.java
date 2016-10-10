@@ -198,7 +198,6 @@ public class DemographicsDetailsFragment extends Fragment
 
     }
 
-
     @Override
     public void showAddCardButton(boolean isVisible) {
 

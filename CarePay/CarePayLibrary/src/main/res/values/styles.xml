@@ -129,6 +129,7 @@
         <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:textSize">@dimen/signup_textview_existing_account_size</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/margintop</item>
     </style>
 
     <style name="SignupRequireHintStyle">
