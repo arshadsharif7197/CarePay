@@ -10,6 +10,9 @@ public class StringUtil {
     private static final String PHONE_NUMBER_REGEX = "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})";
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    static private final String PASWWORD_REGEX_VALIDATION
+            = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}";
+
     /**
      * Determines if the specified String object is null or equal to
      * an empty string.
@@ -48,6 +51,21 @@ public class StringUtil {
         if (email != null) {
             Pattern pattern = Pattern.compile(EMAIL_PATTERN);
             Matcher matcher = pattern.matcher(email);
+            return matcher.matches();
+        }
+        return false;
+    }
+
+    /**
+     * Test if a password respect the standard pattern, id, at least 8 chars,
+     * at least 1 number, 1 upper case, 1 lower case, 1 special character.
+     * @param password The passwrod as a string
+     * @return Whether the password matches the pattern.
+     */
+    public static boolean isValidPassword(String password) {
+        if(password != null) {
+            Pattern pattern = Pattern.compile(PASWWORD_REGEX_VALIDATION);
+            Matcher matcher = pattern.matcher(password);
             return matcher.matches();
         }
         return false;
