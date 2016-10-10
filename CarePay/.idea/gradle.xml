@@ -8,7 +8,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/CarePayAndroid" />
             <option value="$PROJECT_DIR$/CarePayClover" />
             <option value="$PROJECT_DIR$/CarePayComponentLibrary" />
             <option value="$PROJECT_DIR$/CarePayLibrary" />
