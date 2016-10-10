@@ -7,7 +7,7 @@ import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
 
 /**
- * Created by lsoco_user on 8/25/2016.
+ * Created by Jahirul on 8/25/2016.
  */
 public class CarePayPatientApplication extends Application {
 
