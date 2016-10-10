@@ -25,6 +25,9 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.fragments.PaymentMethodFragment;
+import com.carecloud.carepaylibray.payment.models.PaymentsModel;
+import com.carecloud.carepaylibray.payment.services.PaymentsService;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.JsonObject;
 
 import java.text.DecimalFormat;
@@ -77,6 +80,7 @@ public class ResponsibilityFragment extends Fragment {
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getPaymentInformation();
                 FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                 PaymentMethodFragment fragment = (PaymentMethodFragment) fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
                 if (fragment == null) {
@@ -137,10 +141,26 @@ public class ResponsibilityFragment extends Fragment {
         return view;
     }
 
+    private void getPaymentInformation() {
+        PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
+                .createService(PaymentsService.class);
+        Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
+        call.enqueue(new Callback<PaymentsModel>() {
+            @Override
+            public void onResponse(Call<PaymentsModel> call, Response<PaymentsModel> response) {
+                PaymentsModel paymentsModel = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<PaymentsModel> call, Throwable t) {
+            }
+        });
+    }
+
     private void payAndFetchCheckedInAppointment() {
         /*AppointmentModel appointmentModel = AppointmentsActivity.model;
         ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
-        appointmentModel.getAppointmentId();
+        appointmentModel.getPaymentsAppointmentIdModel();
         appointmentModel.getDoctorName();
         appointmentModel.getAppointmentType();
         appointmentsItems.add(appointmentModel);*/
