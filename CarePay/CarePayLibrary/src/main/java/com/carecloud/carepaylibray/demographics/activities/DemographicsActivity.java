@@ -13,7 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -34,8 +36,6 @@ import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.viewpagerindicator.IconPagerAdapter;
-import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,18 +46,18 @@ import java.util.List;
  * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
-    
+
     private TextView    titleTextView;
     private int         currentPageIndex;
     private ViewPager   viewPager;
-    private ProgressBar demographicProgressBar;
-    
+    private ImageView   tabImageView;
+
     private DemographicModel modelGet = null;
     private DemAddressPayloadDto     addressModel;
     private DemPersDetailsPayloadDto detailsModel;
-    private DemIdDocPayloadDto       demPayloadIdDocPojo;
+    private DemIdDocPayloadDto       idDocModel;
     private List<DemInsurancePayloadPojo> insuranceModelList = new ArrayList<>();
-    
+
     public DemPayloadDto getDemographicInfoPayloadModel() {
         DemPayloadDto infoModel = null;
         if (modelGet != null) {
@@ -71,26 +71,26 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         return infoModel;
     }
-    
+
     @Override
     public int getLayoutRes() {
         return R.layout.activity_demographics;
     }
-    
+
     @Override
     public int getContentsHolderId() {
         return R.id.demogr_content_holder;
     }
-    
+
     @Override
     public int getKeyboardHolderId() {
         return R.id.demogr_keyboard_holder;
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
@@ -98,7 +98,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         titleTextView.setText("Address");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
         (DemographicsActivity.this).setSupportActionBar(toolbar);
-        
+
         // set the language
         Intent intent = getIntent();
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
@@ -108,15 +108,21 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             Gson gson = new Gson();
             modelGet = gson.fromJson(demographicsModelString, DemographicModel.class);
         }
+
         // set the progress bar
-        demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
+        ProgressBar demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
-        
-        // b/e
+
+        tabImageView = (ImageView) findViewById(R.id.demographicsOnboardingTab);
+
         isStoragePermissionGranted();
         setupPager();
+
+        initDTOsForFragments();
+        createDTOsForTest(); // TODO: 10/9/2016 remove
+
     }
-    
+
     private void setupPager() {
         currentPageIndex = 0;
         DemographicPagerAdapter demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
@@ -127,7 +133,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
-            
+
             @Override
             public void onPageSelected(int position) {
                 if (position != 0) {
@@ -135,110 +141,110 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                     SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
                 }
                 currentPageIndex = position;
-                setScreenTitle(position);
+                setScreenHeader(position);
             }
-            
+
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
-        
-        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
-        indicator.setOnPageChangeListener(pageChangeListener);
-        indicator.setViewPager(viewPager);
+
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
     }
-    
-    private void setScreenTitle(int position) {
+
+    private void setScreenHeader(int position) {
         switch (position) {
             case 0:
+                tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_1));
                 titleTextView.setText("Address");
                 break;
             case 1:
+                tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_2));
                 titleTextView.setText("Details");
                 break;
             case 2:
+                tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_3));
                 titleTextView.setText("Documents");
                 break;
             case 3:
+                tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_4));
                 titleTextView.setText("More Details");
                 break;
             default:
                 break;
         }
     }
-    
+
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
     }
-    
+
     public DemographicModel getModel() {
         return modelGet;
     }
-    
+
     public DemPersDetailsPayloadDto getDetailsModel() {
         return detailsModel;
     }
-    
+
     public void setAddressModel(DemAddressPayloadDto addressModel) {
         this.addressModel = addressModel;
     }
-    
+
     public DemAddressPayloadDto getAddressModel() {
         return addressModel;
     }
-    
+
     public void setDetailsModel(DemPersDetailsPayloadDto detailsModel) {
         this.detailsModel = detailsModel;
     }
-    
-    public DemIdDocPayloadDto getDemPayloadIdDocPojo() {
-        return demPayloadIdDocPojo;
+
+    public DemIdDocPayloadDto getIdDocModel() {
+        return idDocModel;
     }
-    
-    public void setDemPayloadIdDocPojo(DemIdDocPayloadDto demPayloadIdDocPojo) {
-        this.demPayloadIdDocPojo = demPayloadIdDocPojo;
+
+    public void setIdDocModel(DemIdDocPayloadDto idDocModel) {
+        this.idDocModel = idDocModel;
     }
-    
+
     public void setModel(DemographicModel modelGet) {
         this.modelGet = modelGet;
     }
-    
+
     public List<DemInsurancePayloadPojo> getInsuranceModelList() {
         return insuranceModelList;
     }
-    
+
     public void setInsuranceModelList(List<DemInsurancePayloadPojo> insuranceModelList) {
         this.insuranceModelList = insuranceModelList;
     }
-    
+
     /**
      * Adapter for the viewpager
      */
-    
-    public static class DemographicPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-        
-        final         int   PAGE_COUNT = 4;
-        private final int[] ICONS      = new int[]{
-        R.drawable.signup_step1_indicator,
-        R.drawable.signup_step2_indicator,
-        R.drawable.signup_step3_indicator,
-        R.drawable.signup_step4_indicator
-        };
-        
+    public static class DemographicPagerAdapter extends FragmentPagerAdapter {
+
+        final int PAGE_COUNT = 4;
+
         /**
          * Constructor of the class
          */
         public DemographicPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-        
+
         /**
          * This method will be invoked when a page is requested to create
          */
         @Override
         public Fragment getItem(int position) {
-            
+
             switch (position) {
                 case 0:
                     return new DemographicsAddressFragment();
@@ -252,7 +258,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                     return null;
             }
         }
-        
+
         /**
          * Returns the number of pages
          */
@@ -260,33 +266,26 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         public int getCount() {
             return PAGE_COUNT;
         }
-        
-        
-        @Override
-        public int getIconResId(int index) {
-            return ICONS[index];
-        }
-        
     }
-    
+
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 //   Log.v(TAG, "Permission is granted");
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
                                                   new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                      Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
     }
-    
+
     /**
      * Returns the fragment in the view pager at a certain index. Used in tests
      *
@@ -296,7 +295,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     public Fragment getFragmentAt(int pos) {
         return ((DemographicPagerAdapter) viewPager.getAdapter()).getItem(pos);
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -309,5 +308,48 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         return true;
     }
-    
+
+    private void initDTOsForFragments() {
+        DemPayloadDto infoModel = getDemographicInfoPayloadModel();
+        if(infoModel != null) {
+            addressModel = infoModel.getAddress();
+            detailsModel = infoModel.getPersonalDetails();
+            idDocModel = infoModel.getIdDocument();
+            insuranceModelList = infoModel.getInsurances();
+
+        } else {
+            addressModel = new DemAddressPayloadDto();
+            detailsModel = new DemPersDetailsPayloadDto();
+            idDocModel = new DemIdDocPayloadDto();
+            insuranceModelList = new ArrayList<>();
+        }
+    }
+
+    // for test
+    private void createDTOsForTest() {
+        addressModel.setAddress1("3113 SW 12th");
+        addressModel.setAddress2("234 Ethernity Road");
+        addressModel.setCity("Miami");
+        addressModel.setState("FL");
+        addressModel.setZipcode("33135");
+        addressModel.setPhone("234556699");
+
+        detailsModel.setFirstName("Liviu");
+        detailsModel.setLastName("Socolovici");
+        detailsModel.setPrimaryRace("Asian");
+        detailsModel.setEthnicity("Hispanic");
+        detailsModel.setPreferredLanguage("English");
+
+        idDocModel.setIdNumber("123DESS");
+        idDocModel.setIdState("FL");
+        idDocModel.setIdCountry("USA");
+        idDocModel.setIdDocPhothos(null); // TODO: 10/9/2016 create
+
+        DemInsurancePayloadPojo ins1 = new DemInsurancePayloadPojo();
+        ins1.setInsurancePlan("AETNA");
+        ins1.setInsuranceMemberId("3434343422");
+        ins1.setInsuranceProvider("AETNA PROV");
+        ins1.setInsurancePhotos(null); // TODO: 10/9/2016 create
+        insuranceModelList.add(ins1);
+    }
 }

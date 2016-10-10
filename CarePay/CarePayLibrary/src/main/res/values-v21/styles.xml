@@ -36,13 +36,9 @@
 
     <style name="TextInputLayoutStyle" parent="TextAppearence.App.TextInputLayout">
         <item name="android:textColor">@color/bright_cerulean</item>
-        <item name="android:textSize">10.0sp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="errorTextAppearance">@style/errorTextAppearance</item>
-        <item name="android:paddingStart">0dp</item>
     </style>
 
-    <dimen name="input_text_layout_end_margin">14dp</dimen>
-    <dimen name="input_text_layout_start_margin">14dp</dimen>
 </resources>

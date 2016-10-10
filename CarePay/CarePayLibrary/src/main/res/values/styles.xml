@@ -9,6 +9,7 @@
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="titleTextStyle">@style/actionBarTitle</item>
         <item name="android:overScrollMode">never</item>
+
     </style>
 
     <style name="actionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -53,6 +54,11 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="FloatingLabelStyle">
+        <item name="android:textSize">@dimen/hint_floating_size</item>
+        <item name="android:textColor">@color/payne_gray</item>
+    </style>
+
     <!-- Custom Keyboard -->
 
     <style name="keyboard_1_style">
@@ -83,12 +89,9 @@
 
     <style name="TextInputLayoutStyle" parent="TextAppearence.App.TextInputLayout">
         <item name="android:textColor">@color/bright_cerulean</item>
-        <item name="android:textSize">10.0sp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="errorTextAppearance">@style/errorTextAppearance</item>
-        <item name="android:layout_marginStart">14dp</item>
-        <item name="android:paddingStart">0dp</item>
     </style>
 
     <style name="AlertListTextView" parent="android:Widget.TextView">
@@ -102,12 +105,13 @@
         <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">17.0sp</item>
+        <item name="android:textSize">@dimen/textview_default_textsize</item>
         <item name="android:maxLines">1</item>
         <item name="android:fontFamily">proximanova_regular</item>
         <item name="android:singleLine">true</item>
-        <item name="android:layout_marginStart">@dimen/input_text_layout_start_margin</item>
-        <item name="android:layout_marginEnd">@dimen/input_text_layout_end_margin</item>
+        <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
+        <item name="android:paddingBottom">@dimen/edit_padding_bottom</item>
+        <item name="android:paddingEnd">@dimen/edit_padding_bottom</item>
     </style>
 
     <style name="CityEditTextStyle" parent="EditTextStyle">
@@ -125,13 +129,12 @@
         <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:textSize">@dimen/signup_textview_existing_account_size</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/margintop</item>
     </style>
 
-    <style name="SignupOptionalLabelStyle">
-        <item name="android:layout_marginTop">4dp</item>
+    <style name="SignupRequireHintStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">0dp</item>
         <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_right</item>
         <item name="android:layout_gravity">end</item>
         <item name="android:textSize">@dimen/signup_optional_label_text_size</item>
@@ -301,7 +304,6 @@
     <style name="DemographicsNextButtonStyle" parent="ResponsButtonStyle">
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:fontFamily">GothamRounded-Medium</item>
         <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
         <item name="android:background">@drawable/agree_button_background</item>
@@ -355,6 +357,7 @@
         <item name="android:textColor">@color/cadet_gray</item>
         <item name="android:layout_marginTop">@dimen/sign_up_margin_top</item>
         <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">0dp</item>
     </style>
 
     <!-- Demographics Review Screens Style>-->
@@ -393,6 +396,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:overScrollMode">never</item>
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
+
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/payne_gray</item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/payne_gray</item> <!-- hint and underlying bar when focus -->
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
@@ -629,4 +638,5 @@
     <style name="DefaultTextAppearanceGothamRoundedMediumLabel">
         <item name="android:textColor">@color/lightSlateGray</item>
     </style>
+
 </resources>
