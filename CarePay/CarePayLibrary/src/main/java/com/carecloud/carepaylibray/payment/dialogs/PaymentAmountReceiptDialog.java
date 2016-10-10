@@ -63,7 +63,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-        if (viewId == R.id.dialogCloseImageView) {
+        if (viewId == R.id.dialogCloseHeader) {
             cancel();
         } else if(viewId == R.id.paymentReceiptLocationImageView){
             //address will add after model come

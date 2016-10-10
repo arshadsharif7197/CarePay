@@ -100,6 +100,7 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
             cancel();
         }else if(viewId == R.id.actionButton){
             largeAlertInterface.onActionButton();
+            cancel();
         }
     }
 }
