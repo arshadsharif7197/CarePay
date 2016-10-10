@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="5">
+
+    <include layout="@layout/custom_calendar_toolbar" />
+
+    <com.squareup.timessquare.CalendarPickerView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tsquare_dayTextColor="@color/white"
+        app:tsquare_headerTextColor="@color/white"
+        app:tsquare_titleTextColor="@color/white"
+        app:tsquare_dayBackground="@drawable/custom_calendar_bg_selector"
+        android:background="@color/payne_gray"
+        app:tsquare_dividerColor="@color/payne_gray"
+        android:layout_weight="5"/>
+
+    <Button
+        android:id="@+id/applyDateRangeButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/add_apt_apply_date_range_height"
+        android:background="@drawable/button_green_fill_background"
+        android:text="@string/date_range_apply_button_label"
+        android:textColor="@color/white"
+        android:textSize="@dimen/apt_popup_button_text"
+        android:layout_weight="1"/>
+
+</LinearLayout>

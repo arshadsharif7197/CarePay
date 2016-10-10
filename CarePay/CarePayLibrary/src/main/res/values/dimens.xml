@@ -235,4 +235,8 @@
     <dimen name="no_apt_message_desc_margin_top">5dp</dimen>
     <dimen name="no_apt_message_desc_margin">32dp</dimen>
 
+    <dimen name="add_apt_available_hours_edit_range_height">54dp</dimen>
+    <dimen name="add_apt_apply_date_range_height">52dp</dimen>
+    <dimen name="add_apt_calendar_selected_range_stroke">4dp</dimen>
+    <dimen name="add_apt_calendar_today_date_stroke">3dp</dimen>
 </resources>

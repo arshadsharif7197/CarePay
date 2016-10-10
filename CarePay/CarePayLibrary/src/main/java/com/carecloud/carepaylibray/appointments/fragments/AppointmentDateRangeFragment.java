@@ -1,0 +1,243 @@
+package com.carecloud.carepaylibray.appointments.fragments;
+
+import android.annotation.SuppressLint;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
+import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.timessquare.CalendarPickerView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+public class AppointmentDateRangeFragment extends Fragment {
+
+    private AppointmentModel model;
+    private CalendarPickerView calendarPickerView;
+    private List<Date> dateList;
+    private Date todayDate, startDate, endDate;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            model = (AppointmentModel) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
+            todayDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE);
+            startDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
+            endDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_appointment_date_range, container, false);
+
+        // set the toolbar
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.add_appointment_toolbar);
+        TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), titleView);
+        toolbar.setTitle("");
+
+        Drawable closeIcon = ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close);
+        toolbar.setNavigationIcon(closeIcon);
+        ((AddAppointmentActivity) getActivity()).setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(navigationOnClickListener);
+
+        calendarPickerView = (CalendarPickerView) view.findViewById(R.id.calendarView);
+
+        Button todayButton = (Button) toolbar.findViewById(R.id.today_button);
+        Typeface todayButtonTypeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/gotham_rounded_medium.otf");
+        todayButton.setTypeface(todayButtonTypeface);
+        todayButton.setOnClickListener(todayButtonClickListener);
+
+        if(todayDate != null) {
+            /*Instantiate calendar for today date seelcted*/
+            calendarPickerView.init(todayDate, getNextSixMonthCalendar().getTime())
+                    .withSelectedDate(todayDate)
+                    .inMode(CalendarPickerView.SelectionMode.RANGE);
+        } else if (startDate != null && endDate != null) {
+            /*Instantiate calendar for a date range selected*/
+            Collection<Date> selectedDates = new ArrayList<Date>();
+            selectedDates.add(startDate);
+            selectedDates.add(endDate);
+            calendarPickerView.init(new Date(), getNextSixMonthCalendar().getTime())
+                    .inMode(CalendarPickerView.SelectionMode.RANGE)
+                    .withSelectedDates(selectedDates);
+        } else {
+            /*Instantiate calendar by default a week as a date range*/
+            Date today = new Date();
+            Calendar rangeStart = Calendar.getInstance();
+            rangeStart.add(Calendar.DAY_OF_MONTH, 1);
+            Calendar rangeEnd = Calendar.getInstance();
+            rangeEnd.add(Calendar.DAY_OF_MONTH, 7);
+
+            Collection<Date> selectedDates = new ArrayList<Date>();
+            selectedDates.add(rangeStart.getTime());
+            selectedDates.add(rangeEnd.getTime());
+
+            calendarPickerView.init(today, getNextSixMonthCalendar().getTime())
+                    .inMode(CalendarPickerView.SelectionMode.RANGE)
+                    .withSelectedDates(selectedDates);
+        }
+
+        Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/proximanova_semibold.otf");
+        calendarPickerView.setTypeface(typeface);
+
+        Typeface monthTypeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/proximanova_semibold.otf");
+        calendarPickerView.setTitleTypeface(monthTypeface);
+
+        Typeface dateTypeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/gotham_rounded_book.otf");
+        calendarPickerView.setDateTypeface(dateTypeface);
+        calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
+
+        Button applyDateRangeButton =  (Button) view.findViewById(R.id.applyDateRangeButton);
+        applyDateRangeButton.setOnClickListener(applyButtonClickListener);
+
+        return view;
+    }
+
+    /*
+    *   Method to return Calendar instance for next six months
+    */
+    private Calendar getNextSixMonthCalendar() {
+        final Calendar nextSixMonths = Calendar.getInstance();
+        nextSixMonths.add(Calendar.MONTH, 5);
+        return nextSixMonths;
+    }
+
+    /*
+    *   Click listener for navigation icon on toolbar
+    */
+    View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //Launch previous fragment
+            FragmentManager fm = getFragmentManager();
+            AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
+                    fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
+
+            if (availableHoursFragment == null) {
+                availableHoursFragment = new AvailableHoursFragment();
+            }
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, todayDate);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+            availableHoursFragment.setArguments(bundle);
+
+            fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
+                    AvailableHoursFragment.class.getSimpleName()).commit();
+        }
+    };
+
+    /*
+    *   Click listener for calendar dates
+    */
+    CalendarPickerView.OnDateSelectedListener onDateSelectListener = new CalendarPickerView.OnDateSelectedListener() {
+        @Override
+        public void onDateSelected(Date date) {
+            dateList = calendarPickerView.getSelectedDates();
+            if (dateList.size() == 1) {
+                todayDate = dateList.get(0);
+            }
+        }
+
+        @Override
+        public void onDateUnselected(Date date) {
+        }
+    };
+
+    /*
+    *   Click listener for today button on toolbar
+    */
+    View.OnClickListener todayButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Date today = new Date();
+            Calendar nextSixMonths = Calendar.getInstance();
+            nextSixMonths.add(Calendar.MONTH, 5);
+
+            calendarPickerView.init(today, nextSixMonths.getTime())
+                    .withSelectedDate(today)
+                    .inMode(CalendarPickerView.SelectionMode.RANGE);
+
+            FragmentManager fm = getFragmentManager();
+            AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
+                    fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
+
+            if (availableHoursFragment == null) {
+                availableHoursFragment = new AvailableHoursFragment();
+            }
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, today);
+            availableHoursFragment.setArguments(bundle);
+
+            fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
+                    AvailableHoursFragment.class.getSimpleName()).commit();
+        }
+    };
+
+    /*
+    *   Click listener for apply button
+    */
+    View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            FragmentManager fm = getFragmentManager();
+            AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment) fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
+
+            if (availableHoursFragment == null) {
+                availableHoursFragment = new AvailableHoursFragment();
+            }
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+            if (dateList != null) {
+                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, dateList.get(0));
+                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, dateList.get(dateList.size() - 1));
+            } else if(todayDate != null) {
+                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, todayDate);
+            } else if (startDate != null && endDate != null) {
+                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+            }
+
+            availableHoursFragment.setArguments(bundle);
+
+            fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
+                    AvailableHoursFragment.class.getSimpleName()).commit();
+        }
+    };
+}

@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.appointments.adapters.AllProviderAdapter;
 import com.carecloud.carepaylibray.appointments.adapters.RecentProviderAdapter;
 import com.carecloud.carepaylibray.appointments.dialog.VisitTypeDialog;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -149,7 +150,7 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("DATA", model);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
         visitTypeFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,

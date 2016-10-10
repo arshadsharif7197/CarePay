@@ -23,17 +23,21 @@ import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivit
 import com.carecloud.carepaylibray.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursModel;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class AvailableHoursFragment extends Fragment {
 
     private AppointmentModel model;
     private static String appointmentDate;
+    private Date todayDate, startDate, endDate;
 
     @Override
     public void onStart() {
@@ -46,16 +50,17 @@ public class AvailableHoursFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            model = (AppointmentModel) bundle.getSerializable("DATA");
+            model = (AppointmentModel) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
+            todayDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE);
+            startDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
+            endDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
         }
     }
 
     @SuppressLint("DefaultLocale")
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View availableHoursListView = inflater.inflate(R.layout.fragment_available_hours_list, container, false);
 
         // set the toolbar
@@ -72,7 +77,7 @@ public class AvailableHoursFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Launch previous fragment
+                /*Launch previous fragment*/
                 FragmentManager fm = getFragmentManager();
                 ChooseProviderFragment chooseProviderFragment = (ChooseProviderFragment)
                         fm.findFragmentByTag(ChooseProviderFragment.class.getSimpleName());
@@ -89,45 +94,74 @@ public class AvailableHoursFragment extends Fragment {
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(getActivity());
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        final Button appointmentDatePickerButton = (Button) availableHoursListView.findViewById(R.id.add_appointment_date_pick);
-        Calendar calendar = Calendar.getInstance();
-        appointmentDate = new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(calendar.getTime());
-        appointmentDatePickerButton.setText(String.format("%1$tA, %1$tb %1$td", calendar));
+        CustomProxyNovaSemiBoldLabel  dateRangeCustomTextView = (CustomProxyNovaSemiBoldLabel) availableHoursListView.findViewById(R.id.date_range_custom_text_view);
+        dateRangeCustomTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.glitter));
 
-        appointmentDatePickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setScheduleDate(appointmentDatePickerButton);
-            }
-        });
+        /*todo : once date format is final then will move to dateUtil*/
+        if(todayDate != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
+            String formattedDate = simpleDateFormat.format(todayDate);
+            dateRangeCustomTextView.setText(formattedDate);
+        } else if (startDate != null && endDate != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
+            Calendar nextDay = Calendar.getInstance();
+            nextDay.add(Calendar.DAY_OF_MONTH, 1);
+
+            String formattedDate = simpleDateFormat.format(startDate) + " to " + simpleDateFormat.format(endDate);
+            dateRangeCustomTextView.setText(formattedDate);
+        } else {
+            /*To show by default one week as range from tomorrow*/
+            Calendar rangeStart = Calendar.getInstance();
+            rangeStart.add(Calendar.DAY_OF_MONTH, 1);
+            Calendar rangeEnd = Calendar.getInstance();
+            rangeEnd.add(Calendar.DAY_OF_MONTH, 7);
+
+            startDate = rangeStart.getTime();
+            endDate = rangeEnd.getTime();
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
+            String formattedDate = "From tomorrow to " + simpleDateFormat.format(endDate);
+            dateRangeCustomTextView.setText(formattedDate);
+        }
+
+        Button editRangeButton = (Button) availableHoursListView.findViewById(R.id.add_appointment_date_pick);
+        editRangeButton.setOnClickListener(dateRangeClickListener);
 
         RecyclerView availableHoursRecycleView = (RecyclerView) availableHoursListView.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
         availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(), getSampleArrayList(), model));
 
+        Button editDateRangeButton = (Button) availableHoursListView.findViewById(R.id.edit_date_range_button);
+        editDateRangeButton.setOnClickListener(dateRangeClickListener);
+
         return availableHoursListView;
     }
 
-    @SuppressLint("DefaultLocale")
-    private void setScheduleDate(final Button buttonView) {
-        Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+    /*
+   *   Click listener for edit range and edit date range button
+   */
+    View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            AppointmentDateRangeFragment appointmentDateRangeFragment = (AppointmentDateRangeFragment)
+                    fragmentManager.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
 
-        final DatePickerDialog appointmentDatePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
-                appointmentDate = new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(calendar.getTime());
-                buttonView.setText(String.format("%1$tA, %1$tb %1$td", calendar));
+            if (appointmentDateRangeFragment == null) {
+                appointmentDateRangeFragment = new AppointmentDateRangeFragment();
             }
-        }, year, month, day);
 
-        appointmentDatePicker.setTitle("Pick a Date");
-        appointmentDatePicker.show();
-    }
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, todayDate);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+            appointmentDateRangeFragment.setArguments(bundle);
+
+            fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, appointmentDateRangeFragment,
+                    AvailableHoursFragment.class.getSimpleName()).commit();
+        }
+    };
 
     public static String getAppointmentDate() {
         return appointmentDate;
@@ -135,6 +169,7 @@ public class AvailableHoursFragment extends Fragment {
 
     /**
      * Dummy data for now till it get it from JSON file
+     * todo : Dummy data will be removed once returned by API
      */
     private ArrayList<Object> getSampleArrayList() {
         ArrayList<Object> items = new ArrayList<>();
