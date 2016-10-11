@@ -28,7 +28,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:background">@drawable/button_selector</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
         <item name="android:elevation">3dp</item>

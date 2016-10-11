@@ -56,7 +56,7 @@
                 <EditText
                     android:id="@+id/createPasswordEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:hint="@string/password_text"
+                    android:hint="@string/create_password_text"
                     android:inputType="textPassword"
                     android:layout_gravity="center_vertical"
                     android:nextFocusForward="@+id/repeatPasswordEditText"/>
