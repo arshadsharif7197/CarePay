@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemUpdateDto;
+import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicUpdateDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DemographicModel model = ((DemographicsActivity)getActivity()).getModel();
+                DemographicDTO model = ((DemographicsActivity)getActivity()).getModel();
                 confirmDemographicInformation(); // post the updates
                 /*
                 Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
@@ -75,7 +75,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         // TODO: 9/29/2016 add progress
 
         // TODO: 10/9/2016 remove
-//        DemAddressPayloadDto demographicPayloadAddressModel = new DemAddressPayloadDto();
+//        DemographicAddressPayloadDTO demographicPayloadAddressModel = new DemographicAddressPayloadDTO();
 //        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
 //        demographicPayloadAddressModel.setAddress2("#800 Lejeune");
 //        demographicPayloadAddressModel.setCity("Miami");
@@ -83,7 +83,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 //        demographicPayloadAddressModel.setZipcode("33127");
 //        demographicPayloadAddressModel.setPhone("18007654222");
 //
-//        DemPersDetailsPayloadDto demographicPayloadPersonalDetailsModel = new DemPersDetailsPayloadDto();
+//        DemographicPersDetailsPayloadDTO demographicPayloadPersonalDetailsModel = new DemographicPersDetailsPayloadDTO();
 //        demographicPayloadPersonalDetailsModel.setFirstName("Jahirul");
 //        demographicPayloadPersonalDetailsModel.setMiddleName("I");
 //        demographicPayloadPersonalDetailsModel.setLastName("Bhuiyan");
@@ -92,63 +92,63 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 //        demographicPayloadPersonalDetailsModel.setEthnicity("White");
 //        demographicPayloadPersonalDetailsModel.setPreferredLanguage("English");
 //
-//        DemInsurancePayloadPojo demographicPayloadInsuranceModel = new DemInsurancePayloadPojo();
+//        DemographicInsurancePayloadDTO demographicPayloadInsuranceModel = new DemographicInsurancePayloadDTO();
 //        demographicPayloadInsuranceModel.setInsuranceMemberId("2513515464");
 //        demographicPayloadInsuranceModel.setInsurancePlan("Aetna");
 //        demographicPayloadInsuranceModel.setInsuranceProvider("Aetna Select");
-//        List<DemInsurancePayloadPojo> insurances = new ArrayList<>();
+//        List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
 //        insurances.add(demographicPayloadInsuranceModel);
 //        // second card
-//        DemInsurancePayloadPojo demographicPayloadInsuranceModel2 = new DemInsurancePayloadPojo();
+//        DemographicInsurancePayloadDTO demographicPayloadInsuranceModel2 = new DemographicInsurancePayloadDTO();
 //        demographicPayloadInsuranceModel2.setInsuranceMemberId("999999999999");
 //        demographicPayloadInsuranceModel2.setInsurancePlan("Elect Choice EPO");
 //        demographicPayloadInsuranceModel2.setInsuranceProvider("BlueCross Blue Shield");
 //        insurances.add(demographicPayloadInsuranceModel2);
 //        // third card
-//        DemInsurancePayloadPojo demographicPayloadInsuranceModel3 = new DemInsurancePayloadPojo();
+//        DemographicInsurancePayloadDTO demographicPayloadInsuranceModel3 = new DemographicInsurancePayloadDTO();
 //        demographicPayloadInsuranceModel3.setInsuranceMemberId("4444444444");
 //        demographicPayloadInsuranceModel3.setInsurancePlan("Aetna Value Network HMO");
 //        demographicPayloadInsuranceModel3.setInsuranceProvider("GHI");
 //        insurances.add(demographicPayloadInsuranceModel3);
 
-        DemPayloadDto demPayloadDto = new DemPayloadDto();
-//        demPayloadDto.setAddress(demographicPayloadAddressModel);
-//        demPayloadDto.setPersonalDetails(demographicPayloadPersonalDetailsModel);
-//        demPayloadDto.setIdDocument(demographicPayloadDriversLicenseModel);
-//        demPayloadDto.setInsurances(insurances);
+        DemographicPayloadDTO demographicPayloadDTO = new DemographicPayloadDTO();
+//        demographicPayloadDTO.setAddress(demographicPayloadAddressModel);
+//        demographicPayloadDTO.setPersonalDetails(demographicPayloadPersonalDetailsModel);
+//        demographicPayloadDTO.setIdDocument(demographicPayloadDriversLicenseModel);
+//        demographicPayloadDTO.setInsurances(insurances);
 
-        List<DemUpdateDto> updates = new ArrayList<>();
-        demPayloadDto.setUpdates(updates);
+        List<DemographicUpdateDTO> updates = new ArrayList<>();
+        demographicPayloadDTO.setUpdates(updates);
 
-        /*DemographicModel demographicPostModel = new DemographicModel();
-        demographicPostModel.setPayload(demPayloadDto);*/
+        /*DemographicDTO demographicPostModel = new DemographicDTO();
+        demographicPostModel.setPayload(demographicPayloadDTO);*/
 
         // TODO: 9/29/2016 progress
 
         // obtain the updated models from the pager fragments
-        DemAddressPayloadDto addressModel = ((DemographicsActivity)getActivity()).getAddressModel();
+        DemographicAddressPayloadDTO addressModel = ((DemographicsActivity)getActivity()).getAddressModel();
         if(addressModel != null) {
-            demPayloadDto.setAddress(addressModel);
+            demographicPayloadDTO.setAddress(addressModel);
         }
 
-        DemPersDetailsPayloadDto detailsModel = ((DemographicsActivity)getActivity()).getDetailsModel();
+        DemographicPersDetailsPayloadDTO detailsModel = ((DemographicsActivity)getActivity()).getDetailsModel();
         if(detailsModel != null) {
-            demPayloadDto.setPersonalDetails(detailsModel);
+            demographicPayloadDTO.setPersonalDetails(detailsModel);
         }
 
-        DemIdDocPayloadDto idDocPojo = ((DemographicsActivity)getActivity()).getIdDocModel();
+        DemographicIdDocPayloadDTO idDocPojo = ((DemographicsActivity)getActivity()).getIdDocModel();
         if(idDocPojo != null) {
-            demPayloadDto.setIdDocument(idDocPojo);
+            demographicPayloadDTO.setIdDocument(idDocPojo);
         }
 
-        List<DemInsurancePayloadPojo> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
+        List<DemographicInsurancePayloadDTO> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
         if(insuranceModelList != null) {
-            demPayloadDto.setInsurances(insuranceModelList);
+            demographicPayloadDTO.setInsurances(insuranceModelList);
         }
 
         // TODO: 10/9/2016 uncomment (just testing now)
 //        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-//        Call<ResponseBody> call = apptService.confirmDemographicInformation(demPayloadDto);
+//        Call<ResponseBody> call = apptService.confirmDemographicInformation(demographicPayloadDTO);
 //        call.enqueue(new Callback<ResponseBody>() {
 //            @Override
 //            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,9 +23,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -82,8 +80,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private boolean isZipEmpty;
 
     private boolean isNextVisible = false;
-    private DemAddressPayloadDto     modelAddress;
-    private DemPersDetailsPayloadDto modelPersDetails;
+    private DemographicAddressPayloadDTO     modelAddress;
+    private DemographicPersDetailsPayloadDTO modelPersDetails;
 
     @Nullable
     @Override
@@ -239,11 +237,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     public void initModels() {
         modelAddress = ((DemographicsActivity) getActivity()).getAddressModel();
         if (modelAddress == null) {
-            modelAddress = new DemAddressPayloadDto();
+            modelAddress = new DemographicAddressPayloadDTO();
         }
         modelPersDetails = ((DemographicsActivity) getActivity()).getDetailsModel();
         if (modelPersDetails == null) {
-            modelPersDetails = new DemPersDetailsPayloadDto();
+            modelPersDetails = new DemographicPersDetailsPayloadDTO();
         }
     }
 

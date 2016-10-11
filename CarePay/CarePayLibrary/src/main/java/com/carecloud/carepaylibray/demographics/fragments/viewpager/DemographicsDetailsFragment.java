@@ -20,8 +20,8 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
-import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 
 import java.util.Arrays;
 
@@ -38,15 +38,15 @@ public class DemographicsDetailsFragment extends Fragment
         implements View.OnClickListener,
                    DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private View                     view;
-    private String[]                 raceArray;
-    private String[]                 ethnicityArray;
-    private String[]                 preferredLanguageArray;
-    private int                      selectedArray;
-    private TextView                 raceTextView;
-    private TextView                 ethnicityTextView;
-    private Button                   nextButton;
-    private DemPersDetailsPayloadDto model;
+    private View                             view;
+    private String[]                         raceArray;
+    private String[]                         ethnicityArray;
+    private String[]                         preferredLanguageArray;
+    private int                              selectedArray;
+    private TextView                         raceTextView;
+    private TextView                         ethnicityTextView;
+    private Button                           nextButton;
+    private DemographicPersDetailsPayloadDTO model;
 
     @Nullable
     @Override
@@ -92,8 +92,8 @@ public class DemographicsDetailsFragment extends Fragment
         populateViewsFromModel();
     }
 
-    public DemPersDetailsPayloadDto getModel() {
-        DemPayloadDto payload
+    public DemographicPersDetailsPayloadDTO getModel() {
+        DemographicPayloadDTO payload
                 = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
             model = payload.getPersonalDetails();
@@ -111,7 +111,7 @@ public class DemographicsDetailsFragment extends Fragment
             setPictureFromByteStream(pictureByteStream);
         } else {
             Log.v(LOG_TAG, "demographics details: views populated with defaults");
-            model = new DemPersDetailsPayloadDto();
+            model = new DemographicPersDetailsPayloadDTO();
         }
     }
 

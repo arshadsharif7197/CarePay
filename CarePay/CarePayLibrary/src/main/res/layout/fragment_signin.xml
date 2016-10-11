@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/signin_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+<LinearLayout android:id="@+id/signin_layout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:descendantFocusability="beforeDescendants"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/headerContainerLayout"
@@ -22,7 +22,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo_light" />
+            android:src="@drawable/logo_light"/>
     </LinearLayout>
 
     <ProgressBar
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-8dp"
-        android:indeterminate="true" />
+        android:indeterminate="true"/>
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
@@ -49,7 +49,7 @@
                 android:id="@+id/signinEmailEditText"
                 style="@style/EditTextStyle"
                 android:hint="@string/signin_signup_email_hint"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -64,52 +64,59 @@
                 style="@style/EditTextStyle"
                 android:hint="@string/password_text"
                 android:imeOptions="actionDone"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"/>
 
         </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/signin_button"
             style="@style/SigninSignupButtonStyle"
-            android:text="@string/submit_button" />
+            android:text="@string/submit_button"/>
 
         <Button
             android:id="@+id/signup_button"
             style="@style/SigninNewAccountButtonStyle"
-            android:text="@string/signup_button" />
+            android:text="@string/signup_button"/>
     </LinearLayout>
 
-
     <LinearLayout
-        android:id="@+id/bottomContainerLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        >
+        android:baselineAligned="false"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/changeLanguageText"
-            style="@style/SigninSignupClickableTextView"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:gravity="start"
-            android:text="@string/language_textview" />
+        <LinearLayout
+            android:id="@+id/bottomContainerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="1">
 
-        <TextView
-            android:id="@+id/forgotPasswordTextView"
-            style="@style/SigninSignupClickableTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="end"
-            android:text="@string/forgot_password_textview" />
+            <TextView
+                android:id="@+id/changeLanguageText"
+                style="@style/SigninSignupClickableTextView"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:gravity="start"
+                android:text="@string/language_textview"/>
+
+            <TextView
+                android:id="@+id/forgotPasswordTextView"
+                style="@style/SigninSignupClickableTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="end"
+                android:text="@string/forgot_password_textview"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

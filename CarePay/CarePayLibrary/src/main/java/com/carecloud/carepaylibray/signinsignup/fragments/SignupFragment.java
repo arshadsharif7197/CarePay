@@ -9,9 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -35,7 +33,7 @@ import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -453,12 +451,12 @@ public class SignupFragment extends Fragment {
         return false;
     }
 
-    private void launchDemographics(DemographicModel demographicModel) {
+    private void launchDemographics(DemographicDTO demographicDTO) {
         // do to Demographics
         Intent intent = new Intent(getActivity(), DemographicsActivity.class);
         // pass the object into the gson
         Gson gson = new Gson();
-        intent.putExtra("demographics_model", gson.toJson(demographicModel, DemographicModel.class));
+        intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
 
         startActivity(intent);
         getActivity().finish();
@@ -467,18 +465,18 @@ public class SignupFragment extends Fragment {
     private void getDemographicInformation() {
         progressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.fetchDemographics();
-        call.enqueue(new Callback<DemographicModel>() {
+        Call<DemographicDTO> call = apptService.fetchDemographics();
+        call.enqueue(new Callback<DemographicDTO>() {
             @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                DemographicModel demographicModel = response.body();
+            public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
+                DemographicDTO demographicDTO = response.body();
                 progressBar.setVisibility(View.GONE);
                 Log.v(LOG_TAG, "demographic info fetched");
-                launchDemographics(demographicModel);
+                launchDemographics(demographicDTO);
             }
 
             @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
+            public void onFailure(Call<DemographicDTO> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 Log.e(LOG_TAG, "failed fetching demogr info", t);
             }

@@ -14,7 +14,7 @@
     <string name="respons_pay_label">Pay at practice</string>
     <string name="respons_pay_now_label">Pay now</string>
     <string name="pay_total_amount">PAY TOTAL AMOUNT</string>
-    <string name="make_partial_payment">MAKE PARTIAL PAYMENT</string>
+    <string name="make_partial_payment">PARTIAL PAYMENT</string>
 
     <string name="AL">AL</string>
     <string name="FL">FL</string>
@@ -149,6 +149,7 @@
     <string name="signin_signup_password_hint">Create Password</string>
 
     <string name="password_text">Password</string>
+    <string name="create_password_text">Create Password</string>
     <string name="submit_button">SIGN IN</string>
     <string name="signup_button">CREATE NEW ACCOUNT</string>
     <string name="language_textview">Change language</string>
