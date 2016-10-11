@@ -66,7 +66,7 @@
     <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
     <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
     <dimen name="demographics_address_bottom_margin">20dp</dimen>
-
+    <dimen name="demographics_allergy_padding_between_label_and_text">16dp</dimen>
 
     <!-- Demographics Address -->
     <dimen name="divider_margin_top">8dp</dimen>
@@ -81,6 +81,7 @@
     <dimen name="demogr_details_add_optional_item_top">22dp</dimen>
     <dimen name="demogr_details_container_top">15dp</dimen>
     <dimen name="demogr_details_container_bottom">14dp</dimen>
+    <dimen name="view_allergy_margin_bottom">5dp</dimen>
 
     <!-- Appointments-->
     <dimen name="fab_margin">16dp</dimen>
