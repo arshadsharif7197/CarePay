@@ -3,6 +3,11 @@ engines:
   checkstyle:
     enabled: true
     channel: "beta"
+    checks:
+      com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck:
+        enabled: false
+      com.puppycrawl.tools.checkstyle.checks.javadoc.SummaryJavadocCheck:
+        enabled: false
   pmd:
     enabled: true
     channel: "beta"
