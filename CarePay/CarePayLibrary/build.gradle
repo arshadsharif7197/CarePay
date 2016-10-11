@@ -33,6 +33,10 @@ dependencies {
     // apache utils
     compile 'org.apache.commons:commons-lang3:3.4'
 
+    compile project(path: ':CarePayServiceLibrary')
+    compile project(path: ':CarePayComponentLibrary')
+
+
     // Using for image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
 
