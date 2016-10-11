@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_apt"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/dialogCloseHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_gravity="left"
+            android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+            android:gravity="left"
+            android:src="@drawable/icn_patient_mode_nav_close"
+            android:text="@string/close"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_card_view"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/provider_margin_top"
+            android:layout_marginRight="@dimen/provider_margin_top"
+            android:gravity="center"
+            android:minHeight="@dimen/payment_receipt_layout_margin">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                android:id="@+id/receiptAmountValueLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Receipt #4535"
+                android:textColor="@color/textview_default_textcolor"
+                android:textSize="@dimen/payment_receipt_header_size" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                android:id="@+id/receiptPaymenttypeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="1 Time Payment"
+                android:textColor="@color/manatee"
+                android:textSize="@dimen/payment_receipt_header_size" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                android:id="@+id/receiptPaymentDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="09/09/23"
+                android:textColor="@color/textview_default_textcolor"
+                android:textSize="@dimen/payment_receipt_header_size" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                android:id="@+id/receiptUserNameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/addess_payment_margin_top"
+                android:text="Dr. Joshua Wellington"
+                android:textColor="@color/blue_cerulian"
+                android:textSize="@dimen/payment_receipt_provider_size" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                android:id="@+id/receiptUsertypeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Specialty"
+                android:textColor="@color/bermudagrey"
+                android:textSize="@dimen/payment_receipt_type_size" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/apt_dl_boader_ht"
+                android:layout_marginLeft="@dimen/payment_receipt_margin"
+                android:layout_marginRight="@dimen/payment_receipt_margin"
+                android:layout_marginTop="@dimen/addess_payment_margin_top"
+                android:background="@color/light_gray_dialog" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/payment_receipt_margin"
+                android:layout_marginRight="@dimen/payment_receipt_margin"
+                android:layout_marginTop="@dimen/payment_receipt_margin_top"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:orientation="vertical">
+
+                    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold
+                        android:id="@+id/paymentReceiptHeaderTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:ellipsize="none"
+                        android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                        android:scrollHorizontally="false"
+                        android:singleLine="true"
+                        android:text="Place Name"
+                        android:textColor="@color/payne_gray"
+                        android:textSize="@dimen/textview_textsize" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                        android:id="@+id/addressReceiptLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="none"
+                        android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                        android:maxLines="2"
+                        android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
+                        android:textColor="@color/bermudagrey"
+                        android:textSize="@dimen/textview_textsize" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/paymentReceiptLocationImageView"
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_weight="0.15"
+                    android:src="@drawable/icn_appointment_card_directions" />
+
+                <ImageView
+                    android:id="@+id/paymentReceiptDialImageView"
+                    android:layout_width="@dimen/apt_dl_zero_ht_wdh"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_marginLeft="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_weight="0.15"
+                    android:src="@drawable/icn_appointment_card_call" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/apt_dl_boader_ht"
+                android:layout_marginLeft="@dimen/payment_receipt_margin"
+                android:layout_marginRight="@dimen/payment_receipt_margin"
+                android:layout_marginTop="@dimen/payment_receipt_margin_top"
+                android:background="@color/light_gray_dialog" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/payment_receipt_margin"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/receiptPreviousTitlelabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/payment_option_section_margin"
+                    android:ellipsize="none"
+                    android:gravity="center_vertical|left"
+                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                    android:paddingLeft="@dimen/apt_dl_margin"
+                    android:text="Previous Balance"
+                    android:textColor="@color/bermudagrey"
+                    android:textSize="@dimen/payment_text_balance_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/receiptPreviousValuelabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/payment_option_section_margin"
+                    android:layout_gravity="right"
+                    android:ellipsize="none"
+                    android:gravity="center_vertical|right"
+                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                    android:paddingRight="@dimen/apt_dl_margin"
+                    android:text="$29"
+                    android:textColor="@color/bermudagrey"
+                    android:textSize="@dimen/payment_text_balance_size" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/apt_dl_boader_ht"
+                android:background="@color/light_gray_dialog" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/receiptInsuranceTitleLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/payment_option_section_margin"
+                    android:ellipsize="none"
+                    android:gravity="center_vertical|left"
+                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                    android:paddingLeft="@dimen/apt_dl_margin"
+                    android:text="Insurance CoPay "
+                    android:textColor="@color/bermudagrey"
+                    android:textSize="@dimen/payment_text_balance_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/receiptInsuranceValueLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/payment_option_section_margin"
+                    android:layout_gravity="right"
+                    android:ellipsize="none"
+                    android:gravity="center_vertical|right"
+                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                    android:paddingRight="@dimen/apt_dl_margin"
+                    android:text="$79"
+                    android:textColor="@color/bermudagrey"
+                    android:textSize="@dimen/payment_text_balance_size" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/apt_dl_boader_ht"
+                android:background="@color/light_gray_dialog" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/payment_receipt_margin_layout_top"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/totalPaymentReceiptTitleLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/payment_option_section_margin"
+                    android:ellipsize="none"
+                    android:gravity="center_vertical|left"
+                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                    android:paddingLeft="@dimen/apt_dl_margin"
+                    android:text="Total Amount"
+                    android:textColor="@color/bermudagrey"
+                    android:textSize="@dimen/payment_text_balance_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/totalPaymentReceiptValueLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/payment_option_section_margin"
+                    android:layout_gravity="right"
+                    android:ellipsize="none"
+                    android:gravity="center_vertical|right"
+                    android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                    android:paddingRight="@dimen/apt_dl_margin"
+                    android:text="$108"
+                    android:textColor="@color/bermudagrey"
+                    android:textSize="@dimen/payment_text_balance_size" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/apt_dl_boader_ht"
+                android:layout_marginBottom="@dimen/payment_receipt_margin_bottom"
+                android:background="@color/light_gray_dialog" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/saveOrSharereceiptButton"
+            style="@style/SigninSignupButtonStyle"
+            android:layout_margin="@dimen/payment_receipt_margin"
+            android:text="SAVE OR SHARE RECEIPT" />
+    </LinearLayout>
+</LinearLayout>
