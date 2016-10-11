@@ -8,35 +8,36 @@ import java.util.List;
 
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
+ * Model for Demographics payload
  */
-public class DemPayloadDto {
+public class DemographicPayloadDTO {
 
     @SerializedName("address")
     @Expose
-    private DemAddressPayloadDto address;
+    private DemographicAddressPayloadDTO address;
 
     @SerializedName("personal_details")
     @Expose
-    private DemPersDetailsPayloadDto personalDetails;
+    private DemographicPersDetailsPayloadDTO personalDetails;
 
     @SerializedName("identity_document")
     @Expose
-    private DemIdDocPayloadDto idDocument;
+    private DemographicIdDocPayloadDTO idDocument;
 
     @SerializedName("insurances")
     @Expose
-    private List<DemInsurancePayloadPojo> insurances = new ArrayList<DemInsurancePayloadPojo>();
+    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<DemographicInsurancePayloadDTO>();
 
     @SerializedName("updates")
     @Expose
-    private List<DemUpdateDto> updates = new ArrayList<>();
+    private List<DemographicUpdateDTO> updates = new ArrayList<>();
 
     /**
      *
      * @return
      * The address
      */
-    public DemAddressPayloadDto getAddress() {
+    public DemographicAddressPayloadDTO getAddress() {
         return address;
     }
 
@@ -45,7 +46,7 @@ public class DemPayloadDto {
      * @param address
      * The address
      */
-    public void setAddress(DemAddressPayloadDto address) {
+    public void setAddress(DemographicAddressPayloadDTO address) {
         this.address = address;
     }
 
@@ -54,7 +55,7 @@ public class DemPayloadDto {
      * @return
      * The personalDetails
      */
-    public DemPersDetailsPayloadDto getPersonalDetails() {
+    public DemographicPersDetailsPayloadDTO getPersonalDetails() {
         return personalDetails;
     }
 
@@ -63,7 +64,7 @@ public class DemPayloadDto {
      * @param personalDetails
      * The personal_details
      */
-    public void setPersonalDetails(DemPersDetailsPayloadDto personalDetails) {
+    public void setPersonalDetails(DemographicPersDetailsPayloadDTO personalDetails) {
         this.personalDetails = personalDetails;
     }
 
@@ -72,7 +73,7 @@ public class DemPayloadDto {
      * @return
      * The idDocument
      */
-    public DemIdDocPayloadDto getIdDocument() {
+    public DemographicIdDocPayloadDTO getIdDocument() {
         return idDocument;
     }
 
@@ -81,7 +82,7 @@ public class DemPayloadDto {
      * @param idDocument
      * The drivers_license
      */
-    public void setIdDocument(DemIdDocPayloadDto idDocument) {
+    public void setIdDocument(DemographicIdDocPayloadDTO idDocument) {
         this.idDocument = idDocument;
     }
 
@@ -90,7 +91,7 @@ public class DemPayloadDto {
      * @return
      * The insurances
      */
-    public List<DemInsurancePayloadPojo> getInsurances() {
+    public List<DemographicInsurancePayloadDTO> getInsurances() {
         return insurances;
     }
 
@@ -99,15 +100,15 @@ public class DemPayloadDto {
      * @param insurances
      * The insurances
      */
-    public void setInsurances(List<DemInsurancePayloadPojo> insurances) {
+    public void setInsurances(List<DemographicInsurancePayloadDTO> insurances) {
         this.insurances = insurances;
     }
 
-    public List<DemUpdateDto> getUpdates() {
+    public List<DemographicUpdateDTO> getUpdates() {
         return updates;
     }
 
-    public void setUpdates(List<DemUpdateDto> updates) {
+    public void setUpdates(List<DemographicUpdateDTO> updates) {
         this.updates = updates;
     }
 }

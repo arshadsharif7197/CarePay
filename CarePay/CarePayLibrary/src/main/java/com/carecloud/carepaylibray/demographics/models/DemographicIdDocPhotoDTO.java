@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by lsoco_user on 10/1/2016.
+ * Mdel for ID doc photo.
  */
-public class DemIdDocPhotoDto {
+public class DemographicIdDocPhotoDTO {
 
     @SerializedName("identity_document_photo") @Expose
     private String idDocPhoto;

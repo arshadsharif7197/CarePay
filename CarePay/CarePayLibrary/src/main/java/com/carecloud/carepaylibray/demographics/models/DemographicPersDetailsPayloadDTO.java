@@ -6,8 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
+ * MOdel for personal details payload.
  */
-public class DemPersDetailsPayloadDto extends BasePersonModel {
+public class DemographicPersDetailsPayloadDTO extends BasePersonModel {
 
 
     @SerializedName("primary_race") @Expose

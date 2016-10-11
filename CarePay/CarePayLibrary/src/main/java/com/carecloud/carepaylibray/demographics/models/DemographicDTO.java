@@ -5,12 +5,13 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
+ * Model for demographics
  */
-public class DemographicModel {
+public class DemographicDTO {
 
-    @SerializedName("metadata") @Expose private DemographicMetadataModel        metadata;
-    @SerializedName("payload") @Expose private  DemographicPayloadResponseModel payload;
-    @SerializedName("state") @Expose private    String                          state;
+    @SerializedName("metadata") @Expose private DemographicMetadataModel      metadata;
+    @SerializedName("payload") @Expose private  DemographicPayloadResponseDTO payload;
+    @SerializedName("state") @Expose private    String                        state;
 
     /**
      * @return The metadata
@@ -29,14 +30,14 @@ public class DemographicModel {
     /**
      * @return The payload
      */
-    public DemographicPayloadResponseModel getPayload() {
+    public DemographicPayloadResponseDTO getPayload() {
         return payload;
     }
 
     /**
      * @param payload The payload
      */
-    public void setPayload(DemographicPayloadResponseModel payload) {
+    public void setPayload(DemographicPayloadResponseDTO payload) {
         this.payload = payload;
     }
 

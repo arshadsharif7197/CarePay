@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by lsoco_user on 10/1/2016.
+ * Model for demographic update.
  */
-public class DemUpdateDto {
+public class DemographicUpdateDTO {
 
     @SerializedName("update") @Expose private String update;
 

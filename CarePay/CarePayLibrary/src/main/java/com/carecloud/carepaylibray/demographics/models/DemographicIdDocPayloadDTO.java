@@ -7,11 +7,12 @@ import java.util.List;
 
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
+ * Model for Id doc payload.
  */
-public class DemIdDocPayloadDto {
+public class DemographicIdDocPayloadDTO {
 
     @SerializedName("identity_document_photos") @Expose
-    private List<DemIdDocPhotoDto> idDocPhothos;
+    private List<DemographicIdDocPhotoDTO> idDocPhothos;
 
     @SerializedName("identity_document_number") @Expose
     private String idNumber;
@@ -22,11 +23,11 @@ public class DemIdDocPayloadDto {
     @SerializedName("identity_document_country") @Expose
     private String idCountry;
 
-    public List<DemIdDocPhotoDto> getIdDocPhothos() {
+    public List<DemographicIdDocPhotoDTO> getIdDocPhothos() {
         return idDocPhothos;
     }
 
-    public void setIdDocPhothos(List<DemIdDocPhotoDto> idDocPhothos) {
+    public void setIdDocPhothos(List<DemographicIdDocPhotoDTO> idDocPhothos) {
         this.idDocPhothos = idDocPhothos;
     }
 

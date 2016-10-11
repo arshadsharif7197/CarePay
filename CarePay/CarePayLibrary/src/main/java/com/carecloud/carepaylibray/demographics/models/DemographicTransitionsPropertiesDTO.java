@@ -6,8 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/22/2016.
+ * Model for transition properties.
  */
-public class DemographicTransitionsPropertiesModel {
+public class DemographicTransitionsPropertiesDTO {
 
     @SerializedName("phone")
     @Expose

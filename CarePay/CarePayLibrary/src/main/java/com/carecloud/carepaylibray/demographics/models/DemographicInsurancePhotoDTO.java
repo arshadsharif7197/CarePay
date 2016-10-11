@@ -5,9 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Rahul on 9/30/16.
+ * MOdel for insurance photo.
  */
 
-public class DemInsurancePhotoDto {
+public class DemographicInsurancePhotoDTO {
     @SerializedName("insurance_photo")
     @Expose
     private String insurancePhoto;

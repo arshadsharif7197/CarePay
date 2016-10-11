@@ -9,11 +9,12 @@ import java.util.List;
 
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
+ * Model for insurance payload.
  */
-public class DemInsurancePayloadPojo extends BasePersonModel {
+public class DemographicInsurancePayloadDTO extends BasePersonModel {
 
     @SerializedName("insurance_photos") @Expose
-    private List<DemInsurancePhotoDto> insurancePhotos = new ArrayList<>();
+    private List<DemographicInsurancePhotoDTO> insurancePhotos = new ArrayList<>();
 
     @SerializedName("insurance_provider") @Expose
     private  String insuranceProvider;
@@ -31,11 +32,11 @@ public class DemInsurancePayloadPojo extends BasePersonModel {
         return insuranceProvider;
     }
 
-    public List<DemInsurancePhotoDto> getInsurancePhotos() {
+    public List<DemographicInsurancePhotoDTO> getInsurancePhotos() {
         return insurancePhotos;
     }
 
-    public void setInsurancePhotos(List<DemInsurancePhotoDto> insurancePhotos) {
+    public void setInsurancePhotos(List<DemographicInsurancePhotoDTO> insurancePhotos) {
         this.insurancePhotos = insurancePhotos;
     }
 

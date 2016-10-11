@@ -25,7 +25,7 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
-import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -316,29 +316,29 @@ public class SigninFragment extends Fragment {
     private void getDemographicInformation() {
         progressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicModel> call = apptService.fetchDemographics();
-        call.enqueue(new Callback<DemographicModel>() {
+        Call<DemographicDTO> call = apptService.fetchDemographics();
+        call.enqueue(new Callback<DemographicDTO>() {
             @Override
-            public void onResponse(Call<DemographicModel> call, Response<DemographicModel> response) {
-                DemographicModel demographicModel = response.body();
+            public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
+                DemographicDTO demographicDTO = response.body();
                 progressBar.setVisibility(View.GONE);
                 Log.v(LOG_TAG, "demographic info fetched");
-                launchAppointments(demographicModel);
+                launchAppointments(demographicDTO);
             }
 
             @Override
-            public void onFailure(Call<DemographicModel> call, Throwable t) {
+            public void onFailure(Call<DemographicDTO> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 Log.e(LOG_TAG, "failed fetching demogr info", t);
             }
         });
     }
-    private void launchAppointments(DemographicModel demographicModel) {
+    private void launchAppointments(DemographicDTO demographicDTO) {
         // do to Demographics
         Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
         // pass the object into the gson
         Gson gson = new Gson();
-        intent.putExtra("demographics_model", gson.toJson(demographicModel, DemographicModel.class));
+        intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
 
         startActivity(intent);
         getActivity().finish();

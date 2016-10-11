@@ -24,14 +24,14 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
-import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
-import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemographicModel;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -52,16 +52,16 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private ViewPager   viewPager;
     private ImageView   tabImageView;
 
-    private DemographicModel modelGet = null;
-    private DemAddressPayloadDto     addressModel;
-    private DemPersDetailsPayloadDto detailsModel;
-    private DemIdDocPayloadDto       idDocModel;
-    private List<DemInsurancePayloadPojo> insuranceModelList = new ArrayList<>();
+    private DemographicDTO modelGet = null;
+    private DemographicAddressPayloadDTO     addressModel;
+    private DemographicPersDetailsPayloadDTO detailsModel;
+    private DemographicIdDocPayloadDTO       idDocModel;
+    private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
 
-    public DemPayloadDto getDemographicInfoPayloadModel() {
-        DemPayloadDto infoModel = null;
+    public DemographicPayloadDTO getDemographicInfoPayloadModel() {
+        DemographicPayloadDTO infoModel = null;
         if (modelGet != null) {
-            DemographicPayloadResponseModel response = modelGet.getPayload();
+            DemographicPayloadResponseDTO response = modelGet.getPayload();
             if (response != null) {
                 DemographicPayloadInfoModel infoModelPayload = response.getDemographics();
                 if (infoModelPayload != null) {
@@ -106,7 +106,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         } else if (intent.hasExtra("demographics_model")) {
             String demographicsModelString = intent.getStringExtra("demographics_model");
             Gson gson = new Gson();
-            modelGet = gson.fromJson(demographicsModelString, DemographicModel.class);
+            modelGet = gson.fromJson(demographicsModelString, DemographicDTO.class);
         }
 
         // set the progress bar
@@ -119,8 +119,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         setupPager();
 
         initDTOsForFragments();
-        createDTOsForTest(); // TODO: 10/9/2016 remove
-
     }
 
     private void setupPager() {
@@ -185,43 +183,43 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         viewPager.setCurrentItem(item, smoothScroll);
     }
 
-    public DemographicModel getModel() {
+    public DemographicDTO getModel() {
         return modelGet;
     }
 
-    public DemPersDetailsPayloadDto getDetailsModel() {
+    public DemographicPersDetailsPayloadDTO getDetailsModel() {
         return detailsModel;
     }
 
-    public void setAddressModel(DemAddressPayloadDto addressModel) {
+    public void setAddressModel(DemographicAddressPayloadDTO addressModel) {
         this.addressModel = addressModel;
     }
 
-    public DemAddressPayloadDto getAddressModel() {
+    public DemographicAddressPayloadDTO getAddressModel() {
         return addressModel;
     }
 
-    public void setDetailsModel(DemPersDetailsPayloadDto detailsModel) {
+    public void setDetailsModel(DemographicPersDetailsPayloadDTO detailsModel) {
         this.detailsModel = detailsModel;
     }
 
-    public DemIdDocPayloadDto getIdDocModel() {
+    public DemographicIdDocPayloadDTO getIdDocModel() {
         return idDocModel;
     }
 
-    public void setIdDocModel(DemIdDocPayloadDto idDocModel) {
+    public void setIdDocModel(DemographicIdDocPayloadDTO idDocModel) {
         this.idDocModel = idDocModel;
     }
 
-    public void setModel(DemographicModel modelGet) {
+    public void setModel(DemographicDTO modelGet) {
         this.modelGet = modelGet;
     }
 
-    public List<DemInsurancePayloadPojo> getInsuranceModelList() {
+    public List<DemographicInsurancePayloadDTO> getInsuranceModelList() {
         return insuranceModelList;
     }
 
-    public void setInsuranceModelList(List<DemInsurancePayloadPojo> insuranceModelList) {
+    public void setInsuranceModelList(List<DemographicInsurancePayloadDTO> insuranceModelList) {
         this.insuranceModelList = insuranceModelList;
     }
 
@@ -310,7 +308,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     }
 
     private void initDTOsForFragments() {
-        DemPayloadDto infoModel = getDemographicInfoPayloadModel();
+        DemographicPayloadDTO infoModel = getDemographicInfoPayloadModel();
         if(infoModel != null) {
             addressModel = infoModel.getAddress();
             detailsModel = infoModel.getPersonalDetails();
@@ -318,9 +316,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             insuranceModelList = infoModel.getInsurances();
 
         } else {
-            addressModel = new DemAddressPayloadDto();
-            detailsModel = new DemPersDetailsPayloadDto();
-            idDocModel = new DemIdDocPayloadDto();
+            addressModel = new DemographicAddressPayloadDTO();
+            detailsModel = new DemographicPersDetailsPayloadDTO();
+            idDocModel = new DemographicIdDocPayloadDTO();
             insuranceModelList = new ArrayList<>();
         }
     }
@@ -345,7 +343,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         idDocModel.setIdCountry("USA");
         idDocModel.setIdDocPhothos(null); // TODO: 10/9/2016 create
 
-        DemInsurancePayloadPojo ins1 = new DemInsurancePayloadPojo();
+        DemographicInsurancePayloadDTO ins1 = new DemographicInsurancePayloadDTO();
         ins1.setInsurancePlan("AETNA");
         ins1.setInsuranceMemberId("3434343422");
         ins1.setInsuranceProvider("AETNA PROV");

@@ -3,8 +3,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
+ * Model for payload info metadata.
  */
-public class DemographicPayloadInfoMetaDataModel {
+public class DemographicPayloadInfoMetaDataDTO {
 
     @SerializedName("user_id")
     @Expose

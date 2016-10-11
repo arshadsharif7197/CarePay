@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/28/2016.
+ * Model for payload of response
  */
-
-public class DemographicPayloadResponseModel {
+public class DemographicPayloadResponseDTO {
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadInfoModel demographics;

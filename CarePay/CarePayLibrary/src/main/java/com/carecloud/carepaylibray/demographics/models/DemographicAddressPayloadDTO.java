@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
+ * Model for address payload.
  */
-public class DemAddressPayloadDto {
+public class DemographicAddressPayloadDTO {
 
     @SerializedName("phone") @Expose private    String phone;
     @SerializedName("zipcode") @Expose private  String zipcode;

@@ -3,23 +3,24 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/20/2016.
+ * Model for transition data objet.
  */
-public class DemographicTransitionsDataObjectModel {
+public class DemographicTransitionsDataObjectDTO {
     @SerializedName("address")
     @Expose
-    private DemographicTransitionsDataModel address;
+    private DemographicTransitionsDataDTO address;
 
     @SerializedName("personal_details")
     @Expose
-    private DemographicTransitionsDataModel personalDetails;
+    private DemographicTransitionsDataDTO personalDetails;
 
     @SerializedName("drivers_license")
     @Expose
-    private DemographicTransitionsDataModel driversLicense;
+    private DemographicTransitionsDataDTO driversLicense;
 
     @SerializedName("insurances")
     @Expose
-    private DemographicTransitionsDataModel insurances;
+    private DemographicTransitionsDataDTO insurances;
 
     @SerializedName("updates")
     @Expose
@@ -33,7 +34,7 @@ public class DemographicTransitionsDataObjectModel {
      * @return
      * The address
      */
-    public DemographicTransitionsDataModel getAddress() {
+    public DemographicTransitionsDataDTO getAddress() {
         return address;
     }
 
@@ -42,31 +43,31 @@ public class DemographicTransitionsDataObjectModel {
      * @param address
      * The address
      */
-    public void setAddress(DemographicTransitionsDataModel address) {
+    public void setAddress(DemographicTransitionsDataDTO address) {
         this.address = address;
     }
 
-    public DemographicTransitionsDataModel getPersonalDetails() {
+    public DemographicTransitionsDataDTO getPersonalDetails() {
         return personalDetails;
     }
 
-    public void setPersonalDetails(DemographicTransitionsDataModel personalDetails) {
+    public void setPersonalDetails(DemographicTransitionsDataDTO personalDetails) {
         this.personalDetails = personalDetails;
     }
 
-    public DemographicTransitionsDataModel getDriversLicense() {
+    public DemographicTransitionsDataDTO getDriversLicense() {
         return driversLicense;
     }
 
-    public void setDriversLicense(DemographicTransitionsDataModel driversLicense) {
+    public void setDriversLicense(DemographicTransitionsDataDTO driversLicense) {
         this.driversLicense = driversLicense;
     }
 
-    public DemographicTransitionsDataModel getInsurances() {
+    public DemographicTransitionsDataDTO getInsurances() {
         return insurances;
     }
 
-    public void setInsurances(DemographicTransitionsDataModel insurances) {
+    public void setInsurances(DemographicTransitionsDataDTO insurances) {
         this.insurances = insurances;
     }
 
