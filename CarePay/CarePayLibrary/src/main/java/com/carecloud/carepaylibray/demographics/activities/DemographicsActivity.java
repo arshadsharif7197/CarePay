@@ -72,6 +72,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return infoModel;
     }
 
+    private final String[] FRAG_LABELS = {"Address", "Details", "Documents", "All Set"}; // these will come from meta-data
+
     @Override
     public int getLayoutRes() {
         return R.layout.activity_demographics;
@@ -95,7 +97,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
         toolbar.setTitle("");
-        titleTextView.setText("Address");
+        titleTextView.setText(FRAG_LABELS[0]);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
         (DemographicsActivity.this).setSupportActionBar(toolbar);
 
@@ -119,6 +121,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         setupPager();
 
         initDTOsForFragments();
+
+        createDTOsForTest();
     }
 
     private void setupPager() {
@@ -160,19 +164,19 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         switch (position) {
             case 0:
                 tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_1));
-                titleTextView.setText("Address");
+                titleTextView.setText(FRAG_LABELS[0]);
                 break;
             case 1:
                 tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_2));
-                titleTextView.setText("Details");
+                titleTextView.setText(FRAG_LABELS[1]);
                 break;
             case 2:
                 tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_3));
-                titleTextView.setText("Documents");
+                titleTextView.setText(FRAG_LABELS[2]);
                 break;
             case 3:
                 tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_4));
-                titleTextView.setText("More Details");
+                titleTextView.setText(FRAG_LABELS[3]);
                 break;
             default:
                 break;
