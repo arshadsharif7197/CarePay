@@ -90,6 +90,10 @@ public class CognitoAppHelper {
 
     private static Set<String> currUserAttributes;
 
+    /*
+    * initialize cognito from the application
+    * default value assign for variables
+    * */
     public static void init(Context context) {
         setData();
         CognitoAppHelper.context = context;
@@ -295,8 +299,9 @@ public class CognitoAppHelper {
 
 
     private static AuthenticationHandler executeUserAuthentication(final String password, final CognitoActionCallback successCallback) {
-        if (successCallback != null)
+        if (successCallback != null) {
             successCallback.onBeforeLogin();
+        }
         // create the authentication handler
         return new AuthenticationHandler() {
             @Override
@@ -304,14 +309,16 @@ public class CognitoAppHelper {
                 Log.v(context.getClass().getSimpleName(), "Auth Success");
                 CognitoAppHelper.setCurrSession(cognitoUserSession);
                 CognitoAppHelper.newDevice(device);
-                if (successCallback != null)
+                if (successCallback != null) {
                     successCallback.onLoginSuccess();
+                }
             }
 
             @Override
             public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String username) {
-                if (!password.isEmpty())
+                if (!password.isEmpty()) {
                     getUserAuthentication(authenticationContinuation, username, password);
+                }
             }
 
             @Override
@@ -321,8 +328,9 @@ public class CognitoAppHelper {
             @Override
             public void onFailure(Exception exception) {
                 Log.e(context.getClass().getSimpleName(), CognitoAppHelper.formatException(exception));
-                if (successCallback != null)
+                if (successCallback != null) {
                     successCallback.onLoginFailure(CognitoAppHelper.formatException(exception));
+                }
             }
 
             @Override

@@ -1,13 +1,14 @@
 package com.carecloud.carepaylibray.activities;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
 import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
@@ -34,7 +35,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
         }
     }
 
-    CognitoActionCallback cognitoActionCallback= new CognitoActionCallback() {
+    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
             Intent intent = new Intent(LibraryMainActivity.this, AppointmentsActivity.class);

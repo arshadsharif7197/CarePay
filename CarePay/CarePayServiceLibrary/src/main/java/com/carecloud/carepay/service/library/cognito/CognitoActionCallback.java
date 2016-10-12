@@ -5,7 +5,10 @@ package com.carecloud.carepay.service.library.cognito;
  */
 
 public interface CognitoActionCallback {
-    void onLoginSuccess();
+
     void onBeforeLogin();
+
+    void onLoginSuccess();
+
     void onLoginFailure(String exceptionMessage);
 }

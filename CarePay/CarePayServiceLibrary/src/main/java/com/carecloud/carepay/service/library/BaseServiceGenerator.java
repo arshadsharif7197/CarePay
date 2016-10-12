@@ -46,7 +46,7 @@ public class BaseServiceGenerator {
         Gson gson = new GsonBuilder()
                 .setExclusionStrategies(new ExclusionStrategy() {
                     @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
+                    public boolean shouldSkipField(FieldAttributes fieldAttributes) {
                         return true;//f.getDeclaringClass().equals(RealmObject.class);
                     }
 
@@ -60,7 +60,10 @@ public class BaseServiceGenerator {
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create());
     }
-
+    /**
+    * Create the retrofil service for the specific service class
+    * @param serviceClass Specific service class for converting in to retrofit service model
+    * */
     public  <S> S createService(Class<S> serviceClass) {
         httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.connectTimeout(HttpConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
@@ -91,7 +94,10 @@ public class BaseServiceGenerator {
 
         return retrofit.create(serviceClass);
     }
-
+    /**
+     * Create the retrofil service for the specific service class
+     * @param serviceClass Specific service class for converting in to retrofit service model
+     * */
     public  <S> S createServicePractice(Class<S> serviceClass) {
         httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.connectTimeout(HttpConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
