@@ -23,8 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;

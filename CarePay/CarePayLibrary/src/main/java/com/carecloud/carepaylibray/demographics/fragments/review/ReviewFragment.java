@@ -16,9 +16,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.consentforms.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;

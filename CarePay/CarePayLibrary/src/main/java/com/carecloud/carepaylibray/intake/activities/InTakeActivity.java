@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
