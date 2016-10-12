@@ -241,6 +241,11 @@
     <dimen name="add_apt_apply_date_range_height">52dp</dimen>
     <dimen name="add_apt_calendar_selected_range_stroke">4dp</dimen>
     <dimen name="add_apt_calendar_today_date_stroke">3dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_top">10dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_left">22dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_right">10dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_bottom">20dp</dimen>
+    <dimen name="add_apt_calendar_day_title_text_size">15sp</dimen>
 
     <!-- Payment -->
     <dimen name="payment_method_parent_layout_padding">17dp</dimen>

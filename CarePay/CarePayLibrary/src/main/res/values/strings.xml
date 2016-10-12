@@ -307,6 +307,14 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="edit_range_button_label">Edit range</string>
     <string name="edit_date_range_button_label">Edit date range</string>
     <string name="pick_a_date_label">Pick a date</string>
+    <string name="sunday_text_view_label">S</string>
+    <string name="monday_text_view_label">M</string>
+    <string name="tuesday_text_view_label">T</string>
+    <string name="wednesday_text_view_label">W</string>
+    <string name="thursday_text_view_label">T</string>
+    <string name="friday_text_view_label">F</string>
+    <string name="saturday_text_view_label">S</string>
+
 
     <!--<months string date util>-->
     <string name="January">January</string>

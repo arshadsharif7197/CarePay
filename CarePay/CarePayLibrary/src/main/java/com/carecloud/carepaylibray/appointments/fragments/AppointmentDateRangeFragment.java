@@ -71,6 +71,22 @@ public class AppointmentDateRangeFragment extends Fragment {
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener);
 
+        TextView sundayTextView = (TextView)  view.findViewById(R.id.sundayTextView);
+        TextView mondayTextView = (TextView)  view.findViewById(R.id.mondayTextView);
+        TextView tuesdayTextView = (TextView)  view.findViewById(R.id.tuesdayTextView);
+        TextView wednesdayTextView = (TextView)  view.findViewById(R.id.wednesdayTextView);
+        TextView thursdayTextView = (TextView)  view.findViewById(R.id.thursdayTextView);
+        TextView fridayTextView = (TextView)  view.findViewById(R.id.fridayTextView);
+        TextView saturdayTextView = (TextView)  view.findViewById(R.id.saturdayTextView);
+
+        sundayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.medium_jungle_green));
+        mondayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        tuesdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        wednesdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        thursdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        fridayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        saturdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.medium_jungle_green));
+
         calendarPickerView = (CalendarPickerView) view.findViewById(R.id.calendarView);
 
         Button todayButton = (Button) toolbar.findViewById(R.id.today_button);
@@ -79,7 +95,7 @@ public class AppointmentDateRangeFragment extends Fragment {
         todayButton.setOnClickListener(todayButtonClickListener);
 
         if(todayDate != null) {
-            /*Instantiate calendar for today date seelcted*/
+            /*Instantiate calendar for today date selected*/
             calendarPickerView.init(todayDate, getNextSixMonthCalendar().getTime())
                     .withSelectedDate(todayDate)
                     .inMode(CalendarPickerView.SelectionMode.RANGE);
@@ -109,6 +125,7 @@ public class AppointmentDateRangeFragment extends Fragment {
         }
 
         Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/proximanova_semibold.otf");
+
         calendarPickerView.setTypeface(typeface);
 
         Typeface monthTypeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/proximanova_semibold.otf");
@@ -224,7 +241,7 @@ public class AppointmentDateRangeFragment extends Fragment {
 
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
-            if (dateList != null) {
+            if (dateList != null && dateList.size() > 1) {
                 bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, dateList.get(0));
                 bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, dateList.get(dateList.size() - 1));
             } else if(todayDate != null) {
