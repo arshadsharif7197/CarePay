@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class VisitTypeDialog extends Dialog {
     String[] items = {"Follow-up", "Annual Physical", "New Patient", "Existing Patient",
             "Back Pain", "Asthma", "Chest Pain"};
 
-    public VisitTypeDialog(Context context, final Appointment model, final OnDialogListItemClickListener listener) {
+    public VisitTypeDialog(Context context, final AppointmentDTO model, final OnDialogListItemClickListener listener) {
         super(context);
 
         // This is the layout XML file that describes your Dialog layout
@@ -55,16 +55,16 @@ public class VisitTypeDialog extends Dialog {
     }
 
     public interface OnDialogListItemClickListener {
-        void onDialogListItemClickListener(Appointment model);
+        void onDialogListItemClickListener(AppointmentDTO model);
     }
 
     private class VisitTypeListAdapter extends BaseAdapter {
 
-        private Context mContext;
+        private Context context;
         private ArrayList<String> listItems;
 
-        VisitTypeListAdapter(Context c, ArrayList<String> items) {
-            this.mContext = c;
+        VisitTypeListAdapter(Context context, ArrayList<String> items) {
+            this.context = context;
             this.listItems = items;
         }
 
@@ -85,19 +85,19 @@ public class VisitTypeDialog extends Dialog {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            VisitTypeListHolder pHolder;
+            VisitTypeListHolder holder;
             if (view == null) {
-                view = LayoutInflater.from(mContext).inflate(
+                view = LayoutInflater.from(context).inflate(
                         R.layout.dialog_visit_type_list_item, viewGroup, false);
 
-                pHolder = new VisitTypeListHolder();
-                pHolder.type = (TextView) view.findViewById(R.id.visitTypeListItem);
-                view.setTag(pHolder);
+                holder = new VisitTypeListHolder();
+                holder.type = (TextView) view.findViewById(R.id.visitTypeListItem);
+                view.setTag(holder);
             } else {
-                pHolder = (VisitTypeListHolder) view.getTag();
+                holder = (VisitTypeListHolder) view.getTag();
             }
 
-            pHolder.type.setText(getItem(i));
+            holder.type.setText(getItem(i));
             return view;
         }
 

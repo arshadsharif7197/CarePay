@@ -8,15 +8,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 
 public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
 
-    public QueueAppointmentDialog(Context context, Appointment appointmentModel) {
-        super(context, appointmentModel);
+    public QueueAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+        super(context, appointmentDTO);
         this.context = context;
     }
 

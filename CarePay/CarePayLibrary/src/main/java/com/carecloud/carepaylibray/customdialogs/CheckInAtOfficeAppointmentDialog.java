@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 
 public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
@@ -18,8 +18,8 @@ public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private Context context;
 
-    public CheckInAtOfficeAppointmentDialog(Context context, Appointment appointmentModel) {
-        super(context, appointmentModel);
+    public CheckInAtOfficeAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+        super(context, appointmentDTO);
         this.context = context;
     }
 

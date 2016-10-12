@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
@@ -50,7 +50,7 @@ public class AppointmentsListFragment extends Fragment {
     private LinearLayout noAppointmentView;
 
     private AppointmentsAdapter appointmentsAdapter;
-    private List<Appointment> appointmentsItems;
+    private List<AppointmentDTO> appointmentsItems;
     private List<Object> appointmentListWithHeader;
     private RecyclerView appointmentRecyclerView;
     private AppointmentsListFragment appointmentsListFragment;
@@ -72,7 +72,7 @@ public class AppointmentsListFragment extends Fragment {
      * This function will check today's appointment
      * and notify if its within 2 hours.
      */
-    @SuppressLint("StringFormatMatches")
+    @SuppressLint({"StringFormatMatches", "StringFormatInvalid"})
     private void checkUpcomingAppointmentForReminder() {
         if (appointmentsItems != null && !appointmentsItems.isEmpty()
                 && !appointmentsItems.get(0).getPayload().getId().equalsIgnoreCase(
@@ -209,12 +209,12 @@ public class AppointmentsListFragment extends Fragment {
                     appointmentListWithHeader = getAppointmentListWithHeader();
                     if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
                         if (bundle != null) {
-                            Appointment appointmentModel = (Appointment)
+                            AppointmentDTO appointmentDTO = (AppointmentDTO)
                                     bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
 
-                            if (appointmentModel != null) {
+                            if (appointmentDTO != null) {
                                 // adding checked-in appointment at the top of the list
-                                appointmentListWithHeader.add(0, appointmentModel);
+                                appointmentListWithHeader.add(0, appointmentDTO);
                             }
                         }
 
@@ -270,15 +270,16 @@ public class AppointmentsListFragment extends Fragment {
     private List<Object> getAppointmentListWithHeader() {
         if (appointmentsItems != null && appointmentsItems.size() > 0) {
             // To sort appointment list based on appointment time
-            Collections.sort(appointmentsItems, new Comparator<Appointment>() {
-                public int compare(Appointment o1, Appointment o2) {
+            Collections.sort(appointmentsItems, new Comparator<AppointmentDTO>() {
+                public int compare(AppointmentDTO o1, AppointmentDTO o2) {
                     String dateO1 = o1.getPayload().getStartTime();
                     String dateO2 = o2.getPayload().getStartTime();
 
                     Date date1 = DateUtil.getInstance().setDateRaw(dateO1).getDate();
                     Date date2 = DateUtil.getInstance().setDateRaw(dateO2).getDate();
 
-                    long time1 = 0, time2 = 0;
+                    long time1 = 0;
+                    long time2 = 0;
                     if (date1 != null) {
                         time1 = date1.getTime();
                     }
@@ -296,8 +297,8 @@ public class AppointmentsListFragment extends Fragment {
             });
 
             // To sort appointment list based on today or tomorrow
-            Collections.sort(appointmentsItems, new Comparator<Appointment>() {
-                public int compare(Appointment o1, Appointment o2) {
+            Collections.sort(appointmentsItems, new Comparator<AppointmentDTO>() {
+                public int compare(AppointmentDTO o1, AppointmentDTO o2) {
                     String date01 = o1.getPayload().getStartTime();
 
                     String date02 = o2.getPayload().getStartTime();
@@ -311,23 +312,23 @@ public class AppointmentsListFragment extends Fragment {
             String headerTitle = "";
             appointmentListWithHeader = new ArrayList<>();
 
-            for (Appointment appointmentModel : appointmentsItems) {
-                String title = getSectionHeaderTitle(appointmentModel.getPayload().getStartTime());
+            for (AppointmentDTO appointmentDTO : appointmentsItems) {
+                String title = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
                 if (headerTitle.equalsIgnoreCase(title)
-                        && appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
-                    appointmentListWithHeader.add(appointmentModel);
+                        && appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
+                    appointmentListWithHeader.add(appointmentDTO);
                 } else {
-                    headerTitle = getSectionHeaderTitle(appointmentModel.getPayload().getStartTime());
+                    headerTitle = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
 
                     if (!headerTitle.equals(CarePayConstants.DAY_OVER)) {
                         // If appointment is checked-in, don't add header
-                        if (appointmentModel.getPayload().getAppointmentStatusModel().getId() != 2) {
+                        if (appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
                             AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
                             appointmentSectionHeaderModel.setAppointmentHeader(headerTitle);
                             appointmentListWithHeader.add(appointmentSectionHeaderModel);
-                            appointmentListWithHeader.add(appointmentModel);
+                            appointmentListWithHeader.add(appointmentDTO);
                         } else {
-                            appointmentListWithHeader.add(0, appointmentModel);
+                            appointmentListWithHeader.add(0, appointmentDTO);
                         }
                     }
                 }

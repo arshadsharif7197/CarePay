@@ -6,21 +6,21 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Appointment implements Serializable {
+public class AppointmentDTO implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentsMetadataDto metadata;
+    private AppointmentsMetadataDTO metadata;
     @SerializedName("payload")
     @Expose
-    private AppointmentsPayloadModel payload;
+    private AppointmentsPayloadDTO payload;
 
     /**
      * 
      * @return
      *     The metadata
      */
-    public AppointmentsMetadataDto getMetadata() {
+    public AppointmentsMetadataDTO getMetadata() {
         return metadata;
     }
 
@@ -29,7 +29,7 @@ public class Appointment implements Serializable {
      * @param metadata
      *     The metadata
      */
-    public void setMetadata(AppointmentsMetadataDto metadata) {
+    public void setMetadata(AppointmentsMetadataDTO metadata) {
         this.metadata = metadata;
     }
 
@@ -38,7 +38,7 @@ public class Appointment implements Serializable {
      * @return
      *     The payload
      */
-    public AppointmentsPayloadModel getPayload() {
+    public AppointmentsPayloadDTO getPayload() {
         return payload;
     }
 
@@ -47,7 +47,7 @@ public class Appointment implements Serializable {
      * @param payload
      *     The payload
      */
-    public void setPayload(AppointmentsPayloadModel payload) {
+    public void setPayload(AppointmentsPayloadDTO payload) {
         this.payload = payload;
     }
 

@@ -4,23 +4,20 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppointmentProvidersDto {
+public class AppointmentLocationDTO {
 
     @SerializedName("id")
     @Expose
     private Integer id;
-    @SerializedName("npi")
-    @Expose
-    private Object npi;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("specialty")
+    @SerializedName("is_visible_appointment_scheduler")
     @Expose
-    private String specialty;
-    @SerializedName("phone")
+    private Boolean isVisibleAppointmentScheduler;
+    @SerializedName("address")
     @Expose
-    private String phone;
+    private AppointmentAddressDTO address;
 
     /**
      * 
@@ -43,24 +40,6 @@ public class AppointmentProvidersDto {
     /**
      * 
      * @return
-     *     The npi
-     */
-    public Object getNpi() {
-        return npi;
-    }
-
-    /**
-     * 
-     * @param npi
-     *     The npi
-     */
-    public void setNpi(Object npi) {
-        this.npi = npi;
-    }
-
-    /**
-     * 
-     * @return
      *     The name
      */
     public String getName() {
@@ -77,39 +56,39 @@ public class AppointmentProvidersDto {
     }
 
     /**
-     *
+     * 
      * @return
-     *     The specialty
+     *     The isVisibleAppointmentScheduler
      */
-    public String getSpecialty() {
-        return specialty;
+    public Boolean getIsVisibleAppointmentScheduler() {
+        return isVisibleAppointmentScheduler;
     }
 
     /**
-     *
-     * @param specialty
-     *     The Specialty
+     * 
+     * @param isVisibleAppointmentScheduler
+     *     The is_visible_appointment_scheduler
      */
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
+    public void setIsVisibleAppointmentScheduler(Boolean isVisibleAppointmentScheduler) {
+        this.isVisibleAppointmentScheduler = isVisibleAppointmentScheduler;
     }
 
     /**
-     *
+     * 
      * @return
-     *     The phone
+     *     The address
      */
-    public String getPhone() {
-        return phone;
+    public AppointmentAddressDTO getAddress() {
+        return address;
     }
 
     /**
-     *
-     * @param phone
-     *     The phone
+     * 
+     * @param address
+     *     The address
      */
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setAddress(AppointmentAddressDTO address) {
+        this.address = address;
     }
 
 }

@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
@@ -57,7 +57,8 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         }
 
         Intent intent = getIntent();
-        Appointment appointmentModel = (Appointment) intent.getSerializableExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+        AppointmentDTO appointmentDTO = (AppointmentDTO) intent.getSerializableExtra(
+                CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
 
         FragmentManager fm = getSupportFragmentManager();
         AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment)
@@ -65,7 +66,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         if (appointmentsListFragment == null) {
             appointmentsListFragment = new AppointmentsListFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentModel);
+            bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentDTO);
             appointmentsListFragment.setArguments(bundle);
         }
 
@@ -150,12 +151,12 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
     }
 
 
-    public static Appointment model;
-    public void setAppointmentModel(Appointment model) {
+    public static AppointmentDTO model;
+    public void setAppointmentModel(AppointmentDTO model) {
         AppointmentsActivity.model = model;
     }
 
-    public Appointment getModel() {
+    public AppointmentDTO getModel() {
         return AppointmentsActivity.model;
     }
 }

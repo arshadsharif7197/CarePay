@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.carecloud.carepayclover.adapters.CheckedInAdapter;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.base.BaseServiceGenerator;
@@ -56,7 +56,7 @@ public class CheckedInActivity extends AppCompatActivity {
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
 
                 if(response.code()==200 && response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
-                    CheckedInAdapter CheckedInAdapter = new CheckedInAdapter(CheckedInActivity.this, new ArrayList<Appointment>(response.body().getPayload().getAppointments()));
+                    CheckedInAdapter CheckedInAdapter = new CheckedInAdapter(CheckedInActivity.this, new ArrayList<AppointmentDTO>(response.body().getPayload().getAppointments()));
                     appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(CheckedInActivity.this));
                     appointmentsRecyclerView.setAdapter(CheckedInAdapter);
                 }

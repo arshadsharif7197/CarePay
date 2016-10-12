@@ -19,7 +19,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepaylibray.appointments.dialog.VisitTypeDialog;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ import java.util.ArrayList;
 public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnAllListItemClickListener,
         VisitTypeDialog.OnDialogListItemClickListener {
 
-    private ArrayList<Appointment> recentProviderItems = new ArrayList<>();
-    private ArrayList<Appointment> allProviderItems = new ArrayList<>();
+    private ArrayList<AppointmentDTO> recentProviderItems = new ArrayList<>();
+    private ArrayList<AppointmentDTO> allProviderItems = new ArrayList<>();
 
     @Override
     public void onStart() {
@@ -66,19 +66,19 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         });
 
         /// DUMMY DATA START
-        Appointment appointmentModel = new Appointment();
-        recentProviderItems.add(appointmentModel);
-        allProviderItems.add(appointmentModel);
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
+        recentProviderItems.add(appointmentDTO);
+        allProviderItems.add(appointmentDTO);
 
-        appointmentModel = new Appointment();
-        recentProviderItems.add(appointmentModel);
-        allProviderItems.add(appointmentModel);
+        appointmentDTO = new AppointmentDTO();
+        recentProviderItems.add(appointmentDTO);
+        allProviderItems.add(appointmentDTO);
 
-        appointmentModel = new Appointment();
-        allProviderItems.add(appointmentModel);
+        appointmentDTO = new AppointmentDTO();
+        allProviderItems.add(appointmentDTO);
 
-        appointmentModel = new Appointment();
-        allProviderItems.add(appointmentModel);
+        appointmentDTO = new AppointmentDTO();
+        allProviderItems.add(appointmentDTO);
         /// DUMMY DATA END
 
         // Load and display Recent provider
@@ -98,19 +98,19 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         return chooseProviderView;
     }
 
-    private void loadVisitTypeScreen(Appointment model) {
+    private void loadVisitTypeScreen(AppointmentDTO model) {
         VisitTypeDialog visitTypeDialog = new VisitTypeDialog(getActivity(), model, this);
         visitTypeDialog.show();
     }
 
     @Override
     public void onAllListItemClickListener(int position) {
-        Appointment model = allProviderItems.get(position);
-        loadVisitTypeScreen(model);
+        AppointmentDTO appointmentDTO = allProviderItems.get(position);
+        loadVisitTypeScreen(appointmentDTO);
     }
 
     @Override
-    public void onDialogListItemClickListener(Appointment model) {
+    public void onDialogListItemClickListener(AppointmentDTO model) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         AvailableHoursFragment visitTypeFragment = (AvailableHoursFragment)
                 fragmentManager.findFragmentByTag(AvailableHoursFragment.class.getSimpleName());

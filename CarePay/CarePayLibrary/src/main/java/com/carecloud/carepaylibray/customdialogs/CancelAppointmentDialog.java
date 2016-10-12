@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
@@ -15,8 +15,8 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout rootLayout;
     private Context context;
 
-    public CancelAppointmentDialog(Context context, Appointment appointmentModel) {
-        super(context, appointmentModel);
+    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+        super(context, appointmentDTO);
         this.context = context;
     }
 

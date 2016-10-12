@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -26,17 +26,17 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
-    private AppointmentsPayloadModel payload;
+    private AppointmentsPayloadDTO payload;
     private View addActionLayout, rootLayout;
 
     private String placeName;
     private String placeAddress;
     private String phoneNumber;
 
-    public BaseDoctorInfoDialog(Context context, Appointment appointmentModel) {
+    public BaseDoctorInfoDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context);
         this.context = context;
-        this.payload = appointmentModel.getPayload();
+        this.payload = appointmentDTO.getPayload();
     }
 
     @Override

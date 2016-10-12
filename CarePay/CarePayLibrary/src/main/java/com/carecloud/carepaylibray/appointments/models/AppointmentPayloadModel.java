@@ -11,23 +11,23 @@ public class AppointmentPayloadModel {
 
     @SerializedName("appointments")
     @Expose
-    private List<Appointment> appointments = new ArrayList<>();
+    private List<AppointmentDTO> appointments = new ArrayList<>();
     @SerializedName("providers")
     @Expose
-    private List<AppointmentProvidersDto> providers = new ArrayList<>();
+    private List<AppointmentProvidersDTO> providers = new ArrayList<>();
     @SerializedName("locations")
     @Expose
-    private List<AppointmentLocationsDto> locations = new ArrayList<>();
+    private List<AppointmentLocationsDTO> locations = new ArrayList<>();
     @SerializedName("resources")
     @Expose
-    private List<AppointmentResourcesModel> resources = new ArrayList<>();
+    private List<AppointmentResourcesDTO> resources = new ArrayList<>();
 
     /**
      * 
      * @return
      *     The appointments
      */
-    public List<Appointment> getAppointments() {
+    public List<AppointmentDTO> getAppointments() {
         return appointments;
     }
 
@@ -36,7 +36,7 @@ public class AppointmentPayloadModel {
      * @param appointments
      *     The appointments
      */
-    public void setAppointments(List<Appointment> appointments) {
+    public void setAppointments(List<AppointmentDTO> appointments) {
         this.appointments = appointments;
     }
 
@@ -45,7 +45,7 @@ public class AppointmentPayloadModel {
      * @return
      *     The providers
      */
-    public List<AppointmentProvidersDto> getProviders() {
+    public List<AppointmentProvidersDTO> getProviders() {
         return providers;
     }
 
@@ -54,7 +54,7 @@ public class AppointmentPayloadModel {
      * @param providers
      *     The providers
      */
-    public void setProviders(List<AppointmentProvidersDto> providers) {
+    public void setProviders(List<AppointmentProvidersDTO> providers) {
         this.providers = providers;
     }
 
@@ -63,7 +63,7 @@ public class AppointmentPayloadModel {
      * @return
      *     The locations
      */
-    public List<AppointmentLocationsDto> getLocations() {
+    public List<AppointmentLocationsDTO> getLocations() {
         return locations;
     }
 
@@ -72,7 +72,7 @@ public class AppointmentPayloadModel {
      * @param locations
      *     The locations
      */
-    public void setLocations(List<AppointmentLocationsDto> locations) {
+    public void setLocations(List<AppointmentLocationsDTO> locations) {
         this.locations = locations;
     }
 
@@ -81,7 +81,7 @@ public class AppointmentPayloadModel {
      * @return
      *     The resources
      */
-    public List<AppointmentResourcesModel> getResources() {
+    public List<AppointmentResourcesDTO> getResources() {
         return resources;
     }
 
@@ -90,7 +90,7 @@ public class AppointmentPayloadModel {
      * @param resources
      *     The resources
      */
-    public void setResources(List<AppointmentResourcesModel> resources) {
+    public void setResources(List<AppointmentResourcesDTO> resources) {
         this.resources = resources;
     }
 

@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentPatientDto {
+public class AppointmentPatientDTO {
 
     @SerializedName("id")
     @Expose
@@ -45,7 +45,7 @@ public class AppointmentPatientDto {
     private String photo;
     @SerializedName("responsibility")
     @Expose
-    private List<PatientResponsibilityDto> responsibility = new ArrayList<PatientResponsibilityDto>();
+    private List<PatientResponsibilityDTO> responsibility = new ArrayList<PatientResponsibilityDTO>();
 
     /**
      * 
@@ -235,18 +235,18 @@ public class AppointmentPatientDto {
         this.photo = photo;
     }
 
-    public List<PatientResponsibilityDto> getResponsibility() {
+    public List<PatientResponsibilityDTO> getResponsibility() {
         return responsibility;
     }
 
-    public void setResponsibility(List<PatientResponsibilityDto> responsibility) {
+    public void setResponsibility(List<PatientResponsibilityDTO> responsibility) {
         this.responsibility = responsibility;
     }
 
     public double getTotalBalance(){
         double total=0.00;
         if (responsibility!=null && responsibility.size()>0){
-            for (PatientResponsibilityDto patientResponsibilityDto :responsibility){
+            for (PatientResponsibilityDTO patientResponsibilityDto :responsibility){
                 if(patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Account")){
                     total=total+ patientResponsibilityDto.getTotal();
                 }else if(patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Copay")){
@@ -263,7 +263,7 @@ public class AppointmentPatientDto {
     public double getResponsibilityAccount(){
         double total=0.00;
         if (responsibility!=null && responsibility.size()>0){
-            for (PatientResponsibilityDto patientResponsibilityDto :responsibility){
+            for (PatientResponsibilityDTO patientResponsibilityDto :responsibility){
                 if(patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Account")){
                     return patientResponsibilityDto.getTotal();
                 }
@@ -278,7 +278,7 @@ public class AppointmentPatientDto {
     public double getResponsibilityCopay(){
         double total=0.00;
         if (responsibility!=null && responsibility.size()>0){
-            for (PatientResponsibilityDto patientResponsibilityDto :responsibility){
+            for (PatientResponsibilityDTO patientResponsibilityDto :responsibility){
                 if(patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Copay")){
                     return patientResponsibilityDto.getTotal();
                 }

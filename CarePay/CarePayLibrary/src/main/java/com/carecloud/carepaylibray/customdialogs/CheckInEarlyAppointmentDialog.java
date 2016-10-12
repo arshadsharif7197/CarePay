@@ -9,15 +9,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 
 public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
 
-    public CheckInEarlyAppointmentDialog(Context context, Appointment appointmentModel) {
-        super(context, appointmentModel);
+    public CheckInEarlyAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+        super(context, appointmentDTO);
         this.context = context;
     }
 

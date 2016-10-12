@@ -13,9 +13,9 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
@@ -65,11 +65,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         final Object object = appointmentItems.get(position);
         View view = appointmentsListFragment.getView();
 
-        if (object.getClass() == Appointment.class) {
+        if (object.getClass() == AppointmentDTO.class) {
             holder.appointmentSectionLinearLayout.setVisibility(View.GONE);
             holder.appointmentItemLinearLayout.setVisibility(View.VISIBLE);
 
-            final AppointmentsPayloadModel item = ((Appointment) object).getPayload();
+            final AppointmentsPayloadDTO item = ((AppointmentDTO) object).getPayload();
 
             holder.doctorName.setText(item.getProvider().getName());
             SystemUtil.setProximaNovaSemiboldTypeface(context, holder.doctorName);
@@ -122,10 +122,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 @Override
                 public void onClick(View appointmentListItem) {
                     // Restricted the appointment list item click if it is appointment header type.
-                    if (object.getClass() == Appointment.class) {
+                    if (object.getClass() == AppointmentDTO.class) {
 
                         // appointment clicked item saved so that it can be used on Payment
-                        Appointment item = ((Appointment) object);
+                        AppointmentDTO item = ((AppointmentDTO) object);
                         AppointmentsActivity.model = item;
 
                         if (isPending) {
@@ -190,8 +190,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
                     if (appointmentItems.size() > firstVisibleItemPosition) {
                         Object object = appointmentItems.get(firstVisibleItemPosition);
-                        if (object.getClass() == Appointment.class) {
-                            Appointment item = (Appointment) object;
+                        if (object.getClass() == AppointmentDTO.class) {
+                            AppointmentDTO item = (AppointmentDTO) object;
                             View view = appointmentsListFragment.getView();
 
                             if (view != null) {

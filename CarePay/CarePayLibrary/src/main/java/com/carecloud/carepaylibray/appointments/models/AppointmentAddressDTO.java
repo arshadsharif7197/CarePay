@@ -1,17 +1,18 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppointmentLocationsAddressDto {
+public class AppointmentAddressDTO {
 
     @SerializedName("line1")
     @Expose
     private String line1;
     @SerializedName("line2")
     @Expose
-    private Object line2;
+    private String line2;
     @SerializedName("line3")
     @Expose
     private Object line3;
@@ -57,7 +58,7 @@ public class AppointmentLocationsAddressDto {
      * @return
      *     The line2
      */
-    public Object getLine2() {
+    public String getLine2() {
         return line2;
     }
 
@@ -66,7 +67,7 @@ public class AppointmentLocationsAddressDto {
      * @param line2
      *     The line2
      */
-    public void setLine2(Object line2) {
+    public void setLine2(String line2) {
         this.line2 = line2;
     }
 
@@ -196,4 +197,25 @@ public class AppointmentLocationsAddressDto {
         this.stateName = stateName;
     }
 
+    /**
+     * Returns full address.
+     * @return Full address
+     */
+    public String getPlaceAddressString() {
+        StringBuilder address = new StringBuilder();
+        address.append(StringUtil.isNullOrEmpty(line1) ? "" : line1);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(line2) ? "" : line2);
+        address.append(" ");
+        address.append(line3 == null ? "" : line3);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(city) ? "" : city);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(stateName) ? "" : stateName);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode);
+        address.append(" ");
+        address.append(countyName == null ? "" : countyName);
+        return address.toString();
+    }
 }

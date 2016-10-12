@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepayclover.R;
 import com.carecloud.carepayclover.RotateActivity;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentPatientDto;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentPatientDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.squareup.picasso.Picasso;
 
@@ -26,17 +26,17 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
 
     private Context context;
 
-    ArrayList<Appointment> mData;
+    ArrayList<AppointmentDTO> mData;
     int counter;
 
-    public CheckedInAdapter(Context context, ArrayList<Appointment> data) {
+    public CheckedInAdapter(Context context, ArrayList<AppointmentDTO> data) {
         this.context = context;
         mData = data;
         System.out.println("size: " + data.size());
     }
 
-    private Appointment getAppointmentById(String id) {
-        for (Appointment model : mData) {
+    private AppointmentDTO getAppointmentById(String id) {
+        for (AppointmentDTO model : mData) {
             if (id.equals(model.getPayload().getId()))
                 return model;
         }
@@ -53,8 +53,8 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
 
     @Override
     public void onBindViewHolder(CheckedInAdapter.CartViewHolder holder, final int position) {
-        Appointment mMaster = mData.get(position);
-        AppointmentPatientDto patientModel=mMaster.getPayload().getPatient();
+        AppointmentDTO mMaster = mData.get(position);
+        AppointmentPatientDTO patientModel=mMaster.getPayload().getPatient();
         holder.patientNameTextView.setText(patientModel.getFirstName()+" " + patientModel.getLastName());
         holder.patientBalanceTextView.setText(String.format( "Balance: $%.2f", patientModel.getTotalBalance() ));
         Picasso.with(context).load(patientModel.getPhoto()).transform(new CircleImageTransform()).resize(160,160).into(holder.patientPicImageView);
@@ -70,7 +70,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
         return 0;
     }
 
-    public void setData(ArrayList<Appointment> _data) {
+    public void setData(ArrayList<AppointmentDTO> _data) {
         this.mData = _data;
     }
 
@@ -99,7 +99,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
         public void onClick(View view) {
             int viewId=view.getId();
             if(viewId==R.id.paymentTextview) {
-                AppointmentPatientDto model = (AppointmentPatientDto) view.getTag();
+                AppointmentPatientDTO model = (AppointmentPatientDTO) view.getTag();
                 Intent rotateInIntent = new Intent(context, RotateActivity.class);
                 rotateInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 rotateInIntent.putExtra("rotate_title","Ready to pay");//Sent!

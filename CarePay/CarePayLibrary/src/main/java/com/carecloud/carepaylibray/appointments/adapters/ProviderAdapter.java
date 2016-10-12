@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDto;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
@@ -21,9 +21,9 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
 
     private Context context;
     private OnAllListItemClickListener listener;
-    private ArrayList<Appointment> appointmentArrayList;
+    private ArrayList<AppointmentDTO> appointmentArrayList;
 
-    public ProviderAdapter(Context context, ArrayList<Appointment> appointmentArrayList,
+    public ProviderAdapter(Context context, ArrayList<AppointmentDTO> appointmentArrayList,
                            OnAllListItemClickListener listener) {
         this.context = context;
         this.listener = listener;
@@ -42,10 +42,10 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
 
         if (appointmentArrayList != null) {
 
-            AppointmentsPayloadModel payload = appointmentArrayList.get(position).getPayload();
+            AppointmentsPayloadDTO payload = appointmentArrayList.get(position).getPayload();
             if (payload != null) {
 
-                AppointmentProviderDto provider = payload.getProvider();
+                AppointmentProviderDTO provider = payload.getProvider();
                 holder.doctorName.setText(provider.getName());
                 holder.doctorType.setText(provider.getSpecialty());
                 holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));

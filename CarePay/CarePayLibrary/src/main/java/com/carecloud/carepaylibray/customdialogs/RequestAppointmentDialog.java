@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
@@ -22,8 +22,8 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     private Context context;
     private LinearLayout mainLayout;
 
-    public RequestAppointmentDialog(Context context, Appointment appointmentModel) {
-        super(context, appointmentModel);
+    public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+        super(context, appointmentDTO);
         this.context = context;
     }
 

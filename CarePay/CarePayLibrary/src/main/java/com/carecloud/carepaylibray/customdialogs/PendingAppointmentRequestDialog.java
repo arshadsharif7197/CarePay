@@ -9,15 +9,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 
 public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
 
-    public PendingAppointmentRequestDialog(Context context, Appointment appointmentModel) {
-        super(context, appointmentModel);
+    public PendingAppointmentRequestDialog(Context context, AppointmentDTO appointmentDTO) {
+        super(context, appointmentDTO);
         this.context = context;
     }
 

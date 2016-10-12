@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.appointments.models.Appointment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDto;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDTO;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -21,14 +21,14 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     // The items to display in your RecyclerView
     private List<Object> items;
     private Context context;
-    private Appointment model;
+    private AppointmentDTO appointmentDTO;
     private final int SECTION_HEADER = 0;
 
     // Provide a suitable constructor (depends on the kind of data set)
-    public AvailableHoursAdapter(Context context, List<Object> items, Appointment model) {
+    public AvailableHoursAdapter(Context context, List<Object> items, AppointmentDTO appointmentDTO) {
         this.context = context;
         this.items = items;
-        this.model = model;
+        this.appointmentDTO = appointmentDTO;
     }
 
     // Return the size of your data set (invoked by the layout manager)
@@ -39,7 +39,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof AppointmentAvailableHoursDto) {
+        if (items.get(position) instanceof AppointmentAvailableHoursDTO) {
             return 1;
         } else if (items.get(position) instanceof String) {
             return SECTION_HEADER;
@@ -69,7 +69,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             vhSectionHeader.getTextView().setText(items.get(position).toString());
         } else {
             ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
-            vhTimeSlot.getTextView().setText(((AppointmentAvailableHoursDto) items.get(position)).getmTimeSlot());
+            vhTimeSlot.getTextView().setText(((AppointmentAvailableHoursDTO) items.get(position)).getAppointmentTimeSlot());
         }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -82,13 +82,13 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                    String selectedTimeStr = selectedTimeSlot.getText().toString();
 //                    String newAppointmentDate = AvailableHoursFragment.getAppointmentDate() + " " + selectedTimeStr;
 //                    newAppointmentDate = DateUtil.getDateRaw(new Date(newAppointmentDate));
-//                    model.setNewAppointmentDate(newAppointmentDate);
-//                    model.setNewAppointmentTime(selectedTimeStr);
+//                    appointmentDTO.setNewAppointmentDate(newAppointmentDate);
+//                    appointmentDTO.setNewAppointmentTime(selectedTimeStr);
 
                     // Launch dialog of appointment request
                     AppointmentsActivity baseActivity = new AppointmentsActivity();
-                    baseActivity.setAppointmentModel(model);
-                    new RequestAppointmentDialog(context, model).show();
+                    baseActivity.setAppointmentModel(appointmentDTO);
+                    new RequestAppointmentDialog(context, appointmentDTO).show();
                 }
             }
         });
