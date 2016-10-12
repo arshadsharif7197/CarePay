@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/demogr_details_container_top"
+              android:orientation="horizontal"
+              android:baselineAligned="false">
 
     <TableLayout
         android:layout_width="0dp"
@@ -19,8 +21,7 @@
             <TextView
                 android:id="@+id/viewMedicLabel"
                 style="@style/DemographicsDetailsAllergyStyle"
-                android:layout_weight="1"
-                android:text="Medication"/>
+                android:layout_weight="1"/>
 
             <View
                 android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
@@ -29,8 +30,7 @@
             <TextView
                 android:id="@+id/viewMedicTextView"
                 style="@style/DemographicsDetailsAllergyStyle"
-                android:layout_weight="1"
-                android:text="Medication A"/>
+                android:layout_weight="1"/>
         </TableRow>
 
         <TableRow
@@ -41,8 +41,7 @@
             <TextView
                 android:id="@+id/viewMedicDosageLabel"
                 style="@style/DemographicsDetailsAllergyStyle"
-                android:layout_weight="1"
-                android:text="Dosage"/>
+                android:layout_weight="1"/>
 
             <View
                 android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
@@ -51,8 +50,7 @@
             <TextView
                 android:id="@+id/viewMedicDosageTextView"
                 style="@style/DemographicsDetailsAllergyStyle"
-                android:layout_weight="1"
-                android:text="330mg"/>
+                android:layout_weight="1"/>
         </TableRow>
     </TableLayout>
 
@@ -67,8 +65,7 @@
             style="@style/DemographicsDocsClickableTextStyle"
             android:layout_gravity="center"
             android:layout_marginEnd="0dp"
-            android:textColor="@color/harvard_crimson"
-            android:text="Remove"/>
+            android:textColor="@color/harvard_crimson"/>
     </FrameLayout>
 
 </LinearLayout>

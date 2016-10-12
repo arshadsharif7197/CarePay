@@ -204,7 +204,7 @@
                     android:text="Medication"/>
 
                 <TextView
-                    android:id="@+id/demogrDetailsAddAnotherClickable"
+                    android:id="@+id/demogrDetailsAddAnotherMedClickable"
                     style="@style/DemographicsDocsClickableTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -225,8 +225,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/signup_optional_label_margin_left_right"
-                android:layout_marginStart="@dimen/signup_optional_label_margin_left_right"
-                android:visibility="gone"/>
+                android:layout_marginStart="@dimen/signup_optional_label_margin_left_right"/>
 
             <TextView
                 android:id="@+id/demogrDetailsMedAddUnlisted"

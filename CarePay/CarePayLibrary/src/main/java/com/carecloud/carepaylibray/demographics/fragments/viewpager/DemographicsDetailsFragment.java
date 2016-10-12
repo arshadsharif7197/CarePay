@@ -21,6 +21,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsAllergiesAdapter;
+import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsMedicationsAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
@@ -50,6 +51,7 @@ public class DemographicsDetailsFragment extends Fragment
     private TextView                         raceTextView;
     private TextView                         ethnicityTextView;
     private TextView                         addAnotherAllergyTextView;
+    private TextView                         addAnotherMedTextView;
     private Button                           nextButton;
     private DemographicPersDetailsPayloadDTO model;
 
@@ -85,7 +87,34 @@ public class DemographicsDetailsFragment extends Fragment
                                                                                               "Reaction #22"));
             }
         });
+
+        // set up the medications recycler view
+        final RecyclerView medicRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsMedRecView);
+        medicRecyclerView.setHasFixedSize(true);
+        medicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // dummy meds for now
+        List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> meds = createMeds();
+        medicRecyclerView.setAdapter(new DemographicsDetailsMedicationsAdapter(meds));
+
+        addAnotherMedTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAnotherMedClickable);
+        addAnotherMedTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((DemographicsDetailsMedicationsAdapter)medicRecyclerView.getAdapter())
+                        .addAtFront(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication Z122",
+                                                                                                   "11 mg"));
+            }
+        });
+
         return view;
+    }
+
+    private List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> createMeds() {
+        List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> meds = new ArrayList<>();
+        meds.add(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication 111", "33mg"));
+        meds.add(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication 222", "333mg"));
+        meds.add(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication 333", "23mg"));
+        return meds;
     }
 
     private List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> getAllergies() {
