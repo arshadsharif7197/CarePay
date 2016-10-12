@@ -79,7 +79,7 @@
 
             <TextView
                 android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
-                style="@style/SignupOptionalLabelStyle"
+                style="@style/SignupRequireHintStyle"
                 android:text="Optional"/>
         </FrameLayout>
         <android.support.design.widget.TextInputLayout
@@ -284,7 +284,7 @@
 
             <TextView
                 android:id="@+id/demogrAddressOptionalLabel"
-                style="@style/SignupOptionalLabelStyle"
+                style="@style/SignupRequireHintStyle"
                 android:text="Optional"/>
 
         </FrameLayout>
