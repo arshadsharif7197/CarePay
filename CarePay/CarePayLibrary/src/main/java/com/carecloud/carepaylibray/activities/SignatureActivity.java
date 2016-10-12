@@ -62,15 +62,17 @@ public class SignatureActivity extends AppCompatActivity {
             public void onClick(View view) {
                 isBackButtonClicked = true;
                 Intent mIntent = getIntent();
-                setResult(CarePayConstants.SIGNATURE_REQ_CODE,mIntent);
+                setResult(CarePayConstants.SIGNATURE_REQ_CODE, mIntent);
                 finish();
-            }});
+            }
+        });
         setTypefaces();
         onClickListeners();
         setTextListeners();
     }
 
-    /** Initializing the view
+    /**
+     * Initializing the view
      */
     private void initViews() {
         //initViews data
@@ -91,8 +93,8 @@ public class SignatureActivity extends AppCompatActivity {
         agreeButton = (Button) findViewById(R.id.agreeBtn);
         signaturePad = (SignaturePad) findViewById(R.id.signature_pad);
         clearButton = (Button) findViewById(R.id.clearBtn);
-        legalFirstName=(TextInputLayout)findViewById(R.id.legalFirstName);
-        legalLastName=(TextInputLayout)findViewById(R.id.legalLastName);
+        legalFirstName = (TextInputLayout) findViewById(R.id.legalFirstName);
+        legalLastName = (TextInputLayout) findViewById(R.id.legalLastName);
         legalFirstNameET = (EditText) findViewById(R.id.legalFirstNameET);
         legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
         String headerTitle = getIntent().getExtras().getString("Header_Title");
@@ -101,7 +103,8 @@ public class SignatureActivity extends AppCompatActivity {
 
     }
 
-    /** On click Listeners
+    /**
+     * On click Listeners
      */
     private void onClickListeners() {
         switchButton.setOnClickListener(new View.OnClickListener() {
@@ -148,11 +151,11 @@ public class SignatureActivity extends AppCompatActivity {
 
     }
 
-    /** Text change Listeners
-     *
+    /**
+     * Text change Listeners
      */
     private void setTextListeners() {
-      legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 String hint = "Legal Representative First Name";
@@ -160,14 +163,14 @@ public class SignatureActivity extends AppCompatActivity {
                 if (hasFocus) {
                     // change hint to all caps
                     legalFirstName.setHint(hintCaps);
-                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(),legalFirstName);
+                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(), legalFirstName);
                 } else {
                     if (StringUtil.isNullOrEmpty(legalFirstNameET.getText().toString())) {
                         // change hint to lower
                         legalFirstName.setHint(hint);
 
                     } else {
-                       legalFirstNameET.setHint(hint);
+                        legalFirstNameET.setHint(hint);
                     }
                 }
             }
@@ -181,14 +184,14 @@ public class SignatureActivity extends AppCompatActivity {
                 if (hasFocus) {
                     // change hint to all caps
                     legalLastName.setHint(hintCaps);
-                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(),legalLastName);
+                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(), legalLastName);
                 } else {
                     if (StringUtil.isNullOrEmpty(legalLastNameET.getText().toString())) {
                         // change hint to lower
                         legalLastName.setHint(hint);
 
                     } else {
-                      legalLastNameET.setHint(hint);
+                        legalLastNameET.setHint(hint);
                     }
                 }
 
@@ -228,13 +231,13 @@ public class SignatureActivity extends AppCompatActivity {
         super.onBackPressed();
         isBackButtonClicked = true;
         Intent mIntent = getIntent();
-        setResult(CarePayConstants.SIGNATURE_REQ_CODE,mIntent);
+        setResult(CarePayConstants.SIGNATURE_REQ_CODE, mIntent);
         finish();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         }

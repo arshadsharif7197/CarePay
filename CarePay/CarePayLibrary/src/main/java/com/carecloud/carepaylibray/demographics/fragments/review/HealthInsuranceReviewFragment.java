@@ -24,7 +24,6 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
-
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
@@ -47,7 +46,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
-public class HealthInsuranceReviewFragment extends InsuranceScannerFragment implements View.OnClickListener{
+public class HealthInsuranceReviewFragment extends InsuranceScannerFragment implements View.OnClickListener {
 
 
     private FragmentManager fm;
@@ -132,7 +131,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
                 postPayloadModel.setPersonalDetails(demPersDetailsPayloadDto);
                 postPayloadModel.setIdDocument(demographicPayloadDriversLicenseModel);
                 // clear the list
-             //   insuranceModelList.clear();
+                //   insuranceModelList.clear();
                 insuranceFragment.getBitmapsFromImageViews();
                 // add non trivial insurance models
                 if (isInsuaranceNonTrivial(insuranceModel)) {
@@ -149,7 +148,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         Log.v(LOG_TAG, "health insurance frag POST success\n" + response.code() + "\n"
-                        + response.body());
+                                + response.body());
                         openNewFragment();
                     }
 
@@ -213,14 +212,14 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
             insuranceModelList = payload;
         }
         insuranceModel = getInsuranceModelAtIndex(0);
-        if(insuranceModel != null) {
+        if (insuranceModel != null) {
             List<DemographicInsurancePhotoDTO> photoDtos = insuranceModel.getInsurancePhotos();
-            if(photoDtos != null ) {
-                if(photoDtos.size() > 0) {
+            if (photoDtos != null) {
+                if (photoDtos.size() > 0) {
                     DemographicInsurancePhotoDTO frontPhoto = photoDtos.get(0);
                     Log.v(LOG_TAG, "front: " + frontPhoto.getInsurancePhoto());
                 }
-                if(photoDtos.size() > 1) {
+                if (photoDtos.size() > 1) {
                     DemographicInsurancePhotoDTO backPhoto = photoDtos.get(1);
                     Log.v(LOG_TAG, "back: " + backPhoto.getInsurancePhoto());
                 }
@@ -300,7 +299,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
 
     }
 }

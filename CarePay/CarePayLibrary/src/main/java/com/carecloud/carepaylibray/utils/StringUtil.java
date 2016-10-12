@@ -70,6 +70,10 @@ public class StringUtil {
         return false;
     }
 
+    /**format phone number
+     * @param phoneNumber
+     * @return
+     */
     public static String formatPhoneNumber(String phoneNumber)
     {
         StringBuilder  phoneNumberString = new StringBuilder();
@@ -90,6 +94,11 @@ public class StringUtil {
         }
         return phoneNumberString.toString();
     }
+
+    /** format zipcode
+     * @param zipcode zipcode
+     * @return
+     */
     public static String formatZipCode(String zipcode)
     {
         StringBuilder zipCodeString = new StringBuilder();

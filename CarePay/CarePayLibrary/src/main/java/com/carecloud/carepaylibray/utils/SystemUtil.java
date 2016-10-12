@@ -231,14 +231,11 @@ public class SystemUtil {
     }
 
     *//**
-     * Utility to decode a base64 into a bitmap
-     * @param bitmapAsBytes The encoding as bytes
+     * Utility to dencode a bitmapinto a base64
+     * @param image The encoding as bytes
      * @return The bitmap
-     *//*
-    public static Bitmap base64StringToBitmap(String bitmapAsBytes) {
-        byte[] bitmapdata = Base64.decode(bitmapAsBytes, 0);
-        return BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
-    }*/
+     */
+
     public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
     {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();

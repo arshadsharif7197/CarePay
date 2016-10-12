@@ -154,7 +154,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
 
-    private void formatEditText(){
+    private void formatEditText() {
 
         dobEditText.addTextChangedListener(new TextWatcher() {
 
@@ -179,7 +179,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
         });
 
-       zipCodeEditText.addTextChangedListener(new TextWatcher() {
+        zipCodeEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -219,10 +219,10 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                     if (s.length() == 3 || s.length() == 7)
                         s.append("-");
                     if (s.length() > 3 && Character.isDigit(s.charAt(3))) {
-                            s.insert(3, "-");
+                        s.insert(3, "-");
                     }
                     if (s.length() > 7 && Character.isDigit(s.charAt(7))) {
-                            s.insert(7, "-");
+                        s.insert(7, "-");
                     }
                 }
             }
@@ -305,51 +305,51 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             demographicPersDetailsPayloadDTO = new DemographicPersDetailsPayloadDTO();
         }
 
-            String firstName = firstNameText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(firstName)) {
-                demographicPersDetailsPayloadDTO.setFirstName(firstName);
-            }
+        String firstName = firstNameText.getText().toString();
+        if (!StringUtil.isNullOrEmpty(firstName)) {
+            demographicPersDetailsPayloadDTO.setFirstName(firstName);
+        }
 
-            String middleName = middleNameText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(middleName)) {
-                demographicPersDetailsPayloadDTO.setMiddleName(middleName);
-            }
-            String lastName = lastNameText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(lastName)) {
-                demographicPersDetailsPayloadDTO.setLastName(lastName);
-            }
+        String middleName = middleNameText.getText().toString();
+        if (!StringUtil.isNullOrEmpty(middleName)) {
+            demographicPersDetailsPayloadDTO.setMiddleName(middleName);
+        }
+        String lastName = lastNameText.getText().toString();
+        if (!StringUtil.isNullOrEmpty(lastName)) {
+            demographicPersDetailsPayloadDTO.setLastName(lastName);
+        }
 
-            String dateOfBirth = dobEditText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
-                // the date is DateUtil as
+        String dateOfBirth = dobEditText.getText().toString();
+        if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
+            // the date is DateUtil as
 
-                demographicPersDetailsPayloadDTO.setDateOfBirth(
-                        DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
-            }
+            demographicPersDetailsPayloadDTO.setDateOfBirth(
+                    DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
+        }
 
-            String gender = selectGender.getText().toString();
-            if (!StringUtil.isNullOrEmpty(gender)) {
-                demographicPersDetailsPayloadDTO.setGender(gender);
-            }
+        String gender = selectGender.getText().toString();
+        if (!StringUtil.isNullOrEmpty(gender)) {
+            demographicPersDetailsPayloadDTO.setGender(gender);
+        }
 
-            String race = raceDataTextView.getText().toString();
-            if (!StringUtil.isNullOrEmpty(race)) {
-                demographicPersDetailsPayloadDTO.setPrimaryRace(race);
-            }
+        String race = raceDataTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(race)) {
+            demographicPersDetailsPayloadDTO.setPrimaryRace(race);
+        }
 
-            String ethnicity = ethnicityDataTextView.getText().toString();
-            if (!StringUtil.isNullOrEmpty(ethnicity)) {
-                demographicPersDetailsPayloadDTO.setEthnicity(ethnicity);
-            }
+        String ethnicity = ethnicityDataTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(ethnicity)) {
+            demographicPersDetailsPayloadDTO.setEthnicity(ethnicity);
+        }
 
 
         if (demographicIdDocPayloadDTO == null) {
             demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         }
-            String driverLicense = driverlicenseEditText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(driverLicense)) {
-                demographicIdDocPayloadDTO.setIdNumber(driverLicense);
-            }
+        String driverLicense = driverlicenseEditText.getText().toString();
+        if (!StringUtil.isNullOrEmpty(driverLicense)) {
+            demographicIdDocPayloadDTO.setIdNumber(driverLicense);
+        }
 
 
         if (demographicAddressPayloadDTO == null) {
@@ -472,11 +472,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         });
         middleNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, bool);
             }
         });
 
@@ -620,10 +620,10 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             firstNameText.setText(demographicPersDetailsPayloadDTO.getFirstName());
             lastNameText.setText(demographicPersDetailsPayloadDTO.getLastName());
 
-            String middleName=demographicPersDetailsPayloadDTO.getMiddleName();
-            if(middleName!=null){
+            String middleName = demographicPersDetailsPayloadDTO.getMiddleName();
+            if (middleName != null) {
                 middleNameText.setText(middleName);
-            } else{
+            } else {
                 Log.v(LOG_TAG, "middle name field is empty");
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
@@ -660,7 +660,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             Log.v(LOG_TAG, "demographic personal details is empty");
         }
 
-        if(demographicIdDocPayloadDTO != null){
+        if (demographicIdDocPayloadDTO != null) {
             driverlicenseEditText.setText(demographicIdDocPayloadDTO.getIdNumber());
         } else {
             Log.v(LOG_TAG, "demographic personal details is empty");
@@ -679,7 +679,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             Log.v(LOG_TAG, "Demographic adress is empty ");
         }
     }
-
 
 
     private void openNewFragment() {

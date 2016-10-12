@@ -309,6 +309,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         return false;
     }
 
+    /** On back Pressed going to previous activity
+     */
     public void onBackPressed() {
         Intent intent = new Intent(getContext(), AppointmentsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

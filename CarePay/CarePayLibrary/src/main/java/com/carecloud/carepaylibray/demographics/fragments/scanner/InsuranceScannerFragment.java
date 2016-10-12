@@ -20,9 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
-
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -45,13 +44,12 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class InsuranceScannerFragment extends DocumentScannerFragment {
 
 
-
     private String[] planDataArray;
     private String[] providerDataArray;
     private String[] cardTypeDataArray;
 
-    private ImageCaptureHelper mInsuranceFrontScanHelper;
-    private ImageCaptureHelper mInsuranceBackScanHelper;
+    private ImageCaptureHelper insuranceFrontScanHelper;
+    private ImageCaptureHelper insuranceBackScanHelper;
     private Button btnScanFrontInsurance;
     private Button btnScanBackInsurance;
     private EditText insuranceCardNumEditText;
@@ -77,24 +75,24 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnumber);
 
         frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
-        mInsuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
+        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                selectImage(mInsuranceFrontScanHelper);
+                selectImage(insuranceFrontScanHelper);
             }
         });
         backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
-        mInsuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView);
+        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         btnScanBackInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                selectImage(mInsuranceBackScanHelper);
+                selectImage(insuranceBackScanHelper);
 
             }
         });
@@ -140,18 +138,20 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
         btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
 
-      //  model.setInsuranceMemberId(insuranceCardNumEditText.getText().toString());
+        //  model.setInsuranceMemberId(insuranceCardNumEditText.getText().toString());
         insuranceCardNumEditText.setText(model.getInsuranceMemberId());
 
-      //  model.setInsurancePlan(planDataArray[0]);
+        //  model.setInsurancePlan(planDataArray[0]);
         planTextView.setText(planDataArray[0]);
 
-     //   model.setInsuranceProvider(providerDataArray[0]);
+        //   model.setInsuranceProvider(providerDataArray[0]);
         providerTextView.setText(providerDataArray[0]);
 
 
     }
 
+    /** initializing view from the model
+     */
     @Override
     public void populateViewsFromModel() {
         if (model != null) {
@@ -183,6 +183,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
     }
 
+    /** Showing alert boxes for list
+     * @param listArray
+     * @param title
+     */
     private void showAlertDialogWithListview(final String[] listArray, String title) {
         Log.e("listArray==", listArray.toString());
         Log.e("listArray 23==", Arrays.asList(listArray).toString());
@@ -226,13 +230,15 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         });
     }
 
-
+    /** Converting bitmap images to base64 and posting to server in model
+     * @return
+     */
     public DemographicInsurancePayloadDTO getBitmapsFromImageViews() {
         Bitmap bitmapFront;
         Bitmap bitmapBack;
-        bitmapBack = ((BitmapDrawable) mInsuranceBackScanHelper
+        bitmapBack = ((BitmapDrawable) insuranceBackScanHelper
                 .getImageViewTarget().getDrawable()).getBitmap();
-        bitmapFront = ((BitmapDrawable) mInsuranceFrontScanHelper
+        bitmapFront = ((BitmapDrawable) insuranceFrontScanHelper
                 .getImageViewTarget().getDrawable()).getBitmap();
 
         insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
@@ -270,7 +276,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         planTextView.setText(getString(R.string.demogr_tv_choose_label));
         providerTextView.setText(getString(R.string.demogr_docs_tv_chose_company));
         cardTypeTextView.setText(getString(R.string.demogr_tv_choose_label));
-        mInsuranceFrontScanHelper.resetTargetView();
+        insuranceFrontScanHelper.resetTargetView();
         // additional data deletion may be added when real data is used...
     }
 
@@ -294,6 +300,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             }
         });
     }
+
     @Override
     protected void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
