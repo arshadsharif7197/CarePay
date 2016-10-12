@@ -119,7 +119,6 @@ public class SigninFragment extends Fragment {
         changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(LOG_TAG, "change lang");
                 // relaunch select language
                 Intent intent = new Intent(getActivity(), LibraryMainActivity.class);
                 startActivity(intent);

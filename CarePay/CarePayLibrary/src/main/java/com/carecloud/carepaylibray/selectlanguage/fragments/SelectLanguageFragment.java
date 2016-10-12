@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -107,11 +107,6 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         super.onSaveInstanceState(outState);
     }
 
-    /**
-     * @param view
-     * @param position  getting selected languauge position
-     * @param language
-     */
     @Override
     public void onItemClick(View view, int position, LanguageOptionModel language) {
         List<LanguageOptionModel> newLanguageList = new ArrayList<>();
