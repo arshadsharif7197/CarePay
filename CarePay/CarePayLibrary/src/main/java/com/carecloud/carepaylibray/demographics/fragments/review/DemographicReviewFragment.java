@@ -29,11 +29,12 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
+
 
 
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
@@ -159,21 +160,21 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         dobEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence dob, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence dob, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() > 2 && Character.isDigit(s.charAt(2))) {
-                    s.insert(2, "-");
+            public void afterTextChanged(Editable dob) {
+                if (dob.length() > 2 && Character.isDigit(dob.charAt(2))) {
+                    dob.insert(2, "-");
                 }
-                if (s.length() > 5 && Character.isDigit(s.charAt(5))) {
-                    s.insert(5, "-");
+                if (dob.length() > 5 && Character.isDigit(dob.charAt(5))) {
+                    dob.insert(5, "-");
                 }
 
             }
@@ -182,18 +183,18 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         zipCodeEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence zipcode, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence zipcode, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() > 5 && Character.isDigit(s.charAt(5))) {
-                    s.insert(5, "-");
+            public void afterTextChanged(Editable zipcode) {
+                if (zipcode.length() > 5 && Character.isDigit(zipcode.charAt(5))) {
+                    zipcode.insert(5, "-");
                 }
 
             }
@@ -203,25 +204,25 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             int length_before = 0;
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                length_before = s.length();
+            public void beforeTextChanged(CharSequence phonenumber, int start, int count, int after) {
+                length_before = phonenumber.length();
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence phonenumber, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                if (length_before < s.length()) {
-                    if (s.length() == 3 || s.length() == 7)
-                        s.append("-");
-                    if (s.length() > 3 && Character.isDigit(s.charAt(3))) {
-                        s.insert(3, "-");
+            public void afterTextChanged(Editable phonenumber) {
+                if (length_before < phonenumber.length()) {
+                    if (phonenumber.length() == 3 || phonenumber.length() == 7)
+                        phonenumber.append("-");
+                    if (phonenumber.length() > 3 && Character.isDigit(phonenumber.charAt(3))) {
+                        phonenumber.insert(3, "-");
                     }
-                    if (s.length() > 7 && Character.isDigit(s.charAt(7))) {
-                        s.insert(7, "-");
+                    if (phonenumber.length() > 7 && Character.isDigit(phonenumber.charAt(7))) {
+                        phonenumber.insert(7, "-");
                     }
                 }
             }

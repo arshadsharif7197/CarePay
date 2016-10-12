@@ -38,9 +38,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import retrofit2.Call;
 import retrofit2.Callback;
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
