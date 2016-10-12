@@ -5,20 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
-import com.carecloud.carepaylibray.demographics.models.DemAddressPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemPersDetailsPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 
 import java.util.List;
 
 
 public class DemographicReviewActivity extends AppCompatActivity {
 
-    private DemPersDetailsPayloadDto      demPersDetailsPayloadDto;
-    private DemAddressPayloadDto          demAddressPayloadDto;
-    private List<DemInsurancePayloadPojo> insurances;
-    private DemIdDocPayloadDto            demPayloadIdDocPojo;
+    private DemographicPersDetailsPayloadDTO     demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO         demographicAddressPayloadDTO;
+    private List<DemographicInsurancePayloadDTO> insurances;
+    private DemographicIdDocPayloadDTO           demPayloadIdDocPojo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,36 +34,36 @@ public class DemographicReviewActivity extends AppCompatActivity {
         }
     }
 
-    public DemPersDetailsPayloadDto getDemPersDetailsPayloadDto() {
-        return demPersDetailsPayloadDto;
+    public DemographicPersDetailsPayloadDTO getDemographicPersDetailsPayloadDTO() {
+        return demographicPersDetailsPayloadDTO;
     }
 
-    public void setDemPersDetailsPayloadDto(DemPersDetailsPayloadDto demPersDetailsPayloadDto) {
-        this.demPersDetailsPayloadDto = demPersDetailsPayloadDto;
+    public void setDemographicPersDetailsPayloadDTO(DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO) {
+        this.demographicPersDetailsPayloadDTO = demographicPersDetailsPayloadDTO;
     }
 
-    public DemAddressPayloadDto getDemAddressPayloadDto() {
-        return demAddressPayloadDto;
+    public DemographicAddressPayloadDTO getDemographicAddressPayloadDTO() {
+        return demographicAddressPayloadDTO;
     }
 
-    public void setDemAddressPayloadDto(DemAddressPayloadDto demAddressPayloadDto) {
-        this.demAddressPayloadDto = demAddressPayloadDto;
+    public void setDemographicAddressPayloadDTO(DemographicAddressPayloadDTO demographicAddressPayloadDTO) {
+        this.demographicAddressPayloadDTO = demographicAddressPayloadDTO;
     }
 
 
-    public void setInsurances(List<DemInsurancePayloadPojo> insurances) {
+    public void setInsurances(List<DemographicInsurancePayloadDTO> insurances) {
         this.insurances = insurances;
     }
 
-    public List<DemInsurancePayloadPojo> getInsurances() {
+    public List<DemographicInsurancePayloadDTO> getInsurances() {
         return insurances;
     }
 
-    public DemIdDocPayloadDto getDemPayloadIdDocPojo() {
+    public DemographicIdDocPayloadDTO getDemPayloadIdDocPojo() {
         return demPayloadIdDocPojo;
     }
 
-    public void setDemPayloadIdDocPojo(DemIdDocPayloadDto demPayloadIdDocPojo) {
+    public void setDemPayloadIdDocPojo(DemographicIdDocPayloadDTO demPayloadIdDocPojo) {
         this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
 }
