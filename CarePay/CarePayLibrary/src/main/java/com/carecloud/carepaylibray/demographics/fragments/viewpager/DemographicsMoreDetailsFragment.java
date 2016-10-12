@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
@@ -53,12 +55,11 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DemographicDTO model = ((DemographicsActivity)getActivity()).getModel();
-                confirmDemographicInformation(); // post the updates
-                /*
+                DemographicModel model = ((DemographicsActivity)getActivity()).getModel();
+//                confirmDemographicInformation(); // post the updates
                 Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
                 startActivity(appointmentIntent);
-                getActivity().finish();*/
+                getActivity().finish();
 //                Log.v(LOG_TAG, "demogr_check_point");
             }
         });
@@ -72,10 +73,8 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     }
 
     public void confirmDemographicInformation() {
-        // TODO: 9/29/2016 add progress
 
-        // TODO: 10/9/2016 remove
-//        DemographicAddressPayloadDTO demographicPayloadAddressModel = new DemographicAddressPayloadDTO();
+//        DemAddressPayloadDto demographicPayloadAddressModel = new DemAddressPayloadDto();
 //        demographicPayloadAddressModel.setAddress1("5200 Blue legun dr");
 //        demographicPayloadAddressModel.setAddress2("#800 Lejeune");
 //        demographicPayloadAddressModel.setCity("Miami");
