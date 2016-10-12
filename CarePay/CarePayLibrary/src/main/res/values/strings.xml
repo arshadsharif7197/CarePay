@@ -332,4 +332,6 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="next">NEXT</string>
     <string name="add_new_credit_card">ADD NEW CREDIT CARD</string>
 
+    <string name="cancel_appointment_dialog">CANCEL APPOINTMENT</string>
+
 </resources>
