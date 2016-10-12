@@ -59,11 +59,11 @@ public class DemographicReviewActivity extends AppCompatActivity {
         return insurances;
     }
 
-    public DemographicIdDocPayloadDTO getDemPayloadIdDocPojo() {
+    public DemographicIdDocPayloadDTO getDemographicPayloadIdDocDTO() {
         return demPayloadIdDocPojo;
     }
 
-    public void setDemPayloadIdDocPojo(DemographicIdDocPayloadDTO demPayloadIdDocPojo) {
+    public void setDemographicPayloadIdDocDTO(DemographicIdDocPayloadDTO demPayloadIdDocPojo) {
         this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
 }

@@ -1,3 +1,4 @@
+
 package com.carecloud.carepaylibray.demographics.fragments.review;
 
 import android.content.Intent;
@@ -37,6 +38,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,13 +57,12 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private Button updateInformationUpdate;
 
     private TextView firstnameTextView;
+    private TextView middlenameTextView;
     private TextView lastNameTextView;
-    private TextView emailTextView;
     private TextView dobTExtView;
     private TextView phoneNumberTextView;
     private TextView genderTextView;
     private TextView driverLicenseTextView;
-    private TextView prefferedLanguageTextView;
     private TextView raceTextView;
     private TextView ethnicityTextView;
     private TextView companyTextView;
@@ -151,25 +152,25 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                         if (demographics != null) {
                             metadamodel = demographics.getMetadata();
                             payloadinfomodel = demographics.getPayload();
-                            if (metadamodel != null) {
-                                emailTextView.setText(metadamodel.getUsername());
-                            } else {
-                                Log.v(LOG_TAG, "demographic insurance model is null");
-                            }
-
                             if (payloadinfomodel.getPersonalDetails() != null) {
                                 demographicPersDetailsPayloadDTO = payloadinfomodel.getPersonalDetails();
 
                                 if (demographicPersDetailsPayloadDTO != null) {
                                     firstnameTextView.setText(demographicPersDetailsPayloadDTO.getFirstName());
                                     lastNameTextView.setText(demographicPersDetailsPayloadDTO.getLastName());
+
+                                    String middleName=demographicPersDetailsPayloadDTO.getMiddleName();
+                                    if(middleName != null) {
+                                        middlenameTextView.setText(middleName);
+                                    } else {
+                                        Log.v(LOG_TAG, "middle name field is empty");
+                                    }
                                     String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
                                     if (datetime != null) {
                                         String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy();
                                         dobTExtView.setText(dateOfBirthString);
                                     }
                                     genderTextView.setText(demographicPersDetailsPayloadDTO.getGender());
-                                    prefferedLanguageTextView.setText(demographicPersDetailsPayloadDTO.getPreferredLanguage());
                                     raceTextView.setText(demographicPersDetailsPayloadDTO.getPrimaryRace());
                                     ethnicityTextView.setText(demographicPersDetailsPayloadDTO.getEthnicity());
                                 }
@@ -245,12 +246,11 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         firstnameTextView = (TextView) view.findViewById(R.id.reviewFirstNameTextView);
 
         //  Personal Deatails Model View
+        middlenameTextView=(TextView)view.findViewById(R.id.reviewMiddelNameTextView);
         lastNameTextView = (TextView) view.findViewById(R.id.reviewLastNameTextView);
-        emailTextView = (TextView) view.findViewById(R.id.reviewEmailTextView);
         dobTExtView = (TextView) view.findViewById(R.id.reviewDOBTextView);
         phoneNumberTextView = (TextView) view.findViewById(R.id.reviewPhoneNumberTextView);
         genderTextView = (TextView) view.findViewById(R.id.reviewGenderTextView);
-        prefferedLanguageTextView = (TextView) view.findViewById(R.id.reviewPreferedLangugaeTextView);
         driverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
 
         //  Address Model View
@@ -286,7 +286,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             ((DemographicReviewActivity) getActivity())
                     .setInsurances(insurances);
             ((DemographicReviewActivity) getActivity())
-                    .setDemPayloadIdDocPojo(
+                    .setDemographicPayloadIdDocDTO(
                             demPayloadIdDocPojo);
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -302,122 +302,103 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            getActivity().onBackPressed();
+
+         getActivity().onBackPressed();
             return true;
         }
         return false;
     }
 
+    public void onBackPressed() {
+        Intent intent = new Intent(getContext(), AppointmentsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        getActivity().finish();
+
+    }
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.reviewtitle));
+                (TextView) view.findViewById(R.id.reviewtitle));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewSubtitle));
+                (TextView) view.findViewById(R.id.reviewSubtitle));
 
         setProximaNovaSemiboldTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.demographicSubTitle));
+                (TextView) view.findViewById(R.id.demographicSubTitle));
         setProximaNovaSemiboldTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.healthInsuranceSubTitle));
+                (TextView) view.findViewById(R.id.healthInsuranceSubTitle));
         setProximaNovaSemiboldTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.reviewpersonalInformationLabel));
+                (TextView) view.findViewById(R.id.reviewpersonalInformationLabel));
         setProximaNovaSemiboldTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.reviewAddress));
+                (TextView) view.findViewById(R.id.reviewAddress));
+        setProximaNovaSemiboldTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.reviewRaceTextView));
+        setProximaNovaSemiboldTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.reviewEthnicityTextView));
+        setProximaNovaSemiboldTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.reviewGenderTextView));
 
 
         //PN - extra Bold
-
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewRaceLabel));
+                (TextView) view.findViewById(R.id.reviewCompanyLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewEthnicityLabel));
+                (TextView) view.findViewById(R.id.reviewPlanLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewCompanyLabel));
+                (TextView) view.findViewById(R.id.reviewFirstNameLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewPlanLabel));
+                (TextView) view.findViewById(R.id.reviewMiddleNameLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewFirstNameLabel));
+                (TextView) view.findViewById(R.id.reviewLastNameLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewMiddleNameLabel));
+                (TextView) view.findViewById(R.id.reviewDOBLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewLastNameLabel));
+                (TextView) view.findViewById(R.id.reviewPhoneNumberLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewEmailLabel));
+                (TextView) view.findViewById(R.id.reviewDriverLicenseLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewDOBLabel));
+                (TextView) view.findViewById(R.id.reviewAddress1label));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewPhoneNumberLabel));
+                (TextView) view.findViewById(R.id.reviewAddress2label));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewGenderLabel));
+                (TextView) view.findViewById(R.id.reviewCityLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewPreferedLanguageLabel));
+                (TextView) view.findViewById(R.id.reviewStateLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewDriverLicenseLabel));
+                (TextView) view.findViewById(R.id.reviewZipcodeLabel));
         setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewAddress1label));
-        setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewAddress2label));
-        setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewCityLabel));
-        setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewStateLabel));
-        setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewZipcodeLabel));
-        setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewCountryLabel));
-        setProximaNovaExtraboldTypeface(getActivity(),
-                                        (TextView) view.findViewById(R.id.reviewInsuranceCardNoLabel));
+                (TextView) view.findViewById(R.id.reviewInsuranceCardNoLabel));
 
 
         //PN-Regular
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewRaceTextView));
+                (TextView) view.findViewById(R.id.reviewRaceLabel));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewEthnicityTextView));
+                (TextView) view.findViewById(R.id.reviewEthnicityLabel));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewCompanyTextView));
+                (TextView) view.findViewById(R.id.reviewCompanyTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewPlanTextView));
+                (TextView) view.findViewById(R.id.reviewPlanTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView));
+                (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewFirstNameTextView));
+                (TextView) view.findViewById(R.id.reviewFirstNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewLastNameTextView));
+                (TextView) view.findViewById(R.id.reviewLastNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewMiddelNameTextView));
+                (TextView) view.findViewById(R.id.reviewMiddelNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewEmailTextView));
+                (TextView) view.findViewById(R.id.reviewDOBTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewDOBTextView));
+                (TextView) view.findViewById(R.id.reviewPhoneNumberTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewPhoneNumberTextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewGenderTextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewPreferedLangugaeTextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewDriverLicenseTextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewAddress1TextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewAddress2TextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewCityTextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewStateTextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewZipcodeTextView));
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewCountryTextView));
+                (TextView) view.findViewById(R.id.reviewGenderLabel));
 
-
-        //GNRM
-        setGothamRoundedMediumTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.YesCorrectButton));
-        setGothamRoundedMediumTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.needUpdateButton));
-
+        setProximaNovaRegularTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.reviewDriverLicenseTextView));
+        setProximaNovaRegularTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.reviewAddress1TextView));
+        setProximaNovaRegularTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.reviewAddress2TextView));
     }
-
 }
