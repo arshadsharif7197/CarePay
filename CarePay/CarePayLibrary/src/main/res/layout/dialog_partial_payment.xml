@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_apt"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/dialogCloseImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/apt_imgview_ht"
+        android:layout_gravity="left"
+        android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+        android:gravity="left"
+        android:text="@string/close"
+        android:src="@drawable/icn_patient_mode_nav_close"
+        android:textColor="@color/white" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/apt_dl_margin"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/payment_header_height"
+            android:layout_gravity="center"
+            android:background="@color/blue_cerulian"
+            android:gravity="center"
+            android:orientation="vertical">
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                android:id="@+id/partialPaymentPayingToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/glitter"
+                android:text="How much will you be paying today?" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                android:id="@+id/amountSymbolTextView"
+                android:layout_width="wrap_content"
+                android:textSize="@dimen/payment_header_amount_size"
+                android:background="@android:color/transparent"
+                android:textColor="@color/white_transparent"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:hint="108.00"
+                android:textSize="@dimen/payment_header_amount_size"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white_transparent"
+                android:inputType="numberDecimal"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:id="@+id/enterPartialAmountEditText" />
+        </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/payment_side_margin"
+            android:layout_marginRight="@dimen/payment_side_margin"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                android:id="@+id/partialPaymentTotalAmountTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/payne_gray"
+                android:layout_marginTop="@dimen/payment_header_top_margin" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/payment_header_top_margin"
+                android:layout_height="@dimen/apt_dl_boader_ht"
+                android:background="@color/light_gray_dialog" />
+            <Button
+                android:id="@+id/payPartialButton"
+                style="@style/SigninSignupButtonStyle"
+                android:layout_marginTop="@dimen/payment_button_margin_top"
+                android:text="PAY PARTIAL AMOUNT"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

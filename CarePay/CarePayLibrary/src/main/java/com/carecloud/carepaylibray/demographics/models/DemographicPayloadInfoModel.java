@@ -4,22 +4,23 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
+ * Model for payload info.
  */
 public class DemographicPayloadInfoModel {
 
     @SerializedName("metadata")
     @Expose
-    private DemographicPayloadInfoMetaDataModel metadata;
+    private DemographicPayloadInfoMetaDataDTO metadata;
     @SerializedName("payload")
     @Expose
-    private DemPayloadDto                       payload;
+    private DemographicPayloadDTO             payload;
 
     /**
      *
      * @return
      * The metadata
      */
-    public DemographicPayloadInfoMetaDataModel getMetadata() {
+    public DemographicPayloadInfoMetaDataDTO getMetadata() {
         return metadata;
     }
 
@@ -28,7 +29,7 @@ public class DemographicPayloadInfoModel {
      * @param metadata
      * The metadata
      */
-    public void setMetadata(DemographicPayloadInfoMetaDataModel metadata) {
+    public void setMetadata(DemographicPayloadInfoMetaDataDTO metadata) {
         this.metadata = metadata;
     }
 
@@ -37,7 +38,7 @@ public class DemographicPayloadInfoModel {
      * @return
      * The payload
      */
-    public DemPayloadDto getPayload() {
+    public DemographicPayloadDTO getPayload() {
         return payload;
     }
 
@@ -46,7 +47,7 @@ public class DemographicPayloadInfoModel {
      * @param payload
      * The payload
      */
-    public void setPayload(DemPayloadDto payload) {
+    public void setPayload(DemographicPayloadDTO payload) {
         this.payload = payload;
     }
 }

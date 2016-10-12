@@ -63,4 +63,7 @@
 
     <color name="optionl_gray">#90a4ae</color>
     <color name="pastel_blue">#b0bec5</color>
+
+    <color name="white_transparent">#26ffffff</color>
+    <color name="manatee">#9ba4a9</color>
 </resources>

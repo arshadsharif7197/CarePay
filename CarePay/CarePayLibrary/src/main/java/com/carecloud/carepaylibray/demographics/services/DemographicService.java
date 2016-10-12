@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.demographics.services;
 
-import com.carecloud.carepaylibray.demographics.models.DemPayloadDto;
-import com.carecloud.carepaylibray.demographics.models.DemographicModel;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -14,17 +14,17 @@ import retrofit2.http.POST;
  */
 public interface DemographicService {
     @GET(value = "dev/workflow/carepay/patient_checkin/demographics/information")
-    Call<DemographicModel> fetchDemographicInformation( );
+    Call<DemographicDTO> fetchDemographicInformation( );
 
     @GET(value = "dev/workflow/carepay/patient_checkin/demographics")
-    Call<DemographicModel> fetchDemographics( );
+    Call<DemographicDTO> fetchDemographics( );
 
 
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
     Call<ResponseBody> confirmDemographicInformation(
-            @Body DemPayloadDto demographicModel);
+            @Body DemographicPayloadDTO demographicModel);
 
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics")
     Call<ResponseBody> updateDemographicInformation(
-            @Body DemPayloadDto demographicModel);
+            @Body DemographicPayloadDTO demographicModel);
 }
