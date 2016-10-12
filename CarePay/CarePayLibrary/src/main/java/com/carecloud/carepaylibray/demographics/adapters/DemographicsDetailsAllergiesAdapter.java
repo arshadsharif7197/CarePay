@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographics.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 
 import java.util.List;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 /**
  * Created by lsoco_user on 10/11/2016.
@@ -24,6 +27,8 @@ public class DemographicsDetailsAllergiesAdapter
                                                                           "Reaction");
     private List<AllergyPayloadDTO> items;
 
+
+
     public DemographicsDetailsAllergiesAdapter(List<AllergyPayloadDTO> items) {
         this.items = items;
     }
@@ -37,22 +42,36 @@ public class DemographicsDetailsAllergiesAdapter
 
     @Override
     public void onBindViewHolder(AllergyViewHolder holder, int position) {
-        AllergyPayloadDTO data = items.get(position);
         // populate the view (with both metadata and data)
         holder.categoryLabel.setText(metadataDTO.categoryLabel);
         holder.allergyLabel.setText(metadataDTO.allergyLabel);
-        holder.severityTextView.setText(metadataDTO.reactionLabel);
+        holder.severityLabel.setText(metadataDTO.severityLabel);
         holder.reactionLabel.setText(metadataDTO.reactionLabel);
 
+        AllergyPayloadDTO data = items.get(position);
         holder.categoryTextView.setText(data.category);
         holder.allergyTextView.setText(data.allergy);
         holder.severityTextView.setText(data.severity);
-        holder.reactionLabel.setText(data.reaction);
+        holder.reactionTextView.setText(data.reaction);
+
+        holder.setClickListener(new OnAllergyItemClickListener(position));
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    private void removeAt(int position) {
+        items.remove(position);
+        notifyDataSetChanged();
+        notifyItemRemoved(position);
+    }
+
+    public void addAtFront(AllergyPayloadDTO newItem) {
+        items.add(0, newItem);
+        notifyDataSetChanged();
+        notifyItemInserted(0);
     }
 
     /**
@@ -69,6 +88,8 @@ public class DemographicsDetailsAllergiesAdapter
         TextView allergyTextView;
         TextView severityTextView;
         TextView reactionTextView;
+        TextView removeTextView;
+        OnAllergyItemClickListener clickListener;
 
         AllergyViewHolder(View itemView) {
             super(itemView);
@@ -83,6 +104,13 @@ public class DemographicsDetailsAllergiesAdapter
             allergyTextView = (TextView) allergyView.findViewById(R.id.viewAllergyTextView);
             severityTextView = (TextView) allergyView.findViewById(R.id.viewAllergySeverityTextView);
             reactionTextView = (TextView) allergyView.findViewById(R.id.viewAllergyReactionTextView);
+
+            removeTextView = (TextView) allergyView.findViewById(R.id.viewAllergyRemove);
+        }
+
+        void setClickListener(OnAllergyItemClickListener clickListener) {
+            this.clickListener = clickListener;
+            removeTextView.setOnClickListener(clickListener);
         }
     }
 
@@ -92,7 +120,7 @@ public class DemographicsDetailsAllergiesAdapter
     public static class AllergyPayloadDTO {
 
         String category;
-        public String allergy;
+        String allergy;
         String severity;
         String reaction;
 
@@ -112,19 +140,35 @@ public class DemographicsDetailsAllergiesAdapter
      */
     private static class AllergyMetadataDTO {
 
-        public String categoryLabel;
-        public String allergyLabel;
-        public String severityLabel;
-        public String reactionLabel;
+        String categoryLabel;
+        String allergyLabel;
+        String severityLabel;
+        String reactionLabel;
 
-        public AllergyMetadataDTO(String categoryLabel,
-                                  String allergyLabel,
-                                  String severityLabel,
-                                  String reactionLabel) {
+        AllergyMetadataDTO(String categoryLabel,
+                           String allergyLabel,
+                           String severityLabel,
+                           String reactionLabel) {
             this.categoryLabel = categoryLabel;
             this.allergyLabel = allergyLabel;
             this.severityLabel = severityLabel;
             this.reactionLabel = reactionLabel;
+        }
+    }
+
+    /**
+     * Custom OnClickListener that accept the item position as parameter.
+     */
+    private class OnAllergyItemClickListener implements View.OnClickListener {
+        private int position;
+
+        OnAllergyItemClickListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View view) {
+            removeAt(position);
         }
     }
 }

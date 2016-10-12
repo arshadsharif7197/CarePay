@@ -46,12 +46,11 @@ public class DemographicsDetailsFragment extends Fragment
     private View                             view;
     private String[]                         raceArray;
     private String[]                         ethnicityArray;
-    private String[]                         preferredLanguageArray;
     private int                              selectedArray;
     private TextView                         raceTextView;
     private TextView                         ethnicityTextView;
+    private TextView                         addAnotherAllergyTextView;
     private Button                           nextButton;
-    private RecyclerView                     allergiesRecyclerView;
     private DemographicPersDetailsPayloadDTO model;
 
     @Nullable
@@ -64,10 +63,9 @@ public class DemographicsDetailsFragment extends Fragment
 
         raceArray = getResources().getStringArray(R.array.Race);
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
-        preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
         // set up the allergies recycler view
-        allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsAllergiesRecView);
+        final RecyclerView allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsAllergiesRecView);
         allergiesRecyclerView.setHasFixedSize(true);
         allergiesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -75,6 +73,18 @@ public class DemographicsDetailsFragment extends Fragment
         List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> allergies = getAllergies();
         allergiesRecyclerView.setAdapter(new DemographicsDetailsAllergiesAdapter(allergies));
 
+        // add click listener for 'Add Another' (allergy)
+        addAnotherAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAllergyClickable);
+        addAnotherAllergyTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((DemographicsDetailsAllergiesAdapter)allergiesRecyclerView.getAdapter()) // for now add the same dummy allergy
+                        .addAtFront(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category C",
+                                                                                              "Allergy 8",
+                                                                                              "Severe",
+                                                                                              "Reaction #22"));
+            }
+        });
         return view;
     }
 
@@ -182,8 +192,8 @@ public class DemographicsDetailsFragment extends Fragment
                 dialogInterface.dismiss();
             }
         });
-        View customView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.alert_list_layout, null, false);
+        View customView = LayoutInflater
+                .from(getActivity()).inflate(R.layout.alert_list_layout, null, false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(raceArray));
         listView.setAdapter(mAdapter);
