@@ -4,17 +4,20 @@ package com.carecloud.carepaylibray.payment.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsDeleteCreditCardsModel {
+public class PaymentsCheckinAppointmentDTO {
 
     @SerializedName("method")
     @Expose
     private String method;
+    @SerializedName("name")
+    @Expose
+    private String name;
     @SerializedName("url")
     @Expose
     private String url;
     @SerializedName("query_string")
     @Expose
-    private PaymentCreditCardQueryStringDto queryString;
+    private PaymentsPracticeQueryDTO queryString;
 
     /**
      * 
@@ -32,6 +35,24 @@ public class PaymentsDeleteCreditCardsModel {
      */
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    /**
+     * 
+     * @return
+     *     The name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 
+     * @param name
+     *     The name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -57,7 +78,7 @@ public class PaymentsDeleteCreditCardsModel {
      * @return
      *     The queryString
      */
-    public PaymentCreditCardQueryStringDto getQueryString() {
+    public PaymentsPracticeQueryDTO getQueryString() {
         return queryString;
     }
 
@@ -66,7 +87,7 @@ public class PaymentsDeleteCreditCardsModel {
      * @param queryString
      *     The query_string
      */
-    public void setQueryString(PaymentCreditCardQueryStringDto queryString) {
+    public void setQueryString(PaymentsPracticeQueryDTO queryString) {
         this.queryString = queryString;
     }
 

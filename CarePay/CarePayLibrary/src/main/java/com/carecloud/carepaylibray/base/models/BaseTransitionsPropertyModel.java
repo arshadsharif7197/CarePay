@@ -9,6 +9,9 @@ import java.util.List;
  * Created by Jahirul Bhuiyan on 9/20/2016.
  */
 public class BaseTransitionsPropertyModel {
+    @SerializedName("name")
+    @Expose
+    private String name;
     @SerializedName("type")
     @Expose
     private String type;
@@ -18,6 +21,24 @@ public class BaseTransitionsPropertyModel {
     @SerializedName("validations")
     @Expose
     private List<BaseFieldValidationModel> validations = new ArrayList<BaseFieldValidationModel>();
+
+    /**
+     *
+     * @return
+     * The name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     *
+     * @param name
+     * The name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      *

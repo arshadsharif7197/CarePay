@@ -4,11 +4,11 @@ package com.carecloud.carepaylibray.payment.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsModel {
+public class PaymentsDTO {
 
-    @SerializedName("paymentsMetadataModel")
+    @SerializedName("paymentsMetadata")
     @Expose
-    private PaymentsMetadataModel paymentsMetadataModel;
+    private PaymentsMetadataDTO paymentsMetadata;
     @SerializedName("state")
     @Expose
     private String state;
@@ -16,19 +16,19 @@ public class PaymentsModel {
     /**
      * 
      * @return
-     *     The paymentsMetadataModel
+     *     The paymentsMetadataDTO
      */
-    public PaymentsMetadataModel getPaymentsMetadataModel() {
-        return paymentsMetadataModel;
+    public PaymentsMetadataDTO getPaymentsMetadata() {
+        return paymentsMetadata;
     }
 
     /**
      * 
-     * @param paymentsMetadataModel
-     *     The paymentsMetadataModel
+     * @param paymentsMetadata
+     *     The paymentsMetadata
      */
-    public void setPaymentsMetadataModel(PaymentsMetadataModel paymentsMetadataModel) {
-        this.paymentsMetadataModel = paymentsMetadataModel;
+    public void setPaymentsMetadata(PaymentsMetadataDTO paymentsMetadata) {
+        this.paymentsMetadata = paymentsMetadata;
     }
 
     /**

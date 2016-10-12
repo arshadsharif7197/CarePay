@@ -8,7 +8,7 @@ import com.carecloud.carepaylibray.base.models.BaseFieldValidationModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsCreditCardIdModel {
+public class PaymentsPracticeDTO {
 
     @SerializedName("name")
     @Expose

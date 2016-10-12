@@ -4,7 +4,7 @@ package com.carecloud.carepaylibray.payment.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsPlansModel {
+public class PaymentsMethodsDTO {
 
     @SerializedName("method")
     @Expose

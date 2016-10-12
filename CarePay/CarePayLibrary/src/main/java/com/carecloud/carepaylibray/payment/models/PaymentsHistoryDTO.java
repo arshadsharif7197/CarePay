@@ -4,7 +4,7 @@ package com.carecloud.carepaylibray.payment.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsMethodsModel {
+public class PaymentsHistoryDTO {
 
     @SerializedName("method")
     @Expose
@@ -12,6 +12,9 @@ public class PaymentsMethodsModel {
     @SerializedName("url")
     @Expose
     private String url;
+    @SerializedName("query_string")
+    @Expose
+    private PaymentsQueryDTO paymentsQuery;
 
     /**
      * 
@@ -47,6 +50,24 @@ public class PaymentsMethodsModel {
      */
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    /**
+     * 
+     * @return
+     *     The paymentsQuery
+     */
+    public PaymentsQueryDTO getPaymentsQuery() {
+        return paymentsQuery;
+    }
+
+    /**
+     * 
+     * @param paymentsQuery
+     *     The query_string
+     */
+    public void setPaymentsQuery(PaymentsQueryDTO paymentsQuery) {
+        this.paymentsQuery = paymentsQuery;
     }
 
 }

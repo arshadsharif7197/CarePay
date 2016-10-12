@@ -8,7 +8,7 @@ import com.carecloud.carepaylibray.base.models.BaseFieldValidationModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsEndDateModel {
+public class PaymentsStartDateDTO {
 
     @SerializedName("name")
     @Expose
@@ -21,7 +21,7 @@ public class PaymentsEndDateModel {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<BaseFieldValidationModel> validations = new ArrayList<BaseFieldValidationModel>();
+    private List<BaseFieldValidationModel> paymentValidations = new ArrayList<BaseFieldValidationModel>();
 
     /**
      * 
@@ -80,19 +80,19 @@ public class PaymentsEndDateModel {
     /**
      * 
      * @return
-     *     The validations
+     *     The paymentValidations
      */
-    public List<BaseFieldValidationModel> getValidations() {
-        return validations;
+    public List<BaseFieldValidationModel> getPaymentValidations() {
+        return paymentValidations;
     }
 
     /**
      * 
-     * @param validations
-     *     The validations
+     * @param paymentValidations
+     *     The paymentValidations
      */
-    public void setValidations(List<BaseFieldValidationModel> validations) {
-        this.validations = validations;
+    public void setPaymentValidations(List<BaseFieldValidationModel> paymentValidations) {
+        this.paymentValidations = paymentValidations;
     }
 
 }

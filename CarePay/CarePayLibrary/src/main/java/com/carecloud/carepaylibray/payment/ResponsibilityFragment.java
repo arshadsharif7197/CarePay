@@ -25,9 +25,8 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payment.models.PaymentsModel;
+import com.carecloud.carepaylibray.payment.models.PaymentsDTO;
 import com.carecloud.carepaylibray.payment.services.PaymentsService;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.JsonObject;
 
 import java.text.DecimalFormat;
@@ -144,15 +143,15 @@ public class ResponsibilityFragment extends Fragment {
     private void getPaymentInformation() {
         PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
                 .createService(PaymentsService.class);
-        Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
-        call.enqueue(new Callback<PaymentsModel>() {
+        Call<PaymentsDTO> call = paymentService.fetchPaymentInformation();
+        call.enqueue(new Callback<PaymentsDTO>() {
             @Override
-            public void onResponse(Call<PaymentsModel> call, Response<PaymentsModel> response) {
-                PaymentsModel paymentsModel = response.body();
+            public void onResponse(Call<PaymentsDTO> call, Response<PaymentsDTO> response) {
+                PaymentsDTO paymentsDTO = response.body();
             }
 
             @Override
-            public void onFailure(Call<PaymentsModel> call, Throwable t) {
+            public void onFailure(Call<PaymentsDTO> call, Throwable t) {
             }
         });
     }
@@ -164,7 +163,7 @@ public class ResponsibilityFragment extends Fragment {
         appointmentModel.getDoctorName();
         appointmentModel.getAppointmentType();
         appointmentsItems.add(appointmentModel);*/
-//TODO need to chages the actual model
+        //TODO need to chages the actual model
         String body= "{\"appointment_id\": \""+ AppointmentsActivity.model.getAppointmentId() +"\"}";
 
         AppointmentService aptService = (new BaseServiceGenerator(getActivity()).createService(AppointmentService.class));

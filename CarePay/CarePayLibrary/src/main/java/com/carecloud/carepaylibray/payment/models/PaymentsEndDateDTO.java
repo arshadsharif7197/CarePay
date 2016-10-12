@@ -8,7 +8,7 @@ import com.carecloud.carepaylibray.base.models.BaseFieldValidationModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsPracticeModel {
+public class PaymentsEndDateDTO {
 
     @SerializedName("name")
     @Expose
