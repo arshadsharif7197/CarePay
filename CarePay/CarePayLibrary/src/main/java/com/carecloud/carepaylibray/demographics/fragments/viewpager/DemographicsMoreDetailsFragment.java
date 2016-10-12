@@ -55,7 +55,6 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DemographicModel model = ((DemographicsActivity)getActivity()).getModel();
 //                confirmDemographicInformation(); // post the updates
                 Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
                 startActivity(appointmentIntent);
