@@ -71,8 +71,8 @@ public class StringUtil {
     }
 
     /**format phone number
-     * @param phoneNumber
-     * @return
+     * @param phoneNumber phonenumber as a string
+     * @return formated string
      */
     public static String formatPhoneNumber(String phoneNumber)
     {
@@ -96,8 +96,8 @@ public class StringUtil {
     }
 
     /** format zipcode
-     * @param zipcode zipcode
-     * @return
+     * @param zipcode zipcode as a string
+     * @return formated string
      */
     public static String formatZipCode(String zipcode)
     {
