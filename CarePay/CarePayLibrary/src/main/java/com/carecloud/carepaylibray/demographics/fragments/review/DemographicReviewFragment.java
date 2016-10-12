@@ -385,71 +385,69 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
     private void setEditTexts(View view) {
-        TextInputLayout firstNameLabel;
-        TextInputLayout middleNameLabel;
-        TextInputLayout lastNameLabel;
-        TextInputLayout emailLabel;
-        TextInputLayout doblabel;
-        TextInputLayout phoneNumberLabel;
-        TextInputLayout driverLicenseLabel;
-        TextInputLayout address1Label;
-        TextInputLayout address2Label;
-        TextInputLayout zipcodeLabel;
-        TextInputLayout cityLabel;
-        TextInputLayout stateLabel;
 
+
+        TextInputLayout firstNameLabel;
         firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
         firstNameLabel.setTag(getString(R.string.demofirstNameLabel));
         firstNameText.setTag(firstNameLabel);
         firstNameText.clearFocus();
 
+        TextInputLayout middleNameLabel;
         middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
         middleNameLabel.setTag(getString(R.string.demomiddleNameLabel));
         middleNameText.setTag(middleNameLabel);
         middleNameText.clearFocus();
 
-
+        TextInputLayout lastNameLabel;
         lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
         lastNameLabel.setTag(getString(R.string.demolastNameLabel));
         lastNameText.setTag(lastNameLabel);
         lastNameText.clearFocus();
 
+        TextInputLayout doblabel;
         doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         doblabel.setTag(getString(R.string.demoDobLabel));
         dobEditText.setTag(doblabel);
         dobEditText.clearFocus();
 
+        TextInputLayout phoneNumberLabel;
         phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         phoneNumberLabel.setTag(getString(R.string.demoPhoneNumberLabel));
         phoneNumberEditText.setTag(phoneNumberLabel);
         phoneNumberEditText.clearFocus();
 
+        TextInputLayout driverLicenseLabel;
         driverLicenseLabel = (TextInputLayout) view.findViewById(R.id.reviewDriverLicenseLabel);
         driverLicenseLabel.setTag(getString(R.string.demodriverlicenseLabel));
         driverlicenseEditText.setTag(driverLicenseLabel);
         driverlicenseEditText.clearFocus();
 
+        TextInputLayout address1Label;
         address1Label = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address1Label.setTag(getString(R.string.demoAddress1Label));
         address1EditText.setTag(address1Label);
         address1EditText.clearFocus();
 
+        TextInputLayout address2Label;
         address2Label = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         address2Label.setTag(getString(R.string.demoAddress2Label));
         address2EditText.setTag(address2Label);
         address2EditText.clearFocus();
 
+        TextInputLayout zipcodeLabel;
         zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipcodeLabel.setTag(getString(R.string.demoZipcodeLabel));
         zipCodeEditText.setTag(zipcodeLabel);
         zipCodeEditText.clearFocus();
 
+        TextInputLayout cityLabel;
         cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         cityLabel.setTag(getString(R.string.demoCityLabel));
         cityEditText.setTag(cityLabel);
         cityEditText.clearFocus();
 
-
+        TextInputLayout stateLabel;
         stateLabel = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         stateLabel.setTag(getString(R.string.demoStateLabel));
         stateEditText.setTag(stateLabel);

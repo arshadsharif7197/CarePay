@@ -23,14 +23,14 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.consentforms.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -38,7 +38,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,15 +75,15 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     private ProgressBar demographicProgressBar;
 
-    private DemographicPayloadResponseDTO        demographicPayloadResponseDTO;
-    private DemographicPayloadInfoModel          demographics;
-    private DemographicPayloadInfoMetaDataDTO    metadamodel;
-    private DemographicPayloadDTO                payloadinfomodel;
-    private DemographicPersDetailsPayloadDTO     demographicPersDetailsPayloadDTO;
-    private DemographicAddressPayloadDTO         demographicAddressPayloadDTO;
-    private DemographicInsurancePayloadDTO       demographicInsurancePayloadDTO;
+    private DemographicPayloadResponseDTO demographicPayloadResponseDTO;
+    private DemographicPayloadInfoModel demographics;
+    private DemographicPayloadInfoMetaDataDTO metadamodel;
+    private DemographicPayloadDTO payloadinfomodel;
+    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
+    private DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
     private List<DemographicInsurancePayloadDTO> insurances;
-    private DemographicIdDocPayloadDTO           demPayloadIdDocPojo;
+    private DemographicIdDocPayloadDTO demPayloadIdDocPojo;
 
 
     public static ReviewFragment newInstance() {
@@ -159,8 +158,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     firstnameTextView.setText(demographicPersDetailsPayloadDTO.getFirstName());
                                     lastNameTextView.setText(demographicPersDetailsPayloadDTO.getLastName());
 
-                                    String middleName=demographicPersDetailsPayloadDTO.getMiddleName();
-                                    if(middleName != null) {
+                                    String middleName = demographicPersDetailsPayloadDTO.getMiddleName();
+                                    if (middleName != null) {
                                         middlenameTextView.setText(middleName);
                                     } else {
                                         Log.v(LOG_TAG, "middle name field is empty");
@@ -246,7 +245,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         firstnameTextView = (TextView) view.findViewById(R.id.reviewFirstNameTextView);
 
         //  Personal Deatails Model View
-        middlenameTextView=(TextView)view.findViewById(R.id.reviewMiddelNameTextView);
+        middlenameTextView = (TextView) view.findViewById(R.id.reviewMiddelNameTextView);
         lastNameTextView = (TextView) view.findViewById(R.id.reviewLastNameTextView);
         dobTExtView = (TextView) view.findViewById(R.id.reviewDOBTextView);
         phoneNumberTextView = (TextView) view.findViewById(R.id.reviewPhoneNumberTextView);
@@ -293,7 +292,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             Fragment fragment = DemographicReviewFragment.newInstance();
             transaction.replace(R.id.root_layout, fragment, ReviewFragment.class.getName());
             transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-                                            R.anim.enter_from_left, R.anim.exit_to_right);
+                    R.anim.enter_from_left, R.anim.exit_to_right);
             transaction.addToBackStack("ReviewFragment -> DemographicReviewFragment");
             transaction.commit();
         }
@@ -303,13 +302,14 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
 
-         getActivity().onBackPressed();
+            getActivity().onBackPressed();
             return true;
         }
         return false;
     }
 
-    /** On back Pressed going to previous activity
+    /**
+     * On back Pressed going to previous activity
      */
     public void onBackPressed() {
         Intent intent = new Intent(getContext(), AppointmentsActivity.class);
