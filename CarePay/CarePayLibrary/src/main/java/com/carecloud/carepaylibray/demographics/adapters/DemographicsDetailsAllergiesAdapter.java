@@ -24,7 +24,8 @@ public class DemographicsDetailsAllergiesAdapter
     private final AllergyMetadataDTO metadataDTO = new AllergyMetadataDTO("Category",
                                                                           "Allergy",
                                                                           "Severity",
-                                                                          "Reaction");
+                                                                          "Reaction",
+                                                                          "Remove");
     private List<AllergyPayloadDTO> items;
 
 
@@ -47,6 +48,7 @@ public class DemographicsDetailsAllergiesAdapter
         holder.allergyLabel.setText(metadataDTO.allergyLabel);
         holder.severityLabel.setText(metadataDTO.severityLabel);
         holder.reactionLabel.setText(metadataDTO.reactionLabel);
+        holder.removeTextView.setText(metadataDTO.removeLabel);
 
         AllergyPayloadDTO data = items.get(position);
         holder.categoryTextView.setText(data.category);
@@ -144,15 +146,18 @@ public class DemographicsDetailsAllergiesAdapter
         String allergyLabel;
         String severityLabel;
         String reactionLabel;
+        String removeLabel;
 
         AllergyMetadataDTO(String categoryLabel,
                            String allergyLabel,
                            String severityLabel,
-                           String reactionLabel) {
+                           String reactionLabel,
+                           String removeLabel) {
             this.categoryLabel = categoryLabel;
             this.allergyLabel = allergyLabel;
             this.severityLabel = severityLabel;
             this.reactionLabel = reactionLabel;
+            this.removeLabel = removeLabel;
         }
     }
 

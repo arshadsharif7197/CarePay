@@ -104,7 +104,6 @@
             style="@style/DemographicsDocsClickableTextStyle"
             android:layout_gravity="center"
             android:layout_marginEnd="0dp"
-            android:text="@string/remove"
             android:textColor="@color/harvard_crimson"/>
     </FrameLayout>
 
