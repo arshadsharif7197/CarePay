@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/demogr_details_container_top"
+              android:orientation="horizontal"
+              android:baselineAligned="false">
 
     <TableLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="3"
+        android:orientation="horizontal">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/view_allergy_margin_bottom">
+            android:layout_marginBottom="@dimen/view_allergy_margin_bottom"
+            android:orientation="horizontal">
 
             <TextView
-                android:text="Category"
                 android:id="@+id/viewAllergyCategoryLabel"
                 style="@style/DemographicsDetailsAllergyStyle"
                 android:layout_weight="1"/>
 
-            <View android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
-                  android:layout_height="match_parent"/>
+            <View
+                android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
+                android:layout_height="match_parent"/>
 
             <TextView
-                android:text="Allergy Category A"
-                style="@style/DemographicsDetailsAllergyStyle"
                 android:id="@+id/viewAllergyCategoryTextView"
+                style="@style/DemographicsDetailsAllergyStyle"
                 android:layout_weight="1"/>
         </TableRow>
 
@@ -38,18 +39,17 @@
             android:layout_marginBottom="@dimen/view_allergy_margin_bottom">
 
             <TextView
-                style="@style/DemographicsDetailsAllergyStyle"
-                android:text="Allergy"
                 android:id="@+id/viewAllergyLabel"
+                style="@style/DemographicsDetailsAllergyStyle"
                 android:layout_weight="1"/>
 
-            <View android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
-                  android:layout_height="match_parent"/>
+            <View
+                android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
+                android:layout_height="match_parent"/>
 
             <TextView
-                style="@style/DemographicsDetailsAllergyStyle"
-                android:text="Allergy A"
                 android:id="@+id/viewAllergyTextView"
+                style="@style/DemographicsDetailsAllergyStyle"
                 android:layout_weight="1"/>
         </TableRow>
 
@@ -59,18 +59,17 @@
             android:layout_marginBottom="@dimen/view_allergy_margin_bottom">
 
             <TextView
-                style="@style/DemographicsDetailsAllergyStyle"
-                android:text="Severity"
                 android:id="@+id/viewAllergySeverityLabel"
+                style="@style/DemographicsDetailsAllergyStyle"
                 android:layout_weight="1"/>
 
-            <View android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
-                  android:layout_height="match_parent"/>
+            <View
+                android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
+                android:layout_height="match_parent"/>
 
             <TextView
-                style="@style/DemographicsDetailsAllergyStyle"
-                android:text="Severe"
                 android:id="@+id/viewAllergySeverityTextView"
+                style="@style/DemographicsDetailsAllergyStyle"
                 android:layout_weight="1"/>
         </TableRow>
 
@@ -79,18 +78,17 @@
             android:layout_height="wrap_content">
 
             <TextView
-                style="@style/DemographicsDetailsAllergyStyle"
-                android:text="Reaction"
                 android:id="@+id/viewAllergyReactionLabel"
+                style="@style/DemographicsDetailsAllergyStyle"
                 android:layout_weight="1"/>
 
-            <View android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
-                  android:layout_height="match_parent"/>
+            <View
+                android:layout_width="@dimen/demographics_allergy_padding_between_label_and_text"
+                android:layout_height="match_parent"/>
 
             <TextView
-                style="@style/DemographicsDetailsAllergyStyle"
-                android:text="Reaction #01"
                 android:id="@+id/viewAllergyReactionTextView"
+                style="@style/DemographicsDetailsAllergyStyle"
                 android:layout_weight="1"/>
         </TableRow>
     </TableLayout>
@@ -98,14 +96,15 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_weight="1">
 
         <TextView
-            android:text="@string/remove"
-            style="@style/DemographicsDocsClickableTextStyle"
             android:id="@+id/viewAllergyRemove"
+            style="@style/DemographicsDocsClickableTextStyle"
             android:layout_gravity="center"
+            android:layout_marginEnd="0dp"
+            android:text="@string/remove"
             android:textColor="@color/harvard_crimson"/>
     </FrameLayout>
 

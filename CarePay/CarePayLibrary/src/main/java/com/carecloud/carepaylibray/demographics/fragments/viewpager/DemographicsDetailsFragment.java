@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +20,15 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsAllergiesAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -46,6 +51,7 @@ public class DemographicsDetailsFragment extends Fragment
     private TextView                         raceTextView;
     private TextView                         ethnicityTextView;
     private Button                           nextButton;
+    private RecyclerView                     allergiesRecyclerView;
     private DemographicPersDetailsPayloadDTO model;
 
     @Nullable
@@ -60,8 +66,29 @@ public class DemographicsDetailsFragment extends Fragment
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         preferredLanguageArray = getResources().getStringArray(R.array.Language);
 
+        // set up the allergies recycler view
+        allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsAllergiesRecView);
+        allergiesRecyclerView.setHasFixedSize(true);
+        allergiesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // for now generate dummy data
+        List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> allergies = getAllergies();
+        allergiesRecyclerView.setAdapter(new DemographicsDetailsAllergiesAdapter(allergies));
 
         return view;
+    }
+
+    private List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> getAllergies() {
+        List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> allergies = new ArrayList<>();
+        allergies.add(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category Alpha",
+                                                                                "Allergy A",
+                                                                                "Mild",
+                                                                                "Reaction #01"));
+        allergies.add(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category Alpha",
+                                                                                "Allergy B",
+                                                                                "Benign",
+                                                                                "Reaction #001"));
+        return allergies;
     }
 
     private void initialiseUIFields() {
@@ -144,7 +171,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void showAlertDialogWithListview(final String[] raceArray, String title) {
-        Log.e("raceArray==", raceArray.toString());
+        Log.e("raceArray==", Arrays.toString(raceArray));
         Log.e("raceArray 23==", Arrays.asList(raceArray).toString());
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
