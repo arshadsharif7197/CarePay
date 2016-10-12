@@ -44,4 +44,6 @@ public class ApplicationPreferences {
     public String readStringFromSharedPref(String key) {
         return sharedPreferences.getString(key, CarePayConstants.DEFAULT_STRING_PREFERENCES);
     }
+
+
 }

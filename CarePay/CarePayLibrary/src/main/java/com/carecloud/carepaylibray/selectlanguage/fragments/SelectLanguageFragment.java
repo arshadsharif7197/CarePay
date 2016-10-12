@@ -36,6 +36,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     List<LanguageOptionModel> languageOptionModelList;
     ImageButton languageConfirmButton;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                 getActivity().startActivity(intent);
             }
         });
+
         loadData();
         return view;
 
