@@ -24,9 +24,11 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -117,7 +119,11 @@ public class SigninFragment extends Fragment {
         changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                Log.v(LOG_TAG, "change lang");
+                // relaunch select language
+                Intent intent = new Intent(getActivity(), LibraryMainActivity.class);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
     }
