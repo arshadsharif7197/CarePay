@@ -148,7 +148,7 @@ public class SignupFragment extends Fragment {
         emailText = (EditText) view.findViewById(R.id.emailEditText);
         emailText.setTag(emailInputLayout);
 
-        hint = getString(R.string.password_text);
+        hint = getString(R.string.create_password_text);
         passwordInputLayout = (TextInputLayout) view.findViewById(R.id.createPasswordTextInputLayout);
         passwordInputLayout.setTag(hint);
         passwordText = (EditText) view.findViewById(R.id.createPasswordEditText);

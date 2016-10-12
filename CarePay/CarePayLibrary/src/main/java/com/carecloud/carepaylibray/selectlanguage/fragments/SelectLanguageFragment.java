@@ -38,17 +38,12 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.hide();
+        }
     }
 
-    /**
-     * Creating view for language fragment
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -112,11 +107,6 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         super.onSaveInstanceState(outState);
     }
 
-    /**
-     * @param view
-     * @param position  getting selected languauge position
-     * @param language
-     */
     @Override
     public void onItemClick(View view, int position, LanguageOptionModel language) {
         List<LanguageOptionModel> newLanguageList = new ArrayList<>();
