@@ -27,13 +27,13 @@ public class ApplicationPreferences {
         }
     }
 
-    public static void setUserLanguage(String language) {
+    public void setUserLanguage(String language) {
         editor.putString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, language);
         editor.apply();
     }
 
     public String getUserLanguage() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, CarePayConstants.DEFAULT_LANGUAGE);
+        return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, "");
     }
 
     public void writeStringToSharedPref(String key, String value) {
