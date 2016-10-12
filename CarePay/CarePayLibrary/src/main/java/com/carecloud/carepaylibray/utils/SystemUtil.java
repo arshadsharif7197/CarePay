@@ -145,10 +145,10 @@ public class SystemUtil {
 
         EditText editText = (EditText) view;
         TextInputLayout textInputLayout = (TextInputLayout) editText.getTag();
-        setProximaNovaExtraboldTypefaceInput(view.getContext(), textInputLayout);
         if (textInputLayout == null) {
             return;
         }
+        setProximaNovaExtraboldTypefaceInput(view.getContext(), textInputLayout);
         Typeface editTextTypeface = editText.getTypeface();
 
         boolean error = textInputLayout.isErrorEnabled();

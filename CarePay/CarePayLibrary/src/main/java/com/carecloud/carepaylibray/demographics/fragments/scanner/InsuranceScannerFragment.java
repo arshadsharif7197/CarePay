@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.models.DemInsurancePayloadPojo;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -30,12 +30,12 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private static final String[] plans     = {"Aetna Select", "Aetna Value Network HMO", "Elect Choice EPO", "HMO"};
     private static final String[] providers = {"Aetna", "BlueCross Blue Shield", "Cigna", "GHI", "HIP"};
 
-    private ImageCaptureHelper      mInsuranceScanHelper;
-    private Button                  btnScanInsurance;
-    private TextView                tvInsuranceNum;
-    private TextView                tvPlan;
-    private TextView                tvProvider;
-    private DemInsurancePayloadPojo model;
+    private ImageCaptureHelper             mInsuranceScanHelper;
+    private Button                         btnScanInsurance;
+    private TextView                       tvInsuranceNum;
+    private TextView                       tvPlan;
+    private TextView                       tvProvider;
+    private DemographicInsurancePayloadDTO model;
 
     @Nullable
     @Override
@@ -145,7 +145,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
     }
 
-    public void setModel(DemInsurancePayloadPojo model) {
+    public void setModel(DemographicInsurancePayloadDTO model) {
         this.model = model;
     }
 }
