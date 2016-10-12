@@ -21,13 +21,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.constants.CarePayConstants;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 public class SystemUtil {
 
     public static boolean isTablet(Context context) {
@@ -221,60 +214,5 @@ public class SystemUtil {
         Drawable res = drawable.mutate();
         res.setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
         return res;
-    }
-
-    public static Date parseStringToDate(String dateStr) {
-        // Get appointment date/time in required format
-        try {
-            SimpleDateFormat format = new SimpleDateFormat(
-                    CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
-            return format.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static String parseDateToString(Date date) {
-        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-                CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT, Locale.getDefault());
-        return mSimpleDateFormat.format(date);
-    }
-
-    public static Date parseStringToTime(String dateStr) {
-        // Get appointment date/time in required format
-        try {
-            SimpleDateFormat format = new SimpleDateFormat(
-                    CarePayConstants.TIME_FORMAT_AM_PM, Locale.getDefault());
-            return format.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static String parseTimeToString(Date date) {
-        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-                CarePayConstants.TIME_FORMAT_AM_PM, Locale.getDefault());
-        return mSimpleDateFormat.format(date);
-    }
-
-    public static String parseDateToString(String format, Date date) {
-        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(format, Locale.getDefault());
-        return mSimpleDateFormat.format(date);
-    }
-
-    public static Date parseDateToString(String format, String dateStr) {
-        // Get appointment date/time in required format
-        try {
-            SimpleDateFormat newFormat = new SimpleDateFormat(format, Locale.getDefault());
-            return newFormat.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }
