@@ -1,5 +1,4 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -28,16 +27,18 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttribu
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
-import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
-import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+
 import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -110,7 +111,7 @@ public class SignupFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 if (areAllValid()) {
+                if (areAllValid()) {
                     // request user registration ony if all fiels are valid
                     registerUser();
                 }
@@ -430,15 +431,30 @@ public class SignupFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == RESULT_OK) {
             // confirmed; (auto)sign-in
-            CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
-                                    new CognitoActionCallback() {
-                                        @Override
-                                        public void executeAction() {
-                                            getDemographicInformation();
-                                        }
-                                    });
+            CognitoAppHelper.signIn(userName, passwordText.getText().toString(),cognitoActionCallback);
         }
     }
+
+    CognitoActionCallback cognitoActionCallback= new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            getDemographicInformation();
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onBeforeLogin() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(getContext(),
+                    "Sign-in failed",
+                    "Invalid user id or password");
+
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -499,10 +515,10 @@ public class SignupFragment extends Fragment {
         String password = passwordText.getText().toString();
 
         CognitoAppHelper.getPool().signUpInBackground(userName,
-                                                      password,
-                                                      userAttributes,
-                                                      null,
-                                                      signUpHandler);
+                password,
+                userAttributes,
+                null,
+                signUpHandler);
     }
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
@@ -522,13 +538,7 @@ public class SignupFragment extends Fragment {
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
                 // auto-confirmed; sign-in
-                CognitoAppHelper.signIn(getActivity(), userName, passwordText.getText().toString(), progressBar,
-                                        new CognitoActionCallback() {
-                                            @Override
-                                            public void executeAction() {
-                                                getDemographicInformation();
-                                            }
-                                        });
+                CognitoAppHelper.signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed
@@ -542,8 +552,8 @@ public class SignupFragment extends Fragment {
             String errorMsg = CognitoAppHelper.formatException(exception);
 
             SystemUtil.showDialogMessage(getActivity(),
-                                         "Sign up failed!",
-                                         errorMsg);
+                    "Sign up failed!",
+                    errorMsg);
         }
     };
 }

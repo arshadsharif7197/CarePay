@@ -1,5 +1,4 @@
 package com.carecloud.carepaylibray.signinsignup.fragments;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,11 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
-import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
-import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -305,14 +304,31 @@ public class SigninFragment extends Fragment {
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        CognitoAppHelper.signIn(getActivity(), userName, password, progressBar, new CognitoActionCallback() {
-            @Override
-            public void executeAction() {
-                getDemographicInformation();
-            }
-        });
+        CognitoAppHelper.signIn(userName, password,cognitoActionCallback);
 
     }
+
+    CognitoActionCallback cognitoActionCallback= new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            getDemographicInformation();
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onBeforeLogin() {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(getContext(),
+                    "Sign-in failed",
+                    "Invalid user id or password");
+
+        }
+    };
     private void getDemographicInformation() {
         progressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
