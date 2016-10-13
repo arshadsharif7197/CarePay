@@ -18,15 +18,22 @@ public class PaymentActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         FragmentManager fm = getSupportFragmentManager();
-        ResponsibilityFragment fragment = (ResponsibilityFragment) fm.findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
+        ResponsibilityFragment fragment = (ResponsibilityFragment)
+                fm.findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
         if (fragment == null) {
             fragment = new ResponsibilityFragment();
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
+        bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
+                intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
         fragment.setArguments(bundle);
         fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
                 ResponsibilityFragment.class.getSimpleName()).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
