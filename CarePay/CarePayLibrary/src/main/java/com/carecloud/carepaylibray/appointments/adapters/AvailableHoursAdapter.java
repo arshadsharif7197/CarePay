@@ -9,9 +9,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.appointments.fragments.AvailableHoursFragment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -22,14 +21,19 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     // The items to display in your RecyclerView
     private List<Object> items;
     private Context context;
-    private AppointmentModel model;
-    private final int SECTION_HEADER = 0;
+    private AppointmentDTO appointmentDTO;
+    private final int sectionHeader = 0;
 
-    // Provide a suitable constructor (depends on the kind of data set)
-    public AvailableHoursAdapter(Context context, List<Object> items, AppointmentModel model) {
+    /**
+     * Constructor.
+     * @param context context
+     * @param items list of occurrence
+     * @param appointmentDTO selected appointment item
+     */
+    public AvailableHoursAdapter(Context context, List<Object> items, AppointmentDTO appointmentDTO) {
         this.context = context;
         this.items = items;
-        this.model = model;
+        this.appointmentDTO = appointmentDTO;
     }
 
     // Return the size of your data set (invoked by the layout manager)
@@ -40,10 +44,10 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof AppointmentAvailableHoursModel) {
+        if (items.get(position) instanceof AppointmentAvailableHoursDTO) {
             return 1;
         } else if (items.get(position) instanceof String) {
-            return SECTION_HEADER;
+            return sectionHeader;
         }
         return -1;
     }
@@ -53,7 +57,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
-        if (viewType == SECTION_HEADER) {
+        if (viewType == sectionHeader) {
             View availableHoursListHeaderRow = inflater.inflate(R.layout.apt_available_hours_list_header_row, viewGroup, false);
             viewHolder = new ViewHolderSectionHeader(availableHoursListHeaderRow);
         } else {
@@ -65,29 +69,28 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if (viewHolder.getItemViewType() == SECTION_HEADER) {
+        if (viewHolder.getItemViewType() == sectionHeader) {
             ViewHolderSectionHeader vhSectionHeader = (ViewHolderSectionHeader) viewHolder;
             vhSectionHeader.getTextView().setText(items.get(position).toString());
         } else {
             ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
-            vhTimeSlot.getTextView().setText(((AppointmentAvailableHoursModel) items.get(position)).getmTimeSlot());
+            vhTimeSlot.getTextView().setText(((AppointmentAvailableHoursDTO) items.get(position)).getAppointmentTimeSlot());
         }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                TextView selectedTimeSlot = (TextView) v.findViewById(R.id.textview_timeslot);
+            public void onClick(View view) {
+                TextView selectedTimeSlot = (TextView) view.findViewById(R.id.textview_timeslot);
 
                 if (selectedTimeSlot != null) {
-                    String selectedTimeStr = selectedTimeSlot.getText().toString();
-                    model.setAppointmentDate(AvailableHoursFragment.getAppointmentDate()
-                            + " " + selectedTimeStr.replace(" ", ":00 "));
-                    model.setAppointmentTime(selectedTimeStr);
+                    /**
+                     * Need Select time slot and pass to next screen.
+                     */
 
                     // Launch dialog of appointment request
                     AppointmentsActivity baseActivity = new AppointmentsActivity();
-                    baseActivity.setAppointmentModel(model);
-                    new RequestAppointmentDialog(context, model).show();
+                    baseActivity.setAppointmentModel(appointmentDTO);
+                    new RequestAppointmentDialog(context, appointmentDTO).show();
                 }
             }
         });
@@ -97,10 +100,10 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         private TextView textViewTimeSlot;
 
-        ViewHolderTimeSlot(View v) {
-            super(v);
-            textViewTimeSlot = (TextView) v.findViewById(R.id.textview_timeslot);
-            SystemUtil.setProximaNovaRegularTypeface(v.getContext(), textViewTimeSlot);
+        ViewHolderTimeSlot(View view) {
+            super(view);
+            textViewTimeSlot = (TextView) view.findViewById(R.id.textview_timeslot);
+            SystemUtil.setProximaNovaRegularTypeface(view.getContext(), textViewTimeSlot);
         }
 
         TextView getTextView() {
@@ -116,10 +119,10 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         private TextView textViewSectionHeader;
 
-        ViewHolderSectionHeader(View v) {
-            super(v);
-            textViewSectionHeader = (TextView) v.findViewById(R.id.textview_section_header);
-            SystemUtil.setProximaNovaSemiboldTypeface(v.getContext(), textViewSectionHeader);
+        ViewHolderSectionHeader(View view) {
+            super(view);
+            textViewSectionHeader = (TextView) view.findViewById(R.id.textview_section_header);
+            SystemUtil.setProximaNovaSemiboldTypeface(view.getContext(), textViewSectionHeader);
         }
 
         TextView getTextView() {

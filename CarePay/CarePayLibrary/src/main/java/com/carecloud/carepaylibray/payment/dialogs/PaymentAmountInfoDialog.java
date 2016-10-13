@@ -71,9 +71,9 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     }
 
     @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        int viewId = v.getId();
+    public void onClick(View view) {
+        super.onClick(view);
+        int viewId = view.getId();
         if (viewId == R.id.payNowButton) {
             onPayNow();
         }

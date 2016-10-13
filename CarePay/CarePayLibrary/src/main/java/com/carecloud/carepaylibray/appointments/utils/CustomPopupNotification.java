@@ -25,8 +25,8 @@ public class CustomPopupNotification extends PopupWindow {
     public static final int TYPE_TIMED_NOTIFICATION = 1;
     public static final int TYPE_ALERT_NOTIFICATION = 2;
     public static final int TYPE_ERROR_NOTIFICATION = 3;
-    private View mParentView;
-    private CustomPopupNotification mCustomPopupNotification;
+    private View parentView;
+    private CustomPopupNotification customPopupNotificationInstance;
 
     /**
      * @param context the context to inflate custom popup layout
@@ -44,8 +44,8 @@ public class CustomPopupNotification extends PopupWindow {
         super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.custom_popup_with_action, null),
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mCustomPopupNotification = this;
-        this.mParentView = parentView;
+        customPopupNotificationInstance = this;
+        this.parentView = parentView;
 
         View popupWindowLayout = this.getContentView();
         Button popupDismissButton = (Button) popupWindowLayout.findViewById(R.id.popup_dismiss_button);
@@ -74,8 +74,8 @@ public class CustomPopupNotification extends PopupWindow {
         super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.custom_popup, null),
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mCustomPopupNotification = this;
-        this.mParentView = parentView;
+        customPopupNotificationInstance = this;
+        this.parentView = parentView;
 
         setOutsideTouchable(true);
         View popupWindowLayout = this.getContentView();
@@ -110,8 +110,8 @@ public class CustomPopupNotification extends PopupWindow {
 
             @Override
             public void run() {
-                if (mCustomPopupNotification.isShowing()) {
-                    mCustomPopupNotification.dismiss();
+                if (customPopupNotificationInstance.isShowing()) {
+                    customPopupNotificationInstance.dismiss();
                 }
             }
 
@@ -119,6 +119,6 @@ public class CustomPopupNotification extends PopupWindow {
     }
 
     public void showPopWindow() {
-        showAtLocation(mParentView, Gravity.TOP, 0, 0);
+        showAtLocation(parentView, Gravity.TOP, 0, 0);
     }
 }

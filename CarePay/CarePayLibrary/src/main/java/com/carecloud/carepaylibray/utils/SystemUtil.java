@@ -16,7 +16,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,19 +25,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
-
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 public class SystemUtil {
 
+    private static final String LOG_TAG = SystemUtil.class.getSimpleName();
+
+    /**
+     * Check device is tablet or not
+     *
+     * @param context context
+     * @return true if tablet
+     */
     public static boolean isTablet(Context context) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         float widthInInches = metrics.widthPixels / metrics.xdpi;
@@ -200,6 +198,7 @@ public class SystemUtil {
                         try {
                             dialog.dismiss();
                         } catch (Exception e) {
+                            Log.e(LOG_TAG, e.getMessage());
                         }
                     }
                 });
@@ -210,6 +209,7 @@ public class SystemUtil {
     public static boolean isNotEmptyString(String string) {
         return string != null && !string.isEmpty() && !string.equals("null");
     }
+
     /** * Utility to convert a bitmap to base64
      * @param bitmap The bitmap
      * @return The encoding
@@ -229,28 +229,27 @@ public class SystemUtil {
         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
         return encoded;
     }
+    */
 
-    *//**
+    /**
      * Utility to dencode a bitmapinto a base64
+     *
      * @param image The encoding as bytes
      * @return The bitmap
      */
-
-    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
-    {
+    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality) {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
     }
 
-    public static Bitmap decodeBase64(String input)
-    {
+    public static Bitmap decodeBase64(String input) {
         byte[] decodedBytes = Base64.decode(input, 0);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
+
     /**
-     * Utility to convert dp to pixels
-     *
+     * Utility to convert dp to pixels.
      * @param context   The context
      * @param valueInDp The dps
      * @return The pxs
@@ -260,9 +259,15 @@ public class SystemUtil {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 
+    /**
+     * Converts drawable to gray scale
+     * @param drawable drawable
+     * @return drawable
+     */
     public static Drawable convertDrawableToGrayScale(Drawable drawable) {
-        if (drawable == null)
+        if (drawable == null) {
             return null;
+        }
 
         Drawable res = drawable.mutate();
         res.setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
