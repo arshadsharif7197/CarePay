@@ -237,7 +237,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         /**
          * Constructor of the class
          */
-        public DemographicPagerAdapter(FragmentManager fm) {
+        DemographicPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -341,6 +341,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         detailsModel.setPrimaryRace("Asian");
         detailsModel.setEthnicity("Hispanic");
         detailsModel.setPreferredLanguage("English");
+        detailsModel.setGender("Male");
+        detailsModel.setDateOfBirth("11/22/1977");
 
         idDocModel.setIdNumber("123DESS");
         idDocModel.setIdState("FL");

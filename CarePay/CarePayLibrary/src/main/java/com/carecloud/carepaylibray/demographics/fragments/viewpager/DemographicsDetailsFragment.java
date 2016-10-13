@@ -45,7 +45,9 @@ import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
@@ -266,11 +268,29 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void populateViewsFromModel() {
-        getModel();
-
         if (model != null) {
-            raceTextView.setText(model.getPrimaryRace());
-            ethnicityTextView.setText(model.getEthnicity());
+            String race = model.getPrimaryRace();
+            if(!StringUtil.isNullOrEmpty(race)) {
+                raceTextView.setText(race);
+            }
+            String ethnicity = model.getEthnicity();
+            if(!StringUtil.isNullOrEmpty(ethnicity)) {
+                ethnicityTextView.setText(ethnicity);
+            }
+
+            String gender = model.getGender();
+            if(!StringUtil.isNullOrEmpty(gender)) {
+                genderTextView.setText(gender);
+            }
+
+            String dob = model.getDateOfBirth();
+            if(!StringUtil.isNullOrEmpty(dob)) {
+                dobEdit.setText(dob);
+                dobEdit.requestFocus();
+            }
+            view.requestFocus();
+
+            // make a call to b/e
             String pictureByteStream = model.getProfilePhoto();
             setPictureFromByteStream(pictureByteStream);
         } else {
@@ -304,7 +324,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void nextbuttonClick() {
-        if (isDateOfBirthValid()) {
+        if (isDateOfBirthValid()) { // proceed only of valid date of birth
             // update the model with values from UI
             model.setPrimaryRace(raceTextView.getText().toString());
             model.setEthnicity(ethnicityTextView.getText().toString());
@@ -378,6 +398,12 @@ public class DemographicsDetailsFragment extends Fragment
 
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsGenderLabel));
         setProximaNovaSemiboldTypeface(context, genderTextView);
+
+        if (!StringUtil.isNullOrEmpty(dobEdit.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), dobInputText);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), dobInputText);
+        }
 
         setProximaNovaRegularTypeface(context, dobEdit);
         setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsDobHint));
