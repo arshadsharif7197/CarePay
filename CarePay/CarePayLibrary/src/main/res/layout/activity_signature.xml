@@ -28,6 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/descriptionTv"
             android:layout_marginLeft="@dimen/marginleftright"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
             android:layout_marginRight="@dimen/marginleftright"
             android:layout_marginTop="@dimen/margintop"
             android:text="I'm unable to sign"
@@ -39,24 +41,25 @@
             android:layout_width="match_parent"
             android:background="@color/cadet_gray"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="@dimen/marginleftright"
-            android:layout_marginRight="@dimen/marginleftright"/>
+            android:layout_marginLeft="21dp"
+            android:layout_marginRight="21dp"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/legalFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/switchButton"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="@dimen/consentform_textinput_margintop">
+            android:layout_marginTop="10dp"
+            style="@style/TextInputLayoutStyle">
         <EditText
             android:id="@+id/legalFirstNameET"
-            style="@style/Consent_Form_Edit_Text"
+            style="@style/SigninSignupEditStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint"
             android:layout_below="@+id/switchButton"
+            android:layout_marginStart="@dimen/marginleftright"
+            android:layout_marginEnd="@dimen/marginleftright"
             android:imeOptions="actionNext"
             android:visibility="gone"/>
         </android.support.design.widget.TextInputLayout>
@@ -66,14 +69,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/legalFirstName"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            style="@style/TextInputLayoutStyle"
             android:layout_marginTop="@dimen/consentform_textinput_margintop">
             <EditText
                 android:id="@+id/legalLastNameET"
-                style="@style/Consent_Form_Edit_Text"
+                style="@style/SigninSignupEditStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginleftright"
+                android:layout_marginEnd="@dimen/marginleftright"
                 android:hint="@string/hint_last"
                 android:layout_below="@+id/legalFirstName"
                 android:imeOptions="actionDone"
