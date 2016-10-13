@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.appointments.activities;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,18 +18,21 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+public class AppointmentsActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener {
 
-public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
 
+    public static AppointmentDTO model;
     private TextView appointmentsDrawerUserIdTextView;
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +50,18 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
 
         // get handler to navigation drawer's user id text view
-        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.appointmentsDrawerIdTextView);
+        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
+                .findViewById(R.id.appointmentsDrawerIdTextView);
         String userId = CognitoAppHelper.getCurrUser();
-        if(userId != null) {
+        if (userId != null) {
             appointmentsDrawerUserIdTextView.setText(userId);
         } else {
             appointmentsDrawerUserIdTextView.setText("");
         }
 
         Intent intent = getIntent();
-        AppointmentModel appointmentModel = (AppointmentModel) intent.getSerializableExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+        AppointmentDTO appointmentDTO = (AppointmentDTO) intent.getSerializableExtra(
+                CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
 
         FragmentManager fm = getSupportFragmentManager();
         AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment)
@@ -65,11 +69,12 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         if (appointmentsListFragment == null) {
             appointmentsListFragment = new AppointmentsListFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentModel);
+            bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentDTO);
             appointmentsListFragment.setArguments(bundle);
         }
+
         fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
-                                      AppointmentsListFragment.class.getSimpleName()).commit();
+                AppointmentsListFragment.class.getSimpleName()).commit();
     }
 
     @Override
@@ -112,20 +117,21 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         int id = item.getItemId();
 
         if (id == R.id.nav_appointments) {
-
+            Log.v(LOG_TAG, "Appointments");
         } else if (id == R.id.nav_payments) {
             Intent intent = new Intent(this, PaymentActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             AppointmentsActivity.model = null; // appointment clicked item is cleared.
         } else if (id == R.id.nav_settings) {
-            Intent demographicActivityIntent= new Intent(AppointmentsActivity.this, DemographicsActivity.class);
+            Intent demographicActivityIntent = new Intent(AppointmentsActivity.this,
+                    DemographicsActivity.class);
             startActivity(demographicActivityIntent);
 
         } else if (id == R.id.nav_logout) {
             // perform log out, of course
             String userName = CognitoAppHelper.getCurrUser();
-            if(userName != null) {
+            if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
                 CognitoAppHelper.getPool().getUser().signOut();
                 CognitoAppHelper.setUser(null);
@@ -138,9 +144,9 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
                 finish();
             }
         } else if (id == R.id.nav_purchase) {
-
+            Log.v(LOG_TAG, "Purchase");
         } else if (id == R.id.nav_notification) {
-
+            Log.v(LOG_TAG, "Notification");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -148,13 +154,11 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         return true;
     }
 
-
-    public static AppointmentModel model;
-    public void setAppointmentModel(AppointmentModel model) {
+    public void setAppointmentModel(AppointmentDTO model) {
         AppointmentsActivity.model = model;
     }
 
-    public AppointmentModel getModel() {
+    public AppointmentDTO getModel() {
         return AppointmentsActivity.model;
     }
 }
