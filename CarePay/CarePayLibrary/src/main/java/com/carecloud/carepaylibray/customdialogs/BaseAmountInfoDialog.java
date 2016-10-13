@@ -140,11 +140,11 @@ public class BaseAmountInfoDialog extends Dialog implements
      */
     private void onPhoneCall(final String phoneNumber) {
         if(phoneNumber !=null && phoneNumber.length() > 0)
-        try {
-            context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
-        } catch (android.content.ActivityNotFoundException ex) {
+            try {
+                context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
+            } catch (android.content.ActivityNotFoundException ex) {
 
-        }
+            }
     }
     protected View getRootView() {
         return rootLayout;
