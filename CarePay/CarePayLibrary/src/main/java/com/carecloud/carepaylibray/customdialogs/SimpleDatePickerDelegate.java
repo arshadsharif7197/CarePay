@@ -38,6 +38,21 @@ public class SimpleDatePickerDelegate {
     private OnDateChangedListener onDateChangedListener;
 
     /**
+     * The callback used to indicate the user changed the date.
+     */
+    public interface OnDateChangedListener {
+
+        /**
+         * Called upon a date change.
+         *
+         * @param year        The year that was set.
+         * @param monthOfYear The month that was set (0-11) for compatibility with {@link
+         *                    Calendar}.
+         */
+        void onDateChanged(int year, int monthOfYear);
+    }
+
+    /**
      * Returns the instance of this SimpleDatePickerDelegate
      * @param parent Parent view of delegate
      */
@@ -257,20 +272,5 @@ public class SimpleDatePickerDelegate {
         if (onDateChangedListener != null) {
             onDateChangedListener.onDateChanged(getYear(), getMonth());
         }
-    }
-
-    /**
-     * The callback used to indicate the user changed the date.
-     */
-    public interface OnDateChangedListener {
-
-        /**
-         * Called upon a date change.
-         *
-         * @param year        The year that was set.
-         * @param monthOfYear The month that was set (0-11) for compatibility with {@link
-         *                    Calendar}.
-         */
-        void onDateChanged(int year, int monthOfYear);
     }
 }
