@@ -76,7 +76,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
     protected void updateModelAndViewsAfterScan() { // license has been scanned
         // TODO: 9/29/2016 implement OCR
-        btnScanLicense.setText(R.string.demogr_docs_rescan);
+        //btnScanLicense.setText(R.string.demogr_docs_rescan);
 
         model.setIdNumber("666666666");
         tvLicenseNum.setText("666666666");

@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.Toolbar
-    android:id="@+id/health_insurance_toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/blue_cerulian"
-    android:gravity="center"
+    android:id="@+id/healthinsurance_review_toolbar"
+    style="@style/CustomToolbarStyle"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:id="@+id/health_insurance_toolbar_title"
+        android:id="@+id/healthinsurance_review_toolbar_title"
         style="@style/ResponsibilityToolbarTextStyle"
         android:text="Health Insurance"/>
 
