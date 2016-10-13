@@ -322,4 +322,24 @@ public class DateUtil {
         // check if crt date is before the date in the util and the days differ
         return compareTo(today) == 1 && crtDay != day;
     }
+
+    /**
+     * Formats the month and year. If provided a separator then will be displayed as MM/yyyy or else
+     * MMyyyy
+     *
+     * @param year        The year that was set.
+     * @param monthOfYear The month that was set (0-11) for compatibility with {@link
+     *                    Calendar}.
+     * @return the formatted string
+     */
+    public String formatMonthYear(int year, int monthOfYear) {
+        Locale locale = Locale.getDefault();
+        Calendar calendar = Calendar.getInstance(locale);
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, monthOfYear);
+        SimpleDateFormat format = new SimpleDateFormat(
+                "MM/yyyy", Locale.getDefault());
+        return format.format(calendar.getTime());
+    }
 }
