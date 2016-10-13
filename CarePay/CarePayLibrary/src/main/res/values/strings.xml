@@ -38,14 +38,17 @@
     </string-array>
 
 
-    <string name="Plan1">Plan1</string>
-    <string name="Plan2">Plan2</string>
-    <string name="Plan3">Plan3</string>
+    <string name="AetnaSelect">Aetna Select</string>
+    <string name="AetnaValueNetwork">Aetna Value Network HMO</string>
+    <string name="ElectChoice">Elect Choice HMO</string>
+    <string name="HMO">HMO</string>
 
 
-    <string name="Provider1">Provider1</string>
-    <string name="Provider2">Provider2</string>
-    <string name="Provider3">Provider3</string>
+    <string name="Aetna">Aetna</string>
+    <string name="Blue">Blue Cross Blue Shield</string>
+    <string name="Cigna">Cigna</string>
+    <string name="GHI">GHI</string>
+    <string name="HIP">HIP</string>
 
 
     <string name="English">English</string>
@@ -59,25 +62,28 @@
     </string-array>
 
     <string-array name="plans">
-        <item>@string/Plan1</item>
-        <item>@string/Plan2</item>
-        <item>@string/Plan3</item>
+        <item>@string/AetnaSelect</item>
+        <item>@string/AetnaValueNetwork</item>
+        <item>@string/ElectChoice</item>
+        <item>@string/HMO</item>
     </string-array>
     <string-array name="providers">
-        <item>@string/Provider1</item>
-        <item>@string/Provider2</item>
-        <item>@string/Provider3</item>
+        <item>@string/Aetna</item>
+        <item>@string/Blue</item>
+        <item>@string/Cigna</item>
+        <item>@string/GHI</item>
+        <item>@string/HIP</item>
     </string-array>
 
     <string name="primary">Primary</string>
     <string name="secondary">Secondary</string>
     <string name="tertiary">Tertiary</string>
 
-   <string-array name="cardtypes">
-       <item>@string/primary</item>
-       <item>@string/secondary</item>
-       <item>@string/tertiary</item>
-   </string-array>
+    <string-array name="cardtypes">
+        <item>@string/primary</item>
+        <item>@string/secondary</item>
+        <item>@string/tertiary</item>
+    </string-array>
 
     <string name="hispanic">Hispanic</string>
     <string name="white_americans">White</string>
@@ -137,7 +143,7 @@
     <string name="CityEditText">City</string>
     <string name="StateEditText">State</string>
 
-<!--<review_insuranceScreen>-->
+    <!--<review_insuranceScreen>-->
 
 
     <string name="driverLicense">Diver License</string>
@@ -184,6 +190,13 @@
     <string name="signup_button">CREATE NEW ACCOUNT</string>
     <string name="language_textview">Change language</string>
     <string name="forgot_password_textview">Forgot password?</string>
+
+
+    <!--<patient portal signup >-->
+    <string name="patientportal">Patient Portal</string>
+    <string name="descriptionofportal">Small text describing why the patient may consider signing up for Portal.</string>
+    <string name="signupforportal">SIGN UP PORTAL</string>
+    <string name="passfornow">I'LL PASS NOW</string>
 
     <!--Signup Screen-->
     <string name="caps">FIRST NAME</string>

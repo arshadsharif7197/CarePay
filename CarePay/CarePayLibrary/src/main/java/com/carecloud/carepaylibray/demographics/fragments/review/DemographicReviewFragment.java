@@ -29,10 +29,10 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 
 
@@ -216,8 +216,9 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             @Override
             public void afterTextChanged(Editable phonenumber) {
                 if (length_before < phonenumber.length()) {
-                    if (phonenumber.length() == 3 || phonenumber.length() == 7)
+                    if (phonenumber.length() == 3 || phonenumber.length() == 7) {
                         phonenumber.append("-");
+                    }
                     if (phonenumber.length() > 3 && Character.isDigit(phonenumber.charAt(3))) {
                         phonenumber.insert(3, "-");
                     }
