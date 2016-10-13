@@ -33,14 +33,14 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -49,15 +49,18 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class ResponsibilityFragment extends Fragment {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
-    private AppCompatActivity mActivity;
-    private String copayStr = "", previousBalanceStr = "";
-    private TextView responseTotal, responseCopay, responsePreviousBalance;
+    private AppCompatActivity appCompatActivity;
+    private String copayStr = "";
+    private String previousBalanceStr = "";
+    private TextView responseTotal;
+    private TextView responseCopay;
+    private TextView responsePreviousBalance;
     private AppointmentsResultModel appointmentsModel = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (AppCompatActivity) getActivity();
+        appCompatActivity = (AppCompatActivity) getActivity();
     }
 
     @Nullable
@@ -68,7 +71,7 @@ public class ResponsibilityFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
 
-        setGothamRoundedMediumTypeface(mActivity, title);
+        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -151,19 +154,13 @@ public class ResponsibilityFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PaymentsDTO> call, Throwable t) {
+            public void onFailure(Call<PaymentsDTO> call, Throwable throwable) {
             }
         });
     }
 
     private void payAndFetchCheckedInAppointment() {
-        /*AppointmentModel appointmentModel = AppointmentsActivity.model;
-        ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
-        appointmentModel.getPaymentsAppointmentIdModel();
-        appointmentModel.getDoctorName();
-        appointmentModel.getAppointmentType();
-        appointmentsItems.add(appointmentModel);*/
-        //TODO need to chages the actual model
+
         String body= "{\"appointment_id\": \""+ AppointmentsActivity.model.getAppointmentId() +"\"}";
 
         AppointmentService aptService = (new BaseServiceGenerator(getActivity()).createService(AppointmentService.class));
@@ -189,7 +186,7 @@ public class ResponsibilityFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
 
             }
         });
@@ -201,13 +198,13 @@ public class ResponsibilityFragment extends Fragment {
      */
     private void setTypefaces(View view) {
         // set the typefaces
-        setGothamRoundedBookTypeface(mActivity, (TextView) view.findViewById(R.id.respons_total_label));
-        setGothamRoundedMediumTypeface(mActivity, (TextView) view.findViewById(R.id.respons_total));
-        setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance_label));
-        setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay_label));
-        setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
-        setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay));
-        setGothamRoundedMediumTypeface(mActivity, (Button) view.findViewById(R.id.pay_total_amount_button));
+        setGothamRoundedBookTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_total_label));
+        setGothamRoundedMediumTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_total));
+        setProximaNovaRegularTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_prev_balance_label));
+        setProximaNovaRegularTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_copay_label));
+        setProximaNovaSemiboldTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
+        setProximaNovaSemiboldTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_copay));
+        setGothamRoundedMediumTypeface(appCompatActivity, (Button) view.findViewById(R.id.pay_total_amount_button));
     }
 
     /**
@@ -216,7 +213,7 @@ public class ResponsibilityFragment extends Fragment {
      * @param activity The activity
      */
     public void setActivity(KeyboardHolderActivity activity) {
-        mActivity = activity;
+        appCompatActivity = activity;
     }
 
 
