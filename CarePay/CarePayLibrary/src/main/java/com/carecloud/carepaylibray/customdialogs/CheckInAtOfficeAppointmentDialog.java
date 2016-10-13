@@ -21,13 +21,6 @@ public class CheckInAtOfficeAppointmentDialog  extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private Context context;
     private AppointmentModel appointmentModel;
-
-    /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
-     */
     public CheckInAtOfficeAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
@@ -40,7 +33,6 @@ public class CheckInAtOfficeAppointmentDialog  extends BaseDoctorInfoDialog {
         mainLayout = (LinearLayout)getAddActionChildView();
         setActionButton();
     }
-
     private void setActionButton(){
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

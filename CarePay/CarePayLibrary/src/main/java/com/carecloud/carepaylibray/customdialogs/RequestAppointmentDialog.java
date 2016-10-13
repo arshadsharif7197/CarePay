@@ -30,12 +30,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     private EditText reasonEdittext;
     private AppointmentModel appointmentModel;
 
-    /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
-     */
     public RequestAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
@@ -62,9 +56,9 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         SystemUtil.setProximaNovaSemiboldTypeface(context, optionaltextView);
         reasonEdittext.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                view.setFocusable(true);
-                view.setFocusableInTouchMode(true);
+            public boolean onTouch(View v, MotionEvent event) {
+                v.setFocusable(true);
+                v.setFocusableInTouchMode(true);
                 return false;
             }
         });

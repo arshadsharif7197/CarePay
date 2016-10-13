@@ -22,31 +22,16 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
-    private LinearLayout rootLayout;
-    private LinearLayout mainLayout;
+    private LinearLayout rootLayout,mainLayout;
     private Context context;
     private AppointmentModel appointmentModel;
     private boolean isCanceled = false;
     private CustomGothamRoundedMediumLabel canceledLabel;
-
-    /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
-     */
     public CancelAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
         this.appointmentModel = appointmentModel;
     }
-
-    /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
-     */
     public CancelAppointmentDialog(Context context, AppointmentModel appointmentModel,boolean isCanceled ) {
         super(context, appointmentModel);
         this.context = context;
@@ -65,7 +50,6 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
             setActionButton();
         }
     }
-
     private void setActionButton(){
 
         TextView editAppointmentTextView = (TextView)rootLayout.findViewById(R.id.dialogEditOrCancelAppointTextView);
@@ -75,7 +59,6 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         SystemUtil.setGothamRoundedMediumTypeface(context,editAppointmentTextView);
         editAppointmentTextView.setOnClickListener(this);
     }
-
     private void setActionButtonCanceled(){
 
         LayoutInflater inflater = (LayoutInflater) this.context

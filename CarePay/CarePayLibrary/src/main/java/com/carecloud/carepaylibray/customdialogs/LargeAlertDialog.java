@@ -35,7 +35,6 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
     public interface LargeAlertInterface {
         public void onActionButton();
     }
-
     /**
      * show custom dialog for large message.
      *
@@ -63,7 +62,6 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
      * @param headerIcon the String to evaluate for header  image
      * @param largeAlertInterface the String to evaluate for callback method for action
      */
-
     public LargeAlertDialog(Context context,String message,String actionText,int headerBackGroundColor,int headerIcon,LargeAlertInterface largeAlertInterface){
         super(context);
         this.context = context;
@@ -73,7 +71,6 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
         this.headerBackGroundColor = headerBackGroundColor;
         this.headerIcon = headerIcon;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,10 +93,9 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
         ((LinearLayout)findViewById(R.id.headerLayout)).setBackgroundResource(headerBackGroundColor);
         ((ImageView)findViewById(R.id.headerIconImageView)).setBackgroundResource(headerIcon);
     }
-
     @Override
-    public void onClick(View view) {
-        int viewId = view.getId();
+    public void onClick(View v) {
+        int viewId = v.getId();
         if (viewId == R.id.dialogCloseImageView) {
             cancel();
         }else if(viewId == R.id.actionButton){

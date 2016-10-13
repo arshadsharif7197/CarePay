@@ -19,13 +19,6 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private Context context;
     private AppointmentModel appointmentModel;
-
-    /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
-     */
     public CheckInEarlyAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;

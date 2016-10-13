@@ -31,30 +31,13 @@ public class PaymentAmountReceiptDialog extends Dialog implements
 
     private Context context;
     private JSONObject paymentReceiptModel;
-    private ImageView dialogCloseHeader;
-    private ImageView paymentReceiptLocationImageView;
-    private ImageView paymentReceiptDialImageView;
-    private CustomProxyNovaSemiBoldLabel receiptAmountValueLabel;
-    private CustomProxyNovaSemiBoldLabel receiptPaymenttypeLabel;
-    private CustomProxyNovaSemiBoldLabel receiptPaymentDateLabel;
-    private CustomProxyNovaSemiBoldLabel receiptUserNameLabel;
-    private CustomProxyNovaRegularLabel receiptUsertypeLabel;
-    private CustomProxyNovaRegularLabel addressReceiptLevel;
-    private CustomProxyNovaRegularLabel receiptPreviousTitlelabel;
-    private CustomProxyNovaRegularLabel receiptPreviousValuelabel;
-    private CustomProxyNovaRegularLabel receiptInsuranceTitleLabel;
-    private CustomProxyNovaRegularLabel receiptInsuranceValueLabel;
-    private CustomProxyNovaRegularLabel totalPaymentReceiptTitleLabel;
-    private CustomProxyNovaRegularLabel totalPaymentReceiptValueLabel;
+    private ImageView dialogCloseHeader,paymentReceiptLocationImageView, paymentReceiptDialImageView;
+    private CustomProxyNovaSemiBoldLabel receiptAmountValueLabel,receiptPaymenttypeLabel,receiptPaymentDateLabel,receiptUserNameLabel;
+    private CustomProxyNovaRegularLabel receiptUsertypeLabel,addressReceiptLevel,receiptPreviousTitlelabel,receiptPreviousValuelabel,receiptInsuranceTitleLabel,
+            receiptInsuranceValueLabel,totalPaymentReceiptTitleLabel,totalPaymentReceiptValueLabel;
     private CustomProxyNovaExtraBold paymentReceiptHeaderTextView;
     private Button saveOrSharereceiptButton;
 
-    /**
-     * Contractor for  payment dialog.
-     *
-     * @param context the String to evaluate
-     * @param paymentReceiptModel the DTO to evaluate
-     */
     public PaymentAmountReceiptDialog(Context context, JSONObject paymentReceiptModel) {
         super(context);
         this.context = context;
@@ -78,8 +61,8 @@ public class PaymentAmountReceiptDialog extends Dialog implements
     }
 
     @Override
-    public void onClick(View view) {
-        int viewId = view.getId();
+    public void onClick(View v) {
+        int viewId = v.getId();
         if (viewId == R.id.dialogCloseHeader) {
             cancel();
         } else if(viewId == R.id.paymentReceiptLocationImageView){
@@ -114,7 +97,6 @@ public class PaymentAmountReceiptDialog extends Dialog implements
         saveOrSharereceiptButton = (Button)findViewById(R.id.saveOrSharereceiptButton);
 
     }
-
     private void onSettingStyle(){
         receiptAmountValueLabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
         receiptPaymenttypeLabel.setTextColor(ContextCompat.getColor(context,R.color.manatee));
@@ -131,14 +113,12 @@ public class PaymentAmountReceiptDialog extends Dialog implements
         totalPaymentReceiptValueLabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
         paymentReceiptHeaderTextView.setTextColor(ContextCompat.getColor(context,R.color.payne_gray));
     }
-
     private void onSetListener(){
         dialogCloseHeader.setOnClickListener(this);
         saveOrSharereceiptButton.setOnClickListener(this);
         paymentReceiptDialImageView.setOnClickListener(this);
         paymentReceiptLocationImageView.setOnClickListener(this);
     }
-
     /**
      * show device map view based on address.
      *
@@ -159,15 +139,13 @@ public class PaymentAmountReceiptDialog extends Dialog implements
      * @param phoneNumber the String to evaluate
      */
     private void onPhoneCall(final String phoneNumber) {
-        if(phoneNumber !=null && phoneNumber.length() > 0) {
+        if(phoneNumber !=null && phoneNumber.length() > 0)
             try {
                 context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
             } catch (android.content.ActivityNotFoundException ex) {
-                System.out.print(ex.getMessage());
-            }
-        }
-    }
 
+            }
+    }
     private void onSaveShareButton(){
 
     }

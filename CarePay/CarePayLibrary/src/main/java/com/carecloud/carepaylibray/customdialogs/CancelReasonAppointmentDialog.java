@@ -38,18 +38,9 @@ public class CancelReasonAppointmentDialog extends Dialog implements
     private Button cancelAppointmentButton;
     private EditText reasonEditText;
     private TextInputLayout reasonTextInputLayout;
-    private AppCompatRadioButton rescheduleAppointmentRadioButtom;
-    private AppCompatRadioButton officeRescheduleAppointmentRadioButtom;
-    private AppCompatRadioButton forgotAppointmentRadioButtom;
-    private AppCompatRadioButton noLongerAppointmentRadioButtom;
-    private AppCompatRadioButton otherAppointmentRadioButtom;
+    private AppCompatRadioButton rescheduleAppointmentRadioButtom, officeRescheduleAppointmentRadioButtom,
+            forgotAppointmentRadioButtom, noLongerAppointmentRadioButtom, otherAppointmentRadioButtom;
 
-    /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
-     */
     public CancelReasonAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context);
         this.context = context;
@@ -98,13 +89,18 @@ public class CancelReasonAppointmentDialog extends Dialog implements
                 int checkedRadioButtonId = group.getCheckedRadioButtonId();
                 onSetColorStateForRadioButton(checkedRadioButton);
                 onSelectionRadioCancel(checkedRadioButton.isChecked(), checkedRadioButtonId);
+                if (checkedRadioButton.isChecked()) {
+
+                } else {
+
+                }
             }
         });
         reasonEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                view.setFocusable(true);
-                view.setFocusableInTouchMode(true);
+            public boolean onTouch(View v, MotionEvent event) {
+                v.setFocusable(true);
+                v.setFocusableInTouchMode(true);
                 return false;
             }
         });
@@ -144,8 +140,9 @@ public class CancelReasonAppointmentDialog extends Dialog implements
                         new int[]{android.R.attr.state_checked}
                 },
                 new int[]{
-                        ContextCompat.getColor(context, R.color.lightSlateGray),
-                        ContextCompat.getColor(context, R.color.blue_cerulian),
+
+                        ContextCompat.getColor(context, R.color.lightSlateGray)
+                        , ContextCompat.getColor(context, R.color.blue_cerulian),
                 }
         );
         appCompatRadioButton.setSupportButtonTintList(colorStateList);

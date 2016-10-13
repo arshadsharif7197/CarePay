@@ -30,7 +30,6 @@ import org.json.JSONObject;
 
 public class BaseAmountInfoDialog extends Dialog implements
         View.OnClickListener {
-
     private Context context;
     protected CustomGothamRoundedMediumLabel paymentAmountTextView;
     private CustomProxyNovaSemiBoldLabel userShortnameTextView;
@@ -39,19 +38,11 @@ public class BaseAmountInfoDialog extends Dialog implements
     private CustomProxyNovaSemiBoldLabel paymentDatetextView;
     private CustomProxyNovaExtraBold paymentAddressHeaderTextView;
     private CustomProxyNovaRegularLabel addressAmountLevel;
-    private ImageView dialogCloseHeader;
-    private ImageView  paymentUserPicImageView;
-    private ImageView paymentLocationImageView;
-    private ImageView paymentDialImageView;
+
+    private ImageView dialogCloseHeader, paymentUserPicImageView, paymentLocationImageView, paymentDialImageView;
     private JSONObject paymentModel;
     private View rootLayout;
 
-    /**
-     * Contractor for  base dialog.
-     *
-     * @param context the String to evaluate
-     * @param paymentModel the DTO to evaluate
-     */
     public BaseAmountInfoDialog(Context context,JSONObject paymentModel) {
         super(context);
         this.context = context;
@@ -128,7 +119,6 @@ public class BaseAmountInfoDialog extends Dialog implements
             onPhoneCall("");
         }
     }
-
     /**
      * show device map view based on address.
      *
@@ -149,15 +139,13 @@ public class BaseAmountInfoDialog extends Dialog implements
      * @param phoneNumber the String to evaluate
      */
     private void onPhoneCall(final String phoneNumber) {
-        if(phoneNumber !=null && phoneNumber.length() > 0) {
-            try {
-                context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
-            } catch (android.content.ActivityNotFoundException ex) {
+        if(phoneNumber !=null && phoneNumber.length() > 0)
+        try {
+            context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
+        } catch (android.content.ActivityNotFoundException ex) {
                 System.out.print(ex.getMessage());
-            }
         }
     }
-
     protected View getRootView() {
         return rootLayout;
     }

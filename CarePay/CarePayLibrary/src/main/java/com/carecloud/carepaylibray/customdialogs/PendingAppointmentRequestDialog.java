@@ -19,13 +19,6 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private Context context;
     private AppointmentModel appointmentModel;
-
-    /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
-     */
     public PendingAppointmentRequestDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
@@ -39,7 +32,6 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
         setActionButton();
         onColorHeaderForPending();
     }
-
     private void setActionButton(){
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,7 +40,6 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
         pendingrequesttextView.setOnClickListener(this);
         mainLayout.addView(childActionView);
     }
-
     private void onColorHeaderForPending(){
          View view =  getRootView();
          view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);

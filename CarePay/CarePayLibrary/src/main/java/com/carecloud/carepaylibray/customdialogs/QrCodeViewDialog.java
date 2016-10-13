@@ -20,19 +20,11 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
     private AppointmentModel appointmentModel;
-
-    /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
-     */
     public QrCodeViewDialog(Context context,AppointmentModel appointmentModel){
         super(context);
         this.context = context;
         this.appointmentModel = appointmentModel;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
