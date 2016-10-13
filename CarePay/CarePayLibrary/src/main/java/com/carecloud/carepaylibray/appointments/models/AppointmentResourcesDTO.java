@@ -4,18 +4,21 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppointmentResourcesModel {
+/**
+ * Model for appointment resources.
+ */
+public class AppointmentResourcesDTO {
 
     @SerializedName("resource")
     @Expose
-    private AppointmentResourcesItemModel resource;
+    private AppointmentResourcesItemDTO resource;
 
     /**
      * 
      * @return
      *     The resource
      */
-    public AppointmentResourcesItemModel getResource() {
+    public AppointmentResourcesItemDTO getResource() {
         return resource;
     }
 
@@ -24,7 +27,7 @@ public class AppointmentResourcesModel {
      * @param resource
      *     The resource
      */
-    public void setResource(AppointmentResourcesItemModel resource) {
+    public void setResource(AppointmentResourcesItemDTO resource) {
         this.resource = resource;
     }
 
