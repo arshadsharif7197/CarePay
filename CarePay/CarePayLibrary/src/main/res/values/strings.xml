@@ -180,6 +180,19 @@
     <string name="review_insurance_subHeading">We didn\’t find any insurance info associated with your profile. If you have health insurance, please fill in the fields below.</string>
     <string name="demographics_title">Demographic</string>
     <string name="next_Button">Next</string>
+    <string name="required">Required</string>
+    <string name="dob_format">MM/DD/YYYY</string>
+    <string name="demogr_details_allergies_label">Allergies you have</string>
+    <string name="hint_optional">Optional</string>
+    <string name="demogr_details_allergy_add_label">Allergy</string>
+    <string name="demogr_details_add_another_clickable">Add Another</string>
+    <string name="demogr_details_add_unlisted_allergies_clickable">Add unlisted allergies</string>
+    <string name="demogr_details_medications_you_re_taking">MEDICATIONS YOU\'RE TAKING</string>
+    <string name="demogr_details_optional">Optional</string>
+    <string name="demographics_details_medication_label">Medication</string>
+    <string name="demogr_details_add_another_med_clickable">Add Another</string>
+    <string name="demogr_details_add_unlisted_medications">Add unlisted medications</string>
+    <string name="invalid_date_of_birth_format">Invalid format</string>
 
     <!--Signin Screen-->
     <string name="signin_signup_email_hint">Email</string>
@@ -228,7 +241,7 @@
     <string name="demoVerifyHeading">Demographic Information</string>
     <string name="demoVerifySubHeading">We didn\'t find any demographic info associated with your profile.Please fill in the fields below.</string>
 
-    <!--Appointments List Fragment-->
+    <!-- Appointments List Fragment -->
 
     <string name="apt_day_today">TODAY</string>
     <string name="apt_day_upcoming">UPCOMING</string>
@@ -247,7 +260,7 @@
     <string name="demogr_next">Next</string>
     <string name="check_in_now">CHECK-IN \nNOW</string>
 
-    <!--<Review Screen>-->
+    <!-- Review Screen -->
     <string name="review_screen_header">Review Information</string>
     <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
     <string name="review_screen_demographic">DEMOGRAPHIC</string>
@@ -330,7 +343,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
 
     <!--Add Appointment-->
     <string name="visit_type_label">Visit Type</string>
-    <string name="cancel_button">CANCEL</string>
+    <string name="cancel_button">Cancel</string>
     <string name="choose_provider_recent_title">RECENT</string>
     <string name="choose_provider_all_title">ALL</string>
     <string name="apt_available_hours_title">Available Hours</string>
@@ -390,6 +403,9 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="next">NEXT</string>
     <string name="add_new_credit_card">ADD NEW CREDIT CARD</string>
     <string name="profile_picture">Profile picture</string>
+    <string name="scan_code">Scan code</string>
+    <string name="checkin_scan_code_message">Scan the code below at the practice</string>
+
     <string name="required">Required</string>
     <string name="dob_format">MM/DD/YYYY</string>
     <string name="demogr_details_allergies_label">Allergies you have</string>

@@ -4,17 +4,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +33,9 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScanne
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,15 +54,24 @@ public class DemographicsDetailsFragment extends Fragment
         implements View.OnClickListener,
                    DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private View                             view;
-    private String[]                         raceArray;
-    private String[]                         ethnicityArray;
-    private int                              selectedArray;
-    private TextView                         raceTextView;
-    private TextView                         ethnicityTextView;
-    private TextView                         addAnotherAllergyTextView;
-    private TextView                         addAnotherMedTextView;
-    private Button                           nextButton;
+    private View     view;
+    private String[] raceArray;
+    private String[] ethnicityArray;
+    private int      selectedArray;
+
+    private TextView        raceTextView;
+    private TextView        ethnicityTextView;
+    private TextView        genderTextView;
+    private EditText        dobEdit;
+    private TextView        addUnlistedAllergyTextView;
+    private TextView        addUnlistedMedTextView;
+    private TextView        addAnotherAllergyTextView;
+    private TextView        addAnotherMedTextView;
+    private Button          nextButton;
+    private RecyclerView    allergiesRecyclerView;
+    private RecyclerView    medicRecyclerView;
+    private TextInputLayout dobInputText;
+
     private DemographicPersDetailsPayloadDTO model;
 
     @Nullable
@@ -62,26 +80,23 @@ public class DemographicsDetailsFragment extends Fragment
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
 
-        initialiseUIFields();
-
         raceArray = getResources().getStringArray(R.array.Race);
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
+        genderTextView = (TextView) view.findViewById(R.id.demogrDetailsGenderClickable);
 
-        // set up the allergies recycler view
-        final RecyclerView allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsAllergiesRecView);
-        allergiesRecyclerView.setHasFixedSize(true);
-        allergiesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        setupEdit();
 
-        // for now generate dummy data
-        List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> allergies = getAllergies();
-        allergiesRecyclerView.setAdapter(new DemographicsDetailsAllergiesAdapter(allergies));
+        addUnlistedAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
+        addUnlistedMedTextView = (TextView) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
+
+        setupRecyclerViews();
 
         // add click listener for 'Add Another' (allergy)
         addAnotherAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAllergyClickable);
         addAnotherAllergyTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((DemographicsDetailsAllergiesAdapter)allergiesRecyclerView.getAdapter()) // for now add the same dummy allergy
+                ((DemographicsDetailsAllergiesAdapter) allergiesRecyclerView.getAdapter()) // for now add the same dummy allergy
                         .addAtFront(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category C",
                                                                                               "Allergy 8",
                                                                                               "Severe",
@@ -89,25 +104,95 @@ public class DemographicsDetailsFragment extends Fragment
             }
         });
 
-        // set up the medications recycler view
-        final RecyclerView medicRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsMedRecView);
-        medicRecyclerView.setHasFixedSize(true);
-        medicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // dummy meds for now
-        List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> meds = createMeds();
-        medicRecyclerView.setAdapter(new DemographicsDetailsMedicationsAdapter(meds));
-
         addAnotherMedTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAnotherMedClickable);
         addAnotherMedTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((DemographicsDetailsMedicationsAdapter)medicRecyclerView.getAdapter())
+                ((DemographicsDetailsMedicationsAdapter) medicRecyclerView.getAdapter())
                         .addAtFront(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication Z122",
                                                                                                    "11 mg"));
             }
         });
 
+        initialiseUIFields();
+
         return view;
+    }
+
+    private void setupEdit() {
+        dobInputText = (TextInputLayout) view.findViewById(R.id.demogrDetailsDobInputText);
+        dobEdit = (EditText) view.findViewById(R.id.demogrDetailsDobEdit);
+        dobInputText.setTag(getString(R.string.demoDobLabel));
+        dobEdit.setTag(dobInputText);
+
+        dobEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, b);
+            }
+        });
+        dobEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String dob = dobEdit.getText().toString();
+                if(!StringUtil.isNullOrEmpty(dob)) {
+                    dobInputText.setErrorEnabled(false);
+                    dobInputText.setError(null);
+                }
+            }
+        });
+        dobEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_DONE) {
+                    SystemUtil.hideSoftKeyboard(getActivity());
+                    dobEdit.clearFocus();
+                    view.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private boolean isDateOfBirthValid() {
+        String dob = dobEdit.getText().toString();
+        if(!StringUtil.isNullOrEmpty(dob)) {
+            boolean isValid = DateUtil.isValidateStringDateMMDDYYYY(dob);
+            dobInputText.setErrorEnabled(!isValid);
+            dobInputText.setError(isValid ? null : getString(R.string.invalid_date_of_birth_format));
+            return isValid;
+        }
+        return true;
+    }
+
+    private void setupRecyclerViews() {
+        // set up the allergies recycler view
+        allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsAllergiesRecView);
+        allergiesRecyclerView.setHasFixedSize(true);
+        allergiesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // for now generate dummy data
+        List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> allergies = getAllergies();
+        allergiesRecyclerView.setAdapter(new DemographicsDetailsAllergiesAdapter(allergies));
+
+        // set up the medications recycler view
+        medicRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsMedRecView);
+        medicRecyclerView.setHasFixedSize(true);
+        medicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // dummy meds for now
+        List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> meds = createMeds();
+        medicRecyclerView.setAdapter(new DemographicsDetailsMedicationsAdapter(meds));
     }
 
     // for test
@@ -201,14 +286,16 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void nextbuttonClick() {
-        // update the model with values from UI
-        model.setPrimaryRace(raceTextView.getText().toString());
-        model.setEthnicity(ethnicityTextView.getText().toString());
+        if(isDateOfBirthValid()) {
+            // update the model with values from UI
+            model.setPrimaryRace(raceTextView.getText().toString());
+            model.setEthnicity(ethnicityTextView.getText().toString());
 
-        ((DemographicsActivity) getActivity()).setDetailsModel(model); // save the updated model in the activity
+            ((DemographicsActivity) getActivity()).setDetailsModel(model); // save the updated model in the activity
 
-        // move to next page
-        ((DemographicsActivity) getActivity()).setCurrentItem(2, true);
+            // move to next page
+            ((DemographicsActivity) getActivity()).setCurrentItem(2, true);
+        }
     }
 
     private void showAlertDialogWithListview(final String[] raceArray, String title) {
@@ -253,41 +340,39 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void setTypefaces(View view) {
-        
+
         Context context = getActivity();
-        
+
         setGothamRoundedMediumTypeface(context, (TextView) view.findViewById(R.id.detailsHeading));
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.detailsSubHeading));
 
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.raceTextView));
-        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.raceListTextView));
+        setProximaNovaSemiboldTypeface(context, raceTextView);
 
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.ethnicityTextView));
-        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.ethnicityListTextView));
+        setProximaNovaSemiboldTypeface(context, ethnicityTextView);
 
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsGenderLabel));
-        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsGenderClickable));
+        setProximaNovaSemiboldTypeface(context, genderTextView);
 
-        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsDobEdit));
+        setProximaNovaRegularTypeface(context, dobEdit);
         setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsDobHint));
-
-        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted));
 
         setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAllergiesLabel));
         setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAllergiesHint));
 
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAddAllergyLabel));
-        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAddAllergyClickable));
+        setProximaNovaSemiboldTypeface(context, addAnotherAllergyTextView);
 
-        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted));
+        setProximaNovaRegularTypeface(context, addUnlistedAllergyTextView);
 
         setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsMedLabel));
         setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsMedHint));
 
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsMedAddLabel));
-        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAddAnotherMedClickable));
+        setProximaNovaSemiboldTypeface(context, addAnotherMedTextView);
 
-        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsMedAddUnlisted));
+        setProximaNovaRegularTypeface(context, addUnlistedMedTextView);
 
         setGothamRoundedMediumTypeface(context, nextButton);
 

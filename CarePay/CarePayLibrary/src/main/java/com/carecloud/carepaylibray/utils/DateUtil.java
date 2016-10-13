@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by kkannan on 9/13/16.
@@ -167,8 +169,8 @@ public class DateUtil {
     /**
      * Compare the date with another date
      *
-     * @param date date to compare
-     * @return 0 if equal
+     * @param date The date to compare to
+     * @return An int: 1 if date is before, -1 after or 0 if equal
      */
     public int compareTo(Date date) {
         if (this.date.before(date)) {
@@ -332,6 +334,14 @@ public class DateUtil {
         // check if crt date is before the date in the util and the days differ
         return compareTo(today) == 1 && crtDay != day;
     }
+
+    public static boolean isValidateStringDateMMDDYYYY(String date) {
+        String REGEX_DATE_OF_BIRTH = "\\d{2}/\\d{2}/\\d{4}";
+        Pattern pattern = Pattern.compile(REGEX_DATE_OF_BIRTH);
+        Matcher matcher = pattern.matcher(date);
+        return matcher.matches();
+    }
+}
 
     /**
      * Formats the month and year. If provided a separator then will be displayed as MM/yyyy or else
