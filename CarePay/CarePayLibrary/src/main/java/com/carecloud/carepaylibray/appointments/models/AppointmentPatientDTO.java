@@ -240,7 +240,7 @@ public class AppointmentPatientDTO {
 
     /**
      * Set patient photo.
-     * @param photo: patient photo
+     * @param photo patient photo
      */
     public void setPhoto(String photo) {
         this.photo = photo;

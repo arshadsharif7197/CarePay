@@ -23,6 +23,12 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
     private OnAllListItemClickListener listener;
     private ArrayList<AppointmentDTO> appointmentArrayList;
 
+    /**
+     * Constructor.
+     * @param context context
+     * @param appointmentArrayList list of appointments
+     * @param listener Onclick listener
+     */
     public ProviderAdapter(Context context, ArrayList<AppointmentDTO> appointmentArrayList,
                            OnAllListItemClickListener listener) {
         this.context = context;

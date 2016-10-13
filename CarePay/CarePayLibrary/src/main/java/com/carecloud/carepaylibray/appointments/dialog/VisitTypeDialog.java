@@ -26,9 +26,9 @@ public class VisitTypeDialog extends Dialog {
 
     /**
      * Constructor.
-     * @param context: context
-     * @param model: appointment item
-     * @param listener: Onclick listener
+     * @param context context
+     * @param model appointment item
+     * @param listener Onclick listener
      */
     public VisitTypeDialog(Context context, final AppointmentDTO model, final OnDialogListItemClickListener listener) {
         super(context);

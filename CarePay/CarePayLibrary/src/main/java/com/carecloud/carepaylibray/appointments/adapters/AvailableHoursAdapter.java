@@ -26,9 +26,9 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     /**
      * Constructor.
-     * @param context: context
-     * @param items: list of occurrence
-     * @param appointmentDTO: selected appointment item
+     * @param context context
+     * @param items list of occurrence
+     * @param appointmentDTO selected appointment item
      */
     public AvailableHoursAdapter(Context context, List<Object> items, AppointmentDTO appointmentDTO) {
         this.context = context;
