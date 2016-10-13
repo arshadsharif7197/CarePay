@@ -45,13 +45,14 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class ResponsibilityFragment extends Fragment {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
-    private AppCompatActivity mActivity;
-    private String copayStr = "", previousBalanceStr = "";
+    private AppCompatActivity appCompatActivity;
+    private String copayStr = "";
+    private String previousBalanceStr = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (AppCompatActivity) getActivity();
+        appCompatActivity = (AppCompatActivity) getActivity();
     }
 
     @Nullable
@@ -62,7 +63,7 @@ public class ResponsibilityFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
 
-        setGothamRoundedMediumTypeface(mActivity, title);
+        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -143,11 +144,13 @@ public class ResponsibilityFragment extends Fragment {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-                //TODO: Redirect to AppointmentsActivity on Success
+                /**
+                 * Redirect to AppointmentsActivity on Success
+                 */
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
 
             }
         });
@@ -160,13 +163,13 @@ public class ResponsibilityFragment extends Fragment {
      */
     private void setTypefaces(View view) {
         // set the typefaces
-        setGothamRoundedBookTypeface(mActivity, (TextView) view.findViewById(R.id.respons_total_label));
-        setGothamRoundedMediumTypeface(mActivity, (TextView) view.findViewById(R.id.respons_total));
-        setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance_label));
-        setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay_label));
-        setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
-        setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay));
-        setGothamRoundedMediumTypeface(mActivity, (Button) view.findViewById(R.id.pay_total_amount_button));
+        setGothamRoundedBookTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_total_label));
+        setGothamRoundedMediumTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_total));
+        setProximaNovaRegularTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_prev_balance_label));
+        setProximaNovaRegularTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_copay_label));
+        setProximaNovaSemiboldTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
+        setProximaNovaSemiboldTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_copay));
+        setGothamRoundedMediumTypeface(appCompatActivity, (Button) view.findViewById(R.id.pay_total_amount_button));
     }
 
     /**
@@ -175,7 +178,7 @@ public class ResponsibilityFragment extends Fragment {
      * @param activity The activity
      */
     public void setActivity(KeyboardHolderActivity activity) {
-        mActivity = activity;
+        appCompatActivity = activity;
     }
 
 

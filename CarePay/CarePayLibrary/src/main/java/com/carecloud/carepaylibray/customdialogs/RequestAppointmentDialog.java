@@ -51,9 +51,9 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         EditText reasonEditText = (EditText) childActionView.findViewById(R.id.reasonEditText);
         reasonEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.setFocusable(true);
-                v.setFocusableInTouchMode(true);
+            public boolean onTouch(View view, MotionEvent event) {
+                view.setFocusable(true);
+                view.setFocusableInTouchMode(true);
                 return false;
             }
         });

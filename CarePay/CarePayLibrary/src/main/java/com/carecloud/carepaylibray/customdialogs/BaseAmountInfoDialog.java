@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,8 +29,10 @@ import org.json.JSONObject;
  * Created by prem_mourya on 10/5/2016.
  */
 
-public class BaseAmountInfoDialog extends Dialog implements
-        View.OnClickListener {
+public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener {
+
+    private static final String LOG_TAG = BaseAmountInfoDialog.class.getSimpleName();
+
     private Context context;
     protected CustomGothamRoundedMediumLabel paymentAmountTextView;
     private CustomProxyNovaSemiBoldLabel userShortnameTextView;
@@ -39,11 +42,18 @@ public class BaseAmountInfoDialog extends Dialog implements
     private CustomProxyNovaExtraBold paymentAddressHeaderTextView;
     private CustomProxyNovaRegularLabel addressAmountLevel;
 
-    private ImageView dialogCloseHeader, paymentUserPicImageView, paymentLocationImageView, paymentDialImageView;
+    private ImageView dialogCloseHeader;
+    private ImageView paymentLocationImageView;
+    private ImageView paymentDialImageView;
     private JSONObject paymentModel;
     private View rootLayout;
 
-    public BaseAmountInfoDialog(Context context,JSONObject paymentModel) {
+    /**
+     * Constructor.
+     * @param context context
+     * @param paymentModel payment model
+     */
+    public BaseAmountInfoDialog(Context context, JSONObject paymentModel) {
         super(context);
         this.context = context;
         this.paymentModel = paymentModel;
@@ -52,14 +62,17 @@ public class BaseAmountInfoDialog extends Dialog implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_base_amount_info);
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         WindowManager.LayoutParams params = getWindow().getAttributes();
+
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
+
         onInitialization();
         onSettingStyle();
         onSetListener();
@@ -68,7 +81,7 @@ public class BaseAmountInfoDialog extends Dialog implements
     private void onInitialization() {
         dialogCloseHeader = (ImageView) findViewById(R.id.dialogCloseHeader);
         paymentAmountTextView = (CustomGothamRoundedMediumLabel) findViewById(R.id.paymentAmountTextView);
-        paymentUserPicImageView = (ImageView) findViewById(R.id.paymentUserPicImageView);
+        ImageView paymentUserPicImageView = (ImageView) findViewById(R.id.paymentUserPicImageView);
         userShortnameTextView = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.userShortnameTextView);
         userNameTextView = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.userNameTextView);
         userTypeTextView = (CustomProxyNovaRegularLabel) findViewById(R.id.userTypeTextView);
@@ -77,52 +90,54 @@ public class BaseAmountInfoDialog extends Dialog implements
         addressAmountLevel = (CustomProxyNovaRegularLabel) findViewById(R.id.addressAmountLevel);
         paymentLocationImageView = (ImageView) findViewById(R.id.paymentLocationImageView);
         paymentDialImageView = (ImageView) findViewById(R.id.paymentDailImageView);
-        if(TextUtils.isEmpty("")){
-            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_call);
-            ((ImageView)findViewById(R.id.paymentDailImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
-        }
-        if(!SystemUtil.isNotEmptyString(addressAmountLevel.getText().toString())){
-            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_directions);
-            ((ImageView)findViewById(R.id.paymentLocationImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
-        }
-        rootLayout = findViewById(R.id.rootDialogPaymentLayout);
 
+        if (TextUtils.isEmpty("")) {
+            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_call);
+            ((ImageView) findViewById(R.id.paymentDailImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
+        }
+
+        if (!SystemUtil.isNotEmptyString(addressAmountLevel.getText().toString())) {
+            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_directions);
+            ((ImageView) findViewById(R.id.paymentLocationImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
+        }
+
+        rootLayout = findViewById(R.id.rootDialogPaymentLayout);
     }
 
     private void onSettingStyle() {
-        paymentAmountTextView.setTextColor(ContextCompat.getColor(context,R.color.white));
-        userShortnameTextView.setTextColor(ContextCompat.getColor(context,R.color.white));
-        userNameTextView.setTextColor(ContextCompat.getColor(context,R.color.button_bright_cerulean));
-        userTypeTextView.setTextColor(ContextCompat.getColor(context,R.color.lightSlateGray));
-        paymentDatetextView.setTextColor(ContextCompat.getColor(context,R.color.payne_gray));
-        paymentAddressHeaderTextView.setTextColor(ContextCompat.getColor(context,R.color.payne_gray));
-        addressAmountLevel.setTextColor(ContextCompat.getColor(context,R.color.optionl_gray));
+        paymentAmountTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
+        userShortnameTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
+        userNameTextView.setTextColor(ContextCompat.getColor(context, R.color.button_bright_cerulean));
+        userTypeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+        paymentDatetextView.setTextColor(ContextCompat.getColor(context, R.color.payne_gray));
+        paymentAddressHeaderTextView.setTextColor(ContextCompat.getColor(context, R.color.payne_gray));
+        addressAmountLevel.setTextColor(ContextCompat.getColor(context, R.color.optionl_gray));
     }
 
     private void onSetListener() {
         dialogCloseHeader.setOnClickListener(this);
         paymentLocationImageView.setOnClickListener(this);
         paymentDialImageView.setOnClickListener(this);
-
     }
 
     @Override
-    public void onClick(View v) {
-        int viewId= v.getId();
-        if(viewId == R.id.dialogCloseHeader){
+    public void onClick(View view) {
+        int viewId = view.getId();
+        if (viewId == R.id.dialogCloseHeader) {
             cancel();
-        }else if(viewId == R.id.paymentLocationImageView){
+        } else if (viewId == R.id.paymentLocationImageView) {
             //address will add after model come
-            onMapView("","");
-        }else if(viewId == R.id.paymentDailImageView){
+            onMapView("", "");
+        } else if (viewId == R.id.paymentDailImageView) {
             //phoneCall will add after model come
             onPhoneCall("");
         }
     }
+
     /**
      * show device map view based on address.
-     *
-     * @param address the String to evaluate
+     * @param addressName place name
+     * @param address place address
      */
     private void onMapView(final String addressName, final String address) {
         if (SystemUtil.isNotEmptyString(address)) {
@@ -135,19 +150,19 @@ public class BaseAmountInfoDialog extends Dialog implements
 
     /**
      * show device phone call UI based on phone number.
-     *
-     * @param phoneNumber the String to evaluate
+     * @param phoneNumber phone number
      */
     private void onPhoneCall(final String phoneNumber) {
-        if(phoneNumber !=null && phoneNumber.length() > 0)
-        try {
-            context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
-        } catch (android.content.ActivityNotFoundException ex) {
-
+        if (phoneNumber != null && phoneNumber.length() > 0) {
+            try {
+                context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Log.e(LOG_TAG, ex.getMessage());
+            }
         }
     }
+
     protected View getRootView() {
         return rootLayout;
     }
-
 }

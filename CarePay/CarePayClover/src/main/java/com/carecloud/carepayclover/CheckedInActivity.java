@@ -34,7 +34,7 @@ public class CheckedInActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        ((TextView)findViewById(R.id.goBackTextview)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.goBackTextview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
@@ -56,14 +56,14 @@ public class CheckedInActivity extends AppCompatActivity {
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
 
                 if(response.code()==200 && response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
-                    CheckedInAdapter CheckedInAdapter = new CheckedInAdapter(CheckedInActivity.this, new ArrayList<AppointmentDTO>(response.body().getPayload().getAppointments()));
+                    CheckedInAdapter checkedInAdapter = new CheckedInAdapter(CheckedInActivity.this, new ArrayList<>(response.body().getPayload().getAppointments()));
                     appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(CheckedInActivity.this));
-                    appointmentsRecyclerView.setAdapter(CheckedInAdapter);
+                    appointmentsRecyclerView.setAdapter(checkedInAdapter);
                 }
             }
 
             @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable t) {
+            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
 
             }
         });

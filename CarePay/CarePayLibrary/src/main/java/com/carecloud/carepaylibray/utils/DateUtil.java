@@ -46,7 +46,7 @@ public class DateUtil {
     }
 
     /**
-     * Set the a date to be formated;
+     * Set the a date to be formatted;
      * The expected format is the format previously set for the class with setFormat()
      * or the default "yyyy-MM-dd'T'HH:mm:ssZ"
      *
@@ -157,7 +157,7 @@ public class DateUtil {
     /**
      * Compare the date with another date
      *
-     * @param date: date to compare
+     * @param date date to compare
      * @return 0 if equal
      */
     public int compareTo(Date date) {
@@ -286,6 +286,10 @@ public class DateUtil {
         }
     }
 
+    /**
+     * Check for Today.
+     * @return true if today
+     */
     public boolean isToday() {
         Calendar calendar = Calendar.getInstance();
         int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -295,6 +299,10 @@ public class DateUtil {
         return crtDay == day && crtMonth == month && crtYear == year;
     }
 
+    /**
+     * Check date is before or not.
+     * @return true if before
+     */
     public boolean isYesterdayOrBefore() {
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
@@ -303,6 +311,10 @@ public class DateUtil {
         return compareTo(today) == -1 && crtDay != day;
     }
 
+    /**
+     * Check date is after or not.
+     * @return true if after
+     */
     public boolean isTomorrowOrAfter() {
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
