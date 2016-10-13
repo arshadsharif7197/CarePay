@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.payment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,27 +18,27 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.fragments.PaymentMethodFragment;
+import com.carecloud.carepaylibray.payment.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payment.services.PaymentsService;
 import com.google.gson.JsonObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -47,15 +47,19 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class ResponsibilityFragment extends Fragment {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
-    private AppCompatActivity mActivity;
-    private String copayStr = "", previousBalanceStr = "";
-    private TextView responseTotal, responseCopay, responsePreviousBalance;
-    private AppointmentsResultModel appointmentsModel = null;
+    private AppCompatActivity appCompatActivity;
+    private String copayStr = "";
+    private String previousBalanceStr = "";
+
+    private TextView responseTotal;
+    private TextView responseCopay;
+    private TextView responsePreviousBalance;
+//    private AppointmentsResultModel appointmentsModel = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (AppCompatActivity) getActivity();
+        appCompatActivity = (AppCompatActivity) getActivity();
     }
 
     @Nullable
@@ -66,7 +70,7 @@ public class ResponsibilityFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
 
-        setGothamRoundedMediumTypeface(mActivity, title);
+        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -77,6 +81,7 @@ public class ResponsibilityFragment extends Fragment {
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getPaymentInformation();
                 FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                 PaymentMethodFragment fragment = (PaymentMethodFragment) fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
                 if (fragment == null) {
@@ -101,19 +106,19 @@ public class ResponsibilityFragment extends Fragment {
             }
         });
 
-        responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        responseCopay = (TextView) view.findViewById(R.id.respons_copay);
-        responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
+        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
+        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
 
         Bundle bundle = getArguments();
-        if(bundle != null) {
+        if (bundle != null) {
             ArrayList<PayloadPaymentModel> paymentList = (ArrayList<PayloadPaymentModel>) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
 
-            if(paymentList != null && paymentList.size() > 0) {
-                for(PayloadPaymentModel payment : paymentList) {
-                    if(payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+            if (paymentList != null && paymentList.size() > 0) {
+                for (PayloadPaymentModel payment : paymentList) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         copayStr = payment.getTotal();
-                    } else if(payment.getBalanceType().equalsIgnoreCase(CarePayConstants.ACCOUNT)) {
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.ACCOUNT)) {
                         previousBalanceStr = payment.getTotal();
                     }
                 }
@@ -124,53 +129,53 @@ public class ResponsibilityFragment extends Fragment {
                     double total = copay + previousBalance;
 
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                    responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
+                    responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
 
-                    responseTotal.setText(CarePayConstants.DOLLAR + formatter.format(total));
-                    responseCopay.setText(CarePayConstants.DOLLAR + copayStr);
-                    responsePreviousBalance.setText(CarePayConstants.DOLLAR + previousBalanceStr);
-
-                } catch(NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     ex.printStackTrace();
+                    Log.e(LOG_TAG, ex.getMessage());
                 }
             }
         }
         return view;
     }
 
-    private void payAndFetchCheckedInAppointment() {
-        /*AppointmentModel appointmentModel = AppointmentsActivity.model;
-        ArrayList<AppointmentModel> appointmentsItems = new ArrayList<>();
-        appointmentModel.getAppointmentId();
-        appointmentModel.getDoctorName();
-        appointmentModel.getAppointmentType();
-        appointmentsItems.add(appointmentModel);*/
-//TODO need to chages the actual model
-        String body= "{\"appointment_id\": \""+ AppointmentsActivity.model.getAppointmentId() +"\"}";
+    private void getPaymentInformation() {
+        PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
+                .createService(PaymentsService.class);
+        Call<PaymentsDTO> call = paymentService.fetchPaymentInformation();
+        call.enqueue(new Callback<PaymentsDTO>() {
+            @Override
+            public void onResponse(Call<PaymentsDTO> call, Response<PaymentsDTO> response) {
+                PaymentsDTO paymentsDTO = response.body();
+            }
 
+            @Override
+            public void onFailure(Call<PaymentsDTO> call, Throwable throwable) {
+            }
+        });
+    }
+
+    private void payAndFetchCheckedInAppointment() {
+
+
+        String body = "{\"appointment_id\": \"" + AppointmentsActivity.model.getPayload().getId() + "\"}";
         AppointmentService aptService = (new BaseServiceGenerator(getActivity()).createService(AppointmentService.class));
+
         Call<JsonObject> call = aptService.confirmAppointment(body);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-               /* appointmentsModel = new AppointmentsResultModel();
-                appointmentsModel  = response.body();*/
 
-                Intent intent = new Intent(ResponsibilityFragment.this.getActivity(), AppointmentsActivity.class);
-                AppointmentModel appointmentModel = AppointmentsActivity.model;
-                if(appointmentModel!=null) {
-                    appointmentModel.setCheckedIn(true);
-                    appointmentModel.setPending(false);
-                }
-
-                // appointment clicked item is cleared once payment is done.
-                AppointmentsActivity.model = null;
-                intent.putExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE,appointmentModel);
-                startActivity(intent);
-                getActivity().finish();
+                /**
+                 * Redirect to AppointmentsActivity on Success
+                 */
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
 
             }
         });
@@ -178,17 +183,18 @@ public class ResponsibilityFragment extends Fragment {
 
     /**
      * Helper to set the typefaces
+     *
      * @param view The parent view
      */
     private void setTypefaces(View view) {
         // set the typefaces
-        setGothamRoundedBookTypeface(mActivity, (TextView) view.findViewById(R.id.respons_total_label));
-        setGothamRoundedMediumTypeface(mActivity, (TextView) view.findViewById(R.id.respons_total));
-        setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance_label));
-        setProximaNovaRegularTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay_label));
-        setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
-        setProximaNovaSemiboldTypeface(mActivity, (TextView) view.findViewById(R.id.respons_copay));
-        setGothamRoundedMediumTypeface(mActivity, (Button) view.findViewById(R.id.pay_total_amount_button));
+        setGothamRoundedBookTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_total_label));
+        setGothamRoundedMediumTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_total));
+        setProximaNovaRegularTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_prev_balance_label));
+        setProximaNovaRegularTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_copay_label));
+        setProximaNovaSemiboldTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
+        setProximaNovaSemiboldTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_copay));
+        setGothamRoundedMediumTypeface(appCompatActivity, (Button) view.findViewById(R.id.pay_total_amount_button));
     }
 
     /**
@@ -197,7 +203,7 @@ public class ResponsibilityFragment extends Fragment {
      * @param activity The activity
      */
     public void setActivity(KeyboardHolderActivity activity) {
-        mActivity = activity;
+        appCompatActivity = activity;
     }
 
 
