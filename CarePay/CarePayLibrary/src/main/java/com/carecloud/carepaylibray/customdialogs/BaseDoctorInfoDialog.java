@@ -32,6 +32,13 @@ public class BaseDoctorInfoDialog extends Dialog implements
     private AppointmentModel appointmentModel;
     private View addActionlayout;
     private View  rootLayout;
+    private TextView shortNameTextView;
+    private TextView nameTextView;
+    private TextView typeTextView;
+    private TextView addressTextView ;
+    private TextView addressHeaderTextView ;
+    private TextView dateTextView ;
+    private TextView timeTextView ;
 
     /**
      * Contractor for  base dialog.
@@ -57,13 +64,13 @@ public class BaseDoctorInfoDialog extends Dialog implements
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
 
-        TextView shortNameTextView = (TextView) findViewById(R.id.appointShortnameTextView);
-        TextView nameTextView = (TextView) findViewById(R.id.appointNameTextView);
-        TextView typeTextView = (TextView) findViewById(R.id.appointTypeTextView);
-        TextView addressTextView = (TextView) findViewById(R.id.appointAddressTextView);
-        TextView addressHeaderTextView = (TextView) findViewById(R.id.appointAddressHeaderTextView);
-        TextView dateTextView = (TextView) findViewById(R.id.appointDateTextView);
-        TextView timeTextView = (TextView) findViewById(R.id.appointTimeTextView);
+         shortNameTextView = (TextView) findViewById(R.id.appointShortnameTextView);
+         nameTextView = (TextView) findViewById(R.id.appointNameTextView);
+         typeTextView = (TextView) findViewById(R.id.appointTypeTextView);
+         addressTextView = (TextView) findViewById(R.id.appointAddressTextView);
+         addressHeaderTextView = (TextView) findViewById(R.id.appointAddressHeaderTextView);
+         dateTextView = (TextView) findViewById(R.id.appointDateTextView);
+         timeTextView = (TextView) findViewById(R.id.appointTimeTextView);
 
         DateUtil.getInstance().setDateRaw(appointmentModel.getAppointmentDate());
         dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());

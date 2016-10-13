@@ -116,8 +116,8 @@ public class BaseAmountInfoDialog extends Dialog implements
     }
 
     @Override
-    public void onClick(View v) {
-        int viewId= v.getId();
+    public void onClick(View view) {
+        int viewId= view.getId();
         if(viewId == R.id.dialogCloseHeader){
             cancel();
         }else if(viewId == R.id.paymentLocationImageView){
@@ -153,7 +153,7 @@ public class BaseAmountInfoDialog extends Dialog implements
             try {
                 context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
             } catch (android.content.ActivityNotFoundException ex) {
-
+                System.out.print(ex.getMessage());
             }
         }
     }
