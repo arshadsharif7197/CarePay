@@ -33,7 +33,7 @@ public class EditAppointmentDialog  extends BaseDoctorInfoDialog {
     }
     private void setActionButton(){
 
-        TextView editAppointmentTextView = (TextView)rootLayout.findViewById(R.id.dialogEditAppointTextView);
+        TextView editAppointmentTextView = (TextView)rootLayout.findViewById(R.id.dialogEditOrCancelAppointTextView);
         editAppointmentTextView.setVisibility(View.VISIBLE);
         editAppointmentTextView.setText(R.string.edit_appointment_dialog);
         editAppointmentTextView.setTextColor(context.getResources().getColor(R.color.glitter));
@@ -45,7 +45,7 @@ public class EditAppointmentDialog  extends BaseDoctorInfoDialog {
     public void onClick(View view) {
         super.onClick(view);
         int viewId = view.getId();
-        if(viewId == R.id.dialogEditAppointTextView){
+        if(viewId == R.id.dialogEditOrCancelAppointTextView){
             onEditAppointmnent();
             cancel();
         }
