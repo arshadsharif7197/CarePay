@@ -9,7 +9,7 @@
 
     <!-- Select lannguage -->
     <dimen name="language_text_left_margin">14dp</dimen>
-    <dimen name="language_card_height">50dp</dimen>
+    <dimen name="language_card_height">52dp</dimen>
     <dimen name="language_radiobutton">22dp</dimen>
     <dimen name="langugae_recycleviewpadding">17dp</dimen>
     <dimen name="language_row_margin">15dp</dimen>
@@ -52,8 +52,10 @@
     <dimen name="demographics_docs_header_top">26dp</dimen>
     <dimen name="demographics_docs_button_text_size">13sp</dimen>
     <dimen name="demographics_docs_header_left_right_margin">17dp</dimen>
+    <dimen name="demographics_docs_text_left_margin">14dp</dimen>
+    <dimen name="demographics_docs_text_right_margin">14dp</dimen>
     <dimen name="demographics_docs_header_top_margin">17dp</dimen>
-    <dimen name="demographics_docs_section_margin_top">10dp</dimen>
+    <dimen name="demographics_docs_section_margin_top">36dp</dimen>
     <dimen name="demographics_docs_image_button_container_height">60dp</dimen>
     <dimen name="demographics_docs_image_button_container_margin_top">30dp</dimen>
     <dimen name="demographics_docs_header_title_text_size" type="dimen" format="float">21.0sp</dimen>
@@ -115,9 +117,11 @@
     <dimen name="review_screen_left_margin">17dp</dimen>
     <dimen name="review_screen_right_margin">17dp</dimen>
     <dimen name="review_textview_leftmargin">12dp</dimen>
-    <dimen name="review_texviewmargin_top">1.5dp</dimen>
+    <dimen name="review_texviewmargin_top">2.5dp</dimen>
     <dimen name="review_lablemargintop">9dp</dimen>
     <dimen name="review_section_header">36dp</dimen>
+    <dimen name="review_default_heaight">51dp</dimen>
+    <dimen name="review_center_margin_top_bottom">15dp</dimen>
     <dimen name="review_header_lablemargin_top">27dp</dimen>
     <dimen name="review_section_header_textsize">14sp</dimen>
     <dimen name="review_textlable_textsize">10sp</dimen>
@@ -150,7 +154,7 @@
     <dimen name="consent_view_margin_top_bottom">10dp</dimen>
     <dimen name="date_textview_top_bottom">42dp</dimen>
     <dimen name="consentform_relativeLayout_margin">3dp</dimen>
-    <dimen name="consentform_realtivelayout_textpaddingtop">15dp</dimen>
+    <dimen name="consentform_realtivelayout_textpaddingtop">18dp</dimen>
     <dimen name="consentform_textinput_margintop">5dp</dimen>
 
 
@@ -273,4 +277,12 @@
     <dimen name="payment_receipt_margin_top">12dp</dimen>
     <dimen name="payment_receipt_margin_layout_top">48dp</dimen>
     <dimen name="payment_receipt_margin_bottom">23dp</dimen>
+
+    <!--Cancel Appointment-->
+    <dimen name="cancel_margin_top">26dp</dimen>
+    <dimen name="cancel_text_size">22sp</dimen>
+    <dimen name="cancel_radio_button_height">50dp</dimen>
+    <dimen name="cancel_radio_text_size">19sp</dimen>
+    <dimen name="cancel_edittext_size">16sp</dimen>
+    <dimen name="cancel_button_height">48dp</dimen>
 </resources>

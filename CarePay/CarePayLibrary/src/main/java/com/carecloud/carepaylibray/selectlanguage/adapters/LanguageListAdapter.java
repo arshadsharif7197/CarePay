@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
@@ -69,21 +70,23 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
             languageNameRadioButton = (RadioButton) itemView.findViewById(R.id.languageNameRadioButton);
-            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_regular.otf");
-            languageNameRadioButton.setTypeface(typeface);
+
             languageNameRadioButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     RadioButton radioButton= (RadioButton) view;
                     if(selectedLanguage !=null){
                         selectedLanguage.setChecked(false);
-                        selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.light_gray));
+                        selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.slateGray));
+                        SystemUtil.setProximaNovaRegularTypeface(context, selectedLanguage);
                     }
                     selectedLanguage = radioButton;
                     selectedLanguage.setChecked(true);
                     selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    SystemUtil.setProximaNovaSemiboldTypeface(context, selectedLanguage);
                     if (itemClickListener != null) {
                         itemClickListener.onLanguageChange(selectedLanguage.getText().toString());
+
                     }
                 }
             });
@@ -93,4 +96,6 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     public interface OnItemClickListener {
         void onLanguageChange(String selectedLanguage);
     }
+
+
 }

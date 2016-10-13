@@ -36,20 +36,16 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     List<LanguageOptionModel> languageOptionModelList;
     ImageButton languageConfirmButton;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
     }
 
-    /**
-     * Creating view for language fragment
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -68,6 +64,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
                 getActivity().startActivity(intent);
             }
         });
+
         loadData();
         return view;
 
@@ -105,7 +102,8 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
 
     @Override
     public void onLanguageChange(String selectedLanguage) {
-        languageName=selectedLanguage;
+        languageName = selectedLanguage;
         languageConfirmButton.setEnabled(true);
-    }}
+    }
+}
 
