@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.customdialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,41 +9,40 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-
-/**
- * Created by prem_mourya on 9/22/2016.
- */
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 
 public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
-    private AppointmentModel appointmentModel;
-    public PendingAppointmentRequestDialog(Context context, AppointmentModel appointmentModel) {
-        super(context, appointmentModel);
+
+    public PendingAppointmentRequestDialog(Context context, AppointmentDTO appointmentDTO) {
+        super(context, appointmentDTO);
         this.context = context;
-        this.appointmentModel = appointmentModel;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainLayout = (LinearLayout)getAddActionChildView();
+        mainLayout = (LinearLayout) getAddActionChildView();
         setActionButton();
         onColorHeaderForPending();
     }
-    private void setActionButton(){
+
+    @SuppressLint("InflateParams")
+    private void setActionButton() {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_pending_request_appointment, null);
-        TextView pendingrequesttextView = (TextView) childActionView.findViewById(R.id.appointRequestPendingTextView);
-        pendingrequesttextView.setOnClickListener(this);
+        TextView pendingRequestTextView = (TextView) childActionView.findViewById(R.id.appointRequestPendingTextView);
+        pendingRequestTextView.setOnClickListener(this);
         mainLayout.addView(childActionView);
     }
-    private void onColorHeaderForPending(){
-         View view =  getRootView();
-         view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);
+
+    @SuppressWarnings("deprecation")
+    private void onColorHeaderForPending() {
+        View view = getRootView();
+        view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);
         ((TextView) view.findViewById(R.id.appointDateTextView)).setTextColor(context.getResources().getColor(R.color.white));
         ((TextView) view.findViewById(R.id.appointTimeTextView)).setTextColor(context.getResources().getColor(R.color.white));
     }
@@ -51,7 +51,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
     public void onClick(View view) {
         super.onClick(view);
         int viewId = view.getId();
-        if(viewId == R.id.appointRequestPendingTextView){
+        if (viewId == R.id.appointRequestPendingTextView) {
             onPendingRequestAppointment();
             cancel();
         }
@@ -60,7 +60,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
     /**
      * call check-in at office api.
      */
-    private void onPendingRequestAppointment(){
+    private void onPendingRequestAppointment() {
     }
 
 }

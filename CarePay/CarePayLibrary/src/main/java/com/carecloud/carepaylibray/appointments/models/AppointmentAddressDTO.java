@@ -1,10 +1,14 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppointmentAddressModel {
+/**
+ * Model for appointment address.
+ */
+public class AppointmentAddressDTO {
 
     @SerializedName("line1")
     @Expose
@@ -196,4 +200,25 @@ public class AppointmentAddressModel {
         this.stateName = stateName;
     }
 
+    /**
+     * Returns full address.
+     * @return Full address
+     */
+    public String getPlaceAddressString() {
+        StringBuilder address = new StringBuilder();
+        address.append(StringUtil.isNullOrEmpty(line1) ? "" : line1);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(line2) ? "" : line2);
+        address.append(" ");
+        address.append(line3 == null ? "" : line3);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(city) ? "" : city);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(stateName) ? "" : stateName);
+        address.append(" ");
+        address.append(StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode);
+        address.append(" ");
+        address.append(countyName == null ? "" : countyName);
+        return address.toString();
+    }
 }

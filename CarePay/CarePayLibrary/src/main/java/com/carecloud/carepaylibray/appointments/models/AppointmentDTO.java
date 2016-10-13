@@ -4,21 +4,26 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Appointment {
+import java.io.Serializable;
+
+/**
+ * Model for appointment.
+ */
+public class AppointmentDTO implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentsMetadataModel metadata;
+    private AppointmentsMetadataDTO metadata;
     @SerializedName("payload")
     @Expose
-    private AppointmentsPayloadModel payload;
+    private AppointmentsPayloadDTO payload;
 
     /**
      * 
      * @return
      *     The metadata
      */
-    public AppointmentsMetadataModel getMetadata() {
+    public AppointmentsMetadataDTO getMetadata() {
         return metadata;
     }
 
@@ -27,7 +32,7 @@ public class Appointment {
      * @param metadata
      *     The metadata
      */
-    public void setMetadata(AppointmentsMetadataModel metadata) {
+    public void setMetadata(AppointmentsMetadataDTO metadata) {
         this.metadata = metadata;
     }
 
@@ -36,7 +41,7 @@ public class Appointment {
      * @return
      *     The payload
      */
-    public AppointmentsPayloadModel getPayload() {
+    public AppointmentsPayloadDTO getPayload() {
         return payload;
     }
 
@@ -45,7 +50,7 @@ public class Appointment {
      * @param payload
      *     The payload
      */
-    public void setPayload(AppointmentsPayloadModel payload) {
+    public void setPayload(AppointmentsPayloadDTO payload) {
         this.payload = payload;
     }
 

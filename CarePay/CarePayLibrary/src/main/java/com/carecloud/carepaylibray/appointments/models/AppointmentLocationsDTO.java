@@ -4,7 +4,10 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppointmentLocationModel {
+/**
+ * Model for appointment locations.
+ */
+public class AppointmentLocationsDTO {
 
     @SerializedName("id")
     @Expose
@@ -17,7 +20,7 @@ public class AppointmentLocationModel {
     private Boolean isVisibleAppointmentScheduler;
     @SerializedName("address")
     @Expose
-    private AppointmentAddressModel address;
+    private AppointmentLocationsAddressDTO address;
 
     /**
      * 
@@ -78,7 +81,7 @@ public class AppointmentLocationModel {
      * @return
      *     The address
      */
-    public AppointmentAddressModel getAddress() {
+    public AppointmentLocationsAddressDTO getAddress() {
         return address;
     }
 
@@ -87,7 +90,7 @@ public class AppointmentLocationModel {
      * @param address
      *     The address
      */
-    public void setAddress(AppointmentAddressModel address) {
+    public void setAddress(AppointmentLocationsAddressDTO address) {
         this.address = address;
     }
 
