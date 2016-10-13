@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.demographics.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,9 @@ import com.carecloud.carepaylibrary.R;
 
 import java.util.List;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 10/11/2016.
@@ -27,8 +29,6 @@ public class DemographicsDetailsAllergiesAdapter
                                                                           "Reaction",
                                                                           "Remove");
     private List<AllergyPayloadDTO> items;
-
-
 
     public DemographicsDetailsAllergiesAdapter(List<AllergyPayloadDTO> items) {
         this.items = items;
@@ -81,16 +81,16 @@ public class DemographicsDetailsAllergiesAdapter
      */
     static class AllergyViewHolder extends RecyclerView.ViewHolder {
 
-        View     allergyView;
-        TextView categoryLabel;
-        TextView allergyLabel;
-        TextView severityLabel;
-        TextView reactionLabel;
-        TextView categoryTextView;
-        TextView allergyTextView;
-        TextView severityTextView;
-        TextView reactionTextView;
-        TextView removeTextView;
+        View                       allergyView;
+        TextView                   categoryLabel;
+        TextView                   allergyLabel;
+        TextView                   severityLabel;
+        TextView                   reactionLabel;
+        TextView                   categoryTextView;
+        TextView                   allergyTextView;
+        TextView                   severityTextView;
+        TextView                   reactionTextView;
+        TextView                   removeTextView;
         OnAllergyItemClickListener clickListener;
 
         AllergyViewHolder(View itemView) {
@@ -108,6 +108,23 @@ public class DemographicsDetailsAllergiesAdapter
             reactionTextView = (TextView) allergyView.findViewById(R.id.viewAllergyReactionTextView);
 
             removeTextView = (TextView) allergyView.findViewById(R.id.viewAllergyRemove);
+
+            setTypefaces();
+        }
+
+        private void setTypefaces() {
+            Context context = itemView.getContext();
+
+            setProximaNovaExtraboldTypeface(context, categoryLabel);
+            setProximaNovaExtraboldTypeface(context, allergyLabel);
+            setProximaNovaExtraboldTypeface(context, severityLabel);
+            setProximaNovaExtraboldTypeface(context, reactionLabel);
+            setProximaNovaSemiboldTypeface(context, removeTextView);
+
+            setProximaNovaRegularTypeface(context, categoryTextView);
+            setProximaNovaRegularTypeface(context, allergyTextView);
+            setProximaNovaRegularTypeface(context, severityTextView);
+            setProximaNovaRegularTypeface(context, reactionTextView);
         }
 
         void setClickListener(OnAllergyItemClickListener clickListener) {
@@ -165,6 +182,7 @@ public class DemographicsDetailsAllergiesAdapter
      * Custom OnClickListener that accept the item position as parameter.
      */
     private class OnAllergyItemClickListener implements View.OnClickListener {
+
         private int position;
 
         OnAllergyItemClickListener(int position) {

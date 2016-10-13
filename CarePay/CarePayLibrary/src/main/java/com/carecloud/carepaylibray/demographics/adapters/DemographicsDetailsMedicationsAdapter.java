@@ -1,14 +1,16 @@
 package com.carecloud.carepaylibray.demographics.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.carecloud.carepaylibrary.R;
-
 import java.util.List;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 10/12/2016.
@@ -69,6 +71,7 @@ public class DemographicsDetailsMedicationsAdapter
      */
     static class MedicationViewHolder extends RecyclerView.ViewHolder {
 
+        View     parentView;
         TextView medicationLabel;
         TextView medicationTextView;
         TextView dosageLabel;
@@ -77,11 +80,22 @@ public class DemographicsDetailsMedicationsAdapter
 
         MedicationViewHolder(View itemView) {
             super(itemView);
+            this.parentView = itemView;
+
             medicationLabel = (TextView) itemView.findViewById(R.id.viewMedicLabel);
             medicationTextView = (TextView) itemView.findViewById(R.id.viewMedicTextView);
             dosageLabel = (TextView) itemView.findViewById(R.id.viewMedicDosageLabel);
             dosageTextView = (TextView) itemView.findViewById(R.id.viewMedicDosageTextView);
             removeClickable = (TextView) itemView.findViewById(R.id.viewMedicRemove);
+
+            setTypefaces();
+        }
+
+        private void setTypefaces() {
+            Context context = parentView.getContext();
+            setProximaNovaExtraboldTypeface(context, medicationLabel);
+            setProximaNovaExtraboldTypeface(context, dosageLabel);
+            setProximaNovaSemiboldTypeface(context, removeClickable);
         }
 
         void setClickListener(OnMedicationItemClickListener clickListener) {
@@ -93,6 +107,7 @@ public class DemographicsDetailsMedicationsAdapter
      * Payload for medication.
      */
     public static class MedicationPayloadDTO {
+
         String medication;
         String dosage;
 
@@ -106,6 +121,7 @@ public class DemographicsDetailsMedicationsAdapter
      * Metadata for medication.
      */
     private static class MedicationMetadataDTO {
+
         String medicationLabel;
         String dosageLabel;
         String removeLabel;
@@ -121,6 +137,7 @@ public class DemographicsDetailsMedicationsAdapter
      * Custom OnClickListener that accept the item position as parameter.
      */
     private class OnMedicationItemClickListener implements View.OnClickListener {
+
         private int position;
 
         OnMedicationItemClickListener(int position) {
