@@ -31,10 +31,10 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     private Button payNowButton;
 
     /**
-     * Contractor for partial payment dialog.
+     * Contractor for  payment dialog.
      *
      * @param context the String to evaluate
-     * @param paymentModel the String to evaluate
+     * @param paymentModel the DTO to evaluate
      */
     public PaymentAmountInfoDialog(Context context, JSONObject paymentModel) {
         super(context, paymentModel);

@@ -43,7 +43,7 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
      * Contractor for partial payment dialog.
      *
      * @param context the String to evaluate
-     * @param paymentModel the String to evaluate
+     * @param paymentModel the DTO to evaluate
      */
     public PaymentPartialModeDialog(Context context, JSONObject paymentModel) {
         super(context, paymentModel);

@@ -19,6 +19,13 @@ public class EditAppointmentDialog  extends BaseDoctorInfoDialog {
     private LinearLayout rootLayout;
     private Context context;
     private AppointmentModel appointmentModel;
+
+    /**
+     * Contractor for   dialog.
+     *
+     * @param context the String to evaluate
+     * @param appointmentModel the DTO to evaluate
+     */
     public EditAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
@@ -31,6 +38,7 @@ public class EditAppointmentDialog  extends BaseDoctorInfoDialog {
         rootLayout = (LinearLayout)getRootView();
         setActionButton();
     }
+
     private void setActionButton(){
 
         TextView editAppointmentTextView = (TextView)rootLayout.findViewById(R.id.dialogEditOrCancelAppointTextView);

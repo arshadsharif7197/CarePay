@@ -44,7 +44,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
      * Contractor for partial payment dialog.
      *
      * @param context the String to evaluate
-     * @param paymentModel the String to evaluate
+     * @param paymentModel the DTO to evaluate
      */
     public PartialPaymentDialog(Context context, JSONObject paymentModel) {
         super(context);
