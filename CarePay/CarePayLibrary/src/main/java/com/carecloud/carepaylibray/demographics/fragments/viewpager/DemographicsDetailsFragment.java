@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
@@ -57,6 +59,7 @@ public class DemographicsDetailsFragment extends Fragment
     private View     view;
     private String[] raceArray;
     private String[] ethnicityArray;
+    private String[] genderArray;
     private int      selectedArray;
 
     private TextView        raceTextView;
@@ -80,41 +83,13 @@ public class DemographicsDetailsFragment extends Fragment
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
 
-        raceArray = getResources().getStringArray(R.array.Race);
-        ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
-        genderTextView = (TextView) view.findViewById(R.id.demogrDetailsGenderClickable);
-
-        setupEdit();
-
-        addUnlistedAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
-        addUnlistedMedTextView = (TextView) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
-
-        setupRecyclerViews();
-
-        // add click listener for 'Add Another' (allergy)
-        addAnotherAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAllergyClickable);
-        addAnotherAllergyTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((DemographicsDetailsAllergiesAdapter) allergiesRecyclerView.getAdapter()) // for now add the same dummy allergy
-                        .addAtFront(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category C",
-                                                                                              "Allergy 8",
-                                                                                              "Severe",
-                                                                                              "Reaction #22"));
-            }
-        });
-
-        addAnotherMedTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAnotherMedClickable);
-        addAnotherMedTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((DemographicsDetailsMedicationsAdapter) medicRecyclerView.getAdapter())
-                        .addAtFront(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication Z122",
-                                                                                                   "11 mg"));
-            }
-        });
+        model = ((DemographicsActivity)getActivity()).getDetailsModel();
 
         initialiseUIFields();
+
+        setTypefaces(view);
+
+        populateViewsFromModel();
 
         return view;
     }
@@ -146,7 +121,7 @@ public class DemographicsDetailsFragment extends Fragment
             @Override
             public void afterTextChanged(Editable editable) {
                 String dob = dobEdit.getText().toString();
-                if(!StringUtil.isNullOrEmpty(dob)) {
+                if (!StringUtil.isNullOrEmpty(dob)) {
                     dobInputText.setErrorEnabled(false);
                     dobInputText.setError(null);
                 }
@@ -168,7 +143,7 @@ public class DemographicsDetailsFragment extends Fragment
 
     private boolean isDateOfBirthValid() {
         String dob = dobEdit.getText().toString();
-        if(!StringUtil.isNullOrEmpty(dob)) {
+        if (!StringUtil.isNullOrEmpty(dob)) {
             boolean isValid = DateUtil.isValidateStringDateMMDDYYYY(dob);
             dobInputText.setErrorEnabled(!isValid);
             dobInputText.setError(isValid ? null : getString(R.string.invalid_date_of_birth_format));
@@ -219,6 +194,53 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void initialiseUIFields() {
+        raceArray = getResources().getStringArray(R.array.Race);
+        ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
+        genderArray = getResources().getStringArray(R.array.Gender);
+
+        // init clickables and dob edit
+        raceTextView = (TextView) view.findViewById(R.id.raceListTextView);
+        raceTextView.setOnClickListener(this);
+        ethnicityTextView = (TextView) view.findViewById(R.id.ethnicityListTextView);
+        ethnicityTextView.setOnClickListener(this);
+        genderTextView = (TextView) view.findViewById(R.id.demogrDetailsGenderClickable);
+        genderTextView.setOnClickListener(this);
+        setupEdit();
+        nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
+        nextButton.setOnClickListener(this);
+
+        addUnlistedAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
+        addUnlistedAllergyTextView.setOnClickListener(this);
+
+        addUnlistedMedTextView = (TextView) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
+        addUnlistedMedTextView.setOnClickListener(this);
+
+        // rec views
+        setupRecyclerViews();
+
+        // add click listener for 'Add Another' (allergy)
+        addAnotherAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAllergyClickable);
+        addAnotherAllergyTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((DemographicsDetailsAllergiesAdapter) allergiesRecyclerView.getAdapter()) // for now add the same dummy allergy
+                        .addAtFront(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category C",
+                                                                                              "Allergy 8",
+                                                                                              "Severe",
+                                                                                              "Reaction #22"));
+            }
+        });
+
+        addAnotherMedTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAnotherMedClickable);
+        addAnotherMedTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((DemographicsDetailsMedicationsAdapter) medicRecyclerView.getAdapter())
+                        .addAtFront(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication Z122",
+                                                                                                   "11 mg"));
+            }
+        });
+
         // add capture picture fragment
         FragmentManager fm = getChildFragmentManager();
         String tag = ProfilePictureFragment.class.getSimpleName();
@@ -232,17 +254,6 @@ public class DemographicsDetailsFragment extends Fragment
                 .replace(R.id.demographicsAddressPicCapturer, fragment, tag)
                 .commit();
 
-        // get handlers to the other views
-        raceTextView = (TextView) view.findViewById(R.id.raceListTextView);
-        raceTextView.setOnClickListener(this);
-        ethnicityTextView = (TextView) view.findViewById(R.id.ethnicityListTextView);
-        ethnicityTextView.setOnClickListener(this);
-        nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
-        nextButton.setOnClickListener(this);
-
-        setTypefaces(view);
-
-        populateViewsFromModel();
     }
 
     public DemographicPersDetailsPayloadDTO getModel() {
@@ -280,13 +291,20 @@ public class DemographicsDetailsFragment extends Fragment
         } else if (view == ethnicityTextView) {
             selectedArray = 2;
             showAlertDialogWithListview(ethnicityArray, "Select Ethnicity");
+        } else if(view == genderTextView) {
+            selectedArray = 3;
+            showAlertDialogWithListview(genderArray, "Select Gender");
+        } else if(view == addUnlistedAllergyTextView) {
+            Snackbar.make(view, "Hm... Some UI would do.", Snackbar.LENGTH_SHORT).show();
+        } else if(view == addUnlistedMedTextView) {
+            Snackbar.make(view, "Hm... Some UI would do.", Snackbar.LENGTH_SHORT).show();
         } else if (view == nextButton) {
             nextbuttonClick();
         }
     }
 
     private void nextbuttonClick() {
-        if(isDateOfBirthValid()) {
+        if (isDateOfBirthValid()) {
             // update the model with values from UI
             model.setPrimaryRace(raceTextView.getText().toString());
             model.setEthnicity(ethnicityTextView.getText().toString());
@@ -298,9 +316,9 @@ public class DemographicsDetailsFragment extends Fragment
         }
     }
 
-    private void showAlertDialogWithListview(final String[] raceArray, String title) {
-        Log.e("raceArray==", Arrays.toString(raceArray));
-        Log.e("raceArray 23==", Arrays.asList(raceArray).toString());
+    private void showAlertDialogWithListview(final String[] dataArray, String title) {
+        Log.e("raceArray==", Arrays.toString(dataArray));
+        Log.e("raceArray 23==", Arrays.asList(dataArray).toString());
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
@@ -311,9 +329,11 @@ public class DemographicsDetailsFragment extends Fragment
             }
         });
         View customView = LayoutInflater
-                .from(getActivity()).inflate(R.layout.alert_list_layout, null, false);
+                .from(getActivity()).inflate(R.layout.alert_list_layout,
+                                             (ViewGroup) getView(),
+                                             false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(raceArray));
+        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
         listView.setAdapter(mAdapter);
         dialog.setView(customView);
         final AlertDialog alert = dialog.create();
@@ -324,7 +344,7 @@ public class DemographicsDetailsFragment extends Fragment
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (selectedArray) {
                     case 1:
-                        String race = raceArray[position];
+                        String race = dataArray[position];
                         raceTextView.setText(race);
                         model.setPrimaryRace(race);
                         break;
@@ -333,6 +353,10 @@ public class DemographicsDetailsFragment extends Fragment
                         ethnicityTextView.setText(ethnicity);
                         model.setEthnicity(ethnicity);
                         break;
+                    case 3:
+                        String gender = dataArray[position];
+                        genderTextView.setText(gender);
+                        model.setGender(gender);
                 }
                 alert.dismiss();
             }
