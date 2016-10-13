@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,6 +36,7 @@ public abstract class DocumentScannerFragment extends Fragment {
     private   ImageCaptureHelper          imageCaptureHelper;
     protected NextAddRemoveStatusModifier buttonsStatusCallback;
     private   int                         imageShape;
+    protected Bitmap bitmap;
 
     @Nullable
     @Override
@@ -157,9 +159,9 @@ public abstract class DocumentScannerFragment extends Fragment {
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-                imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
+               bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                imageCaptureHelper.onCaptureImageResult(data, getImageShape());
+                bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
             }
             updateModelAndViewsAfterScan();
         }
@@ -206,4 +208,5 @@ public abstract class DocumentScannerFragment extends Fragment {
 
         void scrollToBottom();
     }
+
 }

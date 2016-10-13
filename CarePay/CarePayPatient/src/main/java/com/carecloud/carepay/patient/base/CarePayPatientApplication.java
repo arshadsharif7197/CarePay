@@ -2,7 +2,7 @@ package com.carecloud.carepay.patient.base;
 
 import android.app.Application;
 
-import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
 

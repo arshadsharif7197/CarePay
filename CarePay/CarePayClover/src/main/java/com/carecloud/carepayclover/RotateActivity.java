@@ -2,13 +2,11 @@ package com.carecloud.carepayclover;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-
-import com.carecloud.carepaylibray.payment.PaymentActivity;
 
 public class RotateActivity extends AppCompatActivity {
     TextView rotateTitleTextView, rotateSubTitleTextView,goBackTextview;
