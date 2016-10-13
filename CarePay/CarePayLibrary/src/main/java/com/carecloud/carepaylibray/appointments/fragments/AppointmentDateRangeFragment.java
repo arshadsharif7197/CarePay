@@ -32,7 +32,9 @@ public class AppointmentDateRangeFragment extends Fragment {
     private AppointmentModel model;
     private CalendarPickerView calendarPickerView;
     private List<Date> dateList;
-    private Date todayDate, startDate, endDate;
+    private Date todayDate;
+    private Date startDate;
+    private Date endDate;
 
     @Override
     public void onStart() {
@@ -74,7 +76,9 @@ public class AppointmentDateRangeFragment extends Fragment {
     }
 
     /**
-     * Method to inflate toolbar to UI.
+     * Method to inflate toolbar to UI
+     *
+     * @param view used as view component
      */
     private void inflateToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.add_appointment_toolbar);
@@ -96,29 +100,38 @@ public class AppointmentDateRangeFragment extends Fragment {
 
     /**
      * Method to inflate UI components
+     *
+     * @param view used as view component
      */
     private void inflateUIComponents(View view) {
         TextView sundayTextView = (TextView) view.findViewById(R.id.sundayTextView);
-        TextView mondayTextView = (TextView) view.findViewById(R.id.mondayTextView);
-        TextView tuesdayTextView = (TextView) view.findViewById(R.id.tuesdayTextView);
-        TextView wednesdayTextView = (TextView) view.findViewById(R.id.wednesdayTextView);
-        TextView thursdayTextView = (TextView) view.findViewById(R.id.thursdayTextView);
-        TextView fridayTextView = (TextView) view.findViewById(R.id.fridayTextView);
-        TextView saturdayTextView = (TextView) view.findViewById(R.id.saturdayTextView);
-
         sundayTextView.setTextColor(ContextCompat.getColor(getContext(),
-                R.color.medium_jungle_green));
+            R.color.medium_jungle_green));
+
+        TextView mondayTextView = (TextView) view.findViewById(R.id.mondayTextView);
         mondayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+
+        TextView tuesdayTextView = (TextView) view.findViewById(R.id.tuesdayTextView);
         tuesdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+
+        TextView wednesdayTextView = (TextView) view.findViewById(R.id.wednesdayTextView);
         wednesdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+
+        TextView thursdayTextView = (TextView) view.findViewById(R.id.thursdayTextView);
         thursdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+
+        TextView fridayTextView = (TextView) view.findViewById(R.id.fridayTextView);
         fridayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+
+        TextView saturdayTextView = (TextView) view.findViewById(R.id.saturdayTextView);
         saturdayTextView.setTextColor(ContextCompat.getColor(getContext(),
-                R.color.medium_jungle_green));
+            R.color.medium_jungle_green));
     }
 
     /**
      * Method to inflate and initialize custom calendar view
+     *
+     * @param view used as view component
      */
     private void initCalendarView(View view) {
         calendarPickerView=(CalendarPickerView)view.findViewById(R.id.calendarView);
@@ -137,7 +150,6 @@ public class AppointmentDateRangeFragment extends Fragment {
                 .withSelectedDates(selectedDates);
         } else {
             /*Instantiate calendar by default a week as a date range*/
-            Date today = new Date();
             Calendar rangeStart = Calendar.getInstance();
             rangeStart.add(Calendar.DAY_OF_MONTH, 1);
             Calendar rangeEnd = Calendar.getInstance();
@@ -147,6 +159,7 @@ public class AppointmentDateRangeFragment extends Fragment {
             selectedDates.add(rangeStart.getTime());
             selectedDates.add(rangeEnd.getTime());
 
+            Date today = new Date();
             calendarPickerView.init(today, getNextSixMonthCalendar().getTime())
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(selectedDates);
@@ -157,7 +170,6 @@ public class AppointmentDateRangeFragment extends Fragment {
         CustomGothamRoundedMediumButton applyDateRangeButton = (CustomGothamRoundedMediumButton)
                 view.findViewById(R.id.applyDateRangeButton);
         applyDateRangeButton.setOnClickListener(applyButtonClickListener);
-
     }
 
     /**

@@ -16,6 +16,12 @@ public class CustomCalendarPickerView extends CalendarPickerView {
 
     Context context;
 
+    /**
+     * Constructor to initialise Custom Calendar Picker View
+     *
+     * @param context application context
+     * @param attrs A collection of attributes, as found associated with a tag in an XML document
+     */
     public CustomCalendarPickerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -23,7 +29,7 @@ public class CustomCalendarPickerView extends CalendarPickerView {
     }
 
     /**
-     * Method to set typeface for calendar date and month.
+     * Method to set typeface for calendar date and month
      */
     private void init() {
         Typeface typeface = Typeface.createFromAsset(getContext().getAssets(),

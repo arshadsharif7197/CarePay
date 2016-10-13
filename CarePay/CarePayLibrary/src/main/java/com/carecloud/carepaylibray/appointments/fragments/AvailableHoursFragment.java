@@ -34,7 +34,9 @@ public class AvailableHoursFragment extends Fragment {
 
     private AppointmentModel model;
     private static String appointmentDate;
-    private Date todayDate, startDate, endDate;
+    private Date todayDate;
+    private Date startDate;
+    private Date endDate;
 
     @Override
     public void onStart() {
@@ -77,7 +79,9 @@ public class AvailableHoursFragment extends Fragment {
     }
 
     /**
-     * Method to inflate toolbar to UI.
+     * Method to inflate toolbar to UI
+     *
+     * @param availableHoursListView used as view component
      */
     private void inflateToolbar(View availableHoursListView) {
         Toolbar toolbar = (Toolbar)
@@ -97,6 +101,8 @@ public class AvailableHoursFragment extends Fragment {
 
     /**
      * Method to inflate UI components
+     *
+     * @param availableHoursListView used as view component
      */
     private void inflateUIComponents(View availableHoursListView) {
         Button editRangeButton = (Button)
@@ -118,7 +124,9 @@ public class AvailableHoursFragment extends Fragment {
     }
 
     /**
-     * Method to update date range that is selected on calendar.
+     * Method to update date range that is selected on calendar
+     *
+     * @param availableHoursListView used as view component
      */
     private void updateDateRange(View availableHoursListView) {
         CustomProxyNovaSemiBoldLabel dateRangeCustomTextView = (CustomProxyNovaSemiBoldLabel)
@@ -213,8 +221,7 @@ public class AvailableHoursFragment extends Fragment {
     }
 
     /**
-     * Dummy data for now till it get it from JSON file
-     * todo : Dummy data will be removed once returned by API
+     * Dummy data will be removed once returned by API
      */
     private ArrayList<Object> getSampleArrayList() {
         ArrayList<Object> items = new ArrayList<>();

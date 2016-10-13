@@ -13,17 +13,36 @@ import android.widget.Button;
 public class CustomGothamRoundedMediumButton extends Button {
 
     Context context;
+
+    /**
+     * Constructor to initialise Custom Gotham Rounded Medium Button
+     *
+     * @param context application context
+     */
     public CustomGothamRoundedMediumButton(Context context) {
         super(context);
         this.context=context;
     }
 
+    /**
+     * Constructor to initialise Custom Gotham Rounded Medium Button
+     *
+     * @param context application context
+     * @param attrs A collection of attributes, as found associated with a tag in an XML document
+     */
     public CustomGothamRoundedMediumButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context=context;
         init();
     }
 
+    /**
+     * Constructor to initialise Custom Gotham Rounded Medium Button
+     *
+     * @param context application context
+     * @param attrs A collection of attributes, as found associated with a tag in an XML document
+     * @param defStyleAttr A collection of style attributes
+     */
     public CustomGothamRoundedMediumButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context=context;
@@ -31,7 +50,7 @@ public class CustomGothamRoundedMediumButton extends Button {
     }
 
     /**
-     * Method to set typeface for button.
+     * Method to set typeface for button
      */
     private void init() {
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
