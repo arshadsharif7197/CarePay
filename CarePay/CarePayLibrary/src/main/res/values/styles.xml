@@ -278,7 +278,7 @@
     <style name="DemographicsDocsLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/charcoal</item>
-        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_text_right_margin</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
         <item name="android:paddingStart">@dimen/signup_optional_label_margin_left_right</item>
     </style>
@@ -363,6 +363,12 @@
         <!--<item name="android:layout_marginEnd">@dimen/demographics_details_allergy_text_end</item>-->
     </style>
 
+    <style name="DemographicsDetailsEditStyle" parent="EditTextStyle">
+        <item name="android:paddingStart">@dimen/demogr_details_padding_start_edit</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:textColor">@color/charcoal</item>
+    </style>
+
     <!-- Signin Signup -->
 
     <style name="errorTextAppearance" parent="@android:style/TextAppearance">
@@ -438,8 +444,8 @@
         <item name="android:layout_marginBottom">@dimen/review_center_margin_top_bottom</item>
         <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
-    <!-- Navigation Screen Theme-->
 
+    <!-- Navigation Screen Theme-->
     <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -447,12 +453,13 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:overScrollMode">never</item>
+
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
 
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/payne_gray</item> <!-- color of the underlying bar when no focus -->
-        <item name="colorControlActivated">@color/payne_gray</item> <!-- hint and underlying bar when focus -->
+        <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/light_gray</item> <!-- hint and underlying bar when focus -->
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

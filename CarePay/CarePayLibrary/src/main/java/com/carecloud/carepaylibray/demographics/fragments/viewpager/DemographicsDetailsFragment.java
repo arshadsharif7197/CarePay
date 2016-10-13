@@ -109,6 +109,7 @@ public class DemographicsDetailsFragment extends Fragment
         return view;
     }
 
+    // for test
     private List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> createMeds() {
         List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> meds = new ArrayList<>();
         meds.add(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication 111", "33mg"));
@@ -117,6 +118,7 @@ public class DemographicsDetailsFragment extends Fragment
         return meds;
     }
 
+    // for test
     private List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> getAllergies() {
         List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> allergies = new ArrayList<>();
         allergies.add(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category Alpha",
@@ -151,7 +153,6 @@ public class DemographicsDetailsFragment extends Fragment
         ethnicityTextView.setOnClickListener(this);
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         nextButton.setOnClickListener(this);
-//        enableNextButton(false); // 'next' is initially disabled // TODO: 9/27/2016 uncomment
 
         setTypefaces(view);
 

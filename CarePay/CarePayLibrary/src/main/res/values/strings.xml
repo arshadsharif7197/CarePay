@@ -391,6 +391,17 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="add_new_credit_card">ADD NEW CREDIT CARD</string>
     <string name="profile_picture">Profile picture</string>
     <string name="required">Required</string>
+    <string name="dob_format">MM/DD/YYYY</string>
+    <string name="demogr_details_allergies_label">Allergies you have</string>
+    <string name="hint_optional">Optional</string>
+    <string name="demogr_details_allergy_add_label">Allergy</string>
+    <string name="demogr_details_add_another_clickable">Add Another</string>
+    <string name="demogr_details_add_unlisted_allergies_clickable">Add unlisted allergies</string>
+    <string name="demogr_details_medications_you_re_taking">MEDICATIONS YOU\'RE TAKING</string>
+    <string name="demogr_details_optional">Optional</string>
+    <string name="demographics_details_medication_label">Medication</string>
+    <string name="demogr_details_add_another_med_clickable">Add Another</string>
+    <string name="demogr_details_add_unlisted_medications">Add unlisted medications</string>
     <string name="remove">Remove</string>
     <string name="credit_card_number">Credit Card Number</string>
     <string name="verification_code">Verification Code</string>
