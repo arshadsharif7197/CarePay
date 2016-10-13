@@ -18,7 +18,7 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
     private static final String ARG_MIN_DATE = "min_date";
     private static final String ARG_MAX_DATE = "max_date";
 
-    private SimpleDatePickerDialog.OnDateSetListener mOnDateSetListener;
+    private SimpleDatePickerDialog.OnDateSetListener onDateSetListener;
 
     /**
      * Create a new default instance of the DialogFragment
@@ -49,13 +49,14 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
      */
     public static SimpleDatePickerDialogFragment getInstance(int year, int month, long minDate,
                                                              long maxDate) {
-        SimpleDatePickerDialogFragment datePickerDialogFragment = new
-                SimpleDatePickerDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_MONTH, month);
         bundle.putInt(ARG_YEAR, year);
         bundle.putLong(ARG_MIN_DATE, minDate);
         bundle.putLong(ARG_MAX_DATE, maxDate);
+
+        SimpleDatePickerDialogFragment datePickerDialogFragment = new
+                SimpleDatePickerDialogFragment();
         datePickerDialogFragment.setArguments(bundle);
         return datePickerDialogFragment;
     }
@@ -66,7 +67,7 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
      * @param onDateSetListener To get call of selected date
      */
     public void setOnDateSetListener(SimpleDatePickerDialog.OnDateSetListener onDateSetListener) {
-        mOnDateSetListener = onDateSetListener;
+        onDateSetListener = onDateSetListener;
     }
 
     @NonNull
@@ -80,7 +81,7 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
         checkForValidMinDate(year, month, minDate);
         checkForValidMaxDate(year, month, maxDate);
         SimpleDatePickerDialog simpleDatePickerDialog = new SimpleDatePickerDialog(
-                getActivity(), mOnDateSetListener, year, month);
+                getActivity(), onDateSetListener, year, month);
         if (minDate != NULL_INT) {
             simpleDatePickerDialog.setMinDate(minDate);
         }

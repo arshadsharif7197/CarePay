@@ -39,14 +39,13 @@ public class SimpleDatePickerDelegate {
 
     /**
      * Returns the instance of this SimpleDatePickerDelegate
-     * @param parent parent as a View
-     * @return The instance
+     * @param parent Parent view of delegate
      */
     public SimpleDatePickerDelegate(View parent) {
 
         setCurrentLocale(Locale.getDefault());
 
-        NumberPicker.OnValueChangeListener onChangeListener = new NumberPicker
+        final NumberPicker.OnValueChangeListener onChangeListener = new NumberPicker
                 .OnValueChangeListener() {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
