@@ -53,7 +53,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
      *
      * @param parent   parent view
      * @param viewType view type
-     * @return
+     * @return created view
      */
     public CheckedInAdapter.CartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.checked_in_list_item_layout, parent, false);
