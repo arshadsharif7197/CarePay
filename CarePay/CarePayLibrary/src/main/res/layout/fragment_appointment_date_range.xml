@@ -82,7 +82,7 @@
 
     </LinearLayout>
 
-    <com.squareup.timessquare.CalendarPickerView
+    <com.carecloud.carepaylibray.customcomponents.CustomCalendarPickerView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
         app:tsquare_headerTextColor="@color/transparent_apt"
         app:tsquare_titleTextColor="@color/white" />
 
-    <Button
+    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
         android:id="@+id/applyDateRangeButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_apt_apply_date_range_height"

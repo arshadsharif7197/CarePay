@@ -52,4 +52,5 @@ public class CarePayConstants {
 
     public static final String APPOINTMENT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssz";
     public static final String RAW_DATE_FORMAT_FOR_TESTS = "yyyy-MM-dd'T'HH:mm:ssX";
+    public static final String RAW_DATE_FORMAT_FOR_CALENDAR__DATE_RANGE = "EEE, MMM d, ''yy";
 }
