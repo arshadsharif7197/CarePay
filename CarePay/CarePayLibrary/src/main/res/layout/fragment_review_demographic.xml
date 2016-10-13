@@ -48,7 +48,8 @@
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/reviewdemogrFirstNameTextInput"
-            style="@style/SigninSignupTextInputStyle">
+            style="@style/TextInputLayoutStyle"
+            android:layout_marginTop="18dp">
 
             <EditText
                 android:id="@+id/reviewdemogrFirstNameEdit"
@@ -79,7 +80,8 @@
 
             <TextView
                 android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
-                style="@style/SignupOptionalLabelStyle"
+                style="@style/SignupRequireHintStyle"
+                android:textColor="@color/cadet_gray"
                 android:text="Optional"/>
         </FrameLayout>
         <android.support.design.widget.TextInputLayout
@@ -94,19 +96,9 @@
                 android:nextFocusForward="@+id/reviewdemogrEmailEdit"/>
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/reviewdemogrEmailTextInput"
-            style="@style/SigninSignupTextInputStyle">
-
-            <EditText
-                 android:id="@+id/reviewdemogrEmailEdit"
-                style="@style/SigninSignupEditStyle"
-                android:hint="Email"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"
-                android:nextFocusForward="@+id/reviewdemogrDOBEdit"/>
-        </android.support.design.widget.TextInputLayout>
-
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <android.support.design.widget.TextInputLayout
             android:id="@+id/reviewdemogrDOBTextInput"
             style="@style/SigninSignupTextInputStyle">
@@ -114,10 +106,17 @@
             <EditText
                 android:id="@+id/revewidemogrDOBEdit"
                 style="@style/SigninSignupEditStyle"
-                android:hint="Date Of Birth"
                 android:imeOptions="actionNext"
+                android:hint="@string/demoDobLabel"
+                android:inputType="date"
                 android:nextFocusForward="@+id/revewidemoPhoneNumberEdit"/>
         </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:id="@+id/dobformatlabel"
+                style="@style/SignupRequireHintStyle"
+                android:textColor="@color/cadet_gray"
+                android:text="@string/dobformat"/>
+        </FrameLayout>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/reviewdemogrPhoneNumberTextInput"
             style="@style/SigninSignupTextInputStyle">
@@ -127,7 +126,8 @@
                 style="@style/SigninSignupEditStyle"
                 android:hint="Phone Number"
                 android:inputType="phone"
-                android:imeOptions="actionDone" />
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/driverLicenseEditText"/>
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -212,32 +212,20 @@
         <View
             style="@style/Consent_Form_View_Style"
             android:layout_width="match_parent" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/reviewDriverLicenseLabel"
+            style="@style/TextInputLayoutStyle"
+            android:layout_weight="1">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
-            android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
-            android:orientation="horizontal">
+        <EditText
+            android:id="@+id/driverLicenseEditText"
+            style="@style/SigninSignupEditStyle"
+            android:hint="@string/driverLicense"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/addressEditTextId"/>
+        </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/preferredLanguageTextView"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Preffred Language"
-                style="@style/DemographicsDocsLabelStyle"/>
 
-            <TextView
-                android:text="@string/demogr_tv_choose_label"
-                style="@style/DemographicsDocsClickableTextStyle"
-                android:id="@+id/preferredLanguageListTextView"
-                android:layout_width="wrap_content"/>
-
-        </LinearLayout>
-        <View
-            style="@style/Consent_Form_View_Style"
-            android:layout_width="match_parent" />
 
         <TextView
             style="@style/DemographicsSectionLabelStyle"
@@ -249,6 +237,7 @@
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
+           android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
            android:orientation="vertical">
 
            <android.support.design.widget.TextInputLayout
@@ -279,31 +268,31 @@
                     style="@style/SigninSignupEditStyle"
                     android:hint="@string/Address2EditText"
                     android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/zipCodeId"/>
+                    android:nextFocusForward="@+id/zipCodeId" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:id="@+id/demogrAddressOptionalLabel"
-                style="@style/SignupOptionalLabelStyle"
+                style="@style/SignupRequireHintStyle"
                 android:text="Optional"/>
 
         </FrameLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/zipCodeTextInputLayout"
-            style="@style/TextInputLayoutStyle"
-            android:layout_weight="1">
+           <android.support.design.widget.TextInputLayout
+               android:id="@+id/zipCodeTextInputLayout"
+               style="@style/TextInputLayoutStyle"
+               android:layout_weight="1">
 
-            <EditText
-                android:id="@+id/zipCodeId"
-                style="@style/SigninSignupEditStyle"
-                android:digits="0123456789-"
-                android:hint="@string/ZipCodeEditText"
-                android:imeOptions="actionNext"
-                android:maxLength="10"
-                android:nextFocusForward="@+id/cityId"/>
+               <EditText
+                   android:id="@+id/zipCodeId"
+                   style="@style/SigninSignupEditStyle"
+                   android:digits="0123456789-"
+                   android:hint="@string/ZipCodeEditText"
+                   android:imeOptions="actionNext"
+                   android:nextFocusForward="@+id/cityId"
+                   android:maxLength="10" />
 
-        </android.support.design.widget.TextInputLayout>
+           </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -332,29 +321,23 @@
                     android:id="@+id/stateAutoCompleteTextView"
                     style="@style/EditTextStyle"
                     android:hint="@string/StateEditText"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="actionDone"
                     android:inputType="textAutoComplete"
-                    android:maxLength="2"
-                    android:nextFocusForward="@+id/phNoEditText"/>
+                    android:maxLength="2" />
 
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
            </LinearLayout>
 
-
-
-
+    </LinearLayout>
+    </ScrollView>
     <Button
         android:textColor="@color/white"
         android:id="@+id/buttonAddDemographicInfo"
         android:gravity="center"
-        android:background="@drawable/button_blue"
-        android:layout_marginTop="70dp"
+        android:background="@drawable/language_button_selector"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:text="@string/aDD_DEMOGRAPHIC_INFO_Button_Label"/>
-
-    </LinearLayout>
-    </ScrollView>
 </LinearLayout>
