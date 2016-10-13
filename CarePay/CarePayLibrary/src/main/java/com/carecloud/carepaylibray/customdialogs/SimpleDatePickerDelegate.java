@@ -37,6 +37,11 @@ public class SimpleDatePickerDelegate {
 
     private OnDateChangedListener onDateChangedListener;
 
+    /**
+     * Returns the instance of this SimpleDatePickerDelegate
+     * @param parent parent as a View
+     * @return The instance
+     */
     public SimpleDatePickerDelegate(View parent) {
 
         setCurrentLocale(Locale.getDefault());
@@ -97,12 +102,23 @@ public class SimpleDatePickerDelegate {
         init(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), null);
     }
 
+    /**
+     * Initialise the SimpleDatePickerDelegate
+     * @param year        The year that was set.
+     * @param monthOfYear The month that was set (0-11) for compatibility with {@link
+     *                    Calendar}.
+     * @param onDateChangedListener onDateChangedListener as a DateChangedListener
+     */
     public void init(int year, int monthOfYear, OnDateChangedListener onDateChangedListener) {
         setDate(year, monthOfYear);
         updateSpinners();
         onDateChangedListener = onDateChangedListener;
     }
 
+    /**
+     * Set the min date
+     * @param date        The date that is to set.
+     */
     public void setMinDate(long date) {
         tempDate.setTimeInMillis(date);
         if (tempDate.get(Calendar.YEAR) == minDate.get(Calendar.YEAR)
@@ -116,6 +132,10 @@ public class SimpleDatePickerDelegate {
         updateSpinners();
     }
 
+    /**
+     * Set the max date
+     * @param date        The date that is to set.
+     */
     public void setMaxDate(long date) {
         tempDate.setTimeInMillis(date);
         if (tempDate.get(Calendar.YEAR) == maxDate.get(Calendar.YEAR)

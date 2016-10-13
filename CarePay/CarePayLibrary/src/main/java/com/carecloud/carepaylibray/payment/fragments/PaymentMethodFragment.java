@@ -28,7 +28,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public class PaymentMethodFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup paymentMethodRadioGroup;
-    private Button paymentChoiceButton, createPaymentPlanButton;
+    private Button createPaymentPlanButton;
+    private Button paymentChoiceButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
     private String[] paymentMethodsArray;
@@ -133,8 +134,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             if (i % 2 == 0) {
                 SystemUtil.setProximaNovaRegularTypeface(this.activity,
                         (RadioButton) paymentMethodRadioGroup.getChildAt(i));
-                ((RadioButton) paymentMethodRadioGroup.getChildAt(i)).
-                        setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
+                ((RadioButton) paymentMethodRadioGroup.getChildAt(i))
+                        .setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
             }
         }
     }
@@ -156,8 +157,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         public void onClick(View view) {
             if (paymentChoiceButton.getText().equals(getString(R.string.choose_credit_card))) {
                 FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-                ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager.
-                        findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
+                ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
+                        .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new ChooseCreditCardFragment();
                 }
@@ -165,14 +166,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
                 fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
                 fragmentTransaction.commit();
-
-            } else if (paymentChoiceButton.getText().equals(getString(R.string.cash))) {
-
-            } else if (paymentChoiceButton.getText().equals(getString(R.string.scan_check))) {
-
-            } else if (paymentChoiceButton.getText().equals(getString(R.string.pay_using_paypal))) {
-
-            } else if (paymentChoiceButton.getText().equals(getString(R.string.pay_using_apple_pay))) {
 
             }
         }

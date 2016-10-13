@@ -45,7 +45,7 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
      * @param month   the initial month
      * @param minDate set the min date in milliseconds which should be less then initial date set.
      * @param maxDate set the max date in milliseconds which should not be less then current date.
-     * @return
+     * @return The instance
      */
     public static SimpleDatePickerDialogFragment getInstance(int year, int month, long minDate,
                                                              long maxDate) {
@@ -63,7 +63,7 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
     /**
      * Get callback of the year and month selected.
      *
-     * @param onDateSetListener
+     * @param onDateSetListener To get call of selected date
      */
     public void setOnDateSetListener(SimpleDatePickerDialog.OnDateSetListener onDateSetListener) {
         mOnDateSetListener = onDateSetListener;
@@ -91,19 +91,19 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
     }
 
     private void checkForValidMinDate(int year, int month, long minDate) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.YEAR, year);
-        c.add(Calendar.MONTH, month);
-        if (c.getTimeInMillis() < minDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, year);
+        calendar.add(Calendar.MONTH, month);
+        if (calendar.getTimeInMillis() < minDate) {
             throw new IllegalArgumentException("Min date should be less than initial date set");
         }
     }
 
     private void checkForValidMaxDate(int year, int month, long maxDate) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.YEAR, year);
-        c.add(Calendar.MONTH, month);
-        if (c.getTimeInMillis() < maxDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, year);
+        calendar.add(Calendar.MONTH, month);
+        if (calendar.getTimeInMillis() < maxDate) {
             throw new IllegalArgumentException(
                     "Max date should not be less than current date.");
         }

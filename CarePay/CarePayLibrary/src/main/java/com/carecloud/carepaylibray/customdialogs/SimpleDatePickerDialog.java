@@ -75,6 +75,7 @@ public class SimpleDatePickerDialog extends AlertDialog implements DialogInterfa
             case BUTTON_NEGATIVE:
                 cancel();
                 break;
+            default:
         }
     }
 

@@ -29,7 +29,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup chooseCreditCardRadioGroup;
-    private Button nextButton, addNewCardButton;
+    private Button addNewCardButton;
+    private Button nextButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
     private String[] creditCardsArray;
@@ -112,12 +113,6 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         onSetRadioButtonRegularTypeFace();
         RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
         onSetRadioButtonSemiBoldTypeFace(selectedRadioButton);
-
-        if (selectedRadioButton.getText().toString().equalsIgnoreCase(creditCardsArray[0])) {
-
-        } else if (selectedRadioButton.getText().toString().equalsIgnoreCase(creditCardsArray[1])) {
-
-        }
     }
 
     private void onSetRadioButtonRegularTypeFace() {
@@ -125,8 +120,8 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             if (i % 2 == 0) {
                 SystemUtil.setProximaNovaRegularTypeface(this.activity, (RadioButton)
                         chooseCreditCardRadioGroup.getChildAt(i));
-                ((RadioButton) chooseCreditCardRadioGroup.getChildAt(i)).
-                        setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
+                ((RadioButton) chooseCreditCardRadioGroup.getChildAt(i))
+                        .setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
             }
         }
     }
