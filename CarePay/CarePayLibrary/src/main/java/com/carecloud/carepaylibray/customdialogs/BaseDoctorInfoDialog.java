@@ -27,10 +27,25 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class BaseDoctorInfoDialog extends Dialog implements
         View.OnClickListener {
+
     private Context context;
     private AppointmentModel appointmentModel;
-    private View addActionlayout, rootLayout;
+    private View addActionlayout;
+    private View  rootLayout;
+    private TextView shortNameTextView;
+    private TextView nameTextView;
+    private TextView typeTextView;
+    private TextView addressTextView ;
+    private TextView addressHeaderTextView ;
+    private TextView dateTextView ;
+    private TextView timeTextView ;
 
+    /**
+     * Contractor for  base dialog.
+     *
+     * @param context the String to evaluate
+     * @param appointmentModel the DTO to evaluate
+     */
     public BaseDoctorInfoDialog(Context context, AppointmentModel appointmentModel) {
         super(context);
         this.context = context;
@@ -49,13 +64,13 @@ public class BaseDoctorInfoDialog extends Dialog implements
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
 
-        TextView shortNameTextView = ((TextView) findViewById(R.id.appointShortnameTextView));
-        TextView nameTextView = ((TextView) findViewById(R.id.appointNameTextView));
-        TextView typeTextView = ((TextView) findViewById(R.id.appointTypeTextView));
-        final TextView addressTextView = ((TextView) findViewById(R.id.appointAddressTextView));
-        final TextView addressHeaderTextView = ((TextView) findViewById(R.id.appointAddressHeaderTextView));
-        TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
-        TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
+         shortNameTextView = (TextView) findViewById(R.id.appointShortnameTextView);
+         nameTextView = (TextView) findViewById(R.id.appointNameTextView);
+         typeTextView = (TextView) findViewById(R.id.appointTypeTextView);
+         addressTextView = (TextView) findViewById(R.id.appointAddressTextView);
+         addressHeaderTextView = (TextView) findViewById(R.id.appointAddressHeaderTextView);
+         dateTextView = (TextView) findViewById(R.id.appointDateTextView);
+         timeTextView = (TextView) findViewById(R.id.appointTimeTextView);
 
         DateUtil.getInstance().setDateRaw(appointmentModel.getAppointmentDate());
         dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
@@ -99,7 +114,8 @@ public class BaseDoctorInfoDialog extends Dialog implements
         } else if (viewId == R.id.appointLocationImageView) {
             onMapView(appointmentModel.getPlaceName(), appointmentModel.getPlaceAddress());
         } else if (viewId == R.id.appointDailImageView) {
-            if (!TextUtils.isEmpty(appointmentModel.getPhoneNumber())) {
+            String phoneNumber= appointmentModel.getPhoneNumber();
+            if (!TextUtils.isEmpty(phoneNumber)) {
                 onPhoneCall(appointmentModel.getPhoneNumber());
             }
         }
@@ -128,7 +144,7 @@ public class BaseDoctorInfoDialog extends Dialog implements
         try {
             context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
         } catch (android.content.ActivityNotFoundException ex) {
-
+            System.out.print(ex.getMessage());
         }
     }
 

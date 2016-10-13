@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
 
-    private JSONObject jsonObject;
+    private JSONObject paymentModel;
     private Context context;
     private View rootView;
     private CardView paymentPartialModeCardView;
@@ -39,10 +39,16 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
     private LinearLayout dialogHeaderlayout;
     private Button payNowButton;
 
-    public PaymentPartialModeDialog(Context context, JSONObject jsonObject) {
-        super(context, jsonObject);
+    /**
+     * Contractor for partial payment dialog.
+     *
+     * @param context the String to evaluate
+     * @param paymentModel the DTO to evaluate
+     */
+    public PaymentPartialModeDialog(Context context, JSONObject paymentModel) {
+        super(context, paymentModel);
         this.context = context;
-        this.jsonObject = jsonObject;
+        this.paymentModel = paymentModel;
     }
 
     @Override
@@ -103,9 +109,9 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
     }
 
     @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        int viewId = v.getId();
+    public void onClick(View view) {
+        super.onClick(view);
+        int viewId = view.getId();
         if (viewId == R.id.payNowButton) {
             onPayNow();
         }

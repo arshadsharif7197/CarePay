@@ -22,6 +22,12 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private Context          context;
     private AppointmentModel appointmentModel;
 
+    /**
+     * Contractor for   dialog.
+     *
+     * @param context the String to evaluate
+     * @param appointmentModel the DTO to evaluate
+     */
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;

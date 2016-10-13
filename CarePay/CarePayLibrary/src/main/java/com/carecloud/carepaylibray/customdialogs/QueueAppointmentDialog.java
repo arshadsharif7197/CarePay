@@ -18,6 +18,13 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private Context context;
     private AppointmentModel appointmentModel;
+
+    /**
+     * Contractor for   dialog.
+     *
+     * @param context the String to evaluate
+     * @param appointmentModel the DTO to evaluate
+     */
     public QueueAppointmentDialog(Context context, AppointmentModel appointmentModel) {
         super(context, appointmentModel);
         this.context = context;
@@ -30,6 +37,7 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
         mainLayout = (LinearLayout)getAddActionChildView();
         setChildView();
     }
+
     private void setChildView(){
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
