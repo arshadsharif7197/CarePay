@@ -1,59 +1,72 @@
 package com.carecloud.carepaylibray.demographics.fragments.review;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
+import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMetaDataDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.Arrays;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
-public class HealthInsuranceReviewFragment extends Fragment implements View.OnClickListener {
-
+public class HealthInsuranceReviewFragment extends InsuranceScannerFragment implements View.OnClickListener {
 
 
-    Button buttonAddHealthInsuranceInfo;
-    View view;
-
-
-
-    String[] providerDataArray;
-    String[] planDataArray;
-    int selectedDataArray;
-    TextView providerDataTextView, planDataTextView;
-
-
+    private FragmentManager fm;
+    private View view;
+    private ScrollView detailsScrollView;
+    private SwitchCompat switchCompat;
+    private FrameLayout insCardContainer;
+    private List<DemographicInsurancePayloadDTO> insuranceModelList;
+    private DemographicPayloadInfoMetaDataDTO payload;
+    private DemographicInsurancePayloadDTO insuranceModel;
+    private InsuranceScannerFragment insuranceFragment;
+    private Button addInsuranceaInfoButton;
 
     private ImageCaptureHelper reviewInsuranceScanHelper;
     private ImageCaptureHelper reviewImageCaptureHelper;
 
-    private Button reviewBtnScanInsurance;
+    private DemographicPersDetailsPayloadDTO demPersDetailsPayloadDto;
+    private DemographicAddressPayloadDTO demAddressPayloadDto;
+    private DemographicIdDocPayloadDTO demographicPayloadDriversLicenseModel;
+
 
     public static HealthInsuranceReviewFragment newInstance() {
         return new HealthInsuranceReviewFragment();
@@ -66,65 +79,94 @@ public class HealthInsuranceReviewFragment extends Fragment implements View.OnCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_review_health_insurance, container, false);
 
+        fm = getChildFragmentManager();
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.health_insurance_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.health_insurance_toolbar_title);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.healthinsurance_review_toolbar);
+        TextView title = (TextView) toolbar.findViewById(R.id.healthinsurance_review_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-              /*  Intent intent = new Intent(getContext(), SigninSignupActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().finish();*/
+            public void onClick(View v) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                Fragment fragment = DemographicReviewFragment.newInstance();
+                transaction.replace(R.id.root_layout, fragment, HealthInsuranceReviewFragment.class.getName());
+                transaction.commit();
+
             }
         });
+        detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
+        initViewFromModels();
+        setButtons();
+        setCardContainers();
+        setSwitch();
 
-        initialiseUIFields();
-
-        providerDataArray = getResources().getStringArray(R.array.providers);
-        planDataArray = getResources().getStringArray(R.array.plans);
 
         setTypefaces(view);
         return view;
     }
 
-    private void initialiseUIFields() {
-        buttonAddHealthInsuranceInfo = (Button) view.findViewById(R.id.buttonAddHealthInsuranceInfo);
-        buttonAddHealthInsuranceInfo.setOnClickListener(this);
-        reviewBtnScanInsurance =(Button)view.findViewById(R.id.demogr_review_insurance_scan_insurance_btn);
-        reviewBtnScanInsurance.setOnClickListener(this);
+    private void initViewFromModels() {
+        demAddressPayloadDto = ((DemographicReviewActivity) getActivity())
+                .getDemographicAddressPayloadDTO();
 
-        ImageView imInsurance = (ImageView) view.findViewById(R.id.demogr_review_insurance_image);
-        reviewInsuranceScanHelper = new ImageCaptureHelper(getActivity(), imInsurance);
-
-
-        providerDataTextView = (TextView) view.findViewById(R.id.demogr_review_docs_provider);
-        providerDataTextView.setOnClickListener(this);
-        planDataTextView = (TextView) view.findViewById(R.id.demogr_review_docs_plan);
-        planDataTextView.setOnClickListener(this);
+        demPersDetailsPayloadDto = ((DemographicReviewActivity) getActivity())
+                .getDemographicPersDetailsPayloadDTO();
+        demographicPayloadDriversLicenseModel = ((DemographicReviewActivity) getActivity())
+                .getDemographicPayloadIdDocDTO();
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view == buttonAddHealthInsuranceInfo) {
-            openNewFragment();
-        }else if(view == reviewBtnScanInsurance){
 
-            selectImage(reviewInsuranceScanHelper);
+    private void setButtons() {
+        // next button
+        addInsuranceaInfoButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
+        addInsuranceaInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
+                postPayloadModel.setAddress(demAddressPayloadDto);
+                postPayloadModel.setPersonalDetails(demPersDetailsPayloadDto);
+                postPayloadModel.setIdDocument(demographicPayloadDriversLicenseModel);
+                // clear the list
+                //   insuranceModelList.clear();
+                insuranceFragment.getBitmapsFromImageViews();
+                // add non trivial insurance models
+                if (isInsuaranceNonTrivial(insuranceModel)) {
+                    insuranceModelList.add(insuranceModel);
+                }
 
-        }else if (view == providerDataTextView) {
-            selectedDataArray = 1;
-            showAlertDialogWithListview(providerDataArray, "Select Race");
-        } else if (view == planDataTextView) {
-            selectedDataArray = 2;
-            showAlertDialogWithListview(planDataArray, "Select Ethnicity");
+                postPayloadModel.setInsurances(insuranceModelList);
 
-        }
+                DemographicService backendService = (new BaseServiceGenerator(getActivity()))
+                        .createService(DemographicService.class);
+                Call<ResponseBody> postInsurances = backendService.updateDemographicInformation(postPayloadModel);
+                postInsurances.enqueue(new Callback<ResponseBody>() {
+
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Log.v(LOG_TAG, "health insurance frag POST success\n" + response.code() + "\n"
+                                + response.body());
+                        openNewFragment();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e(LOG_TAG, "health insurance frag POST failed");
+                    }
+                });
+            }
+        });
     }
+
+    private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
+        return insModel.getInsurancePlan() != null &&
+                insModel.getInsuranceProvider() != null &&
+                insModel.getInsuranceMemberId() != null;
+    }
+
 
     private void openNewFragment() {
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -133,46 +175,6 @@ public class HealthInsuranceReviewFragment extends Fragment implements View.OnCl
         transaction.addToBackStack("HealthInsuranceReviewFragment -> ReviewFragment");
         transaction.commit();
     }
-
-
-    private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.ReviewInsuranceTitle));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.reviewInsuranceSubTitle));
-
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_review_insurance_scan_insurance_btn));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_review_insurance_number_label));
-
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_review_docs_provider));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_review_docs_plan));
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_review_docs_plan));
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_review_docs_provider));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        String userChoosenTask = reviewImageCaptureHelper.getUserChoosenTask();
-        switch (requestCode) {
-            case PermissionsUtil.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString()))
-                        startActivityForResult(Intent.createChooser(reviewImageCaptureHelper.galleryIntent(),
-                                ImageCaptureHelper.CHOOSER_NAME),
-                                ImageCaptureHelper.SELECT_FILE);
-                } else {
-                    //code for deny
-
-                }
-                break;
-
-            case PermissionsUtil.MY_PERMISSIONS_CAMERA:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString()))
-                        startActivityForResult(reviewImageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
-                }
-                }
-        }
 
 
     @Override
@@ -189,118 +191,115 @@ public class HealthInsuranceReviewFragment extends Fragment implements View.OnCl
         }
     }
 
-
-    private void showAlertDialogWithListview(final String[] raceArray, String title) {
-        Log.e("raceArray==", raceArray.toString());
-        Log.e("raceArray 23==", Arrays.asList(raceArray).toString());
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        View customView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.alert_list_layout, null, false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(raceArray));
-        listView.setAdapter(mAdapter);
-        dialog.setView(customView);
-        final AlertDialog alert = dialog.create();
-        alert.show();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                switch (selectedDataArray) {
-                    case 1:
-                        providerDataTextView.setText(providerDataArray[position]);
-                        break;
-                    case 2:
-                        planDataTextView.setText(planDataArray[position]);
-                        break;
-
-                }
-                alert.dismiss();
-            }
-        });
+    @Override
+    public int getImageShape() {
+        return 0;
     }
 
+    @Override
+    protected void updateModelAndViewsAfterScan() {
 
+    }
 
+    @Override
+    public void populateViewsFromModel() {
 
-    public void selectImage(final ImageCaptureHelper imageCaptureHelper) {
-        reviewImageCaptureHelper = imageCaptureHelper;
-        // create the chooser dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
-        builder.setItems(ImageCaptureHelper.chooseActionDlOptions,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (item == 0) { // "Take picture" chosen
-                            imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
-                            boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
-                            if (result) {
-                                startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
-                            }
-                        } else if (item == 1) {  // "Select from Gallery" chosen
-                            imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
-                            boolean result = PermissionsUtil.checkPermission(getActivity());
-                            if (result) {
-                                startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
-                                        ImageCaptureHelper.CHOOSER_NAME),
-                                        ImageCaptureHelper.SELECT_FILE);
-                            }
-                        } else if (item == 3) { // "Cancel"
-                            dialog.dismiss();
-                        }
-                    }
-                });
-        builder.show();
+    }
+
+    private void getTheModels() {
+        List<DemographicInsurancePayloadDTO> payload = ((DemographicReviewActivity) getActivity()).getInsurances();
+        if (payload != null) {
+            insuranceModelList = payload;
+        }
+        insuranceModel = getInsuranceModelAtIndex(0);
+        if (insuranceModel != null) {
+            List<DemographicInsurancePhotoDTO> photoDtos = insuranceModel.getInsurancePhotos();
+            if (photoDtos != null) {
+                if (photoDtos.size() > 0) {
+                    DemographicInsurancePhotoDTO frontPhoto = photoDtos.get(0);
+                    Log.v(LOG_TAG, "front: " + frontPhoto.getInsurancePhoto());
+                }
+                if (photoDtos.size() > 1) {
+                    DemographicInsurancePhotoDTO backPhoto = photoDtos.get(1);
+                    Log.v(LOG_TAG, "back: " + backPhoto.getInsurancePhoto());
+                }
+            }
+        }
+    }
+
+    private void setCardContainers() {
+        getTheModels();
+        insCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance1);
+
+        if (insuranceModel == null) {
+            insuranceModel = new DemographicInsurancePayloadDTO();
+        }
+        insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance");
+        if (insuranceFragment == null) {
+            insuranceFragment = new InsuranceScannerFragment();
+            insuranceFragment.setButtonsStatusCallback(null);
+            insuranceFragment.setModel(insuranceModel); // set the model (if avail)
+        }
+        fm.beginTransaction()
+                .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance")
+                .commit();
+
+    }
+
+    private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int i) {
+        DemographicInsurancePayloadDTO model = null;
+        if (insuranceModelList != null) {
+            int numOfInsurances = insuranceModelList.size();
+            if (numOfInsurances > i) { // check if the list has an item at index i
+                model = insuranceModelList.get(i);
+            }
+        }
+        return model;
     }
 
     /**
-     * Creates a generic dialog that contains a list of choices
+     * Toggles visible/invisible a container of an insurance card details
      *
-     * @param options              The choices
-     * @param title                The dlg title
-     * @param selectionDestination The textview where the selected option will be displayed
+     * @param cardContainer The container
+     * @param isVisible     Whether visible
      */
-    private void showChooseDialog(final String[] options, String title, final TextView selectionDestination) {
-        final String cancelLabel = "Cancel";
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        // add cancel button
-        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
+    private void showInsuranceCard(FrameLayout cardContainer, boolean isVisible) {
+        if (isVisible) {
+            cardContainer.setVisibility(View.VISIBLE);
+        } else {
+            cardContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void setSwitch() {
+        // set the switch
+        fm.executePendingTransactions();
+        switchCompat = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
+
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+            public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
+                showInsuranceCard(insCardContainer, on);
+
             }
         });
 
-        // create dialog layout
-        View customView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_list_layout, null, false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        // create the adapter
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(options));
-        listView.setAdapter(mAdapter);
-        // show the dialog
-        dialog.setView(customView);
-        final AlertDialog alert = dialog.create();
-        alert.show();
-        // set item click listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String selectedOption = options[position];
-                selectionDestination.setText(selectedOption);
-                alert.dismiss();
-            }
-        });
     }
 
 
+    protected void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle));
+        setProximaNovaRegularTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle));
+        setProximaNovaRegularTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.demographicsInsuranceSwitch));
+        setGothamRoundedMediumTypeface(getActivity(), addInsuranceaInfoButton);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+
+    }
 }
