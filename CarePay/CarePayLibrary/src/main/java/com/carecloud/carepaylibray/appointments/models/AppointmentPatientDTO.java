@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Model for appointment patient.
+ */
 public class AppointmentPatientDTO {
 
     @SerializedName("id")
@@ -227,59 +230,89 @@ public class AppointmentPatientDTO {
         this.primaryPhoneNumber = primaryPhoneNumber;
     }
 
+    /**
+     * Get patient photo.
+     * @return photo data
+     */
     public String getPhoto() {
         return photo;
     }
 
+    /**
+     * Set patient photo.
+     * @param photo: patient photo
+     */
     public void setPhoto(String photo) {
         this.photo = photo;
     }
 
+    /**
+     * Get list of responsibility.
+     * @return list of responsibility
+     */
     public List<PatientResponsibilityDTO> getResponsibility() {
         return responsibility;
     }
 
+    /**
+     * Set list of responsibility.
+     * @param responsibility responsibility list
+     */
     public void setResponsibility(List<PatientResponsibilityDTO> responsibility) {
         this.responsibility = responsibility;
     }
 
-    public double getTotalBalance(){
-        double total=0.00;
-        if (responsibility!=null && responsibility.size()>0){
-            for (PatientResponsibilityDTO patientResponsibilityDto :responsibility){
-                if(patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Account")){
-                    total=total+ patientResponsibilityDto.getTotal();
-                }else if(patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Copay")){
-                    total=total+ patientResponsibilityDto.getTotal();
+    /**
+     * Gives total balance.
+     * @return total balance
+     */
+    public double getTotalBalance() {
+        double total = 0.00;
+        if (responsibility != null && responsibility.size() > 0) {
+            for (PatientResponsibilityDTO patientResponsibilityDto : responsibility) {
+                if (patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Account")) {
+                    total = total + patientResponsibilityDto.getTotal();
+                } else if (patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Copay")) {
+                    total = total + patientResponsibilityDto.getTotal();
                 }
             }
         }
+
         // TODO: using for demo. will remove this after the demo
-        if(total==0.00)
-            total=20.00;
+        if (total == 0.00) {
+            total = 20.00;
+        }
         return total;
     }
 
-    public double getResponsibilityAccount(){
-        double total=0.00;
-        if (responsibility!=null && responsibility.size()>0){
-            for (PatientResponsibilityDTO patientResponsibilityDto :responsibility){
-                if(patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Account")){
+    /**
+     * Gives responsibility account.
+     * @return responsibility account
+     */
+    public double getResponsibilityAccount() {
+        double total;
+        if (responsibility != null && responsibility.size() > 0) {
+            for (PatientResponsibilityDTO patientResponsibilityDto : responsibility) {
+                if (patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Account")) {
                     return patientResponsibilityDto.getTotal();
                 }
             }
         }
+
         // TODO: using for demo. will remove this after the demo
-        if(total==0.00)
-            total=20.00;
+        total = 20.00;
         return total;
     }
 
-    public double getResponsibilityCopay(){
-        double total=0.00;
-        if (responsibility!=null && responsibility.size()>0){
-            for (PatientResponsibilityDTO patientResponsibilityDto :responsibility){
-                if(patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Copay")){
+    /**
+     * Gives responsibility copay.
+     * @return responsibility copay
+     */
+    public double getResponsibilityCopay() {
+        double total = 0.00;
+        if (responsibility != null && responsibility.size() > 0) {
+            for (PatientResponsibilityDTO patientResponsibilityDto : responsibility) {
+                if (patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Copay")) {
                     return patientResponsibilityDto.getTotal();
                 }
             }

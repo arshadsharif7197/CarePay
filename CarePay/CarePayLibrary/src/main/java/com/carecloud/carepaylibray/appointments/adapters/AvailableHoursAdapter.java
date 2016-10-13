@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -24,7 +24,12 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private AppointmentDTO appointmentDTO;
     private final int SECTION_HEADER = 0;
 
-    // Provide a suitable constructor (depends on the kind of data set)
+    /**
+     * Constructor.
+     * @param context: context
+     * @param items: list of occurrence
+     * @param appointmentDTO: selected appointment item
+     */
     public AvailableHoursAdapter(Context context, List<Object> items, AppointmentDTO appointmentDTO) {
         this.context = context;
         this.items = items;
@@ -98,10 +103,10 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         private TextView textViewTimeSlot;
 
-        ViewHolderTimeSlot(View v) {
-            super(v);
-            textViewTimeSlot = (TextView) v.findViewById(R.id.textview_timeslot);
-            SystemUtil.setProximaNovaRegularTypeface(v.getContext(), textViewTimeSlot);
+        ViewHolderTimeSlot(View view) {
+            super(view);
+            textViewTimeSlot = (TextView) view.findViewById(R.id.textview_timeslot);
+            SystemUtil.setProximaNovaRegularTypeface(view.getContext(), textViewTimeSlot);
         }
 
         TextView getTextView() {
@@ -117,10 +122,10 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         private TextView textViewSectionHeader;
 
-        ViewHolderSectionHeader(View v) {
-            super(v);
-            textViewSectionHeader = (TextView) v.findViewById(R.id.textview_section_header);
-            SystemUtil.setProximaNovaSemiboldTypeface(v.getContext(), textViewSectionHeader);
+        ViewHolderSectionHeader(View view) {
+            super(view);
+            textViewSectionHeader = (TextView) view.findViewById(R.id.textview_section_header);
+            SystemUtil.setProximaNovaSemiboldTypeface(view.getContext(), textViewSectionHeader);
         }
 
         TextView getTextView() {

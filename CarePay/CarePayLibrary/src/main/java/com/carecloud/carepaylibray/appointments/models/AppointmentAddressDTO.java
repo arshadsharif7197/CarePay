@@ -5,6 +5,9 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Model for appointment address.
+ */
 public class AppointmentAddressDTO {
 
     @SerializedName("line1")

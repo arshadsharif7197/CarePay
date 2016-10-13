@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Model for appointment payload.
+ */
 public class AppointmentPayloadModel {
 
     @SerializedName("appointments")

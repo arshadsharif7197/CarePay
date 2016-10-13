@@ -43,8 +43,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     /**
      * Constructor.
      * @param context: context
-     * @param appointmentItems: appointment list
-     * @param appointmentsListFragment: Screen instance
+     * @param appointmentItems: list of appointments
+     * @param appointmentsListFragment: screen instance
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
                                AppointmentsListFragment appointmentsListFragment) {

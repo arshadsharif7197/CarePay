@@ -6,6 +6,13 @@ public class AppointmentAvailableHoursDTO {
     private String appointmentDate;
     private String appointmentTimeSlot;
 
+    /**
+     * Constructor.
+     * @param appointmentDay: appointment day
+     * @param appointmentMonth: appointment month
+     * @param appointmentDate: appointment date
+     * @param appointmentTimeSlot: appointment time
+     */
     public AppointmentAvailableHoursDTO(String appointmentDay, String appointmentMonth,
                                         String appointmentDate, String appointmentTimeSlot) {
         this.appointmentDay = appointmentDay;

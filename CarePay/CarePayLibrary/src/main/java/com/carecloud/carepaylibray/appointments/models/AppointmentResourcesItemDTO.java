@@ -4,6 +4,9 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Model for appointment resources item.
+ */
 public class AppointmentResourcesItemDTO {
 
     @SerializedName("appointment_confirmation")

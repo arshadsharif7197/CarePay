@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Model for appointment.
+ */
 public class AppointmentDTO implements Serializable {
 
     @SerializedName("metadata")

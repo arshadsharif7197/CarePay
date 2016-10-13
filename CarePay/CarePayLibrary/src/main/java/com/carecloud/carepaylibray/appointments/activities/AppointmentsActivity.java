@@ -29,6 +29,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 public class AppointmentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static AppointmentDTO model;
     private TextView appointmentsDrawerUserIdTextView;
 
     @Override
@@ -114,7 +115,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         int id = item.getItemId();
 
         if (id == R.id.nav_appointments) {
-
+            Log.v(LOG_TAG, "Appointments");
         } else if (id == R.id.nav_payments) {
             Intent intent = new Intent(this, PaymentActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -140,9 +141,9 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
                 finish();
             }
         } else if (id == R.id.nav_purchase) {
-
+            Log.v(LOG_TAG, "Purchase");
         } else if (id == R.id.nav_notification) {
-
+            Log.v(LOG_TAG, "Notification");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -150,8 +151,6 @@ public class AppointmentsActivity extends AppCompatActivity implements Navigatio
         return true;
     }
 
-
-    public static AppointmentDTO model;
     public void setAppointmentModel(AppointmentDTO model) {
         AppointmentsActivity.model = model;
     }
