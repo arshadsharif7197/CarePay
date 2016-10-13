@@ -196,7 +196,7 @@
     <string name="patientportal">Patient Portal</string>
     <string name="descriptionofportal">Small text describing why the patient may consider signing up for Portal.</string>
     <string name="signupforportal">SIGN UP PORTAL</string>
-    <string name="passfornow">I'LL PASS NOW</string>
+    <string name="passfornow">ILL PASS NOW</string>
 
     <!--Signup Screen-->
     <string name="caps">FIRST NAME</string>
