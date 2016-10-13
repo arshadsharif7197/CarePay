@@ -1,10 +1,9 @@
-package com.carecloud.carepaylibray.base;
+package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 
-import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
-import com.carecloud.carepaylibray.constants.ResponseConstants;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -25,7 +24,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * This is an generic class use for API call using retrofit.
  * Any HTTP request will be created from this class.
  * Default header for HTTP request are added by default.
- * TODO: Additional header will be added by from the parameters
  * Default Base URL created from String.xml.
  * If needed to change there is a constructor which accept base url as parameter.
  */
@@ -35,7 +33,7 @@ public class BaseServiceGenerator {
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
     public BaseServiceGenerator(Context context) {
-        API_BASE_URL=context.getResources().getString(R.string.api_base_url);
+        API_BASE_URL=HttpConstants.API_BASE_URL;
         generateBuilder();
     }
 
@@ -48,7 +46,7 @@ public class BaseServiceGenerator {
         Gson gson = new GsonBuilder()
                 .setExclusionStrategies(new ExclusionStrategy() {
                     @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
+                    public boolean shouldSkipField(FieldAttributes fieldAttributes) {
                         return true;//f.getDeclaringClass().equals(RealmObject.class);
                     }
 
@@ -59,14 +57,17 @@ public class BaseServiceGenerator {
                 })
                 .create();
         builder = new Retrofit.Builder()
-                        .baseUrl(API_BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create());
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create());
     }
-
+    /**
+    * Create the retrofil service for the specific service class
+    * @param serviceClass Specific service class for converting in to retrofit service model
+    * */
     public  <S> S createService(Class<S> serviceClass) {
-        httpClient.readTimeout(ResponseConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
-        httpClient.connectTimeout(ResponseConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
-        httpClient.writeTimeout(ResponseConstants.WRITE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        httpClient.connectTimeout(HttpConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        httpClient.writeTimeout(HttpConstants.WRITE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -93,11 +94,14 @@ public class BaseServiceGenerator {
 
         return retrofit.create(serviceClass);
     }
-
+    /**
+     * Create the retrofil service for the specific service class
+     * @param serviceClass Specific service class for converting in to retrofit service model
+     * */
     public  <S> S createServicePractice(Class<S> serviceClass) {
-        httpClient.readTimeout(ResponseConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
-        httpClient.connectTimeout(ResponseConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
-        httpClient.writeTimeout(ResponseConstants.WRITE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        httpClient.connectTimeout(HttpConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        httpClient.writeTimeout(HttpConstants.WRITE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 
         httpClient.addInterceptor(new Interceptor() {
             @Override

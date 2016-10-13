@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -89,28 +90,33 @@ public class ImageCaptureHelper {
      * Callback method to be used upon returning from Camera activity
      * @param data The intent used to launch the Camera
      * @param shape The intended shape of the captured image
+     *              @return The bitmap
      */
-    public void onCaptureImageResult(Intent data, int shape) {
+    public Bitmap onCaptureImageResult(Intent data, int shape) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        setCapturedImageToTargetView(thumbnail, shape);
+
+        return setCapturedImageToTargetView(thumbnail, shape);
+
     }
 
     /**
      * Callback method to be used upon returning from Gallery activity
      * @param data The intent used to launch the GAllery
      * @param shape The intended shape of the captured image
+     *              @return The bitmap
      */
-    public void onSelectFromGalleryResult(Intent data, int shape) {
+    public Bitmap onSelectFromGalleryResult(Intent data, int shape) {
         try {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-            setCapturedImageToTargetView(thumbnail, shape);
+           return  setCapturedImageToTargetView(thumbnail, shape);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     /**
@@ -154,13 +160,15 @@ public class ImageCaptureHelper {
 
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, finalBitmap.getWidth(), finalBitmap.getHeight());
+        final RectF rectf = new RectF(0, 0, finalBitmap.getWidth(), finalBitmap.getHeight());
 
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail));
-        canvas.drawRect(rect, paint);
+   //     canvas.drawRect(rect, paint);
+        canvas.drawRoundRect(rectf,3,3,paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(finalBitmap, rect, rect, paint);
 
@@ -212,7 +220,7 @@ public class ImageCaptureHelper {
      * @param thumbnail The bitmap
      * @param shape The shape (ImageCaptureHelper.ROUNDED or ImageCaptureHelper.RECTANGULAR)
      */
-    private void setCapturedImageToTargetView(Bitmap thumbnail, int shape) {
+    private Bitmap setCapturedImageToTargetView(Bitmap thumbnail, int shape) {
         Bitmap bitmap = null;
         if (shape == ROUND_IMAGE) {
             bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true),
@@ -222,7 +230,8 @@ public class ImageCaptureHelper {
                                             imgWidth,
                                             imgHeight);
         }
-        imageViewTarget.setImageBitmap(bitmap);
+      imageViewTarget.setImageBitmap(bitmap);
+        return bitmap;
     }
 
     public void resetTargetView() {
@@ -231,4 +240,6 @@ public class ImageCaptureHelper {
 
     public void setImageFromCharStream(String imageCharStream) {
     }
+
+
 }

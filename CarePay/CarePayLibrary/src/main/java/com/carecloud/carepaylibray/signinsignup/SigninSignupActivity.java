@@ -10,6 +10,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,7 +40,7 @@ public class SigninSignupActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
-            Log.v(LOG_TAG, "home pressed");
+            SystemUtil.hideSoftKeyboard(SigninSignupActivity.this);
             onBackPressed();
             return true;
         }

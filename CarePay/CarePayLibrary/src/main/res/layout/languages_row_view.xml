@@ -9,12 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/language_card_height"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="1dp"
         android:clickable="true"
         android:focusable="true"
-       android:layout_marginBottom="1dp"
         android:foreground="?android:attr/selectableItemBackground">
 
-        <RelativeLayout
+        <!--<RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">
@@ -24,10 +24,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/language_text_left_margin"
+                android:layout_marginStart="@dimen/language_text_left_margin"
                 android:layout_marginTop="@dimen/language_row_margin"
                 android:layout_marginBottom="@dimen/language_row_margin"
-                android:text="Select Language"
                 android:textColor="@color/slateGray"
                 android:textSize="@dimen/textview_default_textsize" />
 
@@ -35,15 +34,30 @@
                 android:id="@+id/languageRadioImage"
                 android:layout_width="@dimen/language_radiobutton"
                 android:layout_height="@dimen/language_radiobutton"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/language_radio_image_rightmargin"
+                android:layout_marginEnd="@dimen/language_radio_image_rightmargin"
                 android:layout_marginTop="@dimen/language_row_margin"
                 android:layout_marginBottom="@dimen/language_row_margin"
-                android:buttonTint="@color/colorPrimary"
+                android:src="@drawable/cell_radio_off"
                 android:clickable="false" />
-        </RelativeLayout>
+        </RelativeLayout>-->
 
+
+        <RadioButton
+            android:id="@+id/languageNameRadioButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:button="@null"
+            android:drawableEnd="@drawable/language_item_back"
+            android:layout_marginTop="@dimen/language_row_margin"
+            android:layout_marginBottom="@dimen/language_row_margin"
+            android:paddingStart="@dimen/language_text_left_margin"
+            android:paddingEnd="@dimen/language_radio_image_rightmargin"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/textview_default_textsize" />
     </android.support.v7.widget.CardView>
 
 </LinearLayout>
