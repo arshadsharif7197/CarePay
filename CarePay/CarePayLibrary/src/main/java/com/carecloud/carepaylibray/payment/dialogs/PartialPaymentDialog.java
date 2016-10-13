@@ -40,12 +40,6 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private String amountMsg = "Pending amount: ";
     private String amountSymbol = "$";
 
-    /**
-     * Contractor for partial payment dialog.
-     *
-     * @param context the String to evaluate
-     * @param paymentModel the DTO to evaluate
-     */
     public PartialPaymentDialog(Context context, JSONObject paymentModel) {
         super(context);
         this.context = context;
@@ -83,10 +77,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
         SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
     }
-
     @Override
-    public void onClick(View view) {
-        int viewId = view.getId();
+    public void onClick(View v) {
+        int viewId = v.getId();
         if (viewId == R.id.dialogCloseImageView) {
             cancel();
         } else if (viewId == R.id.payPartialButton) {
@@ -95,16 +88,16 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     }
 
     @Override
-    public void afterTextChanged(Editable stringValue) {
+    public void afterTextChanged(Editable s) {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence stringValue, int start, int count, int after) {
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white));
     }
 
     @Override
-    public void onTextChanged(CharSequence stringValue, int start, int before, int count) {
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
         String amountEditText = enterPartialAmountEditText.getText().toString();
         onPendingAmountValidation(amountEditText);
     }

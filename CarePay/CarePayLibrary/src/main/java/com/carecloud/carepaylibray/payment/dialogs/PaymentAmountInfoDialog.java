@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
 
-    private JSONObject paymentModel;
+    private JSONObject jsonObject;
     private Context context;
     private View rootView;
     private LinearLayout addChildDynamicLayout;
@@ -30,16 +30,10 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     private CustomProxyNovaRegularLabel insuranceCoPayAmountTextView;
     private Button payNowButton;
 
-    /**
-     * Contractor for  payment dialog.
-     *
-     * @param context the String to evaluate
-     * @param paymentModel the DTO to evaluate
-     */
-    public PaymentAmountInfoDialog(Context context, JSONObject paymentModel) {
-        super(context, paymentModel);
+    public PaymentAmountInfoDialog(Context context, JSONObject jsonObject) {
+        super(context, jsonObject);
         this.context = context;
-        this.paymentModel = paymentModel;
+        this.jsonObject = jsonObject;
     }
 
     @Override
@@ -77,9 +71,9 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     }
 
     @Override
-    public void onClick(View view) {
-        super.onClick(view);
-        int viewId = view.getId();
+    public void onClick(View v) {
+        super.onClick(v);
+        int viewId = v.getId();
         if (viewId == R.id.payNowButton) {
             onPayNow();
         }
