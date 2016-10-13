@@ -1,11 +1,12 @@
 package com.carecloud.carepaylibray.appointments.models;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Jahirul Bhuiyan on 9/30/2016.
  */
-
-public class PatientResponsibilityModel {
+public class PatientResponsibilityDTO {
     @SerializedName("balance_type")
     @Expose
     private String balanceType;

@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.payment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +18,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
@@ -52,10 +50,11 @@ public class ResponsibilityFragment extends Fragment {
     private AppCompatActivity appCompatActivity;
     private String copayStr = "";
     private String previousBalanceStr = "";
+
     private TextView responseTotal;
     private TextView responseCopay;
     private TextView responsePreviousBalance;
-    private AppointmentsResultModel appointmentsModel = null;
+//    private AppointmentsResultModel appointmentsModel = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,19 +106,19 @@ public class ResponsibilityFragment extends Fragment {
             }
         });
 
-        responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        responseCopay = (TextView) view.findViewById(R.id.respons_copay);
-        responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
+        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
+        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
 
         Bundle bundle = getArguments();
-        if(bundle != null) {
+        if (bundle != null) {
             ArrayList<PayloadPaymentModel> paymentList = (ArrayList<PayloadPaymentModel>) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
 
-            if(paymentList != null && paymentList.size() > 0) {
-                for(PayloadPaymentModel payment : paymentList) {
-                    if(payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+            if (paymentList != null && paymentList.size() > 0) {
+                for (PayloadPaymentModel payment : paymentList) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         copayStr = payment.getTotal();
-                    } else if(payment.getBalanceType().equalsIgnoreCase(CarePayConstants.ACCOUNT)) {
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.ACCOUNT)) {
                         previousBalanceStr = payment.getTotal();
                     }
                 }
@@ -130,13 +129,13 @@ public class ResponsibilityFragment extends Fragment {
                     double total = copay + previousBalance;
 
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                    responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
+                    responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
 
-                    responseTotal.setText(CarePayConstants.DOLLAR + formatter.format(total));
-                    responseCopay.setText(CarePayConstants.DOLLAR + copayStr);
-                    responsePreviousBalance.setText(CarePayConstants.DOLLAR + previousBalanceStr);
-
-                } catch(NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     ex.printStackTrace();
+                    Log.e(LOG_TAG, ex.getMessage());
                 }
             }
         }
@@ -161,28 +160,18 @@ public class ResponsibilityFragment extends Fragment {
 
     private void payAndFetchCheckedInAppointment() {
 
-        String body= "{\"appointment_id\": \""+ AppointmentsActivity.model.getAppointmentId() +"\"}";
 
+        String body = "{\"appointment_id\": \"" + AppointmentsActivity.model.getPayload().getId() + "\"}";
         AppointmentService aptService = (new BaseServiceGenerator(getActivity()).createService(AppointmentService.class));
+
         Call<JsonObject> call = aptService.confirmAppointment(body);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-               /* appointmentsModel = new AppointmentsResultModel();
-                appointmentsModel  = response.body();*/
 
-                Intent intent = new Intent(ResponsibilityFragment.this.getActivity(), AppointmentsActivity.class);
-                AppointmentModel appointmentModel = AppointmentsActivity.model;
-                if(appointmentModel!=null) {
-                    appointmentModel.setCheckedIn(true);
-                    appointmentModel.setPending(false);
-                }
-
-                // appointment clicked item is cleared once payment is done.
-                AppointmentsActivity.model = null;
-                intent.putExtra(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE,appointmentModel);
-                startActivity(intent);
-                getActivity().finish();
+                /**
+                 * Redirect to AppointmentsActivity on Success
+                 */
             }
 
             @Override
@@ -194,6 +183,7 @@ public class ResponsibilityFragment extends Fragment {
 
     /**
      * Helper to set the typefaces
+     *
      * @param view The parent view
      */
     private void setTypefaces(View view) {
