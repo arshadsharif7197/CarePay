@@ -25,6 +25,7 @@
         <TextView
             android:id="@+id/detailsSubHeading"
             style="@style/DemographicsDocsHeaderSubtitleStyle"
+            android:layout_marginBottom="@dimen/demogr_details_margin_top_detials_container"
             android:text="@string/detailsSubHeadingTextView"/>
 
     </LinearLayout>
@@ -37,21 +38,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="4dp">
 
             <FrameLayout
                 android:id="@+id/demographicsAddressPicCapturer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
-                android:layout_marginTop="@dimen/demogr_details_margin_top_detials_container"/>
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 style="@style/DemographicsContainerStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,7 +60,7 @@
 
                     <TextView
                         android:id="@+id/raceTextView"
-                        style="@style/DemographicsDocsLabelStyle"
+                        style="@style/DemographicsDetailsLabelStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:text="@string/raceLabel"/>
@@ -88,7 +87,7 @@
 
                     <TextView
                         android:id="@+id/ethnicityTextView"
-                        style="@style/DemographicsDocsLabelStyle"
+                        style="@style/DemographicsDetailsLabelStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:text="@string/ethnicityLabel"/>
@@ -116,7 +115,7 @@
 
                     <TextView
                         android:id="@+id/demogrDetailsGenderLabel"
-                        style="@style/DemographicsDocsLabelStyle"
+                        style="@style/DemographicsDetailsLabelStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:text="@string/review_gender_label"/>
@@ -147,7 +146,7 @@
                         android:layout_marginStart="0dp"
                         android:paddingEnd="0dp"
                         android:paddingStart="0dp"
-                        app:textTextAppearance="@style/FloatingLabelStyle">
+                        app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <EditText
                             android:id="@+id/demogrDetailsDobEdit"
@@ -156,7 +155,7 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <TextView
-                        android:id="@+id/demogrAddressFirstNameReqHint"
+                        android:id="@+id/demogrDetailsDobHint"
                         style="@style/SignupRequireHintStyle"
                         android:text="@string/dob_format"/>
                 </FrameLayout>
@@ -191,7 +190,7 @@
 
                     <TextView
                         android:id="@+id/demogrDetailsAddAllergyLabel"
-                        style="@style/DemographicsDocsLabelStyle"
+                        style="@style/DemographicsDetailsLabelStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:text="@string/demogr_details_allergy_add_label"/>
@@ -257,7 +256,7 @@
 
                     <TextView
                         android:id="@+id/demogrDetailsMedAddLabel"
-                        style="@style/DemographicsDocsLabelStyle"
+                        style="@style/DemographicsDetailsLabelStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:text="@string/demographics_details_medication_label"/>

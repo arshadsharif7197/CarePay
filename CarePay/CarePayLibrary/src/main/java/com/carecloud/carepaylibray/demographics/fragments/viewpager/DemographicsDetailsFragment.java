@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -252,16 +253,43 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsHeading));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.detailsSubHeading));
+        
+        Context context = getActivity();
+        
+        setGothamRoundedMediumTypeface(context, (TextView) view.findViewById(R.id.detailsHeading));
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.detailsSubHeading));
 
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.raceTextView));
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.raceListTextView));
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.raceTextView));
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.raceListTextView));
 
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityTextView));
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.ethnicityListTextView));
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.ethnicityTextView));
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.ethnicityListTextView));
 
-        setGothamRoundedMediumTypeface(getActivity(), nextButton);
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsGenderLabel));
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsGenderClickable));
+
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsDobEdit));
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsDobHint));
+
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted));
+
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAllergiesLabel));
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAllergiesHint));
+
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAddAllergyLabel));
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAddAllergyClickable));
+
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted));
+
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsMedLabel));
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsMedHint));
+
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsMedAddLabel));
+        setProximaNovaSemiboldTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsAddAnotherMedClickable));
+
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsMedAddUnlisted));
+
+        setGothamRoundedMediumTypeface(context, nextButton);
 
     }
 
