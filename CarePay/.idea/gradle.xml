@@ -8,9 +8,14 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/CarePayAndroid" />
             <option value="$PROJECT_DIR$/CarePayClover" />
+            <option value="$PROJECT_DIR$/CarePayComponentLibrary" />
             <option value="$PROJECT_DIR$/CarePayLibrary" />
+            <option value="$PROJECT_DIR$/CarePayPatient" />
+            <option value="$PROJECT_DIR$/CarePayPracticeClover" />
+            <option value="$PROJECT_DIR$/CarePayPracticeLibrary" />
+            <option value="$PROJECT_DIR$/CarePayPracticeTablet" />
+            <option value="$PROJECT_DIR$/CarePayServiceLibrary" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

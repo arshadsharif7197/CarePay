@@ -8,18 +8,23 @@ package com.carecloud.carepaylibray.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.ByteArrayOutputStream;
 
 public class SystemUtil {
 
@@ -134,10 +139,10 @@ public class SystemUtil {
 
         EditText editText = (EditText) view;
         TextInputLayout textInputLayout = (TextInputLayout) editText.getTag();
-        setProximaNovaExtraboldTypefaceInput(view.getContext(), textInputLayout);
         if (textInputLayout == null) {
             return;
         }
+        setProximaNovaExtraboldTypefaceInput(view.getContext(), textInputLayout);
         Typeface editTextTypeface = editText.getTypeface();
 
         boolean error = textInputLayout.isErrorEnabled();
@@ -194,7 +199,44 @@ public class SystemUtil {
     public static boolean isNotEmptyString(String string) {
         return string != null && !string.isEmpty() && !string.equals("null");
     }
+    /** * Utility to convert a bitmap to base64
+     * @param bitmap The bitmap
+     * @return The encoding
+     */
+   /* public static String bitmapToBase64String(Bitmap bitmap) {
+        //calculate how many bytes our image consists of.
+       *//* int bytes = bitmap.getByteCount();
 
+        ByteBuffer buffer = ByteBuffer.allocate(bytes); //Create a new buffer
+        bitmap.copyPixelsToBuffer(buffer); //Move the byte data to the buffer
+
+        byte[] array = buffer.array(); //Get the underlying array containing the data.
+        return Base64.encodeToString(array, 0);*//*
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return encoded;
+    }
+
+    *//**
+     * Utility to dencode a bitmapinto a base64
+     * @param image The encoding as bytes
+     * @return The bitmap
+     */
+
+    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+    }
+
+    public static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
     /**
      * Utility to convert dp to pixels
      *
@@ -215,4 +257,5 @@ public class SystemUtil {
         res.setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
         return res;
     }
+
 }

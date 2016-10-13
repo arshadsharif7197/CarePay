@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.utils;
 
 
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,7 +10,7 @@ public class StringUtil {
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     static private final String PASWWORD_REGEX_VALIDATION
-            = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}";
+            = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
 
     /**
      * Determines if the specified String object is null or equal to
@@ -71,10 +70,14 @@ public class StringUtil {
         return false;
     }
 
-    public static String formatPhoneNumber(String phn)
+    /**format phone number
+     * @param phoneNumber phonenumber as a string
+     * @return formated string
+     */
+    public static String formatPhoneNumber(String phoneNumber)
     {
         StringBuilder  phoneNumberString = new StringBuilder();
-        phoneNumberString.append(phn);
+        phoneNumberString.append(phoneNumber);
         if (phoneNumberString.length() > 0)
         {
             if (phoneNumberString.length() == 3 || phoneNumberString.length() == 7)
@@ -91,16 +94,21 @@ public class StringUtil {
         }
         return phoneNumberString.toString();
     }
-    public static String formatZipCode(String phn)
+
+    /** format zipcode
+     * @param zipcode zipcode as a string
+     * @return formated string
+     */
+    public static String formatZipCode(String zipcode)
     {
-        StringBuilder  phoneNumberString = new StringBuilder();
-        phoneNumberString.append(phn);
-            if (phoneNumberString.length() > 0 && phoneNumberString.length() > 5 && Character.isDigit(phoneNumberString.charAt(5))) {
-                phoneNumberString.insert(5, "-");
+        StringBuilder zipCodeString = new StringBuilder();
+        zipCodeString.append(zipcode);
+            if (zipCodeString.length() > 0 && zipCodeString.length() > 5 && Character.isDigit(zipCodeString.charAt(5))) {
+                zipCodeString.insert(5, "-");
             }
 
 
-        return phoneNumberString.toString();
+        return zipCodeString.toString();
     }
 
     public static String onShortDrName(String fullName) {

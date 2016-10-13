@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.models.DemIdDocPayloadDto;
+import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -32,11 +32,11 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
 
-    private ImageCaptureHelper mLicenseScanHelper;
-    private TextView           tvLicenseNum;
-    private Button             btnScanLicense;
-    private TextView           tvState;
-    private DemIdDocPayloadDto model;
+    private ImageCaptureHelper         mLicenseScanHelper;
+    private TextView                   tvLicenseNum;
+    private Button                     btnScanLicense;
+    private TextView                   tvState;
+    private DemographicIdDocPayloadDTO model;
 
     @Nullable
     @Override
@@ -76,7 +76,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
     protected void updateModelAndViewsAfterScan() { // license has been scanned
         // TODO: 9/29/2016 implement OCR
-        btnScanLicense.setText(R.string.demogr_docs_rescan);
+        //btnScanLicense.setText(R.string.demogr_docs_rescan);
 
         model.setIdNumber("666666666");
         tvLicenseNum.setText("666666666");
@@ -124,7 +124,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
     }
 
-    public void setModel(DemIdDocPayloadDto model) {
+    public void setModel(DemographicIdDocPayloadDTO model) {
         this.model = model;
     }
 }

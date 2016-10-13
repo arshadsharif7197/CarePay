@@ -4,24 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.cognito.CognitoActionCallback;
-import com.carecloud.carepaylibray.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.ResponsibilityFragment;
 import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.signinsignup.fragments.SignupFragment;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class LibraryMainActivity extends KeyboardHolderActivity {
 
@@ -34,20 +27,35 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
     @Override
     public void placeInitContentFragment() {
         // check if user logged in; if yes go to appointments
-        boolean signedIn = CognitoAppHelper.findCurrentUser(new CognitoActionCallback() {
-            @Override
-            public void executeAction() {
-                Intent intent = new Intent(LibraryMainActivity.this, AppointmentsActivity.class);
-                startActivity(intent);
-                LibraryMainActivity.this.finish();
-            }
-        });
+        boolean signedIn = CognitoAppHelper.findCurrentUser(cognitoActionCallback);
         if (!signedIn) { // if not signed in, launch the flow
             replaceFragment(SelectLanguageFragment.class, false);
         } else {
             // show a splash screen
         }
     }
+
+    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            Intent intent = new Intent(LibraryMainActivity.this, AppointmentsActivity.class);
+            startActivity(intent);
+            LibraryMainActivity.this.finish();
+        }
+
+        @Override
+        public void onBeforeLogin() {
+
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(LibraryMainActivity.this,
+                    "Sign-in failed",
+                    "Invalid user id or password");
+
+        }
+    };
 
     @Override
     public int getLayoutRes() {
