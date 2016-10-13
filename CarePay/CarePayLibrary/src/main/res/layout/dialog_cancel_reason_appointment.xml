@@ -38,106 +38,106 @@
             <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="@dimen/cancel_margin_top"
                 android:gravity="center_horizontal"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
+                android:paddingLeft="@dimen/apt_imgview_ht"
+                android:paddingRight="@dimen/apt_imgview_ht"
                 android:text="What’s the reason for canceling the appointment?"
                 android:textColor="@color/payne_gray"
-                android:textSize="22sp" />
+                android:textSize="@dimen/cancel_text_size" />
 
             <RadioGroup
                 android:id="@+id/cancelReasonRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/apt_dl_margin"
                 android:divider="?android:attr/dividerHorizontal"
                 android:orientation="vertical">
 
                 <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/rescheduleAppointmentRadioButtom"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/cancel_radio_button_height"
                     android:layout_gravity="start"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
+                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
                     android:layoutDirection="rtl"
                     android:text="Decided to Reschedule"
                     android:textAlignment="textStart"
                     android:textColor="@color/lightSlateGray"
                     android:buttonTint="@color/lightSlateGray"
-                    android:textSize="19sp" />
+                    android:textSize="@dimen/cancel_radio_text_size" />
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/apt_lst_img_elevation"
                     android:background="@color/cadet_gray" />
                 <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/officeRescheduleAppointmentRadioButtom"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/cancel_radio_button_height"
                     android:layout_gravity="start"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
+                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
                     android:layoutDirection="rtl"
                     android:text="Office Rescheduled"
                     android:textAlignment="textStart"
                     android:textColor="@color/lightSlateGray"
                     android:buttonTint="@color/lightSlateGray"
-                    android:textSize="19sp" />
+                    android:textSize="@dimen/cancel_radio_text_size" />
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/apt_lst_img_elevation"
                     android:background="@color/cadet_gray" />
                 <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/forgotAppointmentRadioButtom"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/cancel_radio_button_height"
                     android:layout_gravity="start"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
+                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
                     android:layoutDirection="rtl"
                     android:text="I forgot I had an Appointment"
                     android:textAlignment="textStart"
                     android:textColor="@color/lightSlateGray"
                     android:buttonTint="@color/lightSlateGray"
-                    android:textSize="19sp" />
+                    android:textSize="@dimen/cancel_radio_text_size"/>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/apt_lst_img_elevation"
                     android:background="@color/cadet_gray" />
                 <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/noLongerAppointmentRadioButtom"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/cancel_radio_button_height"
                     android:layout_gravity="start"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
+                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
                     android:layoutDirection="rtl"
                     android:text="No Longer Needed"
                     android:textAlignment="textStart"
                     android:textColor="@color/lightSlateGray"
                     android:buttonTint="@color/lightSlateGray"
-                    android:textSize="19sp" />
+                    android:textSize="@dimen/cancel_radio_text_size"/>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/apt_lst_img_elevation"
                     android:background="@color/cadet_gray" />
                 <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/otherAppointmentRadioButtom"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/cancel_radio_button_height"
                     android:layout_gravity="start"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
+                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
                     android:layoutDirection="rtl"
                     android:text="Other"
                     android:textAlignment="textStart"
                     android:textColor="@color/lightSlateGray"
                     android:buttonTint="@color/lightSlateGray"
-                    android:textSize="19sp" />
+                    android:textSize="@dimen/cancel_radio_text_size" />
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/apt_lst_img_elevation"
                     android:background="@color/cadet_gray" />
             </RadioGroup>
 
@@ -150,11 +150,11 @@
                 <EditText
                     android:id="@+id/reasonEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_height="@dimen/cancel_radio_button_height"
+                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
+                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
                     android:focusable="false"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/cancel_edittext_size"
                     android:enabled="false"
                     android:hint="Describe briefly the reason "
                     android:imeOptions="flagNoExtractUi"
@@ -173,10 +173,10 @@
                 <Button
                     android:id="@+id/cancelAppointmentButton"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_height="@dimen/cancel_button_height"
+                    android:layout_marginLeft="@dimen/apt_dl_margin"
+                    android:layout_marginRight="@dimen/apt_dl_margin"
+                    android:layout_marginBottom="@dimen/apt_dl_margin"
                     android:background="@drawable/button_munsell_border"
                     android:text="CANCEL APPOINTMENT"
                     android:textColor="@color/munsell"
