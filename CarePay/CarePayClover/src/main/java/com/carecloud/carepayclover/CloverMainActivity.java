@@ -10,9 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 import com.clover.sdk.util.CustomerMode;
 
 import retrofit2.Call;

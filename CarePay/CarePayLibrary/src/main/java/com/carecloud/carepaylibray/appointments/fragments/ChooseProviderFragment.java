@@ -17,19 +17,18 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
-import com.carecloud.carepaylibray.appointments.adapters.AllProviderAdapter;
-import com.carecloud.carepaylibray.appointments.adapters.RecentProviderAdapter;
+import com.carecloud.carepaylibray.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepaylibray.appointments.dialog.VisitTypeDialog;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 
-public class ChooseProviderFragment extends Fragment implements AllProviderAdapter.OnAllListItemClickListener,
-        RecentProviderAdapter.OnRecentListItemClickListener, VisitTypeDialog.OnDialogListItemClickListener {
+public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnAllListItemClickListener,
+        VisitTypeDialog.OnDialogListItemClickListener {
 
-    private ArrayList<AppointmentModel> recentProviderItems = new ArrayList<>();
-    private ArrayList<AppointmentModel> allProviderItems = new ArrayList<>();
+    private ArrayList<AppointmentDTO> recentProviderItems = new ArrayList<>();
+    private ArrayList<AppointmentDTO> allProviderItems = new ArrayList<>();
 
     @Override
     public void onStart() {
@@ -67,79 +66,51 @@ public class ChooseProviderFragment extends Fragment implements AllProviderAdapt
         });
 
         /// DUMMY DATA START
-        AppointmentModel appointmentModel = new AppointmentModel();
-        appointmentModel.setDoctorName("Dr. Ellie Burton");
-        appointmentModel.setAppointmentType("Family Physician");
-        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        appointmentModel.setAptId("1234");
-        appointmentModel.setPlaceName("Mercy Hospital");
-        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
-        recentProviderItems.add(appointmentModel);
-        allProviderItems.add(appointmentModel);
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
+        recentProviderItems.add(appointmentDTO);
+        allProviderItems.add(appointmentDTO);
 
-        appointmentModel = new AppointmentModel();
-        appointmentModel.setDoctorName("Dr. Joshua Wellington");
-        appointmentModel.setAppointmentType("Neurologist");
-        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        appointmentModel.setAptId("1234");
-        appointmentModel.setPlaceName("Mercy Hospital");
-        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
-        recentProviderItems.add(appointmentModel);
-        allProviderItems.add(appointmentModel);
+        appointmentDTO = new AppointmentDTO();
+        recentProviderItems.add(appointmentDTO);
+        allProviderItems.add(appointmentDTO);
 
-        appointmentModel = new AppointmentModel();
-        appointmentModel.setDoctorName("Dr. George Diaz");
-        appointmentModel.setAppointmentType("Urologist");
-        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        appointmentModel.setAptId("1234");
-        appointmentModel.setPlaceName("Mercy Hospital");
-        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
-        allProviderItems.add(appointmentModel);
+        appointmentDTO = new AppointmentDTO();
+        allProviderItems.add(appointmentDTO);
 
-        appointmentModel = new AppointmentModel();
-        appointmentModel.setDoctorName("Dr. Helena S. Harley");
-        appointmentModel.setAppointmentType("Pediatry");
-        appointmentModel.setAppointmentDate("09/08/16 5:12:28 PM UTC");
-        appointmentModel.setAptId("1234");
-        appointmentModel.setPlaceName("Mercy Hospital");
-        appointmentModel.setPlaceAddress("3663 S Miami Ave, Miami, FL 33133, USA");
-        allProviderItems.add(appointmentModel);
+        appointmentDTO = new AppointmentDTO();
+        allProviderItems.add(appointmentDTO);
         /// DUMMY DATA END
 
         // Load and display Recent provider
-        RecentProviderAdapter recentProviderAdapter = new RecentProviderAdapter(getActivity(), recentProviderItems, this);
-        RecyclerView recyclerViewRecent = ((RecyclerView) chooseProviderView.findViewById(R.id.choose_provider_recycler_view_recent));
+        ProviderAdapter recentProviderAdapter = new ProviderAdapter(getActivity(), recentProviderItems, this);
+        RecyclerView recyclerViewRecent = ((RecyclerView)
+                chooseProviderView.findViewById(R.id.choose_provider_recycler_view_recent));
         recyclerViewRecent.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewRecent.setAdapter(recentProviderAdapter);
 
         // Load and display All provider
-        AllProviderAdapter allProviderAdapter = new AllProviderAdapter(getActivity(), allProviderItems, this);
-        RecyclerView recyclerViewAll = ((RecyclerView) chooseProviderView.findViewById(R.id.choose_provider_recycler_view_all));
+        ProviderAdapter allProviderAdapter = new ProviderAdapter(getActivity(), allProviderItems, this);
+        RecyclerView recyclerViewAll = ((RecyclerView)
+                chooseProviderView.findViewById(R.id.choose_provider_recycler_view_all));
         recyclerViewAll.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewAll.setAdapter(allProviderAdapter);
 
         return chooseProviderView;
     }
 
-    private void loadVisitTypeScreen(AppointmentModel model) {
+    private void loadVisitTypeScreen(AppointmentDTO model) {
         VisitTypeDialog visitTypeDialog = new VisitTypeDialog(getActivity(), model, this);
         visitTypeDialog.show();
     }
 
     @Override
     public void onAllListItemClickListener(int position) {
-        AppointmentModel model = allProviderItems.get(position);
-        loadVisitTypeScreen(model);
+        AppointmentDTO appointmentDTO = allProviderItems.get(position);
+        loadVisitTypeScreen(appointmentDTO);
     }
 
     @Override
-    public void onRecentListItemClickListener(int position) {
-        AppointmentModel model = recentProviderItems.get(position);
-        loadVisitTypeScreen(model);
-    }
-
-    @Override
-    public void onDialogListItemClickListener(AppointmentModel model) {
+    public void onDialogListItemClickListener(AppointmentDTO model) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         AvailableHoursFragment visitTypeFragment = (AvailableHoursFragment)
                 fragmentManager.findFragmentByTag(AvailableHoursFragment.class.getSimpleName());
