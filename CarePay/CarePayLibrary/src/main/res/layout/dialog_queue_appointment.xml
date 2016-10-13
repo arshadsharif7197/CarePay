@@ -6,7 +6,7 @@ android:layout_gravity="center_horizontal"
 android:gravity="center_horizontal"
 android:orientation="vertical">
 
-<TextView
+<com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="QUEUE"
@@ -21,6 +21,6 @@ android:orientation="vertical">
     android:layout_height="wrap_content"
     android:text="You are 3rd"
     android:textColor="@color/dark_green"
-    android:textSize="@dimen/apt_popup_message_text_line_spacing"
+    android:textSize="@dimen/apt_dl_text_big"
     android:textStyle="bold" />
 </LinearLayout>

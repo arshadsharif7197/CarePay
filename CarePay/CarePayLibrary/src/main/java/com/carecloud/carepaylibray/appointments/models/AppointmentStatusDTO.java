@@ -4,7 +4,10 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppointmentStatusModel {
+/**
+ * Model for appointment status.
+ */
+public class AppointmentStatusDTO {
 
     @SerializedName("id")
     @Expose
