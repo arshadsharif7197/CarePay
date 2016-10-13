@@ -22,7 +22,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<Object> items;
     private Context context;
     private AppointmentDTO appointmentDTO;
-    private final int SECTION_HEADER = 0;
+    private final int sectionHeader = 0;
 
     /**
      * Constructor.
@@ -47,7 +47,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (items.get(position) instanceof AppointmentAvailableHoursDTO) {
             return 1;
         } else if (items.get(position) instanceof String) {
-            return SECTION_HEADER;
+            return sectionHeader;
         }
         return -1;
     }
@@ -57,7 +57,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
-        if (viewType == SECTION_HEADER) {
+        if (viewType == sectionHeader) {
             View availableHoursListHeaderRow = inflater.inflate(R.layout.apt_available_hours_list_header_row, viewGroup, false);
             viewHolder = new ViewHolderSectionHeader(availableHoursListHeaderRow);
         } else {
@@ -69,7 +69,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if (viewHolder.getItemViewType() == SECTION_HEADER) {
+        if (viewHolder.getItemViewType() == sectionHeader) {
             ViewHolderSectionHeader vhSectionHeader = (ViewHolderSectionHeader) viewHolder;
             vhSectionHeader.getTextView().setText(items.get(position).toString());
         } else {
@@ -79,16 +79,13 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                TextView selectedTimeSlot = (TextView) v.findViewById(R.id.textview_timeslot);
+            public void onClick(View view) {
+                TextView selectedTimeSlot = (TextView) view.findViewById(R.id.textview_timeslot);
 
                 if (selectedTimeSlot != null) {
-                    //TODO: Select time slot and pass to next screen
-//                    String selectedTimeStr = selectedTimeSlot.getText().toString();
-//                    String newAppointmentDate = AvailableHoursFragment.getAppointmentDate() + " " + selectedTimeStr;
-//                    newAppointmentDate = DateUtil.getDateRaw(new Date(newAppointmentDate));
-//                    appointmentDTO.setNewAppointmentDate(newAppointmentDate);
-//                    appointmentDTO.setNewAppointmentTime(selectedTimeStr);
+                    /**
+                     * Need Select time slot and pass to next screen.
+                     */
 
                     // Launch dialog of appointment request
                     AppointmentsActivity baseActivity = new AppointmentsActivity();

@@ -123,7 +123,7 @@ public class AppointmentsListFragment extends Fragment {
 
     private View.OnClickListener negativeActionListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             popup.dismiss();
             popup = null;
 
@@ -135,7 +135,7 @@ public class AppointmentsListFragment extends Fragment {
 
     private View.OnClickListener positiveActionListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             popup.dismiss();
             popup = null;
 
@@ -143,7 +143,9 @@ public class AppointmentsListFragment extends Fragment {
                     CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
 
-            //TODO: Go for next flow
+            /**
+             * Go for next flow.
+             */
         }
     };
 
@@ -234,7 +236,7 @@ public class AppointmentsListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable t) {
+            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
 
             }
         });

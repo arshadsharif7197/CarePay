@@ -58,7 +58,7 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         listener.onAllListItemClickListener(holder.getAdapterPosition());
                     }
                 });

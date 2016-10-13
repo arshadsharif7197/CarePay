@@ -52,8 +52,8 @@ public class VisitTypeDialog extends Dialog {
 
         visitTypeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                model.setNewAppointmentVisitType(adapterView.getItemAtPosition(i).toString());
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+//                model.setNewAppointmentVisitType(adapterView.getItemAtPosition(position).toString());
                 listener.onDialogListItemClickListener(model);
                 dismiss();
             }
@@ -80,17 +80,17 @@ public class VisitTypeDialog extends Dialog {
         }
 
         @Override
-        public String getItem(int i) {
-            return listItems.get(i);
+        public String getItem(int position) {
+            return listItems.get(position);
         }
 
         @Override
-        public long getItemId(int i) {
+        public long getItemId(int position) {
             return 0;
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public View getView(int position, View view, ViewGroup viewGroup) {
             VisitTypeListHolder holder;
             if (view == null) {
                 view = LayoutInflater.from(context).inflate(
@@ -103,7 +103,7 @@ public class VisitTypeDialog extends Dialog {
                 holder = (VisitTypeListHolder) view.getTag();
             }
 
-            holder.type.setText(getItem(i));
+            holder.type.setText(getItem(position));
             return view;
         }
 

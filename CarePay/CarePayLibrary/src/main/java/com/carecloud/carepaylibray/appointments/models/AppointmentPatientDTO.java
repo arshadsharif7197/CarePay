@@ -278,7 +278,7 @@ public class AppointmentPatientDTO {
             }
         }
 
-        // TODO: using for demo. will remove this after the demo
+        // using for demo. will remove this after the demo.
         if (total == 0.00) {
             total = 20.00;
         }
@@ -299,7 +299,7 @@ public class AppointmentPatientDTO {
             }
         }
 
-        // TODO: using for demo. will remove this after the demo
+        // using for demo. will remove this after the demo.
         total = 20.00;
         return total;
     }
