@@ -30,12 +30,16 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets
 
 public class SignatureActivity extends AppCompatActivity {
 
-    private TextView titleTv, signatureHelpTv;
+    private TextView titleTextView;
+    private TextView signatureHelpTextView;
     private SignaturePad signaturePad;
     private SwitchCompat switchButton;
-    private Button agreeBtn, clearBtn;
-    private EditText legalFirstNameET, legalLastNameET;
-    private TextInputLayout legalFirstName,legalLastName;
+    private Button agreeButton;
+    private Button clearButton;
+    private EditText legalFirstNameET;
+    private EditText legalLastNameET;
+    private TextInputLayout legalFirstName;
+    private TextInputLayout legalLastName;
     private Map<Integer, List<String>> stringMap = new HashMap<>();
     public static boolean isBackButtonClicked = false;
 
@@ -53,11 +57,23 @@ public class SignatureActivity extends AppCompatActivity {
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isBackButtonClicked = true;
+                Intent mIntent = getIntent();
+                setResult(CarePayConstants.SIGNATURE_REQ_CODE, mIntent);
+                finish();
+            }
+        });
         setTypefaces();
         onClickListeners();
         setTextListeners();
     }
 
+    /**
+     * Initializing the view
+     */
     private void initViews() {
         //initViews data
         List<String> dataList = new ArrayList<>();
@@ -71,22 +87,25 @@ public class SignatureActivity extends AppCompatActivity {
         stringMap.put(0, dataList);
         stringMap.put(1, dataList2);
 
-        titleTv = (TextView) findViewById(R.id.titleTv);
-        signatureHelpTv = (TextView) findViewById(R.id.helperTv);
+        titleTextView = (TextView) findViewById(R.id.titleTv);
+        signatureHelpTextView = (TextView) findViewById(R.id.helperTv);
         switchButton = (SwitchCompat) findViewById(R.id.switchButton);
-        agreeBtn = (Button) findViewById(R.id.agreeBtn);
+        agreeButton = (Button) findViewById(R.id.agreeBtn);
         signaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-        clearBtn = (Button) findViewById(R.id.clearBtn);
-        legalFirstName=(TextInputLayout)findViewById(R.id.legalFirstName);
-        legalLastName=(TextInputLayout)findViewById(R.id.legalLastName);
+        clearButton = (Button) findViewById(R.id.clearBtn);
+        legalFirstName = (TextInputLayout) findViewById(R.id.legalFirstName);
+        legalLastName = (TextInputLayout) findViewById(R.id.legalLastName);
         legalFirstNameET = (EditText) findViewById(R.id.legalFirstNameET);
         legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
         String headerTitle = getIntent().getExtras().getString("Header_Title");
-        titleTv.setText(headerTitle);
+        titleTextView.setText(headerTitle);
 
 
     }
 
+    /**
+     * On click Listeners
+     */
     private void onClickListeners() {
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,14 +118,14 @@ public class SignatureActivity extends AppCompatActivity {
             }
         });
 
-        clearBtn.setOnClickListener(new View.OnClickListener() {
+        clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearSignature();
             }
         });
 
-        agreeBtn.setOnClickListener(new View.OnClickListener() {
+        agreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (getIntent().hasExtra("consentform"))
@@ -121,7 +140,7 @@ public class SignatureActivity extends AppCompatActivity {
 
             @Override
             public void onSigned() {
-                agreeBtn.setEnabled(true);
+                agreeButton.setEnabled(true);
             }
 
             @Override
@@ -131,8 +150,12 @@ public class SignatureActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Text change Listeners
+     */
     private void setTextListeners() {
-      legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 String hint = "Legal Representative First Name";
@@ -140,14 +163,14 @@ public class SignatureActivity extends AppCompatActivity {
                 if (hasFocus) {
                     // change hint to all caps
                     legalFirstName.setHint(hintCaps);
-                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(),legalFirstName);
+                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(), legalFirstName);
                 } else {
                     if (StringUtil.isNullOrEmpty(legalFirstNameET.getText().toString())) {
                         // change hint to lower
                         legalFirstName.setHint(hint);
 
                     } else {
-                       legalFirstNameET.setHint(hint);
+                        legalFirstNameET.setHint(hint);
                     }
                 }
             }
@@ -161,14 +184,14 @@ public class SignatureActivity extends AppCompatActivity {
                 if (hasFocus) {
                     // change hint to all caps
                     legalLastName.setHint(hintCaps);
-                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(),legalLastName);
+                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(), legalLastName);
                 } else {
                     if (StringUtil.isNullOrEmpty(legalLastNameET.getText().toString())) {
                         // change hint to lower
                         legalLastName.setHint(hint);
 
                     } else {
-                      legalLastNameET.setHint(hint);
+                        legalLastNameET.setHint(hint);
                     }
                 }
 
@@ -180,26 +203,26 @@ public class SignatureActivity extends AppCompatActivity {
     private void clearSignature() {
         if (signaturePad != null) {
             signaturePad.clear();
-            agreeBtn.setEnabled(false);
+            agreeButton.setEnabled(false);
         }
     }
 
     private void showData(boolean isChecked) {
         if (!isChecked) {
-            titleTv.setText(stringMap.get(0).get(0));
-            signatureHelpTv.setText(stringMap.get(0).get(1));
+            titleTextView.setText(stringMap.get(0).get(0));
+            signatureHelpTextView.setText(stringMap.get(0).get(1));
             legalFirstNameET.setVisibility(View.GONE);
             legalLastNameET.setVisibility(View.GONE);
         } else {
-            titleTv.setText(stringMap.get(1).get(0));
-            signatureHelpTv.setText(stringMap.get(1).get(1));
+            titleTextView.setText(stringMap.get(1).get(0));
+            signatureHelpTextView.setText(stringMap.get(1).get(1));
             legalFirstNameET.setVisibility(View.VISIBLE);
             legalLastNameET.setVisibility(View.VISIBLE);
         }
     }
 
     private void setTypefaces() {
-        setGothamRoundedMediumTypeface(this, titleTv);
+        setGothamRoundedMediumTypeface(this, titleTextView);
         setProximaNovaRegularTypeface(this, (TextView) findViewById(R.id.descriptionTv));
     }
 
@@ -208,13 +231,13 @@ public class SignatureActivity extends AppCompatActivity {
         super.onBackPressed();
         isBackButtonClicked = true;
         Intent mIntent = getIntent();
-        setResult(CarePayConstants.SIGNATURE_REQ_CODE,mIntent);
+        setResult(CarePayConstants.SIGNATURE_REQ_CODE, mIntent);
         finish();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         }
