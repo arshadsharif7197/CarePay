@@ -9,11 +9,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepayclover.adapters.CheckedInAdapter;
 import com.carecloud.carepaylibray.appointments.models.Appointment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
 
 import java.util.ArrayList;
 
