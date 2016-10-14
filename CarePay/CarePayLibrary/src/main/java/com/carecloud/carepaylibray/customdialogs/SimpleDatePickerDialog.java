@@ -28,6 +28,19 @@ public class SimpleDatePickerDialog extends AlertDialog implements DialogInterfa
     private OnDateSetListener dateSetListener;
 
     /**
+     * The callback used to indicate the user is done filling in the date.
+     */
+    public interface OnDateSetListener {
+
+        /**
+         * @param year        The year that was set.
+         * @param monthOfYear The month that was set (0-11) for compatibility with {@link
+         *                    java.util.Calendar}.
+         */
+        void onDateSet(int year, int monthOfYear);
+    }
+
+    /**
      * @param context The context the dialog is to run in.
      */
     public SimpleDatePickerDialog(Context context, OnDateSetListener listener, int year,
@@ -101,18 +114,5 @@ public class SimpleDatePickerDialog extends AlertDialog implements DialogInterfa
 
     public void setMaxDate(long maxDate) {
         simpleDatePickerDelegate.setMaxDate(maxDate);
-    }
-
-    /**
-     * The callback used to indicate the user is done filling in the date.
-     */
-    public interface OnDateSetListener {
-
-        /**
-         * @param year        The year that was set.
-         * @param monthOfYear The month that was set (0-11) for compatibility with {@link
-         *                    java.util.Calendar}.
-         */
-        void onDateSet(int year, int monthOfYear);
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,9 +22,6 @@ import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,12 +52,8 @@ public class AddNewCreditCardFragment extends Fragment implements
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         initilizeViews(addNewCreditCardView);
         setTypefaces();
 
@@ -172,9 +166,9 @@ public class AddNewCreditCardFragment extends Fragment implements
 
     private void displaySimpleDatePickerDialogFragment() {
         SimpleDatePickerDialogFragment datePickerDialogFragment;
-        Calendar calendar = Calendar.getInstance(Locale.getDefault());
-        datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+        DateUtil instance = DateUtil.getInstance();
+        datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance( instance.getYear(),
+                instance.getMonth());
         datePickerDialogFragment.setOnDateSetListener(this);
         datePickerDialogFragment.show(getChildFragmentManager(), null);
     }
