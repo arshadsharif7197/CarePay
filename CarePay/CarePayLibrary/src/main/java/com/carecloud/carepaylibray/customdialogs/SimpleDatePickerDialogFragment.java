@@ -64,10 +64,10 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
     /**
      * Get callback of the year and month selected.
      *
-     * @param dateSetListener To get call of selected date
+     * @param onDateSetListener To get call of selected date
      */
-    public void setOnDateSetListener(SimpleDatePickerDialog.OnDateSetListener dateSetListener) {
-        this.onDateSetListener = dateSetListener;
+    public void setOnDateSetListener(SimpleDatePickerDialog.OnDateSetListener onDateSetListener) {
+        onDateSetListener = onDateSetListener;
     }
 
     @NonNull
