@@ -55,6 +55,9 @@
                 android:id="@+id/reviewdemogrFirstNameEdit"
                 style="@style/SigninSignupEditStyle"
                 android:hint="@string/firstname_text"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
+                android:maxLength="20"
+                android:inputType="textPersonName"
                 android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -72,7 +75,9 @@
                     style="@style/SigninSignupEditStyle"
                     android:hint="@string/middlename_text"
                     android:imeOptions="actionNext"
-                    android:maxLength="25"
+                    android:inputType="textPersonName"
+                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
+                    android:maxLength="20"
                     android:nextFocusForward="@+id/reviewdemogrsLastNameEdit"
                     android:paddingTop="0dp"/>
 
@@ -92,6 +97,9 @@
                 android:id="@+id/reviewdemogrLastNameEdit"
                 style="@style/SigninSignupEditStyle"
                 android:hint="@string/lastname_text"
+                android:inputType="textPersonName"
+                android:maxLength="20"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
                 android:imeOptions="actionNext"
                 android:nextFocusForward="@+id/reviewdemogrEmailEdit"/>
         </android.support.design.widget.TextInputLayout>
@@ -109,6 +117,8 @@
                 android:imeOptions="actionNext"
                 android:hint="@string/demoDobLabel"
                 android:inputType="date"
+                android:maxLength="10"
+                android:digits="0123456789-"
                 android:nextFocusForward="@+id/revewidemoPhoneNumberEdit"/>
         </android.support.design.widget.TextInputLayout>
             <TextView
@@ -124,8 +134,10 @@
             <EditText
                 android:id="@+id/reviewgrdemoPhoneNumberEdit"
                 style="@style/SigninSignupEditStyle"
-                android:hint="Phone Number"
+                android:hint="@string/demoPhoneNumberLabel"
                 android:inputType="phone"
+                android:digits="0123456789-"
+                android:maxLength="12"
                 android:imeOptions="actionNext"
                 android:nextFocusForward="@+id/driverLicenseEditText"/>
         </android.support.design.widget.TextInputLayout>
@@ -222,6 +234,7 @@
             style="@style/SigninSignupEditStyle"
             android:hint="@string/driverLicense"
             android:imeOptions="actionNext"
+            android:inputType=""
             android:nextFocusForward="@+id/addressEditTextId"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -250,6 +263,8 @@
                 style="@style/SigninSignupEditStyle"
                 android:hint="@string/Address1EditText"
                 android:imeOptions="actionNext"
+                android:inputType="textPostalAddress"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789"
                 android:nextFocusForward="@+id/addressEditText2Id"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -267,14 +282,17 @@
                     android:id="@+id/addressEditText2Id"
                     style="@style/SigninSignupEditStyle"
                     android:hint="@string/Address2EditText"
+                    android:textColor="@color/cadet_gray"
+                    android:inputType="textPostalAddress"
                     android:imeOptions="actionNext"
+                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789"
                     android:nextFocusForward="@+id/zipCodeId" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:id="@+id/demogrAddressOptionalLabel"
                 style="@style/SignupRequireHintStyle"
-                android:text="Optional"/>
+                android:text="@string/demooptional"/>
 
         </FrameLayout>
 
