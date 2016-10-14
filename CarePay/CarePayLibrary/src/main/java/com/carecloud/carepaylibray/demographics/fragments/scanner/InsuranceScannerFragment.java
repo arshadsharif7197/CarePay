@@ -25,11 +25,12 @@ import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePaylo
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.squareup.picasso.Picasso;
+
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,21 +98,20 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
             }
         });
-        planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
-        planTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedDataArray = 1;
-                showAlertDialogWithListview(planDataArray, "Select Plan");
-            }
-        });
-
         providerTextView = (TextView) view.findViewById(R.id.demogr_docs_provider);
         providerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedDataArray = 2;
+                selectedDataArray = 1;
                 showAlertDialogWithListview(providerDataArray, "Select Provider");
+            }
+        });
+        planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
+        planTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedDataArray = 2;
+                showAlertDialogWithListview(planDataArray, "Select Plan");
             }
         });
         cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
@@ -189,8 +189,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
      * @param title
      */
     private void showAlertDialogWithListview(final String[] listArray, String title) {
-        Log.e("listArray==", listArray.toString());
-        Log.e("listArray 23==", Arrays.asList(listArray).toString());
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
@@ -200,15 +198,23 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                 dialogInterface.dismiss();
             }
         });
+
         View customView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.alert_list_layout, null, false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(listArray));
-        listView.setAdapter(mAdapter);
+        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(listArray));
+        listView.setAdapter(alertAdapter);
         dialog.setView(customView);
+
         final AlertDialog alert = dialog.create();
         alert.show();
-
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+             @Override
+             public void onShow(DialogInterface dialog) {
+                 alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                         getResources().getColor(R.color.blue_cerulian));
+             }
+         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -232,7 +238,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     /** Converting bitmap images to base64 and posting to server in model
-     * @return
+     * @return insurance model
      */
     public DemographicInsurancePayloadDTO getBitmapsFromImageViews() {
         Bitmap bitmapFront;
