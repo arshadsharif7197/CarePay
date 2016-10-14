@@ -23,20 +23,22 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payment.fragments.PaymentMethodFragment;
+import com.carecloud.carepaylibray.payment.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payment.services.PaymentsService;
 import com.google.gson.JsonObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -48,6 +50,11 @@ public class ResponsibilityFragment extends Fragment {
     private AppCompatActivity appCompatActivity;
     private String copayStr = "";
     private String previousBalanceStr = "";
+
+    private TextView responseTotal;
+    private TextView responseCopay;
+    private TextView responsePreviousBalance;
+//    private AppointmentsResultModel appointmentsModel = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +81,7 @@ public class ResponsibilityFragment extends Fragment {
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getPaymentInformation();
                 FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                 PaymentMethodFragment fragment = (PaymentMethodFragment) fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
                 if (fragment == null) {
@@ -134,7 +142,24 @@ public class ResponsibilityFragment extends Fragment {
         return view;
     }
 
+    private void getPaymentInformation() {
+        PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
+                .createService(PaymentsService.class);
+        Call<PaymentsDTO> call = paymentService.fetchPaymentInformation();
+        call.enqueue(new Callback<PaymentsDTO>() {
+            @Override
+            public void onResponse(Call<PaymentsDTO> call, Response<PaymentsDTO> response) {
+                PaymentsDTO paymentsDTO = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<PaymentsDTO> call, Throwable throwable) {
+            }
+        });
+    }
+
     private void payAndFetchCheckedInAppointment() {
+
 
         String body = "{\"appointment_id\": \"" + AppointmentsActivity.model.getPayload().getId() + "\"}";
         AppointmentService aptService = (new BaseServiceGenerator(getActivity()).createService(AppointmentService.class));
