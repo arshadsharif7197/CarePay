@@ -27,15 +27,20 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Created by arpit_jain1 on 10/10/2016.
+ * Custom Calendar Fragment
+ */
 public class AppointmentDateRangeFragment extends Fragment {
 
-//    private AppointmentModel model;
     private AppointmentDTO appointmentDTO;
     private CalendarPickerView calendarPickerView;
+    private CustomGothamRoundedMediumButton applyDateRangeButton;
     private List<Date> dateList;
-    private Date todayDate;
-    private Date startDate;
-    private Date endDate;
+    private Date previousStartDate;
+    private Date previousEndDate;
+    private Date newStartDate;
+    private Date newEndDate;
 
     @Override
     public void onStart() {
@@ -48,15 +53,11 @@ public class AppointmentDateRangeFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-//            model = (AppointmentModel)
-//                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
             appointmentDTO = (AppointmentDTO)
-                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
-            todayDate = (Date)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE);
-            startDate = (Date)
+                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
+            previousStartDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
-            endDate = (Date)
+            previousEndDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
         }
     }
@@ -138,16 +139,11 @@ public class AppointmentDateRangeFragment extends Fragment {
      */
     private void initCalendarView(View view) {
         calendarPickerView=(CalendarPickerView)view.findViewById(R.id.calendarView);
-        if(todayDate!=null) {
-            /*Instantiate calendar for today/single date selected*/
-            calendarPickerView.init(new Date(), getNextSixMonthCalendar().getTime())
-                .withSelectedDate(todayDate)
-                .inMode(CalendarPickerView.SelectionMode.RANGE);
-        } else if(startDate!=null&&endDate!=null) {
+        if(previousStartDate!=null && previousEndDate!=null) {
             /*Instantiate calendar for a date range selected*/
             Collection<Date> selectedDates = new ArrayList<Date>();
-            selectedDates.add(startDate);
-            selectedDates.add(endDate);
+            selectedDates.add(previousStartDate);
+            selectedDates.add(previousEndDate);
             calendarPickerView.init(new Date(), getNextSixMonthCalendar().getTime())
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(selectedDates);
@@ -170,9 +166,10 @@ public class AppointmentDateRangeFragment extends Fragment {
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
 
-        CustomGothamRoundedMediumButton applyDateRangeButton = (CustomGothamRoundedMediumButton)
+        applyDateRangeButton = (CustomGothamRoundedMediumButton)
                 view.findViewById(R.id.applyDateRangeButton);
         applyDateRangeButton.setOnClickListener(applyButtonClickListener);
+        applyDateRangeButton.setEnabled(false);
     }
 
     /**
@@ -201,10 +198,10 @@ public class AppointmentDateRangeFragment extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, todayDate);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
-                startDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+                previousStartDate);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
+                previousEndDate);
         availableHoursFragment.setArguments(bundle);
 
         fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
@@ -220,13 +217,28 @@ public class AppointmentDateRangeFragment extends Fragment {
         @Override
         public void onDateSelected(Date date) {
             dateList = calendarPickerView.getSelectedDates();
-            if (dateList.size() == 1) {
-                todayDate = dateList.get(0);
+
+            if (dateList.size() > 1) {
+                newStartDate = dateList.get(0);
+                newEndDate = dateList.get(dateList.size() - 1);
+            } else if (dateList.size() == 1) {
+                if(newStartDate != null) {
+                    newEndDate = dateList.get(0);
+                } else {
+                    newStartDate = dateList.get(0);
+                }
+            }
+
+            if(newStartDate != null && newEndDate != null) {
+                applyDateRangeButton.setEnabled(true);
+            } else {
+                applyDateRangeButton.setEnabled(false);
             }
         }
 
         @Override
         public void onDateUnselected(Date date) {
+            clearSelectedDate();
         }
     };
 
@@ -236,29 +248,16 @@ public class AppointmentDateRangeFragment extends Fragment {
     View.OnClickListener todayButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-        Date today = new Date();
-        Calendar nextSixMonths = Calendar.getInstance();
-        nextSixMonths.add(Calendar.MONTH, 5);
+            clearSelectedDate();
+            Date today = new Date();
+            Calendar nextSixMonths = Calendar.getInstance();
+            nextSixMonths.add(Calendar.MONTH, 5);
 
-        calendarPickerView.init(today, nextSixMonths.getTime())
+            calendarPickerView.init(today, nextSixMonths.getTime())
                 .withSelectedDate(today)
                 .inMode(CalendarPickerView.SelectionMode.RANGE);
 
-        FragmentManager fm = getFragmentManager();
-        AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
-                fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
-
-        if (availableHoursFragment == null) {
-            availableHoursFragment = new AvailableHoursFragment();
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, today);
-        availableHoursFragment.setArguments(bundle);
-
-        fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
-                AvailableHoursFragment.class.getSimpleName()).commit();
+            newStartDate = today;
         }
     };
 
@@ -268,35 +267,35 @@ public class AppointmentDateRangeFragment extends Fragment {
     View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-        FragmentManager fm = getFragmentManager();
-        AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
-                fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
+                FragmentManager fm = getFragmentManager();
+                AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
+                        fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
 
-        if (availableHoursFragment == null) {
-            availableHoursFragment = new AvailableHoursFragment();
-        }
+                if (availableHoursFragment == null) {
+                    availableHoursFragment = new AvailableHoursFragment();
+                }
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
-        if (dateList != null && dateList.size() > 1) {
-            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
-                dateList.get(0));
-            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
-                dateList.get(dateList.size() - 1));
-        } else if(todayDate != null) {
-            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE,
-                todayDate);
-        } else if (startDate != null && endDate != null) {
-            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
-                startDate);
-            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
-                endDate);
-        }
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
+                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
+                        newStartDate);
+                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
+                        newEndDate);
 
-        availableHoursFragment.setArguments(bundle);
+                availableHoursFragment.setArguments(bundle);
 
-        fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
-                AvailableHoursFragment.class.getSimpleName()).commit();
+                fm.beginTransaction().replace(R.id.add_appointments_frag_holder,
+                        availableHoursFragment,
+                        AvailableHoursFragment.class.getSimpleName()).commit();
         }
     };
+
+    /**
+     * Method to remove selected date
+     */
+    void clearSelectedDate() {
+        /*removing previously selected dates*/
+        newStartDate = null;
+        newEndDate = null;
+    }
 }

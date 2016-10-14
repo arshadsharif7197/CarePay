@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/payne_gray"
     android:weightSum="5">
 
     <include layout="@layout/custom_calendar_toolbar" />
@@ -99,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_apt_apply_date_range_height"
         android:layout_weight="1"
-        android:background="@drawable/button_green_fill_background"
+        android:background="@drawable/button_green_selector"
         android:text="@string/date_range_apply_button_label"
         android:textColor="@color/white"
         android:textSize="@dimen/apt_popup_button_text" />

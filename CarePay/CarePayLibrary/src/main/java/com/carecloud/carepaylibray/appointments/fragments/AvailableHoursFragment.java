@@ -35,7 +35,6 @@ public class AvailableHoursFragment extends Fragment {
 
     private AppointmentDTO appointmentDTO;
     private static String appointmentDate;
-    private Date todayDate;
     private Date startDate;
     private Date endDate;
 
@@ -51,9 +50,7 @@ public class AvailableHoursFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             appointmentDTO = (AppointmentDTO)
-                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
-            todayDate = (Date)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE);
+                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
             startDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
             endDate = (Date)
@@ -137,14 +134,7 @@ public class AvailableHoursFragment extends Fragment {
 
         DateUtil.getInstance().setFormat(CarePayConstants.RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE);
 
-        if (todayDate != null) {
-            DateUtil.getInstance().setDate(todayDate);
-            dateRangeCustomTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear()
-                    + " " + getResources().getString(R.string.to) + " "
-                    + DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
-        } else if (startDate != null && endDate != null) {
-            Calendar nextDay = Calendar.getInstance();
-            nextDay.add(Calendar.DAY_OF_MONTH, 1);
+        if (startDate != null && endDate != null) {
             DateUtil.getInstance().setDate(startDate);
             String formattedStartDate = DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear();
             DateUtil.getInstance().setDate(endDate);
@@ -153,18 +143,18 @@ public class AvailableHoursFragment extends Fragment {
             dateRangeCustomTextView.setText(formattedStartDate + " " +
                     getResources().getString(R.string.to) + " " + formattedEndDate);
         } else {
-            /*To show by default one week as range from tomorrow*/
+            /*To show by default one week as range from today*/
             Calendar rangeStart = Calendar.getInstance();
-            rangeStart.add(Calendar.DAY_OF_MONTH, 1);
+            rangeStart.add(Calendar.DAY_OF_MONTH, 0);
             Calendar rangeEnd = Calendar.getInstance();
-            rangeEnd.add(Calendar.DAY_OF_MONTH, 7);
+            rangeEnd.add(Calendar.DAY_OF_MONTH, 6);
 
             startDate = rangeStart.getTime();
             endDate = rangeEnd.getTime();
 
             DateUtil.getInstance().setDate(endDate);
             dateRangeCustomTextView.setText(
-                    getResources().getString(R.string.date_range_from_tomorrow_to)
+                    getResources().getString(R.string.date_range_from_today_to)
                     + " " + DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
         }
     }
@@ -206,7 +196,6 @@ public class AvailableHoursFragment extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, todayDate);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
                 startDate);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
