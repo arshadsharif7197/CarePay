@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+import com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity;
 import com.carecloud.carepaylibray.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -120,7 +121,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // relaunch select language
-                Intent intent = new Intent(getActivity(), LibraryMainActivity.class);
+                Intent intent = new Intent(getActivity(), SelectLangaugeActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }
