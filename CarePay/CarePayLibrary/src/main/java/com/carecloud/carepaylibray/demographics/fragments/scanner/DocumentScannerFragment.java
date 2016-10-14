@@ -36,7 +36,7 @@ public abstract class DocumentScannerFragment extends Fragment {
     private   ImageCaptureHelper          imageCaptureHelper;
     protected NextAddRemoveStatusModifier buttonsStatusCallback;
     private   int                         imageShape;
-    protected Bitmap bitmap;
+    protected Bitmap                      bitmap;
 
     @Nullable
     @Override
@@ -102,7 +102,9 @@ public abstract class DocumentScannerFragment extends Fragment {
         });
 
         // create dialog layout
-        View customView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_list_layout, null, false);
+        View customView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_list_layout,
+                                                                     (ViewGroup) getView(),
+                                                                     false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         // create the adapter
         CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(options));
@@ -159,7 +161,7 @@ public abstract class DocumentScannerFragment extends Fragment {
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-               bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
+                bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
                 bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
             }
@@ -169,6 +171,7 @@ public abstract class DocumentScannerFragment extends Fragment {
 
     /**
      * Gets the shape of the captured image
+     *
      * @return The shape (ImageCaptureHelper.ROUND_IMAGE or RECTANGULAR_IMAGE)
      */
     public abstract int getImageShape();

@@ -84,16 +84,19 @@ public class DemographicsDetailsFragment extends Fragment
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
 
+        // get data
         raceArray = getResources().getStringArray(R.array.Race);
         ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
         genderArray = getResources().getStringArray(R.array.Gender);
-
         model = ((DemographicsActivity) getActivity()).getDetailsModel();
 
+        // init view references
         initialiseUIFields();
 
+        // set the fonts
         setTypefaces(view);
 
+        // set data in view
         populateViewsFromModel();
 
         return view;
@@ -199,7 +202,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void initialiseUIFields() {
-        // init clickables and dob edit
+        // init click-ables and dob edit
         raceTextView = (TextView) view.findViewById(R.id.demogrDetailsRaceListTextView);
         raceTextView.setOnClickListener(this);
         ethnicityTextView = (TextView) view.findViewById(R.id.demogrDetailsEthnicityListTextView);
@@ -245,11 +248,11 @@ public class DemographicsDetailsFragment extends Fragment
         // add capture picture fragment
         FragmentManager fm = getChildFragmentManager();
         String tag = ProfilePictureFragment.class.getSimpleName();
-        ProfilePictureFragment fragment
-                = (ProfilePictureFragment) fm.findFragmentByTag(tag);
+        ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
             fragment = new ProfilePictureFragment();
             fragment.setButtonsStatusCallback(this);
+            fragment.setModel(model);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsAddressPicCapturer, fragment, tag)

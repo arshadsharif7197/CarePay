@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +12,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Picasso;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
@@ -20,9 +30,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
  */
 public class ProfilePictureFragment extends DocumentScannerFragment {
 
-    private ImageCaptureHelper imageCaptureHelper;
-    private Button             buttonChangeCurrentPhoto;
-    private Object             model;
+    private ImageCaptureHelper               imageCaptureHelper;
+    private Button                           buttonChangeCurrentPhoto;
+    private DemographicPersDetailsPayloadDTO model;
 
     @Nullable
     @Override
@@ -46,13 +56,25 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
     @Override
     protected void updateModelAndViewsAfterScan() {
-        // maybe later
+        // save the image as base64 in the model
+        if(bitmap != null) {
+            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+            model.setProfilePhoto(imageAsBase64);
+        }
     }
 
     @Override
     public void populateViewsFromModel() {
         if(model != null) {
-            // TODO: 9/28/2016 populate the views
+            String profilePicURL = model.getProfilePhoto();
+            if(!StringUtil.isNullOrEmpty(profilePicURL)) {
+                try {
+                    URL url = new URL(profilePicURL);
+                    Picasso.with(getContext()).load(url.toString()).into(imageCaptureHelper.getImageViewTarget());
+                } catch (MalformedURLException e) {
+                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+                }
+            }
         }
     }
 
@@ -72,7 +94,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.ROUND_IMAGE;
     }
 
-    public void setModel(Object model) {
+    public void setModel(DemographicPersDetailsPayloadDTO model) {
         this.model = model;
     }
 }
