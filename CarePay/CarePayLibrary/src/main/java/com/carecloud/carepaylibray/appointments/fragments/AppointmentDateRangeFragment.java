@@ -249,6 +249,7 @@ public class AppointmentDateRangeFragment extends Fragment {
         @Override
         public void onClick(View view) {
             clearSelectedDate();
+            applyDateRangeButton.setEnabled(false);
             Date today = new Date();
             Calendar nextSixMonths = Calendar.getInstance();
             nextSixMonths.add(Calendar.MONTH, 5);
