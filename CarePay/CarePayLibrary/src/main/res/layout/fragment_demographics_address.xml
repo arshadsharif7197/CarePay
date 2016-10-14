@@ -52,7 +52,8 @@
                         android:id="@+id/demogrAddressFirstNameEdit"
                         style="@style/SigninSignupEditStyle"
                         android:hint="@string/firstname_text"
-                        android:nextFocusForward="@+id/middleNameEditText"/>
+                        android:nextFocusForward="@+id/middleNameEditText"
+                        android:inputType="textPersonName"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView

@@ -86,6 +86,10 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // change the caption of the button
+        if(bitmap != null) {
+            buttonChangeCurrentPhoto.setText(getString(R.string.changeCurrentPhotoButton));
+        }
         buttonsStatusCallback.enableNextButton(true);
     }
 

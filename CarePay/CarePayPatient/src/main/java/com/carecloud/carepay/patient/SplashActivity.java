@@ -15,6 +15,7 @@ import com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
