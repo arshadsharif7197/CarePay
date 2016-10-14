@@ -135,9 +135,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
 
     @Override
-    protected void updateModelAndViewsAfterScan() {
-      //  btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
-     //   btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
+        btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
+        btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
 
      //   insuranceCardNumEditText.setText(model.getInsuranceMemberId());
      //    model.setInsuranceMemberId(insuranceCardNumEditText.getText().toString());
@@ -157,10 +157,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
      */
     @Override
     public void populateViewsFromModel() {
-       
+
         if (model != null) {
             Log.v(LOG_TAG, "InsuranceScannerFrag - populateFromModel()");
-            updateModelAndViewsAfterScan();
+            updateModelAndViewsAfterScan(null);
             List<DemographicInsurancePhotoDTO> photos = model.getInsurancePhotos();
             if (photos == null) {
                 Log.v(LOG_TAG, InsuranceScannerFragment.class.getSimpleName() + " no ins photos");

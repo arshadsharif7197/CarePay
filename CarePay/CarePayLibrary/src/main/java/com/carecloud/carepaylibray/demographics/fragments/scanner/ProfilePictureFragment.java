@@ -55,7 +55,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan() {
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
         // save the image as base64 in the model
         if(bitmap != null) {
             String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);

@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -33,10 +36,15 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
 
-    private ImageCaptureHelper         mLicenseScanHelper;
-    private EditText                   tvLicenseNum;
-    private Button                     btnScanLicense;
-    private TextView                   tvState;
+    private ImageCaptureHelper scannerFront;
+    private ImageCaptureHelper scannerBack;
+    private TextView           documentTypeClickable;
+    private Button             scanFrontButton;
+    private Button             scanBackButton;
+    private EditText           idNumberEdit;
+    private TextInputLayout    idNumberInputText;
+    private TextView           stateClickable;
+
     private DemographicIdDocPayloadDTO model;
 
     @Nullable
@@ -44,27 +52,40 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
 
-//        tvLicenseNum = (EditText) view.findViewById(R.id.demogr_docs_license_num);
+        documentTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
 
-        ImageView imLicense = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
+        idNumberEdit = (EditText) view.findViewById(R.id.demogr_docs_license_num);
+        ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
+        scannerFront = new ImageCaptureHelper(getActivity(), imageFront);
 
-        mLicenseScanHelper = new ImageCaptureHelper(getActivity(), imLicense);
+        ImageView imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
+        scannerBack = new ImageCaptureHelper(getActivity(), imageBack);
 
         // add click listener
-        btnScanLicense = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
-        btnScanLicense.setOnClickListener(new View.OnClickListener() {
+        scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
+        scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(LOG_TAG, "scan license");
-                selectImage(mLicenseScanHelper);
+                Log.v(LOG_TAG, "scan front");
+                selectImage(scannerFront);
             }
         });
 
-        tvState = (TextView) view.findViewById(R.id.demogr_tv_state);
-        tvState.setOnClickListener(new View.OnClickListener() {
+        scanBackButton = (Button) view.findViewById(R.id.demogrDocsBackScanButton);
+        scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(states, "Select state", tvState);
+                Log.v(LOG_TAG, "scan back");
+                selectImage(scannerBack);
+            }
+        });
+        
+
+        stateClickable = (TextView) view.findViewById(R.id.demogr_tv_state);
+        stateClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChooseDialog(states, "Select state", stateClickable);
             }
         });
 
@@ -76,31 +97,41 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan() { // license has been scanned
-        // TODO: 9/29/2016 implement OCR
-        //btnScanLicense.setText(R.string.demogr_docs_rescan);
-
-        model.setIdNumber("666666666");
-        tvLicenseNum.setText("666666666");
-        tvLicenseNum.setVisibility(View.VISIBLE);
-
-        model.setIdState(states[8]);
-        tvState.setText(states[8]);
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) { // license has been scanned
+        if(scanner == scannerFront) {
+            if(bitmap != null) {
+                // change button caption to 'rescan'
+                scanFrontButton.setText(R.string.demogr_docs_rescan_front);
+                // set the front image
+                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//                model.setProfilePhoto(imageAsBase64);
+            }
+        } else if(scanner == scannerBack) {
+            if(bitmap != null) {
+                // change button caption to 'rescan'
+                scanBackButton.setText(R.string.demogr_docs_rescan_back);
+                // set the back image
+                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//                model.setProfilePhoto(imageAsBase64);
+            }
+        }
     }
 
     @Override
     public void populateViewsFromModel() {
         if (model != null) {
-            // check the type of the model
-//            mLicenseScanHelper.setImageFromCharStream(model.getIdDocPhothos());
+            String idType = model.getIdType();
+            if(!StringUtil.isNullOrEmpty(idType)) {
+                documentTypeClickable.setText(idType);
+            }
             String licenseNum = model.getIdNumber();
             if (!StringUtil.isNullOrEmpty(licenseNum)) {
-                tvLicenseNum.setVisibility(View.VISIBLE);
-            } else {
-                tvLicenseNum.setVisibility(View.GONE);
+                idNumberEdit.setText(licenseNum);
             }
-            tvLicenseNum.setText(licenseNum);
-            tvState.setText(model.getIdState());
+            String state = model.getIdState();
+            if(!StringUtil.isNullOrEmpty(state)) {
+                stateClickable.setText(state);
+            }
         }
     }
 
