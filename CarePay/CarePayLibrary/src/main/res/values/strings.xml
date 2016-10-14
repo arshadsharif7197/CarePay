@@ -38,14 +38,17 @@
     </string-array>
 
 
-    <string name="Plan1">Plan1</string>
-    <string name="Plan2">Plan2</string>
-    <string name="Plan3">Plan3</string>
+    <string name="AetnaSelect">Aetna Select</string>
+    <string name="AetnaValueNetwork">Aetna Value Network HMO</string>
+    <string name="ElectChoice">Elect Choice HMO</string>
+    <string name="HMO">HMO</string>
 
 
-    <string name="Provider1">Provider1</string>
-    <string name="Provider2">Provider2</string>
-    <string name="Provider3">Provider3</string>
+    <string name="Aetna">Aetna</string>
+    <string name="Blue">Blue Cross Blue Shield</string>
+    <string name="Cigna">Cigna</string>
+    <string name="GHI">GHI</string>
+    <string name="HIP">HIP</string>
 
 
     <string name="English">English</string>
@@ -59,16 +62,28 @@
     </string-array>
 
     <string-array name="plans">
-        <item>@string/Plan1</item>
-        <item>@string/Plan2</item>
-        <item>@string/Plan3</item>
+        <item>@string/AetnaSelect</item>
+        <item>@string/AetnaValueNetwork</item>
+        <item>@string/ElectChoice</item>
+        <item>@string/HMO</item>
     </string-array>
     <string-array name="providers">
-        <item>@string/Provider1</item>
-        <item>@string/Provider2</item>
-        <item>@string/Provider3</item>
+        <item>@string/Aetna</item>
+        <item>@string/Blue</item>
+        <item>@string/Cigna</item>
+        <item>@string/GHI</item>
+        <item>@string/HIP</item>
     </string-array>
 
+    <string name="primary">Primary</string>
+    <string name="secondary">Secondary</string>
+    <string name="tertiary">Tertiary</string>
+
+    <string-array name="cardtypes">
+        <item>@string/primary</item>
+        <item>@string/secondary</item>
+        <item>@string/tertiary</item>
+    </string-array>
 
     <string name="hispanic">Hispanic</string>
     <string name="white_americans">White</string>
@@ -100,17 +115,20 @@
     <string name="demogr_docs_logo_title">Documents, please</string>
     <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
     <string name="demogr_docs_scan_label">Scan Driver\'s License</string>
-    <string name="demogr_docs_scan_insurance_label">Scan Insurance Card</string>
+    <string name="demogr_docs_scan_insurance_front_label">SCAN FRONT</string>
+    <string name="demogr_docs_scan_insurance_backlabel">SCAN BACK</string>
     <string name="demogr_license_scan_label">Driver\'s License Number</string>
     <string name="demogr_docs_license_number_label">Driver\'s License State</string>
     <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
     <string name="demogr_insurance_provider">Provider</string>
     <string name="demogr_insurance_plan">Plan</string>
-    <string name="demogr_insurance_number_label">Insurance Policy Number</string>
+    <string name="demogr_insurances_card_type">Type</string>
+    <string name="demogr_insurance_number_label">Insurance Card Number</string>
     <string name="demogr_button_label">Next</string>
     <string name="demogr_tv_choose_label">Choose</string>
     <string name="demogr_docs_tv_chose_company">Choose Company First</string>
-    <string name="demogr_docs_rescan">Re-scan</string>
+    <string name="demogr_docs_rescan_front">RE-SCAN-FRONT</string>
+    <string name="demogr_docs_rescan_back">RE-SCAN-BACK</string>
     <string name="demogr_docs_add_card">Add Card</string>
     <string name="demogr_docs_remove_card">Remove Card</string>
 
@@ -125,6 +143,24 @@
     <string name="CityEditText">City</string>
     <string name="StateEditText">State</string>
 
+    <!--<review_insuranceScreen>-->
+
+
+    <string name="driverLicense">Diver License</string>
+    <string name="review_insurancecardnumber_hint">Insurance Card Number</string>
+    <string name="dobformat">MM/DD/YYYY</string>
+    <string name="demofirstNameLabel">First Name</string>
+    <string name="demomiddleNameLabel">Middle Name</string>
+    <string name="demolastNameLabel">Last Name</string>
+    <string name="demoemailLabel">Email</string>
+    <string name="demoDobLabel">Date of Birth</string>
+    <string name="demoPhoneNumberLabel">Phone Number</string>
+    <string name="demodriverlicenseLabel">Driver License</string>
+    <string name="demoAddress1Label">Address Line 1</string>
+    <string name="demoAddress2Label">Address Line 2</string>
+    <string name="demoZipcodeLabel">Zip Code</string>
+    <string name="demoCityLabel">City</string>
+    <string name="demoStateLabel">State</string>
 
     <!--Details Fragment-->
 
@@ -155,6 +191,13 @@
     <string name="language_textview">Change language</string>
     <string name="forgot_password_textview">Forgot password?</string>
 
+
+    <!--<patient portal signup >-->
+    <string name="patientportal">Patient Portal</string>
+    <string name="descriptionofportal">Small text describing why the patient may consider signing up for Portal.</string>
+    <string name="signupforportal">SIGN UP PORTAL</string>
+    <string name="passfornow">I&amp;’LL PASS NOW</string>
+
     <!--Signup Screen-->
     <string name="caps">FIRST NAME</string>
     <string name="firstname_text">First Name</string>
@@ -172,7 +215,7 @@
     <string name="signup_error_passwords_unmatched">Passwords do not match</string>
     <string name="signup_error_passwords_invalid">Invalid password</string>
     <string name="signup_password_format_instructions">Passwords need to have at least 8 characters,
-        one number, one special character ($@!%*?&amp;_-) and one upper letter</string>
+        one number, one special character ($@!%*?&amp;_-) and one uppercase letter</string>
 
     <!--MoreDetails Fragment-->
     <string name="PlaceHolderIcon">PlaceHolder Icon</string>
@@ -207,8 +250,8 @@
     <string name="review_screen_header">Review Information</string>
     <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
     <string name="review_screen_demographic">DEMOGRAPHIC</string>
-    <string name="review_race_label">RACE</string>
-    <string name="review_ethnicity_label">ETHNICITY</string>
+    <string name="review_race_label">Race</string>
+    <string name="review_ethnicity_label">Ethnicity</string>
     <string name="review_screen_healthinsurance">HEALTH INSURANCE</string>
     <string name="review_screen_company_lable">COMPANY</string>
     <string name="review_plan_label">PLAN</string>
@@ -227,7 +270,7 @@
     <string name="review_address2_label">ADDRESS 2</string>
     <string name="review_driverlicense_label">DRIVER LICENSE</string>
     <string name="review_prefferedlanguage_label">PREFERRED LANGUAGE</string>
-    <string name="review_gender_label">GENDER</string>
+    <string name="review_gender_label">Gender</string>
     <string name="review_city_label">CITY</string>
     <string name="review_state_label">STATE</string>
     <string name="review_zipcode_label">ZIPCODE</string>
@@ -266,8 +309,6 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <!-- Intake -->
     <string name="intakeNextButtonLastText">Finish intake forms</string>
     <string name="intakeNextButtonText">Next Question</string>
-    <string name="edit_appointment_dialog">EDIT APPOINTMENT</string>
-    <string name="dateFormatString">M/dd/yyyy</string>
 
     <string name="apt_popup_message_text">Your appointment with %1$s starts in %2$s. Want to Check-in early?</string>
     <string name="dismiss">DISMISS</string>
@@ -331,5 +372,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="scan_check">SCAN CHECK</string>
     <string name="next">NEXT</string>
     <string name="add_new_credit_card">ADD NEW CREDIT CARD</string>
+
+    <string name="cancel_appointment_dialog">CANCEL APPOINTMENT</string>
 
 </resources>

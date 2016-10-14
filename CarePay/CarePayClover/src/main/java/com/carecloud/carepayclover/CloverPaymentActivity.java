@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.carecloud.carepaylibray.base.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.payment.services.PaymentsService;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;

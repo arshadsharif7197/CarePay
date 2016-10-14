@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
             android:id="@+id/appointments_section_header_title"
             android:layout_width="match_parent"
             android:layout_height="@dimen/apt_skicky_header_height"
@@ -140,7 +140,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel
                     android:id="@+id/upcomingDateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -163,7 +163,7 @@
                     android:textColor="@color/cadet_gray"
                     android:textSize="@dimen/apt_list_upcoming_month_txt_size" />
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
                     android:id="@+id/separatorTextView"
                     android:layout_width="62dp"
                     android:layout_height="1dp"

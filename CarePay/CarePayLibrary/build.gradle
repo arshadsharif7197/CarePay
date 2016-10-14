@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         minSdkVersion 17
@@ -40,25 +40,11 @@ dependencies {
     // Using for image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    //compile 'com.google.code.gson:gson:2.6.2'
-
-    // Retrofit dependencies
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.okhttp3:okhttp:3.3.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.3.0'
-
-
     compile 'com.mcxiaoke.viewpagerindicator:library:2.4.1@aar'
     compile 'com.github.gcacace:signature-pad:1.2.0'
     compile 'com.smartystreets.api:smartystreets-java-sdk:1.0.7+'
-    compile 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.3.1'
 
-    /*compile('com.google.apis:google-api-services-drive:v2-rev170-1.20.0') {
-        exclude module: 'httpclient' //by artifact name
-        exclude group: 'org.apache.httpcomponents' //by group
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient' //by both name and group
-    }*/
+
     // for testing
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support:support-annotations:24.2.1'
