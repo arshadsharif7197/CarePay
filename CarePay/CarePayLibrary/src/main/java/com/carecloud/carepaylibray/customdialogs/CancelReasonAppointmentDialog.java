@@ -3,15 +3,11 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRadioButton;
-import android.text.Editable;
-import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -19,11 +15,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -33,7 +28,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public class CancelReasonAppointmentDialog extends Dialog implements
         View.OnClickListener {
     private Context context;
-    private AppointmentModel appointmentModel;
+    private AppointmentDTO appointmentDTO;
     private RadioGroup cancelReasonRadioGroup;
     private Button cancelAppointmentButton;
     private EditText reasonEditText;
@@ -48,12 +43,12 @@ public class CancelReasonAppointmentDialog extends Dialog implements
      * Contractor for   dialog.
      *
      * @param context the String to evaluate
-     * @param appointmentModel the DTO to evaluate
+     * @param appointmentDTO the DTO to evaluate
      */
-    public CancelReasonAppointmentDialog(Context context, AppointmentModel appointmentModel) {
+    public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context);
         this.context = context;
-        this.appointmentModel = appointmentModel;
+        this.appointmentDTO = appointmentDTO;
     }
 
     @Override
@@ -117,7 +112,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements
         if (viewId == R.id.dialogCloseHeaderImageView) {
             cancel();
         } else if (viewId == R.id.cancelAppointmentButton) {
-            new CancelAppointmentDialog(context,appointmentModel,true).show();
+            new CancelAppointmentDialog(context, appointmentDTO,true).show();
             cancel();
         }
     }

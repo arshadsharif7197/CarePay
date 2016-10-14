@@ -19,8 +19,9 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AvailableHoursAdapter;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -32,7 +33,7 @@ import java.util.Date;
 
 public class AvailableHoursFragment extends Fragment {
 
-    private AppointmentModel model;
+    private AppointmentDTO appointmentDTO;
     private static String appointmentDate;
     private Date todayDate;
     private Date startDate;
@@ -49,8 +50,8 @@ public class AvailableHoursFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            model = (AppointmentModel)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
+            appointmentDTO = (AppointmentDTO)
+                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
             todayDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE);
             startDate = (Date)
@@ -115,8 +116,9 @@ public class AvailableHoursFragment extends Fragment {
         RecyclerView availableHoursRecycleView = (RecyclerView)
                 availableHoursListView.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
+
         availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
-                getSampleArrayList(), model));
+                getSampleArrayList(), appointmentDTO));
 
         Button editDateRangeButton = (Button)
                 availableHoursListView.findViewById(R.id.edit_date_range_button);
@@ -133,7 +135,7 @@ public class AvailableHoursFragment extends Fragment {
                 availableHoursListView.findViewById(R.id.date_range_custom_text_view);
         dateRangeCustomTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.glitter));
 
-        DateUtil.getInstance().setFormat(CarePayConstants.RAW_DATE_FORMAT_FOR_CALENDAR__DATE_RANGE);
+        DateUtil.getInstance().setFormat(CarePayConstants.RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE);
 
         if (todayDate != null) {
             DateUtil.getInstance().setDate(todayDate);
@@ -163,7 +165,7 @@ public class AvailableHoursFragment extends Fragment {
             DateUtil.getInstance().setDate(endDate);
             dateRangeCustomTextView.setText(
                     getResources().getString(R.string.date_range_from_tomorrow_to)
-                            + " " + DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
+                    + " " + DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
         }
     }
 
@@ -203,7 +205,7 @@ public class AvailableHoursFragment extends Fragment {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, todayDate);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
                 startDate);
@@ -226,19 +228,19 @@ public class AvailableHoursFragment extends Fragment {
     private ArrayList<Object> getSampleArrayList() {
         ArrayList<Object> items = new ArrayList<>();
         items.add("TOMORROW");
-        items.add(new AppointmentAvailableHoursModel("Thursday", "September", "22", "01:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Thursday", "September", "22", "02:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Thursday", "September", "22", "03:00 PM"));
-        items.add(new AppointmentAvailableHoursModel("Thursday", "September", "22", "04:30 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Thursday", "September", "22", "01:30 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Thursday", "September", "22", "02:30 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Thursday", "September", "22", "03:00 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Thursday", "September", "22", "04:30 PM"));
         items.add("FRIDAY, September 23rd");
-        items.add(new AppointmentAvailableHoursModel("Friday", "September", "23", "01:00 PM"));
-        items.add(new AppointmentAvailableHoursModel("Friday", "September", "23", "02:00 PM"));
-        items.add(new AppointmentAvailableHoursModel("Friday", "September", "23", "03:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Friday", "September", "23", "04:00 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Friday", "September", "23", "01:00 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Friday", "September", "23", "02:00 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Friday", "September", "23", "03:30 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Friday", "September", "23", "04:00 PM"));
         items.add("MONDAY, September 26th");
-        items.add(new AppointmentAvailableHoursModel("Monday", "September", "26", "01:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Monday", "September", "26", "02:30 PM"));
-        items.add(new AppointmentAvailableHoursModel("Monday", "September", "26", "03:00 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Monday", "September", "26", "01:30 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Monday", "September", "26", "02:30 PM"));
+        items.add(new AppointmentAvailableHoursDTO("Monday", "September", "26", "03:00 PM"));
         return items;
     }
 }

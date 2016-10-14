@@ -19,12 +19,12 @@ public class DateUtil {
 
     private static DateUtil instance;
     private String format = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
-    private Date   date;
-    private int    day;
-    private int    month; // Attention! 0-indexed month
-    private int    year;
-    private int    hour12;
-    private int    minute;
+    private Date date;
+    private int day;
+    private int month; // Attention! 0-indexed month
+    private int year;
+    private int hour12;
+    private int minute;
     private String dayLiteral;
     private String monthLiteral;
     private String dayLiteralAbbr;
@@ -39,13 +39,14 @@ public class DateUtil {
     public static DateUtil getInstance() {
         if (instance == null) {
             instance = new DateUtil();
-            instance.setDate(Calendar.getInstance(Locale.getDefault()).getTime()); // by default set the date to current date
+            // by default set the date to current date
+            instance.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
         }
         return instance;
     }
 
     /**
-     * Set the a date to be formated;
+     * Set the a date to be formatted;
      * The expected format is the format previously set for the class with setFormat()
      * or the default "yyyy-MM-dd'T'HH:mm:ssZ"
      *
@@ -93,7 +94,7 @@ public class DateUtil {
      */
     public String getDateAsDayMonthDayOrdinal() {
         return String.format(Locale.getDefault(), "%s, %s %d%s",
-                             dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
+                dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
     }
 
     /**
@@ -123,7 +124,7 @@ public class DateUtil {
     public String getDateAsMonthLiteralDayOrdinalYear() {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         return String.format(Locale.getDefault(), "%s %s%s, %d",
-                             monthLiteral, day, ordinal, year);
+                monthLiteral, day, ordinal, year);
     }
 
     /**
@@ -166,8 +167,8 @@ public class DateUtil {
     /**
      * Compare the date with another date
      *
-     * @param date
-     * @return
+     * @param date date to compare
+     * @return 0 if equal
      */
     public int compareTo(Date date) {
         if (this.date.before(date)) {
@@ -295,6 +296,10 @@ public class DateUtil {
         }
     }
 
+    /**
+     * Check for Today.
+     * @return true if today
+     */
     public boolean isToday() {
         Calendar calendar = Calendar.getInstance();
         int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -304,6 +309,10 @@ public class DateUtil {
         return crtDay == day && crtMonth == month && crtYear == year;
     }
 
+    /**
+     * Check date is before or not.
+     * @return true if before
+     */
     public boolean isYesterdayOrBefore() {
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
@@ -312,6 +321,10 @@ public class DateUtil {
         return compareTo(today) == -1 && crtDay != day;
     }
 
+    /**
+     * Check date is after or not.
+     * @return true if after
+     */
     public boolean isTomorrowOrAfter() {
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
