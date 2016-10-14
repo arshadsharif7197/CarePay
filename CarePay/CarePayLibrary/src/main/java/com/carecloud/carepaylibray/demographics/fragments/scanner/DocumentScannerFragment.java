@@ -33,7 +33,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public abstract class DocumentScannerFragment extends Fragment {
 
-    private   ImageCaptureHelper          imageCaptureHelper;
+    protected ImageCaptureHelper          imageCaptureHelper;
     protected NextAddRemoveStatusModifier buttonsStatusCallback;
     private   int                         imageShape;
     protected Bitmap                      bitmap;
@@ -159,7 +159,6 @@ public abstract class DocumentScannerFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v(LOG_TAG, "onActivityResult()");
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {

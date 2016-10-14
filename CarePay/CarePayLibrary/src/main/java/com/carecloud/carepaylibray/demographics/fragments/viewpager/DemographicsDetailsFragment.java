@@ -294,14 +294,14 @@ public class DemographicsDetailsFragment extends Fragment
 
             // make a call to b/e
             String pictureByteStream = model.getProfilePhoto();
-            setPictureFromByteStream(pictureByteStream);
+            setPictures(pictureByteStream);
         } else {
             Log.v(LOG_TAG, "demographics details: views populated with defaults");
             model = new DemographicPersDetailsPayloadDTO();
         }
     }
 
-    private void setPictureFromByteStream(String pictureByteStream) {
+    private void setPictures(String pictureByteStream) {
     }
 
     @Override

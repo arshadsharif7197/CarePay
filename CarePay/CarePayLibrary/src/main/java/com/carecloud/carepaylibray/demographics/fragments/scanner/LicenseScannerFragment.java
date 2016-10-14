@@ -22,9 +22,16 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Picasso;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -182,17 +189,18 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             if (bitmap != null) {
                 // change button caption to 'rescan'
                 scanFrontButton.setText(R.string.demogr_docs_rescan_front);
-                // set the front image
+                // save from image
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
-//                model.setProfilePhoto(imageAsBase64);
+                DemographicIdDocPhotoDTO frontDTO = model.getIdDocPhothos().get(0);
+                frontDTO.setIdDocPhoto(imageAsBase64); // create the image dto
             }
         } else if (scanner == scannerBack) {
             if (bitmap != null) {
                 // change button caption to 'rescan'
                 scanBackButton.setText(R.string.demogr_docs_rescan_back);
-                // set the back image
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
-//                model.setProfilePhoto(imageAsBase64);
+                DemographicIdDocPhotoDTO backDTO = model.getIdDocPhothos().get(1);
+                backDTO.setIdDocPhoto(imageAsBase64); // create the image dto
             }
         }
     }
@@ -211,6 +219,27 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             String state = model.getIdState();
             if (!StringUtil.isNullOrEmpty(state)) {
                 idStateClickable.setText(state);
+            }
+
+            // add front image
+            String frontPic = model.getIdDocPhothos().get(0).getIdDocPhoto();
+            if (!StringUtil.isNullOrEmpty(frontPic)) {
+                try {
+                    URL url = new URL(frontPic);
+                    Picasso.with(getContext()).load(url.toString()).into(scannerFront.getImageViewTarget());
+                } catch (MalformedURLException e) {
+                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+                }
+            }
+            // add back image
+            String backPic = model.getIdDocPhothos().get(1).getIdDocPhoto();
+            if (!StringUtil.isNullOrEmpty(frontPic)) {
+                try {
+                    URL url = new URL(backPic);
+                    Picasso.with(getContext()).load(url.toString()).into(scannerBack.getImageViewTarget());
+                } catch (MalformedURLException e) {
+                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+                }
             }
         }
     }
@@ -238,6 +267,14 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
     public void setModel(DemographicIdDocPayloadDTO model) {
         this.model = model;
+        List<DemographicIdDocPhotoDTO> photoDTOs = model.getIdDocPhothos();
+        if (photoDTOs == null || photoDTOs.size() < 2) { // create the list of photos (front and back) if null
+            photoDTOs = new ArrayList<>();
+            // create two empty photos DTOs
+            photoDTOs.add(new DemographicIdDocPhotoDTO());
+            photoDTOs.add(new DemographicIdDocPhotoDTO());
+            this.model.setIdDocPhothos(photoDTOs);
+        }
     }
 
     public DemographicIdDocPayloadDTO getModel() {

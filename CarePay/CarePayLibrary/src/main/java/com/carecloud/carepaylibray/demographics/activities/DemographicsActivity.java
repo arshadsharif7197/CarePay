@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.demographics.fragments.viewpager.Demographics
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
@@ -343,12 +344,21 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         detailsModel.setPreferredLanguage("English");
         detailsModel.setGender("Male");
         detailsModel.setDateOfBirth("11/22/1977");
+        detailsModel.setProfilePhoto("http://sourcefed.com/wp-content/uploads/2012/10/twitter-for-ios-app-thumbnail.jpg");
 
         idDocModel.setIdNumber("123DESS");
         idDocModel.setIdState("FL");
         idDocModel.setIdCountry("USA");
         idDocModel.setIdType("Driver's License");
-        idDocModel.setIdDocPhothos(null); // TODO: 10/9/2016 create
+
+        List<DemographicIdDocPhotoDTO> photoDTOs = new ArrayList<>();
+        DemographicIdDocPhotoDTO front = new DemographicIdDocPhotoDTO();
+        front.setIdDocPhoto("https://opensource.org/files/twitterlogo.png");
+        photoDTOs.add(front);
+        DemographicIdDocPhotoDTO back = new DemographicIdDocPhotoDTO();
+        back.setIdDocPhoto("http://vignette3.wikia.nocookie.net/fairytail/images/c/ce/Twitter_Logo.png/revision/latest?cb=20120726211959");
+        photoDTOs.add(back);
+        idDocModel.setIdDocPhothos(photoDTOs);
 
         DemographicInsurancePayloadDTO ins1 = new DemographicInsurancePayloadDTO();
         ins1.setInsurancePlan("AETNA");
