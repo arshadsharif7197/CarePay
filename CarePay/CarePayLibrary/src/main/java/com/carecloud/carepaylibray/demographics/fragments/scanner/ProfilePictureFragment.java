@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
@@ -52,6 +53,11 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         populateViewsFromModel();
 
         return view;
+    }
+
+    @Override
+    protected void updateModel(TextView selectionDestination) {
+
     }
 
     @Override

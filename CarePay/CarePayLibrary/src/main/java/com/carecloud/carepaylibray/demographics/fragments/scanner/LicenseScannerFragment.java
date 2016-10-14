@@ -1,14 +1,20 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
+import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.NotificationCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,25 +42,35 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
 
+    private View               view;
     private ImageCaptureHelper scannerFront;
     private ImageCaptureHelper scannerBack;
-    private TextView           documentTypeClickable;
+    private TextView           idTypeClickable;
     private Button             scanFrontButton;
     private Button             scanBackButton;
     private EditText           idNumberEdit;
     private TextInputLayout    idNumberInputText;
-    private TextView           stateClickable;
+    private TextView           idStateClickable;
 
     private DemographicIdDocPayloadDTO model;
+    private String[] docTypes = {"Driver's License", "Passport"}; // these will come from b/e
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
+        view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
 
-        documentTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
+        idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
+        idTypeClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChooseDialog(docTypes, "Select document type", idTypeClickable);
 
-        idNumberEdit = (EditText) view.findViewById(R.id.demogr_docs_license_num);
+            }
+        });
+
+        setEditText();
+
         ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
         scannerFront = new ImageCaptureHelper(getActivity(), imageFront);
 
@@ -79,35 +95,99 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
                 selectImage(scannerBack);
             }
         });
-        
 
-        stateClickable = (TextView) view.findViewById(R.id.demogr_tv_state);
-        stateClickable.setOnClickListener(new View.OnClickListener() {
+
+        idStateClickable = (TextView) view.findViewById(R.id.demogr_tv_state);
+        idStateClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(states, "Select state", stateClickable);
+                showChooseDialog(states, "Select state", idStateClickable);
             }
         });
 
         setTypefaces(view);
 
-//        populateViewsFromModel();
+        populateViewsFromModel();
 
         return view;
     }
 
+    private void setEditText() {
+
+        idNumberEdit = (EditText) view.findViewById(R.id.demogr_docs_license_num);
+        idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
+        idNumberInputText.setTag(getString(R.string.demogrDocsNumberHint));
+        idNumberEdit.setTag(idNumberInputText);
+
+        idNumberEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) { // show the keyboard
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, b);
+            }
+        });
+
+        idNumberEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String idNumber = idNumberEdit.getText().toString();
+                if (!StringUtil.isNullOrEmpty(idNumber)) {
+                    model.setIdNumber(idNumber);
+                }
+            }
+        });
+
+        idNumberEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    idNumberEdit.clearFocus();
+                    view.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    protected void updateModel(TextView selectionDestination) {
+        if (selectionDestination == idTypeClickable) { // update 'id type' field in the model
+            String idType = selectionDestination.getText().toString();
+            if (!StringUtil.isNullOrEmpty(idType)) {
+                model.setIdType(idType);
+            }
+        } else if (selectionDestination == idStateClickable) { // update 'state' field in the model
+            String state = idStateClickable.getText().toString();
+            if (!StringUtil.isNullOrEmpty(state)) {
+                model.setIdState(state);
+            }
+        }
+    }
+
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) { // license has been scanned
-        if(scanner == scannerFront) {
-            if(bitmap != null) {
+        if (scanner == scannerFront) {
+            if (bitmap != null) {
                 // change button caption to 'rescan'
                 scanFrontButton.setText(R.string.demogr_docs_rescan_front);
                 // set the front image
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
 //                model.setProfilePhoto(imageAsBase64);
             }
-        } else if(scanner == scannerBack) {
-            if(bitmap != null) {
+        } else if (scanner == scannerBack) {
+            if (bitmap != null) {
                 // change button caption to 'rescan'
                 scanBackButton.setText(R.string.demogr_docs_rescan_back);
                 // set the back image
@@ -121,16 +201,16 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     public void populateViewsFromModel() {
         if (model != null) {
             String idType = model.getIdType();
-            if(!StringUtil.isNullOrEmpty(idType)) {
-                documentTypeClickable.setText(idType);
+            if (!StringUtil.isNullOrEmpty(idType)) {
+                idTypeClickable.setText(idType);
             }
             String licenseNum = model.getIdNumber();
             if (!StringUtil.isNullOrEmpty(licenseNum)) {
                 idNumberEdit.setText(licenseNum);
             }
             String state = model.getIdState();
-            if(!StringUtil.isNullOrEmpty(state)) {
-                stateClickable.setText(state);
+            if (!StringUtil.isNullOrEmpty(state)) {
+                idStateClickable.setText(state);
             }
         }
     }
@@ -158,5 +238,9 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
     public void setModel(DemographicIdDocPayloadDTO model) {
         this.model = model;
+    }
+
+    public DemographicIdDocPayloadDTO getModel() {
+        return model;
     }
 }

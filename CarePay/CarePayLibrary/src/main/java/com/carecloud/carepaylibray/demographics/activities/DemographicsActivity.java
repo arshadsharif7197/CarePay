@@ -347,6 +347,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         idDocModel.setIdNumber("123DESS");
         idDocModel.setIdState("FL");
         idDocModel.setIdCountry("USA");
+        idDocModel.setIdType("Driver's License");
         idDocModel.setIdDocPhothos(null); // TODO: 10/9/2016 create
 
         DemographicInsurancePayloadDTO ins1 = new DemographicInsurancePayloadDTO();

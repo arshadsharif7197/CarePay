@@ -133,6 +133,11 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         return view;
     }
 
+    @Override
+    protected void updateModel(TextView selectionDestination) {
+        // nothing to do here
+    }
+
 
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {

@@ -118,11 +118,14 @@ public abstract class DocumentScannerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String selectedOption = options[position];
-                selectionDestination.setText(selectedOption);
+                selectionDestination.setText(selectedOption); // set the selected option in the target textview
+                updateModel(selectionDestination);
                 alert.dismiss();
             }
         });
     }
+
+    protected abstract void updateModel(TextView selectionDestination);
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

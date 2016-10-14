@@ -108,7 +108,7 @@
     <string name="demogr_docs_scan_label">Scan Driver\'s License</string>
     <string name="demogr_docs_scan_insurance_front_label">SCAN FRONT</string>
     <string name="demogr_docs_scan_insurance_backlabel">SCAN BACK</string>
-    <string name="demogr_license_scan_label">Driver\'s License Number</string>
+    <string name="demogrDocsNumberHint">Driver\'s License Number</string>
     <string name="demogr_docs_license_number_label">Driver\'s License State</string>
     <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
     <string name="demogr_insurance_provider">Provider</string>
