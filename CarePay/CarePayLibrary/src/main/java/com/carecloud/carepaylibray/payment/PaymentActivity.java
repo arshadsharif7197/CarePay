@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -30,6 +32,15 @@ public class PaymentActivity extends AppCompatActivity {
         fragment.setArguments(bundle);
         fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
                 ResponsibilityFragment.class.getSimpleName()).commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            SystemUtil.hideSoftKeyboard(this);
+            onBackPressed();
+        }
+        return true;
     }
 
     @Override
