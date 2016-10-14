@@ -62,8 +62,6 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.finish();
             }
             super.handleMessage(msg);
-
-
         }
     };
 }

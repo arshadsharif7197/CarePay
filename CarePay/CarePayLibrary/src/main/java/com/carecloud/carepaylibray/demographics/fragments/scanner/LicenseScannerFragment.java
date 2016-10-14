@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,7 +34,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
 
     private ImageCaptureHelper         mLicenseScanHelper;
-    private TextView                   tvLicenseNum;
+    private EditText                   tvLicenseNum;
     private Button                     btnScanLicense;
     private TextView                   tvState;
     private DemographicIdDocPayloadDTO model;
@@ -43,14 +44,14 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
 
-        tvLicenseNum = (TextView) view.findViewById(R.id.demogr_docs_license_num);
+//        tvLicenseNum = (EditText) view.findViewById(R.id.demogr_docs_license_num);
 
-        ImageView imLicense = (ImageView) view.findViewById(R.id.demogr_license_image);
+        ImageView imLicense = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
 
         mLicenseScanHelper = new ImageCaptureHelper(getActivity(), imLicense);
 
         // add click listener
-        btnScanLicense = (Button) view.findViewById(R.id.demogr_docs_scan_license_btn);
+        btnScanLicense = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
         btnScanLicense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,11 +70,12 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
         setTypefaces(view);
 
-        populateViewsFromModel();
+//        populateViewsFromModel();
 
         return view;
     }
 
+    @Override
     protected void updateModelAndViewsAfterScan() { // license has been scanned
         // TODO: 9/29/2016 implement OCR
         //btnScanLicense.setText(R.string.demogr_docs_rescan);
@@ -104,11 +106,10 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void setTypefaces(View view) {
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_license_scan_label));
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_scan_license_btn));
+        setGothamRoundedMediumTypeface(getActivity(), (Button) view.findViewById(R.id.demogrDocsFrontScanButton));
         setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_license_state_label));
         setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_tv_state));
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_license_num));
+//        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_license_num));
     }
 
     @Override

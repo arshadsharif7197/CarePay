@@ -46,6 +46,7 @@
                 style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+                android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left"
                 android:checked="false"
                 android:text="@string/demogr_insurance_switch_text"/>
 
@@ -80,6 +81,7 @@
     <Button
         android:id="@+id/demographicsAddMedInfoButton"
         style="@style/DemographicsAddRemoveInsuranceStyle"
+        android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left"
         android:layout_width="match_parent"
         android:text="@string/demogr_docs_add_card"/>
 
