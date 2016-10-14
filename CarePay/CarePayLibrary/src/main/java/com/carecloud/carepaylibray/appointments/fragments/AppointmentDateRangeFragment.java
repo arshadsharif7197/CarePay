@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -29,7 +29,8 @@ import java.util.List;
 
 public class AppointmentDateRangeFragment extends Fragment {
 
-    private AppointmentModel model;
+//    private AppointmentModel model;
+    private AppointmentDTO appointmentDTO;
     private CalendarPickerView calendarPickerView;
     private List<Date> dateList;
     private Date todayDate;
@@ -47,8 +48,10 @@ public class AppointmentDateRangeFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            model = (AppointmentModel)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
+//            model = (AppointmentModel)
+//                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
+            appointmentDTO = (AppointmentDTO)
+                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
             todayDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE);
             startDate = (Date)
@@ -197,7 +200,7 @@ public class AppointmentDateRangeFragment extends Fragment {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, todayDate);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
                 startDate);
@@ -250,7 +253,7 @@ public class AppointmentDateRangeFragment extends Fragment {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_DATE_BUNDLE, today);
         availableHoursFragment.setArguments(bundle);
 
@@ -274,7 +277,7 @@ public class AppointmentDateRangeFragment extends Fragment {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
         if (dateList != null && dateList.size() > 1) {
             bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
                 dateList.get(0));
