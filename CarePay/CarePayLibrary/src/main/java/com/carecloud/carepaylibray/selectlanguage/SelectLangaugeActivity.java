@@ -18,9 +18,9 @@ public class SelectLangaugeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acctivity_selectlanguage);
 
-        FragmentManager mFragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            mFragmentManager.beginTransaction()
+            fragmentManager.beginTransaction()
                     .replace(R.id.layoutselectlangauge, new SelectLanguageFragment(), SelectLanguageFragment.class.getSimpleName())
                     .commit();
         }
