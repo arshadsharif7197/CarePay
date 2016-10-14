@@ -1,96 +1,98 @@
-package com.carecloud.carepaylibray.base.models;
 
+package com.carecloud.carepaylibray.payment.models;
+
+import com.carecloud.carepaylibray.base.models.BaseFieldValidationModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
-/**
- * Created by Jahirul Bhuiyan on 9/20/2016.
- */
-public class BaseTransitionsPropertyModel {
+
+public class PaymentsEndDateDTO {
+
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("type")
-    @Expose
-    private String type;
     @SerializedName("label")
     @Expose
     private String label;
+    @SerializedName("type")
+    @Expose
+    private String type;
     @SerializedName("validations")
     @Expose
     private List<BaseFieldValidationModel> validations = new ArrayList<BaseFieldValidationModel>();
 
     /**
-     *
+     * 
      * @return
-     * The name
+     *     The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
+     * 
      * @param name
-     * The name
+     *     The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
+     * 
      * @return
-     * The type
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     *
-     * @param type
-     * The type
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     *
-     * @return
-     * The label
+     *     The label
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     *
+     * 
      * @param label
-     * The label
+     *     The label
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     *
+     * 
      * @return
-     * The validations
+     *     The type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * 
+     * @param type
+     *     The type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * 
+     * @return
+     *     The validations
      */
     public List<BaseFieldValidationModel> getValidations() {
         return validations;
     }
 
     /**
-     *
+     * 
      * @param validations
-     * The validations
+     *     The validations
      */
     public void setValidations(List<BaseFieldValidationModel> validations) {
         this.validations = validations;
     }
+
 }
