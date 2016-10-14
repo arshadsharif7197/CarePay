@@ -59,14 +59,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/raceTextView"
+                        android:id="@+id/demogrDetailsRaceTextView"
                         style="@style/DemographicsDetailsLabelStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:text="@string/raceLabel"/>
 
                     <TextView
-                        android:id="@+id/raceListTextView"
+                        android:id="@+id/demogrDetailsRaceListTextView"
                         style="@style/DemographicsDocsClickableTextStyle"
                         android:text="@string/demogr_tv_choose_label"/>
 
@@ -86,14 +86,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/ethnicityTextView"
+                        android:id="@+id/demogrDetailsEthnicityTextView"
                         style="@style/DemographicsDetailsLabelStyle"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:text="@string/ethnicityLabel"/>
 
                     <TextView
-                        android:id="@+id/ethnicityListTextView"
+                        android:id="@+id/demogrDetailsEthnicityListTextView"
                         style="@style/DemographicsDocsClickableTextStyle"
                         android:text="@string/chooseTextView"
                         android:textColor="@color/bright_cerulean"/>

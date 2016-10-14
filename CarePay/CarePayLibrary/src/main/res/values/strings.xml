@@ -5,7 +5,6 @@
     <string name="google_map_api_key">AIzaSyDFrx3OGugrIUQzsoEJVobtQoz6f9MMim</string>
     <string name="Menu">Menu</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="respons_title">Responsibility</string>
     <string name="respons_total_label">Your total patient responsibility</string>
@@ -19,22 +18,15 @@
     <string name="AL">AL</string>
     <string name="FL">FL</string>
 
-    <string name="American">American</string>
+    <string name="american_indian">American Indian</string>
     <string name="Asian">Asian</string>
-    <string name="Black">Black</string>
-    <string name="Nativehawaiian">Native Hawaiian</string>
-    <string name="Pacific">Other Pacific islander</string>
-    <string name="White">White</string>
-    <string name="Other">Other</string>
-
+    <string name="african_american">African American</string>
 
     <string-array name="Race">
+        <item>@string/american_indian</item>
         <item>@string/Asian</item>
-        <item>@string/Black</item>
-        <item>@string/Nativehawaiian</item>
-        <item>@string/Pacific</item>
-        <item>@string/White</item>
-        <item>@string/Other</item>
+        <item>@string/african_american</item>
+        <item>@string/decline_to_answer</item>
     </string-array>
 
 
@@ -50,9 +42,9 @@
     <string name="GHI">GHI</string>
     <string name="HIP">HIP</string>
 
-
     <string name="English">English</string>
     <string name="Spanish">Spanish</string>
+
     <string name="Male">Male</string>
     <string name="Female">Female</string>
 
@@ -92,14 +84,13 @@
 
     <string-array name="Ethnicity">
         <item>@string/hispanic</item>
-        <item>@string/white_americans</item>
-        <item>@string/other</item>
         <item>@string/decline_to_answer</item>
     </string-array>
 
     <string-array name="Gender">
         <item>@string/Male</item>
         <item>@string/Female</item>
+        <item>@string/decline_to_answer</item>
     </string-array>
 
 
@@ -404,6 +395,9 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="profile_picture">Profile picture</string>
     <string name="scan_code">Scan code</string>
     <string name="checkin_scan_code_message">Scan the code below at the practice</string>
+    <string name="select_race">Select Race</string>
+    <string name="select_ethnicity">Select Ethnicity</string>
+    <string name="select_gender">Select Gender</string>
 
     <string name="required">Required</string>
     <string name="dob_format">MM/DD/YYYY</string>

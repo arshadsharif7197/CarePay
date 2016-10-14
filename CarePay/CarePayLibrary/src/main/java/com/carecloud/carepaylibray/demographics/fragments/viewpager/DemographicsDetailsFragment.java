@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
@@ -85,7 +84,11 @@ public class DemographicsDetailsFragment extends Fragment
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
 
-        model = ((DemographicsActivity)getActivity()).getDetailsModel();
+        raceArray = getResources().getStringArray(R.array.Race);
+        ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
+        genderArray = getResources().getStringArray(R.array.Gender);
+
+        model = ((DemographicsActivity) getActivity()).getDetailsModel();
 
         initialiseUIFields();
 
@@ -196,14 +199,10 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void initialiseUIFields() {
-        raceArray = getResources().getStringArray(R.array.Race);
-        ethnicityArray = getResources().getStringArray(R.array.Ethnicity);
-        genderArray = getResources().getStringArray(R.array.Gender);
-
         // init clickables and dob edit
-        raceTextView = (TextView) view.findViewById(R.id.raceListTextView);
+        raceTextView = (TextView) view.findViewById(R.id.demogrDetailsRaceListTextView);
         raceTextView.setOnClickListener(this);
-        ethnicityTextView = (TextView) view.findViewById(R.id.ethnicityListTextView);
+        ethnicityTextView = (TextView) view.findViewById(R.id.demogrDetailsEthnicityListTextView);
         ethnicityTextView.setOnClickListener(this);
         genderTextView = (TextView) view.findViewById(R.id.demogrDetailsGenderClickable);
         genderTextView.setOnClickListener(this);
@@ -270,21 +269,21 @@ public class DemographicsDetailsFragment extends Fragment
     private void populateViewsFromModel() {
         if (model != null) {
             String race = model.getPrimaryRace();
-            if(!StringUtil.isNullOrEmpty(race)) {
+            if (!StringUtil.isNullOrEmpty(race)) {
                 raceTextView.setText(race);
             }
             String ethnicity = model.getEthnicity();
-            if(!StringUtil.isNullOrEmpty(ethnicity)) {
+            if (!StringUtil.isNullOrEmpty(ethnicity)) {
                 ethnicityTextView.setText(ethnicity);
             }
 
             String gender = model.getGender();
-            if(!StringUtil.isNullOrEmpty(gender)) {
+            if (!StringUtil.isNullOrEmpty(gender)) {
                 genderTextView.setText(gender);
             }
 
             String dob = model.getDateOfBirth();
-            if(!StringUtil.isNullOrEmpty(dob)) {
+            if (!StringUtil.isNullOrEmpty(dob)) {
                 dobEdit.setText(dob);
                 dobEdit.requestFocus();
             }
@@ -300,49 +299,63 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void setPictureFromByteStream(String pictureByteStream) {
-        // TODO: 9/28/2016 implement
     }
 
     @Override
     public void onClick(View view) {
         if (view == raceTextView) {
             selectedArray = 1;
-            showAlertDialogWithListview(raceArray, "Select Race");
+            showAlertDialogWithListview(raceArray, getString(R.string.select_race));
         } else if (view == ethnicityTextView) {
             selectedArray = 2;
-            showAlertDialogWithListview(ethnicityArray, "Select Ethnicity");
-        } else if(view == genderTextView) {
+            showAlertDialogWithListview(ethnicityArray, getString(R.string.select_ethnicity));
+        } else if (view == genderTextView) {
             selectedArray = 3;
-            showAlertDialogWithListview(genderArray, "Select Gender");
-        } else if(view == addUnlistedAllergyTextView) {
-            Snackbar.make(view, "Hm... Some UI would do.", Snackbar.LENGTH_SHORT).show();
-        } else if(view == addUnlistedMedTextView) {
-            Snackbar.make(view, "Hm... Some UI would do.", Snackbar.LENGTH_SHORT).show();
+            showAlertDialogWithListview(genderArray, getString(R.string.select_gender));
+        } else if (view == addUnlistedAllergyTextView) {
+            Snackbar.make(view, "In progress", Snackbar.LENGTH_SHORT).show();
+        } else if (view == addUnlistedMedTextView) {
+            Snackbar.make(view, "In progress", Snackbar.LENGTH_SHORT).show();
         } else if (view == nextButton) {
             nextbuttonClick();
         }
     }
 
     private void nextbuttonClick() {
-        if (isDateOfBirthValid()) { // proceed only of valid date of birth
+        if (isDateOfBirthValid()) { // proceed only if valid date of birth
             // update the model with values from UI
-            model.setPrimaryRace(raceTextView.getText().toString());
-            model.setEthnicity(ethnicityTextView.getText().toString());
-
-            ((DemographicsActivity) getActivity()).setDetailsModel(model); // save the updated model in the activity
+            updateViewsFromModel();
 
             // move to next page
             ((DemographicsActivity) getActivity()).setCurrentItem(2, true);
         }
     }
 
-    private void showAlertDialogWithListview(final String[] dataArray, String title) {
-        Log.e("raceArray==", Arrays.toString(dataArray));
-        Log.e("raceArray 23==", Arrays.asList(dataArray).toString());
+    private void updateViewsFromModel() {
+        String race = raceTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(race) && !race.equals(getString(R.string.choose))) {
+            model.setPrimaryRace(race);
+        }
+        String ethnicity = ethnicityTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(ethnicity) && !ethnicity.equals(getString(R.string.choose))) {
+            model.setEthnicity(ethnicity);
+        }
+        String gender = genderTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(gender) && !gender.equals(getString(R.string.choose))) {
+            model.setGender(gender);
+        }
+        // at hhis point date of birth has been validated (if not empty nor null)
+        String dob = dobEdit.getText().toString();
+        if (!StringUtil.isNullOrEmpty(dob)) { // simply test if empty (or null)
+            model.setDateOfBirth(dob);
+        }
+        ((DemographicsActivity) getActivity()).setDetailsModel(model); // save the updated model in the activity
+    }
 
+    private void showAlertDialogWithListview(final String[] dataArray, String title) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -364,19 +377,38 @@ public class DemographicsDetailsFragment extends Fragment
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (selectedArray) {
                     case 1:
-                        String race = dataArray[position];
-                        raceTextView.setText(race);
-                        model.setPrimaryRace(race);
+                        // by 'convention' the last position means 'Decline to answer'
+                        if (position == dataArray.length - 1) {
+                            // restore the label
+                            raceTextView.setText(getString(R.string.choose));
+                            model.setPrimaryRace(null);
+                        } else {
+                            String race = dataArray[position];
+                            raceTextView.setText(race);
+                            model.setPrimaryRace(race);
+                        }
                         break;
                     case 2:
-                        String ethnicity = ethnicityArray[position];
-                        ethnicityTextView.setText(ethnicity);
-                        model.setEthnicity(ethnicity);
+                        if (position == dataArray.length - 1) {
+                            // restore the label
+                            ethnicityTextView.setText(getString(R.string.choose));
+                            model.setEthnicity(null);
+                        } else {
+                            String ethnicity = ethnicityArray[position];
+                            ethnicityTextView.setText(ethnicity);
+                            model.setEthnicity(ethnicity);
+                        }
                         break;
                     case 3:
-                        String gender = dataArray[position];
-                        genderTextView.setText(gender);
-                        model.setGender(gender);
+                        if (position == dataArray.length - 1) {
+                            // restore the label
+                            genderTextView.setText(getString(R.string.choose));
+                            model.setGender(null);
+                        } else {
+                            String gender = dataArray[position];
+                            genderTextView.setText(gender);
+                            model.setGender(gender);
+                        }
                 }
                 alert.dismiss();
             }
@@ -390,10 +422,10 @@ public class DemographicsDetailsFragment extends Fragment
         setGothamRoundedMediumTypeface(context, (TextView) view.findViewById(R.id.detailsHeading));
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.detailsSubHeading));
 
-        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.raceTextView));
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsRaceTextView));
         setProximaNovaSemiboldTypeface(context, raceTextView);
 
-        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.ethnicityTextView));
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsEthnicityTextView));
         setProximaNovaSemiboldTypeface(context, ethnicityTextView);
 
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDetailsGenderLabel));
