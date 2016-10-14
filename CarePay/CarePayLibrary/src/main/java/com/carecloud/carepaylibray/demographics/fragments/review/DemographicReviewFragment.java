@@ -43,7 +43,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

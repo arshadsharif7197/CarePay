@@ -1,14 +1,14 @@
 package com.carecloud.carepaylibray.demographics.activities;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
 import android.view.MenuItem;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
@@ -17,7 +17,6 @@ import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePaylo
 
 import java.util.List;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 public class DemographicReviewActivity extends AppCompatActivity {
