@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -34,7 +35,9 @@ import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
@@ -103,7 +106,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         });
 
 
-        idStateClickable = (TextView) view.findViewById(R.id.demogr_tv_state);
+        idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);
         idStateClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,7 +123,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
     private void setEditText() {
 
-        idNumberEdit = (EditText) view.findViewById(R.id.demogr_docs_license_num);
+        idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
         idNumberInputText.setTag(getString(R.string.demogrDocsNumberHint));
         idNumberEdit.setTag(idNumberInputText);
@@ -214,6 +217,8 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             String licenseNum = model.getIdNumber();
             if (!StringUtil.isNullOrEmpty(licenseNum)) {
                 idNumberEdit.setText(licenseNum);
+                idNumberEdit.requestFocus(); // required for CAPS hint
+                view.requestFocus();
             }
             String state = model.getIdState();
             if (!StringUtil.isNullOrEmpty(state)) {
@@ -245,10 +250,19 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (Button) view.findViewById(R.id.demogrDocsFrontScanButton));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_license_state_label));
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_tv_state));
-//        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.demogr_docs_license_num));
+        Context context = getActivity();
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel));
+        setProximaNovaSemiboldTypeface(context, idTypeClickable);
+        setGothamRoundedMediumTypeface(context, scanFrontButton);
+        setGothamRoundedMediumTypeface(context, scanBackButton);
+        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel));
+        setProximaNovaSemiboldTypeface(context, idStateClickable);
+        setProximaNovaSemiboldTypeface(context, idNumberEdit);
+        if(!StringUtil.isNullOrEmpty(idNumberEdit.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(context, idNumberInputText);
+        } else {
+            setProximaNovaSemiboldTextInputLayout(context, idNumberInputText);
+        }
     }
 
     @Override
