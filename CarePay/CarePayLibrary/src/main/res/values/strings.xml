@@ -161,6 +161,7 @@
     <string name="demoZipcodeLabel">Zip Code</string>
     <string name="demoCityLabel">City</string>
     <string name="demoStateLabel">State</string>
+    <string name="demooptional">Optional</string>
 
     <!--Details Fragment-->
 
