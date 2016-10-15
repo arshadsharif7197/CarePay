@@ -56,7 +56,6 @@
                 style="@style/SigninSignupEditStyle"
                 android:hint="@string/firstname_text"
                 android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
-                android:maxLength="20"
                 android:inputType="textPersonName"
                 android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"/>
         </android.support.design.widget.TextInputLayout>
@@ -77,7 +76,6 @@
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName"
                     android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
-                    android:maxLength="20"
                     android:nextFocusForward="@+id/reviewdemogrsLastNameEdit"
                     android:paddingTop="0dp"/>
 
@@ -98,7 +96,6 @@
                 style="@style/SigninSignupEditStyle"
                 android:hint="@string/lastname_text"
                 android:inputType="textPersonName"
-                android:maxLength="20"
                 android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
                 android:imeOptions="actionNext"
                 android:nextFocusForward="@+id/reviewdemogrEmailEdit"/>
@@ -234,7 +231,6 @@
             style="@style/SigninSignupEditStyle"
             android:hint="@string/driverLicense"
             android:imeOptions="actionNext"
-            android:inputType=""
             android:nextFocusForward="@+id/addressEditTextId"/>
         </android.support.design.widget.TextInputLayout>
 

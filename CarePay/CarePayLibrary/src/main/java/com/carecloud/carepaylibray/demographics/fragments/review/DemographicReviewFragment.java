@@ -64,7 +64,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private String[] ethnicityDataArray;
     private String[] genderSelectArray;
 
-    private static String phonefomrat = "xxx-xxx-xxxx";
     int selectedDataArray;
     private TextView raceDataTextView;
     private TextView ethnicityDataTextView;
