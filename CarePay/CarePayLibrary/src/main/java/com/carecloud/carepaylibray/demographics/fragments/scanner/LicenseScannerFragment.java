@@ -1,12 +1,11 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
-import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -222,7 +221,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             }
 
             // add front image
-            String frontPic = model.getIdDocPhothos().get(0).getIdDocPhoto();
+            String frontPic  = model.getIdDocPhothos().get(0).getIdDocPhoto();
             if (!StringUtil.isNullOrEmpty(frontPic)) {
                 try {
                     URL url = new URL(frontPic);
@@ -233,7 +232,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             }
             // add back image
             String backPic = model.getIdDocPhothos().get(1).getIdDocPhoto();
-            if (!StringUtil.isNullOrEmpty(frontPic)) {
+            if (!StringUtil.isNullOrEmpty(backPic)) {
                 try {
                     URL url = new URL(backPic);
                     Picasso.with(getContext()).load(url.toString()).into(scannerBack.getImageViewTarget());
@@ -265,15 +264,23 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
     }
 
-    public void setModel(DemographicIdDocPayloadDTO model) {
+    public void setModel(@NonNull DemographicIdDocPayloadDTO model) {
         this.model = model;
         List<DemographicIdDocPhotoDTO> photoDTOs = model.getIdDocPhothos();
-        if (photoDTOs == null || photoDTOs.size() < 2) { // create the list of photos (front and back) if null
+        if (photoDTOs == null) { // create the list of photos (front and back) if null
             photoDTOs = new ArrayList<>();
             // create two empty photos DTOs
             photoDTOs.add(new DemographicIdDocPhotoDTO());
             photoDTOs.add(new DemographicIdDocPhotoDTO());
             this.model.setIdDocPhothos(photoDTOs);
+        } else {
+            if(photoDTOs.size() == 0) {
+                // create two empty photos DTOs
+                photoDTOs.add(new DemographicIdDocPhotoDTO());
+                photoDTOs.add(new DemographicIdDocPhotoDTO());
+            } else if(photoDTOs.size() == 1) {
+                photoDTOs.add(1, new DemographicIdDocPhotoDTO()); // create the second
+            }
         }
     }
 

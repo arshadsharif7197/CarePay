@@ -341,7 +341,6 @@ public class DateUtil {
         Matcher matcher = pattern.matcher(date);
         return matcher.matches();
     }
-}
 
     /**
      * Formats the month and year. If provided a separator then will be displayed as MM/yyyy or else

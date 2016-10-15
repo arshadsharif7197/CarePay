@@ -352,9 +352,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         idDocModel.setIdType("Driver's License");
 
         List<DemographicIdDocPhotoDTO> photoDTOs = new ArrayList<>();
+        // add front
         DemographicIdDocPhotoDTO front = new DemographicIdDocPhotoDTO();
         front.setIdDocPhoto("https://opensource.org/files/twitterlogo.png");
         photoDTOs.add(front);
+        // add back
         DemographicIdDocPhotoDTO back = new DemographicIdDocPhotoDTO();
         back.setIdDocPhoto("http://vignette3.wikia.nocookie.net/fairytail/images/c/ce/Twitter_Logo.png/revision/latest?cb=20120726211959");
         photoDTOs.add(back);
