@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayload
 import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
@@ -362,11 +363,47 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         photoDTOs.add(back);
         idDocModel.setIdDocPhothos(photoDTOs);
 
-        DemographicInsurancePayloadDTO ins1 = new DemographicInsurancePayloadDTO();
-        ins1.setInsurancePlan("AETNA");
-        ins1.setInsuranceMemberId("3434343422");
-        ins1.setInsuranceProvider("AETNA PROV");
-        ins1.setInsurancePhotos(null); // TODO: 10/9/2016 create
-        insuranceModelList.add(ins1);
+        // insurance 1
+//        DemographicInsurancePayloadDTO ins1 = new DemographicInsurancePayloadDTO();
+//        ins1.setInsurancePlan("AETNA");
+//        ins1.setInsuranceMemberId("3434343422");
+//        ins1.setInsuranceProvider("AETNA PROV");
+//        List<DemographicInsurancePhotoDTO> photos = new ArrayList<>();
+//        DemographicInsurancePhotoDTO frontDTO = new DemographicInsurancePhotoDTO();
+//        frontDTO.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
+//        photos.add(frontDTO);
+//        DemographicInsurancePhotoDTO backDTO = new DemographicInsurancePhotoDTO();
+//        backDTO.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
+//        photos.add(backDTO);
+//        ins1.setInsurancePhotos(photos);
+//        insuranceModelList.add(ins1);
+
+//        DemographicInsurancePayloadDTO ins2 = new DemographicInsurancePayloadDTO();
+//        ins2.setInsurancePlan("AETNA");
+//        ins2.setInsuranceMemberId("3434343422");
+//        ins2.setInsuranceProvider("AETNA PROV");
+//        List<DemographicInsurancePhotoDTO> photos2 = new ArrayList<>();
+//        DemographicInsurancePhotoDTO frontDTO2 = new DemographicInsurancePhotoDTO();
+//        frontDTO2.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
+//        photos2.add(frontDTO2);
+//        DemographicInsurancePhotoDTO backDTO2 = new DemographicInsurancePhotoDTO();
+//        backDTO2.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
+//        photos2.add(backDTO2);
+//        ins2.setInsurancePhotos(photos2);
+//        insuranceModelList.add(ins2);
+
+//        DemographicInsurancePayloadDTO ins3 = new DemographicInsurancePayloadDTO();
+//        ins3.setInsurancePlan("AETNA");
+//        ins3.setInsuranceMemberId("3434343422");
+//        ins3.setInsuranceProvider("AETNA PROV");
+//        List<DemographicInsurancePhotoDTO> photos3 = new ArrayList<>();
+//        DemographicInsurancePhotoDTO frontDTO3 = new DemographicInsurancePhotoDTO();
+//        frontDTO3.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
+//        photos3.add(frontDTO3);
+//        DemographicInsurancePhotoDTO backDTO3 = new DemographicInsurancePhotoDTO();
+//        backDTO3.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
+//        photos3.add(backDTO3);
+//        ins3.setInsurancePhotos(photos3);
+//        insuranceModelList.add(ins3);
     }
 }

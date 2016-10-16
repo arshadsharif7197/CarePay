@@ -286,7 +286,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         detailsScrollView.scrollTo(0, bottomView.getBottom());
     }
 
-
     /**
      * Helper to set the switch
      */
