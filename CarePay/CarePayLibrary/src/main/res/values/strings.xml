@@ -409,5 +409,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="demogr_docs_add_card">Add Card</string>
     <string name="scanned_id_doc">Scanned ID Doc</string>
     <string name="demogr_docs_document_type">Document Type</string>
+    <string name="insurance_scan_front">Insurance scan front</string>
+    <string name="insurance_scan_back">Insurance scan back</string>
 
 </resources>

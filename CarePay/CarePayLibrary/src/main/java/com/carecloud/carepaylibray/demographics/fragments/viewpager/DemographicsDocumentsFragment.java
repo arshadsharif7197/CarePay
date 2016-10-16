@@ -150,7 +150,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     }
 
     private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
-        return insModel.getInsurancePlan() != null &&
+        return insModel != null &&
+                insModel.getInsurancePlan() != null &&
                 insModel.getInsuranceProvider() != null &&
                 insModel.getInsuranceMemberId() != null;
     }

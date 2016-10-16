@@ -1,38 +1,39 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -50,20 +51,19 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private String[] providerDataArray;
     private String[] cardTypeDataArray;
 
-    private ImageCaptureHelper insuranceFrontScanHelper;
-    private ImageCaptureHelper insuranceBackScanHelper;
-    private Button btnScanFrontInsurance;
-    private Button btnScanBackInsurance;
-    private EditText insuranceCardNumEditText;
-    private TextView planTextView;
-    private TextView providerTextView;
-    private TextView cardTypeTextView;
-    private ImageView frontInsuranceImageView;
-    private ImageView backInsuranceImageView;
+    private ImageCaptureHelper             insuranceFrontScanHelper;
+    private ImageCaptureHelper             insuranceBackScanHelper;
+    private Button                         btnScanFrontInsurance;
+    private Button                         btnScanBackInsurance;
+    private EditText                       insuranceCardNumEditText;
+    private TextView                       planTextView;
+    private TextView                       providerTextView;
+    private TextView                       cardTypeTextView;
+    private ImageView                      frontInsuranceImageView;
+    private ImageView                      backInsuranceImageView;
     private DemographicInsurancePayloadDTO model;
-    private TextInputLayout insuranceCardNumberLabel;
+    private TextInputLayout                insuranceCardNumberLabel;
 
-    int selectedDataArray;
     private DemographicInsurancePhotoDTO insurancefrontPhotoDto;
     private DemographicInsurancePhotoDTO insurancebackPhotoDto;
 
@@ -73,8 +73,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_demographics_scan_insurance, container, false);
 
-
-        insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnumber);
+        insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
 
         frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
         insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
@@ -102,24 +101,21 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         providerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedDataArray = 1;
-                showAlertDialogWithListview(providerDataArray, "Select Provider");
+                showChooseDialog(providerDataArray, "Select Provider", providerTextView);
             }
         });
         planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
         planTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedDataArray = 2;
-                showAlertDialogWithListview(planDataArray, "Select Plan");
+                showChooseDialog(planDataArray, "Select Plan", planTextView);
             }
         });
         cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
         cardTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedDataArray = 3;
-                showAlertDialogWithListview(cardTypeDataArray, "Select Card Type");
+                showChooseDialog(cardTypeDataArray, "Select Card Type", cardTypeTextView);
             }
         });
 
@@ -135,12 +131,27 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void updateModel(TextView selectionDestination) {
-        // nothing to do here
+        if (selectionDestination == providerTextView) { // update 'id type' field in the model
+            String provider = selectionDestination.getText().toString();
+            if (!StringUtil.isNullOrEmpty(provider)) {
+                model.setInsuranceProvider(provider);
+            }
+        } else if (selectionDestination == planTextView) { // update 'state' field in the model
+            String plan = planTextView.getText().toString();
+            if (!StringUtil.isNullOrEmpty(plan)) {
+                model.setInsurancePlan(plan);
+            }
+        } else if (selectionDestination == cardTypeTextView) {
+            String type = cardTypeTextView.getText().toString();
+            if (!StringUtil.isNullOrEmpty(type)) {
+                // TODO: 10/16/2016 update  model
+            }
+        }
     }
-
 
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
+        // TODO: 10/16/2016 remove defaulting
         btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
         btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
 
@@ -155,10 +166,28 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
        // model.setInsuranceProvider(providerTextView.getText().toString());
 
 
-
+        if (scanner == insuranceFrontScanHelper) {
+            if (bitmap != null) {
+                // change button caption to 'rescan'
+                btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
+                // save from image
+                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                DemographicInsurancePhotoDTO frontDTO = model.getInsurancePhotos().get(0);
+                frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
+            }
+        } else if (scanner == insuranceBackScanHelper) {
+            if (bitmap != null) {
+                // change button caption to 'rescan'
+                btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
+                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                DemographicInsurancePhotoDTO backDTO = model.getInsurancePhotos().get(1);
+                backDTO.setInsurancePhoto(imageAsBase64); // create the image dto
+            }
+        }
     }
 
-    /** initializing view from the model
+    /**
+     * initializing view from the model
      */
     @Override
     public void populateViewsFromModel() {
@@ -216,60 +245,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
     }
 
-    /** Showing alert boxes for list
-     * @param listArray
-     * @param title
-     */
-    private void showAlertDialogWithListview(final String[] listArray, String title) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        View customView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.alert_list_layout, null, false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(listArray));
-        listView.setAdapter(alertAdapter);
-        dialog.setView(customView);
-
-        final AlertDialog alert = dialog.create();
-        alert.show();
-        alert.setOnShowListener(new DialogInterface.OnShowListener() {
-             @Override
-             public void onShow(DialogInterface dialog) {
-                 alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-                         getResources().getColor(R.color.blue_cerulian));
-             }
-         });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                switch (selectedDataArray) {
-                    case 1:
-                        providerTextView.setText(providerDataArray[position]);
-
-                        break;
-                    case 2:
-                        planTextView.setText(planDataArray[position]);
-
-                        break;
-                    case 3:
-                        cardTypeTextView.setText(cardTypeDataArray[position]);
-
-                        break;
-                }
-                alert.dismiss();
-            }
-        });
-    }
-
-    /** Converting bitmap images to base64 and posting to server in model
+    /**
+     * Converting bitmap images to base64 and posting to server in model
+     *
      * @return insurance model
      */
     public DemographicInsurancePayloadDTO getBitmapsFromImageViews() {
@@ -306,7 +284,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
     }
 
-
     public void resetViewsContent() {
         Log.v(LOG_TAG, "resetViewsContent()");
 
@@ -320,12 +297,43 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         // additional data deletion may be added when real data is used...
     }
 
-    private void setEditTexts(View view) {
+    private void setEditTexts(final View view) {
         insuranceCardNumberLabel = (TextInputLayout) view.findViewById(R.id.insurancecardNumberLabel);
         insuranceCardNumberLabel.setTag(getString(R.string.review_insurancecardnumber_hint));
-        insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnumber);
+        insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
         insuranceCardNumEditText.setTag(insuranceCardNumberLabel);
         setChangeFocusListeners();
+        insuranceCardNumEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String idNumber = insuranceCardNumEditText.getText().toString();
+                if (!StringUtil.isNullOrEmpty(idNumber)) {
+                    model.setInsuranceMemberId(idNumber);
+                }
+            }
+        });
+
+        insuranceCardNumEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_NEXT) {
+                    insuranceCardNumEditText.clearFocus();
+                    view.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         insuranceCardNumEditText.clearFocus();
     }
 
@@ -344,27 +352,27 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Override
     protected void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn));
+                                       (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn));
         setGothamRoundedMediumTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn));
+                                       (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_insurance_plan_label));
+                                      (TextView) view.findViewById(R.id.demogr_insurance_plan_label));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_docs_plan));
+                                       (TextView) view.findViewById(R.id.demogr_docs_plan));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview));
+                                       (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_insurance_provider_label));
+                                      (TextView) view.findViewById(R.id.demogr_insurance_provider_label));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel));
+                                      (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_docs_provider));
+                                       (TextView) view.findViewById(R.id.demogr_docs_provider));
         setProximaNovaRegularTypeface(getActivity(),
-                (EditText) view.findViewById(R.id.reviewinsurncecardnumber));
+                                      (EditText) view.findViewById(R.id.reviewinsurncecardnum));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel));
+                                      (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview));
+                                       (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview));
 
 
     }
@@ -387,5 +395,22 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
     public void setModel(DemographicInsurancePayloadDTO model) {
         this.model = model;
+        List<DemographicInsurancePhotoDTO> photoDTOs = model.getInsurancePhotos();
+        if (photoDTOs == null) { // create the list of photos (front and back) if null
+            photoDTOs = new ArrayList<>();
+            // create two empty photos DTOs
+            photoDTOs.add(new DemographicInsurancePhotoDTO());
+            photoDTOs.add(new DemographicInsurancePhotoDTO());
+            this.model.setInsurancePhotos(photoDTOs);
+        } else {
+            if (photoDTOs.size() == 0) {
+                // create two empty photos DTOs
+                photoDTOs.add(new DemographicInsurancePhotoDTO());
+                photoDTOs.add(new DemographicInsurancePhotoDTO());
+            } else if (photoDTOs.size() == 1) {
+                photoDTOs.add(1, new DemographicInsurancePhotoDTO()); // create the second
+            }
+        }
+
     }
 }
