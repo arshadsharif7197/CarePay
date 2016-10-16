@@ -33,6 +33,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 
 import com.squareup.picasso.Picasso;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,21 +153,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
-        // TODO: 10/16/2016 remove defaulting
-        btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
-        btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
-
-     //   insuranceCardNumEditText.setText(model.getInsuranceMemberId());
-     //    model.setInsuranceMemberId(insuranceCardNumEditText.getText().toString());
-
-
-       // planTextView.setText(planTextView.getText().toString());
-     //   model.setInsurancePlan(planTextView.getText().toString());
-
-      //  providerTextView.setText(providerTextView.getText().toString());
-       // model.setInsuranceProvider(providerTextView.getText().toString());
-
-
         if (scanner == insuranceFrontScanHelper) {
             if (bitmap != null) {
                 // change button caption to 'rescan'
@@ -191,57 +178,50 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
      */
     @Override
     public void populateViewsFromModel() {
-
+        resetViewsContent();
         if (model != null) {
-            Log.v(LOG_TAG, "InsuranceScannerFrag - populateFromModel()");
-            updateModelAndViewsAfterScan(null);
+            // populate with images
             List<DemographicInsurancePhotoDTO> photos = model.getInsurancePhotos();
             if (photos == null) {
                 Log.v(LOG_TAG, InsuranceScannerFragment.class.getSimpleName() + " no ins photos");
             } else {
                 if (photos.size() > 0) {
+                    String photoBackURL = photos.get(0).getInsurancePhoto();
+                    try {
+                        URL url = new URL(photoBackURL);
+                        Picasso.with(getContext()).load(url.toString()).into(backInsuranceImageView);
+                    } catch (MalformedURLException e) {
+                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
+                    }
+                }
 
-                    String photoFrontURL = photos.get(0).getInsurancePhoto();
-                    if(photoFrontURL != null) {
-                        btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
-                        Picasso.with(getActivity()).load(photoFrontURL).into(frontInsuranceImageView);
-                    } else {
-                        frontInsuranceImageView.setImageResource(R.drawable.icn_camera);
-                        btnScanFrontInsurance.setText(R.string.demogr_docs_scan_insurance_front_label);
-                    }
-                    String photoBackURL = photos.get(1).getInsurancePhoto();
-                    if(photoBackURL != null) {
-                        btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
-                        Picasso.with(getActivity()).load(photoBackURL).into(backInsuranceImageView);
-                    } else {
-                        backInsuranceImageView.setImageResource(R.drawable.icn_camera);
-                        btnScanBackInsurance.setText(R.string.demogr_docs_scan_insurance_backlabel);
+                if (photos.size() > 1) {
+                    String photoFrontURL = photos.get(1).getInsurancePhoto();
+                    try {
+                        URL url = new URL(photoFrontURL);
+                        Picasso.with(getContext()).load(url.toString()).into(frontInsuranceImageView);
+                    } catch (MalformedURLException e) {
+                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
                     }
                 }
-                }
+            }
+
+            // (used for Review)
+            insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
+            insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
+
+            String insProvider = model.getInsuranceProvider();
+            if(!StringUtil.isNullOrEmpty(insProvider)) {
+                providerTextView.setText(model.getInsuranceProvider());
+            }
+            String insPlan = model.getInsurancePlan();
+            if(!StringUtil.isNullOrEmpty(insPlan)) {
+                planTextView.setText(insPlan);
+            }
             String insNum = model.getInsuranceMemberId();
-            if(insNum != null) {
+            if(!StringUtil.isNullOrEmpty(insNum)) {
                 insuranceCardNumEditText.setText(insNum);
-            } else {
-                insuranceCardNumEditText.setText("");
             }
-            String provider= model.getInsuranceProvider();
-            if(provider != null){
-
-                providerTextView.setText(provider);
-            } else {
-                providerTextView.setText(getString(R.string.demogr_docs_tv_chose_company));
-            }
-
-            String plan=model.getInsurancePlan();
-            if(plan != null) {
-                planTextView.setText(plan);
-            } else {
-                planTextView.setText(getString(R.string.demogr_tv_choose_label));
-            }
-
-        } else {
-           Log.e(LOG_TAG, " Model is empty ");
         }
     }
 
@@ -294,7 +274,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         providerTextView.setText(getString(R.string.demogr_docs_tv_chose_company));
         cardTypeTextView.setText(getString(R.string.demogr_tv_choose_label));
         insuranceFrontScanHelper.resetTargetView();
-        // additional data deletion may be added when real data is used...
+        insuranceBackScanHelper.resetTargetView();
     }
 
     private void setEditTexts(final View view) {
