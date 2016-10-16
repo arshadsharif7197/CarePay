@@ -78,7 +78,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                     URL url = new URL(profilePicURL);
                     Picasso.with(getContext()).load(url.toString()).into(imageCaptureHelper.getImageViewTarget());
                 } catch (MalformedURLException e) {
-                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+//                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
                 }
             }
         }

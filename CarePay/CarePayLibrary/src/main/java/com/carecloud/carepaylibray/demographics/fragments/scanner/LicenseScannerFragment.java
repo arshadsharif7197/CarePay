@@ -232,7 +232,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(frontPic);
                     Picasso.with(getContext()).load(url.toString()).into(scannerFront.getImageViewTarget());
                 } catch (MalformedURLException e) {
-                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+//                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
                 }
             }
             // add back image
@@ -242,7 +242,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(backPic);
                     Picasso.with(getContext()).load(url.toString()).into(scannerBack.getImageViewTarget());
                 } catch (MalformedURLException e) {
-                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+//                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
                 }
             }
         }

@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SplashActivity"
-            android:theme="@style/Theme.AppCompat.Translucent">
+            android:theme="@style/NavigationTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

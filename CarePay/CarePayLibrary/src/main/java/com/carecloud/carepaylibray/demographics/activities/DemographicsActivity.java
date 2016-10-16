@@ -124,7 +124,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
         initDTOsForFragments();
 
-        createDTOsForTest();
+//        createDTOsForTest();
     }
 
     private void setupPager() {

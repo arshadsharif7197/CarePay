@@ -104,6 +104,11 @@ public class SignupFragment extends Fragment {
 
         parentLayout.clearFocus();
 
+        // TODO: 10/16/2016 remove
+        emailText.setText("lsocolovici@yahoo.com");
+        passwordText.setText("Liviu123_");
+        repeatPasswordText.setText("Liviu123_");
+
         return view;
     }
 
@@ -452,7 +457,7 @@ public class SignupFragment extends Fragment {
         public void onLoginFailure(String exceptionMessage) {
             SystemUtil.showDialogMessage(getContext(),
                     "Sign-in failed",
-                    "Invalid user id or password");
+                    exceptionMessage);
 
         }
     };
@@ -508,18 +513,21 @@ public class SignupFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        userName = emailText.getText().toString();
-        if (userName.length() > 0) {
-            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
-            // add more attributes here is needed...
-        }
-        String password = passwordText.getText().toString();
-
-        CognitoAppHelper.getPool().signUpInBackground(userName,
-                password,
-                userAttributes,
-                null,
-                signUpHandler);
+        // TODO: 10/16/2016 remove
+        CognitoAppHelper.signIn(emailText.getText().toString(), passwordText.getText().toString(), cognitoActionCallback);
+        // TODO: 10/16/2016 uncomment
+//        userName = emailText.getText().toString();
+//        if (userName.length() > 0) {
+//            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
+//            // add more attributes here is needed...
+//        }
+//        String password = passwordText.getText().toString();
+//
+//        CognitoAppHelper.getPool().signUpInBackground(userName,
+//                password,
+//                userAttributes,
+//                null,
+//                signUpHandler);
     }
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {

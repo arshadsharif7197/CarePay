@@ -146,7 +146,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         } else if (selectionDestination == cardTypeTextView) {
             String type = cardTypeTextView.getText().toString();
             if (!StringUtil.isNullOrEmpty(type)) {
-                // TODO: 10/16/2016 update  model
+                Log.v(LOG_TAG, "needed field in json");
             }
         }
     }
@@ -191,7 +191,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         URL url = new URL(photoBackURL);
                         Picasso.with(getContext()).load(url.toString()).into(backInsuranceImageView);
                     } catch (MalformedURLException e) {
-                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
+//                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
                     }
                 }
 
@@ -201,7 +201,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         URL url = new URL(photoFrontURL);
                         Picasso.with(getContext()).load(url.toString()).into(frontInsuranceImageView);
                     } catch (MalformedURLException e) {
-                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
+//                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
                     }
                 }
             }
