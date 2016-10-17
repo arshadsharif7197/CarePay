@@ -26,9 +26,12 @@
             android:theme="@style/NavigationTheme"/>
 
         <activity android:name="com.carecloud.carepaylibray.homescreen.HomeScreenActivity"/>
-
         <activity
             android:name="com.carecloud.carepaylibray.activities.SignatureActivity"
+            android:theme="@style/NavigationTheme"/>
+
+        <activity
+            android:name="com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity"
             android:theme="@style/NavigationTheme"/>
 
         <activity

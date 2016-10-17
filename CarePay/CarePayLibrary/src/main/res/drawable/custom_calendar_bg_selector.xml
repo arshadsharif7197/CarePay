@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item app:tsquare_state_range_middle="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/yellowGreen_blend" />
+        </shape>
+    </item>
+
+    <item app:tsquare_state_range_first="true" android:drawable="@drawable/custom_calendar_bg_range_start" />
+    <item app:tsquare_state_range_last="true" android:drawable="@drawable/custom_calendar_bg_range_end" />
+
+    <item  android:state_selected="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/yellowGreen" />
+            <stroke
+                android:width="@dimen/add_apt_calendar_selected_range_stroke"
+                android:color="@color/transparent_apt" />
+        </shape>
+    </item>
+
+    <item app:tsquare_state_current_month="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/payne_gray" />
+        </shape>
+    </item>
+
+    <item app:tsquare_state_today="true" >
+        <shape android:shape="oval">
+            <stroke
+                android:width="@dimen/add_apt_calendar_today_date_stroke"
+                android:color="@color/lightSlateGray" />
+        </shape>
+    </item>
+
+    <item app:tsquare_state_current_month="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/payne_gray" />
+        </shape>
+    </item>
+</selector>

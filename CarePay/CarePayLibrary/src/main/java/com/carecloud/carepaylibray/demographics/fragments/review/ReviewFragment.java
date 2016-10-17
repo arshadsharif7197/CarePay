@@ -4,13 +4,13 @@ package com.carecloud.carepaylibray.demographics.fragments.review;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.consentforms.ConsentActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
@@ -111,21 +110,14 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AppointmentsActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
+        DemographicReviewActivity.isFromReview = true;
 
         initialiseUIFields();
         setTypefaces(view);
 
         return view;
     }
+
 
     /**
      * .
@@ -288,7 +280,9 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                     .setDemographicPayloadIdDocDTO(
                             demPayloadIdDocPojo);
 
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
             Fragment fragment = DemographicReviewFragment.newInstance();
             transaction.replace(R.id.root_layout, fragment, ReviewFragment.class.getName());
             transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
@@ -298,26 +292,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-
-            getActivity().onBackPressed();
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * On back Pressed going to previous activity
-     */
-    public void onBackPressed() {
-        Intent intent = new Intent(getContext(), AppointmentsActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        getActivity().finish();
-
-    }
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
