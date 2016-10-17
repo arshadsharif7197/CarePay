@@ -235,7 +235,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             if (!StringUtil.isNullOrEmpty(frontPic)) {
                 try {
                     URL url = new URL(frontPic);
-                    Picasso.with(getContext()).load(url.toString()).into(scannerFront.getImageViewTarget());
+                    Picasso.with(getContext()).load(frontPic).into(scannerFront.getImageViewTarget());
                 } catch (MalformedURLException e) {
 //                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
                 }
@@ -245,7 +245,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
             if (!StringUtil.isNullOrEmpty(backPic)) {
                 try {
                     URL url = new URL(backPic);
-                    Picasso.with(getContext()).load(url.toString()).into(scannerBack.getImageViewTarget());
+                    Picasso.with(getContext()).load(backPic).into(scannerBack.getImageViewTarget());
                 } catch (MalformedURLException e) {
 //                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
                 }

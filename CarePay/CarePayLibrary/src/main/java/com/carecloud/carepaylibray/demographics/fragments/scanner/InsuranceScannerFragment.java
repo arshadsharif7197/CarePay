@@ -190,24 +190,25 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                 Log.v(LOG_TAG, InsuranceScannerFragment.class.getSimpleName() + " no ins photos");
             } else {
                 if (photos.size() > 0) {
-                    String photoBackURL = photos.get(0).getInsurancePhoto();
+                    String photoFrontURL = photos.get(0).getInsurancePhoto();
                     try {
-                        URL url = new URL(photoBackURL);
-                        Picasso.with(getContext()).load(url.toString()).into(backInsuranceImageView);
+                        URL url = new URL(photoFrontURL);
+                        Picasso.with(getContext()).load(photoFrontURL).into(frontInsuranceImageView);
                     } catch (MalformedURLException e) {
 //                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
                     }
                 }
 
                 if (photos.size() > 1) {
-                    String photoFrontURL = photos.get(1).getInsurancePhoto();
+                    String photoBackURL = photos.get(1).getInsurancePhoto();
                     try {
-                        URL url = new URL(photoFrontURL);
-                        Picasso.with(getContext()).load(url.toString()).into(frontInsuranceImageView);
+                        URL url = new URL(photoBackURL);
+                        Picasso.with(getContext()).load(photoBackURL).into(backInsuranceImageView);
                     } catch (MalformedURLException e) {
 //                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
                     }
                 }
+
             }
 
             // (used for Review)
