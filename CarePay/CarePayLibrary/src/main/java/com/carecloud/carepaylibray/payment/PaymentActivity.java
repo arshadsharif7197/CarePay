@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -18,15 +20,31 @@ public class PaymentActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         FragmentManager fm = getSupportFragmentManager();
-        ResponsibilityFragment fragment = (ResponsibilityFragment) fm.findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
+        ResponsibilityFragment fragment = (ResponsibilityFragment)
+                fm.findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
         if (fragment == null) {
             fragment = new ResponsibilityFragment();
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
+        bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
+                intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
         fragment.setArguments(bundle);
         fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
                 ResponsibilityFragment.class.getSimpleName()).commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            SystemUtil.hideSoftKeyboard(this);
+            onBackPressed();
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
