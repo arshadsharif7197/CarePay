@@ -7,19 +7,20 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 
+import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_GOTHAM_ROUNDED_BOOK;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_GOTHAM_ROUNDED_MEDIUM;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_PROXIMA_NOVA_EXTRA_BOLD;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_PROXIMA_NOVA_LIGHT;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_PROXIMA_NOVA_REGULAR;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_PROXIMA_NOVA_SEMI_BOLD;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.GOTHAM_ROUNDED_BOOK;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.GOTHAM_ROUNDED_MEDIUM;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.PROXIMA_NOVA_EXTRA_BOLD;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.PROXIMA_NOVA_LIGHT;
 import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.PROXIMA_NOVA_SEMI_BOLD;
+
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -32,7 +33,7 @@ public class CarePayTextView extends TextView {
 
     /**
      * Public constructor with context
-     * @param context
+     * @param context sender context
      */
     public CarePayTextView(Context context) {
         super(context);
@@ -42,8 +43,8 @@ public class CarePayTextView extends TextView {
     /**
      * Public constructor with context and Attribute.
      * All the custom styleable declare are apply here also.
-     * @param context
-     * @param attrs
+     * @param context sender context
+     * @param attrs styleable attributes
      */
     public CarePayTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,9 +56,9 @@ public class CarePayTextView extends TextView {
      * Public constructor with context, Attributes and default attributes.
      * All the custom styleable declare are apply here also.
      * Default attributes also apply here
-     * @param context
-     * @param attrs
-     * @param defStyleAttr
+     * @param context sender context
+     * @param attrs styleable attributes
+     * @param defStyleAttr styleable default attributes
      */
 
     public CarePayTextView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -76,7 +77,7 @@ public class CarePayTextView extends TextView {
 
     /**
      * set font attribute dynamically
-     * @param fontAttribute
+     * @param fontAttribute styleable attributes
      */
     public void setFontAttribute(int fontAttribute) {
         this.fontAttribute = fontAttribute;
@@ -86,7 +87,7 @@ public class CarePayTextView extends TextView {
 
     /**
      * initialize
-     * @param attrs
+     * @param attrs styleable attributes
      */
     private void init(AttributeSet attrs) {
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(
