@@ -50,7 +50,7 @@
             style="@style/DemographicsDocsButtonStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/demogr_docs_scan_label"/>
+            android:text="@string/demogr_docs_scan_insurance_front_label"/>
 
     </LinearLayout>
 
@@ -71,7 +71,7 @@
             style="@style/DemographicsDocsButtonStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/demogr_docs_scan_label"/>
+            android:text="@string/demogr_docs_scan_insurance_backlabel"/>
 
     </LinearLayout>
 

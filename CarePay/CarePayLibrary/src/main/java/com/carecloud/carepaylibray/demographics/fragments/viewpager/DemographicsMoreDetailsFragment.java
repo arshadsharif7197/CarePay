@@ -81,13 +81,10 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     }
 
     public void confirmDemographicInformation() {
-        // TODO: 9/29/2016 progress
-
         DemographicPayloadDTO demographicPayloadDTO = new DemographicPayloadDTO();
 
 //        List<DemographicUpdateDTO> updates = new ArrayList<>();
 //        demographicPayloadDTO.setUpdates(updates);
-
 
         // obtain the updated models from the pager fragments
         DemographicAddressPayloadDTO addressModel = ((DemographicsActivity)getActivity()).getAddressModel();

@@ -45,7 +45,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
  * Created by lsoco_user on 9/13/2016.
  * Fragment for with scanning driver's license functionality
  */
-public class LicenseScannerFragment extends DocumentScannerFragment {
+public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private static final String[] states = new String[]{
             "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
@@ -63,7 +63,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
     private TextView           idStateClickable;
 
     private DemographicIdDocPayloadDTO model;
-    private String[] docTypes = {"Driver's License", "Passport"}; // these will come from b/e
+    private String[] docTypes = {"Driver's License"}; // these will come from b/e
 
     @Nullable
     @Override

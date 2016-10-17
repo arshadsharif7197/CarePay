@@ -105,7 +105,6 @@
     <string name="demogr_docs_logo">Logo</string>
     <string name="demogr_docs_logo_title">Documents, please</string>
     <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
-    <string name="demogr_docs_scan_label">Scan Driver\'s License</string>
     <string name="demogr_docs_scan_insurance_front_label">SCAN FRONT</string>
     <string name="demogr_docs_scan_insurance_backlabel">SCAN BACK</string>
     <string name="demogrDocsNumberHint">Driver\'s License Number</string>

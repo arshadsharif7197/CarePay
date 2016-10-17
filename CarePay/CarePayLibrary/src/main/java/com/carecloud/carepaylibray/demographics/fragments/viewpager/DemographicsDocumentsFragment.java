@@ -18,7 +18,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
-import com.carecloud.carepaylibray.demographics.fragments.scanner.LicenseScannerFragment;
+import com.carecloud.carepaylibray.demographics.fragments.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 
@@ -35,22 +35,22 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
     private static final String LOG_TAG = DemographicsDocumentsFragment.class.getSimpleName();
-    private FragmentManager                      fm;
-    private View                                 view;
-    private ScrollView                           detailsScrollView;
-    private SwitchCompat                         switchCompat;
-    private FrameLayout                          insCardContainer1;
-    private FrameLayout                          insCardContainer2;
-    private FrameLayout                          insCardContainer3;
-    private LicenseScannerFragment               licenseFragment;
-    private InsuranceScannerFragment             insuranceFragment;
-    private InsuranceScannerFragment             extraInsuranceFrag1;
-    private InsuranceScannerFragment             extraInsuranceFrag2;
-    private boolean                              isSecondCardAdded;
-    private boolean                              isThirdCardAdded;
-    private TextView                               addCardButton;
-    private Button                               nextButton;
-    private DemographicIdDocPayloadDTO           demPayloadIdDocDTO;
+    private FragmentManager            fm;
+    private View                       view;
+    private ScrollView                 detailsScrollView;
+    private SwitchCompat               switchCompat;
+    private FrameLayout                insCardContainer1;
+    private FrameLayout                insCardContainer2;
+    private FrameLayout                insCardContainer3;
+    private IdDocScannerFragment       licenseFragment;
+    private InsuranceScannerFragment   insuranceFragment;
+    private InsuranceScannerFragment   extraInsuranceFrag1;
+    private InsuranceScannerFragment   extraInsuranceFrag2;
+    private boolean                    isSecondCardAdded;
+    private boolean                    isThirdCardAdded;
+    private TextView                   addCardButton;
+    private Button                     nextButton;
+    private DemographicIdDocPayloadDTO demPayloadIdDocDTO;
     private List<DemographicInsurancePayloadDTO> insuranceModelList;
     private DemographicInsurancePayloadDTO       insuranceModel1;
     private DemographicInsurancePayloadDTO       insuranceModel2;
@@ -171,9 +171,9 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         fm = getChildFragmentManager();
         // add license fragment
-        licenseFragment = (LicenseScannerFragment) fm.findFragmentByTag("license");
+        licenseFragment = (IdDocScannerFragment) fm.findFragmentByTag("license");
         if (licenseFragment == null) {
-            licenseFragment = new LicenseScannerFragment();
+            licenseFragment = new IdDocScannerFragment();
             licenseFragment.setButtonsStatusCallback(this);
             licenseFragment.setModel(demPayloadIdDocDTO); // set the model
         }
