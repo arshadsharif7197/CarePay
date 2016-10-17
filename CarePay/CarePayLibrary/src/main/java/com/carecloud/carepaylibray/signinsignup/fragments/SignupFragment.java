@@ -104,11 +104,6 @@ public class SignupFragment extends Fragment {
 
         parentLayout.clearFocus();
 
-        // TODO: 10/16/2016 remove
-        emailText.setText("lvictor1979@gmail.com");
-        passwordText.setText("test123");
-        repeatPasswordText.setText("test123");
-
         return view;
     }
 
@@ -117,10 +112,10 @@ public class SignupFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (areAllValid()) {
+                if (areAllValid()) {
                     // request user registration ony if all fiels are valid
                     registerUser();
-//                }
+                }
             }
         });
         submitButton.setEnabled(false);
@@ -513,21 +508,18 @@ public class SignupFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        // TODO: 10/16/2016 remove
-        CognitoAppHelper.signIn(emailText.getText().toString(), passwordText.getText().toString(), cognitoActionCallback);
-        // TODO: 10/16/2016 uncomment
-//        userName = emailText.getText().toString();
-//        if (userName.length() > 0) {
-//            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
-//            // add more attributes here is needed...
-//        }
-//        String password = passwordText.getText().toString();
-//
-//        CognitoAppHelper.getPool().signUpInBackground(userName,
-//                password,
-//                userAttributes,
-//                null,
-//                signUpHandler);
+        userName = emailText.getText().toString();
+        if (userName.length() > 0) {
+            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
+            // add more attributes here is needed...
+        }
+        String password = passwordText.getText().toString();
+
+        CognitoAppHelper.getPool().signUpInBackground(userName,
+                password,
+                userAttributes,
+                null,
+                signUpHandler);
     }
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
