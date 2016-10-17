@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 
-import java.util.List;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.List;
 
 /**
  * Created by lsoco_user on 10/11/2016.

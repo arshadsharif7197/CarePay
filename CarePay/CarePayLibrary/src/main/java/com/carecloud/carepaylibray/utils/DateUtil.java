@@ -335,6 +335,11 @@ public class DateUtil {
         return compareTo(today) == 1 && crtDay != day;
     }
 
+    /**
+     * Format a date as mm/dd/yyyy
+     * @param date The date whose format is to be changed
+     * @return  The dat in the new format as a string
+     */
     public static boolean isValidateStringDateMMDDYYYY(String date) {
         final String regexDateOfBirth = "\\d{2}/\\d{2}/\\d{4}";
         Pattern pattern = Pattern.compile(regexDateOfBirth);

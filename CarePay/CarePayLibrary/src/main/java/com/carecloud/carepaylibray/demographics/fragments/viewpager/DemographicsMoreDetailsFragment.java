@@ -1,8 +1,5 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +23,10 @@ import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDT
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 import java.util.List;
 import okhttp3.ResponseBody;

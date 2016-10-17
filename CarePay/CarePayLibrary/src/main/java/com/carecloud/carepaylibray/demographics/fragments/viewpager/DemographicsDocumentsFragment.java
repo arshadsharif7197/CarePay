@@ -1,8 +1,5 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +21,9 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScann
 import com.carecloud.carepaylibray.demographics.fragments.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 import java.util.ArrayList;
 import java.util.List;
