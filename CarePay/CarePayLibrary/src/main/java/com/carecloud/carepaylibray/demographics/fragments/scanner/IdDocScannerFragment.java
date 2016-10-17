@@ -26,8 +26,6 @@ import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDT
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -53,6 +51,7 @@ import java.util.List;
  */
 public class IdDocScannerFragment extends DocumentScannerFragment {
 
+    private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
     private static final String[] states = new String[]{
             "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
             "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
