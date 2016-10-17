@@ -2,18 +2,25 @@
 
     <!-- Base application theme. -->
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
+    <!-- Navigation Screen Theme-->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
-        <item name="titleTextStyle">@style/actionBarTitle</item>
         <item name="android:overScrollMode">never</item>
 
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
+
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/light_gray</item> <!-- hint and underlying bar when focus -->
     </style>
 
 
-<!--<splash screen theme></splash>-->
+    <!-- Splash screen theme -->
 
     <style name="Theme.AppCompat.Translucent">
         <item name="android:windowIsTranslucent">true</item>
@@ -446,23 +453,6 @@
         <item name="android:layout_marginTop">@dimen/review_center_margin_top_bottom</item>
         <item name="android:layout_marginBottom">@dimen/review_center_margin_top_bottom</item>
         <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
-    </style>
-
-    <!-- Navigation Screen Theme-->
-    <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
-        <item name="android:overScrollMode">never</item>
-
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
-
-        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
-        <item name="colorControlActivated">@color/light_gray</item> <!-- hint and underlying bar when focus -->
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
