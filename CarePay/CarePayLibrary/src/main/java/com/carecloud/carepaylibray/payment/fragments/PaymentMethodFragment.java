@@ -28,35 +28,27 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public class PaymentMethodFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup paymentMethodRadioGroup;
-    private Button paymentChoiceButton, createPaymentPlanButton;
-    private Activity mActivity;
+    private Button createPaymentPlanButton;
+    private Button paymentChoiceButton;
+    private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
     private String[] paymentMethodsArray;
     private String[] createPaymentMethodButtonCaptionArray;
     private int[] paymentMethodsDrawableArray;
 
-    public PaymentMethodFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
-        mActivity = getActivity();
+        activity = getActivity();
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(R.string.payment_method);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
+                R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
 
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
@@ -70,8 +62,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 getString(R.string.cash), getString(R.string.scan_check),
                 getString(R.string.pay_using_paypal), getString(R.string.pay_using_apple_pay)};
         paymentMethodsDrawableArray = new int[]{R.drawable.payment_credit_card_button_selector,
-                R.drawable.payment_cash_button_selector, R.drawable.payment_check_button_selector,
-                R.drawable.payment_paypal_button_selector, R.drawable.payment_apple_button_selector};
+             R.drawable.payment_cash_button_selector, R.drawable.payment_check_button_selector,
+             R.drawable.payment_paypal_button_selector, R.drawable.payment_apple_button_selector};
 
         initilizeViews(view);
 
@@ -79,16 +71,16 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     }
 
     private RadioButton getPaymentMethodRadioButton(String cardInfo, int index) {
-        RadioButton radioButtonView = new RadioButton(mActivity);
+        RadioButton radioButtonView = new RadioButton(activity);
         radioButtonView.setId(index);
         radioButtonView.setButtonDrawable(null);
         radioButtonView.setBackground(null);
         radioButtonView.setText(cardInfo);
-        radioButtonView.setCompoundDrawablesWithIntrinsicBounds(paymentMethodsDrawableArray[index], 0,
-                R.drawable.check_box_intake, 0);
+        radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                paymentMethodsDrawableArray[index], 0, R.drawable.check_box_intake, 0);
         radioButtonView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-        radioButtonView.setTextColor(ContextCompat.getColor(mActivity, R.color.radio_button_selector));
-        radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_lable_text_size));
+        radioButtonView.setTextColor(ContextCompat.getColor(activity, R.color.radio_button_selector));
+        radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));
         radioButtonView.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin));
 
         return radioButtonView;
@@ -104,13 +96,14 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         paymentChoiceButton.setEnabled(false);
 
         for (int i = 0; i < paymentMethodsArray.length; i++) {
-            paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentMethodsArray[i], i), radioGroupLayoutParam);
+            paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentMethodsArray[i], i),
+                    radioGroupLayoutParam);
 
-            View dividerLineView = new View(mActivity);
+            View dividerLineView = new View(activity);
             dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, 1
             ));
-            dividerLineView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.cadet_gray));
+            dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
             paymentMethodRadioGroup.addView(dividerLineView);
             onSetRadioButtonRegularTypeFace();
         }
@@ -133,30 +126,33 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private void onSetRadioButtonRegularTypeFace() {
         for (int i = 0; i < paymentMethodRadioGroup.getChildCount(); i++) {
             if (i % 2 == 0) {
-                SystemUtil.setProximaNovaRegularTypeface(this.mActivity, (RadioButton) paymentMethodRadioGroup.getChildAt(i));
-                ((RadioButton) paymentMethodRadioGroup.getChildAt(i)).setTextColor(ContextCompat.getColor(mActivity, R.color.slateGray));
+                SystemUtil.setProximaNovaRegularTypeface(this.activity,
+                        (RadioButton) paymentMethodRadioGroup.getChildAt(i));
+                ((RadioButton) paymentMethodRadioGroup.getChildAt(i))
+                        .setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
             }
         }
     }
 
     private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
-        SystemUtil.setProximaNovaSemiboldTypeface(this.mActivity, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(mActivity, R.color.blue_cerulian));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.activity, radioButton);
+        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.blue_cerulian));
     }
 
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-
+        public void onClick(View view) {
+            // ToDo : Create payment plan action here - to be done
         }
     };
 
     private View.OnClickListener paymentChoiceButtonListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             if (paymentChoiceButton.getText().equals(getString(R.string.choose_credit_card))) {
                 FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-                ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager.findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
+                ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
+                        .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new ChooseCreditCardFragment();
                 }
@@ -164,14 +160,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
                 fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
                 fragmentTransaction.commit();
-
-            } else if (paymentChoiceButton.getText().equals(getString(R.string.cash))) {
-
-            } else if (paymentChoiceButton.getText().equals(getString(R.string.scan_check))) {
-
-            } else if (paymentChoiceButton.getText().equals(getString(R.string.pay_using_paypal))) {
-
-            } else if (paymentChoiceButton.getText().equals(getString(R.string.pay_using_apple_pay))) {
 
             }
         }

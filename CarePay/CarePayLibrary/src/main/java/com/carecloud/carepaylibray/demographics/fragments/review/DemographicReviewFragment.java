@@ -36,7 +36,6 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 
 
-
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -97,7 +96,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
-
+        DemographicReviewActivity.isFromReview = false;
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
@@ -105,15 +104,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment fragment = ReviewFragment.newInstance();
-                transaction.replace(R.id.root_layout, fragment, DemographicReviewFragment.class.getName());
-                transaction.commit();
-            }
-        });
+
         initialiseUIFields();
         initViewFromModels();
         setEditTexts(view);
@@ -203,6 +194,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
 
             int length_before = 0;
+
             @Override
             public void beforeTextChanged(CharSequence phonenumber, int start, int count, int after) {
                 length_before = phonenumber.length();
@@ -210,11 +202,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void onTextChanged(CharSequence phonenumber, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable phonenumber) {
+
                 if (length_before < phonenumber.length()) {
                     if (phonenumber.length() == 3 || phonenumber.length() == 7) {
                         phonenumber.append("-");

@@ -1,9 +1,14 @@
 package com.carecloud.carepaylibray.demographics.activities;
 
+
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import android.view.MenuItem;
+
 import com.carecloud.carepaylibrary.R;
+
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
@@ -13,6 +18,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePaylo
 import java.util.List;
 
 
+
 public class DemographicReviewActivity extends AppCompatActivity {
 
     private DemographicPersDetailsPayloadDTO     demographicPersDetailsPayloadDTO;
@@ -20,17 +26,33 @@ public class DemographicReviewActivity extends AppCompatActivity {
     private List<DemographicInsurancePayloadDTO> insurances;
     private DemographicIdDocPayloadDTO           demPayloadIdDocPojo;
 
+    public static boolean isFromReview=false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_demographic_review);
 
-        if (savedInstanceState == null) {
+        FragmentManager fm = getSupportFragmentManager();
+        ReviewFragment fragment = (ReviewFragment) fm.findFragmentByTag(ReviewFragment.class.getSimpleName());
+        if(fragment == null) {
+            fragment = ReviewFragment.newInstance();
+        }
             getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.root_layout, ReviewFragment.newInstance(), ReviewFragment.class.getName())
+                    .beginTransaction().addToBackStack("reviewscreen")
+                    .replace(R.id.root_layout, fragment, ReviewFragment.class.getName())
                     .commit();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isFromReview){
+            this.finish();
+
+        }else {
+            super.onBackPressed();
         }
     }
 
@@ -65,5 +87,14 @@ public class DemographicReviewActivity extends AppCompatActivity {
 
     public void setDemographicPayloadIdDocDTO(DemographicIdDocPayloadDTO demPayloadIdDocPojo) {
         this.demPayloadIdDocPojo = demPayloadIdDocPojo;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 }
