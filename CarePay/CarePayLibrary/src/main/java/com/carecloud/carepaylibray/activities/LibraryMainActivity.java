@@ -82,9 +82,7 @@ public class LibraryMainActivity extends KeyboardHolderActivity {
         // else go to Signin
         Fragment fragment = fm.findFragmentByTag(fragClass.getSimpleName());
         if (fragment == null) {
-            if (fragClass.equals(SelectLanguageFragment.class)) {
-                fragment = new SelectLanguageFragment();
-            } else if (fragClass.equals(SigninFragment.class)) {
+            if (fragClass.equals(SigninFragment.class)) {
                 fragment = new SigninFragment();
             } else if (fragClass.equals(SignupFragment.class)) {
                 fragment = new SignupFragment();

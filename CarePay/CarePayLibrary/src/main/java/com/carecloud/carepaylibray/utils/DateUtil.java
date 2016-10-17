@@ -98,6 +98,16 @@ public class DateUtil {
     }
 
     /**
+     * Format the date as "EEE, MMM d YYYY" (eg Mon, Oct 10th 2016)
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsDayMonthDayOrdinalYear() {
+        return String.format(Locale.getDefault(), "%s, %s %d%s %s",
+                dayLiteralAbbr, monthLiteralAbbr, day, getOrdinalSuffix(day), year);
+    }
+
+    /**
      * Return the time as 12-hour (format "h:mm a")
      *
      * @return A string contains the formatted time
@@ -321,5 +331,25 @@ public class DateUtil {
         int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
         // check if crt date is before the date in the util and the days differ
         return compareTo(today) == 1 && crtDay != day;
+    }
+
+    /**
+     * Formats the month and year. If provided a separator then will be displayed as MM/yyyy or else
+     * MMyyyy
+     *
+     * @param year        The year that was set.
+     * @param monthOfYear The month that was set (0-11) for compatibility with {@link
+     *                    Calendar}.
+     * @return the formatted string
+     */
+    public String formatMonthYear(int year, int monthOfYear) {
+        Locale locale = Locale.getDefault();
+        Calendar calendar = Calendar.getInstance(locale);
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, monthOfYear);
+        SimpleDateFormat format = new SimpleDateFormat(
+                "MM/yyyy", Locale.getDefault());
+        return format.format(calendar.getTime());
     }
 }

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -38,7 +39,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,7 +62,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
     private DemographicInsurancePayloadDTO insuranceModel;
     private InsuranceScannerFragment insuranceFragment;
     private Button addInsuranceaInfoButton;
-
+    private ProgressBar demographicProgressBar;
     private ImageCaptureHelper reviewInsuranceScanHelper;
     private ImageCaptureHelper reviewImageCaptureHelper;
 
@@ -80,31 +83,21 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         view = inflater.inflate(R.layout.fragment_review_health_insurance, container, false);
 
         fm = getChildFragmentManager();
-
+        DemographicReviewActivity.isFromReview = false;
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.healthinsurance_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.healthinsurance_review_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographichealthinsuranceReviewProgressBar);
+        demographicProgressBar.setVisibility(View.GONE);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment fragment = DemographicReviewFragment.newInstance();
-                transaction.replace(R.id.root_layout, fragment, HealthInsuranceReviewFragment.class.getName());
-                transaction.commit();
-
-            }
-        });
         detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
         initViewFromModels();
         setButtons();
         setCardContainers();
         setSwitch();
-
-
         setTypefaces(view);
         return view;
     }
@@ -126,40 +119,48 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         addInsuranceaInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
-                postPayloadModel.setAddress(demAddressPayloadDto);
-                postPayloadModel.setPersonalDetails(demPersDetailsPayloadDto);
-                postPayloadModel.setIdDocument(demographicPayloadDriversLicenseModel);
-                // clear the list
-                //   insuranceModelList.clear();
-                insuranceFragment.getBitmapsFromImageViews();
-                // add non trivial insurance models
-                if (isInsuaranceNonTrivial(insuranceModel)) {
-                    insuranceModelList.add(insuranceModel);
-                }
-
-                postPayloadModel.setInsurances(insuranceModelList);
-
-                DemographicService backendService = (new BaseServiceGenerator(getActivity()))
-                        .createService(DemographicService.class);
-                Call<ResponseBody> postInsurances = backendService.updateDemographicInformation(postPayloadModel);
-                postInsurances.enqueue(new Callback<ResponseBody>() {
-
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Log.v(LOG_TAG, "health insurance frag POST success\n" + response.code() + "\n"
-                                + response.body());
-                        openNewFragment();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e(LOG_TAG, "health insurance frag POST failed");
-                    }
-                });
+                postUpdates();
             }
         });
+
     }
+
+    private void postUpdates() {
+        demographicProgressBar.setVisibility(View.VISIBLE);
+        DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
+        postPayloadModel.setAddress(demAddressPayloadDto);
+        postPayloadModel.setPersonalDetails(demPersDetailsPayloadDto);
+        postPayloadModel.setIdDocument(demographicPayloadDriversLicenseModel);
+        // clear the list
+        //   insuranceModelList.clear();
+        insuranceFragment.getBitmapsFromImageViews();
+        // add non trivial insurance models
+        if (isInsuaranceNonTrivial(insuranceModel)) {
+            insuranceModelList.add(insuranceModel);
+        }
+
+        postPayloadModel.setInsurances(insuranceModelList);
+
+        DemographicService backendService = (new BaseServiceGenerator(getActivity()))
+                .createService(DemographicService.class);
+        Call<ResponseBody> postInsurances = backendService.updateDemographicInformation(postPayloadModel);
+        postInsurances.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.v(LOG_TAG, "health insurance frag POST success\n" + response.code() + "\n"
+                        + response.body());
+                openNewFragment();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(LOG_TAG, "health insurance frag POST failed");
+            }
+        });
+
+    }
+
 
     private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
         return insModel.getInsurancePlan() != null &&
@@ -169,10 +170,10 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
 
     private void openNewFragment() {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         Fragment fragment = ReviewFragment.newInstance();
         transaction.replace(R.id.root_layout, fragment, HealthInsuranceReviewFragment.class.getName());
-        transaction.addToBackStack("HealthInsuranceReviewFragment -> ReviewFragment");
         transaction.commit();
     }
 
