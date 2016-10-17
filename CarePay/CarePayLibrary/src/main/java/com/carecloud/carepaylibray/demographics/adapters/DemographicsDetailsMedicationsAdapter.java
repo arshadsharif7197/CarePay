@@ -1,7 +1,5 @@
 package com.carecloud.carepaylibray.demographics.adapters;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.carecloud.carepaylibrary.R;
 
 import java.util.List;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 10/12/2016.
