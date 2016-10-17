@@ -105,9 +105,9 @@ public class SignupFragment extends Fragment {
         parentLayout.clearFocus();
 
         // TODO: 10/16/2016 remove
-        emailText.setText("lsocolovici@yahoo.com");
-        passwordText.setText("Liviu123_");
-        repeatPasswordText.setText("Liviu123_");
+        emailText.setText("lvictor1979@gmail.com");
+        passwordText.setText("test123");
+        repeatPasswordText.setText("test123");
 
         return view;
     }
@@ -117,10 +117,10 @@ public class SignupFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (areAllValid()) {
+//                if (areAllValid()) {
                     // request user registration ony if all fiels are valid
                     registerUser();
-                }
+//                }
             }
         });
         submitButton.setEnabled(false);

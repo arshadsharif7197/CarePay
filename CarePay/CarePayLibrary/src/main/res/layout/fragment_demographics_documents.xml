@@ -4,6 +4,8 @@
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:descendantFocusability="beforeDescendants"
+              android:focusable="true"
               android:orientation="vertical">
 
     <LinearLayout
@@ -27,8 +29,8 @@
         android:id="@+id/demographicsDocsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginBottom="@dimen/top_bottom_scroll_padding"
+        android:layout_weight="1"
         android:paddingTop="@dimen/top_bottom_scroll_padding">
 
         <LinearLayout
@@ -45,10 +47,17 @@
                 android:id="@+id/demographicsInsuranceSwitch"
                 style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left"
                 android:checked="false"
                 android:text="@string/demogr_insurance_switch_text"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_view_height"
+                android:layout_marginBottom="@dimen/divider_margin_bottom"
+                android:layout_marginTop="@dimen/divider_margin_top"
+                android:background="@color/light_gray"/>
 
             <FrameLayout
                 android:id="@+id/demographicsDocsInsurance1"
@@ -66,8 +75,8 @@
                 android:id="@+id/demographicsDocsInsurance3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginBottom="4dp"
+                android:visibility="gone"/>
 
             <View
                 android:id="@+id/demographicsDocsBottomView"
@@ -78,11 +87,12 @@
 
     </ScrollView>
 
-    <Button
+    <TextView
         android:id="@+id/demographicsAddMedInfoButton"
-        style="@style/DemographicsAddRemoveInsuranceStyle"
-        android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left"
+        style="@style/SigninSignupClickableTextView"
         android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/demographics_docs_header_top"
+        android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left"
         android:text="@string/demogr_docs_add_card"/>
 
     <Button

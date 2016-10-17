@@ -291,17 +291,10 @@ public class DemographicsDetailsFragment extends Fragment
                 dobEdit.requestFocus();
             }
             view.requestFocus();
-
-            // make a call to b/e
-            String pictureByteStream = model.getProfilePhoto();
-            setPictures(pictureByteStream);
         } else {
             Log.v(LOG_TAG, "demographics details: views populated with defaults");
             model = new DemographicPersDetailsPayloadDTO();
         }
-    }
-
-    private void setPictures(String pictureByteStream) {
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,7 +29,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import com.squareup.picasso.Picasso;
@@ -53,6 +56,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private String[] providerDataArray;
     private String[] cardTypeDataArray;
 
+    private View                           view;
     private ImageCaptureHelper             insuranceFrontScanHelper;
     private ImageCaptureHelper             insuranceBackScanHelper;
     private Button                         btnScanFrontInsurance;
@@ -64,7 +68,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private ImageView                      frontInsuranceImageView;
     private ImageView                      backInsuranceImageView;
     private DemographicInsurancePayloadDTO model;
-    private TextInputLayout                insuranceCardNumberLabel;
+    private TextInputLayout                insuranceCardNumberTextInput;
 
     private DemographicInsurancePhotoDTO insurancefrontPhotoDto;
     private DemographicInsurancePhotoDTO insurancebackPhotoDto;
@@ -73,7 +77,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_demographics_scan_insurance, container, false);
+        view = inflater.inflate(R.layout.fragment_demographics_scan_insurance, container, false);
 
         insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
 
@@ -125,9 +129,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         planDataArray = getResources().getStringArray(R.array.plans);
         cardTypeDataArray = getResources().getStringArray(R.array.cardtypes);
 
+        setEditTexts(view);
         setTypefaces(view);
         populateViewsFromModel();
-        setEditTexts(view);
         return view;
     }
 
@@ -211,16 +215,18 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
 
             String insProvider = model.getInsuranceProvider();
-            if(!StringUtil.isNullOrEmpty(insProvider)) {
+            if (!StringUtil.isNullOrEmpty(insProvider)) {
                 providerTextView.setText(model.getInsuranceProvider());
             }
             String insPlan = model.getInsurancePlan();
-            if(!StringUtil.isNullOrEmpty(insPlan)) {
+            if (!StringUtil.isNullOrEmpty(insPlan)) {
                 planTextView.setText(insPlan);
             }
             String insNum = model.getInsuranceMemberId();
-            if(!StringUtil.isNullOrEmpty(insNum)) {
+            if (!StringUtil.isNullOrEmpty(insNum)) {
                 insuranceCardNumEditText.setText(insNum);
+                insuranceCardNumEditText.requestFocus(); // required for CAPS hint
+                view.requestFocus();
             }
         }
     }
@@ -278,10 +284,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     private void setEditTexts(final View view) {
-        insuranceCardNumberLabel = (TextInputLayout) view.findViewById(R.id.insurancecardNumberLabel);
-        insuranceCardNumberLabel.setTag(getString(R.string.review_insurancecardnumber_hint));
+        insuranceCardNumberTextInput = (TextInputLayout) view.findViewById(R.id.insurancecardNumberLabel);
+        insuranceCardNumberTextInput.setTag(getString(R.string.review_insurancecardnumber_hint));
         insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
-        insuranceCardNumEditText.setTag(insuranceCardNumberLabel);
+        insuranceCardNumEditText.setTag(insuranceCardNumberTextInput);
         setChangeFocusListeners();
         insuranceCardNumEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -305,7 +311,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+                if (i == EditorInfo.IME_ACTION_NONE) {
+                    SystemUtil.hideSoftKeyboard(getActivity());
                     insuranceCardNumEditText.clearFocus();
                     view.requestFocus();
                     return true;
@@ -331,30 +338,35 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(),
+        Context context = getActivity();
+        setGothamRoundedMediumTypeface(context,
                                        (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn));
-        setGothamRoundedMediumTypeface(getActivity(),
+        setGothamRoundedMediumTypeface(context,
                                        (TextView) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn));
-        setProximaNovaRegularTypeface(getActivity(),
+        setProximaNovaRegularTypeface(context,
                                       (TextView) view.findViewById(R.id.demogr_insurance_plan_label));
-        setProximaNovaSemiboldTypeface(getActivity(),
+        setProximaNovaSemiboldTypeface(context,
                                        (TextView) view.findViewById(R.id.demogr_docs_plan));
-        setProximaNovaSemiboldTypeface(getActivity(),
+        setProximaNovaSemiboldTypeface(context,
                                        (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview));
-        setProximaNovaRegularTypeface(getActivity(),
+        setProximaNovaRegularTypeface(context,
                                       (TextView) view.findViewById(R.id.demogr_insurance_provider_label));
-        setProximaNovaRegularTypeface(getActivity(),
+        setProximaNovaRegularTypeface(context,
                                       (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel));
-        setProximaNovaSemiboldTypeface(getActivity(),
+        setProximaNovaSemiboldTypeface(context,
                                        (TextView) view.findViewById(R.id.demogr_docs_provider));
-        setProximaNovaRegularTypeface(getActivity(),
+        setProximaNovaRegularTypeface(context,
                                       (EditText) view.findViewById(R.id.reviewinsurncecardnum));
-        setProximaNovaRegularTypeface(getActivity(),
+        setProximaNovaRegularTypeface(context,
                                       (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel));
-        setProximaNovaSemiboldTypeface(getActivity(),
+        setProximaNovaSemiboldTypeface(context,
                                        (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview));
 
-
+        if (!StringUtil.isNullOrEmpty(insuranceCardNumEditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(context, insuranceCardNumberTextInput);
+        } else {
+            setProximaNovaSemiboldTextInputLayout(context, insuranceCardNumberTextInput);
+        }
     }
 
     @Override

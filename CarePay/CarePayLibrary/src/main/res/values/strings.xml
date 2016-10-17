@@ -406,7 +406,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="new_credit_card">New Credit Card</string>
 
     <string name="cancel_appointment_dialog">CANCEL APPOINTMENT</string>
-    <string name="demogr_docs_add_card">Add Card</string>
+    <string name="demogr_docs_add_card">Have multiple insurances?</string>
     <string name="scanned_id_doc">Scanned ID Doc</string>
     <string name="demogr_docs_document_type">Document Type</string>
     <string name="insurance_scan_front">Insurance scan front</string>

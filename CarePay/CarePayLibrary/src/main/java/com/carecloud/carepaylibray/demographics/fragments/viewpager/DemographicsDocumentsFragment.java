@@ -48,7 +48,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private InsuranceScannerFragment             extraInsuranceFrag2;
     private boolean                              isSecondCardAdded;
     private boolean                              isThirdCardAdded;
-    private Button                               addCardButton;
+    private TextView                               addCardButton;
     private Button                               nextButton;
     private DemographicIdDocPayloadDTO           demPayloadIdDocDTO;
     private List<DemographicInsurancePayloadDTO> insuranceModelList;
@@ -132,7 +132,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         });
 
         // add button
-        addCardButton = (Button) view.findViewById(R.id.demographicsAddMedInfoButton);
+        addCardButton = (TextView) view.findViewById(R.id.demographicsAddMedInfoButton);
         addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) {

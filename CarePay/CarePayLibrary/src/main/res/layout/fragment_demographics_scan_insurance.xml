@@ -6,21 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/demographics_docs_section_container_margin_top"
-    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:descendantFocusability="beforeDescendants">
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/DemographicsDocsImageButtonContainerStyle">
 
         <ImageView
             android:id="@+id/demogr_insurance_frontimage"
+            style="@style/DemographicImageviewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/DemographicImageviewStyle"
-            android:src="@drawable/icn_camera"
-            android:contentDescription="@string/insurance_scan_front"/>
+            android:contentDescription="@string/insurance_scan_front"
+            android:src="@drawable/icn_camera"/>
 
         <Button
             android:id="@+id/demogr_insurance_scan_insurance_frontbtn"
@@ -30,17 +29,18 @@
             android:text="@string/demogr_docs_scan_insurance_front_label"/>
 
     </LinearLayout>
+
     <LinearLayout
         style="@style/DemographicsDocsImageButtonContainerStyle"
         android:layout_marginTop="16dp">
 
         <ImageView
             android:id="@+id/demogr_insurance_backimage"
+            style="@style/DemographicImageviewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/DemographicImageviewStyle"
-            android:src="@drawable/icn_camera"
-            android:contentDescription="@string/insurance_scan_back"/>
+            android:contentDescription="@string/insurance_scan_back"
+            android:src="@drawable/icn_camera"/>
 
         <Button
             android:id="@+id/demogr_insurance_scan_insurance_backbtn"
@@ -54,7 +54,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="51dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
         android:orientation="horizontal">
 
@@ -62,9 +62,9 @@
             android:id="@+id/demogr_insurance_provider_label"
             style="@style/DemographicsDocsLabelStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"
             android:text="@string/demogr_insurance_provider"/>
 
         <TextView
@@ -75,73 +75,73 @@
             android:text="@string/demogr_tv_choose_label"/>
 
     </LinearLayout>
+
     <View
         style="@style/Consent_Form_View_Style"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="51dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/demogr_insurance_plan_label"
             style="@style/DemographicsDocsLabelStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"
             android:text="@string/demogr_insurance_plan"/>
 
         <TextView
             android:id="@+id/demogr_docs_plan"
             style="@style/DemographicsDocsClickableTextStyle"
-            android:text="@string/demogr_docs_tv_chose_company"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginTop="15dp"
+            android:text="@string/demogr_docs_tv_chose_company"/>
 
     </LinearLayout>
+
     <View
         style="@style/Consent_Form_View_Style"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"/>
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/insurancecardNumberLabel"
+        style="@style/TextInputLayoutStyle">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/insurancecardNumberLabel"
-            style="@style/TextInputLayoutStyle"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <EditText
-                android:id="@+id/reviewinsurncecardnum"
-                style="@style/SigninSignupEditStyle"
-                android:hint="@string/demogr_insurance_number_label"
-                android:imeOptions="actionNext"
-                android:nextFocusForward="@+id/cityId"/>
-        </android.support.design.widget.TextInputLayout>
+        <EditText
+            android:id="@+id/reviewinsurncecardnum"
+            style="@style/SigninSignupEditStyle"
+            android:paddingStart="28dp"
+            android:hint="@string/demogr_insurance_number_label"
+            android:imeOptions="actionNone"/>
+    </android.support.design.widget.TextInputLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="51dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/demogr_insurance_card_type_abel"
             style="@style/DemographicsDocsLabelStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="15dp"
+            android:layout_weight="1"
             android:text="@string/demogr_insurances_card_type"/>
 
         <TextView
             android:id="@+id/demogr_insurance_card_type_textview"
             style="@style/DemographicsDocsClickableTextStyle"
-            android:text="@string/demogr_tv_choose_label"
-            android:layout_marginTop="15dp" />
+            android:layout_marginTop="15dp"
+            android:text="@string/demogr_tv_choose_label"/>
 
     </LinearLayout>
+
     <View
         style="@style/Consent_Form_View_Style"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"/>
 
 </LinearLayout>

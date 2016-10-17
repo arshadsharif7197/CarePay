@@ -374,7 +374,6 @@
     </style>
 
     <!-- Signin Signup -->
-
     <style name="errorTextAppearance" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">ProximaNova-Semibold</item>
         <item name="android:textColor">@color/harvard_crimson</item>

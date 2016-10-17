@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -131,6 +132,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         idNumberEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                Log.v(LOG_TAG, "focus changed: " + b);
                 if (b) { // show the keyboard
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
@@ -160,7 +162,9 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
         idNumberEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+                if (i == EditorInfo.IME_ACTION_NONE) {
+                    Log.v(LOG_TAG, "ID scanneer IME_ACTION_DONE");
+                    SystemUtil.hideSoftKeyboard(getActivity());
                     idNumberEdit.clearFocus();
                     view.requestFocus();
                     return true;
@@ -168,6 +172,7 @@ public class LicenseScannerFragment extends DocumentScannerFragment {
                 return false;
             }
         });
+        idNumberEdit.clearFocus();
     }
 
     @Override

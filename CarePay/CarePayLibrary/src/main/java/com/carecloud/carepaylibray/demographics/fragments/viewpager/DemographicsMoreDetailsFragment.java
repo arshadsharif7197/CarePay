@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,14 +18,11 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicUpdateDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -89,8 +85,8 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
 
         DemographicPayloadDTO demographicPayloadDTO = new DemographicPayloadDTO();
 
-        List<DemographicUpdateDTO> updates = new ArrayList<>();
-        demographicPayloadDTO.setUpdates(updates);
+//        List<DemographicUpdateDTO> updates = new ArrayList<>();
+//        demographicPayloadDTO.setUpdates(updates);
 
 
         // obtain the updated models from the pager fragments
@@ -119,7 +115,6 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                // TODO: 9/29/2016 progress
                 Log.d(LOG_TAG, "demogr post succeeded");
 
                 Intent appointmentIntent = new Intent(context, AppointmentsActivity.class);
@@ -130,7 +125,6 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d(LOG_TAG, "demogr post failed", t);
-                // TODO: 9/29/2016 progres
             }
         });
     }
