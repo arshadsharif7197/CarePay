@@ -24,7 +24,7 @@ import org.apache.commons.lang3.text.WordUtils;
  * */
 public class SigninActivity extends AppCompatActivity {
 
-    TextView signin_button;
+    TextView signinButton;
     TextView forgotPasswordButton;
     TextView goBackTextview;
 
