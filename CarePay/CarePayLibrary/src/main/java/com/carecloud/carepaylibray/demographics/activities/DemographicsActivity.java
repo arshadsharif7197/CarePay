@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,7 +74,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return infoModel;
     }
 
-    private final String[] FRAG_LABELS = {"Address", "Details", "Documents", "All Set"}; // these will come from meta-data
+    private final String[] fragLabels = {"Address", "Details", "Documents", "All Set"}; // these will come from meta-data
 
     @Override
     public int getLayoutRes() {
@@ -100,7 +99,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
         toolbar.setTitle("");
-        titleTextView.setText(FRAG_LABELS[0]);
+        titleTextView.setText(fragLabels[0]);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
         (DemographicsActivity.this).setSupportActionBar(toolbar);
 
@@ -167,19 +166,19 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         switch (position) {
             case 0:
                 tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_1));
-                titleTextView.setText(FRAG_LABELS[0]);
+                titleTextView.setText(fragLabels[0]);
                 break;
             case 1:
                 tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_2));
-                titleTextView.setText(FRAG_LABELS[1]);
+                titleTextView.setText(fragLabels[1]);
                 break;
             case 2:
                 tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_3));
-                titleTextView.setText(FRAG_LABELS[2]);
+                titleTextView.setText(fragLabels[2]);
                 break;
             case 3:
                 tabImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icn_signup_step_4));
-                titleTextView.setText(FRAG_LABELS[3]);
+                titleTextView.setText(fragLabels[3]);
                 break;
             default:
                 break;
@@ -328,7 +327,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             idDocModel = new DemographicIdDocPayloadDTO();
             insuranceModelList = new ArrayList<>();
         }
-        Log.v(LOG_TAG, "dummy");
     }
 
     // for test

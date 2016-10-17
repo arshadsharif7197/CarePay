@@ -1,5 +1,9 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,15 +28,10 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPay
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -120,8 +119,8 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d(LOG_TAG, "demogr post failed", t);
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.d(LOG_TAG, "demogr post failed", throwable);
             }
         });
     }

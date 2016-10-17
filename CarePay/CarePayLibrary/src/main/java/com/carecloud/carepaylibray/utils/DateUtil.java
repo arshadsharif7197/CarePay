@@ -336,8 +336,8 @@ public class DateUtil {
     }
 
     public static boolean isValidateStringDateMMDDYYYY(String date) {
-        String REGEX_DATE_OF_BIRTH = "\\d{2}/\\d{2}/\\d{4}";
-        Pattern pattern = Pattern.compile(REGEX_DATE_OF_BIRTH);
+        final String regexDateOfBirth = "\\d{2}/\\d{2}/\\d{4}";
+        Pattern pattern = Pattern.compile(regexDateOfBirth);
         Matcher matcher = pattern.matcher(date);
         return matcher.matches();
     }

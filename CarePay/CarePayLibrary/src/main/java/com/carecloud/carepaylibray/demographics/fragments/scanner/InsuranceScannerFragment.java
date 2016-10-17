@@ -157,17 +157,15 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
-        if (scanner == insuranceFrontScanHelper) {
-            if (bitmap != null) {
+        if (bitmap != null) {
+            if (scanner == insuranceFrontScanHelper) {
                 // change button caption to 'rescan'
                 btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
                 // save from image
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO frontDTO = model.getInsurancePhotos().get(0);
                 frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
-            }
-        } else if (scanner == insuranceBackScanHelper) {
-            if (bitmap != null) {
+            } else if (scanner == insuranceBackScanHelper) {
                 // change button caption to 'rescan'
                 btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
@@ -292,12 +290,12 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         setChangeFocusListeners();
         insuranceCardNumEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
             }
 
             @Override
@@ -311,8 +309,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         insuranceCardNumEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NONE) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NONE) {
                     SystemUtil.hideSoftKeyboard(getActivity());
                     insuranceCardNumEditText.clearFocus();
                     view.requestFocus();
@@ -386,6 +384,11 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
     }
 
+    /**
+     * Set the model; creates the child models of there are null
+     *
+     * @param model The DTO
+     */
     public void setModel(DemographicInsurancePayloadDTO model) {
         this.model = model;
         List<DemographicInsurancePhotoDTO> photoDTOs = model.getInsurancePhotos();

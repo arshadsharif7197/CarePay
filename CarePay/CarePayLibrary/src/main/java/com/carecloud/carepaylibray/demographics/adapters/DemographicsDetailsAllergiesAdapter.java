@@ -1,5 +1,9 @@
 package com.carecloud.carepaylibray.demographics.adapters;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,12 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-
 import java.util.List;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 10/11/2016.
@@ -36,9 +36,9 @@ public class DemographicsDetailsAllergiesAdapter
 
     @Override
     public AllergyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_allergy, parent, false);
-        return new AllergyViewHolder(v);
+        return new AllergyViewHolder(view);
     }
 
     @Override
@@ -70,6 +70,10 @@ public class DemographicsDetailsAllergiesAdapter
         notifyItemRemoved(position);
     }
 
+    /**
+     * Adds an allergy item in the list
+     * @param newItem A new item to be added
+     */
     public void addAtFront(AllergyPayloadDTO newItem) {
         items.add(0, newItem);
         notifyDataSetChanged();
@@ -143,6 +147,13 @@ public class DemographicsDetailsAllergiesAdapter
         String severity;
         String reaction;
 
+        /**
+         * Ctor for allergy DTO
+         * @param category The allergy category.
+         * @param allergy The allergy name.
+         * @param severity The severity.
+         * @param reaction The reaction.
+         */
         public AllergyPayloadDTO(String category,
                                  String allergy,
                                  String severity,

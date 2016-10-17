@@ -1,5 +1,13 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,12 +41,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 9/13/2016.
@@ -131,12 +132,12 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         idNumberEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                Log.v(LOG_TAG, "focus changed: " + b);
-                if (b) { // show the keyboard
+            public void onFocusChange(View view, boolean hasFocus) {
+                Log.v(LOG_TAG, "focus changed: " + hasFocus);
+                if (hasFocus) { // show the keyboard
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
 
@@ -161,8 +162,8 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         idNumberEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NONE) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NONE) {
                     Log.v(LOG_TAG, "ID scanneer IME_ACTION_DONE");
                     SystemUtil.hideSoftKeyboard(getActivity());
                     idNumberEdit.clearFocus();
@@ -192,17 +193,15 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) { // license has been scanned
-        if (scanner == scannerFront) {
-            if (bitmap != null) {
+        if (bitmap != null) {
+            if (scanner == scannerFront) {
                 // change button caption to 'rescan'
                 scanFrontButton.setText(R.string.demogr_docs_rescan_front);
                 // save from image
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO frontDTO = model.getIdDocPhothos().get(0);
                 frontDTO.setIdDocPhoto(imageAsBase64); // create the image dto
-            }
-        } else if (scanner == scannerBack) {
-            if (bitmap != null) {
+            } else if (scanner == scannerBack) {
                 // change button caption to 'rescan'
                 scanBackButton.setText(R.string.demogr_docs_rescan_back);
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
@@ -231,7 +230,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             }
 
             // add front image
-            String frontPic  = model.getIdDocPhothos().get(0).getIdDocPhoto();
+            String frontPic = model.getIdDocPhothos().get(0).getIdDocPhoto();
             if (!StringUtil.isNullOrEmpty(frontPic)) {
                 try {
                     URL url = new URL(frontPic);
@@ -263,7 +262,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel));
         setProximaNovaSemiboldTypeface(context, idStateClickable);
         setProximaNovaSemiboldTypeface(context, idNumberEdit);
-        if(!StringUtil.isNullOrEmpty(idNumberEdit.getText().toString())) {
+        if (!StringUtil.isNullOrEmpty(idNumberEdit.getText().toString())) {
             setProximaNovaExtraboldTypefaceInput(context, idNumberInputText);
         } else {
             setProximaNovaSemiboldTextInputLayout(context, idNumberInputText);
@@ -283,6 +282,11 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
     }
 
+    /**
+     * Sets the DTO for this fragment; it creates the required child DTO if they are null
+     *
+     * @param model The model
+     */
     public void setModel(@NonNull DemographicIdDocPayloadDTO model) {
         this.model = model;
         List<DemographicIdDocPhotoDTO> photoDTOs = model.getIdDocPhothos();
@@ -293,11 +297,11 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             photoDTOs.add(new DemographicIdDocPhotoDTO());
             this.model.setIdDocPhothos(photoDTOs);
         } else {
-            if(photoDTOs.size() == 0) {
+            if (photoDTOs.size() == 0) {
                 // create two empty photos DTOs
                 photoDTOs.add(new DemographicIdDocPhotoDTO());
                 photoDTOs.add(new DemographicIdDocPhotoDTO());
-            } else if(photoDTOs.size() == 1) {
+            } else if (photoDTOs.size() == 1) {
                 photoDTOs.add(1, new DemographicIdDocPhotoDTO()); // create the second
             }
         }
