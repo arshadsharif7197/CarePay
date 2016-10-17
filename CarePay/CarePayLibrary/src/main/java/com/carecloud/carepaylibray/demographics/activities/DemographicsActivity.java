@@ -47,15 +47,15 @@ import java.util.List;
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
-    private TextView    titleTextView;
-    private int         currentPageIndex;
-    private ViewPager   viewPager;
-    private ImageView   tabImageView;
+    private TextView titleTextView;
+    private int currentPageIndex;
+    private ViewPager viewPager;
+    private ImageView tabImageView;
 
     private DemographicDTO modelGet = null;
-    private DemographicAddressPayloadDTO     addressModel;
+    private DemographicAddressPayloadDTO addressModel;
     private DemographicPersDetailsPayloadDTO detailsModel;
-    private DemographicIdDocPayloadDTO       idDocModel;
+    private DemographicIdDocPayloadDTO idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
 
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
@@ -275,8 +275,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -309,7 +309,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     private void initDTOsForFragments() {
         DemographicPayloadDTO infoModel = getDemographicInfoPayloadModel();
-        if(infoModel != null) {
+        if (infoModel != null) {
             addressModel = infoModel.getAddress();
             detailsModel = infoModel.getPersonalDetails();
             idDocModel = infoModel.getIdDocument();
