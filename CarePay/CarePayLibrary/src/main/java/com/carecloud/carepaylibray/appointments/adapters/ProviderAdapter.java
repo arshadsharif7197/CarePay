@@ -55,8 +55,9 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
         final Object object = providersArrayList.get(position);
 
         View view = chooseProviderFragment.getView();
-        if (view == null)
+        if (view == null) {
             return;
+        }
 
         if (object.getClass() == ProvidersScheduleDTO.class) {
             holder.providerSectionLinearLayout.setVisibility(View.GONE);
@@ -69,7 +70,7 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View listItem) {
                     listener.onProviderListItemClickListener(holder.getAdapterPosition());
                 }
             });
