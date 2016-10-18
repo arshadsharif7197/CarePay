@@ -556,7 +556,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Log.v(LOG_TAG, "first name onFocusChange()" + b);
                 if (b) { // show the keyboard
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
