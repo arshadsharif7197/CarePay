@@ -1,39 +1,46 @@
 package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.fragments.ChooseProviderFragment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
+import com.carecloud.carepaylibray.appointments.models.ProvidersScheduleDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.ProviderViewHolder> {
 
     private Context context;
-    private OnAllListItemClickListener listener;
-    private ArrayList<AppointmentDTO> appointmentArrayList;
+    private List<Object> providersArrayList;
+    private OnProviderListItemClickListener listener;
+    private ChooseProviderFragment chooseProviderFragment;
 
     /**
      * Constructor.
      * @param context context
-     * @param appointmentArrayList list of appointments
+     * @param providersArrayList list of providers
      * @param listener Onclick listener
+     * @param chooseProviderFragment screen instance
      */
-    public ProviderAdapter(Context context, ArrayList<AppointmentDTO> appointmentArrayList,
-                           OnAllListItemClickListener listener) {
+    public ProviderAdapter(Context context, List<Object> providersArrayList,
+                           OnProviderListItemClickListener listener,
+                           ChooseProviderFragment chooseProviderFragment) {
+
         this.context = context;
         this.listener = listener;
-        this.appointmentArrayList = appointmentArrayList;
+        this.providersArrayList = providersArrayList;
+        this.chooseProviderFragment = chooseProviderFragment;
     }
 
     @Override
@@ -45,30 +52,51 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
 
     @Override
     public void onBindViewHolder(final ProviderViewHolder holder, int position) {
+        final Object object = providersArrayList.get(position);
 
-        if (appointmentArrayList != null) {
+        View view = chooseProviderFragment.getView();
+        if (view == null)
+            return;
 
-            AppointmentsPayloadDTO payload = appointmentArrayList.get(position).getPayload();
-            if (payload != null) {
+        if (object.getClass() == ProvidersScheduleDTO.class) {
+            holder.providerSectionLinearLayout.setVisibility(View.GONE);
+            holder.providerItemLinearLayout.setVisibility(View.VISIBLE);
 
-                AppointmentProviderDTO provider = payload.getProvider();
-                holder.doctorName.setText(provider.getName());
-                holder.doctorType.setText(provider.getSpecialty());
-                holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));
+            ProvidersScheduleDTO provider = (ProvidersScheduleDTO) object;
+            holder.doctorName.setText(provider.getName());
+            holder.doctorType.setText(provider.getSpecialty());
+            holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        listener.onAllListItemClickListener(holder.getAdapterPosition());
-                    }
-                });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onProviderListItemClickListener(holder.getAdapterPosition());
+                }
+            });
+        } else {
+            AppointmentSectionHeaderModel item = (AppointmentSectionHeaderModel) object;
+            if (position == 0) {
+                holder.providerSectionLinearLayout.setVisibility(View.GONE);
+                holder.providerItemLinearLayout.setVisibility(View.GONE);
+
+                CustomProxyNovaSemiBoldLabel providerStickyHeaderTitle =
+                        (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.providers_sticky_header_title);
+                providerStickyHeaderTitle.setText(item.getAppointmentHeader());
+                providerStickyHeaderTitle.setTextColor(
+                        ContextCompat.getColor(view.getContext(), R.color.lightSlateGray));
+                providerStickyHeaderTitle.setVisibility(View.VISIBLE);
+            } else {
+                String title = item.getAppointmentHeader();
+                holder.providerSectionLinearLayout.setVisibility(View.VISIBLE);
+                holder.providerItemLinearLayout.setVisibility(View.GONE);
+                holder.providerSectionHeaderTitle.setText(title);
             }
         }
     }
 
     @Override
     public int getItemCount() {
-        return appointmentArrayList.size();
+        return providersArrayList.size();
     }
 
     static class ProviderViewHolder extends RecyclerView.ViewHolder {
@@ -76,6 +104,10 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
         private CustomGothamRoundedMediumLabel shortName;
         private CustomProxyNovaSemiBoldLabel doctorName;
         private CustomProxyNovaRegularLabel doctorType;
+
+        private CustomGothamRoundedMediumLabel providerSectionHeaderTitle;
+        private LinearLayout providerSectionLinearLayout;
+        private LinearLayout providerItemLinearLayout;
 
         ProviderViewHolder(View itemView) {
             super(itemView);
@@ -86,10 +118,17 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
             doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
             // set doctor short name
             shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
+
+            providerSectionLinearLayout = (LinearLayout)
+                    itemView.findViewById(R.id.providers_section_linear_layout);
+            providerItemLinearLayout = (LinearLayout)
+                    itemView.findViewById(R.id.provider_item_linear_layout);
+            providerSectionHeaderTitle = (CustomGothamRoundedMediumLabel)
+                    itemView.findViewById(R.id.providers_section_header_title);
         }
     }
 
-    public interface OnAllListItemClickListener {
-        void onAllListItemClickListener(int position);
+    public interface OnProviderListItemClickListener {
+        void onProviderListItemClickListener(int position);
     }
 }
