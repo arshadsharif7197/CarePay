@@ -48,6 +48,9 @@ public class AppointmentResourceDTO {
     @SerializedName("updated_by")
     @Expose
     private Integer updatedBy;
+    @SerializedName("default_provider")
+    @Expose
+    private ProvidersDefaultDTO defaultProvider;
 
     /**
      * 
@@ -281,6 +284,24 @@ public class AppointmentResourceDTO {
      */
     public void setUpdatedBy(Integer updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    /**
+     *
+     * @return
+     *     The defaultProvider
+     */
+    public ProvidersDefaultDTO getDefaultProvider() {
+        return defaultProvider;
+    }
+
+    /**
+     *
+     * @param defaultProvider
+     *     The default_provider
+     */
+    public void setDefaultProvider(ProvidersDefaultDTO defaultProvider) {
+        this.defaultProvider = defaultProvider;
     }
 
 }
