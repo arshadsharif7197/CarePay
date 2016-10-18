@@ -113,7 +113,6 @@
         <EditText
             android:id="@+id/reviewinsurncecardnum"
             style="@style/SigninSignupEditStyle"
-            android:paddingStart="28dp"
             android:hint="@string/demogr_insurance_number_label"
             android:imeOptions="actionNone"/>
     </android.support.design.widget.TextInputLayout>
