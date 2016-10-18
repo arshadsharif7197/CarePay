@@ -21,14 +21,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CloverMainActivity extends AppCompatActivity {
-public static int count;
-TextView checkedInCounterTextview;
+
+    public static int count;
+    TextView checkedInCounterTextview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSystemUiVisibility();
         setContentView(R.layout.activity_main_clover);
-        checkedInCounterTextview= (TextView) findViewById(R.id.checkedInCounterTextview);
+        checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
         getDemographicInformation();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -56,10 +58,11 @@ TextView checkedInCounterTextview;
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            count=Integer.parseInt(checkedInCounterTextview.getText().toString())+1;
-            checkedInCounterTextview.setText(String.valueOf( count));
+            count = Integer.parseInt(checkedInCounterTextview.getText().toString()) + 1;
+            checkedInCounterTextview.setText(String.valueOf(count));
         }
     };
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -73,13 +76,13 @@ TextView checkedInCounterTextview;
             @Override
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
 
-                if(response.code()==200 && response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
-                    checkedInCounterTextview.setText(String.valueOf( response.body().getPayload().getAppointments().size()));
+                if (response.code() == 200 && response.body().getPayload() != null && response.body().getPayload().getAppointments() != null) {
+                    checkedInCounterTextview.setText(String.valueOf(response.body().getPayload().getAppointments().size()));
                 }
             }
 
             @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable t) {
+            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
 
             }
         });

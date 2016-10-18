@@ -7,8 +7,16 @@ import android.util.Log;
 import com.clover.sdk.v1.app.AppNotification;
 import com.clover.sdk.v1.app.AppNotificationReceiver;
 
+/*
+ * Created by Jahirul Bhuiyan on 10/17/2016.
+ * This is the Push notification receiver from server
+ * This class handle checking-in and alert counter
+ * after receiving this class broadcast a local broadcast for any component that implemented
+ * */
+
 public class NotificationReceiver extends AppNotificationReceiver {
-    public final static String NOTIFICATION_ACTION = "checkin";
+
+    private  final static String NOTIFICATION_ACTION = "checkin";
     private Context context;
 
     public NotificationReceiver() {

@@ -7,12 +7,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-
 import com.carecloud.carepay.practice.library.R;
 
+/*
+ * Created by Jahirul Bhuiyan on 10/17/2016.
+ * This activity use for flipping the screen.
+ * */
+
 public class RotateActivity extends AppCompatActivity {
-    TextView rotateTitleTextView, rotateSubTitleTextView,goBackTextview;
-double totalAmount, previousBalance,insuranceCoPay;
+
+    private TextView rotateTitleTextView;
+    private TextView rotateSubTitleTextView;
+    private TextView goBackTextview;
+
+    private double totalAmount;
+    private double  previousBalance;
+    private double  insuranceCoPay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +31,7 @@ double totalAmount, previousBalance,insuranceCoPay;
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         rotateTitleTextView = (TextView) findViewById(R.id.rotateTitleTextView);
         rotateSubTitleTextView = (TextView) findViewById(R.id.rotateSubTitleTextView);
-        goBackTextview=(TextView) findViewById(R.id.goBackTextview);
+        goBackTextview = (TextView) findViewById(R.id.goBackTextview);
         Intent intent = getIntent();
         if (intent.hasExtra("rotate_title")) {
             String rotateTitle = intent.getStringExtra("rotate_title");
@@ -31,17 +42,17 @@ double totalAmount, previousBalance,insuranceCoPay;
             rotateSubTitleTextView.setText(rotateSubTitle);
         }
         if (intent.hasExtra("total_pay_balance")) {
-            totalAmount=intent.getDoubleExtra("total_pay_balance",20.00);
+            totalAmount = intent.getDoubleExtra("total_pay_balance", 20.00);
         }
         if (intent.hasExtra("previous_balance")) {
-            previousBalance=intent.getDoubleExtra("previous_balance",15.00);
+            previousBalance = intent.getDoubleExtra("previous_balance", 15.00);
         }
         if (intent.hasExtra("insurance_co_pay_balance")) {
-            insuranceCoPay=intent.getDoubleExtra("insurance_co_pay_balance",5.00);
+            insuranceCoPay = intent.getDoubleExtra("insurance_co_pay_balance", 5.00);
         }
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             goBackTextview.setVisibility(View.GONE);
-        }else {
+        } else {
             goBackTextview.setVisibility(View.VISIBLE);
             goBackTextview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -58,9 +69,9 @@ double totalAmount, previousBalance,insuranceCoPay;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             Intent responsibilityIntent = new Intent(RotateActivity.this, PatientResponsibilityActivity.class);
             responsibilityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            responsibilityIntent.putExtra("total_pay_balance",totalAmount);
-            responsibilityIntent.putExtra("previous_balance",previousBalance);
-            responsibilityIntent.putExtra("insurance_co_pay_balance",insuranceCoPay);
+            responsibilityIntent.putExtra("total_pay_balance", totalAmount);
+            responsibilityIntent.putExtra("previous_balance", previousBalance);
+            responsibilityIntent.putExtra("insurance_co_pay_balance", insuranceCoPay);
             startActivity(responsibilityIntent);
             this.finish();
         } else {

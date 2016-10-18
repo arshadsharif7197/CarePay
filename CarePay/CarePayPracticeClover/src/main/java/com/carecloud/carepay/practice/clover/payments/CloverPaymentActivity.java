@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.payment.services.PaymentsService;
@@ -42,7 +43,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
     private OrderConnector orderConnector;
     private InventoryConnector inventoryConnector;
     private Order order;
-    public Long amount=new Long(2000);;
+    public Long amount=new Long(2000);
     private CloverAuth.AuthResult authResult = null;
 
     @Override
@@ -156,7 +157,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Void param) {
                 if (authResult.authToken != null && authResult.baseUrl != null) {
                     connect();
                     new OrderAsyncTask().execute();
@@ -172,12 +173,12 @@ public class CloverPaymentActivity extends AppCompatActivity {
 
         @Override
         protected final Order doInBackground(Void... params) {
-            Order mOrder;
+            Order order;
             List<Item> merchantItems;
-            Item mItem;
+            Item item;
             try {
                 // Create a new order
-                mOrder = orderConnector.createOrder(new Order());
+                order = orderConnector.createOrder(new Order());
                 // Grab the items from the merchant's inventory
                 merchantItems = inventoryConnector.getItems();
                 // If there are no item's in the merchant's inventory, then call a toast and return null
@@ -187,19 +188,19 @@ public class CloverPaymentActivity extends AppCompatActivity {
                     return null;
                 }
                 // Taking the first item from the inventory
-                mItem = merchantItems.get(0);
+                item = merchantItems.get(0);
                 // Add this item to the order, must add using its PriceType
-                if (mItem.getPriceType() == PriceType.FIXED) {
-                    orderConnector.addFixedPriceLineItem(mOrder.getId(), mItem.getId(), null, null);
-                } else if (mItem.getPriceType() == PriceType.PER_UNIT) {
-                    orderConnector.addPerUnitLineItem(mOrder.getId(), mItem.getId(), 1, null, null);
+                if (item.getPriceType() == PriceType.FIXED) {
+                    orderConnector.addFixedPriceLineItem(order.getId(), item.getId(), null, null);
+                } else if (item.getPriceType() == PriceType.PER_UNIT) {
+                    orderConnector.addPerUnitLineItem(order.getId(), item.getId(), 1, null, null);
                 } else { // The item must be of a VARIABLE PriceType
-                    orderConnector.addVariablePriceLineItem(mOrder.getId(), mItem.getId(), 5, null, null);
+                    orderConnector.addVariablePriceLineItem(order.getId(), item.getId(), 5, null, null);
                 }
                 // Update local representation of the order
-                mOrder = orderConnector.getOrder(mOrder.getId());
+                order = orderConnector.getOrder(order.getId());
 
-                return mOrder;
+                return order;
             } catch (RemoteException e) {
                 e.printStackTrace();
             } catch (ClientException e) {
@@ -291,7 +292,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
                 //TODO: implement rotate functionality
-               /* Intent rotateInIntent = new Intent(CloverPaymentActivity.this, CloverMainActivity.class);
+                /*Intent rotateInIntent = new Intent(CloverPaymentActivity.this, CloverMainActivity.class);
                 rotateInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(rotateInIntent);
                 CloverPaymentActivity.this.finish();
@@ -300,21 +301,15 @@ public class CloverPaymentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
+            public void onFailure(Call<Object> call, Throwable callback) {
+                Log.e(TAG, callback.getMessage());
             }
         });
     }
 
+    public static void dumpIntent(Intent intent) {
 
-    /**
-     * Debugs the intent we created
-     *
-     * @param i - intent to debug contents of
-     */
-    public static void dumpIntent(Intent i) {
-
-        Bundle bundle = i.getExtras();
+        Bundle bundle = intent.getExtras();
         if (bundle != null) {
             Set<String> keys = bundle.keySet();
             Iterator<String> it = keys.iterator();
