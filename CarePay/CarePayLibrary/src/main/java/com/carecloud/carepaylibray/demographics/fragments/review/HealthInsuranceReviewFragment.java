@@ -198,7 +198,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan() {
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
 
     }
 

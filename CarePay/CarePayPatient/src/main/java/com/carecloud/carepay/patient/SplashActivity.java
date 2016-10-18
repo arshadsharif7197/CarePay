@@ -6,15 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoAccessToken;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
-import com.carecloud.carepaylibray.activities.LibraryMainActivity;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -44,8 +41,8 @@ public class SplashActivity extends Activity {
     public Handler splashHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            CognitoActionCallback cognitoActionCallback = null;
-            boolean signedIn = CognitoAppHelper.findCurrentUser(cognitoActionCallback);
+//            CognitoActionCallback cognitoActionCallback = null;
+            boolean signedIn = CognitoAppHelper.findCurrentUser(null);
             if (msg.what == STOPSPLASH && !(ApplicationPreferences.Instance.getUserLanguage().equals("English"))) {
                 Intent intent = new Intent(SplashActivity.this, SelectLangaugeActivity.class);
                 startActivity(intent);
@@ -61,8 +58,6 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.finish();
             }
             super.handleMessage(msg);
-
-
         }
     };
 }
