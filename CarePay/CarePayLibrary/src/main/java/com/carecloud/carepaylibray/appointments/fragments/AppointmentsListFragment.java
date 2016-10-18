@@ -258,8 +258,8 @@ public class AppointmentsListFragment extends Fragment {
                     AppointmentSectionHeaderModel appointmentSectionHeaderModel
                             = new AppointmentSectionHeaderModel();
                     appointmentListWithHeader.remove(appointmentSectionHeaderModel);
-//                    appointmentListWithHeader.remove(appointmentModel);
                     appointmentListWithHeader.clear();
+                    appointmentsAdapter.hideHeaderView();
                 }
 
                 // API call to fetch latest appointments
@@ -322,7 +322,7 @@ public class AppointmentsListFragment extends Fragment {
                 } else {
                     headerTitle = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
 
-                    if (!headerTitle.equals(CarePayConstants.DAY_OVER)) {
+//                    if (!headerTitle.equals(CarePayConstants.DAY_OVER)) {
                         // If appointment is checked-in, don't add header
                         if (appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
                             AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
@@ -332,7 +332,7 @@ public class AppointmentsListFragment extends Fragment {
                         } else {
                             appointmentListWithHeader.add(0, appointmentDTO);
                         }
-                    }
+//                    }
                 }
             }
         }

@@ -117,17 +117,27 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:paddingEnd="@dimen/default_title_indicator_title_padding"
+                android:paddingStart="0dp"
                 android:visibility="gone">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                    android:id="@+id/missed_appointment_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom|end"
+                    android:text="@string/missed_appointment_label"
+                    android:textColor="#90a4ae"
+                    android:textSize="@dimen/apt_list_missing_txt_size"
+                    android:visibility="gone" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
                     android:id="@+id/todayTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
                     android:gravity="center"
-                    android:paddingEnd="@dimen/default_title_indicator_title_padding"
-                    android:paddingStart="0dp"
-                    android:paddingTop="@dimen/default_title_indicator_title_padding"
                     android:textSize="@dimen/button_textsize_medium" />
             </LinearLayout>
 

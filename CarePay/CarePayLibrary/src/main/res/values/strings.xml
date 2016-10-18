@@ -246,6 +246,7 @@
     <string name="close">Close</string>
     <string name="demogr_next">Next</string>
     <string name="check_in_now">CHECK-IN \nNOW</string>
+    <string name="missed_appointment_label">Missed</string>
 
     <!--<Review Screen>-->
     <string name="review_screen_header">Review Information</string>
