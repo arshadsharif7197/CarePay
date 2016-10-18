@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppThemePractice" parent="@style/AppThemeNoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#FF0D91EF</item>
+        <item name="colorPrimaryDark">#FF0D91EF</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+</resources>

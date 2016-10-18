@@ -35,7 +35,7 @@
 
         <LinearLayout
             android:id="@+id/demographicsAddressDetContainer"
-            style="@style/DemographicsDocsHeaderStyle"
+            style="@style/DemographicsContainerStyle"
             android:layout_marginTop="0dp"
             android:orientation="vertical">
 
@@ -52,13 +52,14 @@
                         android:id="@+id/demogrAddressFirstNameEdit"
                         style="@style/SigninSignupEditStyle"
                         android:hint="@string/firstname_text"
-                        android:nextFocusForward="@+id/middleNameEditText"/>
+                        android:nextFocusForward="@+id/middleNameEditText"
+                        android:inputType="textPersonName"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
                     android:id="@+id/demogrAddressFirstNameReqHint"
                     style="@style/SignupRequireHintStyle"
-                    android:text="Required"/>
+                    android:text="@string/required"/>
             </FrameLayout>
 
             <FrameLayout
@@ -82,7 +83,7 @@
                 <TextView
                     android:id="@+id/demogrAddressLastNameReqHint"
                     style="@style/SignupRequireHintStyle"
-                    android:text="Required"/>
+                    android:text="@string/required"/>
             </FrameLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -143,7 +144,8 @@
                     <EditText
                         android:id="@+id/cityId"
                         style="@style/CityEditTextStyle"
-                        android:nextFocusRight="@+id/stateAutoCompleteTextView"/>
+                        android:nextFocusRight="@+id/stateAutoCompleteTextView"
+                        android:labelFor="@+id/cityId"/>
 
                 </android.support.design.widget.TextInputLayout>
 
