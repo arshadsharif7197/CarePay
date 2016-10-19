@@ -20,85 +20,73 @@ public class DemographicPayloadDTO {
     @Expose
     private DemographicPersDetailsPayloadDTO personalDetails;
 
-    @SerializedName("identity_document")
+    @SerializedName("identity_documents")
     @Expose
-    private DemographicIdDocPayloadDTO idDocument;
+    private List<DemographicIdDocPayloadDTO> idDocuments;
 
     @SerializedName("insurances")
     @Expose
-    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<DemographicInsurancePayloadDTO>();
+    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
 
     @SerializedName("updates")
     @Expose
     private List<DemographicUpdateDTO> updates = new ArrayList<>();
 
     /**
-     *
-     * @return
-     * The address
+     * @return The address
      */
     public DemographicAddressPayloadDTO getAddress() {
         return address;
     }
 
     /**
-     *
-     * @param address
-     * The address
+     * @param address The address
      */
     public void setAddress(DemographicAddressPayloadDTO address) {
         this.address = address;
     }
 
     /**
-     *
-     * @return
-     * The personalDetails
+     * @return The personalDetails
      */
     public DemographicPersDetailsPayloadDTO getPersonalDetails() {
         return personalDetails;
     }
 
     /**
-     *
-     * @param personalDetails
-     * The personal_details
+     * @param personalDetails The personal_details
      */
     public void setPersonalDetails(DemographicPersDetailsPayloadDTO personalDetails) {
         this.personalDetails = personalDetails;
     }
 
     /**
+     * Getter
      *
-     * @return
-     * The idDocument
+     * @return The list of id docs
      */
-    public DemographicIdDocPayloadDTO getIdDocument() {
-        return idDocument;
+    public List<DemographicIdDocPayloadDTO> getIdDocuments() {
+        return idDocuments;
     }
 
     /**
+     * Setter
      *
-     * @param idDocument
-     * The drivers_license
+     * @param idDocuments The id documents
      */
-    public void setIdDocument(DemographicIdDocPayloadDTO idDocument) {
-        this.idDocument = idDocument;
+    public void setIdDocuments(List<DemographicIdDocPayloadDTO> idDocuments) {
+        this.idDocuments = idDocuments;
     }
 
     /**
-     *
-     * @return
-     * The insurances
+     * @return The insurances
      */
     public List<DemographicInsurancePayloadDTO> getInsurances() {
         return insurances;
     }
 
     /**
-     *
-     * @param insurances
-     * The insurances
+     * @param insurances The insurances
      */
     public void setInsurances(List<DemographicInsurancePayloadDTO> insurances) {
         this.insurances = insurances;
