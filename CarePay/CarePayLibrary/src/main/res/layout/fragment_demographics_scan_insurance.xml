@@ -114,7 +114,8 @@
             android:id="@+id/reviewinsurncecardnum"
             style="@style/SigninSignupEditStyle"
             android:hint="@string/demogr_insurance_number_label"
-            android:imeOptions="actionNone"/>
+            android:imeOptions="actionNone"
+            android:maxLength="10"/>
     </android.support.design.widget.TextInputLayout>
 
 
