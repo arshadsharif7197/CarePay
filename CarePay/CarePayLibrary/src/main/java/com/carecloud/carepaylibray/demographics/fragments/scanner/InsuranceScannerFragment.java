@@ -193,7 +193,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                     try {
                         URL url = new URL(photoFrontURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
-                        Picasso.with(getContext()).load(photoFrontURL).into(frontInsuranceImageView);
+                        Picasso.with(getContext()).load(photoFrontURL)
+                                .resize(insuranceFrontScanHelper.getImgWidth(), insuranceFrontScanHelper.getImgHeight())
+                                .into(frontInsuranceImageView);
                     } catch (MalformedURLException e) {
                         Log.d(LOG_TAG, "invalid url: " + photoFrontURL);
                         // (re)load the placeholder
@@ -207,7 +209,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                     try {
                         URL url = new URL(photoBackURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
-                        Picasso.with(getContext()).load(photoBackURL).into(backInsuranceImageView);
+                        Picasso.with(getContext()).load(photoBackURL)
+                                .resize(insuranceBackScanHelper.getImgWidth(), insuranceBackScanHelper.getImgHeight())
+                                .into(backInsuranceImageView);
                     } catch (MalformedURLException e) {
                         Log.d(LOG_TAG, "invalid url: " + photoBackURL);
                         // (re)load  the placeholder
