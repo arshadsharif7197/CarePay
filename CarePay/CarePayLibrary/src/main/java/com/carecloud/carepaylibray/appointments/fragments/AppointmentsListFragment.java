@@ -354,7 +354,7 @@ public class AppointmentsListFragment extends Fragment {
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
             headerText = CarePayConstants.DAY_UPCOMING;
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            headerText = CarePayConstants.DAY_OVER;
+            headerText = CarePayConstants.DAY_TODAY;
         } else {
             headerText = CarePayConstants.DAY_TODAY;
         }
