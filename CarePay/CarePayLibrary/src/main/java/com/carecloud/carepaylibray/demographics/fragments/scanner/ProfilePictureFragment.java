@@ -18,8 +18,6 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPay
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -36,6 +34,7 @@ import java.net.URL;
  */
 public class ProfilePictureFragment extends DocumentScannerFragment {
 
+    private static String LOG_TAG = ProfilePictureFragment.class.getSimpleName();
     private ImageCaptureHelper               imageCaptureHelper;
     private Button                           buttonChangeCurrentPhoto;
     private DemographicPersDetailsPayloadDTO model;
