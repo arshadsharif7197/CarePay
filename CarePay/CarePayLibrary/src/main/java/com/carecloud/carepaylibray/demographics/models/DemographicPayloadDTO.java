@@ -26,43 +26,35 @@ public class DemographicPayloadDTO {
 
     @SerializedName("insurances")
     @Expose
-    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<DemographicInsurancePayloadDTO>();
+    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
 
     @SerializedName("updates")
     @Expose
     private List<DemographicUpdateDTO> updates = new ArrayList<>();
 
     /**
-     *
-     * @return
-     * The address
+     * @return The address
      */
     public DemographicAddressPayloadDTO getAddress() {
         return address;
     }
 
     /**
-     *
-     * @param address
-     * The address
+     * @param address The address
      */
     public void setAddress(DemographicAddressPayloadDTO address) {
         this.address = address;
     }
 
     /**
-     *
-     * @return
-     * The personalDetails
+     * @return The personalDetails
      */
     public DemographicPersDetailsPayloadDTO getPersonalDetails() {
         return personalDetails;
     }
 
     /**
-     *
-     * @param personalDetails
-     * The personal_details
+     * @param personalDetails The personal_details
      */
     public void setPersonalDetails(DemographicPersDetailsPayloadDTO personalDetails) {
         this.personalDetails = personalDetails;
@@ -70,6 +62,7 @@ public class DemographicPayloadDTO {
 
     /**
      * Getter
+     *
      * @return The list of id docs
      * The idDocument
      */
@@ -79,6 +72,7 @@ public class DemographicPayloadDTO {
 
     /**
      * Setter
+     *
      * @param idDocuments The id documents
      */
     public void setIdDocuments(List<DemographicIdDocPayloadDTO> idDocuments) {
@@ -86,18 +80,14 @@ public class DemographicPayloadDTO {
     }
 
     /**
-     *
-     * @return
-     * The insurances
+     * @return The insurances
      */
     public List<DemographicInsurancePayloadDTO> getInsurances() {
         return insurances;
     }
 
     /**
-     *
-     * @param insurances
-     * The insurances
+     * @param insurances The insurances
      */
     public void setInsurances(List<DemographicInsurancePayloadDTO> insurances) {
         this.insurances = insurances;
