@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,19 +22,19 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.fragments.review.DemographicReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.smartystreets.api.us_zipcode.City;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+
+import com.smartystreets.api.us_zipcode.City;
 
 
 /**
@@ -44,7 +43,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
  */
 public class DemographicsAddressFragment extends GenericEditsFragment {
 
-    private static final String LOG_TAG = DemographicsAddressFragment.class.getSimpleName();
     View view;
 
     private LinearLayout rootLayout;
@@ -237,6 +235,9 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     }
 
+    /**
+     * Init the models (DTOs) for this screen
+     */
     public void initModels() {
         modelAddress = ((DemographicsActivity) getActivity()).getAddressModel();
         if (modelAddress == null) {
@@ -308,12 +309,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private void setTextWachers() {
         firstNameText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
@@ -329,12 +330,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         lastNameText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
@@ -350,12 +351,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         address1EditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
@@ -380,7 +381,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         zipCodeEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-                if(charSequence != null) {
+                if (charSequence != null) {
                     zipCodeEditText.setSelection(charSequence.length());
                 }
             }
@@ -399,12 +400,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     modelAddress.setZipcode(zip);
                 }
 
-                if(editable != null) {
+                if (editable != null) {
                     int len = editable.length();
-                    if(len > 1) {
-                        char c = editable.toString().charAt(len - 1);
+                    if (len > 1) {
+                        char lastChar = editable.toString().charAt(len - 1);
                         if (len == 6) {
-                            if (c != '-') {
+                            if (lastChar != '-') {
                                 // remove
                                 editable.replace(len - 1, len, "-");
                             }
@@ -419,12 +420,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         cityEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
@@ -441,11 +442,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         stateAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
             }
 
             @Override
@@ -462,12 +463,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
 
             }
 
@@ -492,8 +493,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private void setEditActionListeners() {
         firstNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT) {
                     lastNameText.requestFocus();
                     return true;
                 }
@@ -502,8 +503,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         lastNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT) {
                     address1EditText.requestFocus();
                     return true;
                 }
@@ -512,8 +513,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         address1EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT) {
                     address2EditText.requestFocus();
                     return true;
                 }
@@ -522,8 +523,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         address2EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT) {
                     zipCodeEditText.requestFocus();
                     return true;
                 }
@@ -532,8 +533,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         });
         zipCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT) {
                     cityEditText.requestFocus();
                     return true;
                 }
@@ -543,8 +544,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         cityEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT) {
                     stateAutoCompleteTextView.requestFocus();
                     return true;
                 }
@@ -554,8 +555,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         stateAutoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT) {
                     phNoTextInputLayout.requestFocus();
                     return true;
                 }
@@ -565,8 +566,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE) {
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_DONE) {
                     phoneNumberEditText.clearFocus();
                     rootLayout.requestFocus();
                     SystemUtil.hideSoftKeyboard(getActivity());
@@ -583,50 +584,50 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private void setFocusChangeListeners() {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) { // show the keyboard
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) { // show the keyboard
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
         lastNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
         address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
 
         address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
 
         zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
-                if (!b) { // for SmartyStreets
+                SystemUtil.handleHintChange(view, hasFocus);
+                if (!hasFocus) { // for SmartyStreets
                     getCityAndState(zipCodeEditText.getText().toString());
                 }
             }
@@ -644,21 +645,21 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         stateAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
 
         phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
     }
@@ -797,11 +798,9 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
     /**
      * Background task to call smarty streets zip code lookup.
-     *
      * The response is a com.smartystreets.api.us_zipcode.City object,
      * that contains city, mailableCity, stateAbbreviation and state.
      */
-
     private void getCityAndState(String zipcode) {
 
         new AsyncTask<String, Void, Void>() {
@@ -813,8 +812,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
 
                 if (smartyStreetsResponse != null) {
                     cityEditText.setText(smartyStreetsResponse.getCity());
@@ -822,7 +821,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     stateAbbr = smartyStreetsResponse.getStateAbbreviation();
                     stateAutoCompleteTextView.setText(stateAbbr);
                 }
-
             }
         }.execute(zipcode);
     }
