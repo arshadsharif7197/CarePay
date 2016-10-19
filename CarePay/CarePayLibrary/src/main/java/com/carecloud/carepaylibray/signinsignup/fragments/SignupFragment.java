@@ -452,7 +452,7 @@ public class SignupFragment extends Fragment {
         public void onLoginFailure(String exceptionMessage) {
             SystemUtil.showDialogMessage(getContext(),
                     "Sign-in failed",
-                    "Invalid user id or password");
+                    exceptionMessage);
 
         }
     };
