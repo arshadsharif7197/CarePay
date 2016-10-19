@@ -323,7 +323,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 idDocModel = infoModel.getIdDocuments().get(0);
             }
             insuranceModelList = infoModel.getInsurances();
-
         } else {
             addressModel = new DemographicAddressPayloadDTO();
             detailsModel = new DemographicPersDetailsPayloadDTO();
