@@ -18,4 +18,7 @@ public interface AppointmentService {
 
     @GET(value = "dev/workflow/carepay/patient_checkin/appointments/practice")
     Call<AppointmentsResultModel> fetchCheckedInAppointments();
+
+    @GET(value = "dev/workflow/carepay/patient_checkin/appointments/providers_schedule")
+    Call<AppointmentsResultModel> fetchProvidersInformation();
 }

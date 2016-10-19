@@ -41,6 +41,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -250,8 +251,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
     private void showAlertDialogWithListview(final String[] listArray, String title) {
-        Log.e("listArray==", listArray.toString());
-        Log.e("listArray 23==", Arrays.asList(listArray).toString());
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
@@ -262,7 +261,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
         });
         View customView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.alert_list_layout, null, false);
+                R.layout.alert_list_layout, (ViewGroup) getView(), false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(listArray));
         listView.setAdapter(mAdapter);
@@ -568,7 +567,10 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         postPayloadModel.setAddress(demographicAddressPayloadDTO);
         postPayloadModel.setPersonalDetails(demographicPersDetailsPayloadDTO);
         postPayloadModel.setInsurances(insurances);
-        postPayloadModel.setIdDocument(demographicIdDocPayloadDTO);
+        // add id docs
+        List<DemographicIdDocPayloadDTO> idDocDTOs = new ArrayList<>();
+        idDocDTOs.add(demographicIdDocPayloadDTO);
+        postPayloadModel.setIdDocuments(idDocDTOs);
 
         DemographicService apptService = (new BaseServiceGenerator(getActivity()))
                 .createService(DemographicService.class); // String token, String searchString

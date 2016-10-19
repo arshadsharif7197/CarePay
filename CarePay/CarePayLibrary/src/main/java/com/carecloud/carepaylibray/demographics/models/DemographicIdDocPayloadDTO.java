@@ -23,6 +23,9 @@ public class DemographicIdDocPayloadDTO {
     @SerializedName("identity_document_country") @Expose
     private String idCountry;
 
+    @SerializedName("identity_document_type") @Expose
+    private String idType;
+
     public List<DemographicIdDocPhotoDTO> getIdDocPhothos() {
         return idDocPhothos;
     }
@@ -65,5 +68,13 @@ public class DemographicIdDocPayloadDTO {
 
     public void setIdCountry(String idCountry) {
         this.idCountry = idCountry;
+    }
+
+    public String getIdType() {
+        return idType;
+    }
+
+    public void setIdType(String idType) {
+        this.idType = idType;
     }
 }

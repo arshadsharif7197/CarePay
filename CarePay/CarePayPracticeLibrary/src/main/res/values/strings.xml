@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarePay</string>
+    <string name="signin">Sign-in</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="go_back">&#160;&#160;&#160;Go Back</string>
+    <string name="signin_title">Sign-in to CarePay</string>
+    <string name="no_account">There is no Clover account.</string>
+
+    <string name="empty_inventory">Please add an item to the inventory before attempting to take orders.</string>
+
+    <string name="payment_successful">Payment Succeeded for Order: %1$s</string>
+
+    <string name="payment_failed">Payment Not Successful</string>
+
+    <string name="amount_required">Valid amount is required</string>
+</resources>

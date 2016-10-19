@@ -2,18 +2,27 @@
 
     <!-- Base application theme. -->
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
+    <!-- Navigation Screen Theme-->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
-        <item name="titleTextStyle">@style/actionBarTitle</item>
         <item name="android:overScrollMode">never</item>
+        <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
 
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
+
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/light_gray</item> <!-- hint and underlying bar when focus -->
     </style>
 
 
-<!--<splash screen theme></splash>-->
+    <!-- Splash screen theme -->
+
 
     <style name="Theme.AppCompat.Translucent">
         <item name="android:windowIsTranslucent">true</item>
@@ -24,6 +33,24 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#FF0D91EF</item>
+        <item name="colorPrimaryDark">#FF0D91EF</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
+    </style>
+
+    <style name="DefaultTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/cadet_gray</item>
+        <item name="android:textSize">@dimen/textview_default_textsize</item>
+
     </style>
 
     <style name="actionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -149,7 +176,7 @@
     <style name="SignupRequireHintStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_right</item>
+        <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_left_right</item>
         <item name="android:layout_gravity">end</item>
         <item name="android:textSize">@dimen/signup_optional_label_text_size</item>
     </style>
@@ -215,7 +242,7 @@
     </style>
 
 
-    <!-- Demographics Documents -->
+    <!-- Demographics onboarding -->
 
     <style name="DemographicsDocsButtonStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/rich_electric_blue</item>
@@ -255,11 +282,19 @@
         <item name="android:layout_marginTop">@dimen/demographics_docs_header_top</item>
     </style>
 
+    <style name="DemographicsContainerStyle" parent="DemographicsDocsHeaderStyle">
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+    </style>
+
     <style name="DemographicsDocsDocumentLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/payne_gray</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
+        <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
+        <item name="android:paddingEnd">@dimen/edit_padding_bottom</item>
     </style>
 
     <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
@@ -272,8 +307,9 @@
     <style name="DemographicsDocsLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/charcoal</item>
-        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_text_right_margin</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
+        <item name="android:paddingStart">@dimen/signup_optional_label_margin_left_right</item>
     </style>
 
     <style name="DemographicImageviewStyle">
@@ -283,8 +319,7 @@
     <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height</item>
-        <item name="android:layout_marginRight">17dp</item>
-        <item name="android:layout_marginLeft">17dp</item>
+        <item name="android:layout_marginTop">@dimen/signup_top_margin_edit_container</item>
         <item name="android:orientation">horizontal</item>
     </style>
 
@@ -295,6 +330,7 @@
         <item name="android:textColor">@color/blue_cerulian</item>
         <item name="android:layout_marginRight">14dp</item>
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
+        <item name="android:layout_marginEnd">@dimen/signup_optional_label_margin_left_right</item>
     </style>
 
     <style name="DemographicsFragmentsHeadingStyle" parent="android:Widget.TextView">
@@ -315,10 +351,7 @@
 
     <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
         <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
-        </item>
-        <item name="android:layout_marginEnd">@dimen/demographics_docs_header_left_right_margin
-        </item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
         <item name="android:background">@drawable/button_scan_card</item>
     </style>
 
@@ -336,11 +369,38 @@
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:layout_marginStart">3dp</item>
+        <item name="android:layout_marginStart">@dimen/signup_optional_label_margin_left_right</item>
+    </style>
+
+    <style name="DemographicsDetailsAddUnlistedStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/demogr_details_container_top</item>
+        <item name="android:layout_marginLeft">@dimen/signup_optional_label_margin_left_right</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:textColor">@color/lightSlateGray</item>
+        <item name="android:textSize">@dimen/demogr_details_unlisted_text_size</item>
+    </style>
+
+    <style name="DemographicsDetailsAllergyStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
+        <item name="android:lineSpacingExtra">23dp</item>
+        <item name="android:textColor">@color/slateGray</item>
+    </style>
+
+    <style name="DemographicsDetailsEditStyle" parent="EditTextStyle">
+        <item name="android:paddingStart">@dimen/signup_optional_label_margin_left_right</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:textColor">@color/charcoal</item>
+    </style>
+
+    <style name="DemographicsDetailsLabelStyle" parent="DemographicsDocsLabelStyle">
+        <item name="android:layout_marginStart">0dp</item>
     </style>
 
     <!-- Signin Signup -->
-
     <style name="errorTextAppearance" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">ProximaNova-Semibold</item>
         <item name="android:textColor">@color/harvard_crimson</item>
@@ -413,22 +473,6 @@
         <item name="android:layout_marginTop">@dimen/review_center_margin_top_bottom</item>
         <item name="android:layout_marginBottom">@dimen/review_center_margin_top_bottom</item>
         <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
-    </style>
-    <!-- Navigation Screen Theme-->
-
-    <style name="NavigationTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
-        <item name="android:overScrollMode">never</item>
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
-
-        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/payne_gray</item> <!-- color of the underlying bar when no focus -->
-        <item name="colorControlActivated">@color/payne_gray</item> <!-- hint and underlying bar when focus -->
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

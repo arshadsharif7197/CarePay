@@ -43,6 +43,7 @@ public class BaseServiceGenerator {
     }
 
     private void generateBuilder() {
+        // TODO will work on future or remove
         Gson gson = new GsonBuilder()
                 .setExclusionStrategies(new ExclusionStrategy() {
                     @Override
