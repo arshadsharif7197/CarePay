@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -130,7 +131,10 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
         postPayloadModel.setAddress(demAddressPayloadDto);
         postPayloadModel.setPersonalDetails(demPersDetailsPayloadDto);
-        postPayloadModel.setIdDocument(demographicPayloadDriversLicenseModel);
+        // add the id docs
+        List<DemographicIdDocPayloadDTO> idDocDTOs = new ArrayList<>();
+        idDocDTOs.add(demographicPayloadDriversLicenseModel);
+        postPayloadModel.setIdDocuments(idDocDTOs);
         // clear the list
         //   insuranceModelList.clear();
         insuranceFragment.getBitmapsFromImageViews();

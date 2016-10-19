@@ -23,6 +23,7 @@ public class DemographicIdDocPayloadDTO {
     @SerializedName("identity_document_country") @Expose
     private String idCountry;
 
+    @SerializedName("identity_document_type") @Expose
     private String idType;
 
     public List<DemographicIdDocPhotoDTO> getIdDocPhothos() {

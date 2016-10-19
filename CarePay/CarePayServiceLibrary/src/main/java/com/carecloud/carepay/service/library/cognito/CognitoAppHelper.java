@@ -44,20 +44,20 @@ public class CognitoAppHelper {
 
     // App settings
 
-    private static List<String> attributeDisplaySeq;
+    private static List<String>        attributeDisplaySeq;
     private static Map<String, String> signUpFieldsC2O;
     private static Map<String, String> signUpFieldsO2C;
 
     private static CognitoAppHelper cognitoAppHelper;
-    private static CognitoUserPool userPool;
-    private static String user;
-    private static CognitoDevice newDevice;
-    private static int itemCount;
+    private static CognitoUserPool  userPool;
+    private static String           user;
+    private static CognitoDevice    newDevice;
+    private static int              itemCount;
 
     private static Context context;
 
     private static final String userPoolId = CognitoConstants.USER_POOL_ID;
-    private static final String clientId = CognitoConstants.CLIENT_ID;
+    private static final String clientId   = CognitoConstants.CLIENT_ID;
 
 
     private CognitoAppHelper() {
@@ -129,7 +129,7 @@ public class CognitoAppHelper {
         return signUpFieldsC2O;
     }
 
-    public static void setCurrSession(CognitoUserSession session) {
+    private static void setCurrSession(CognitoUserSession session) {
         currSession = session;
     }
 
@@ -175,7 +175,7 @@ public class CognitoAppHelper {
 
         if (temp != null && temp.length() > 0) {
             formattedString = temp.split("\\(")[0];
-            if (temp != null && temp.length() > 0) {
+            if (temp.length() > 0) {
                 return formattedString;
             }
         }
@@ -187,13 +187,13 @@ public class CognitoAppHelper {
         return itemCount;
     }
 
-    public static void newDevice(CognitoDevice device) {
+    private static void newDevice(CognitoDevice device) {
         newDevice = device;
     }
 
     private static void setData() {
         // Set attribute display sequence
-        attributeDisplaySeq = new ArrayList<String>();
+        attributeDisplaySeq = new ArrayList<>();
         attributeDisplaySeq.add("given_name");
         attributeDisplaySeq.add("middle_name");
         attributeDisplaySeq.add("family_name");
@@ -201,7 +201,7 @@ public class CognitoAppHelper {
         attributeDisplaySeq.add("phone_number");
         attributeDisplaySeq.add("email");
 
-        signUpFieldsC2O = new HashMap<String, String>();
+        signUpFieldsC2O = new HashMap<>();
         signUpFieldsC2O.put("Given name", "given_name");
         signUpFieldsC2O.put("Family name", "family_name");
         signUpFieldsC2O.put("Nick name", "nickname");
@@ -211,7 +211,7 @@ public class CognitoAppHelper {
         signUpFieldsC2O.put("Email", "email");
         signUpFieldsC2O.put("Middle name", "middle_name");
 
-        signUpFieldsO2C = new HashMap<String, String>();
+        signUpFieldsO2C = new HashMap<>();
         signUpFieldsO2C.put("given_name", "Given name");
         signUpFieldsO2C.put("family_name", "Family name");
         signUpFieldsO2C.put("nickname", "Nick name");
@@ -259,18 +259,10 @@ public class CognitoAppHelper {
     /**
      * Sign in utility
      *
-     * @param username The user name
-     * @param password The password
+     * @param username        The user name
+     * @param password        The password
+     * @param successCallback callback to be execruted on completion
      */
-
-    public static void signIn(String username, final String password) {
-        AuthenticationHandler authenticationHandler = executeUserAuthentication(password, null);
-        // set the username
-        CognitoAppHelper.setUser(username);
-        // perform the authentication
-        CognitoAppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
-    }
-
     public static void signIn(String username,
                               final String password,
                               final CognitoActionCallback successCallback) {

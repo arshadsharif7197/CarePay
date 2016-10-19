@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "com.example.carepaypracticeclover"
+        applicationId "com.carecloud.carepay.practice.clover"
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
@@ -24,5 +24,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:multidex:1.0.+'
     compile project(':CarePayPracticeLibrary')
+    compile 'com.clover.sdk:clover-android-sdk:latest.release'
 }
