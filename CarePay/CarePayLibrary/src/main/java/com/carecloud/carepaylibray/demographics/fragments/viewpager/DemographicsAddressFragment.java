@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.fragments.review.DemographicReviewFragment;
 import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
@@ -232,6 +233,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         // populate views
         populateViewsWithData();
+
+
     }
 
     public void initModels() {
@@ -367,15 +370,23 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 }
             }
         });
+
+        zipCodeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                zipCodeEditText.setSelection(zipCodeEditText.getText().length());
+            }
+        });
         zipCodeEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+                if(charSequence != null) {
+                    zipCodeEditText.setSelection(charSequence.length());
+                }
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
             }
 
             @Override
@@ -386,6 +397,23 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     zipCodeTextInputLayout.setError(null);
                     zipCodeTextInputLayout.setErrorEnabled(false);
                     modelAddress.setZipcode(zip);
+                }
+
+                if(editable != null) {
+                    int len = editable.length();
+                    if(len > 1) {
+                        char c = editable.toString().charAt(len - 1);
+                        if (len == 6) {
+                            if (c != '-') {
+                                // remove
+                                editable.replace(len - 1, len, "-");
+                            }
+                        } else {
+                            if (len > 10) {
+                                editable.replace(len - 1, len, "");
+                            }
+                        }
+                    }
                 }
             }
         });
