@@ -20,9 +20,9 @@ public class DemographicPayloadDTO {
     @Expose
     private DemographicPersDetailsPayloadDTO personalDetails;
 
-    @SerializedName("identity_document")
+    @SerializedName("identity_documents")
     @Expose
-    private DemographicIdDocPayloadDTO idDocument;
+    private List<DemographicIdDocPayloadDTO> idDocuments;
 
     @SerializedName("insurances")
     @Expose
@@ -69,21 +69,20 @@ public class DemographicPayloadDTO {
     }
 
     /**
-     *
-     * @return
+     * Getter
+     * @return The list of id docs
      * The idDocument
      */
-    public DemographicIdDocPayloadDTO getIdDocument() {
-        return idDocument;
+    public List<DemographicIdDocPayloadDTO> getIdDocuments() {
+        return idDocuments;
     }
 
     /**
-     *
-     * @param idDocument
-     * The drivers_license
+     * Setter
+     * @param idDocuments The id documents
      */
-    public void setIdDocument(DemographicIdDocPayloadDTO idDocument) {
-        this.idDocument = idDocument;
+    public void setIdDocuments(List<DemographicIdDocPayloadDTO> idDocuments) {
+        this.idDocuments = idDocuments;
     }
 
     /**

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +15,12 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 import com.squareup.picasso.Picasso;
@@ -62,7 +66,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
         // save the image as base64 in the model
-        if(bitmap != null) {
+        if (bitmap != null) {
             String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
             model.setProfilePhoto(imageAsBase64);
         }
@@ -70,17 +74,28 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
     @Override
     public void populateViewsFromModel() {
-        if(model != null) {
+        if (model != null) {
             String profilePicURL = model.getProfilePhoto();
-            if(!StringUtil.isNullOrEmpty(profilePicURL)) {
+            if (!StringUtil.isNullOrEmpty(profilePicURL)) {
                 try {
                     URL url = new URL(profilePicURL);
-                    Picasso.with(getContext()).load(url.toString()).into(imageCaptureHelper.getImageViewTarget());
+                    Log.v(LOG_TAG, "valid url: " + url.toString());
+                    Picasso.with(getContext())
+                            .load(profilePicURL)
+                            .transform(new CircleImageTransform())
+                            .resize(imageCaptureHelper.getImgWidth(), imageCaptureHelper.getImgWidth())
+                            .into(imageCaptureHelper.getImageViewTarget());
+                    return;
                 } catch (MalformedURLException e) {
-//                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+                    // just log
+                    Log.d(LOG_TAG, "invalid url: " + profilePicURL);
                 }
             }
         }
+        // if no image to load, simply load the placeholder
+        imageCaptureHelper.getImageViewTarget()
+                .setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                                            R.drawable.icn_placeholder_user_profile_png));
     }
 
     @Override
@@ -92,7 +107,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // change the caption of the button
-        if(bitmap != null) {
+        if (bitmap != null) {
             buttonChangeCurrentPhoto.setText(getString(R.string.changeCurrentPhotoButton));
         }
         buttonsStatusCallback.enableNextButton(true);
