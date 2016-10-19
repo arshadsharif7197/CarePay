@@ -318,7 +318,10 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         if (infoModel != null) {
             addressModel = infoModel.getAddress();
             detailsModel = infoModel.getPersonalDetails();
-            idDocModel = infoModel.getIdDocument();
+            List<DemographicIdDocPayloadDTO> idDocDTOs = infoModel.getIdDocuments();
+            if(idDocDTOs != null && idDocDTOs.size() > 0) {
+                idDocModel = infoModel.getIdDocuments().get(0);
+            }
             insuranceModelList = infoModel.getInsurances();
 
         } else {

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -238,9 +239,12 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             if (!StringUtil.isNullOrEmpty(frontPic)) {
                 try {
                     URL url = new URL(frontPic);
+                    Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(frontPic).into(scannerFront.getImageViewTarget());
                 } catch (MalformedURLException e) {
-//                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+                    Log.e(LOG_TAG, "invalid url: " + frontPic);
+                    scannerFront.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                                                                                 R.drawable.icn_camera));
                 }
             }
             // add back image
@@ -248,9 +252,12 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             if (!StringUtil.isNullOrEmpty(backPic)) {
                 try {
                     URL url = new URL(backPic);
+                    Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(backPic).into(scannerBack.getImageViewTarget());
                 } catch (MalformedURLException e) {
-//                    Log.e(LOG_TAG, ProfilePictureFragment.class.getSimpleName(), e);
+                    Log.e(LOG_TAG, "invalid url: " + backPic);
+                    scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                                                                                 R.drawable.icn_camera));
                 }
             }
         }

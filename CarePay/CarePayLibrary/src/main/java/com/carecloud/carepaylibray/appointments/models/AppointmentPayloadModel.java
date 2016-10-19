@@ -24,6 +24,9 @@ public class AppointmentPayloadModel {
     @SerializedName("resources")
     @Expose
     private List<AppointmentResourcesDTO> resources = new ArrayList<>();
+    @SerializedName("providers_schedule")
+    @Expose
+    private List<ProvidersScheduleDTO> providersSchedule = new ArrayList<>();
 
     /**
      * 
@@ -95,6 +98,24 @@ public class AppointmentPayloadModel {
      */
     public void setResources(List<AppointmentResourcesDTO> resources) {
         this.resources = resources;
+    }
+
+    /**
+     *
+     * @return
+     *     The providersSchedule
+     */
+    public List<ProvidersScheduleDTO> getProvidersSchedule() {
+        return providersSchedule;
+    }
+
+    /**
+     *
+     * @param providersSchedule
+     *     The providers_schedule
+     */
+    public void setProvidersSchedule(List<ProvidersScheduleDTO> providersSchedule) {
+        this.providersSchedule = providersSchedule;
     }
 
 }

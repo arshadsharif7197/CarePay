@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -185,15 +186,19 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             // populate with images
             List<DemographicInsurancePhotoDTO> photos = model.getInsurancePhotos();
             if (photos == null) {
-                Log.v(LOG_TAG, InsuranceScannerFragment.class.getSimpleName() + " no ins photos");
+                Log.v(LOG_TAG, InsuranceScannerFragment.class.getSimpleName() + " no insurance photos");
             } else {
                 if (photos.size() > 0) {
                     String photoFrontURL = photos.get(0).getInsurancePhoto();
                     try {
                         URL url = new URL(photoFrontURL);
+                        Log.d(LOG_TAG, "valid url: " + url.toString());
                         Picasso.with(getContext()).load(photoFrontURL).into(frontInsuranceImageView);
                     } catch (MalformedURLException e) {
-//                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
+                        Log.d(LOG_TAG, "invalid url: " + photoFrontURL);
+                        // (re)load the placeholder
+                        frontInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                                                                           R.drawable.icn_camera));
                     }
                 }
 
@@ -201,12 +206,15 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                     String photoBackURL = photos.get(1).getInsurancePhoto();
                     try {
                         URL url = new URL(photoBackURL);
+                        Log.d(LOG_TAG, "valid url: " + url.toString());
                         Picasso.with(getContext()).load(photoBackURL).into(backInsuranceImageView);
                     } catch (MalformedURLException e) {
-//                        Log.e(LOG_TAG, InsuranceScannerFragment.class.getSimpleName(), e);
+                        Log.d(LOG_TAG, "invalid url: " + photoBackURL);
+                        // (re)load  the placeholder
+                        backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                                                                          R.drawable.icn_camera));
                     }
                 }
-
             }
 
             // (used for Review)
