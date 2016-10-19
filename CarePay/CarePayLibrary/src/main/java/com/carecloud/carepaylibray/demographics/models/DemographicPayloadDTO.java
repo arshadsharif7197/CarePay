@@ -64,7 +64,6 @@ public class DemographicPayloadDTO {
      * Getter
      *
      * @return The list of id docs
-     * The idDocument
      */
     public List<DemographicIdDocPayloadDTO> getIdDocuments() {
         return idDocuments;
