@@ -278,7 +278,6 @@
                     android:id="@+id/addressEditText2Id"
                     style="@style/SigninSignupEditStyle"
                     android:hint="@string/Address2EditText"
-                    android:textColor="@color/cadet_gray"
                     android:inputType="textPostalAddress"
                     android:imeOptions="actionNext"
                     android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789"

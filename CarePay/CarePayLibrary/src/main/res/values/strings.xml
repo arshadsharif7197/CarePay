@@ -259,7 +259,7 @@
     <string name="review_address_lable">ADDRESS</string>
     <string name="review_address1_label">ADDRESS 1</string>
     <string name="review_address2_label">ADDRESS 2</string>
-    <string name="review_driverlicense_label">DRIVER LICENSE</string>
+    <string name="review_driverlicense_label">DRIVER\'S  LICENSE</string>
     <string name="review_prefferedlanguage_label">PREFERRED LANGUAGE</string>
     <string name="review_gender_label">Gender</string>
     <string name="review_city_label">CITY</string>
