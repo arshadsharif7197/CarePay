@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+            android:id="@+id/patientmodetextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottom_left_rounded_background"
+            android:drawableTop="@drawable/icn_checkout"
+            android:paddingBottom="20dp"
+            android:paddingTop="70dp"
+            android:text="Check-Out"
+            android:textColor="@color/charcoal"
+            android:textSize="28sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="336dp"
+            android:layout_marginBottom="10dp" />
+
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+        android:id="@+id/logoutTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_left_rounded_background"
+        android:drawableTop="@drawable/icn_check_in"
+            android:paddingBottom="20dp"
+        android:paddingTop="70dp"
+        android:text="Check-In"
+        android:textColor="@color/charcoal"
+        android:textSize="28sp"
+            android:layout_marginStart="55dp"
+            android:layout_alignBaseline="@+id/patientmodetextView"
+            android:layout_alignBottom="@+id/patientmodetextView"
+            android:layout_toEndOf="@+id/patientmodetextView" />
+
+    </RelativeLayout>
+
+</LinearLayout>

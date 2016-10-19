@@ -14,4 +14,6 @@
     <string name="payment_failed">Payment Not Successful</string>
 
     <string name="amount_required">Valid amount is required</string>
+    <string name="forgotpassword">Forgot password</string>
+
 </resources>
