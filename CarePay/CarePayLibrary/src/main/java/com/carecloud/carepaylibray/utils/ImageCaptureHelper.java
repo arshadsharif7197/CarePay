@@ -95,7 +95,9 @@ public class ImageCaptureHelper {
     public Bitmap onCaptureImageResult(Intent data, int shape) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        if (thumbnail != null) {
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
 
         return setCapturedImageToTargetView(thumbnail, shape);
 
@@ -145,7 +147,7 @@ public class ImageCaptureHelper {
      * @param height The destination heght
      * @return The scaled bitmap
      */
-    public Bitmap getSquareCroppedBitmap(Bitmap bitmap, int width, int height) {
+    private Bitmap getSquareCroppedBitmap(Bitmap bitmap, int width, int height) {
         Bitmap finalBitmap;
         if (bitmap.getWidth() != width || bitmap.getHeight() != height) {
             finalBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
@@ -181,7 +183,7 @@ public class ImageCaptureHelper {
      * @param radius The destination bitmap radius
      * @return The scaled bitmap
      */
-    public Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int radius) {
+    private Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int radius) {
         Bitmap finalBitmap;
 
         if (bitmap.getWidth() != radius || bitmap.getHeight() != radius) {
@@ -240,6 +242,5 @@ public class ImageCaptureHelper {
 
     public void setImageFromCharStream(String imageCharStream) {
     }
-
 
 }
