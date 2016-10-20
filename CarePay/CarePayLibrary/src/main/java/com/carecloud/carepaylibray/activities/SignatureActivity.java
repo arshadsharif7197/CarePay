@@ -43,6 +43,7 @@ public class SignatureActivity extends AppCompatActivity {
     private Map<Integer, List<String>> stringMap = new HashMap<>();
     public static boolean isBackButtonClicked = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +93,7 @@ public class SignatureActivity extends AppCompatActivity {
         switchButton = (SwitchCompat) findViewById(R.id.switchButton);
         agreeButton = (Button) findViewById(R.id.agreeBtn);
         signaturePad = (SignaturePad) findViewById(R.id.signature_pad);
+        signaturePad.setMinWidth(1);
         clearButton = (Button) findViewById(R.id.clearBtn);
         legalFirstName = (TextInputLayout) findViewById(R.id.legalFirstName);
         legalLastName = (TextInputLayout) findViewById(R.id.legalLastName);
@@ -136,10 +138,12 @@ public class SignatureActivity extends AppCompatActivity {
         signaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
             @Override
             public void onStartSigning() {
+
             }
 
             @Override
             public void onSigned() {
+
                 agreeButton.setEnabled(true);
             }
 
@@ -209,12 +213,10 @@ public class SignatureActivity extends AppCompatActivity {
 
     private void showData(boolean isChecked) {
         if (!isChecked) {
-            titleTextView.setText(stringMap.get(0).get(0));
             signatureHelpTextView.setText(stringMap.get(0).get(1));
             legalFirstNameET.setVisibility(View.GONE);
             legalLastNameET.setVisibility(View.GONE);
         } else {
-            titleTextView.setText(stringMap.get(1).get(0));
             signatureHelpTextView.setText(stringMap.get(1).get(1));
             legalFirstNameET.setVisibility(View.VISIBLE);
             legalLastNameET.setVisibility(View.VISIBLE);
