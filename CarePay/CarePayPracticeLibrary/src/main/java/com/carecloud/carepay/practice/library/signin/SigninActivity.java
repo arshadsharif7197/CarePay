@@ -119,9 +119,10 @@ public class SigninActivity extends AppCompatActivity {
                 CustomAlertAdapter mAdapter = new CustomAlertAdapter(SigninActivity.this, Arrays.asList(language));
                 listView.setAdapter(mAdapter);
                 dialog.setView(customView);
+
                 final AlertDialog alert = dialog.create();
                 alert.show();
-
+                alert.getWindow().setLayout(500,350);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,6 +142,7 @@ public class SigninActivity extends AppCompatActivity {
                 dialog.setView(customview);
                 final AlertDialog alert = dialog.create();
                 alert.show();
+                alert.getWindow().setLayout(500,450);
             }
         });
 
