@@ -67,6 +67,28 @@ public class StringUtil {
     }
 
     /**
+     * Capitalize each first letter after a space
+     * @param source The "sentence" (a string containing spaces)
+     * @return The string with capitalized first letters
+     */
+    public static String captialize(String source) {
+
+        source = source.toLowerCase();
+        StringBuilder res = new StringBuilder();
+
+        String[] strArr = source.split(" ");
+        for (String str : strArr) {
+            char[] stringArray = str.trim().toCharArray();
+            stringArray[0] = Character.toUpperCase(stringArray[0]);
+            str = new String(stringArray);
+
+            res.append(str).append(" ");
+        }
+
+        return res.toString();
+    }
+
+    /**
      * Utility to remove any formatting from zip
      * @param formattedZipCode The zip code
      * @return The unformatted zip code as String
