@@ -236,7 +236,6 @@
     <string name="close">Close</string>
     <string name="demogr_next">Next</string>
     <string name="check_in_now">CHECK-IN \nNOW</string>
-    <string name="missed_appointment_label">Missed</string>
 
     <!-- Review Screen -->
     <string name="review_screen_header">Review Information</string>
@@ -270,7 +269,6 @@
 
 
     <!--<Navigation Screen>-->
-    <string name="Appointments_title">Appointments</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>

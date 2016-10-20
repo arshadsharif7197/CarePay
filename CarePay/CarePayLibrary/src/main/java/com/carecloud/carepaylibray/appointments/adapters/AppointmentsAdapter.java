@@ -2,9 +2,11 @@ package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,10 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
@@ -25,9 +29,11 @@ import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.List;
@@ -39,6 +45,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private Context context;
     private List<Object> appointmentItems;
+    private AppointmentLabelDTO appointmentLabels;
     private AppointmentsListFragment appointmentsListFragment;
 
     /**
@@ -48,11 +55,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
      * @param appointmentsListFragment screen instance
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
-                               AppointmentsListFragment appointmentsListFragment) {
+                               AppointmentsListFragment appointmentsListFragment,
+                               AppointmentsResultModel appointmentInfo) {
 
         this.context = context;
         this.appointmentItems = appointmentItems;
         this.appointmentsListFragment = appointmentsListFragment;
+        this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
     }
 
     @Override
@@ -62,7 +71,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     @Override
-    public void onBindViewHolder(AppointmentViewHolder holder, final int position) {
+    public void onBindViewHolder(final AppointmentViewHolder holder, final int position) {
         final Object object = appointmentItems.get(position);
         View view = appointmentsListFragment.getView();
 
@@ -97,7 +106,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 if(isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                    holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
+                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckedInLabel()));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
@@ -112,7 +121,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                 if(isCheckedIn) {
-                    holder.todayTimeTextView.setText(context.getString(R.string.checked_in_label));
+                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckedInLabel()));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
                     holder.todayTimeTextView.setText(time12Hour);
@@ -141,13 +150,22 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 }
             });
 
-//            if (TextUtils.isEmpty(item.getPhoto())) {
+            String photoUrl = item.getProvider().getPhoto();
+            if (TextUtils.isEmpty(photoUrl)) {
                 holder.shortName.setText(StringUtil.onShortDrName(item.getProvider().getName()));
-//            } else {
-//                Picasso.with(context).load(item.getPhoto()).transform(
-//                      new CircleImageTransform()).resize(58, 58).into(holder.profileImage);
-//                holder.profileImage.setVisibility(View.VISIBLE);
-//            }
+            } else {
+                Picasso.Builder builder = new Picasso.Builder(context);
+                builder.listener(new Picasso.Listener() {
+                    @Override
+                    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                        holder.shortName.setText(StringUtil.onShortDrName(item.getProvider().getName()));
+                    }
+                });
+
+                builder.build().load(photoUrl).transform(new CircleImageTransform())
+                        .resize(58, 58).into(holder.profileImage);
+                holder.profileImage.setVisibility(View.VISIBLE);
+            }
 
             if (isPending) {
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
@@ -155,6 +173,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)) {
                 holder.missedAppointmentTextView.setVisibility(View.VISIBLE);
+                holder.missedAppointmentTextView.setText(StringUtil.getLabelForView(appointmentLabels.getMissedAppointmentsHeading()));
                 holder.missedAppointmentTextView.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
 
@@ -182,7 +201,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         } else {
             AppointmentSectionHeaderModel item = (AppointmentSectionHeaderModel) object;
             String title = item.getAppointmentHeader();
-            title = title.equalsIgnoreCase(CarePayConstants.DAY_OVER) ? CarePayConstants.DAY_TODAY : title;
+            if (title.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
+                    title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+                title = StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
+            } else {
+                title = StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
+            }
 
             if (position == 0) {
                 holder.appointmentSectionLinearLayout.setVisibility(View.GONE);
@@ -229,9 +253,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                                 appointmentStickyHeaderTitle.setVisibility(View.GONE);
                             } else {
                                 String sectionHeaderTitle = getSectionHeaderTitle(item.getPayload().getStartTime());
-                                appointmentStickyHeaderTitle.setText(
-                                        sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)
-                                                ? CarePayConstants.DAY_TODAY : sectionHeaderTitle);
+                                if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
+                                        sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+                                    sectionHeaderTitle = StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
+                                } else {
+                                    sectionHeaderTitle = StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
+                                }
+
+                                appointmentStickyHeaderTitle.setText(sectionHeaderTitle);
                                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
                             }
                         }

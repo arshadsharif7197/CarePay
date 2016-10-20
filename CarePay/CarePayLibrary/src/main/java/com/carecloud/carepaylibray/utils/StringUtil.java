@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.utils;
 
 
+import android.view.View;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -122,5 +124,13 @@ public class StringUtil {
                 return "";
         } else
             return "";
+    }
+
+    public static String getLabelForView(String label) {
+        if (isNullOrEmpty(label)) {
+            return "Not Defined";
+        } else {
+            return label;
+        }
     }
 }

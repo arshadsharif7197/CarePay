@@ -48,7 +48,7 @@ public class CheckInActivity extends AppCompatActivity {
 
     private void getDemographicInformation() {
         AppointmentService apptService = (new BaseServiceGenerator(this)).createServicePractice(AppointmentService.class); //, String token, String searchString
-        Call<AppointmentsResultModel> call = apptService.fetchCheckedInAppointments();
+        Call<AppointmentsResultModel> call = apptService.getCheckedInAppointments();
         call.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {

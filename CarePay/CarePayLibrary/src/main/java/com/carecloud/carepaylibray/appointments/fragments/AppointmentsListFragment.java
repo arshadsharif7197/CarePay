@@ -21,6 +21,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
@@ -28,6 +29,7 @@ import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +46,7 @@ public class AppointmentsListFragment extends Fragment {
 
     private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
 
+    private AppointmentsResultModel appointmentInfo;
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
     private SwipeRefreshLayout appointmentRefresh;
@@ -106,12 +109,18 @@ public class AppointmentsListFragment extends Fragment {
                             appointmentInDuration = differenceInMinutes + " minutes";
                         }
 
-                        String doctorName = appointmentsItems.get(0).getPayload().getProvider().getName();
-                        popup = new CustomPopupNotification(getActivity(), getView(),
-                                getString(R.string.checkin_early), getString(R.string.dismiss),
-                                getString(R.string.apt_popup_message_text, doctorName, appointmentInDuration),
-                                positiveActionListener, negativeActionListener);
-                        popup.showPopWindow();
+                        if (appointmentInfo != null) {
+                            AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
+                            String doctorName = appointmentsItems.get(0).getPayload().getProvider().getName();
+                            popup = new CustomPopupNotification(getActivity(), getView(),
+                                    StringUtil.getLabelForView(labels.getAppointmentsCheckInEarly()),
+                                    StringUtil.getLabelForView(labels.getDismissMessage()),
+                                    getNotificationMessage(StringUtil.getLabelForView(
+                                            labels.getAppointmentsCheckInEarlyPrompt()), doctorName,
+                                            appointmentInDuration),
+                                    positiveActionListener, negativeActionListener);
+                            popup.showPopWindow();
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -119,6 +128,15 @@ public class AppointmentsListFragment extends Fragment {
                 Log.e(LOG_TAG, e.getMessage());
             }
         }
+    }
+
+    private String getNotificationMessage(String baseString, String doctorName, String duration) {
+        String[] splitStr = baseString.split("%");
+        if (splitStr.length > 0) {
+            return splitStr[0] + doctorName + splitStr[2] + duration + splitStr[4];
+        }
+
+        return baseString;
     }
 
     private View.OnClickListener negativeActionListener = new View.OnClickListener() {
@@ -161,6 +179,9 @@ public class AppointmentsListFragment extends Fragment {
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
 
+        Bundle arguments = getArguments();
+        appointmentInfo = (AppointmentsResultModel) arguments.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
+
         //Pull down to refresh
         appointmentRefresh = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
         onRefresh();
@@ -181,16 +202,16 @@ public class AppointmentsListFragment extends Fragment {
         });
 
         //Fetch appointment data
-        getAppointmentInformation();
+        getAppointmentsList();
 
         return appointmentsListView;
     }
 
-    private void getAppointmentInformation() {
+    private void getAppointmentsList() {
         appointmentProgressBar.setVisibility(View.VISIBLE);
 
         AppointmentService aptService = (new BaseServiceGenerator(getActivity())).createService(AppointmentService.class);
-        Call<AppointmentsResultModel> call = aptService.fetchAppointmentInformation();
+        Call<AppointmentsResultModel> call = aptService.getAppointmentsList();
         call.enqueue(new Callback<AppointmentsResultModel>() {
 
             @Override
@@ -221,7 +242,7 @@ public class AppointmentsListFragment extends Fragment {
                         }
 
                         appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                                appointmentListWithHeader, appointmentsListFragment);
+                                appointmentListWithHeader, appointmentsListFragment, appointmentInfo);
                         appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         appointmentRecyclerView.setAdapter(appointmentsAdapter);
                     } else {
@@ -263,7 +284,7 @@ public class AppointmentsListFragment extends Fragment {
                 }
 
                 // API call to fetch latest appointments
-                getAppointmentInformation();
+                getAppointmentsList();
             }
         });
     }
