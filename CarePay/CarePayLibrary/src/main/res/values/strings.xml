@@ -169,7 +169,7 @@
     <string name="review_insurance_subHeading">We didn\’t find any insurance info associated with your profile. If you have health insurance, please fill in the fields below.</string>
     <string name="demographics_title">Demographic</string>
     <string name="next_Button">Next</string>
-    <string name="invalid_date_of_birth_format">Invalid format</string>
+    <string name="invalid_date_of_birth_format">Invalid date</string>
 
     <!--Signin Screen-->
     <string name="signin_signup_email_hint">Email</string>
