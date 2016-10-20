@@ -43,12 +43,11 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import java.util.ArrayList;
