@@ -36,7 +36,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 
 import com.smartystreets.api.us_zipcode.City;
 
-
 /**
  * Created by lsoco_user on 9/2/2016.
  * Fragment for on-boarding demographics address.
@@ -214,7 +213,9 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     modelAddress.setZipcode(zipCodeEditText.getText().toString());
                     modelAddress.setCity(cityEditText.getText().toString());
                     modelAddress.setState(stateAutoCompleteTextView.getText().toString());
-                    modelAddress.setPhone(phoneNumberEditText.getText().toString());
+                    // eliminate '-' from the phone number
+                    String formattedPhoneNum = phoneNumberEditText.getText().toString();
+                    modelAddress.setPhone(formattedPhoneNum.replace("-", ""));
 
                     ((DemographicsActivity) getActivity()).setAddressModel(modelAddress); // sent the modelAddress to the activity
                     ((DemographicsActivity) getActivity()).setDetailsModel(modelPersDetails); // sent the modelDetails to the activity
@@ -298,8 +299,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
 
             String phone = modelAddress.getPhone();
-            if (!StringUtil.isNullOrEmpty(phone)) {
-                phoneNumberEditText.setText(phone);
+            if (!StringUtil.isNullOrEmpty(phone) && phone.length() == 10) {
+                // expected as xxxxxxxxxx; convert to xxx-xxx-xxxx
+                String formattedPhone = String.format("%s-%s-%s",
+                                                      phone.substring(0, 3),
+                                                      phone.substring(3, 6),
+                                                      phone.substring(6, 10));
+                phoneNumberEditText.setText(formattedPhone);
                 phoneNumberEditText.requestFocus();
             }
         }
@@ -461,6 +467,14 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 }
             }
         });
+
+        // place the cursor on the last char when clicked
+        phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                phoneNumberEditText.setSelection(phoneNumberEditText.getText().length());
+            }
+        });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
@@ -480,6 +494,21 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     phNoTextInputLayout.setError(null);
                     phNoTextInputLayout.setErrorEnabled(false);
                     modelAddress.setPhone(phone);
+                }
+
+                // password auto-complete functionality
+                if (editable != null) {
+                    int len = editable.length();
+                    if (len > 0) {
+                        char lastChar = editable.charAt(len - 1);
+                        if ((len == 4 || len == 8) && lastChar != '-') {
+                            editable.replace(len - 1, len, "-"); // add '-'
+                        } else {
+                            if (len > 12) {
+                                editable.replace(len - 1, len, ""); // discard
+                            }
+                        }
+                    }
                 }
             }
         });

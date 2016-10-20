@@ -189,8 +189,8 @@
                     android:hint="@string/PhoneNumberEditText"
                     android:imeOptions="actionDone"
                     android:inputType="phone"
-                    android:maxLength="10"
-                    android:digits="1234567890"/>
+                    android:maxLength="12"
+                    android:digits="1234567890-"/>
 
             </android.support.design.widget.TextInputLayout>
 
