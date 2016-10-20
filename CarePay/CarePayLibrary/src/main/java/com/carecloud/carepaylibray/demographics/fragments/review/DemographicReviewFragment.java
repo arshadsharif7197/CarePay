@@ -148,6 +148,12 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
 
     private void formatEditText() {
+        dobEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dobEditText.setSelection(dobEditText.getText().toString().length());
+            }
+        });
 
         dobEditText.addTextChangedListener(new TextWatcher() {
 
@@ -162,13 +168,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable dob) {
-                if (dob.length() > 2 && Character.isDigit(dob.charAt(2))) {
-                    dob.insert(2, "-");
-                }
-                if (dob.length() > 5 && Character.isDigit(dob.charAt(5))) {
-                    dob.insert(5, "-");
-                }
-
+                StringUtil.autoFormatDateOfBirth(dob);
             }
         });
 

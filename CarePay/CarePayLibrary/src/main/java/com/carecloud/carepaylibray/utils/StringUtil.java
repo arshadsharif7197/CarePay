@@ -186,6 +186,22 @@ public class StringUtil {
         }
     }
 
+    /**
+     * Util to auto-format a edit text holding a date as (mm/dd/yyyy)
+     * @param editable The editable passed in the text watcher of that edit
+     */
+    public static void autoFormatDateOfBirth(Editable editable) {
+        if (!StringUtil.isNullOrEmpty(editable)) {
+            int len = editable.length();
+            char lastChar = editable.charAt(len - 1);
+            if ((len == 3 || len == 6) && lastChar != '/') {
+                editable.replace(len - 1, len, "/");
+            } else if (len > 10) {
+                editable.replace(len - 1, len, "");
+            }
+        }
+    }
+
     public static String onShortDrName(String fullName) {
         if (fullName != null && fullName.length() > 1) {
             String stringSplitArr[] = fullName.split(" ");

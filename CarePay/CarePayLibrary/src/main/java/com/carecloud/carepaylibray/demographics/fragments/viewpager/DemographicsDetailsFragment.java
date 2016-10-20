@@ -118,6 +118,14 @@ public class DemographicsDetailsFragment extends Fragment
                 SystemUtil.handleHintChange(view, hasFocus);
             }
         });
+
+        dobEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dobEdit.setSelection(dobEdit.getText().toString().length());
+            }
+        });
+
         dobEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -134,8 +142,11 @@ public class DemographicsDetailsFragment extends Fragment
                     dobInputText.setErrorEnabled(false);
                     dobInputText.setError(null);
                 }
+                // auto-format to mm/dd/yyyy
+                StringUtil.autoFormatDateOfBirth(editable);
             }
         });
+
         dobEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
