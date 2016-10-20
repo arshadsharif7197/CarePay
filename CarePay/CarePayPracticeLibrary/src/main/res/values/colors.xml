@@ -28,4 +28,5 @@
     <color name="taupe_gray1">#848d92</color>
     <color name="manatee">#979797</color>
     <color name="rich_electric_blue_1">#018fcc</color>
+    <color name="transparent_apt">#00000000</color>
 </resources>

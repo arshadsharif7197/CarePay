@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.HowToCheckInActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
@@ -37,7 +38,7 @@ public class CloverMainActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.checkinTextView)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent checkedInIntent = new Intent(CloverMainActivity.this, CheckInActivity.class);
+                Intent checkedInIntent = new Intent(CloverMainActivity.this, HowToCheckInActivity.class);
                 checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(checkedInIntent);
             }

@@ -14,4 +14,12 @@
     <string name="payment_failed">Payment Not Successful</string>
 
     <string name="amount_required">Valid amount is required</string>
+
+    <!--How to check in screen constants-->
+    <string name="how_to_check_in_label">How do you want to check in?</string>
+    <string name="care_pay_login_button_label">CarePay Login</string>
+    <string name="scan_qr_code_button_label">Scan QR Code</string>
+    <string name="manual_search_button_label">Manual Search</string>
+    <string name="create_carepay_account_button_label">Create CarePay Account</string>
+
 </resources>
