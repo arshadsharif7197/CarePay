@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -71,6 +72,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private TextView cityTextView;
     private TextView stateTextView;
     private TextView zipcodeTextView;
+    private FrameLayout addressline2label;
+    private View address2labelview;
 
     private ProgressBar demographicProgressBar;
 
@@ -161,7 +164,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                         String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy();
                                         dobTExtView.setText(dateOfBirthString);
                                     }
-                                    genderTextView.setText(demographicPersDetailsPayloadDTO.getGender());
+                                    String gender=demographicPersDetailsPayloadDTO.getGender();
+                                    genderTextView.setText(gender);
                                     raceTextView.setText(demographicPersDetailsPayloadDTO.getPrimaryRace());
                                     ethnicityTextView.setText(demographicPersDetailsPayloadDTO.getEthnicity());
                                 }
@@ -186,7 +190,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                 demographicAddressPayloadDTO = payloadinfomodel.getAddress();
                                 if (demographicAddressPayloadDTO != null) {
                                     address1TextView.setText(demographicAddressPayloadDTO.getAddress1());
-                                    address2TextView.setText(demographicAddressPayloadDTO.getAddress2());
+                                    String address2=demographicAddressPayloadDTO.getAddress2();
+                                    address2TextView.setText(address2);
                                     cityTextView.setText(demographicAddressPayloadDTO.getCity());
                                     stateTextView.setText(demographicAddressPayloadDTO.getState());
                                     String zipcode = StringUtil.formatZipCode(
@@ -248,6 +253,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         //  Address Model View
         address1TextView = (TextView) view.findViewById(R.id.reviewAddress1TextView);
         address2TextView = (TextView) view.findViewById(R.id.reviewAddress2TextView);
+        addressline2label=(FrameLayout)view.findViewById(R.id.address2layout);
+        address2labelview=view.findViewById(R.id.address2labelview);
         cityTextView = (TextView) view.findViewById(R.id.reviewCityTextView);
         stateTextView = (TextView) view.findViewById(R.id.reviewStateTextView);
         zipcodeTextView = (TextView) view.findViewById(R.id.reviewZipcodeTextView);
