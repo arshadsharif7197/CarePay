@@ -7,19 +7,19 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_GOTHAM_ROUNDED_BOLD;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_GOTHAM_ROUNDED_BOOK;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_GOTHAM_ROUNDED_MEDIUM;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_PROXIMA_NOVA_EXTRA_BOLD;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_PROXIMA_NOVA_LIGHT;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_PROXIMA_NOVA_REGULAR;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFont.FONT_PROXIMA_NOVA_SEMI_BOLD;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.GOTHAM_ROUNDED_BOLD;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.GOTHAM_ROUNDED_BOOK;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.GOTHAM_ROUNDED_MEDIUM;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.PROXIMA_NOVA_EXTRA_BOLD;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.PROXIMA_NOVA_LIGHT;
-import static com.carecloud.carepaylibray.customcomponents.CustomAssetStyleable.CustomAssetFontAttribute.PROXIMA_NOVA_SEMI_BOLD;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOLD;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOOK;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_MEDIUM;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_EXTRA_BOLD;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_LIGHT;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_REGULAR;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_SEMI_BOLD;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_BOLD;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_BOOK;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_MEDIUM;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_EXTRA_BOLD;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_LIGHT;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD;
 
 
 /**
