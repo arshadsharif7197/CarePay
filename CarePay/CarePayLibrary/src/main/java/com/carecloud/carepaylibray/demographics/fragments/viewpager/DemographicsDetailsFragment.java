@@ -297,9 +297,11 @@ public class DemographicsDetailsFragment extends Fragment
                 genderTextView.setText(gender);
             }
 
-            String dob = model.getDateOfBirth();
-            if (!StringUtil.isNullOrEmpty(dob)) {
-                dobEdit.setText(dob);
+            String unformattedDob = model.getDateOfBirth(); // date from model is excepted to be unformatted
+            if (!StringUtil.isNullOrEmpty(unformattedDob)) {
+                // format date as mm/dd/yyyy
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(unformattedDob).getDateAsMMddyyyyWithSlash();
+                dobEdit.setText(dateOfBirthString);
                 dobEdit.requestFocus();
             }
             view.requestFocus();

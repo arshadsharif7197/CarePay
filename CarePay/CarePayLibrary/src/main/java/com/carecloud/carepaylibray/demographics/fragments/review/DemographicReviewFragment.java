@@ -623,9 +623,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
-
-                dobEditText.setText(DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy());
-
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                dobEditText.setText(dateOfBirthString);
             } else {
                 Log.v(LOG_TAG, "date is null");
             }

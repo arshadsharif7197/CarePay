@@ -130,12 +130,21 @@ public class DateUtil {
     }
 
     /**
-     * Format dat as MM-dd-yyyy
+     * Format date as MM-dd-yyyy
      *
      * @return The formatted date as string
      */
     public String getDateAsMMddyyyy() {
         return String.format(Locale.getDefault(), "%02d-%02d-%4d", month + 1, day, year);
+    }
+
+    /**
+     * Format date as MM/dd/yyyy
+     *
+     * @return The formatted date as string
+     */
+    public String getDateAsMMddyyyyWithSlash() {
+        return String.format(Locale.getDefault(), "%02d/%02d/%4d", month + 1, day, year);
     }
 
     /**
@@ -151,12 +160,12 @@ public class DateUtil {
     }
 
     /**
-     * Creates a date from a string formatted as MM-dd-yyyy
+     * Creates a Date object from a string representing a date formatted as MM/dd/yyyy
      *
      * @param dateString The date (as string)
      */
     public static Date parseFromDateAsMMddyyyy(String dateString) {
-        SimpleDateFormat formatted = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
         Date date = null;
         try {
             date = formatted.parse(dateString);
