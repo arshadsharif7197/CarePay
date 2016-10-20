@@ -357,11 +357,13 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         }
         String zipCode = zipCodeEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(zipCode)) {
-            demographicAddressPayloadDTO.setZipcode(zipCode);
+            // 'de-format' before saving to model
+            demographicAddressPayloadDTO.setZipcode(StringUtil.revertZipToRawFormat(zipCode));
         }
         String phoneNumber = phoneNumberEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(phoneNumber)) {
-            demographicAddressPayloadDTO.setPhone(phoneNumber);
+            // 'de-format' before saving to model
+            demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumber));
         }
 
         String city = cityEditText.getText().toString();

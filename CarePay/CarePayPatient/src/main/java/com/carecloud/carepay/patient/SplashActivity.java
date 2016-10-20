@@ -9,6 +9,7 @@ import android.os.Message;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
@@ -35,13 +36,11 @@ public class SplashActivity extends Activity {
         Message msg = new Message();
         msg.what = STOPSPLASH;
         splashHandler.sendMessageDelayed(msg, SPLASHTIME);
-
     }
 
     public Handler splashHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-//            CognitoActionCallback cognitoActionCallback = null;
             boolean signedIn = CognitoAppHelper.findCurrentUser(null);
             if (msg.what == STOPSPLASH && !(ApplicationPreferences.Instance.getUserLanguage().equals("English"))) {
                 Intent intent = new Intent(SplashActivity.this, SelectLangaugeActivity.class);

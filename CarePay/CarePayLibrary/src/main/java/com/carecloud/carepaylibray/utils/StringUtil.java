@@ -1,6 +1,10 @@
 package com.carecloud.carepaylibray.utils;
 
 
+import android.text.Editable;
+
+import android.view.View;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,21 +27,13 @@ public class StringUtil {
         return (string == null || string.equals(""));
     }
 
-    public static String captialize(String source) {
-
-        source = source.toLowerCase();
-        StringBuilder res = new StringBuilder();
-
-        String[] strArr = source.split(" ");
-        for (String str : strArr) {
-            char[] stringArray = str.trim().toCharArray();
-            stringArray[0] = Character.toUpperCase(stringArray[0]);
-            str = new String(stringArray);
-
-            res.append(str).append(" ");
-        }
-
-        return res.toString();
+    /**
+     * Utility to determine if an Editable is null or empty
+     * @param editable The editable
+     * @return Whether null or empty
+     */
+    public static boolean isNullOrEmpty(Editable editable) {
+        return (editable == null || editable.length() == 0);
     }
 
     public static boolean isValidPhoneNumber(String phoneNumber) {
@@ -68,6 +64,46 @@ public class StringUtil {
             return matcher.matches();
         }
         return false;
+    }
+
+    /**
+     * Capitalize each first letter after a space
+     * @param source The "sentence" (a string containing spaces)
+     * @return The string with capitalized first letters
+     */
+    public static String captialize(String source) {
+
+        source = source.toLowerCase();
+        StringBuilder res = new StringBuilder();
+
+        String[] strArr = source.split(" ");
+        for (String str : strArr) {
+            char[] stringArray = str.trim().toCharArray();
+            stringArray[0] = Character.toUpperCase(stringArray[0]);
+            str = new String(stringArray);
+
+            res.append(str).append(" ");
+        }
+
+        return res.toString();
+    }
+
+    /**
+     * Utility to remove any formatting from zip
+     * @param formattedZipCode The zip code
+     * @return The unformatted zip code as String
+     */
+    public static String revertZipToRawFormat(String formattedZipCode) {
+        return formattedZipCode.replace("-", "");
+    }
+
+    /**
+     * Utility to remove any formatting from phone
+     * @param formattedPhoneNum The phone
+     * @return The unformatted phone as String
+     */
+    public static String revertToRawPhoneFormat(String formattedPhoneNum) {
+        return formattedPhoneNum.replace("-", "");
     }
 
     /**format phone number
@@ -107,8 +143,47 @@ public class StringUtil {
                 zipCodeString.insert(5, "-");
             }
 
-
         return zipCodeString.toString();
+    }
+
+    /**
+     * Util to auto-format a edit text holding a phone
+     * @param editable The editable passed in the text watcher of that edit
+     */
+    public static void autoFormatPhone(Editable editable) {
+        // password auto-complete functionality
+        if (!StringUtil.isNullOrEmpty(editable)) {
+            int len = editable.length();
+            char lastChar = editable.charAt(len - 1);
+            if ((len == 4 || len == 8) && lastChar != '-') {
+                editable.replace(len - 1, len, "-"); // add '-'
+            } else {
+                if (len > 12) {
+                    editable.replace(len - 1, len, ""); // discard
+                }
+            }
+        }
+    }
+
+    /**
+     * Util to auto-format a edit text holding a zip
+     * @param editable The editable passed in the text watcher of that edit
+     */
+    public static void autoFormatZipcode(Editable editable) {
+        if (!StringUtil.isNullOrEmpty(editable)) {
+            int len = editable.length();
+            char lastChar = editable.toString().charAt(len - 1);
+            if (len == 6) {
+                if (lastChar != '-') {
+                    // remove
+                    editable.replace(len - 1, len, "-");
+                }
+            } else {
+                if (len > 10) {
+                    editable.replace(len - 1, len, "");
+                }
+            }
+        }
     }
 
     public static String onShortDrName(String fullName) {
@@ -122,5 +197,18 @@ public class StringUtil {
                 return "";
         } else
             return "";
+    }
+
+    /**
+     * Returns label for view.
+     * @param label string received from endpoint
+     * @return label for view
+     */
+    public static String getLabelForView(String label) {
+        if (isNullOrEmpty(label)) {
+            return "Not Defined";
+        } else {
+            return label;
+        }
     }
 }
