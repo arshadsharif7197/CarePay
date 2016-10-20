@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.utils;
 
 
+import android.text.Editable;
+
 import android.view.View;
 
 import java.util.regex.Matcher;
@@ -24,6 +26,16 @@ public class StringUtil {
     public static boolean isNullOrEmpty(String string) {
         return (string == null || string.equals(""));
     }
+
+    /**
+     * Utility to determine if an Editable is null or empty
+     * @param editable The editable
+     * @return Wether null or empty
+     */
+    public static boolean isNullOrEmpty(Editable editable) {
+        return (editable == null || editable.length() == 0);
+    }
+
 
     public static String captialize(String source) {
 

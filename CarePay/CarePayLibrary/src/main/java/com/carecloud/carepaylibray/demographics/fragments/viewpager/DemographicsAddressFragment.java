@@ -406,19 +406,17 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     modelAddress.setZipcode(zip);
                 }
 
-                if (editable != null) {
+                if (!StringUtil.isNullOrEmpty(editable)) {
                     int len = editable.length();
-                    if (len > 1) {
-                        char lastChar = editable.toString().charAt(len - 1);
-                        if (len == 6) {
-                            if (lastChar != '-') {
-                                // remove
-                                editable.replace(len - 1, len, "-");
-                            }
-                        } else {
-                            if (len > 10) {
-                                editable.replace(len - 1, len, "");
-                            }
+                    char lastChar = editable.toString().charAt(len - 1);
+                    if (len == 6) {
+                        if (lastChar != '-') {
+                            // remove
+                            editable.replace(len - 1, len, "-");
+                        }
+                    } else {
+                        if (len > 10) {
+                            editable.replace(len - 1, len, "");
                         }
                     }
                 }
@@ -497,16 +495,14 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                 }
 
                 // password auto-complete functionality
-                if (editable != null) {
+                if (!StringUtil.isNullOrEmpty(editable)) {
                     int len = editable.length();
-                    if (len > 0) {
-                        char lastChar = editable.charAt(len - 1);
-                        if ((len == 4 || len == 8) && lastChar != '-') {
-                            editable.replace(len - 1, len, "-"); // add '-'
-                        } else {
-                            if (len > 12) {
-                                editable.replace(len - 1, len, ""); // discard
-                            }
+                    char lastChar = editable.charAt(len - 1);
+                    if ((len == 4 || len == 8) && lastChar != '-') {
+                        editable.replace(len - 1, len, "-"); // add '-'
+                    } else {
+                        if (len > 12) {
+                            editable.replace(len - 1, len, ""); // discard
                         }
                     }
                 }
