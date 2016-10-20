@@ -70,8 +70,8 @@ public class CloverMainActivity extends AppCompatActivity {
     }
 
     private void getDemographicInformation() {
-        AppointmentService apptService = (new BaseServiceGenerator(this)).createServicePractice(AppointmentService.class); //, String token, String searchString
-        Call<AppointmentsResultModel> call = apptService.getCheckedInAppointments();
+        AppointmentService apptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class); //, String token, String searchString
+        Call<AppointmentsResultModel> call = apptService.fetchCheckedInAppointments();
         call.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
