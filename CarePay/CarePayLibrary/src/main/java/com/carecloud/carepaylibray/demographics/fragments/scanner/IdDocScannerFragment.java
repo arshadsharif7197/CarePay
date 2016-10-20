@@ -240,7 +240,9 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 try {
                     URL url = new URL(frontPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
-                    Picasso.with(getContext()).load(frontPic).into(scannerFront.getImageViewTarget());
+                    Picasso.with(getContext()).load(frontPic)
+                            .resize(scannerFront.getImgWidth(), scannerFront.getImgHeight())
+                            .into(scannerFront.getImageViewTarget());
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + frontPic);
                     scannerFront.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
@@ -253,7 +255,9 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 try {
                     URL url = new URL(backPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
-                    Picasso.with(getContext()).load(backPic).into(scannerBack.getImageViewTarget());
+                    Picasso.with(getContext()).load(backPic)
+                            .resize(scannerBack.getImgWidth(), scannerBack.getImgHeight())
+                            .into(scannerBack.getImageViewTarget());
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
                     scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),

@@ -48,7 +48,6 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
-
 /**
  * Created by harish_revuri on 9/7/2016.
  * Signup screen.
@@ -439,7 +438,7 @@ public class SignupFragment extends Fragment {
     CognitoActionCallback cognitoActionCallback= new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
-            getDemographicInformation();
+            getDemographicInformation(); // disable fetch demographics; call to information will be performed
             progressBar.setVisibility(View.INVISIBLE);
         }
 
@@ -471,10 +470,11 @@ public class SignupFragment extends Fragment {
     private void launchDemographics(DemographicDTO demographicDTO) {
         // do to Demographics
         Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-        // pass the object into the gson
-        Gson gson = new Gson();
-        intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
-
+        if(demographicDTO != null) {
+            // pass the object into the gson
+            Gson gson = new Gson();
+            intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
+        }
         startActivity(intent);
         getActivity().finish();
     }
@@ -482,13 +482,13 @@ public class SignupFragment extends Fragment {
     private void getDemographicInformation() {
         progressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicDTO> call = apptService.fetchDemographics();
+        Call<DemographicDTO> call = apptService.fetchDemographicInformation();
         call.enqueue(new Callback<DemographicDTO>() {
             @Override
             public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
                 DemographicDTO demographicDTO = response.body();
+
                 progressBar.setVisibility(View.GONE);
-                Log.v(LOG_TAG, "demographic info fetched");
                 launchDemographics(demographicDTO);
             }
 

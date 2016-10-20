@@ -71,7 +71,6 @@ public class DemographicPayloadDTO {
 
     /**
      * Setter
-     *
      * @param idDocuments The id documents
      */
     public void setIdDocuments(List<DemographicIdDocPayloadDTO> idDocuments) {
