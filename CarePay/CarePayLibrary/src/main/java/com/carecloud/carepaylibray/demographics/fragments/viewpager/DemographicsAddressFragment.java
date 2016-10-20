@@ -29,6 +29,10 @@ import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.utils.StringUtil.autoFormatPhone;
+import static com.carecloud.carepaylibray.utils.StringUtil.autoFormatZipcode;
+import static com.carecloud.carepaylibray.utils.StringUtil.revertToRawPhoneFormat;
+import static com.carecloud.carepaylibray.utils.StringUtil.revertZipToRawFormat;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -210,12 +214,13 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     // update the modelAddress with values from UI
                     modelAddress.setAddress1(address1EditText.getText().toString());
                     modelAddress.setAddress2(address2EditText.getText().toString());
-                    modelAddress.setZipcode(zipCodeEditText.getText().toString());
+                    String formattedZipCode = zipCodeEditText.getText().toString();
+                    modelAddress.setZipcode(revertZipToRawFormat(formattedZipCode));
                     modelAddress.setCity(cityEditText.getText().toString());
                     modelAddress.setState(stateAutoCompleteTextView.getText().toString());
                     // eliminate '-' from the phone number
                     String formattedPhoneNum = phoneNumberEditText.getText().toString();
-                    modelAddress.setPhone(formattedPhoneNum.replace("-", ""));
+                    modelAddress.setPhone(revertToRawPhoneFormat(formattedPhoneNum));
 
                     ((DemographicsActivity) getActivity()).setAddressModel(modelAddress); // sent the modelAddress to the activity
                     ((DemographicsActivity) getActivity()).setDetailsModel(modelPersDetails); // sent the modelDetails to the activity
@@ -232,8 +237,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         // populate views
         populateViewsWithData();
-
-
     }
 
     /**
@@ -282,7 +285,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
             String zip = modelAddress.getZipcode();
             if (!StringUtil.isNullOrEmpty(zip)) {
-                zipCodeEditText.setText(zip);
+                zipCodeEditText.setText(StringUtil.formatZipCode(zip));
                 zipCodeEditText.requestFocus();
             }
 
@@ -301,11 +304,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             String phone = modelAddress.getPhone();
             if (!StringUtil.isNullOrEmpty(phone) && phone.length() == 10) {
                 // expected as xxxxxxxxxx; convert to xxx-xxx-xxxx
-                String formattedPhone = String.format("%s-%s-%s",
-                                                      phone.substring(0, 3),
-                                                      phone.substring(3, 6),
-                                                      phone.substring(6, 10));
-                phoneNumberEditText.setText(formattedPhone);
+                phoneNumberEditText.setText(StringUtil.formatPhoneNumber(phone));
                 phoneNumberEditText.requestFocus();
             }
         }
@@ -406,20 +405,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     modelAddress.setZipcode(zip);
                 }
 
-                if (!StringUtil.isNullOrEmpty(editable)) {
-                    int len = editable.length();
-                    char lastChar = editable.toString().charAt(len - 1);
-                    if (len == 6) {
-                        if (lastChar != '-') {
-                            // remove
-                            editable.replace(len - 1, len, "-");
-                        }
-                    } else {
-                        if (len > 10) {
-                            editable.replace(len - 1, len, "");
-                        }
-                    }
-                }
+                autoFormatZipcode(editable);
             }
         });
         cityEditText.addTextChangedListener(new TextWatcher() {
@@ -494,18 +480,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     modelAddress.setPhone(phone);
                 }
 
-                // password auto-complete functionality
-                if (!StringUtil.isNullOrEmpty(editable)) {
-                    int len = editable.length();
-                    char lastChar = editable.charAt(len - 1);
-                    if ((len == 4 || len == 8) && lastChar != '-') {
-                        editable.replace(len - 1, len, "-"); // add '-'
-                    } else {
-                        if (len > 12) {
-                            editable.replace(len - 1, len, ""); // discard
-                        }
-                    }
-                }
+                autoFormatPhone(editable);
             }
         });
     }
