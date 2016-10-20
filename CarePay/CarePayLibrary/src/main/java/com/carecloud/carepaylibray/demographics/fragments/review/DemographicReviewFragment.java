@@ -47,6 +47,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,11 +60,7 @@ import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 
 
 public class DemographicReviewFragment extends Fragment implements View.OnClickListener {
@@ -103,7 +105,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private TextInputLayout stateLabel;
     private TextInputLayout zipcodeLabel;
     private TextInputLayout doblabel;
-    ;
     private LinearLayout rootview;
 
 
