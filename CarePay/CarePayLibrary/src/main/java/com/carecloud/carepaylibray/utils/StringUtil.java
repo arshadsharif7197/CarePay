@@ -126,6 +126,11 @@ public class StringUtil {
             return "";
     }
 
+    /**
+     * Returns label for view.
+     * @param label string received from endpoint
+     * @return label for view
+     */
     public static String getLabelForView(String label) {
         if (isNullOrEmpty(label)) {
             return "Not Defined";
