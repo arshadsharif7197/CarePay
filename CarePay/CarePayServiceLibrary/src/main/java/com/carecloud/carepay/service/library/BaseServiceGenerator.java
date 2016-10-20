@@ -97,6 +97,7 @@ public class BaseServiceGenerator {
 
         return retrofit.create(serviceClass);
     }
+    
     public static boolean isNullOrEmpty(String string) {
         return (string == null || string.trim().equals(""));
     }

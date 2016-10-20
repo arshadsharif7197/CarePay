@@ -8,18 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
-import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCartView;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 
-import org.joda.time.DateTime;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,7 +50,7 @@ public class CheckInActivity extends AppCompatActivity {
 
     private void getDemographicInformation() {
         AppointmentService apptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class); //, String token, String searchString
-        Call<AppointmentsResultModel> call = apptService.fetchCheckedInAppointments();
+        Call<AppointmentsResultModel> call = apptService.getCheckedInAppointments();
         call.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {

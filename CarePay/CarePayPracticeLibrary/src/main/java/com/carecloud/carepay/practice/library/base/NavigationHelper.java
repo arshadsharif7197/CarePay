@@ -3,11 +3,8 @@ package com.carecloud.carepay.practice.library.base;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
-import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
-
 import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_HOME;
 
 /**

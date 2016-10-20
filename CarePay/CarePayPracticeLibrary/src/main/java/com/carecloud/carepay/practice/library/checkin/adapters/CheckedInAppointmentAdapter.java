@@ -112,6 +112,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
          * Constructor.
          * @param view view
          */
+
         CartViewHolder(View view) {
             super(view);
             appointmentStatusCartView= (AppointmentStatusCartView) view;
