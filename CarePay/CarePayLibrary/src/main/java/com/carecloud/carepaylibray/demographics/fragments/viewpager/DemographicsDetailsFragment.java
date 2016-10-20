@@ -48,6 +48,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -327,11 +328,11 @@ public class DemographicsDetailsFragment extends Fragment
         } else if (view == addUnlistedMedTextView) {
             Snackbar.make(view, "In progress", Snackbar.LENGTH_SHORT).show();
         } else if (view == nextButton) {
-            nextbuttonClick();
+            onNextButtonClick();
         }
     }
 
-    private void nextbuttonClick() {
+    private void onNextButtonClick() {
         if (isDateOfBirthValid()) { // proceed only if valid date of birth
             // update the model with values from UI
             updateViewsFromModel();
@@ -354,10 +355,12 @@ public class DemographicsDetailsFragment extends Fragment
         if (!StringUtil.isNullOrEmpty(gender) && !gender.equals(getString(R.string.choose))) {
             model.setGender(gender);
         }
-        // at hhis point date of birth has been validated (if not empty nor null)
-        String dob = dobEdit.getText().toString();
-        if (!StringUtil.isNullOrEmpty(dob)) { // simply test if empty (or null)
-            model.setDateOfBirth(dob);
+        // at this point date of birth has been validated (if not empty nor null)
+        String formattedDob = dobEdit.getText().toString();
+        if (!StringUtil.isNullOrEmpty(formattedDob)) { // simply test if empty (or null)
+            // convert back to raw format
+            Date dob = DateUtil.parseFromDateAsMMddyyyy(formattedDob);
+            model.setDateOfBirth(DateUtil.getDateRaw(dob));
         }
         ((DemographicsActivity) getActivity()).setDetailsModel(model); // save the updated model in the activity
     }

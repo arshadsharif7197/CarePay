@@ -155,7 +155,8 @@ public class DateUtil {
      * @return The string
      */
     public static String getDateRaw(Date date) {
-        SimpleDateFormat out = new SimpleDateFormat(instance.format, Locale.getDefault());
+        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+        SimpleDateFormat out = new SimpleDateFormat(rawFmt, Locale.getDefault());
         return out.format(date);
     }
 
