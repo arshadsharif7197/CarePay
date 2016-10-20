@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@color/white"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:id="@+id/demographicsReviewRootLayout">
 
 
     <include layout="@layout/toolbar_demographics_review"/>
@@ -44,11 +49,14 @@
             android:id="@+id/reviewdemogrPersonalInfoLabel"
             android:text="@string/review_PersonalInforamation_label"
             android:layout_marginTop="36dp"
-            style="@style/DemographicsSectionLabelStyle"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/reviewDemographicBlue."/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/reviewdemogrFirstNameTextInput"
             style="@style/TextInputLayoutStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
             android:layout_marginTop="18dp">
 
             <EditText
@@ -57,7 +65,8 @@
                 android:hint="@string/firstname_text"
                 android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
                 android:inputType="textPersonName"
-                android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"/>
+                android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"
+                />
         </android.support.design.widget.TextInputLayout>
 
 
@@ -67,7 +76,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/reviewdemogrMiddleNameTextInputLayout"
-                style="@style/SigninSignupTextInputStyle">
+                style="@style/SigninSignupTextInputStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/reviewdemogrMiddleNameEdit"
@@ -76,8 +86,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName"
                     android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
-                    android:nextFocusForward="@+id/reviewdemogrsLastNameEdit"
-                    android:paddingTop="0dp"/>
+                    android:nextFocusForward="@+id/reviewdemogrsLastNameEdit" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -89,7 +98,8 @@
         </FrameLayout>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/reviewdemogrLastNameTextInput"
-            style="@style/SigninSignupTextInputStyle">
+            style="@style/SigninSignupTextInputStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <EditText
                 android:id="@+id/reviewdemogrLastNameEdit"
@@ -106,7 +116,8 @@
             android:layout_height="wrap_content">
         <android.support.design.widget.TextInputLayout
             android:id="@+id/reviewdemogrDOBTextInput"
-            style="@style/SigninSignupTextInputStyle">
+            style="@style/SigninSignupTextInputStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <EditText
                 android:id="@+id/revewidemogrDOBEdit"
@@ -126,7 +137,8 @@
         </FrameLayout>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/reviewdemogrPhoneNumberTextInput"
-            style="@style/SigninSignupTextInputStyle">
+            style="@style/SigninSignupTextInputStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <EditText
                 android:id="@+id/reviewgrdemoPhoneNumberEdit"
@@ -142,8 +154,10 @@
         <TextView
             android:id="@+id/demographicsLabel"
             android:text="@string/review_screen_demographic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
-            style="@style/DemographicsSectionLabelStyle"/>
+            style="@style/reviewDemographicBlue."/>
 
 
         <LinearLayout
@@ -224,6 +238,7 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/reviewDriverLicenseLabel"
             style="@style/TextInputLayoutStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
             android:layout_weight="1">
 
         <EditText
@@ -237,10 +252,12 @@
 
 
         <TextView
-            style="@style/DemographicsSectionLabelStyle"
             android:id="@+id/demographicsAddressAddressSectionLabel"
             android:text="@string/demogr_section_address_label"
-            android:layout_marginTop="36dp"/>
+            android:layout_marginTop="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/reviewDemographicBlue."/>
 
 
        <LinearLayout
@@ -252,7 +269,8 @@
            <android.support.design.widget.TextInputLayout
             android:id="@+id/address1TextInputLayout"
             style="@style/TextInputLayoutStyle"
-            android:layout_weight="1">
+            android:layout_weight="1"
+               app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <EditText
                 android:id="@+id/addressEditTextId"
@@ -260,7 +278,8 @@
                 android:hint="@string/Address1EditText"
                 android:imeOptions="actionNext"
                 android:inputType="textPostalAddress"
-                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                 android:nextFocusForward="@+id/addressEditText2Id"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -272,7 +291,8 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/address2TextInputLayout"
                 style="@style/TextInputLayoutStyle"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/addressEditText2Id"
@@ -280,7 +300,7 @@
                     android:hint="@string/Address2EditText"
                     android:inputType="textPostalAddress"
                     android:imeOptions="actionNext"
-                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789"
+                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                     android:nextFocusForward="@+id/zipCodeId" />
             </android.support.design.widget.TextInputLayout>
 
@@ -294,7 +314,8 @@
            <android.support.design.widget.TextInputLayout
                android:id="@+id/zipCodeTextInputLayout"
                style="@style/TextInputLayoutStyle"
-               android:layout_weight="1">
+               android:layout_weight="1"
+               app:hintTextAppearance="@style/FloatingLabelStyle">
 
                <EditText
                    android:id="@+id/zipCodeId"
@@ -310,13 +331,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/cityTextInputLayout"
                 style="@style/TextInputLayoutStyle"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/cityId"
@@ -328,6 +349,7 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/stateTextInputLayout"
                 style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
                 android:layout_weight="1">
 
                 <AutoCompleteTextView
@@ -335,7 +357,8 @@
                     style="@style/EditTextStyle"
                     android:hint="@string/StateEditText"
                     android:imeOptions="actionDone"
-                    android:inputType="textAutoComplete"
+                    android:inputType="textCapCharacters"
+                    android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
                     android:maxLength="2" />
 
             </android.support.design.widget.TextInputLayout>

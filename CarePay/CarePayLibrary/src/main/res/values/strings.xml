@@ -135,7 +135,7 @@
     <!--<review_insuranceScreen>-->
 
 
-    <string name="driverLicense">Diver License</string>
+    <string name="driverLicense">Diver\'s License</string>
     <string name="review_insurancecardnumber_hint">Insurance Card Number</string>
     <string name="dobformat">MM/DD/YYYY</string>
     <string name="demofirstNameLabel">First Name</string>
@@ -257,8 +257,8 @@
     <string name="review_dateofbirth_label">DOB</string>
     <string name="review_phone_number_label">PHONE NUMBER</string>
     <string name="review_address_lable">ADDRESS</string>
-    <string name="review_address1_label">ADDRESS 1</string>
-    <string name="review_address2_label">ADDRESS 2</string>
+    <string name="review_address1_label">ADDRESS LINE 1</string>
+    <string name="review_address2_label">ADDRESS LINE 2</string>
     <string name="review_driverlicense_label">DRIVER\'S  LICENSE</string>
     <string name="review_prefferedlanguage_label">PREFERRED LANGUAGE</string>
     <string name="review_gender_label">Gender</string>
@@ -326,7 +326,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="request_appointment_button_text">REQUEST APPOINTMENT</string>
     <string name="checked_in_label">CHECKED-IN</string>
     <string name="demogr_section_name_label">Name</string>
-    <string name="demogr_section_address_label">Address</string>
+    <string name="demogr_section_address_label">ADDRESS</string>
 
     <string name="choose">Choose</string>
     <string name="Other">Other</string>

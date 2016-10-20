@@ -335,6 +335,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
+                    android:id="@+id/address2layout"
                     android:layout_height="@dimen/review_default_heaight">
 
                     <TextView
@@ -355,6 +356,7 @@
 
                 <View
                     style="@style/Review_Screen_View_Style"
+                    android:id="@+id/address2labelview"
                     android:layout_width="match_parent" />
                 <FrameLayout
                     android:layout_width="match_parent"
