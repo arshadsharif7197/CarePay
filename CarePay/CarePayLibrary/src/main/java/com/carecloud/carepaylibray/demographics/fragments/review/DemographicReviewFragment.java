@@ -48,8 +48,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
