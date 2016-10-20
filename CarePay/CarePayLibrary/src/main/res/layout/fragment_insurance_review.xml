@@ -51,7 +51,7 @@
                     style="@style/reviewDemographicBlue."
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PERSONAL INFO" />
+                    android:text="@string/review_PersonalInforamation_label" />
 
                 <FrameLayout
                     android:layout_width="match_parent"

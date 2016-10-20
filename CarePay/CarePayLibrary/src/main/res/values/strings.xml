@@ -249,7 +249,7 @@
     <string name="review_screen_insurancepolicy_number_lable">INSURANCE MEMBER ID</string>
     <string name="review_screen_agreebutton">YES, THESE ARE CORRECT</string>
     <string name="review_screen_disagreebutton">I NEED TO UPDATE THIS INFORMATION</string>
-    <string name="review_PersonalInforamation_label">PERSONAL INFORMATION</string>
+    <string name="review_PersonalInforamation_label">PERSONAL INFO</string>
     <string name="review_firstname_label">FIRST NAME</string>
     <string name="review_lastname_label">LAST NAME</string>
     <string name="review_middlename_label">MIDDLE NAME</string>
