@@ -49,12 +49,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_confirmation_pin);
         setCancelable(false);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 1.0);
-        getWindow().setAttributes(params);
+        onSettingDialogAttributes();
         onInitialization();
         onSettingStyle();
         onSetListener();
@@ -133,5 +128,14 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
             actualValue = actualValue.substring(0,actualValue.length()-1);
             pinEditText.setText(actualValue);
         }
+    }
+
+    private void onSettingDialogAttributes(){
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+
+        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 1.0);
+        getWindow().setAttributes(params);
     }
 }
