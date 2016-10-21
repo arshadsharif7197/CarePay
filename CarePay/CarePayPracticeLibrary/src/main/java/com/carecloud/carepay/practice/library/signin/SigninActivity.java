@@ -25,9 +25,11 @@ import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import java.util.Arrays;
 
 
@@ -76,7 +78,8 @@ public class SigninActivity extends AppCompatActivity {
         setEditTexts();
     }
 
-
+    /** Initailizing the view
+     */
     public void initViews() {
         signinButton = (TextView) findViewById(R.id.signinTextview);
         signinButton.setEnabled(false);
