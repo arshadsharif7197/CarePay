@@ -25,6 +25,7 @@ public class HowToCheckInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_how_to_check_in);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        /*Initialise views*/
         initViews();
     }
 
@@ -34,26 +35,32 @@ public class HowToCheckInActivity extends AppCompatActivity {
     void initViews(){
         CustomGothamRoundedMediumButton goBackButton = (CustomGothamRoundedMediumButton)
                 findViewById(R.id.goBackButton);
+        goBackButton.setText(getResources().getString(R.string.not_defined));
         goBackButton.setOnClickListener(goBackButtonListener);
 
         CustomGothamRoundedMediumLabel howToCheckInTextView = (CustomGothamRoundedMediumLabel)
                 findViewById(R.id.howToCheckInTextView);
+        howToCheckInTextView.setText(getResources().getString(R.string.not_defined));
         howToCheckInTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.white));
 
         CustomGothamRoundedBookButton carePayLoginButton = (CustomGothamRoundedBookButton)
                 findViewById(R.id.carePayLoginButton);
+        carePayLoginButton.setText(getResources().getString(R.string.not_defined));
         carePayLoginButton.setOnClickListener(carePayLoginButtonListener);
 
         CustomGothamRoundedBookButton scanQRCodeButton = (CustomGothamRoundedBookButton)
                 findViewById(R.id.scanQRCodeButton);
+        scanQRCodeButton.setText(getResources().getString(R.string.not_defined));
         scanQRCodeButton.setOnClickListener(scanQRCodeButtonListener);
 
         CustomGothamRoundedBookButton manualSearchButton = (CustomGothamRoundedBookButton)
                 findViewById(R.id.manualSearchButton);
+        manualSearchButton.setText(getResources().getString(R.string.not_defined));
         manualSearchButton.setOnClickListener(manualSearchButtonListener);
 
         CustomGothamRoundedMediumButton createCarePayAccountButton =
                 (CustomGothamRoundedMediumButton) findViewById(R.id.createCarePayAccountButton);
+        createCarePayAccountButton.setText(getResources().getString(R.string.not_defined));
         createCarePayAccountButton.setOnClickListener(createCarePayAccountButtonListener);
 
         ImageView homeImageView = (ImageView) findViewById(R.id.homeImageView);
