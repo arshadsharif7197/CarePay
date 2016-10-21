@@ -12,4 +12,5 @@
     <dimen name="appointment_cart_provider_textsize">17sp</dimen>
     <dimen name="appointment_cart_amount_textsize">17sp</dimen>
     <dimen name="appointment_cart_time_textsize">16sp</dimen>
+    <dimen name="forgotpassword_textsize">14.0sp</dimen>
 </resources>

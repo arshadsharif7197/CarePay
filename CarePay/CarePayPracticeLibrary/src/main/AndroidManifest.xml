@@ -3,7 +3,8 @@
     package="com.carecloud.carepay.practice.library">
 
     <application>
-        <activity android:name=".checkin.CheckInActivity"></activity>
+        <activity android:name=".checkin.CheckInActivity" />
+        <activity android:name=".patientmode.PatientModeSplashActivity"></activity>
     </application>
 
 </manifest>
