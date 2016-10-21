@@ -83,7 +83,7 @@
     <RelativeLayout
         android:id="@+id/mainLayout"
         android:layout_width="500.0dp"
-        android:layout_height="193.0dp"
+        android:layout_height="220.0dp"
         android:background="@drawable/layout_shadow"
         android:elevation="20dp"
         android:gravity="center"
