@@ -377,7 +377,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         zipCodeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                zipCodeEditText.setSelection(zipCodeEditText.getText().length());
+                zipCodeEditText.setSelection(zipCodeEditText.length());
             }
         });
         zipCodeEditText.addTextChangedListener(new TextWatcher() {
@@ -386,9 +386,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
                 prevLen = charSequence.length();
-                if (charSequence != null) {
-                    zipCodeEditText.setSelection(charSequence.length());
-                }
+                zipCodeEditText.setSelection(charSequence.length());
             }
 
             @Override
@@ -456,7 +454,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                phoneNumberEditText.setSelection(phoneNumberEditText.getText().length());
+                phoneNumberEditText.setSelection(phoneNumberEditText.length());
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {

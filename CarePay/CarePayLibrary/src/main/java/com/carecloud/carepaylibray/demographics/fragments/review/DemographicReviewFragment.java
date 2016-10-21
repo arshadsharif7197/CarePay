@@ -151,7 +151,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         dobEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dobEditText.setSelection(dobEditText.getText().toString().length());
+                dobEditText.setSelection(dobEditText.length());
             }
         });
 
@@ -174,10 +174,18 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
         });
 
+        zipCodeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dobEditText.setSelection(dobEditText.length());
+            }
+        });
         zipCodeEditText.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
 
             @Override
             public void beforeTextChanged(CharSequence zipcode, int start, int count, int after) {
+                prevLen = zipcode.length();
             }
 
             @Override
@@ -187,13 +195,16 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable zipcode) {
-                if (zipcode.length() > 5 && Character.isDigit(zipcode.charAt(5))) {
-                    zipcode.insert(5, "-");
-                }
-
+                StringUtil.autoFormatZipcode(zipcode, prevLen);
             }
         });
 
+        phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                phoneNumberEditText.setSelection(phoneNumberEditText.length());
+            }
+        });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
 
             int length_before = 0;
@@ -209,18 +220,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable phonenumber) {
-
-                if (length_before < phonenumber.length()) {
-                    if (phonenumber.length() == 3 || phonenumber.length() == 7) {
-                        phonenumber.append("-");
-                    }
-                    if (phonenumber.length() > 3 && Character.isDigit(phonenumber.charAt(3))) {
-                        phonenumber.insert(3, "-");
-                    }
-                    if (phonenumber.length() > 7 && Character.isDigit(phonenumber.charAt(7))) {
-                        phonenumber.insert(7, "-");
-                    }
-                }
+                StringUtil.autoFormatPhone(phonenumber, length_before);
             }
         });
 

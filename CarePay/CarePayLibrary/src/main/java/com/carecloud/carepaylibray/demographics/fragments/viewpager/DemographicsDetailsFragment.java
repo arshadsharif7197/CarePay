@@ -123,7 +123,7 @@ public class DemographicsDetailsFragment extends Fragment
         dobEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dobEdit.setSelection(dobEdit.getText().toString().length());
+                dobEdit.setSelection(dobEdit.length());
             }
         });
 
