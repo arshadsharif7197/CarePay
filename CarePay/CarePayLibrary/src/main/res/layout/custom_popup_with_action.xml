@@ -24,8 +24,7 @@
             style="@style/AppointmentPopupMessageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/apt_popup_message_margin"
-            android:text="@string/apt_popup_message_text" />
+            android:layout_margin="@dimen/apt_popup_message_margin" />
 
     </LinearLayout>
 
@@ -42,8 +41,7 @@
             android:layout_weight="1"
             android:layout_margin="@dimen/apt_popup_button_margin"
             android:background="@drawable/button_payne_gray_background"
-            style="@style/AppointmentPopupButton"
-            android:text="@string/dismiss" />
+            style="@style/AppointmentPopupButton" />
 
         <Button
             android:id="@+id/popup_checkin_button"
@@ -52,7 +50,6 @@
             android:layout_weight="1"
             android:layout_margin="@dimen/apt_popup_button_margin"
             android:background="@drawable/button_yellow_green_background"
-            style="@style/AppointmentPopupButton"
-            android:text="@string/checkin_early" />
+            style="@style/AppointmentPopupButton" />
     </LinearLayout>
 </LinearLayout>

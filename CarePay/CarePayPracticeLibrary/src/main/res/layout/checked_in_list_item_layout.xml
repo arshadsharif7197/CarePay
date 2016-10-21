@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCartView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/patientPicImageView"
         android:layout_width="160dp"
         android:layout_height="160dp"
@@ -77,5 +76,5 @@
         android:layout_below="@+id/patientPicImageView"
         android:layout_marginTop="18dp"
         android:layout_marginStart="15dp"
-        android:background="@color/white" />
-</RelativeLayout>
+        android:background="@color/white" />-->
+</com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCartView>

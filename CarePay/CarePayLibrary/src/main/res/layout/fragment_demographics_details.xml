@@ -152,7 +152,9 @@
                             android:id="@+id/demogrDetailsDobEdit"
                             style="@style/DemographicsDetailsEditStyle"
                             android:hint="@string/demoDobLabel"
-                            android:inputType="date"/>
+                            android:inputType="date"
+                            android:digits="1234567890/"
+                            android:maxLength="10"/>
                     </android.support.design.widget.TextInputLayout>
 
                     <TextView
