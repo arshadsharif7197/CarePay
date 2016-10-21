@@ -9,6 +9,7 @@
         <activity android:name=".payments.RotateActivity" />
         <activity android:name=".signin.SigninActivity" />
         <activity android:name=".checkin.HowToCheckInActivity"></activity>
+        <activity android:name=".patientmode.PatientModeSplashActivity"></activity>
     </application>
 
 </manifest>

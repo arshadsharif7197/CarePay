@@ -3,8 +3,19 @@
     <!-- Base application theme. -->
     <style name="AppThemePractice" parent="@style/AppThemeNoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#FF0D91EF</item>
-        <item name="colorPrimaryDark">#FF0D91EF</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:overScrollMode">never</item>
+        <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
+
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
+
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/light_gray</item>
     </style>
 </resources>
