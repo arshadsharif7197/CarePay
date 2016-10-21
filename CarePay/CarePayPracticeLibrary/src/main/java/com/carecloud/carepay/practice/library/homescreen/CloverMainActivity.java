@@ -11,15 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
-import com.carecloud.carepay.practice.library.checkin.HowToCheckInActivity;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.services.AppointmentService;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
 
 public class CloverMainActivity extends AppCompatActivity {
 

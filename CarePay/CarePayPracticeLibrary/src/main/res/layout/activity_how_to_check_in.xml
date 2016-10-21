@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/dimen_20dp"
     android:paddingRight="@dimen/dimen_20dp"
     android:paddingTop="@dimen/dimen_18dp"
-    tools:context="com.carecloud.carepay.practice.library.checkin.HowToCheckInActivity">
+    tools:context="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
