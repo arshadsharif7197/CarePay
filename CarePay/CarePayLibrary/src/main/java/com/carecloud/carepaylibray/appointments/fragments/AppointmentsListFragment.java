@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -161,9 +162,8 @@ public class AppointmentsListFragment extends Fragment {
                     CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
 
-            /**
-             * Go for next flow.
-             */
+            Intent demographicReviewIntent = new Intent(getContext(), DemographicReviewActivity.class);
+            getContext().startActivity(demographicReviewIntent);
         }
     };
 
