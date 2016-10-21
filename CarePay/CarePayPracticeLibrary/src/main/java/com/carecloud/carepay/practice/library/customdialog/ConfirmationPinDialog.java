@@ -29,12 +29,19 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
     private CustomProxyNovaRegularLabel subHeaderLabel;
     private CustomGothamRoundedMediumButton dialogCancelTextView;
 
-
+    /**
+     * Constructor.
+     * @param context context
+     */
     public ConfirmationPinDialog(Context context) {
         super(context);
         this.context=context;
     }
 
+    /**
+     * for initialization UI .
+     * @param savedInstanceState for saving state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +61,9 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
 
     }
 
+    /**
+     * for initialization UI components  .
+     */
     private void onInitialization(){
         pinEditText = (EditText)findViewById(R.id.pinEditText);
         headerLabel = (CustomGothamRoundedMediumButton)findViewById(R.id.headerLabel);
@@ -61,24 +71,18 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
         dialogCancelTextView = (CustomGothamRoundedMediumButton)findViewById(R.id.dialogCancelTextView);
     }
 
+    /**
+     * for setting  UI Component Style .
+     */
     private void onSettingStyle(){
         headerLabel.setTextColor(ContextCompat.getColor(context, com.carecloud.carepaylibrary.R.color.white));
         subHeaderLabel.setTextColor(ContextCompat.getColor(context, com.carecloud.carepaylibrary.R.color.white));
         dialogCancelTextView.setTextColor(ContextCompat.getColor(context, com.carecloud.carepaylibrary.R.color.bright_cerulean));
-
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_one));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_two));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_three));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_four));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_five));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_six));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_seven));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_eighth));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_nine));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_zero));
-        SystemUtil.setGothamRoundedMediumTypeface(context,(Button)findViewById(R.id.pin_key_blank));
     }
 
+    /**
+     * set listner for components .
+     */
     private void onSetListener(){
         (findViewById(R.id.pin_key_one)).setOnClickListener(this);
         (findViewById(R.id.pin_key_two)).setOnClickListener(this);
@@ -97,6 +101,10 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
 
     }
 
+    /**
+     * for components listener .
+     * @param view for clicked view
+     */
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
@@ -109,6 +117,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
             onEnterPinNumber(buttonValue);
         }
     }
+
 
     private void onEnterPinNumber(String pinNumberStr){
         String actualValue = pinEditText.getText().toString();
