@@ -138,12 +138,7 @@ public class SigninActivity extends AppCompatActivity {
         forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(SigninActivity.this);
-                View customview=LayoutInflater.from(SigninActivity.this).inflate(R.layout.patient_mode_switch_dialog, null, false);
-                dialog.setView(customview);
-                final AlertDialog alert = dialog.create();
-                alert.show();
-                alert.getWindow().setLayout(500,450);
+
             }
         });
 
