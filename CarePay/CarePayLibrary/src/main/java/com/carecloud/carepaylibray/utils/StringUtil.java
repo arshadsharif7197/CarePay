@@ -158,8 +158,16 @@ public class StringUtil {
                 phoneNumber.append("-");
             }
 
+            if (currentLength == 4 && lastChar != '-') { // re-insert / after its deletion
+                phoneNumber.replace(currentLength - 1, currentLength, "-" + lastChar);
+            }
+
             if (currentLength == 7 && lastChar != '-') {
                 phoneNumber.append("-");
+            }
+
+            if (currentLength == 8 && lastChar != '-') { // re-insert / after its deletion
+                phoneNumber.replace(currentLength - 1, currentLength, "-" + lastChar);
             }
 
             if(lengthBefore != 3 && lengthBefore != 7 && lastChar == '-') {
@@ -174,15 +182,19 @@ public class StringUtil {
      * @param zipcode The editable passed in the text watcher of that edit
      */
     public static void autoFormatZipcode(Editable zipcode, int lengthBefore) {
-        // password auto-complete functionality
+        // zipcode auto-complete functionality
         int currentLength = zipcode.length();
         if (lengthBefore < currentLength) {
             char lastChar = zipcode.charAt(currentLength - 1);
-            if (currentLength == 5 && lastChar != '-') {
+            if (currentLength == 5 && lastChar != '-') { // insert separator
                 zipcode.append("-");
             }
 
-            if (lengthBefore != 5 && lastChar == '-') {
+            if (currentLength == 6 && lastChar != '-') { // re-insert separator
+                zipcode.replace(currentLength - 1, currentLength, "-" + lastChar);
+            }
+
+            if (lengthBefore != 5 && lastChar == '-') { // discard separator except for position 5
                 zipcode.replace(currentLength - 1, currentLength, "");
             }
         }
@@ -194,16 +206,26 @@ public class StringUtil {
      * @param dob The editable passed in the text watcher of that edit
      */
     public static void autoFormatDateOfBirth(Editable dob, int lengthBefore) {
-        // password auto-complete functionality
+        // date auto-complete functionality
         int currentLength = dob.length();
-        if (lengthBefore < currentLength) {
+        if (lengthBefore < currentLength) { // on adding chars
             char lastChar = dob.charAt(currentLength - 1);
+            Log.v("StringUtil", "autoFormatDateOfBirth(" + dob + ", " + lengthBefore + ")"
+                    + " lastChar: " + lastChar);
             if (currentLength == 2 && lastChar != '/') {
                 dob.append("/");
             }
 
+            if (currentLength == 3 && lastChar != '/') { // re-insert / after its deletion
+                dob.replace(currentLength - 1, currentLength, "/" + lastChar);
+            }
+
             if (currentLength == 5 && lastChar != '/') {
                 dob.append("/");
+            }
+
+            if (currentLength == 6 && lastChar != '/') { // re-insert / after its deletion
+                dob.replace(currentLength - 1, currentLength, "/" + lastChar);
             }
 
             if(lengthBefore != 2 && lengthBefore != 5 && lastChar == '/') {
