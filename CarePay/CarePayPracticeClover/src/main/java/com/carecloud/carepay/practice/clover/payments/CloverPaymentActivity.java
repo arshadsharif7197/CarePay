@@ -286,7 +286,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
 
     private void postCloverPayment(Payment payment) {
         //To DO
-        PaymentsService paymentsService = (new BaseServiceGenerator(this)).createServicePractice(PaymentsService.class);
+        PaymentsService paymentsService = (new BaseServiceGenerator(this)).createService(PaymentsService.class);
         Call<Object> call = paymentsService.updateCarePayPayment(payment.getJSONObject());
         call.enqueue(new Callback<Object>() {
             @Override
@@ -298,6 +298,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
                 CloverPaymentActivity.this.finish();
                 Toast.makeText(getApplicationContext(), "CareCloud Payment Success", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, response.toString());*/
+
             }
 
             @Override
