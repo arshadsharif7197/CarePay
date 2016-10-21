@@ -4,10 +4,12 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Model for GET appointment result.
  */
-public class AppointmentsResultModel {
+public class AppointmentsResultModel implements Serializable {
 
     @SerializedName("metadata")
     @Expose

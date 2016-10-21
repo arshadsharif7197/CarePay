@@ -4,13 +4,14 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Model for appointment payload.
  */
-public class AppointmentPayloadModel {
+public class AppointmentPayloadModel implements Serializable {
 
     @SerializedName("appointments")
     @Expose
