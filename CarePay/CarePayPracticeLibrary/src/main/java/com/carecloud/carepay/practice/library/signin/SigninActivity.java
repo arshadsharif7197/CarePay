@@ -230,12 +230,12 @@ public class SigninActivity extends AppCompatActivity {
 
 
     private void setEditTexts() {
-        signInEmailTextInputLayout.setTag("Email Address");
+        signInEmailTextInputLayout.setTag("Not Defined");
         emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
-        emailEditText.setHint("Email Address");
+        emailEditText.setHint("Not Defined");
         emailEditText.setTag(signInEmailTextInputLayout);
 
-        passwordTextInputLayout.setTag(getString(com.carecloud.carepaylibrary.R.string.password_text));
+        passwordTextInputLayout.setTag("Not Defined");
         passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
         passwordEditText.setTag(passwordTextInputLayout);
 

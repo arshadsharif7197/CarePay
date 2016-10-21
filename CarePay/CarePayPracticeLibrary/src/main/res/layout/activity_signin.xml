@@ -12,6 +12,7 @@
         android:layout_height="0dp"
         android:layout_weight="2.5"
         android:layout_marginTop="20.0dp"
+        android:layout_marginEnd="20.0dp"
         android:orientation="horizontal">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,7 +39,7 @@
         android:paddingStart="20dp"
         android:paddingEnd="15dp"
         android:layout_marginTop="21.4dp"
-        android:text="EN"
+        android:text="Not"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:layout_alignParentEnd="true" />
@@ -57,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_15dp"
             android:gravity="center"
-            android:text="@string/signin_title"
+            android:text="@string/not_defined"
             android:textSize="@dimen/signin_title_textsize"
             android:textColor="@color/white"
             app:customAssetFont="gotham_rounded_medium" />
@@ -98,7 +99,7 @@
         <EditText
             android:id="@+id/signinEmailpracticeEditText"
             style="@style/EditTextStyle"
-            android:hint="@string/signin_signup_email_hint"
+            android:hint="@string/not_defined"
             android:imeOptions="actionNext"
             android:inputType="textEmailAddress"/>
         </android.support.design.widget.TextInputLayout>
@@ -114,7 +115,7 @@
             <EditText
                 android:id="@+id/passwordpracticeEditText"
                 style="@style/EditTextStyle"
-                android:hint="@string/password_text"
+                android:hint="@string/not_defined"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"/>
 
@@ -130,20 +131,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:customAssetFont="gotham_rounded_medium"
-            android:text="Sign-in"
+            android:text="@string/not_defined"
             android:paddingBottom="10dp"
             android:textColor="@color/bright_cerulean"
             android:textSize="18sp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="70dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="10dp"
-            android:layout_alignParentEnd="@id/signinTextview"
-            android:src="@drawable/icn_right_arrow"
-            android:id="@+id/rightarrow" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:paddingBottom="10dp"
+        android:src="@drawable/icn_right_arrow"
+        android:id="@+id/rightarrow"
+        android:layout_alignBottom="@+id/signinTextview"
+        android:layout_toEndOf="@+id/signinTextview"
+        android:layout_marginStart="21dp" />
 
 </RelativeLayout>
 
@@ -160,7 +162,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/forgot_password"
+        android:text="@string/not_defined"
         android:textSize="@dimen/forgotpassword_textsize"
         android:textColor="@color/white"
         app:customAssetFont="proxima_nova_regular"
