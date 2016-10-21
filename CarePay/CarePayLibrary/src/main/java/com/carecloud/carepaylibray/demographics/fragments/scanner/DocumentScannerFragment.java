@@ -35,7 +35,6 @@ public abstract class DocumentScannerFragment extends Fragment {
 
     protected ImageCaptureHelper          imageCaptureHelper;
     protected NextAddRemoveStatusModifier buttonsStatusCallback;
-    private   int                         imageShape;
     protected Bitmap                      bitmap;
 
     @Nullable

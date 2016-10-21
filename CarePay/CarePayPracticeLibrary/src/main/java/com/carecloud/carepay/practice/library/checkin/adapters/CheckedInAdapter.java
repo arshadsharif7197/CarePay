@@ -52,7 +52,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
     /**
      * Creates view.
      *
-     * @param parent   parent view
+     * @param parent   parent view.
      * @param viewType view type
      * @return created view
      */
@@ -107,17 +107,17 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
             super(view);
             container = view;
             view.setOnClickListener(this);
-            patientNameTextView = (TextView) view.findViewById(R.id.patientNameTextView);
+            /*patientNameTextView = (TextView) view.findViewById(R.id.patientNameTextView);
             patientBalanceTextView = (TextView) view.findViewById(R.id.patientBalanceTextView);
             paymentTextview = (TextView) view.findViewById(R.id.paymentTextview);
             assistTextview = (TextView) view.findViewById(R.id.assistTextview);
-            patientPicImageView = (ImageView) view.findViewById(R.id.patientPicImageView);
+            patientPicImageView = (ImageView) view.findViewById(R.id.patientPicImageView);*/
             paymentTextview.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            int viewId = view.getId();
+            /*int viewId = view.getId();
             if (viewId == R.id.paymentTextview) {
                 AppointmentPatientDTO model = (AppointmentPatientDTO) view.getTag();
                 Intent rotateInIntent = new Intent(context, RotateActivity.class);
@@ -128,7 +128,7 @@ public class CheckedInAdapter extends RecyclerView.Adapter<CheckedInAdapter.Cart
                 rotateInIntent.putExtra("previous_balance", model.getResponsibilityAccount());
                 rotateInIntent.putExtra("insurance_co_pay_balance", model.getResponsibilityCopay());
                 context.startActivity(rotateInIntent);
-            }
+            }*/
         }
     }
 }
