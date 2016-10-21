@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_how_to_check_in"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/rich_electric_blue_1"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_21dp"
+    android:paddingLeft="@dimen/dimen_20dp"
+    android:paddingRight="@dimen/dimen_20dp"
+    android:paddingTop="@dimen/dimen_18dp"
+    tools:context="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+            android:id="@+id/goBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_overlay"
+            android:drawableLeft="@drawable/icn_arrow_left"
+            android:drawablePadding="@dimen/dimen_10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22sp"
+            android:paddingLeft="@dimen/dimen_15dp"
+            android:paddingRight="@dimen/dimen_15dp"
+            android:textAllCaps="false"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/cp_logo" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+            android:id="@+id/howToCheckInTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_36sp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton
+            android:id="@+id/carePayLoginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent_apt"
+            android:drawableLeft="@drawable/icn_key"
+            android:drawablePadding="@dimen/dimen_25dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_28sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:textAllCaps="false"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton
+            android:id="@+id/scanQRCodeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent_apt"
+            android:drawableLeft="@drawable/icn_scan"
+            android:drawablePadding="@dimen/dimen_25dp"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:textSize="@dimen/text_size_28sp"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton
+            android:id="@+id/manualSearchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent_apt"
+            android:drawableLeft="@drawable/icn_search"
+            android:drawablePadding="@dimen/dimen_25dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_28sp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"/>
+
+        <TextView
+            android:layout_width="@dimen/dimen_450dp"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_35dp"
+            android:background="@color/white"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+            android:id="@+id/createCarePayAccountButton"
+            android:layout_width="@dimen/dimen_450dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_overlay"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22sp"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/homeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/icn_home"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>
