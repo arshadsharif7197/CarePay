@@ -114,7 +114,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     private void getProvidersInformation() {
         appointmentProgressBar.setVisibility(View.VISIBLE);
         AppointmentService aptService = (new BaseServiceGenerator(getActivity())).createService(AppointmentService.class);
-        Call<AppointmentsResultModel> call = aptService.fetchProvidersInformation();
+        Call<AppointmentsResultModel> call = aptService.getProvidersList();
         call.enqueue(new Callback<AppointmentsResultModel>() {
 
             @Override
