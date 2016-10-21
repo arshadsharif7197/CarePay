@@ -156,9 +156,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         });
 
         dobEditText.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
 
             @Override
             public void beforeTextChanged(CharSequence dob, int start, int count, int after) {
+                prevLen = dob.length();
             }
 
             @Override
@@ -168,7 +170,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable dob) {
-                StringUtil.autoFormatDateOfBirth(dob);
+                StringUtil.autoFormatDateOfBirth(dob, prevLen);
             }
         });
 

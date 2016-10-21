@@ -128,8 +128,10 @@ public class DemographicsDetailsFragment extends Fragment
         });
 
         dobEdit.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                prevLen = charSequence.length();
             }
 
             @Override
@@ -144,7 +146,7 @@ public class DemographicsDetailsFragment extends Fragment
                     dobInputText.setError(null);
                 }
                 // auto-format to mm/dd/yyyy
-                StringUtil.autoFormatDateOfBirth(editable);
+                StringUtil.autoFormatDateOfBirth(editable, prevLen);
             }
         });
 
