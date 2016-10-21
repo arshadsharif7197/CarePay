@@ -17,9 +17,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,9 +43,17 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -51,9 +61,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+
 
 
 public class DemographicReviewFragment extends Fragment implements View.OnClickListener {
@@ -87,6 +96,20 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private EditText middleNameText;
     private EditText lastNameText;
 
+    private TextInputLayout firstNameLabel;
+    private TextInputLayout middleNameLabel;
+    private TextInputLayout lastNameLabel;
+    private TextInputLayout phoneNumberLabel;
+    private TextInputLayout address1Label;
+    private TextInputLayout address2Label;
+    private TextInputLayout driverLicenseLabel;
+    private TextInputLayout cityLabel;
+    private TextInputLayout stateLabel;
+    private TextInputLayout zipcodeLabel;
+    private TextInputLayout doblabel;
+    private LinearLayout rootview;
+
+
     public static DemographicReviewFragment newInstance() {
         return new DemographicReviewFragment();
     }
@@ -96,8 +119,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
         DemographicReviewActivity.isFromReview = false;
+
+        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
@@ -107,11 +133,13 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         initialiseUIFields();
-        initViewFromModels();
         setEditTexts(view);
+        setTypefaces(view);
+        initViewFromModels();
+
         formatEditText();
 
-        setTypefaces(view);
+
         return view;
     }
 
@@ -143,16 +171,36 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         ethnicityDataArray = getResources().getStringArray(R.array.Ethnicity);
         genderSelectArray = getResources().getStringArray(R.array.Gender);
 
+        firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
+        middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
+        lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
+        doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+        phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+        driverLicenseLabel = (TextInputLayout) view.findViewById(R.id.reviewDriverLicenseLabel);
+        address1Label = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
+        address2Label = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
+        zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
+        cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
+        stateLabel = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+
 
     }
 
 
     private void formatEditText() {
+        dobEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dobEditText.setSelection(dobEditText.length());
+            }
+        });
 
         dobEditText.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
 
             @Override
             public void beforeTextChanged(CharSequence dob, int start, int count, int after) {
+                prevLen = dob.length();
             }
 
             @Override
@@ -162,20 +210,22 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable dob) {
-                if (dob.length() > 2 && Character.isDigit(dob.charAt(2))) {
-                    dob.insert(2, "-");
-                }
-                if (dob.length() > 5 && Character.isDigit(dob.charAt(5))) {
-                    dob.insert(5, "-");
-                }
-
+                StringUtil.autoFormatDateOfBirth(dob, prevLen);
             }
         });
 
+        zipCodeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dobEditText.setSelection(dobEditText.length());
+            }
+        });
         zipCodeEditText.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
 
             @Override
             public void beforeTextChanged(CharSequence zipcode, int start, int count, int after) {
+                prevLen = zipcode.length();
             }
 
             @Override
@@ -185,13 +235,16 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable zipcode) {
-                if (zipcode.length() > 5 && Character.isDigit(zipcode.charAt(5))) {
-                    zipcode.insert(5, "-");
-                }
-
+                StringUtil.autoFormatZipcode(zipcode, prevLen);
             }
         });
 
+        phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                phoneNumberEditText.setSelection(phoneNumberEditText.length());
+            }
+        });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
 
             int length_before = 0;
@@ -207,18 +260,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable phonenumber) {
-
-                if (length_before < phonenumber.length()) {
-                    if (phonenumber.length() == 3 || phonenumber.length() == 7) {
-                        phonenumber.append("-");
-                    }
-                    if (phonenumber.length() > 3 && Character.isDigit(phonenumber.charAt(3))) {
-                        phonenumber.insert(3, "-");
-                    }
-                    if (phonenumber.length() > 7 && Character.isDigit(phonenumber.charAt(7))) {
-                        phonenumber.insert(7, "-");
-                    }
-                }
+                StringUtil.autoFormatPhone(phonenumber, length_before);
             }
         });
 
@@ -357,11 +399,13 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         }
         String zipCode = zipCodeEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(zipCode)) {
-            demographicAddressPayloadDTO.setZipcode(zipCode);
+            // 'de-format' before saving to model
+            demographicAddressPayloadDTO.setZipcode(StringUtil.revertZipToRawFormat(zipCode));
         }
         String phoneNumber = phoneNumberEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(phoneNumber)) {
-            demographicAddressPayloadDTO.setPhone(phoneNumber);
+            // 'de-format' before saving to model
+            demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumber));
         }
 
         String city = cityEditText.getText().toString();
@@ -378,72 +422,49 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     private void setEditTexts(View view) {
 
-
-        TextInputLayout firstNameLabel;
-        firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
         firstNameLabel.setTag(getString(R.string.demofirstNameLabel));
         firstNameText.setTag(firstNameLabel);
-        firstNameText.clearFocus();
 
-        TextInputLayout middleNameLabel;
-        middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
+
         middleNameLabel.setTag(getString(R.string.demomiddleNameLabel));
         middleNameText.setTag(middleNameLabel);
         middleNameText.clearFocus();
 
-        TextInputLayout lastNameLabel;
-        lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
+
         lastNameLabel.setTag(getString(R.string.demolastNameLabel));
         lastNameText.setTag(lastNameLabel);
-        lastNameText.clearFocus();
 
-        TextInputLayout doblabel;
-        doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+
         doblabel.setTag(getString(R.string.demoDobLabel));
         dobEditText.setTag(doblabel);
-        dobEditText.clearFocus();
 
-        TextInputLayout phoneNumberLabel;
-        phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+
         phoneNumberLabel.setTag(getString(R.string.demoPhoneNumberLabel));
         phoneNumberEditText.setTag(phoneNumberLabel);
-        phoneNumberEditText.clearFocus();
 
-        TextInputLayout driverLicenseLabel;
-        driverLicenseLabel = (TextInputLayout) view.findViewById(R.id.reviewDriverLicenseLabel);
+
         driverLicenseLabel.setTag(getString(R.string.demodriverlicenseLabel));
         driverlicenseEditText.setTag(driverLicenseLabel);
-        driverlicenseEditText.clearFocus();
 
-        TextInputLayout address1Label;
-        address1Label = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
+
         address1Label.setTag(getString(R.string.demoAddress1Label));
         address1EditText.setTag(address1Label);
-        address1EditText.clearFocus();
 
-        TextInputLayout address2Label;
-        address2Label = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
+
         address2Label.setTag(getString(R.string.demoAddress2Label));
         address2EditText.setTag(address2Label);
-        address2EditText.clearFocus();
 
-        TextInputLayout zipcodeLabel;
-        zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
+
         zipcodeLabel.setTag(getString(R.string.demoZipcodeLabel));
         zipCodeEditText.setTag(zipcodeLabel);
-        zipCodeEditText.clearFocus();
 
-        TextInputLayout cityLabel;
-        cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
+
         cityLabel.setTag(getString(R.string.demoCityLabel));
         cityEditText.setTag(cityLabel);
-        cityEditText.clearFocus();
 
-        TextInputLayout stateLabel;
-        stateLabel = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+
         stateLabel.setTag(getString(R.string.demoStateLabel));
         stateEditText.setTag(stateLabel);
-        stateEditText.clearFocus();
 
 
         setChangeFocusListeners();
@@ -610,43 +631,52 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
         if (demographicPersDetailsPayloadDTO != null) {
             //Personal Details
-            firstNameText.setText(demographicPersDetailsPayloadDTO.getFirstName());
-            lastNameText.setText(demographicPersDetailsPayloadDTO.getLastName());
+            String firstName = demographicPersDetailsPayloadDTO.getFirstName();
+            if (firstName != null) {
+                firstNameText.setText(firstName);
+                firstNameText.requestFocus();
+            }
+
+            String lastName = demographicPersDetailsPayloadDTO.getLastName();
+            if (lastName != null) {
+                lastNameText.setText(lastName);
+                lastNameText.requestFocus();
+            }
 
             String middleName = demographicPersDetailsPayloadDTO.getMiddleName();
             if (middleName != null) {
                 middleNameText.setText(middleName);
+                middleNameText.requestFocus();
+
             } else {
                 Log.v(LOG_TAG, "middle name field is empty");
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
-
-                dobEditText.setText(DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy());
-
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                dobEditText.setText(dateOfBirthString);
             } else {
                 Log.v(LOG_TAG, "date is null");
             }
             String getGender = demographicPersDetailsPayloadDTO.getGender();
-            if (getGender != null) {
+            if (!getGender.isEmpty()) {
                 selectGender.setText(getGender);
             } else {
                 selectGender.setText(R.string.choose);
+
             }
 
             String getRace = demographicPersDetailsPayloadDTO.getPrimaryRace();
-            if (getRace != null) {
+            if (!getRace.isEmpty()) {
                 raceDataTextView.setText(getRace);
             } else {
                 raceDataTextView.setText(R.string.choose);
             }
             String getethnicity = demographicPersDetailsPayloadDTO.getEthnicity();
-            if (getethnicity != null) {
+            if (!getethnicity.isEmpty()) {
                 ethnicityDataTextView.setText(getethnicity);
             } else {
-
                 ethnicityDataTextView.setText(R.string.choose);
-
             }
 
         } else {
@@ -654,23 +684,59 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         }
 
         if (demographicIdDocPayloadDTO != null) {
-            driverlicenseEditText.setText(demographicIdDocPayloadDTO.getIdNumber());
+            String driverlicense = demographicIdDocPayloadDTO.getIdNumber();
+            if (driverlicense != null) {
+                driverlicenseEditText.setText(driverlicense);
+                driverlicenseEditText.requestFocus();
+            }
         } else {
             Log.v(LOG_TAG, "demographic personal details is empty");
         }
 
         if (demographicAddressPayloadDTO != null) {
             //Address
-            address1EditText.setText(demographicAddressPayloadDTO.getAddress1());
-            address2EditText.setText(demographicAddressPayloadDTO.getAddress2());
-            cityEditText.setText(demographicAddressPayloadDTO.getCity());
-            stateEditText.setText(demographicAddressPayloadDTO.getState());
-            zipCodeEditText.setText(StringUtil.formatZipCode(demographicAddressPayloadDTO.getZipcode()));
-            phoneNumberEditText.setText(StringUtil.formatPhoneNumber(demographicAddressPayloadDTO.getPhone()));
+            String addressLine1 = demographicAddressPayloadDTO.getAddress1();
+            if (addressLine1 != null) {
+                address1EditText.setText(addressLine1);
+                address1EditText.requestFocus();
+
+            }
+
+            String addressLine2 = demographicAddressPayloadDTO.getAddress2();
+            if (addressLine2 != null) {
+                address2EditText.setText(addressLine2);
+                address2EditText.requestFocus();
+            }
+
+            String city = demographicAddressPayloadDTO.getCity();
+            if (city != null) {
+                cityEditText.setText(city);
+                cityEditText.requestFocus();
+            }
+            String state = demographicAddressPayloadDTO.getState();
+            if (state != null) {
+                stateEditText.setText(state);
+                stateEditText.requestFocus();
+            }
+            String zipcode = demographicAddressPayloadDTO.getZipcode();
+            if (zipcode != null) {
+                zipCodeEditText.setText(StringUtil.formatZipCode(zipcode));
+                zipCodeEditText.requestFocus();
+
+            }
+
+            String phoneumber = demographicAddressPayloadDTO.getPhone();
+            if (phoneumber != null) {
+                phoneNumberEditText.setText(StringUtil.formatPhoneNumber(phoneumber));
+            }
 
         } else {
             Log.v(LOG_TAG, "Demographic adress is empty ");
         }
+
+        rootview.requestFocus();
+        hideSoftKeyboard(getActivity());
+
     }
 
 
@@ -702,6 +768,74 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         setGothamRoundedMediumTypeface(getActivity(),
                 (TextView) view.findViewById(R.id.detailsReviewHeading));
 
+        if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), firstNameLabel);
+        }
+
+
+        if (!StringUtil.isNullOrEmpty(lastNameText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), lastNameLabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), lastNameLabel);
+        }
+
+        if (!StringUtil.isNullOrEmpty(middleNameText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), middleNameLabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), middleNameLabel);
+        }
+
+        if (!StringUtil.isNullOrEmpty(dobEditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), doblabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), doblabel);
+        }
+
+        if (!StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), phoneNumberLabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), phoneNumberLabel);
+        }
+
+        if (!StringUtil.isNullOrEmpty(address1EditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), address1Label);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), address1Label);
+        }
+
+
+        if (!StringUtil.isNullOrEmpty(address2EditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), address2Label);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), address2Label);
+        }
+
+        if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), zipcodeLabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), zipcodeLabel);
+        }
+
+        if (!StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), cityLabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), cityLabel);
+        }
+
+        if (!StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), stateLabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), stateLabel);
+        }
+        if (!StringUtil.isNullOrEmpty(driverlicenseEditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), driverLicenseLabel);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), driverLicenseLabel);
+        }
+
+
         setProximaNovaSemiboldTypeface(getActivity(),
                 (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel));
         setProximaNovaSemiboldTypeface(getActivity(),
@@ -727,4 +861,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         setProximaNovaSemiboldTypeface(getActivity(),
                 (TextView) view.findViewById(R.id.ethnicityListDataTextView));
     }
+
+
 }

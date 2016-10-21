@@ -21,12 +21,12 @@ public class DateUtil {
 
     private static DateUtil instance;
     private String format = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
-    private Date date;
-    private int day;
-    private int month; // Attention! 0-indexed month
-    private int year;
-    private int hour12;
-    private int minute;
+    private Date   date;
+    private int    day;
+    private int    month; // Attention! 0-indexed month
+    private int    year;
+    private int    hour12;
+    private int    minute;
     private String dayLiteral;
     private String monthLiteral;
     private String dayLiteralAbbr;
@@ -96,7 +96,7 @@ public class DateUtil {
      */
     public String getDateAsDayMonthDayOrdinal() {
         return String.format(Locale.getDefault(), "%s, %s %d%s",
-                dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
+                             dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
     }
 
     /**
@@ -106,7 +106,7 @@ public class DateUtil {
      */
     public String getDateAsDayMonthDayOrdinalYear() {
         return String.format(Locale.getDefault(), "%s, %s %d%s %s",
-                dayLiteralAbbr, monthLiteralAbbr, day, getOrdinalSuffix(day), year);
+                             dayLiteralAbbr, monthLiteralAbbr, day, getOrdinalSuffix(day), year);
     }
 
     /**
@@ -126,16 +126,25 @@ public class DateUtil {
     public String getDateAsMonthLiteralDayOrdinalYear() {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         return String.format(Locale.getDefault(), "%s %s%s, %d",
-                monthLiteral, day, ordinal, year);
+                             monthLiteral, day, ordinal, year);
     }
 
     /**
-     * Format dat as MM-dd-yyyy
+     * Format date as MM-dd-yyyy
      *
      * @return The formatted date as string
      */
     public String getDateAsMMddyyyy() {
         return String.format(Locale.getDefault(), "%02d-%02d-%4d", month + 1, day, year);
+    }
+
+    /**
+     * Format date as MM/dd/yyyy
+     *
+     * @return The formatted date as string
+     */
+    public String getDateAsMMddyyyyWithSlash() {
+        return String.format(Locale.getDefault(), "%02d/%02d/%4d", month + 1, day, year);
     }
 
     /**
@@ -146,17 +155,18 @@ public class DateUtil {
      * @return The string
      */
     public static String getDateRaw(Date date) {
-        SimpleDateFormat out = new SimpleDateFormat(instance.format, Locale.getDefault());
+        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+        SimpleDateFormat out = new SimpleDateFormat(rawFmt, Locale.getDefault());
         return out.format(date);
     }
 
     /**
-     * Creates a date from a string formatted as MM-dd-yyyy
+     * Creates a Date object from a string representing a date formatted as MM/dd/yyyy
      *
      * @param dateString The date (as string)
      */
     public static Date parseFromDateAsMMddyyyy(String dateString) {
-        SimpleDateFormat formatted = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
         Date date = null;
         try {
             date = formatted.parse(dateString);
@@ -300,6 +310,7 @@ public class DateUtil {
 
     /**
      * Check for Today.
+     *
      * @return true if today
      */
     public boolean isToday() {
@@ -313,6 +324,7 @@ public class DateUtil {
 
     /**
      * Check date is before or not.
+     *
      * @return true if before
      */
     public boolean isYesterdayOrBefore() {
@@ -325,6 +337,7 @@ public class DateUtil {
 
     /**
      * Check date is after or not.
+     *
      * @return true if after
      */
     public boolean isTomorrowOrAfter() {
@@ -337,14 +350,22 @@ public class DateUtil {
 
     /**
      * Format a date as mm/dd/yyyy
-     * @param date The date whose format is to be changed
-     * @return  The dat in the new format as a string
+     *
+     * @param dateString The date whose format is to be changed
+     * @return The dat in the new format as a string
      */
-    public static boolean isValidateStringDateMMDDYYYY(String date) {
-        final String regexDateOfBirth = "\\d{2}/\\d{2}/\\d{4}";
-        Pattern pattern = Pattern.compile(regexDateOfBirth);
-        Matcher matcher = pattern.matcher(date);
-        return matcher.matches();
+    public static boolean isValidateStringDateMMDDYYYY(String dateString) {
+        String formatString = "MM/dd/yyyy";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
+            format.setLenient(false);
+            format.parse(dateString);
+        } catch (ParseException e) {
+            return false;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
     }
 
     /**

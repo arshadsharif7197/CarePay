@@ -151,8 +151,9 @@
         <item name="android:fontFamily">proximanova_regular</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
-        <item name="android:paddingBottom">@dimen/edit_padding_bottom</item>
-        <item name="android:paddingEnd">@dimen/edit_padding_bottom</item>
+        <item name="android:paddingBottom">@dimen/edit_padding_15</item>
+        <item name="android:paddingTop">@dimen/edit_padding_15</item>
+        <item name="android:paddingEnd">@dimen/edit_padding_15</item>
     </style>
 
     <style name="CityEditTextStyle" parent="EditTextStyle">
@@ -239,6 +240,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:gravity">start</item>
     </style>
 
 
@@ -294,7 +296,8 @@
         <item name="android:textColor">@color/payne_gray</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
         <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
-        <item name="android:paddingEnd">@dimen/edit_padding_bottom</item>
+        <item name="android:paddingEnd">@dimen/edit_padding_15</item>
+        <item name="android:gravity">start</item>
     </style>
 
     <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
@@ -307,9 +310,9 @@
     <style name="DemographicsDocsLabelStyle" parent="android:Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/charcoal</item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_text_right_margin</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
         <item name="android:paddingStart">@dimen/signup_optional_label_margin_left_right</item>
+        <item name="android:gravity">start</item>
     </style>
 
     <style name="DemographicImageviewStyle">
@@ -370,6 +373,8 @@
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:layout_marginStart">@dimen/signup_optional_label_margin_left_right</item>
+        <item name="android:gravity">start</item>
+
     </style>
 
     <style name="DemographicsDetailsAddUnlistedStyle">
@@ -388,6 +393,7 @@
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
         <item name="android:lineSpacingExtra">23dp</item>
         <item name="android:textColor">@color/slateGray</item>
+        <item name="android:gravity">start</item>
     </style>
 
     <style name="DemographicsDetailsEditStyle" parent="EditTextStyle">
@@ -398,6 +404,7 @@
 
     <style name="DemographicsDetailsLabelStyle" parent="DemographicsDocsLabelStyle">
         <item name="android:layout_marginStart">0dp</item>
+        <item name="android:gravity">start</item>
     </style>
 
     <!-- Signin Signup -->
@@ -737,7 +744,7 @@
         <item name="android:textColor">@color/charcoal</item>
     </style>
     <style name="DefaultTextAppearanceGothamRoundedMediumLabel">
-        <item name="android:textColor">@color/lightSlateGray</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources>

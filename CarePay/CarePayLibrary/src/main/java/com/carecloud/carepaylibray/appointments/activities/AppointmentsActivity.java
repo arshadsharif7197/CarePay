@@ -15,14 +15,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.carecloud.carepaylibray.utils.StringUtil;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AppointmentsActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -31,14 +40,37 @@ public class AppointmentsActivity extends AppCompatActivity implements
 
     public static AppointmentDTO model;
     private TextView appointmentsDrawerUserIdTextView;
+    private AppointmentsResultModel appointmentsScreenLabels;
 
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Get appointment information data
+        AppointmentService aptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class);
+        Call<AppointmentsResultModel> call = aptService.getAppointmentsInformation();
+        call.enqueue(new Callback<AppointmentsResultModel>() {
+
+            @Override
+            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
+                appointmentsScreenLabels = response.body();
+                AppointmentLabelDTO appointmentLabels = appointmentsScreenLabels.getMetadata().getLabel();
+
+                // Set Appointment screen title
+                toolbar.setTitle(StringUtil.getLabelForView(appointmentLabels.getAppointmentsHeading()));
+                gotoAppointmentFragment();
+            }
+
+            @Override
+            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
+
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,7 +90,9 @@ public class AppointmentsActivity extends AppCompatActivity implements
         } else {
             appointmentsDrawerUserIdTextView.setText("");
         }
+    }
 
+    private void gotoAppointmentFragment() {
         Intent intent = getIntent();
         AppointmentDTO appointmentDTO = (AppointmentDTO) intent.getSerializableExtra(
                 CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
@@ -69,6 +103,7 @@ public class AppointmentsActivity extends AppCompatActivity implements
         if (appointmentsListFragment == null) {
             appointmentsListFragment = new AppointmentsListFragment();
             Bundle bundle = new Bundle();
+            bundle.putSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE, appointmentsScreenLabels);
             bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentDTO);
             appointmentsListFragment.setArguments(bundle);
         }

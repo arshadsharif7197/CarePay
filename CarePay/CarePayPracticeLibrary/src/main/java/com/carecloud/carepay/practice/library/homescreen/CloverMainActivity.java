@@ -31,7 +31,7 @@ public class CloverMainActivity extends AppCompatActivity {
         setSystemUiVisibility();
         setContentView(R.layout.activity_main_clover);
         checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
-        getDemographicInformation();
+       // getDemographicInformation();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ((TextView) findViewById(R.id.checkinTextView)).setOnClickListener(new View.OnClickListener() {
@@ -69,8 +69,8 @@ public class CloverMainActivity extends AppCompatActivity {
         unregisterReceiver(newCheckedInReceiver);
     }
 
-    private void getDemographicInformation() {
-        AppointmentService apptService = (new BaseServiceGenerator(this)).createServicePractice(AppointmentService.class); //, String token, String searchString
+    /*private void getDemographicInformation() {
+        AppointmentService apptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class); //, String token, String searchString
         Call<AppointmentsResultModel> call = apptService.fetchCheckedInAppointments();
         call.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
@@ -86,6 +86,6 @@ public class CloverMainActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 
 }
