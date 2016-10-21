@@ -68,8 +68,8 @@ public class PatientModeSplashActivity extends AppCompatActivity {
                 });
                 View customView = LayoutInflater.from(PatientModeSplashActivity.this).inflate(R.layout.alert_list_practice_layout, null, false);
                 ListView listView = (ListView) customView.findViewById(R.id.dialoglist_practice);
-                CustomAlertAdapter mAdapter = new CustomAlertAdapter(PatientModeSplashActivity.this, Arrays.asList(language));
-                listView.setAdapter(mAdapter);
+                CustomAlertAdapter adapter = new CustomAlertAdapter(PatientModeSplashActivity.this, Arrays.asList(language));
+                listView.setAdapter(adapter);
                 dialog.setView(customView);
                 final AlertDialog alert = dialog.create();
                 alert.show();

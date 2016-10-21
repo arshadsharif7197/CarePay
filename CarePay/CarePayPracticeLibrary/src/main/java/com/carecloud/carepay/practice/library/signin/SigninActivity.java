@@ -27,10 +27,10 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import java.util.Arrays;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -117,8 +117,8 @@ public class SigninActivity extends AppCompatActivity {
                 });
                 View customView = LayoutInflater.from(SigninActivity.this).inflate(R.layout.alert_list_practice_layout, null, false);
                 ListView listView = (ListView) customView.findViewById(R.id.dialoglist_practice);
-                CustomAlertAdapter mAdapter = new CustomAlertAdapter(SigninActivity.this, Arrays.asList(language));
-                listView.setAdapter(mAdapter);
+                CustomAlertAdapter adapter = new CustomAlertAdapter(SigninActivity.this, Arrays.asList(language));
+                listView.setAdapter(adapter);
                 dialog.setView(customView);
 
                 final AlertDialog alert = dialog.create();
@@ -245,20 +245,20 @@ public class SigninActivity extends AppCompatActivity {
     private void setChangeFocusListeners() {
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
                     SystemUtil.showSoftKeyboard(SigninActivity.this);
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, bool);
             }
         });
         passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
                     SystemUtil.showSoftKeyboard(SigninActivity.this);
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, bool);
             }
         });
     }
