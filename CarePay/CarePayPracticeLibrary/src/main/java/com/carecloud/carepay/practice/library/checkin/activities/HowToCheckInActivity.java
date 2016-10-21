@@ -93,8 +93,7 @@ public class HowToCheckInActivity extends AppCompatActivity {
     View.OnClickListener scanQRCodeButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(HowToCheckInActivity.this, "Scan QR Code Button clicked",
-                    Toast.LENGTH_SHORT).show();
+            /*To implement click event for Scan QR Code*/
         }
     };
 
@@ -104,8 +103,7 @@ public class HowToCheckInActivity extends AppCompatActivity {
     View.OnClickListener manualSearchButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(HowToCheckInActivity.this, "Manual Search Button clicked",
-                    Toast.LENGTH_SHORT).show();
+            /*To implement click event for Manual Search */
         }
     };
 
@@ -115,8 +113,7 @@ public class HowToCheckInActivity extends AppCompatActivity {
     View.OnClickListener createCarePayAccountButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(HowToCheckInActivity.this, "Create CarePay Account Button clicked",
-                    Toast.LENGTH_SHORT).show();
+            /*To implement click event for Create CarePay Account*/
         }
     };
 
