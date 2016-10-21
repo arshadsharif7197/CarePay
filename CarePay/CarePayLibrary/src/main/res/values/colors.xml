@@ -16,6 +16,7 @@
     <color name="valuetext_default_textcolor">#1F9BDE</color>
     <color name="textview_default_textcolor">#37474F</color>
     <color name="button_bright_cerulean">#1F9BDE</color>
+    <color name="dark_gray">#ff9fa7ab</color>
     <color name="gray">#ffb0bec5</color>
     <color name="munsell">#ffeceff1</color>
     <color name="blue_cerulian">#ff1f9bde</color>

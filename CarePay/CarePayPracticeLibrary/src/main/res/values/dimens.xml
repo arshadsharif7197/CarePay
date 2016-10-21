@@ -5,5 +5,12 @@
     <dimen name="signin_button_textsize">18sp</dimen>
     <dimen name="go_back_textsize">22sp</dimen>
     <dimen name="signin_title_textsize">36sp</dimen>
+    <dimen name="appointment_cart_padding">10dp</dimen>
+    <dimen name="appointment_cart_elevation">30dp</dimen>
+    <dimen name="appointment_cart_corner_radius">10dp</dimen>
+    <dimen name="appointment_cart_patient_textsize">22sp</dimen>
+    <dimen name="appointment_cart_provider_textsize">17sp</dimen>
+    <dimen name="appointment_cart_amount_textsize">17sp</dimen>
+    <dimen name="appointment_cart_time_textsize">16sp</dimen>
     <dimen name="forgotpassword_textsize">14.0sp</dimen>
 </resources>

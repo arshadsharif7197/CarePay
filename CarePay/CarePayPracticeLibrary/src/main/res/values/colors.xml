@@ -3,6 +3,7 @@
     <color name="colorPrimary">#1F9BDE</color>
     <color name="colorPrimaryDark">#066699</color>
     <color name="colorAccent">#acacac</color>
+    <color name="amaranth">#ffe63248</color>
     <color name="white">#ffffff</color>
     <color name="lightSlateGray">#78909C</color>
     <color name="charcoal">#ff37474f</color>

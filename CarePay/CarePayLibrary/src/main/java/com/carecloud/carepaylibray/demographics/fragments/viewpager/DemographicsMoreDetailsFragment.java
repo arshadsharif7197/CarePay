@@ -28,6 +28,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -98,8 +99,11 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         }
 
         DemographicIdDocPayloadDTO idDocPojo = ((DemographicsActivity)getActivity()).getIdDocModel();
-        if(idDocPojo != null) {
-            demographicPayloadDTO.setIdDocument(idDocPojo);
+        if(idDocPojo != null) { // add the doc
+            List<DemographicIdDocPayloadDTO> idDocPayloadDTOs = new ArrayList<>();
+            idDocPojo.setIdCountry("USA"); // to remove
+            idDocPayloadDTOs.add(idDocPojo);
+            demographicPayloadDTO.setIdDocuments(idDocPayloadDTOs);
         }
 
         List<DemographicInsurancePayloadDTO> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
@@ -112,8 +116,6 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(LOG_TAG, "demogr post succeeded");
-
                 Intent appointmentIntent = new Intent(context, AppointmentsActivity.class);
                 startActivity(appointmentIntent);
                 getActivity().finish();

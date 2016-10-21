@@ -318,92 +318,16 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         if (infoModel != null) {
             addressModel = infoModel.getAddress();
             detailsModel = infoModel.getPersonalDetails();
-            idDocModel = infoModel.getIdDocument();
+            List<DemographicIdDocPayloadDTO> idDocDTOs = infoModel.getIdDocuments();
+            if(idDocDTOs != null && idDocDTOs.size() > 0) {
+                idDocModel = infoModel.getIdDocuments().get(0);
+            }
             insuranceModelList = infoModel.getInsurances();
-
         } else {
             addressModel = new DemographicAddressPayloadDTO();
             detailsModel = new DemographicPersDetailsPayloadDTO();
             idDocModel = new DemographicIdDocPayloadDTO();
             insuranceModelList = new ArrayList<>();
         }
-    }
-
-    // for test
-    private void createDTOsForTest() {
-        addressModel.setAddress1("3113 SW 12th");
-        addressModel.setAddress2("234 Ethernity Road");
-        addressModel.setCity("Miami");
-        addressModel.setState("FL");
-        addressModel.setZipcode("33135");
-        addressModel.setPhone("234556699");
-
-        detailsModel.setFirstName("Liviu");
-        detailsModel.setLastName("Socolovici");
-        detailsModel.setPrimaryRace("Asian");
-        detailsModel.setEthnicity("Hispanic");
-        detailsModel.setPreferredLanguage("English");
-        detailsModel.setGender("Male");
-        detailsModel.setDateOfBirth("11/22/1977");
-        detailsModel.setProfilePhoto("http://sourcefed.com/wp-content/uploads/2012/10/twitter-for-ios-app-thumbnail.jpg");
-
-        idDocModel.setIdNumber("123DESS");
-        idDocModel.setIdState("FL");
-        idDocModel.setIdCountry("USA");
-        idDocModel.setIdType("Driver's License");
-
-        List<DemographicIdDocPhotoDTO> photoDTOs = new ArrayList<>();
-        // add front
-        DemographicIdDocPhotoDTO front = new DemographicIdDocPhotoDTO();
-        front.setIdDocPhoto("https://opensource.org/files/twitterlogo.png");
-        photoDTOs.add(front);
-        // add back
-        DemographicIdDocPhotoDTO back = new DemographicIdDocPhotoDTO();
-        back.setIdDocPhoto("http://vignette3.wikia.nocookie.net/fairytail/images/c/ce/Twitter_Logo.png/revision/latest?cb=20120726211959");
-        photoDTOs.add(back);
-        idDocModel.setIdDocPhothos(photoDTOs);
-
-        // insurance 1
-        DemographicInsurancePayloadDTO ins1 = new DemographicInsurancePayloadDTO();
-        ins1.setInsurancePlan("AETNA");
-        ins1.setInsuranceMemberId("3434343422");
-        ins1.setInsuranceProvider("AETNA PROV");
-        List<DemographicInsurancePhotoDTO> photos = new ArrayList<>();
-        DemographicInsurancePhotoDTO frontDTO = new DemographicInsurancePhotoDTO();
-        frontDTO.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
-        photos.add(frontDTO);
-        DemographicInsurancePhotoDTO backDTO = new DemographicInsurancePhotoDTO();
-        backDTO.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
-        photos.add(backDTO);
-        ins1.setInsurancePhotos(photos);
-        insuranceModelList.add(ins1);
-
-        DemographicInsurancePayloadDTO ins2 = new DemographicInsurancePayloadDTO();
-        ins2.setInsurancePlan("AETNA");
-        ins2.setInsuranceMemberId("3434343422");
-        ins2.setInsuranceProvider("AETNA PROV");
-        List<DemographicInsurancePhotoDTO> photos2 = new ArrayList<>();
-        DemographicInsurancePhotoDTO frontDTO2 = new DemographicInsurancePhotoDTO();
-        frontDTO2.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
-        photos2.add(frontDTO2);
-        DemographicInsurancePhotoDTO backDTO2 = new DemographicInsurancePhotoDTO();
-        backDTO2.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
-        photos2.add(backDTO2);
-        ins2.setInsurancePhotos(photos2);
-        insuranceModelList.add(ins2);
-
-//        DemographicInsurancePayloadDTO ins3 = new DemographicInsurancePayloadDTO();
-//        ins3.setInsurancePlan("AETNA");
-//        ins3.setInsuranceMemberId("3434343422");
-//        ins3.setInsuranceProvider("AETNA PROV");
-//        List<DemographicInsurancePhotoDTO> photos3 = new ArrayList<>();
-//        DemographicInsurancePhotoDTO frontDTO3 = new DemographicInsurancePhotoDTO();
-//        frontDTO3.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
-//        photos3.add(frontDTO3);
-//        DemographicInsurancePhotoDTO backDTO3 = new DemographicInsurancePhotoDTO();
-//        backDTO3.setInsurancePhoto("https://opensource.org/files/twitterlogo.png");
-//        photos3.add(backDTO3);
-//        ins3.setInsurancePhotos(photos3);
-//        insuranceModelList.add(ins3);
     }
 }
