@@ -744,7 +744,7 @@
         <item name="android:textColor">@color/charcoal</item>
     </style>
     <style name="DefaultTextAppearanceGothamRoundedMediumLabel">
-        <item name="android:textColor">@color/lightSlateGray</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources>

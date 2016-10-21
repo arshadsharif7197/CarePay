@@ -3,6 +3,7 @@
 <LinearLayout
     android:id="@+id/demogr_docs_insurance_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/demographics_docs_section_container_margin_top"
@@ -108,7 +109,8 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/insurancecardNumberLabel"
-        style="@style/TextInputLayoutStyle">
+        style="@style/TextInputLayoutStyle"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
 
         <EditText
             android:id="@+id/reviewinsurncecardnum"

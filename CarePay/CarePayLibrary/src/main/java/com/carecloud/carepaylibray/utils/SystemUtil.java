@@ -6,6 +6,7 @@ package com.carecloud.carepaylibray.utils;
  */
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -15,7 +16,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
+
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;

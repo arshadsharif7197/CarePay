@@ -51,7 +51,7 @@
                     style="@style/reviewDemographicBlue."
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PERSONAL INFORMATION" />
+                    android:text="@string/review_PersonalInforamation_label" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -335,6 +335,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
+                    android:id="@+id/address2layout"
                     android:layout_height="@dimen/review_default_heaight">
 
                     <TextView
@@ -355,7 +356,32 @@
 
                 <View
                     style="@style/Review_Screen_View_Style"
+                    android:id="@+id/address2labelview"
                     android:layout_width="match_parent" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/review_default_heaight">
+
+                    <TextView
+                        android:id="@+id/reviewZipcodeLabel"
+                        style="@style/reviewDemographiclabel."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/review_zipcode_label" />
+                    <TextView
+                        android:id="@+id/reviewZipcodeTextView"
+                        style="@style/reviewDemographictext."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="23.5dp"
+                        android:text="" />
+
+                </FrameLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -411,29 +437,6 @@
                     style="@style/Review_Screen_View_Style"
                     android:layout_width="match_parent" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/review_default_heaight">
-
-                    <TextView
-                        android:id="@+id/reviewZipcodeLabel"
-                        style="@style/reviewDemographiclabel."
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_zipcode_label" />
-                    <TextView
-                        android:id="@+id/reviewZipcodeTextView"
-                        style="@style/reviewDemographictext."
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="23.5dp"
-                        android:text="" />
-
-                </FrameLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
 
 
             </LinearLayout>
