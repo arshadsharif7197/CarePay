@@ -212,26 +212,26 @@ public class ImageCaptureHelper {
         // calculate crop
         int origWidth = thumbnail.getWidth();
         int origHeigth = thumbnail.getHeight();
-        int x = 0;
-        int y = 0;
+        int xCoord = 0;
+        int yCoord = 0;
         int croppedWidth = origWidth;
         int croppedHeight = origHeigth;
         int cropSize;
         // calculate
         if(origWidth < origHeigth ) {
             cropSize = origHeigth - origWidth;
-            y = cropSize;
+            yCoord = cropSize;
             croppedHeight = origWidth;
         } else if(origWidth > origHeigth) {
             cropSize = origWidth - origHeigth;
-            x = cropSize;
+            xCoord = cropSize;
             croppedWidth = origHeigth;
         }
 
         // crop to square
         Bitmap croppedBitmap = Bitmap.createBitmap(thumbnail,
-                                                   x,
-                                                   y,
+                                                   xCoord,
+                                                   yCoord,
                                                    croppedWidth,
                                                    croppedHeight);
 
