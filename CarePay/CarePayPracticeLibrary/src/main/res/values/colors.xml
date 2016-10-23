@@ -24,12 +24,15 @@
     <color name="Matisse">#176D9C</color>
     <color name="harvard_crimson">#d0021b</color>
     <color name="black">#000000</color>
-
     <color name="brick_red">#d14c4c </color>
     <color name="Munsell">#eceff1</color>
     <color name="overlay_green">#7ED321</color>
-<color name="paint_color_thumbnail">#BAB399</color>
-<color name="checkin_item_border">#80C8E9 </color>
+
+    <color name="checkin_item_border">#80C8E9</color>
+    <color name="taupe_gray1">#848d92</color>
+    <color name="rich_electric_blue_1">#018fcc</color>
+
+    <color name="paint_color_thumbnail">#BAB399</color>
     <color name="grayRound">#546e7a</color>
     <color name="light_gray_dialog">#eceff1</color>
     <color name="dark_green">#7ed321</color>

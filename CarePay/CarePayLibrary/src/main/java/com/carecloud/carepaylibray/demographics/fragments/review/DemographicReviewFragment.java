@@ -188,11 +188,19 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
 
     private void formatEditText() {
+        dobEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dobEditText.setSelection(dobEditText.length());
+            }
+        });
 
         dobEditText.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
 
             @Override
             public void beforeTextChanged(CharSequence dob, int start, int count, int after) {
+                prevLen = dob.length();
             }
 
             @Override
@@ -202,20 +210,22 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable dob) {
-                if (dob.length() > 2 && Character.isDigit(dob.charAt(2))) {
-                    dob.insert(2, "-");
-                }
-                if (dob.length() > 5 && Character.isDigit(dob.charAt(5))) {
-                    dob.insert(5, "-");
-                }
-
+                StringUtil.autoFormatDateOfBirth(dob, prevLen);
             }
         });
 
+        zipCodeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dobEditText.setSelection(dobEditText.length());
+            }
+        });
         zipCodeEditText.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
 
             @Override
             public void beforeTextChanged(CharSequence zipcode, int start, int count, int after) {
+                prevLen = zipcode.length();
             }
 
             @Override
@@ -225,13 +235,16 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable zipcode) {
-                if (zipcode.length() > 5 && Character.isDigit(zipcode.charAt(5))) {
-                    zipcode.insert(5, "-");
-                }
-
+                StringUtil.autoFormatZipcode(zipcode, prevLen);
             }
         });
 
+        phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                phoneNumberEditText.setSelection(phoneNumberEditText.length());
+            }
+        });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
 
             int length_before = 0;
@@ -247,18 +260,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable phonenumber) {
-
-                if (length_before < phonenumber.length()) {
-                    if (phonenumber.length() == 3 || phonenumber.length() == 7) {
-                        phonenumber.append("-");
-                    }
-                    if (phonenumber.length() > 3 && Character.isDigit(phonenumber.charAt(3))) {
-                        phonenumber.insert(3, "-");
-                    }
-                    if (phonenumber.length() > 7 && Character.isDigit(phonenumber.charAt(7))) {
-                        phonenumber.insert(7, "-");
-                    }
-                }
+                StringUtil.autoFormatPhone(phonenumber, length_before);
             }
         });
 
@@ -651,11 +653,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
-
-                dobEditText.setText(DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy());
-                dobEditText.requestFocus();
-
-
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                dobEditText.setText(dateOfBirthString);
             } else {
                 Log.v(LOG_TAG, "date is null");
             }
