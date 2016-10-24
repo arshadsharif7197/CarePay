@@ -35,4 +35,16 @@
     <dimen name="appointment_cart_time_textsize">16sp</dimen>
     <dimen name="forgotpassword_textsize">14.0sp</dimen>
 
+    <!-- Custom Filter Popup -->
+    <dimen name="custom_filter_popup_header_padding">8dp</dimen>
+    <dimen name="drawable_padding">5dp</dimen>
+    <dimen name="view_padding">10dp</dimen>
+    <dimen name="view_margin">10dp</dimen>
+    <dimen name="search_edittext_padding_right">50dp</dimen>
+    <dimen name="clear_search_button_margin">-40dp</dimen>
+    <dimen name="recyclerview_padding_bottom">40dp</dimen>
+    <dimen name="custom_filter_text_size">18sp</dimen>
+    <dimen name="custom_filter_view_margin">5dp</dimen>
+    <dimen name="custom_filter_patient_image_size">32dp</dimen>
+
 </resources>
