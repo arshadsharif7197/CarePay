@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;

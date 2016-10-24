@@ -1,13 +1,13 @@
-package com.carecloud.carepaylibray.demographics.models.metadata;
+package com.carecloud.carepaylibray.demographics.dtos;
 
-import com.carecloud.carepaylibray.demographics.models.metadata.DemographicMetadataModel;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicPayloadResponseDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.DemographicMetadataModel;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
- * Model for demographics
+ * Master DTO for demographics
  */
 public class DemographicDTO {
 

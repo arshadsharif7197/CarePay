@@ -19,8 +19,8 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;

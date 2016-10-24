@@ -1,6 +1,6 @@
-package com.carecloud.carepaylibray.demographics.models.payload;
+package com.carecloud.carepaylibray.demographics.dtos.payload;
 
-import com.carecloud.carepaylibray.demographics.models.metadata.DemographicPayloadInfoMetaDataDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.DemographicPayloadInfoMetaDataDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**

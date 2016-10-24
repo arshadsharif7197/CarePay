@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models.transitions;
+package com.carecloud.carepaylibray.demographics.dtos.metadata.transitions;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

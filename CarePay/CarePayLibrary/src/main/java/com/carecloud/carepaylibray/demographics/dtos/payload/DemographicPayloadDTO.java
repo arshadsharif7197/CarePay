@@ -1,6 +1,5 @@
-package com.carecloud.carepaylibray.demographics.models.payload;
+package com.carecloud.carepaylibray.demographics.dtos.payload;
 
-import com.carecloud.carepaylibray.demographics.models.updates.DemographicUpdateDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -31,7 +30,7 @@ public class DemographicPayloadDTO {
 
     @SerializedName("updates")
     @Expose
-    private List<DemographicUpdateDTO> updates = new ArrayList<>();
+    private List<DemographicPayloadUpdateDTO> updates = new ArrayList<>();
 
     /**
      * @return The address
@@ -92,11 +91,11 @@ public class DemographicPayloadDTO {
         this.insurances = insurances;
     }
 
-    public List<DemographicUpdateDTO> getUpdates() {
+    public List<DemographicPayloadUpdateDTO> getUpdates() {
         return updates;
     }
 
-    public void setUpdates(List<DemographicUpdateDTO> updates) {
+    public void setUpdates(List<DemographicPayloadUpdateDTO> updates) {
         this.updates = updates;
     }
 }

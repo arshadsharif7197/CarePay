@@ -32,8 +32,8 @@ import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsAlle
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsMedicationsAdapter;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 

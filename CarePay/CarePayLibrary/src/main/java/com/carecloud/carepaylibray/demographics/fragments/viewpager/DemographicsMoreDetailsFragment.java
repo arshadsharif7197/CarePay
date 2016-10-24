@@ -17,11 +17,11 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -84,7 +84,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
     public void confirmDemographicInformation() {
         DemographicPayloadDTO demographicPayloadDTO = new DemographicPayloadDTO();
 
-//        List<DemographicUpdateDTO> updates = new ArrayList<>();
+//        List<DemographicPayloadUpdateDTO> updates = new ArrayList<>();
 //        demographicPayloadDTO.setUpdates(updates);
 
         // obtain the updated models from the pager fragments

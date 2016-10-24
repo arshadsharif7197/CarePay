@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models.labels;
+package com.carecloud.carepaylibray.demographics.dtos.metadata.labels;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

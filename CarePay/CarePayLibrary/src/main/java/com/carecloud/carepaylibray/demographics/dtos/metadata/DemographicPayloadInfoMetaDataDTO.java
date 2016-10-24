@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models.metadata;
+package com.carecloud.carepaylibray.demographics.dtos.metadata;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,18 +8,16 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemographicPayloadInfoMetaDataDTO {
 
-    @SerializedName("user_id")
-    @Expose
+    @SerializedName("user_id") @Expose
     private String userId;
-    @SerializedName("username")
-    @Expose
+
+    @SerializedName("username") @Expose
     private String username;
-    @SerializedName("updated_dt")
-    @Expose
+
+    @SerializedName("updated_dt") @Expose
     private String updatedDt;
 
-    @SerializedName("created_dt")
-    @Expose
+    @SerializedName("created_dt")@Expose
     private String createdDt;
 
     /**

@@ -1,32 +1,30 @@
-package com.carecloud.carepaylibray.demographics.models.metadata;
+package com.carecloud.carepaylibray.demographics.dtos.metadata;
 
-import com.carecloud.carepaylibray.demographics.models.labels.DemographicLabelsDTO;
-import com.carecloud.carepaylibray.demographics.models.links.DemographicLinksDTO;
-import com.carecloud.carepaylibray.demographics.models.transitions.DemographicTransitionsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.links.DemographicLinksDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.DemographicTransitionsDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
- * Model for meta-data.
+ * Master DTO for demographics meta-data
  */
-class DemographicMetadataModel {
-    @SerializedName("labels")
-    @Expose
+public class DemographicMetadataModel {
+    @SerializedName("labels") @Expose
     private DemographicLabelsDTO labels;
 
-    @SerializedName("links")
-    @Expose
+    @SerializedName("links") @Expose
     private DemographicLinksDTO links;
 
-    @SerializedName("transitions")
-    @Expose
+    @SerializedName("transitions") @Expose
     private DemographicTransitionsDTO transitions;
+
+
 
     /**
      *
-     * @return
-     * The labels
+     * @return The labels
      */
     public DemographicLabelsDTO getLabels() {
         return labels;
@@ -34,8 +32,7 @@ class DemographicMetadataModel {
 
     /**
      *
-     * @param labels
-     * The labels
+     * @param labels The labels
      */
     public void setLabels(DemographicLabelsDTO labels) {
         this.labels = labels;
@@ -43,8 +40,7 @@ class DemographicMetadataModel {
 
     /**
      *
-     * @return
-     * The links
+     * @return The links
      */
     public DemographicLinksDTO getLinks() {
         return links;
@@ -52,8 +48,7 @@ class DemographicMetadataModel {
 
     /**
      *
-     * @param links
-     * The links
+     * @param links the links
      */
     public void setLinks(DemographicLinksDTO links) {
         this.links = links;
@@ -61,8 +56,7 @@ class DemographicMetadataModel {
 
     /**
      *
-     * @return
-     * The transitions
+     * @return The transitions
      */
     public DemographicTransitionsDTO getTransitions() {
         return transitions;
@@ -70,8 +64,7 @@ class DemographicMetadataModel {
 
     /**
      *
-     * @param transitions
-     * The transitions
+     * @param transitions The transitions
      */
     public void setTransitions(DemographicTransitionsDTO transitions) {
         this.transitions = transitions;

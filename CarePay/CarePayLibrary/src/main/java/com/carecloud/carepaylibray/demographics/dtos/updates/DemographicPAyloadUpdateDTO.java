@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models.updates;
+package com.carecloud.carepaylibray.demographics.dtos.updates;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by lsoco_user on 10/1/2016.
  * Model for demographic update.
  */
-public class DemographicUpdateDTO {
+public class DemographicPAyloadUpdateDTO {
 
     @SerializedName("update") @Expose private String update;
 

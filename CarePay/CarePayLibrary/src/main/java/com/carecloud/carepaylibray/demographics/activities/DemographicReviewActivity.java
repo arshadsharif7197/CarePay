@@ -10,10 +10,10 @@ import android.view.MenuItem;
 import com.carecloud.carepaylibrary.R;
 
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 
 import java.util.List;
 

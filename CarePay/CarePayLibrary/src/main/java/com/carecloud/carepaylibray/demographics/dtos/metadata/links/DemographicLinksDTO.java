@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models.links;
+package com.carecloud.carepaylibray.demographics.dtos.metadata.links;
 import com.carecloud.carepaylibray.base.models.BaseLinkModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
