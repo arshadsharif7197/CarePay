@@ -13,9 +13,22 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
+import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingLabelDTO;
+import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingMetadataDTO;
+import com.carecloud.carepay.practice.library.practicesetting.services.PracticeSettingService;
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by prem_mourya on 10/20/2016.
@@ -28,6 +41,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
     private CustomGothamRoundedMediumButton headerLabel;
     private CustomProxyNovaRegularLabel subHeaderLabel;
     private CustomGothamRoundedMediumButton dialogCancelTextView;
+    private PracticeSettingDTO practiceSettingResponse;
 
     /**
      * Constructor.
@@ -49,6 +63,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_confirmation_pin);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        onLabelsServiceCall();
         setCancelable(false);
         onInitialization();
         onSettingStyle();
@@ -128,5 +143,31 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
             actualValue = actualValue.substring(0,actualValue.length()-1);
             pinEditText.setText(actualValue);
         }
+    }
+
+    private void onLabelsServiceCall(){
+        PracticeSettingService aptService = (new BaseServiceGenerator(context)).createService(PracticeSettingService.class);
+        Call<PracticeSettingDTO> call = aptService.getPracticeSettingInformation();
+        call.enqueue(new Callback<PracticeSettingDTO>() {
+
+            @Override
+            public void onResponse(Call<PracticeSettingDTO> call, Response<PracticeSettingDTO> response) {
+                practiceSettingResponse = response.body();
+                PracticeSettingLabelDTO practiceSettingLabels = response.body().getMetadata().getLabel();
+                onSetViewLabels(practiceSettingLabels);
+            }
+
+            @Override
+            public void onFailure(Call<PracticeSettingDTO> call, Throwable throwable) {
+               cancel();
+            }
+        });
+    }
+
+    private void onSetViewLabels(PracticeSettingLabelDTO practiceSettingLabels){
+        headerLabel.setText(practiceSettingLabels.getPracticeSettingPinPracticeMode());
+        subHeaderLabel.setText(practiceSettingLabels.getPracticeSettingPinEnterUnlockPracticeMode());
+        dialogCancelTextView.setText(practiceSettingLabels.getPracticeSettingPinCancel());
+        findViewById(R.id.mainViewLayout).setVisibility(View.VISIBLE);
     }
 }
