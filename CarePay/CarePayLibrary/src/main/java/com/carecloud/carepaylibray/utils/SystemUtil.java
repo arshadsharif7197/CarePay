@@ -211,27 +211,6 @@ public class SystemUtil {
         return string != null && !string.isEmpty() && !string.equals("null");
     }
 
-    /** * Utility to convert a bitmap to base64
-     * @param bitmap The bitmap
-     * @return The encoding
-     */
-   /* public static String bitmapToBase64String(Bitmap bitmap) {
-        //calculate how many bytes our image consists of.
-       *//* int bytes = bitmap.getByteCount();
-
-        ByteBuffer buffer = ByteBuffer.allocate(bytes); //Create a new buffer
-        bitmap.copyPixelsToBuffer(buffer); //Move the byte data to the buffer
-
-        byte[] array = buffer.array(); //Get the underlying array containing the data.
-        return Base64.encodeToString(array, 0);*//*
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream .toByteArray();
-        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        return encoded;
-    }
-    */
-
     /**
      * Utility to dencode a bitmapinto a base64
      *
@@ -242,11 +221,6 @@ public class SystemUtil {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
-    }
-
-    public static Bitmap decodeBase64(String input) {
-        byte[] decodedBytes = Base64.decode(input, 0);
-        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
     /**
