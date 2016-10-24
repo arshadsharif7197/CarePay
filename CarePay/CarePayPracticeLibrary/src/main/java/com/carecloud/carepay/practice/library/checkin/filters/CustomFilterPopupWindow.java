@@ -136,7 +136,7 @@ public class CustomFilterPopupWindow extends PopupWindow
             clearFiltersButton.setVisibility(View.GONE);
             filteredDataMap.clear();
             /*
-             * TODO : To give callback to the parent screen that all filters cleared
+             * To give callback to the parent screen that all filters cleared
              */
         }
     };
@@ -178,7 +178,7 @@ public class CustomFilterPopupWindow extends PopupWindow
     };
 
     /*
-     * TODO : To get the provider and location data from Check-In screen when DTO is finalised
+     * To get the provider and location data from Check-In screen when DTO is finalised
      */
     private ArrayList<Object> getProviderAndLocationData() {
         Object[] filterableProviderDataDTOs;
@@ -203,7 +203,7 @@ public class CustomFilterPopupWindow extends PopupWindow
     }
 
     /*
-     * TODO : To get the patient data from Check-In screen when DTO is finalised
+     * To get the patient data from Check-In screen when DTO is finalised
      */
     private ArrayList<Object> getPatientData() {
         Object[] filterablePatientDataDTOs;
@@ -242,7 +242,7 @@ public class CustomFilterPopupWindow extends PopupWindow
             clearFiltersButton.setVisibility(View.VISIBLE);
         }
        /*
-        * TODO : To give callback to the parent screen wherever Custom Filter used
+        * To give callback to the parent screen wherever Custom Filter used
         */
     }
 }
