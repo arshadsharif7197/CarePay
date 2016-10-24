@@ -14,6 +14,7 @@ public class PracticeSettingMetadataDTO {
     @SerializedName("links")
     @Expose
     private PracticeSettingLinksDTO links;
+
     /**
      *
      * @return
