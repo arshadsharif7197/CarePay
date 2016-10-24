@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/mainViewLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone"
@@ -17,7 +17,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
             android:id="@+id/headerLabel"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@color/transparent_apt"
@@ -27,7 +27,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
             android:id="@+id/subHeaderLabel"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/white"
@@ -237,7 +237,7 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                     android:id="@+id/dialogCancelTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:background="@color/transparent_apt"
