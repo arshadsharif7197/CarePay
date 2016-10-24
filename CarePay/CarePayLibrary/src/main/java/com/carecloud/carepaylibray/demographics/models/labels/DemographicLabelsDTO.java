@@ -1,34 +1,36 @@
-package com.carecloud.carepaylibray.demographics.models;
+package com.carecloud.carepaylibray.demographics.models.labels;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Jahirul Bhuiyan on 9/19/2016.
  * MOdel for label.
  */
 public class DemographicLabelsDTO {
-    @SerializedName("demographics_update_button")
-    @Expose
+    @SerializedName("demographics_update_button") @Expose
     private String demographicsUpdateButton;
-    @SerializedName("demographics_update_profile_photo_link")
-    @Expose
+
+    @SerializedName("demographics_update_profile_photo_link") @Expose
     private String demographicsUpdateProfilePhotoLink;
-    @SerializedName("demographics_update_email_and_password_link")
-    @Expose
+
+    @SerializedName("demographics_update_email_and_password_link") @Expose
     private String demographicsUpdateEmailAndPasswordLink;
-    @SerializedName("demographics_address_section")
-    @Expose
+
+    @SerializedName("demographics_address_section") @Expose
     private String demographicsAddressSection;
-    @SerializedName("demographics_details_section")
-    @Expose
+
+
+    @SerializedName("demographics_details_section") @Expose
     private String demographicsDetailsSection;
-    @SerializedName("demographics_documents_section")
-    @Expose
+
+    @SerializedName("demographics_documents_section") @Expose
     private String demographicsDocumentsSection;
-    @SerializedName("demographics_updates_section")
-    @Expose
+
+
+    @SerializedName("demographics_updates_section") @Expose
     private String demographicsUpdatesSection;
-    @SerializedName("demographics_add_another_insurance_link")
-    @Expose
+
+    @SerializedName("demographics_add_another_insurance_link") @Expose
     private String demographicsAddAnotherInsuranceLink;
 
     /**

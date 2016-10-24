@@ -23,8 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPhotoDTO;
+import com.carecloud.carepaylibray.demographics.models.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import com.carecloud.carepaylibray.utils.StringUtil;

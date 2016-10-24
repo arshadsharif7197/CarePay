@@ -1,11 +1,11 @@
-package com.carecloud.carepaylibray.demographics.models;
+package com.carecloud.carepaylibray.demographics.models.transitions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 9/20/2016.
  * Model for transition data objet.
  */
-public class DemographicTransitionsDataObjectDTO {
+class DemographicTransitionsDataObjectDTO {
     @SerializedName("address")
     @Expose
     private DemographicTransitionsDataDTO address;

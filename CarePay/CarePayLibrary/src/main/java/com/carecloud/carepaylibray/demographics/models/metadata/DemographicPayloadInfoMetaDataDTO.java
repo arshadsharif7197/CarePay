@@ -1,6 +1,7 @@
-package com.carecloud.carepaylibray.demographics.models;
+package com.carecloud.carepaylibray.demographics.models.metadata;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  * Model for payload info metadata.

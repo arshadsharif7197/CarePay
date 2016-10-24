@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models;
+package com.carecloud.carepaylibray.demographics.models.payload;
 
 import com.carecloud.carepaylibray.base.models.BasePersonModel;
 import com.google.gson.annotations.Expose;

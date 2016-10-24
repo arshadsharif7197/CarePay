@@ -1,5 +1,8 @@
-package com.carecloud.carepaylibray.demographics.models;
+package com.carecloud.carepaylibray.demographics.models.metadata;
 
+import com.carecloud.carepaylibray.demographics.models.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.models.links.DemographicLinksDTO;
+import com.carecloud.carepaylibray.demographics.models.transitions.DemographicTransitionsDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Jahirul Bhuiyan on 9/19/2016.
  * Model for meta-data.
  */
-public class DemographicMetadataModel {
+class DemographicMetadataModel {
     @SerializedName("labels")
     @Expose
     private DemographicLabelsDTO labels;

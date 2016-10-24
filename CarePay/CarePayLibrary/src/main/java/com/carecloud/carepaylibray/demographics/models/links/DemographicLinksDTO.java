@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models;
+package com.carecloud.carepaylibray.demographics.models.links;
 import com.carecloud.carepaylibray.base.models.BaseLinkModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,12 +6,11 @@ import com.google.gson.annotations.SerializedName;
  * Created by Jahirul Bhuiyan on 9/19/2016.
  * Model for links.
  */
-class DemographicLinksDTO {
-    @SerializedName("self")
-    @Expose
+public class DemographicLinksDTO {
+    @SerializedName("self")  @Expose
     private BaseLinkModel self;
-    @SerializedName("demographics")
-    @Expose
+
+    @SerializedName("demographics") @Expose
     private BaseLinkModel demographics;
 
     /**

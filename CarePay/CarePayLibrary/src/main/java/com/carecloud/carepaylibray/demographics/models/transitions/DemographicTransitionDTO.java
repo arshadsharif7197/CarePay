@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models;
+package com.carecloud.carepaylibray.demographics.models.transitions;
 
 import com.carecloud.carepaylibray.base.models.BaseTransitionsModel;
 
@@ -6,7 +6,7 @@ import com.carecloud.carepaylibray.base.models.BaseTransitionsModel;
  * Created by Jahirul Bhuiyan on 9/20/2016.
  * MOdel for demographics transition.
  */
-public class DemographicTransitionDTO extends BaseTransitionsModel {
+class DemographicTransitionDTO extends BaseTransitionsModel {
     public DemographicTransitionsDataObjectDTO getData(){
         return super.getData(DemographicTransitionsDataObjectDTO.class);
     }

@@ -1,9 +1,9 @@
 package com.carecloud.carepaylibray.demographics.services;
 
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.models.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.models.metadata.DemographicDTO;
 
-import com.carecloud.carepaylibray.demographics.models.DemographicsInsurancesListDTO;
+import com.carecloud.carepaylibray.demographics.models.payload.DemographicsInsurancesListDTO;
 
 
 import okhttp3.ResponseBody;

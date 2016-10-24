@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.models;
+package com.carecloud.carepaylibray.demographics.models.transitions;
 
 import com.carecloud.carepaylibray.base.models.BaseTransitionsPropertyModel;
 
