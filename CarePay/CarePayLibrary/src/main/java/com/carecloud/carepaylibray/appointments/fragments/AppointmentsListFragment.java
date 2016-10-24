@@ -26,8 +26,10 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
+import com.carecloud.carepaylibray.base.NavigationHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -161,9 +163,9 @@ public class AppointmentsListFragment extends Fragment {
             ApplicationPreferences.Instance.writeStringToSharedPref(
                     CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
+            NavigationHelper.initInstance(getContext());
+            NavigationHelper.Instance().navigateToWorkflow(appointmentInfo.getState());
 
-            Intent demographicReviewIntent = new Intent(getContext(), DemographicReviewActivity.class);
-            getContext().startActivity(demographicReviewIntent);
         }
     };
 
@@ -181,7 +183,7 @@ public class AppointmentsListFragment extends Fragment {
 
         Bundle arguments = getArguments();
         appointmentInfo = (AppointmentsResultModel) arguments.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
-
+        Log.d("TEST",appointmentInfo.getState());
         //Pull down to refresh
         appointmentRefresh = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
         onRefresh();

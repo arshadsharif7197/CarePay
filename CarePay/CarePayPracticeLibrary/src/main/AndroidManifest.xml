@@ -5,6 +5,7 @@
     <application>
         <activity android:name=".checkin.CheckInActivity" />
         <activity android:name=".patientmode.PatientModeSplashActivity"></activity>
+        <activity android:name=".appointments.AppointmentsActivity"></activity>
     </application>
 
 </manifest>
