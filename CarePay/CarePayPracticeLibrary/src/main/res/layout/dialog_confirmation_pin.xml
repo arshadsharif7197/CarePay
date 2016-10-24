@@ -7,9 +7,11 @@
     android:background="@color/transparent_apt">
 
     <LinearLayout
+        android:id="@+id/mainViewLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:background="@color/transparent_apt"
         android:orientation="vertical">
 
@@ -20,7 +22,6 @@
             android:layout_gravity="center_horizontal"
             android:background="@color/transparent_apt"
             android:textAllCaps="false"
-            android:text="Not Defined"
             android:textColor="@color/white"
             android:textSize="@dimen/pin_header_text_size" />
 
@@ -29,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Not Defined"
             android:textColor="@color/white"
             android:textSize="@dimen/pin_sub_header_text_size" />
 
@@ -242,7 +242,6 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@color/transparent_apt"
                     android:gravity="center_horizontal"
-                    android:text="Not Defined"
                     android:textColor="@color/bright_cerulean" />
             </LinearLayout>
         </LinearLayout>
