@@ -5,6 +5,27 @@
     <dimen name="signin_button_textsize">18sp</dimen>
     <dimen name="go_back_textsize">22sp</dimen>
     <dimen name="signin_title_textsize">36sp</dimen>
+
+    <!-- Default dimens which will be use for any default styling  -->
+    <dimen name="dimen_1dp">1dp</dimen>
+    <dimen name="dimen_5dp">5dp</dimen>
+    <dimen name="dimen_8dp">8dp</dimen>
+    <dimen name="dimen_10dp">10dp</dimen>
+    <dimen name="dimen_12dp">12dp</dimen>
+    <dimen name="dimen_15dp">15dp</dimen>
+    <dimen name="dimen_17dp">17dp</dimen>
+    <dimen name="dimen_18dp">18dp</dimen>
+    <dimen name="dimen_20dp">20dp</dimen>
+    <dimen name="dimen_21dp">21dp</dimen>
+    <dimen name="dimen_22dp">22dp</dimen>
+    <dimen name="dimen_25dp">25dp</dimen>
+    <dimen name="dimen_35dp">35dp</dimen>
+    <dimen name="dimen_450dp">450dp</dimen>
+
+    <dimen name="text_size_22sp">22sp</dimen>
+    <dimen name="text_size_28sp">28sp</dimen>
+    <dimen name="text_size_36sp">36sp</dimen>
+
     <dimen name="appointment_cart_padding">10dp</dimen>
     <dimen name="appointment_cart_elevation">30dp</dimen>
     <dimen name="appointment_cart_corner_radius">10dp</dimen>
@@ -14,16 +35,4 @@
     <dimen name="appointment_cart_time_textsize">16sp</dimen>
     <dimen name="forgotpassword_textsize">14.0sp</dimen>
 
-    <!--pin confirmation dialog-->
-    <dimen name="button_height">77dp</dimen>
-    <dimen name="button_width">66dp</dimen>
-    <dimen name="key_border_width">1dp</dimen>
-    <dimen name="button_padding">2dp</dimen>
-    <dimen name="button_margin_top">30dp</dimen>
-    <dimen name="pin_header_text_size">29sp</dimen>
-    <dimen name="pin_sub_header_text_size">19sp</dimen>
-    <dimen name="pin_sub_edit_text_size">50sp</dimen>
-    <dimen name="button_pin_text_size">38sp</dimen>
-    <dimen name="button_delete_key_width">40dp</dimen>
-    <dimen name="button_delete_key_height">27dp</dimen>
 </resources>
