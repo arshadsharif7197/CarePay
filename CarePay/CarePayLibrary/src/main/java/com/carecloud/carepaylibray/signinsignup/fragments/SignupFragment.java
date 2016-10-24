@@ -502,7 +502,6 @@ public class SignupFragment extends Fragment {
 
     // cognito
     private void registerUser() {
-        Log.v(LOG_TAG, "registerUser()");
         // Read user data and register
         CognitoUserAttributes userAttributes = new CognitoUserAttributes();
 
