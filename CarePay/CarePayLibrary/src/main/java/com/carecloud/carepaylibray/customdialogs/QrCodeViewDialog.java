@@ -23,7 +23,6 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
     private AppointmentDTO appointmentDTO;
-    private final int WIDTH = 500;
 
     /**
      *
@@ -67,9 +66,10 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
      */
     Bitmap encodeAsBitmap(String convertToQRCode) throws WriterException {
         BitMatrix result;
+        int pixelWidth = 500;
         try {
-            result = new MultiFormatWriter().encode(convertToQRCode, BarcodeFormat.QR_CODE, WIDTH,
-                    WIDTH, null);
+            result = new MultiFormatWriter().encode(convertToQRCode, BarcodeFormat.QR_CODE,
+                    pixelWidth, pixelWidth, null);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
             return null;
@@ -90,7 +90,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
             heightCounter++;
         }
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap.setPixels(pixels, 0, WIDTH, 0, 0, width, height);
+        bitmap.setPixels(pixels, 0, pixelWidth, 0, 0, width, height);
         return bitmap;
     }
 
