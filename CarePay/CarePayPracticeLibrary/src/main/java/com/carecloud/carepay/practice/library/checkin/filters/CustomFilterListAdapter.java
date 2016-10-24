@@ -242,21 +242,21 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 results.count = origFilterableDataDTOList.size();
             } else {
                 // We perform filtering operation
-                List<FilterableDataDTO> nFilterableDataDTOList = new ArrayList<>();
+                List<FilterableDataDTO> filterableDataDTOList = new ArrayList<>();
 
                 for (Object object : filterableDataDTOList) {
                     try {
                         FilterableDataDTO dataDTO = (FilterableDataDTO) object;
                         if (dataDTO.getName().toUpperCase().startsWith(constraint.toString()
                                 .toUpperCase())) {
-                            nFilterableDataDTOList.add(dataDTO);
+                            filterableDataDTOList.add(dataDTO);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                results.values = nFilterableDataDTOList;
-                results.count = nFilterableDataDTOList.size();
+                results.values = filterableDataDTOList;
+                results.count = filterableDataDTOList.size();
             }
             return results;
         }

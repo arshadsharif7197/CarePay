@@ -80,11 +80,11 @@ public class CustomFilterPopupWindow extends PopupWindow
 
     private void initialiseViews() {
         View popupWindowLayout = this.getContentView();
-        ImageView closeFilterWindowImageView = (ImageView) popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
         clearSearchImageView = (ImageView) popupWindowLayout.findViewById(R.id.clearSearchImageView);
         searchPatientEditText = (EditText) popupWindowLayout.findViewById(R.id.searchPatientEditText);
         filterableDataRecyclerView = (RecyclerView) popupWindowLayout.findViewById(R.id.filterableDataRecyclerView);
         clearFiltersButton = (Button) popupWindowLayout.findViewById(R.id.clearFiltersButton);
+        ImageView closeFilterWindowImageView = (ImageView) popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
 
         closeFilterWindowImageView.setOnClickListener(closeFilterWindowListener);
         clearSearchImageView.setOnClickListener(clearSearchTextListener);
@@ -135,7 +135,9 @@ public class CustomFilterPopupWindow extends PopupWindow
             filterableDataRecyclerView.setAdapter(listAdapter);
             clearFiltersButton.setVisibility(View.GONE);
             filteredDataMap.clear();
-            // TODO : To give callback to the parent screen that all filters cleared
+            /*
+             * TODO : To give callback to the parent screen that all filters cleared
+             */
         }
     };
 
@@ -175,7 +177,9 @@ public class CustomFilterPopupWindow extends PopupWindow
         }
     };
 
-    // TODO : To get the provider and location data from Check-In screen when DTO is finalised
+    /*
+     * TODO : To get the provider and location data from Check-In screen when DTO is finalised
+     */
     private ArrayList<Object> getProviderAndLocationData() {
         Object[] filterableProviderDataDTOs;
         filterableProviderDataDTOs = new Object[]{"Doctors",
@@ -198,7 +202,9 @@ public class CustomFilterPopupWindow extends PopupWindow
         return filterableDataDTOList;
     }
 
-    // TODO : To get the patient data from Check-In screen when DTO is finalised
+    /*
+     * TODO : To get the patient data from Check-In screen when DTO is finalised
+     */
     private ArrayList<Object> getPatientData() {
         Object[] filterablePatientDataDTOs;
         filterablePatientDataDTOs = new Object[]{
@@ -235,6 +241,8 @@ public class CustomFilterPopupWindow extends PopupWindow
         } else {
             clearFiltersButton.setVisibility(View.VISIBLE);
         }
-        // TODO : To give callback to the parent screen wherever Custom Filter used
+       /*
+        * TODO : To give callback to the parent screen wherever Custom Filter used
+        */
     }
 }
