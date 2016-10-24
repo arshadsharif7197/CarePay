@@ -19,6 +19,11 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private Context context;
     private AppointmentDTO appointmentDTO;
 
+    /**
+     *
+     * @param context activity context
+     * @param appointmentDTO appointment model
+     */
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context, appointmentDTO);
         this.context = context;

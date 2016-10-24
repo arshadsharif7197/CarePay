@@ -23,8 +23,13 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
     private AppointmentDTO appointmentDTO;
-    public final static int WIDTH = 500;
+    private final int WIDTH = 500;
 
+    /**
+     *
+     * @param context activity context
+     * @param appointmentDTO appointment model
+     */
     public QrCodeViewDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context);
         this.context = context;
@@ -57,8 +62,8 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
     /**
      * @param convertToQRCode string which needs to be converted to QR code
-     * @return
-     * @throws WriterException
+     * @return bitmap
+     * @throws WriterException throws WriterException that needs to be caught
      */
     Bitmap encodeAsBitmap(String convertToQRCode) throws WriterException {
         BitMatrix result;
@@ -76,10 +81,11 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         int heightCounter = 0;
         while (heightCounter < height) {
             int offset = heightCounter * width;
-            for (int widthCounter = 0; widthCounter < width; widthCounter++)
+            for (int widthCounter = 0; widthCounter < width; widthCounter++) {
                 pixels[offset + widthCounter] = result.get(widthCounter, heightCounter) ?
                         ContextCompat.getColor(context, R.color.black)
                         : ContextCompat.getColor(context, R.color.white);
+            }
 
             heightCounter++;
         }
