@@ -183,7 +183,6 @@ public class AppointmentsListFragment extends Fragment {
 
         Bundle arguments = getArguments();
         appointmentInfo = (AppointmentsResultModel) arguments.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
-        Log.d("TEST",appointmentInfo.getState());
         //Pull down to refresh
         appointmentRefresh = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
         onRefresh();
