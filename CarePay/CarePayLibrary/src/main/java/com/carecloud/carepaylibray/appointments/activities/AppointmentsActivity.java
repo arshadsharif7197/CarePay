@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
@@ -139,6 +140,12 @@ public class AppointmentsActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if(id == R.id.action_launch_demogr_review) {
+            // temporary launch Demographics Review for QA testing
+            // (please do not remove!)
+            Intent intent = new Intent(this, DemographicReviewActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
