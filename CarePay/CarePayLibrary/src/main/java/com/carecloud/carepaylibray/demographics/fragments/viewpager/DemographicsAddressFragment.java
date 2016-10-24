@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -376,15 +377,16 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         zipCodeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                zipCodeEditText.setSelection(zipCodeEditText.getText().length());
+                zipCodeEditText.setSelection(zipCodeEditText.length());
             }
         });
         zipCodeEditText.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-                if (charSequence != null) {
-                    zipCodeEditText.setSelection(charSequence.length());
-                }
+                prevLen = charSequence.length();
+                zipCodeEditText.setSelection(charSequence.length());
             }
 
             @Override
@@ -401,7 +403,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     modelAddress.setZipcode(zip);
                 }
 
-                StringUtil.autoFormatZipcode(editable);
+                StringUtil.autoFormatZipcode(editable, prevLen);
             }
         });
         cityEditText.addTextChangedListener(new TextWatcher() {
@@ -452,13 +454,15 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                phoneNumberEditText.setSelection(phoneNumberEditText.getText().length());
+                phoneNumberEditText.setSelection(phoneNumberEditText.length());
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+            int len = 0;
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-
+                len = charSequence.length();
             }
 
             @Override
@@ -467,7 +471,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(Editable phonenumber) {
                 String phone = phoneNumberEditText.getText().toString();
                 isPhoneEmpty = StringUtil.isNullOrEmpty(phone);
                 if (!isPhoneEmpty) {
@@ -475,8 +479,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
                     phNoTextInputLayout.setErrorEnabled(false);
                     modelAddress.setPhone(phone);
                 }
-
-                StringUtil.autoFormatPhone(editable);
+                // auto-format as typing
+                StringUtil.autoFormatPhone(phonenumber, len);
             }
         });
     }

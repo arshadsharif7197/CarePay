@@ -42,10 +42,6 @@ public class ImageCaptureHelper {
     private int       imgHeight;
     private Activity  context;
 
-    public ImageCaptureHelper(Activity activity) {
-        context = activity;
-    }
-
     public ImageCaptureHelper(Activity activity, ImageView targetImageView) {
         context = activity;
         imageViewTarget = targetImageView;
@@ -88,14 +84,16 @@ public class ImageCaptureHelper {
 
     /**
      * Callback method to be used upon returning from Camera activity
-     * @param data The intent used to launch the Camera
+     *
+     * @param data  The intent used to launch the Camera
      * @param shape The intended shape of the captured image
-     *              @return The bitmap
+     * @return The bitmap
      */
     public Bitmap onCaptureImageResult(Intent data, int shape) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         if (thumbnail != null) {
+            // compress
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         }
 
@@ -105,16 +103,18 @@ public class ImageCaptureHelper {
 
     /**
      * Callback method to be used upon returning from Gallery activity
-     * @param data The intent used to launch the GAllery
+     *
+     * @param data  The intent used to launch the GAllery
      * @param shape The intended shape of the captured image
-     *              @return The bitmap
+     * @return The bitmap
      */
     public Bitmap onSelectFromGalleryResult(Intent data, int shape) {
         try {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            // compress
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-           return  setCapturedImageToTargetView(thumbnail, shape);
+            return setCapturedImageToTargetView(thumbnail, shape);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -123,6 +123,7 @@ public class ImageCaptureHelper {
 
     /**
      * Creates an intent to launch the camera
+     *
      * @return The intent
      */
     public Intent galleryIntent() {
@@ -134,6 +135,7 @@ public class ImageCaptureHelper {
 
     /**
      * Creates an intent to launch Gallery
+     *
      * @return The intent
      */
     public Intent cameraIntent() {
@@ -142,19 +144,11 @@ public class ImageCaptureHelper {
 
     /**
      * Builds a scaled square bitmap from another bitmap
-     * @param bitmap The original bitmap
-     * @param width The destination bitmap width
-     * @param height The destination heght
+     *
+     * @param finalBitmap The original bitmap
      * @return The scaled bitmap
      */
-    private Bitmap getSquareCroppedBitmap(Bitmap bitmap, int width, int height) {
-        Bitmap finalBitmap;
-        if (bitmap.getWidth() != width || bitmap.getHeight() != height) {
-            finalBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
-        } else {
-            finalBitmap = bitmap;
-        }
-
+    private Bitmap getSquareCroppedBitmap(Bitmap finalBitmap) {
         Bitmap output = Bitmap.createBitmap(finalBitmap.getWidth(),
                                             finalBitmap.getHeight(),
                                             Bitmap.Config.ARGB_8888);
@@ -169,8 +163,7 @@ public class ImageCaptureHelper {
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail));
-   //     canvas.drawRect(rect, paint);
-        canvas.drawRoundRect(rectf,3,3,paint);
+        canvas.drawRoundRect(rectf, 3, 3, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(finalBitmap, rect, rect, paint);
 
@@ -179,27 +172,19 @@ public class ImageCaptureHelper {
 
     /**
      * Builds a scaled round bitmap from another bitmap
-     * @param bitmap The original bitmap
-     * @param radius The destination bitmap radius
+     *
+     * @param finalBitmap The original bitmap
      * @return The scaled bitmap
      */
-    private Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int radius) {
-        Bitmap finalBitmap;
-
-        if (bitmap.getWidth() != radius || bitmap.getHeight() != radius) {
-            finalBitmap = Bitmap.createScaledBitmap(bitmap, radius, radius, false);
-        } else {
-            finalBitmap = bitmap;
-        }
-
+    private Bitmap getRoundedCroppedBitmap(Bitmap finalBitmap) {
         Bitmap output = Bitmap.createBitmap(finalBitmap.getWidth(),
                                             finalBitmap.getHeight(),
                                             Bitmap.Config.ARGB_8888);
+
         Canvas canvas = new Canvas(output);
 
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, finalBitmap.getWidth(), finalBitmap.getHeight());
-
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         paint.setDither(true);
@@ -219,28 +204,49 @@ public class ImageCaptureHelper {
 
     /**
      * Set the a bitmap to the target image view
+     *
      * @param thumbnail The bitmap
-     * @param shape The shape (ImageCaptureHelper.ROUNDED or ImageCaptureHelper.RECTANGULAR)
+     * @param shape     The shape (ImageCaptureHelper.ROUNDED or ImageCaptureHelper.RECTANGULAR)
      */
     private Bitmap setCapturedImageToTargetView(Bitmap thumbnail, int shape) {
+        // calculate crop
+        int origWidth = thumbnail.getWidth();
+        int origHeigth = thumbnail.getHeight();
+        int xxCoord = 0;
+        int yyCoord = 0;
+        int croppedWidth = origWidth;
+        int croppedHeight = origHeigth;
+        int cropSize;
+        // calculate
+        if(origWidth < origHeigth ) {
+            cropSize = origHeigth - origWidth;
+            yyCoord = cropSize;
+            croppedHeight = origWidth;
+        } else if(origWidth > origHeigth) {
+            cropSize = origWidth - origHeigth;
+            xxCoord = cropSize;
+            croppedWidth = origHeigth;
+        }
+
+        // crop to square
+        Bitmap croppedBitmap = Bitmap.createBitmap(thumbnail,
+                                                   xxCoord,
+                                                   yyCoord,
+                                                   croppedWidth,
+                                                   croppedHeight);
+
+        // compress
         Bitmap bitmap = null;
         if (shape == ROUND_IMAGE) {
-            bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, true),
-                                             imgWidth);
+            bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgWidth, false));
         } else if (shape == RECTANGULAR_IMAGE) {
-            bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgHeight, true),
-                                            imgWidth,
-                                            imgHeight);
+            bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgHeight, true));
         }
-      imageViewTarget.setImageBitmap(bitmap);
+        imageViewTarget.setImageBitmap(bitmap);
         return bitmap;
     }
 
     public void resetTargetView() {
         imageViewTarget.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_camera));
     }
-
-    public void setImageFromCharStream(String imageCharStream) {
-    }
-
 }
