@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.activities;
+package com.carecloud.carepaylibray.consentforms;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -14,23 +15,33 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDataModelDTO;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
+import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class SignatureActivity extends AppCompatActivity {
 
     private TextView titleTextView;
+    private TextView beforesignWarningTextView;
     private TextView signatureHelpTextView;
     private SignaturePad signaturePad;
     private SwitchCompat switchButton;
@@ -44,12 +55,29 @@ public class SignatureActivity extends AppCompatActivity {
     public static boolean isBackButtonClicked = false;
 
 
+    private ConsentFormDTO consentFormDTO= null;
+    private ConsentFormMetadataDTO consentFormMetadataDTO;
+    private ConsentFormLabelsDTO consentFormLabelsDTO;
+
+    private String patientSignature;
+    private String legalSignature;
+    private String legalFirstNameLabel;
+    private String legalLastNameLabel;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
 
-        initViews();
+        Intent intent=getIntent();
+
+        intent.getExtras();
+        if (intent.hasExtra("consentform_model")) {
+            String consentformModelString = intent.getStringExtra("consentform_model");
+            Gson gson = new Gson();
+            consentFormDTO = gson.fromJson(consentformModelString, ConsentFormDTO.class);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
@@ -67,9 +95,10 @@ public class SignatureActivity extends AppCompatActivity {
                 finish();
             }
         });
+        initViews();
         setTypefaces();
+        setEditTexts();
         onClickListeners();
-        setTextListeners();
     }
 
     /**
@@ -99,9 +128,29 @@ public class SignatureActivity extends AppCompatActivity {
         legalLastName = (TextInputLayout) findViewById(R.id.legalLastName);
         legalFirstNameET = (EditText) findViewById(R.id.legalFirstNameET);
         legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
+        beforesignWarningTextView= (TextView) findViewById(R.id.beforesignwarnigTextView);
         String headerTitle = getIntent().getExtras().getString("Header_Title");
         titleTextView.setText(headerTitle);
+        initviewfromModel();
 
+    }
+
+
+    private void initviewfromModel() {
+
+                    agreeButton.setText(getIntent().getExtras().getString("confirmsign"));
+                    switchButton.setText(getIntent().getExtras().getString("unabletosign"));
+
+                    legalFirstNameLabel =getIntent().getExtras().getString("legalFirstName");
+                    legalFirstNameET.setHint(legalFirstNameLabel);
+                    legalLastNameLabel= getIntent().getExtras().getString("legalLastName");
+                    legalLastNameET.setHint(legalLastNameLabel);
+                    beforesignWarningTextView.setText(getIntent().getExtras().getString("beforesignwarnig"));
+                    clearButton.setText(getIntent().getExtras().getString("signclearbutton"));
+                    agreeButton.setText(getIntent().getExtras().getString("confirmsign"));
+                    legalSignature= getIntent().getExtras().getString("legalsign");
+                    patientSignature=getIntent().getExtras().getString("patientsign");
+                    signatureHelpTextView.setText(patientSignature);
 
     }
 
@@ -154,55 +203,48 @@ public class SignatureActivity extends AppCompatActivity {
 
 
     }
+    private void setEditTexts() {
+
+        legalFirstName.setTag(legalFirstNameLabel);
+        legalFirstNameET.setTag(legalFirstName);
+
+        legalLastName.setTag(legalLastNameLabel);
+        legalLastNameET.setTag(legalLastName);
+
+        setChangeFocusListeners();
+
+    }
+    private void setChangeFocusListeners() {
+
+        legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    SystemUtil.showSoftKeyboard(SignatureActivity.this);
+                }
+                SystemUtil.handleHintChange(v, hasFocus);
+
+            }
+        });
+
+
+        legalLastNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    SystemUtil.showSoftKeyboard(SignatureActivity.this);
+                }
+                SystemUtil.handleHintChange(v, hasFocus);
+
+            }
+        });
+    }
+
+
 
     /**
      * Text change Listeners
      */
-    private void setTextListeners() {
-        legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                String hint = "Legal Representative First Name";
-                String hintCaps = hint.toUpperCase();
-                if (hasFocus) {
-                    // change hint to all caps
-                    legalFirstName.setHint(hintCaps);
-                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(), legalFirstName);
-                } else {
-                    if (StringUtil.isNullOrEmpty(legalFirstNameET.getText().toString())) {
-                        // change hint to lower
-                        legalFirstName.setHint(hint);
-
-                    } else {
-                        legalFirstNameET.setHint(hint);
-                    }
-                }
-            }
-
-        });
-        legalLastNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                String hint = "Legal Representative Last Name";
-                String hintCaps = hint.toUpperCase();
-                if (hasFocus) {
-                    // change hint to all caps
-                    legalLastName.setHint(hintCaps);
-                    setProximaNovaSemiboldTextInputLayout(getApplicationContext(), legalLastName);
-                } else {
-                    if (StringUtil.isNullOrEmpty(legalLastNameET.getText().toString())) {
-                        // change hint to lower
-                        legalLastName.setHint(hint);
-
-                    } else {
-                        legalLastNameET.setHint(hint);
-                    }
-                }
-
-            }
-
-        });
-    }
 
     private void clearSignature() {
         if (signaturePad != null) {
@@ -213,11 +255,15 @@ public class SignatureActivity extends AppCompatActivity {
 
     private void showData(boolean isChecked) {
         if (!isChecked) {
-            signatureHelpTextView.setText(stringMap.get(0).get(1));
+            signatureHelpTextView.setText(patientSignature);
+            legalFirstName.setVisibility(View.GONE);
+            legalLastName.setVisibility(View.GONE);
             legalFirstNameET.setVisibility(View.GONE);
             legalLastNameET.setVisibility(View.GONE);
         } else {
-            signatureHelpTextView.setText(stringMap.get(1).get(1));
+            signatureHelpTextView.setText(legalSignature);
+            legalFirstName.setVisibility(View.VISIBLE);
+            legalLastName.setVisibility(View.VISIBLE);
             legalFirstNameET.setVisibility(View.VISIBLE);
             legalLastNameET.setVisibility(View.VISIBLE);
         }
@@ -225,7 +271,14 @@ public class SignatureActivity extends AppCompatActivity {
 
     private void setTypefaces() {
         setGothamRoundedMediumTypeface(this, titleTextView);
-        setProximaNovaRegularTypeface(this, (TextView) findViewById(R.id.descriptionTv));
+        setProximaNovaRegularTypeface(this, beforesignWarningTextView);
+        setProximaNovaRegularTypeface(this, legalFirstNameET);
+        setProximaNovaRegularTypeface(this, legalLastNameET);
+        setProximaNovaRegularTypeface(this, switchButton);
+        setProximaNovaSemiboldTypeface(this,signatureHelpTextView);
+        setGothamRoundedMediumTypeface(this, agreeButton);
+
+
     }
 
     @Override

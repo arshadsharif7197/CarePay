@@ -7,7 +7,21 @@ import java.io.Serializable;
  */
 public class FormData implements Serializable{
 
-    private String title, description, content, content2, date;
+    private String title;
+    private String description;
+    private String content;
+    private String content2;
+    private String date;
+
+    public String getButtonLabel() {
+        return buttonLabel;
+    }
+
+    public void setButtonLabel(String buttonLabel) {
+        this.buttonLabel = buttonLabel;
+    }
+
+    private String buttonLabel;
 
     public String getTitle() {
         return title;
