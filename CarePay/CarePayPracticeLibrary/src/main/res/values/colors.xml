@@ -84,4 +84,6 @@
     <color name="gray_white">#80ffffff</color>
 
     <color name="manatee_lite">#4Dd7d7d7</color>
+
+    <color name="change_mode_divider_color">#0295d7</color>
 </resources>

@@ -18,4 +18,12 @@
         <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
         <item name="colorControlActivated">@color/light_gray</item>
     </style>
+
+    <style name="ChangeModeDialogOptions">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">20dp</item>
+        <item name="android:paddingBottom">38dp</item>
+        <item name="android:textSize">22sp</item>
+    </style>
 </resources>
