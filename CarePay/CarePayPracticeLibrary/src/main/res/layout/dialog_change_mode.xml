@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_rounded_border"
+    android:orientation="horizontal"
+    android:paddingEnd="56.5dp"
+    android:paddingStart="23.5dp">
+
+    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+        android:id="@+id/dialog_patient_mode_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="20dp"
+        android:drawableTop="@drawable/icn_patient_mode"
+        android:paddingBottom="38dp"
+        android:paddingTop="65dp"
+        android:textColor="#37474f"
+        android:textSize="22sp" />
+
+    <View
+        android:layout_width="1.5dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="54.5dp"
+        android:layout_marginStart="18.5dp"
+        android:background="#0295d7" />
+
+    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+        android:id="@+id/dialog_logout_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="20dp"
+        android:drawableTop="@drawable/icn_log_out"
+        android:paddingBottom="38dp"
+        android:paddingTop="57dp"
+        android:textColor="#37474f"
+        android:textSize="22sp" />
+
+</LinearLayout>

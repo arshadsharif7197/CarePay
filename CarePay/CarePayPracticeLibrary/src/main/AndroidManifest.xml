@@ -4,7 +4,8 @@
 
     <application>
         <activity android:name=".checkin.CheckInActivity" />
-        <activity android:name=".patientmode.PatientModeSplashActivity"></activity>
+        <activity android:name=".patientmode.PatientModeSplashActivity"/>
+        <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"/>
     </application>
 
 </manifest>

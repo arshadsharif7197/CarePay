@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 
 import com.carecloud.carepay.practice.clover.R;
+import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.payment.services.PaymentsService;
 import com.clover.sdk.util.CloverAccount;
@@ -50,26 +51,26 @@ public class CloverPaymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clover_payment);
-        Intent intent = getIntent();
-        if (intent.hasExtra("total_pay")) {
-            double totalAmount = intent.getDoubleExtra("total_pay", 20.00);
-            amount = new Long((long) (totalAmount*100));
-        }
-
-        if (account == null) {
-            {
-                account = CloverAccount.getAccount(this);
-                authenticateCloverAccount();
-            }
-
-
-            // If an account can't be acquired, exit the app
-            if (account == null) {
-                Toast.makeText(this, getString(R.string.no_account), Toast.LENGTH_SHORT).show();
-                finish();
-                return;
-            }
-        }
+//        Intent intent = getIntent();
+//        if (intent.hasExtra("total_pay")) {
+//            double totalAmount = intent.getDoubleExtra("total_pay", 20.00);
+//            amount = new Long((long) (totalAmount*100));
+//        }
+//
+//        if (account == null) {
+//            {
+//                account = CloverAccount.getAccount(this);
+//                authenticateCloverAccount();
+//            }
+//
+//
+//            // If an account can't be acquired, exit the app
+//            if (account == null) {
+//                Toast.makeText(this, getString(R.string.no_account), Toast.LENGTH_SHORT).show();
+//                finish();
+//                return;
+//            }
+//        }
 
         // For testing Purpose only
 //        RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.activity_clover_payment);
@@ -80,6 +81,9 @@ public class CloverPaymentActivity extends AppCompatActivity {
 //            }
 //        });
 
+        Intent rotateInIntent = new Intent(CloverPaymentActivity.this, CloverMainActivity.class);
+        rotateInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(rotateInIntent);
     }
 
 
@@ -88,20 +92,20 @@ public class CloverPaymentActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (account == null) {
-            {
-                account = CloverAccount.getAccount(this);
-                authenticateCloverAccount();
-            }
-
-
-            // If an account can't be acquired, exit the app
-            if (account == null) {
-                Toast.makeText(this, getString(R.string.no_account), Toast.LENGTH_SHORT).show();
-                finish();
-                return;
-            }
-        }
+//        if (account == null) {
+//            {
+//                account = CloverAccount.getAccount(this);
+//                authenticateCloverAccount();
+//            }
+//
+//
+//            // If an account can't be acquired, exit the app
+//            if (account == null) {
+//                Toast.makeText(this, getString(R.string.no_account), Toast.LENGTH_SHORT).show();
+//                finish();
+//                return;
+//            }
+//        }
 
     }
 
