@@ -139,7 +139,7 @@ public class ConsentFormLabelsDTO {
      * @return The consentReadCarefullyWarning
      */
     public String getConsentReadCarefullyWarning() {
-        return StringUtil.isNullOrEmpty(consentReadCarefullyWarning) ? "undefined label" : consentReadCarefullyWarning;
+        return StringUtil.isNullOrEmpty(consentReadCarefullyWarning) ? "Not Defined" : consentReadCarefullyWarning;
     }
 
     /**
@@ -153,7 +153,7 @@ public class ConsentFormLabelsDTO {
      * @return The authorizationFormTitle
      */
     public String getAuthorizationFormTitle() {
-        return StringUtil.isNullOrEmpty(authorizationFormTitle) ? "undefined label" : authorizationFormTitle;
+        return StringUtil.isNullOrEmpty(authorizationFormTitle) ? "Not Defined"  : authorizationFormTitle;
     }
 
     /**
@@ -167,7 +167,7 @@ public class ConsentFormLabelsDTO {
      * @return The signAuthorizationFormTitle
      */
     public String getSignAuthorizationFormTitle() {
-        return StringUtil.isNullOrEmpty(signAuthorizationFormTitle) ? "undefined label" : signAuthorizationFormTitle;
+        return StringUtil.isNullOrEmpty(signAuthorizationFormTitle) ? "Not Defined"  : signAuthorizationFormTitle;
     }
 
     /**
@@ -182,7 +182,7 @@ public class ConsentFormLabelsDTO {
      */
     public String getHipaaAgreementTitle() {
 
-        return StringUtil.isNullOrEmpty(hipaaAgreementTitle) ? "undefined label" : hipaaAgreementTitle;
+        return StringUtil.isNullOrEmpty(hipaaAgreementTitle) ? "Not Defined" : hipaaAgreementTitle;
     }
 
     /**
@@ -197,7 +197,7 @@ public class ConsentFormLabelsDTO {
      */
     public String getSignHipaaAgreementTitle() {
 
-        return StringUtil.isNullOrEmpty(signHipaaAgreementTitle) ? "undefined label" : signHipaaAgreementTitle;
+        return StringUtil.isNullOrEmpty(signHipaaAgreementTitle) ? "Not Defined"  : signHipaaAgreementTitle;
     }
 
     /**
@@ -211,7 +211,7 @@ public class ConsentFormLabelsDTO {
      * @return The confirmSignatureButton
      */
     public String getConfirmSignatureButton() {
-        return StringUtil.isNullOrEmpty(confirmSignatureButton) ? "undefined label" : confirmSignatureButton;
+        return StringUtil.isNullOrEmpty(confirmSignatureButton) ? "Not Defined" : confirmSignatureButton;
     }
 
     /**
@@ -240,7 +240,7 @@ public class ConsentFormLabelsDTO {
      * @return The signFormButton
      */
     public String getSignFormButton() {
-        return StringUtil.isNullOrEmpty(signFormButton) ? "undefined label" : signFormButton;
+        return StringUtil.isNullOrEmpty(signFormButton) ? "Not Defined"  : signFormButton;
     }
 
     /**
@@ -254,7 +254,7 @@ public class ConsentFormLabelsDTO {
      * @return The minorsInformation
      */
     public String getMinorsInformation() {
-        return StringUtil.isNullOrEmpty(minorsInformation) ? "undefined label" : minorsInformation;
+        return StringUtil.isNullOrEmpty(minorsInformation) ? "Not Defined" : minorsInformation;
     }
 
     /**
@@ -268,7 +268,7 @@ public class ConsentFormLabelsDTO {
      * @return The nextStepButton
      */
     public String getNextStepButton() {
-        return StringUtil.isNullOrEmpty(nextStepButton) ? "undefined label" : nextStepButton;
+        return StringUtil.isNullOrEmpty(nextStepButton) ? "Not Defined"  : nextStepButton;
     }
 
     /**
@@ -282,7 +282,7 @@ public class ConsentFormLabelsDTO {
      * @return The legalFirstNameLabel
      */
     public String getLegalFirstNameLabel() {
-        return StringUtil.isNullOrEmpty(legalFirstNameLabel) ? "undefined label" : legalFirstNameLabel;
+        return StringUtil.isNullOrEmpty(legalFirstNameLabel) ? "Not Defined"  : legalFirstNameLabel;
     }
 
     /**
@@ -296,7 +296,7 @@ public class ConsentFormLabelsDTO {
      * @return The legalLastNameLabel
      */
     public String getLegalLastNameLabel() {
-        return StringUtil.isNullOrEmpty(legalLastNameLabel) ? "undefined label" : legalLastNameLabel;
+        return StringUtil.isNullOrEmpty(legalLastNameLabel) ? "Not Defined"  : legalLastNameLabel;
     }
 
     /**
@@ -310,7 +310,7 @@ public class ConsentFormLabelsDTO {
      * @return The legalSignatureLabel
      */
     public String getLegalSignatureLabel() {
-        return StringUtil.isNullOrEmpty(legalSignatureLabel) ? "undefined label" : legalSignatureLabel;
+        return StringUtil.isNullOrEmpty(legalSignatureLabel) ? "Not Defined"  : legalSignatureLabel;
     }
 
     /**
@@ -324,7 +324,7 @@ public class ConsentFormLabelsDTO {
      * @return The signClearButton
      */
     public String getSignClearButton() {
-        return StringUtil.isNullOrEmpty(signClearButton) ? "undefined label" : signClearButton;
+        return StringUtil.isNullOrEmpty(signClearButton) ? "Not Defined"  : signClearButton;
     }
 
     /**
@@ -338,7 +338,7 @@ public class ConsentFormLabelsDTO {
      * @return The beforeSignatureWarningText
      */
     public String getBeforeSignatureWarningText() {
-        return StringUtil.isNullOrEmpty(beforeSignatureWarningText) ? "undefined label" : beforeSignatureWarningText;
+        return StringUtil.isNullOrEmpty(beforeSignatureWarningText) ? "Not Defined"  : beforeSignatureWarningText;
     }
 
     /**
@@ -352,7 +352,7 @@ public class ConsentFormLabelsDTO {
      * @return The unableToSignText
      */
     public String getUnableToSignText() {
-        return StringUtil.isNullOrEmpty(unableToSignText) ? "undefined label" : unableToSignText;
+        return StringUtil.isNullOrEmpty(unableToSignText) ? "Not Defined" : unableToSignText;
     }
 
     /**
@@ -366,7 +366,7 @@ public class ConsentFormLabelsDTO {
      * @return The patientSignatureHeading
      */
     public String getPatientSignatureHeading() {
-        return StringUtil.isNullOrEmpty(patientSignatureHeading) ? "undefined label" : patientSignatureHeading;
+        return StringUtil.isNullOrEmpty(patientSignatureHeading) ? "Not Defined"  : patientSignatureHeading;
     }
 
     /**
@@ -380,7 +380,7 @@ public class ConsentFormLabelsDTO {
      * @return The selectGenderLabel
      */
     public String getSelectGenderLabel() {
-        return StringUtil.isNullOrEmpty(selectGenderLabel) ? "undefined label" : selectGenderLabel;
+        return StringUtil.isNullOrEmpty(selectGenderLabel) ? "Not Defined"  : selectGenderLabel;
     }
 
     /**
@@ -408,7 +408,7 @@ public class ConsentFormLabelsDTO {
      * @return The hipaaConfidentialityAgreementText
      */
     public String getHipaaConfidentialityAgreementText() {
-        return StringUtil.isNullOrEmpty(hipaaConfidentialityAgreementText) ? "undefined label" : hipaaConfidentialityAgreementText;
+        return StringUtil.isNullOrEmpty(hipaaConfidentialityAgreementText) ? "Not Defined"  : hipaaConfidentialityAgreementText;
     }
 
     /**
@@ -422,7 +422,7 @@ public class ConsentFormLabelsDTO {
      * @return The authorizationGrantText
      */
     public String getAuthorizationGrantText() {
-        return StringUtil.isNullOrEmpty(authorizationGrantText) ? "undefined label" : authorizationGrantText;
+        return StringUtil.isNullOrEmpty(authorizationGrantText) ? "Not Defined"  : authorizationGrantText;
     }
 
     /**
@@ -436,7 +436,7 @@ public class ConsentFormLabelsDTO {
      * @return The authorizationLegalText
      */
     public String getAuthorizationLegalText() {
-        return StringUtil.isNullOrEmpty(authorizationLegalText) ? "undefined label" : authorizationLegalText;
+        return StringUtil.isNullOrEmpty(authorizationLegalText) ? "Not Defined"  : authorizationLegalText;
     }
 
     /**
@@ -450,7 +450,7 @@ public class ConsentFormLabelsDTO {
      * @return The readConfirmText
      */
     public String getReadConfirmText() {
-        return StringUtil.isNullOrEmpty(readConfirmText) ? "undefined label" : readConfirmText;
+        return StringUtil.isNullOrEmpty(readConfirmText) ? "Not Defined"  : readConfirmText;
     }
 
     /**
@@ -464,7 +464,7 @@ public class ConsentFormLabelsDTO {
      * @return The consentForMedicareText
      */
     public String getConsentForMedicareText() {
-        return StringUtil.isNullOrEmpty(consentForMedicareText) ? "undefined label" : consentForMedicareText;
+        return StringUtil.isNullOrEmpty(consentForMedicareText) ? "Not Defined"  : consentForMedicareText;
     }
 
     /**
