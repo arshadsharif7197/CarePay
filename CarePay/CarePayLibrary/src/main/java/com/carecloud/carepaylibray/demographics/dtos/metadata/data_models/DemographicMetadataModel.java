@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.dtos.metadata;
+package com.carecloud.carepaylibray.demographics.dtos.metadata.data_models;
 
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.links.DemographicLinksDTO;
@@ -20,7 +20,8 @@ public class DemographicMetadataModel {
     @SerializedName("transitions") @Expose
     private DemographicTransitionsDTO transitions;
 
-
+    @SerializedName("data_models") @Expose
+    private DemographicMetadataDataModelsDTO dataModels;
 
     /**
      *
@@ -68,5 +69,21 @@ public class DemographicMetadataModel {
      */
     public void setTransitions(DemographicTransitionsDTO transitions) {
         this.transitions = transitions;
+    }
+
+    /**
+     * Getter.
+     * @return demographics metadata entities
+     */
+    public DemographicMetadataDataModelsDTO getDataModels() {
+        return dataModels;
+    }
+
+    /**
+     * Setter.
+     * @param dataModels The demographics metadata entities
+     */
+    public void setDataModels(DemographicMetadataDataModelsDTO dataModels) {
+        this.dataModels = dataModels;
     }
 }
