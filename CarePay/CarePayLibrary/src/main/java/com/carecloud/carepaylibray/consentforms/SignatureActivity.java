@@ -16,19 +16,19 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.github.gcacace.signaturepad.views.SignaturePad;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
+import com.github.gcacace.signaturepad.views.SignaturePad;
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
 
 
 public class SignatureActivity extends AppCompatActivity {
@@ -74,8 +74,8 @@ public class SignatureActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 isBackButtonClicked = true;
-                Intent mIntent = getIntent();
-                setResult(CarePayConstants.SIGNATURE_REQ_CODE, mIntent);
+                Intent intentsign = getIntent();
+                setResult(CarePayConstants.SIGNATURE_REQ_CODE, intentsign);
                 finish();
             }
         });
