@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoMod
 import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -303,14 +304,21 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (currentPageIndex == 0) {
-                SystemUtil.hideSoftKeyboard(this);
-                onBackPressed();
-            } else {
-                setCurrentItem(currentPageIndex - 1, true);
-            }
+            onBackPressed();
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (currentPageIndex == 0) {
+            SystemUtil.hideSoftKeyboard(this);
+            // re-launch SigninSignupActivity
+            Intent intent = new Intent(this, SigninSignupActivity.class);
+            startActivity(intent);
+        } else {
+            setCurrentItem(currentPageIndex - 1, true);
+        }
     }
 
     private void initDTOsForFragments() {
