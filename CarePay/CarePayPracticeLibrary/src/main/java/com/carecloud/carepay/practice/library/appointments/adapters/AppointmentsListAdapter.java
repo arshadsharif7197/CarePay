@@ -26,6 +26,11 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
     private Context context;
     private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentsArrayList;
 
+    /**
+     * This will create a list of appointments
+     * @param context
+     * @param appointmentsArrayList
+     */
     public AppointmentsListAdapter(Context context, List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentsArrayList) {
 
         this.context = context;

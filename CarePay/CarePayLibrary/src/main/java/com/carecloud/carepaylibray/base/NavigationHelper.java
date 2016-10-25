@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import static com.carecloud.carepaylibray.base.NavigationStateConstants.APPOINTMENTS;
+
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 
-import static com.carecloud.carepaylibray.base.NavigationStateConstants.APPOINTMENTS;
 
 
 /**
@@ -23,6 +24,10 @@ public class NavigationHelper {
 
     }
 
+    /**
+     *
+     * @param context
+     */
     public static void initInstance(Context context) {
         NavigationHelper.context = context;
         if (instance == null) {
@@ -30,7 +35,7 @@ public class NavigationHelper {
         }
     }
 
-    public static NavigationHelper Instance() {
+    public static NavigationHelper instance() {
         return instance;
     }
 
@@ -38,6 +43,11 @@ public class NavigationHelper {
         navigateToWorkflow(state,null);
     }
 
+    /**
+     *
+     * @param state
+     * @param bundle
+     */
     public void navigateToWorkflow(String state, Bundle bundle) {
         Intent intent=null;
         switch (state) {

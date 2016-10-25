@@ -164,7 +164,7 @@ public class AppointmentsListFragment extends Fragment {
                     CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
             NavigationHelper.initInstance(getContext());
-            NavigationHelper.Instance().navigateToWorkflow(appointmentInfo.getState());
+            NavigationHelper.instance().navigateToWorkflow(appointmentInfo.getState());
 
         }
     };
