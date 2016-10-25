@@ -4,12 +4,11 @@ package com.carecloud.carepaylibray.consentforms.models.transitions;
  * Created by Rahul on 10/23/16.
  */
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 public class ConsentFormsAppointmentIDDTO {
