@@ -6,10 +6,10 @@ package com.carecloud.carepaylibray.consentforms.models.transitions;
 
 
 import java.util.ArrayList;
-        import java.util.List;
+import java.util.List;
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConsentFormsPracticeMgmtDTO {
 
@@ -27,72 +27,56 @@ public class ConsentFormsPracticeMgmtDTO {
     private List<ConsentFormsPracticeMgmtValidationDTO> validations = new ArrayList<ConsentFormsPracticeMgmtValidationDTO>();
 
     /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
-     * The label
+     * @return The label
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     *
-     * @param label
-     * The label
+     * @param label The label
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     *
-     * @return
-     * The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     *
-     * @param type
-     * The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     *
-     * @return
-     * The validations
+     * @return The validations
      */
     public List<ConsentFormsPracticeMgmtValidationDTO> getValidations() {
         return validations;
     }
 
     /**
-     *
-     * @param validations
-     * The validations
+     * @param validations The validations
      */
     public void setValidations(List<ConsentFormsPracticeMgmtValidationDTO> validations) {
         this.validations = validations;

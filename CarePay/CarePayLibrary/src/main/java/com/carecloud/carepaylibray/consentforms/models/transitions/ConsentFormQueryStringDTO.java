@@ -4,8 +4,8 @@ package com.carecloud.carepaylibray.consentforms.models.transitions;
  * Created by Rahul on 10/21/16.
  */
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConsentFormQueryStringDTO {
 
@@ -20,54 +20,42 @@ public class ConsentFormQueryStringDTO {
     private ConsentFormsAppointmentIDDTO appointmentId;
 
     /**
-     *
-     * @return
-     * The practiceMgmt
+     * @return The practiceMgmt
      */
     public ConsentFormsPracticeMgmtDTO getPracticeMgmt() {
         return practiceMgmt;
     }
 
     /**
-     *
-     * @param practiceMgmt
-     * The practice_mgmt
+     * @param practiceMgmt The practice_mgmt
      */
     public void setPracticeMgmt(ConsentFormsPracticeMgmtDTO practiceMgmt) {
         this.practiceMgmt = practiceMgmt;
     }
 
     /**
-     *
-     * @return
-     * The practiceId
+     * @return The practiceId
      */
     public ConsentFormsPracticeIDDTO getPracticeId() {
         return practiceId;
     }
 
     /**
-     *
-     * @param practiceId
-     * The practice_id
+     * @param practiceId The practice_id
      */
     public void setPracticeId(ConsentFormsPracticeIDDTO practiceId) {
         this.practiceId = practiceId;
     }
 
     /**
-     *
-     * @return
-     * The appointmentId
+     * @return The appointmentId
      */
     public ConsentFormsAppointmentIDDTO getAppointmentId() {
         return appointmentId;
     }
 
     /**
-     *
-     * @param appointmentId
-     * The appointment_id
+     * @param appointmentId The appointment_id
      */
     public void setAppointmentId(ConsentFormsAppointmentIDDTO appointmentId) {
         this.appointmentId = appointmentId;

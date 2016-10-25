@@ -1,14 +1,14 @@
-package com.carecloud.carepaylibray.consentforms.models.transitions;
+package com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedicare;
 
 /**
  * Created by Rahul on 10/23/16.
  */
 
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
-public class ConsentFormsPracticeIdValidationDTO {
+public class ConsentFormMedicareSignByPatientValidationDTO {
 
     @SerializedName("type")
     @Expose
@@ -16,6 +16,9 @@ public class ConsentFormsPracticeIdValidationDTO {
     @SerializedName("value")
     @Expose
     private Boolean value;
+    @SerializedName("error_message")
+    @Expose
+    private String errorMessage;
 
     /**
      * @return The type
@@ -43,6 +46,20 @@ public class ConsentFormsPracticeIdValidationDTO {
      */
     public void setValue(Boolean value) {
         this.value = value;
+    }
+
+    /**
+     * @return The errorMessage
+     */
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    /**
+     * @param errorMessage The error_message
+     */
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
 }

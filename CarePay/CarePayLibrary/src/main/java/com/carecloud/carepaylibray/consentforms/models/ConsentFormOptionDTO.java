@@ -4,8 +4,8 @@ package com.carecloud.carepaylibray.consentforms.models;
  * Created by Rahul on 10/21/16.
  */
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConsentFormOptionDTO {
 
@@ -17,36 +17,28 @@ public class ConsentFormOptionDTO {
     private String name;
 
     /**
-     *
-     * @return
-     * The label
+     * @return The label
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     *
-     * @param label
-     * The label
+     * @param label The label
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;

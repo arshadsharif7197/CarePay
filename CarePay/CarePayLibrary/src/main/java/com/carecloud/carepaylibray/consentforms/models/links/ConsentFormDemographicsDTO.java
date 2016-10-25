@@ -5,8 +5,8 @@ package com.carecloud.carepaylibray.consentforms.models.links;
  */
 
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConsentFormDemographicsDTO {
 
@@ -18,36 +18,28 @@ public class ConsentFormDemographicsDTO {
     private String url;
 
     /**
-     *
-     * @return
-     * The action
+     * @return The action
      */
     public String getAction() {
         return action;
     }
 
     /**
-     *
-     * @param action
-     * The action
+     * @param action The action
      */
     public void setAction(String action) {
         this.action = action;
     }
 
     /**
-     *
-     * @return
-     * The url
+     * @return The url
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     *
-     * @param url
-     * The url
+     * @param url The url
      */
     public void setUrl(String url) {
         this.url = url;

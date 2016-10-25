@@ -5,9 +5,9 @@ package com.carecloud.carepaylibray.consentforms.models;
  */
 
 
-        import com.carecloud.carepaylibray.consentforms.models.data_models.consent_for_medicare.ConsentFormsConsentMedicarePropertiesDTO;
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedicare.ConsentFormsConsentMedicarePropertiesDTO;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConsentFormConsentMedicareDTO {
 
@@ -16,18 +16,14 @@ public class ConsentFormConsentMedicareDTO {
     private ConsentFormsConsentMedicarePropertiesDTO properties;
 
     /**
-     *
-     * @return
-     * The properties
+     * @return The properties
      */
     public ConsentFormsConsentMedicarePropertiesDTO getProperties() {
         return properties;
     }
 
     /**
-     *
-     * @param properties
-     * The properties
+     * @param properties The properties
      */
     public void setProperties(ConsentFormsConsentMedicarePropertiesDTO properties) {
         this.properties = properties;

@@ -5,8 +5,8 @@ package com.carecloud.carepaylibray.consentforms.models.transitions;
  */
 
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConsentFormDataDTO {
 
@@ -15,18 +15,14 @@ public class ConsentFormDataDTO {
     private String link;
 
     /**
-     *
-     * @return
-     * The link
+     * @return The link
      */
     public String getLink() {
         return link;
     }
 
     /**
-     *
-     * @param link
-     * The link
+     * @param link The link
      */
     public void setLink(String link) {
         this.link = link;

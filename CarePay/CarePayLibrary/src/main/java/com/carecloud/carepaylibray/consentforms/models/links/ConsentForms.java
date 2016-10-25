@@ -17,36 +17,28 @@ public class ConsentForms {
     private String url;
 
     /**
-     *
-     * @return
-     * The method
+     * @return The method
      */
     public String getMethod() {
         return method;
     }
 
     /**
-     *
-     * @param method
-     * The method
+     * @param method The method
      */
     public void setMethod(String method) {
         this.method = method;
     }
 
     /**
-     *
-     * @return
-     * The url
+     * @return The url
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     *
-     * @param url
-     * The url
+     * @param url The url
      */
     public void setUrl(String url) {
         this.url = url;

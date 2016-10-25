@@ -5,8 +5,8 @@ package com.carecloud.carepaylibray.consentforms.models;
  */
 
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConsentFormDataModelDTO {
 
@@ -15,18 +15,14 @@ public class ConsentFormDataModelDTO {
     private ConsentFormPostDTO post;
 
     /**
-     *
-     * @return
-     * The post
+     * @return The post
      */
     public ConsentFormPostDTO getPost() {
         return post;
     }
 
     /**
-     *
-     * @param post
-     * The post
+     * @param post The post
      */
     public void setPost(ConsentFormPostDTO post) {
         this.post = post;
