@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+
 import static com.carecloud.carepaylibray.base.NavigationStateConstants.APPOINTMENTS;
 
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
@@ -26,7 +27,7 @@ public class NavigationHelper {
 
     /**
      *
-     * @param context
+     * @param context context
      */
     public static void initInstance(Context context) {
         NavigationHelper.context = context;
@@ -45,8 +46,8 @@ public class NavigationHelper {
 
     /**
      *
-     * @param state
-     * @param bundle
+     * @param state state
+     * @param bundle bundle
      */
     public void navigateToWorkflow(String state, Bundle bundle) {
         Intent intent=null;

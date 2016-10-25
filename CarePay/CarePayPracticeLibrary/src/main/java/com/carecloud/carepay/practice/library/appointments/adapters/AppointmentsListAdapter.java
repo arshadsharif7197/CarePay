@@ -28,8 +28,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
     /**
      * This will create a list of appointments
-     * @param context
-     * @param appointmentsArrayList
+     * @param context context
+     * @param appointmentsArrayList appointmentsArrayList
      */
     public AppointmentsListAdapter(Context context, List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentsArrayList) {
 
