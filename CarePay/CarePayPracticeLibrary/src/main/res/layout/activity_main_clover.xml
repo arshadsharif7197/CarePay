@@ -130,7 +130,7 @@
                 android:textSize="28sp" />
 
             <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
-                android:id="@+id/textView"
+                android:id="@+id/paymentTextView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="1dp"

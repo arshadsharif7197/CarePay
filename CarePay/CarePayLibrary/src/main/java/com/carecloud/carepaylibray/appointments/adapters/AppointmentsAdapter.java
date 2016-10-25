@@ -106,7 +106,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 if(isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckedInLabel()));
+                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(
+                            appointmentLabels.getAppointmentsCheckedInLabel()));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
@@ -121,7 +122,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                 if(isCheckedIn) {
-                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckedInLabel()));
+                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(
+                            appointmentLabels.getAppointmentsCheckedInLabel()));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
                     holder.todayTimeTextView.setText(time12Hour);
@@ -173,7 +175,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)) {
                 holder.missedAppointmentTextView.setVisibility(View.VISIBLE);
-                holder.missedAppointmentTextView.setText(StringUtil.getLabelForView(appointmentLabels.getMissedAppointmentsHeading()));
+                holder.missedAppointmentTextView.setText(StringUtil.getLabelForView(
+                        appointmentLabels.getMissedAppointmentsHeading()));
                 holder.missedAppointmentTextView.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
 
@@ -200,13 +203,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             }
         } else {
             AppointmentSectionHeaderModel item = (AppointmentSectionHeaderModel) object;
-            String title = item.getAppointmentHeader();
-            if (title.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
-                    title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-                title = StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
-            } else {
-                title = StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
-            }
+            String title = getSectionHeaderTitleByDay(item.getAppointmentHeader());
 
             if (position == 0) {
                 holder.appointmentSectionLinearLayout.setVisibility(View.GONE);
@@ -252,13 +249,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             if (isCheckedIn) {
                                 appointmentStickyHeaderTitle.setVisibility(View.GONE);
                             } else {
-                                String sectionHeaderTitle = getSectionHeaderTitle(item.getPayload().getStartTime());
-                                if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
-                                        sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-                                    sectionHeaderTitle = StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
-                                } else {
-                                    sectionHeaderTitle = StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
-                                }
+                                String sectionHeaderTitle = getSectionHeaderTitleByDay(
+                                        getSectionHeaderTitle(item.getPayload().getStartTime()));
 
                                 appointmentStickyHeaderTitle.setText(sectionHeaderTitle);
                                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
@@ -268,6 +260,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 }
             }
         });
+    }
+
+    private String getSectionHeaderTitleByDay(String day) {
+        if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
+                day.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+            return StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
+        } else {
+            return StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
+        }
     }
 
     /**
