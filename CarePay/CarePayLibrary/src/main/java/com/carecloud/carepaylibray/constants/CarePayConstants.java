@@ -10,6 +10,9 @@ public class CarePayConstants {
 
     public static final String PREFERENCE_USER_SELECTED_LANGUAGE = "user_selected_language";
 
+    public static final String PREFERENCE_PRACTICE_SELECTED_LANGUAGE = "user_selected_language";
+
+
     // Default data
 
     public static final String DEFAULT_LANGUAGE = "English";

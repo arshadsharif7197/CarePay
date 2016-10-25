@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+
+import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_MODE_SIGNIN;
 import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_HOME;
+
 
 /**
  * Created by Jahirul Bhuiyan on 10/10/2016.
@@ -27,33 +31,37 @@ public class NavigationHelper {
         }
     }
 
-    public static NavigationHelper Instance() {
+    public static NavigationHelper getInstance() {
         return instance;
     }
 
-    public void navigateToWorkflow(String state) {
-        navigateToWorkflow(state,null);
-    }
-
-    public void navigateToWorkflow(String state, Bundle bundle) {
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         Intent intent=null;
-        switch (state) {
+
+        switch (workflowDTO.getState()) {
+            case PRACTICE_MODE_SIGNIN: {
+                intent = new Intent(context, SigninActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                break;
+            }
             case PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
             }
             default: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
 
             }
-
         }
-        if(bundle!=null){
-            intent.putExtra(state, bundle);
-        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(context.getClass().getSimpleName(), workflowDTO.toString());
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 

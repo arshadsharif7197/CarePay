@@ -2,15 +2,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.carecloud.carepay.practice.library">
 
-    <application>
-        <activity android:name=".checkin.CheckInActivity" />
-        <activity android:name=".homescreen.CloverMainActivity" />
-        <activity android:name=".payments.PatientResponsibilityActivity" />
-        <activity android:name=".payments.RotateActivity" />
-        <activity android:name=".signin.SigninActivity" />
-        <activity android:name=".checkin.activities.HowToCheckInActivity"></activity>
-        <activity android:name=".patientmode.PatientModeSplashActivity"></activity>
-        <activity android:name=".appointments.AppointmentsActivity"></activity>
-    </application>
-
 </manifest>
