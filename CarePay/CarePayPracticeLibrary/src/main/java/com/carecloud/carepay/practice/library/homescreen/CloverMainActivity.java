@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 
-public class CloverMainActivity extends AppCompatActivity {
+public class CloverMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static int count;
     TextView checkedInCounterTextview;
@@ -24,17 +26,12 @@ public class CloverMainActivity extends AppCompatActivity {
         setSystemUiVisibility();
         setContentView(R.layout.activity_main_clover);
         checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
-       // getDemographicInformation();
+        // getDemographicInformation();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ((TextView) findViewById(R.id.checkinTextView)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent checkedInIntent = new Intent(CloverMainActivity.this, HowToCheckInActivity.class);
-                checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(checkedInIntent);
-            }
-        });
+
+        findViewById(R.id.checkinTextView).setOnClickListener(this);
+        findViewById(R.id.paymentTextView).setOnClickListener(this);
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
     }
 
@@ -60,6 +57,35 @@ public class CloverMainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(newCheckedInReceiver);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int viewId = view.getId();
+
+        if (viewId == R.id.checkinTextView) {
+            Intent checkedInIntent = new Intent(CloverMainActivity.this, CheckInActivity.class);
+            checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(checkedInIntent);
+
+        } else if (viewId == R.id.paymentTextView) {
+
+            ChangeModeDialog changeModeDialog = new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
+
+                @Override
+                public void onPatientModeSelected() {
+                    Toast.makeText(CloverMainActivity.this, "Patient Mode selected...", Toast.LENGTH_SHORT).show();
+                }
+            }, new ChangeModeDialog.LogoutClickListener() {
+
+                @Override
+                public void onLogoutSelected() {
+                    Toast.makeText(CloverMainActivity.this, "Logout selected...", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            changeModeDialog.show();
+        }
     }
 
     /*private void getDemographicInformation() {

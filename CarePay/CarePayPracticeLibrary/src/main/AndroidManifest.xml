@@ -10,6 +10,7 @@
         <activity android:name=".signin.SigninActivity" />
         <activity android:name=".checkin.activities.HowToCheckInActivity"></activity>
         <activity android:name=".patientmode.PatientModeSplashActivity"></activity>
+        <activity android:name=".appointments.AppointmentsActivity"></activity>
     </application>
 
 </manifest>
