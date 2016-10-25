@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.consentforms;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
@@ -27,21 +25,18 @@ import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.services.ConsentFormService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.intake.activities.InTakeActivity;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.google.gson.Gson;
 
-import java.io.Serializable;
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
 
@@ -63,8 +58,8 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     private String medicareTitle;
     private String hippaTitle;
     private String medicareDescription;
-    private String authorizationDescription_1;
-    private String authorizationDescription_2;
+    private String authorizationDescription1;
+    private String authorizationDescription2;
     private String hippaDescription;
     private String readCarefullySign;
     private String consentMainTitle;
@@ -86,7 +81,6 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     private String authForm;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +99,6 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         setSupportActionBar(toolbar);
 
         getConsentFormInformation();
-
 
 
     }
@@ -189,8 +182,8 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
                                 hippaTitle = consentFormLabelsDTO.getHipaaAgreementTitle();
                                 medicareDescription = consentFormLabelsDTO.getConsentForMedicareText();
                                 readCarefullySign = consentFormLabelsDTO.getConsentReadCarefullyWarning();
-                                authorizationDescription_1 = consentFormLabelsDTO.getAuthorizationGrantText();
-                                authorizationDescription_2 = consentFormLabelsDTO.getAuthorizationLegalText();
+                                authorizationDescription1 = consentFormLabelsDTO.getAuthorizationGrantText();
+                                authorizationDescription2 = consentFormLabelsDTO.getAuthorizationLegalText();
                                 hippaDescription = consentFormLabelsDTO.getHipaaConfidentialityAgreementText();
                                 consentMainTitle = consentFormLabelsDTO.getConsentMainTitle();
                                 signAuthLabel = consentFormLabelsDTO.getSignAuthorizationFormTitle();
@@ -222,7 +215,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
             }
         });
 
-       AppointmentService aptService = (new BaseServiceGenerator(getApplicationContext())).createService(AppointmentService.class);
+        AppointmentService aptService = (new BaseServiceGenerator(getApplicationContext())).createService(AppointmentService.class);
         Call<AppointmentsResultModel> callapp = aptService.getAppointmentsList();
         callapp.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
@@ -240,7 +233,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
                     } else {
                         Log.d(LOG_TAG, "consent form information failed");
                     }
-                } else{
+                } else {
                     Log.d(LOG_TAG, "consent form information failed");
                 }
             }
@@ -261,11 +254,11 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         String fromSecCommaOnSubstring = medicareDescription.substring(medicareDescription.indexOf(',', indexFirstComma + 1), medicareDescription.length());
         medicareForm = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstCommaSubstring, patienFirstName, patientLastName, fromSecCommaOnSubstring);
 
-        int indexFirstPercent=authorizationDescription_2.indexOf('%');
-        String  upToFirspercentSubstring = authorizationDescription_2.substring(0, indexFirstPercent );
-        String fromSecpercentOnSubstring = authorizationDescription_2.substring(authorizationDescription_2.indexOf(',', indexFirstComma + 1), authorizationDescription_2.length());
-        authForm = String.format(Locale.getDefault(), "%s %s %s" , upToFirspercentSubstring,providerName, fromSecpercentOnSubstring);
-}
+        int indexFirstPercent = authorizationDescription2.indexOf('%');
+        String upToFirspercentSubstring = authorizationDescription2.substring(0, indexFirstPercent);
+        String fromSecpercentOnSubstring = authorizationDescription2.substring(authorizationDescription2.indexOf(',', indexFirstComma + 1), authorizationDescription2.length());
+        authForm = String.format(Locale.getDefault(), "%s %s %s", upToFirspercentSubstring, providerName, fromSecpercentOnSubstring);
+    }
 
     private Fragment getConsentForm() {
 
@@ -295,6 +288,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
 
     /**
      * Updates the title to show the form number and the corresponding bulleted tab
+     *
      * @param currentForm The id of the current form
      */
     private void updateTitle(FormId currentForm) {
@@ -334,7 +328,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         } else if (formName.equals("form2")) {
             formData.setTitle(authorizationTitle);
             formData.setDescription(readCarefullySign);
-            formData.setContent(authorizationDescription_1);
+            formData.setContent(authorizationDescription1);
             formData.setContent2(authForm);
             formData.setButtonLabel(signAuthLabel.toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());

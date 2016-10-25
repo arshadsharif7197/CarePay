@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,27 +15,23 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.consentforms.models.ConsentFormDataModelDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 public class SignatureActivity extends AppCompatActivity {
 
@@ -55,10 +50,6 @@ public class SignatureActivity extends AppCompatActivity {
     public static boolean isBackButtonClicked = false;
 
 
-    private ConsentFormDTO consentFormDTO= null;
-    private ConsentFormMetadataDTO consentFormMetadataDTO;
-    private ConsentFormLabelsDTO consentFormLabelsDTO;
-
     private String patientSignature;
     private String legalSignature;
     private String legalFirstNameLabel;
@@ -70,14 +61,9 @@ public class SignatureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
 
-        Intent intent=getIntent();
+        Intent intent = getIntent();
 
         intent.getExtras();
-        if (intent.hasExtra("consentform_model")) {
-            String consentformModelString = intent.getStringExtra("consentform_model");
-            Gson gson = new Gson();
-            consentFormDTO = gson.fromJson(consentformModelString, ConsentFormDTO.class);
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
@@ -128,7 +114,7 @@ public class SignatureActivity extends AppCompatActivity {
         legalLastName = (TextInputLayout) findViewById(R.id.legalLastName);
         legalFirstNameET = (EditText) findViewById(R.id.legalFirstNameET);
         legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
-        beforesignWarningTextView= (TextView) findViewById(R.id.beforesignwarnigTextView);
+        beforesignWarningTextView = (TextView) findViewById(R.id.beforesignwarnigTextView);
         String headerTitle = getIntent().getExtras().getString("Header_Title");
         titleTextView.setText(headerTitle);
         initviewfromModel();
@@ -138,19 +124,19 @@ public class SignatureActivity extends AppCompatActivity {
 
     private void initviewfromModel() {
 
-                    agreeButton.setText(getIntent().getExtras().getString("confirmsign"));
-                    switchButton.setText(getIntent().getExtras().getString("unabletosign"));
+        agreeButton.setText(getIntent().getExtras().getString("confirmsign"));
+        switchButton.setText(getIntent().getExtras().getString("unabletosign"));
 
-                    legalFirstNameLabel =getIntent().getExtras().getString("legalFirstName");
-                    legalFirstNameET.setHint(legalFirstNameLabel);
-                    legalLastNameLabel= getIntent().getExtras().getString("legalLastName");
-                    legalLastNameET.setHint(legalLastNameLabel);
-                    beforesignWarningTextView.setText(getIntent().getExtras().getString("beforesignwarnig"));
-                    clearButton.setText(getIntent().getExtras().getString("signclearbutton"));
-                    agreeButton.setText(getIntent().getExtras().getString("confirmsign"));
-                    legalSignature= getIntent().getExtras().getString("legalsign");
-                    patientSignature=getIntent().getExtras().getString("patientsign");
-                    signatureHelpTextView.setText(patientSignature);
+        legalFirstNameLabel = getIntent().getExtras().getString("legalFirstName");
+        legalFirstNameET.setHint(legalFirstNameLabel);
+        legalLastNameLabel = getIntent().getExtras().getString("legalLastName");
+        legalLastNameET.setHint(legalLastNameLabel);
+        beforesignWarningTextView.setText(getIntent().getExtras().getString("beforesignwarnig"));
+        clearButton.setText(getIntent().getExtras().getString("signclearbutton"));
+        agreeButton.setText(getIntent().getExtras().getString("confirmsign"));
+        legalSignature = getIntent().getExtras().getString("legalsign");
+        patientSignature = getIntent().getExtras().getString("patientsign");
+        signatureHelpTextView.setText(patientSignature);
 
     }
 
@@ -164,8 +150,9 @@ public class SignatureActivity extends AppCompatActivity {
                 clearSignature();
                 if (switchButton.isChecked()) {
                     showData(true);
-                } else
+                } else {
                     showData(false);
+                }
             }
         });
 
@@ -179,8 +166,9 @@ public class SignatureActivity extends AppCompatActivity {
         agreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (getIntent().hasExtra("consentform"))
+                if (getIntent().hasExtra("consentform")) {
                     finish();
+                }
             }
         });
 
@@ -203,6 +191,7 @@ public class SignatureActivity extends AppCompatActivity {
 
 
     }
+
     private void setEditTexts() {
 
         legalFirstName.setTag(legalFirstNameLabel);
@@ -214,6 +203,7 @@ public class SignatureActivity extends AppCompatActivity {
         setChangeFocusListeners();
 
     }
+
     private void setChangeFocusListeners() {
 
         legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -239,7 +229,6 @@ public class SignatureActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     /**
@@ -275,7 +264,7 @@ public class SignatureActivity extends AppCompatActivity {
         setProximaNovaRegularTypeface(this, legalFirstNameET);
         setProximaNovaRegularTypeface(this, legalLastNameET);
         setProximaNovaRegularTypeface(this, switchButton);
-        setProximaNovaSemiboldTypeface(this,signatureHelpTextView);
+        setProximaNovaSemiboldTypeface(this, signatureHelpTextView);
         setGothamRoundedMediumTypeface(this, agreeButton);
 
 
@@ -285,8 +274,8 @@ public class SignatureActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         isBackButtonClicked = true;
-        Intent mIntent = getIntent();
-        setResult(CarePayConstants.SIGNATURE_REQ_CODE, mIntent);
+        Intent intent = getIntent();
+        setResult(CarePayConstants.SIGNATURE_REQ_CODE, intent);
         finish();
     }
 
