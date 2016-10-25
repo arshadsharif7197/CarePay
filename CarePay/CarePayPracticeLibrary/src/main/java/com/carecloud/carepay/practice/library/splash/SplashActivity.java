@@ -3,9 +3,8 @@ package com.carecloud.carepay.practice.library.splash;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import android.support.v7.app.AppCompatActivity;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.NavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;

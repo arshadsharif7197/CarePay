@@ -36,7 +36,7 @@ class ServiceGenerator {
     private ServiceGenerator() {
     }
 
-    static ServiceGenerator Instance() {
+    static ServiceGenerator getInstance() {
         if (instance == null) {
             instance = new ServiceGenerator();
         }

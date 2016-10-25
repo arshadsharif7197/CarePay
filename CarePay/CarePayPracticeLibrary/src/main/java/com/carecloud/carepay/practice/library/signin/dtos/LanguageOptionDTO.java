@@ -18,7 +18,7 @@ public class LanguageOptionDTO {
     private String code;
     @SerializedName("default")
     @Expose
-    private Boolean _default;
+    private Boolean isDefault;
 
     /**
      *
@@ -77,10 +77,10 @@ public class LanguageOptionDTO {
     /**
      *
      * @return
-     * The _default
+     * The isDefault
      */
     public Boolean getDefault() {
-        return _default;
+        return isDefault;
     }
 
     /**
@@ -89,6 +89,6 @@ public class LanguageOptionDTO {
      * The default
      */
     public void setDefault(Boolean _default) {
-        this._default = _default;
+        this.isDefault = _default;
     }
 }

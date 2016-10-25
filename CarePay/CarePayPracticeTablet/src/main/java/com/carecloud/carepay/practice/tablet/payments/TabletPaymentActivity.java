@@ -1,9 +1,12 @@
 package com.carecloud.carepay.practice.tablet.payments;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import android.support.v7.app.AppCompatActivity;
 import com.carecloud.carepay.practice.tablet.R;
+
+/**
+ * Payment activity class for tablet mode
+ */
 
 public class TabletPaymentActivity extends AppCompatActivity {
 

@@ -19,11 +19,10 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
-
-import org.joda.time.DateTime;
-
 import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs;
 import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs_appointmentListType;
+import org.joda.time.DateTime;
+
 
 /**
  * Created by Jahirul Bhuiyan on 10/18/2016.
@@ -94,8 +93,6 @@ public class AppointmentStatusCartView extends CardView {
             typedArray.recycle();
         } catch (Exception exception){
             appointmentListType = APPOINTMENT_CARD_TYPE_CHECKING_IN;
-        }finally {
-
         }
 
     }
