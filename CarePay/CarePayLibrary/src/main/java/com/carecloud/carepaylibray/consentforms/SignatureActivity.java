@@ -14,13 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
-import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
-import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -31,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 
 public class SignatureActivity extends AppCompatActivity {
@@ -208,11 +206,11 @@ public class SignatureActivity extends AppCompatActivity {
 
         legalFirstNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+            public void onFocusChange(View changeListener, boolean hasFocus) {
                 if (hasFocus) {
                     SystemUtil.showSoftKeyboard(SignatureActivity.this);
                 }
-                SystemUtil.handleHintChange(v, hasFocus);
+                SystemUtil.handleHintChange(changeListener, hasFocus);
 
             }
         });
@@ -220,11 +218,11 @@ public class SignatureActivity extends AppCompatActivity {
 
         legalLastNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+            public void onFocusChange(View changeListener, boolean hasFocus) {
                 if (hasFocus) {
                     SystemUtil.showSoftKeyboard(SignatureActivity.this);
                 }
-                SystemUtil.handleHintChange(v, hasFocus);
+                SystemUtil.handleHintChange(changeListener, hasFocus);
 
             }
         });

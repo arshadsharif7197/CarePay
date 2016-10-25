@@ -26,10 +26,12 @@ import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsD
 import com.carecloud.carepaylibray.consentforms.services.ConsentFormService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.activities.InTakeActivity;
-import com.carecloud.carepaylibray.utils.DateUtil;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
+import com.carecloud.carepaylibray.utils.DateUtil;
+
 
 import java.util.Locale;
 

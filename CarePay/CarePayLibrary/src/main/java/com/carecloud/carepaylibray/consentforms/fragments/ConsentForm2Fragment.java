@@ -74,7 +74,7 @@ public class ConsentForm2Fragment extends Fragment {
     private ConsentFormMinorDateofBirthDTO consentFormMinorDateofBirthDTO;
     private ConsentFormMinorGenderDTO consentFormMinorGenderDTO;
     private AppointmentsPayloadDTO appointmentsPayloadDTO;
-    Date date=new Date();
+    Date date = new Date();
 
     private String firstNameLabel;
     private String lastNameLabel;
@@ -89,7 +89,6 @@ public class ConsentForm2Fragment extends Fragment {
     private String providerName;
     private String patienFirstName;
     private String patientLastName;
-
 
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -108,9 +107,9 @@ public class ConsentForm2Fragment extends Fragment {
         dateTextView = (TextView) view.findViewById(R.id.dateTv);
         signButton = (Button) view.findViewById(R.id.signButton);
         signButton.setEnabled(false);
-        minorDOB= (TextView) view.findViewById(R.id.minor_dateofbirth);
-        minorGender=(TextView)view.findViewById(R.id.minor_gender);
-        minorInformation= (TextView) view.findViewById(R.id.minor_information);
+        minorDOB = (TextView) view.findViewById(R.id.minor_dateofbirth);
+        minorGender = (TextView) view.findViewById(R.id.minor_gender);
+        minorInformation = (TextView) view.findViewById(R.id.minor_information);
         minorFirstNameTextView = (TextInputLayout) view.findViewById(R.id.text_input_layout);
         minorLastNameTextView = (TextInputLayout) view.findViewById(R.id.minorLastName);
         minorFirstNameEditText = (EditText) view.findViewById(R.id.minorFirstNameET);
@@ -200,7 +199,7 @@ public class ConsentForm2Fragment extends Fragment {
         });
     }
 
-    private void onClickListners(){
+    private void onClickListners() {
         dobTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,49 +220,49 @@ public class ConsentForm2Fragment extends Fragment {
         });
 
     }
+
     private void initViewFromModels() {
 
         consentFormDTO = ((ConsentActivity) getActivity())
                 .getConsentFormDTO();
 
-        consentFormLabelsDTO=((ConsentActivity) getActivity())
+        consentFormLabelsDTO = ((ConsentActivity) getActivity())
                 .getConsentFormLabelsDTO();
 
-        appointmentsPayloadDTO= ((ConsentActivity) getActivity()).getAppointmentsPayloadDTO();
+        appointmentsPayloadDTO = ((ConsentActivity) getActivity()).getAppointmentsPayloadDTO();
 
 
     }
 
 
+    private void getLabels() {
 
-   private void getLabels(){
+        consentFormMinorFirstNameDTO = consentFormDTO.getMetadata().getDataModels().getPost()
+                .getConsentForAuthorization().getProperties().getMinorFirstName();
 
-      consentFormMinorFirstNameDTO = consentFormDTO.getMetadata().getDataModels().getPost()
-              .getConsentForAuthorization().getProperties().getMinorFirstName();
+        consentFormMinorLastNameDTO = consentFormDTO.getMetadata().getDataModels().getPost()
+                .getConsentForAuthorization().getProperties().getMinorLastName();
 
-       consentFormMinorLastNameDTO =  consentFormDTO.getMetadata().getDataModels().getPost()
-               .getConsentForAuthorization().getProperties().getMinorLastName();
+        consentFormMinorGenderDTO = consentFormDTO.getMetadata().getDataModels().getPost()
+                .getConsentForAuthorization().getProperties().getMinorGender();
 
-       consentFormMinorGenderDTO =  consentFormDTO.getMetadata().getDataModels().getPost()
-               .getConsentForAuthorization().getProperties().getMinorGender();
+        consentFormMinorDateofBirthDTO = consentFormDTO.getMetadata().getDataModels().getPost()
+                .getConsentForAuthorization().getProperties().getMinorDateOfBirth();
 
-       consentFormMinorDateofBirthDTO =  consentFormDTO.getMetadata().getDataModels().getPost()
-               .getConsentForAuthorization().getProperties().getMinorDateOfBirth();
-
-        firstNameLabel=consentFormMinorFirstNameDTO.getLabel();
-        lastNameLabel=consentFormMinorLastNameDTO.getLabel();
-       nextButtonLabel=consentFormLabelsDTO.getSignAuthorizationFormTitle().toUpperCase();
-        genderLabel=consentFormMinorGenderDTO.getLabel();
-        minordobLabel=consentFormMinorDateofBirthDTO.getLabel();
-        selectGenderLabel=consentFormLabelsDTO.getSelectGenderLabel();
-       minorInformationLabel=consentFormLabelsDTO.getMinorsInformation();
-        selectDateLabel=consentFormLabelsDTO.getSelectDateLabel();
-        maleLabel=consentFormMinorGenderDTO.getOptions().get(0).toString();
-        femaleLabel=consentFormMinorGenderDTO.getOptions().get(1).toString();
+        firstNameLabel = consentFormMinorFirstNameDTO.getLabel();
+        lastNameLabel = consentFormMinorLastNameDTO.getLabel();
+        nextButtonLabel = consentFormLabelsDTO.getSignAuthorizationFormTitle().toUpperCase();
+        genderLabel = consentFormMinorGenderDTO.getLabel();
+        minordobLabel = consentFormMinorDateofBirthDTO.getLabel();
+        selectGenderLabel = consentFormLabelsDTO.getSelectGenderLabel();
+        minorInformationLabel = consentFormLabelsDTO.getMinorsInformation();
+        selectDateLabel = consentFormLabelsDTO.getSelectDateLabel();
+        maleLabel = consentFormMinorGenderDTO.getOptions().get(0).toString();
+        femaleLabel = consentFormMinorGenderDTO.getOptions().get(1).toString();
 
     }
 
-    private void initviews(){
+    private void initviews() {
         minorFirstNameEditText.setHint(firstNameLabel);
         minorLastNameEditText.setHint(lastNameLabel);
         minorGender.setText(genderLabel);
@@ -327,7 +326,7 @@ public class ConsentForm2Fragment extends Fragment {
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            String dob = new StringBuilder().append(i1+1).append("/").append(i2).append("/")
+            String dob = new StringBuilder().append(i1 + 1).append("/").append(i2).append("/")
                     .append(i).toString();
             dobTextView.setText(dob);
             isDatePicked = !(dob.equals(R.string.pick_date));
