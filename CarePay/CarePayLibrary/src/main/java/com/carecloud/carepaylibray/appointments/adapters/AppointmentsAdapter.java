@@ -85,7 +85,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             final AppointmentsPayloadDTO item = ((AppointmentDTO) object).getPayload();
             holder.doctorName.setText(item.getProvider().getName());
-            holder.doctorType.setText(item.getProvider().getSpecialty());
+            holder.doctorType.setText(item.getProvider().getSpecialty().getName());
 
             // Date of Upcoming appointment
             String upcomingStartTime = item.getStartTime();

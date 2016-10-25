@@ -258,7 +258,7 @@ public class AppointmentsListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-
+                appointmentProgressBar.setVisibility(View.GONE);
             }
         });
     }
