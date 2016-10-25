@@ -27,14 +27,11 @@ public class MetadataEntityDTO {
     @SerializedName("action") @Expose
     public MetadataActionDTO actionMetaDTO;
 
-    @SerializedName("properties") @Expose
-    public MetadataPropertiesDTO propertiesMetaDTO;
+    @SerializedName("options") @Expose
+    public List<MetadataOptionDTO> optionsMetaListDTO;
 
     @SerializedName("validations") @Expose
     public List<MetadataValidationDTO> validationsMetaListDTO;
-
-    @SerializedName("options") @Expose
-    public List<MetadataOptionDTO> optionsMetaListDTO;
 
     /**
      * Getter

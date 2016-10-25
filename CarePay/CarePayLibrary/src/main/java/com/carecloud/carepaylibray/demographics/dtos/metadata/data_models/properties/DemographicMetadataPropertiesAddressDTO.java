@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.properties;
 
 import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.general.MetadataEntityDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.general.MetadataPropertiesDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Specific metadata DTO for 'address'
  */
 
-public class DemographicMetadataPropertiesAddressDTO extends MetadataPropertiesDTO {
+public class DemographicMetadataPropertiesAddressDTO {
     @SerializedName("phone") @Expose
     public MetadataEntityDTO phoneMetaDTO;
 

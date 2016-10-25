@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos;
 
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.DemographicMetadataModel;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -11,21 +11,21 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemographicDTO {
 
-    @SerializedName("metadata") @Expose private DemographicMetadataModel      metadata;
+    @SerializedName("metadata") @Expose private DemographicMetadataDTO        metadata;
     @SerializedName("payload") @Expose private  DemographicPayloadResponseDTO payload;
     @SerializedName("state") @Expose private    String                        state;
 
     /**
      * @return The metadata
      */
-    public DemographicMetadataModel getMetadata() {
+    public DemographicMetadataDTO getMetadata() {
         return metadata;
     }
 
     /**
      * @param metadata The metadata
      */
-    public void setMetadata(DemographicMetadataModel metadata) {
+    public void setMetadata(DemographicMetadataDTO metadata) {
         this.metadata = metadata;
     }
 

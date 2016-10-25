@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Jahirul Bhuiyan on 9/19/2016.
  * Master DTO for demographics meta-data
  */
-public class DemographicMetadataModel {
+public class DemographicMetadataDTO {
     @SerializedName("labels") @Expose
     private DemographicLabelsDTO labels;
 

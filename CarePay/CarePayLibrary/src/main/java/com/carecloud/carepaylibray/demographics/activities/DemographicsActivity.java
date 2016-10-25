@@ -20,6 +20,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.DemographicMetadataDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityAddressDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityIdDocsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityInsurancesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityUpdatesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.properties.DemographicMetadataPropertiesAddressDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
@@ -46,17 +54,24 @@ import java.util.List;
  * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
-
-    private TextView titleTextView;
     private int currentPageIndex;
+    // views
+    private TextView titleTextView;
     private ViewPager viewPager;
     private ImageView tabImageView;
-
+    // jsons (payload)
     private DemographicDTO modelGet = null;
     private DemographicAddressPayloadDTO addressModel;
     private DemographicPersDetailsPayloadDTO detailsModel;
     private DemographicIdDocPayloadDTO idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
+    // jsons (metadata)
+    private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
+    private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
+    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private DemographicMetadataEntityUpdatesDTO updateMetaDTO;
+
 
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
@@ -312,8 +327,10 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     }
 
     private void initDTOsForFragments() {
+        // init payload DTOs
         DemographicPayloadDTO infoModel = getDemographicInfoPayloadModel();
         if (infoModel != null) {
+            // init payload DTOs
             addressModel = infoModel.getAddress();
             detailsModel = infoModel.getPersonalDetails();
             List<DemographicIdDocPayloadDTO> idDocDTOs = infoModel.getIdDocuments();
@@ -327,5 +344,16 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             idDocModel = new DemographicIdDocPayloadDTO();
             insuranceModelList = new ArrayList<>();
         }
+        // init metadata DTOs
+        DemographicMetadataDTO metadataDTO = modelGet.getMetadata();
+        DemographicLabelsDTO labelsDTO = metadataDTO.getLabels();
+        addressEntityMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.addressMetaDTO;
+        persDetailsMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.persDetailsMetaDTO;
+        idDocsMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.idDocsMetaDTO;
+        insurancesMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.insurancesMetaDTO;
+        updateMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.updatesMetaDTO;
+
+        int dummy = 0;
+
     }
 }
