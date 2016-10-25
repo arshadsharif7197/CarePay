@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,8 +9,7 @@
         android:id="@+id/signButton"
         style="@style/Consent_form_Button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/consenttitle" />
+        android:layout_height="wrap_content"/>
 
     <ScrollView
         android:id="@+id/consentform_scrollView"
@@ -41,8 +41,7 @@
                     style="@style/ConsentActivityDescriptionTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/titleTv"
-                    android:text="@string/description" />
+                    android:layout_below="@+id/titleTv" />
 
             </RelativeLayout>
 
@@ -55,7 +54,6 @@
                 android:gravity="left"
                 android:maxLines="99"
                 android:scrollbars="vertical"
-                android:text="@string/content"
                 android:textSize="@dimen/respons_toolbar_title_text_size" />
 
             <LinearLayout
@@ -71,22 +69,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
                     android:layout_marginTop="@dimen/consent_top"
-                    android:text="@string/Minors_information"
-                    android:textColor="@color/bright_cerulean"
+                    android:gravity="start"
+                    style="@style/reviewDemographicBlue."
                     android:textSize="@dimen/consent_minor_info_textsize" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/text_input_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:hintTextAppearance="@style/FloatingLabelStyle"
                     android:layout_marginTop="@dimen/consentform_textinput_margintop">
 
                     <EditText
                         android:id="@+id/minorFirstNameET"
-                        style="@style/Consent_Form_Edit_Text"
+                        style="@style/SigninSignupEditStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Minor's First Name"
                         android:imeOptions="actionNext" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -94,14 +92,14 @@
                     android:id="@+id/minorLastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:hintTextAppearance="@style/FloatingLabelStyle"
                     android:layout_marginTop="@dimen/consentform_textinput_margintop">
 
                     <EditText
                         android:id="@+id/minorLastNameET"
-                        style="@style/Consent_Form_Edit_Text"
+                        style="@style/SigninSignupEditStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Minor's Last Name"
                         android:imeOptions="actionDone" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -109,8 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
-                    android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-                    android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop">
+                    android:layout_marginRight="@dimen/consentform_relativeLayout_margin">
 
                     <TextView
                         android:id="@+id/dobET"
@@ -118,7 +115,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:gravity="right"
-                        android:text="@string/pick_date"
+                        style="@style/ConsentForm_GenderStyle"
+                        android:paddingEnd="14dp"
                         android:textColor="@color/bright_cerulean"
                         android:textSize="@dimen/consent_minor_textsize" />
 
@@ -126,15 +124,15 @@
                         android:id="@+id/minor_dateofbirth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        style="@style/reviewDemographicrelativelayout"
                         android:layout_centerVertical="true"
-                        android:text="Minor's Date of Birth"
                         android:textColor="@color/charcoal"
                         android:textSize="@dimen/consent_minor_textsize" />
 
                 </RelativeLayout>
 
                 <View
-                    style="@style/Consent_Form_View_Style"
+                    style="@style/Review_Screen_View_Style"
                     android:layout_width="match_parent" />
 
 
@@ -142,16 +140,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
-                    android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-                    android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop">
+                    android:layout_marginRight="@dimen/consentform_relativeLayout_margin">
 
                     <TextView
                         android:id="@+id/minor_gender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="Minor's Gender"
                         android:textColor="@color/charcoal"
+                        style="@style/reviewDemographicrelativelayout"
                         android:textSize="@dimen/consent_minor_textsize" />
 
 
@@ -160,13 +157,13 @@
                         style="@style/ConsentForm_GenderStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:text="@string/choose_gender" />
+                        android:paddingEnd="14dp"
+                        android:clickable="true" />
 
                 </RelativeLayout>
 
                 <View
-                    style="@style/Consent_Form_View_Style"
+                    style="@style/Review_Screen_View_Style"
                     android:layout_width="match_parent" />
             </LinearLayout>
 
@@ -176,8 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="99"
-                android:scrollbars="vertical"
-                android:text="@string/content" />
+                android:scrollbars="vertical" />
 
             <TextView
                 android:id="@+id/dateTv"
