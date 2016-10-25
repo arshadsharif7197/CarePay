@@ -26,6 +26,12 @@ public class ChangeModeDialog extends Dialog implements View.OnClickListener {
         void onLogoutSelected();
     }
 
+    /**
+     * Constructor.
+     * @param context context
+     * @param patientModeClickListener patient mode click listener
+     * @param logoutClickListener logout click listener
+     */
     public ChangeModeDialog(Context context, PatientModeClickListener patientModeClickListener,
                             LogoutClickListener logoutClickListener) {
         super(context);
