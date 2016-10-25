@@ -17,10 +17,17 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
     private Context context;
+    private AppointmentDTO appointmentDTO;
 
+    /**
+     *
+     * @param context activity context
+     * @param appointmentDTO appointment model
+     */
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context, appointmentDTO);
         this.context = context;
+        this.appointmentDTO = appointmentDTO;
     }
 
     @Override
@@ -50,7 +57,6 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         int viewId = view.getId();
         if (viewId == R.id.checkOfficeButton) {
             onCheckInAtOffice();
-            cancel();
         } else if (viewId == R.id.checkOfficeNowButton) {
             onCheckInAtNow();
             cancel();
@@ -61,8 +67,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      * call check-in at office api.
      */
     private void onCheckInAtOffice() {
-        Intent demographicReviewIntent = new Intent(context, DemographicReviewActivity.class);
-        context.startActivity(demographicReviewIntent);
+        /*To show QR code in dialog*/
+        new QrCodeViewDialog(context, appointmentDTO).show();
     }
 
     /**
