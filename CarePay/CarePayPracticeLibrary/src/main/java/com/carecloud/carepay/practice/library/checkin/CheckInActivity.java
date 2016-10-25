@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.checkin;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -30,7 +31,11 @@ public class CheckInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_in);
         checkinginRecyclerView = (RecyclerView) findViewById(R.id.checkinginRecyclerView);
+        checkinginRecyclerView.setHasFixedSize(true);
+        checkinginRecyclerView.setItemAnimator(new DefaultItemAnimator());
         waitingRoomRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
+        waitingRoomRecyclerView.setHasFixedSize(true);
+        waitingRoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

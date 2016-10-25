@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,9 +20,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.base.NavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
+import com.carecloud.carepay.practice.library.signin.dtos.SignInTransitionsDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -41,7 +48,7 @@ import java.util.Arrays;
  * On success authentication screen will navigate next screen from the transition Json
  * On failed showing the authentication failure dialog with no navigation
  */
-public class SigninActivity extends AppCompatActivity {
+public class SigninActivity extends BasePracticeActivity {
 
     private TextView signinButton;
     private TextView forgotPasswordButton;
@@ -61,12 +68,14 @@ public class SigninActivity extends AppCompatActivity {
 
     private String[] language = {"EN", "SP"};
 
+    SigninDTO signinDTO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CognitoAppHelper.init(this);
-
+        signinDTO=getConvertedDTO(SigninDTO.class);
         setContentView(R.layout.activity_signin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setSystemUiVisibility();
@@ -92,6 +101,16 @@ public class SigninActivity extends AppCompatActivity {
         languageButton = (TextView) findViewById(R.id.languageTextview);
         signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
+        initializeLebals();
+    }
+
+    private void initializeLebals(){
+        if(signinDTO!=null){
+            SigninLabelsDTO signinLabelsDTO=signinDTO.getMetadata().getLabels();
+            if(signinLabelsDTO!=null){
+                signinButton.setText(signinLabelsDTO.getSigninButton());
+            }
+        }
     }
 
 
@@ -283,8 +302,14 @@ public class SigninActivity extends AppCompatActivity {
         @Override
         public void onLoginSuccess() {
             progressBar.setVisibility(View.INVISIBLE);
-            launchHomescreen();
+            SignInTransitionsDTO signInTransitionsDTO=signinDTO.getMetadata().getTransitions();
+            if(signInTransitionsDTO!=null) {
+                WorkflowServiceHelper.getInstance().executeGetRequest(signInTransitionsDTO.getAuthenticate().getUrl(),signinCallback);
+            }
+            //launchHomescreen();
         }
+
+
 
         @Override
         public void onBeforeLogin() {
@@ -297,6 +322,23 @@ public class SigninActivity extends AppCompatActivity {
             SystemUtil.showDialogMessage(SigninActivity.this,
                     "Sign-in failed",
                     "Invalid user id or password");
+
+        }
+    };
+
+    WorkflowServiceCallback signinCallback=new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
 
         }
     };
