@@ -90,6 +90,7 @@ public class SigninActivity extends BasePracticeActivity {
         initViews();
         setEditTexts();
         setClicables();
+        setTypeFace();
 
         isEmptyEmail = true;
         isEmptyPassword = true;
@@ -110,9 +111,9 @@ public class SigninActivity extends BasePracticeActivity {
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
         signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
         languageButton.setVisibility(View.VISIBLE);
-        int langaugelsitsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
+        int langaugelistsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
 
-        for (int i = 0; i < langaugelsitsize; i++) {
+        for (int i = 0; i < langaugelistsize; i++) {
             language.add(i, signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i).getName());
         }
 
