@@ -39,9 +39,11 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -62,7 +64,8 @@ public class ConsentForm2Fragment extends Fragment {
     private IFragmentCallback fragmentCallback;
     private ScrollView consentFormScrollView;
     private EditText minorFirstNameEditText, minorLastNameEditText;
-    private String[] gender = {"Male", "Female"};
+
+    private List<String> gender = new ArrayList<String>();
 
     private TextView minorGender;
 
@@ -161,7 +164,7 @@ public class ConsentForm2Fragment extends Fragment {
         initviews();
     }
 
-    private void showAlertDialogWithListview(final String[] genderArray, String title) {
+    private void showAlertDialogWithListview(final List<String> genderArray, String title) {
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
@@ -174,7 +177,7 @@ public class ConsentForm2Fragment extends Fragment {
         View customView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.alert_list_layout, null, false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(genderArray));
+        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), gender);
         listView.setAdapter(mAdapter);
         dialog.setView(customView);
         final AlertDialog alert = dialog.create();
@@ -183,17 +186,8 @@ public class ConsentForm2Fragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                switch (position) {
-                    case 0:
-                        chooseGenderTextView.setText(maleLabel);
-                        isGenderSelected = true;
-                        break;
-                    case 1:
-                        chooseGenderTextView.setText(femaleLabel);
-                        isGenderSelected = true;
-                        break;
+                chooseGenderTextView.setText(consentFormMinorGenderDTO.getOptions().get(position).getName().toUpperCase());
 
-                }
                 alert.dismiss();
             }
         });
@@ -220,6 +214,7 @@ public class ConsentForm2Fragment extends Fragment {
         });
 
     }
+
 
     private void initViewFromModels() {
 
@@ -257,8 +252,11 @@ public class ConsentForm2Fragment extends Fragment {
         selectGenderLabel = consentFormLabelsDTO.getSelectGenderLabel();
         minorInformationLabel = consentFormLabelsDTO.getMinorsInformation();
         selectDateLabel = consentFormLabelsDTO.getSelectDateLabel();
-        maleLabel = consentFormMinorGenderDTO.getOptions().get(0).toString();
-        femaleLabel = consentFormMinorGenderDTO.getOptions().get(1).toString();
+        int genderlistsize = consentFormMinorGenderDTO.getOptions().size();
+
+        for (int i = 0; i < genderlistsize; i++) {
+            gender.add(i, consentFormMinorGenderDTO.getOptions().get(i).getName());
+        }
 
     }
 
@@ -288,10 +286,13 @@ public class ConsentForm2Fragment extends Fragment {
         minorFirstNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean bool) {
+
                 if (bool) {
+                    // change hint to all caps
                     SystemUtil.showSoftKeyboard(getActivity());
+                } else {
+                    SystemUtil.handleHintChange(view, bool);
                 }
-                SystemUtil.handleHintChange(view, bool);
             }
         });
 
@@ -300,10 +301,13 @@ public class ConsentForm2Fragment extends Fragment {
             @Override
             public void onFocusChange(View view, boolean bool) {
                 if (bool) {
+                    // change hint to all caps
                     SystemUtil.showSoftKeyboard(getActivity());
+                } else {
+                    SystemUtil.handleHintChange(view, bool);
                 }
-                SystemUtil.handleHintChange(view, bool);
             }
+
         });
 
     }
