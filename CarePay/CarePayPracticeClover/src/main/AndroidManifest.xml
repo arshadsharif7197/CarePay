@@ -31,6 +31,12 @@
         <activity android:name="com.carecloud.carepay.practice.library.signin.SigninActivity"></activity>
         <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"></activity>
         <activity android:name="com.carecloud.carepay.practice.library.checkin.CheckInActivity"></activity>
+        <activity android:name="com.carecloud.carepay.practice.library.payments.PatientResponsibilityActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.payments.RotateActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity" />
+
     </application>
 
 </manifest>

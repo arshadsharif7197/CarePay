@@ -7,4 +7,15 @@
     android:background="@drawable/background_default"
     tools:context="com.carecloud.carepay.practice.library.splash.SplashActivity">
 
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/logo_light"
+        android:foregroundGravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="531dp"
+        android:id="@+id/imageView2" />
+
 </RelativeLayout>

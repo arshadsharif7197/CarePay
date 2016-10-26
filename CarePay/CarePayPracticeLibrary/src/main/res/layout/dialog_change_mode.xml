@@ -11,6 +11,7 @@
         android:id="@+id/dialog_patient_mode_option"
         style="@style/ChangeModeDialogOptions"
         android:drawableTop="@drawable/icn_patient_mode"
+        android:gravity="center"
         android:paddingTop="@dimen/patient_mode_padding_top" />
 
     <View
@@ -18,11 +19,14 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/change_mode_divider_margin_end"
         android:layout_marginStart="@dimen/change_mode_divider_margin_start"
-        android:background="@color/change_mode_divider_color" />
+        android:background="@color/change_mode_divider_color"
+        android:id="@+id/view"
+        android:layout_weight="1" />
 
     <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
         android:id="@+id/dialog_logout_option"
         style="@style/ChangeModeDialogOptions"
+        android:gravity="center"
         android:drawableTop="@drawable/icn_log_out"
         android:paddingTop="@dimen/logout_padding_top" />
 

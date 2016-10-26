@@ -34,11 +34,14 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.List;
 
 
 /**
@@ -53,6 +56,7 @@ public class SigninActivity extends BasePracticeActivity {
     private TextView signinButton;
     private TextView forgotPasswordButton;
     private TextView languageButton;
+    private TextView signinTitle;
 
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
@@ -66,7 +70,10 @@ public class SigninActivity extends BasePracticeActivity {
     private boolean isEmptyPassword;
     private ImageView rightarrow;
 
-    private String[] language = {"EN", "SP"};
+    private String emailLabel;
+    private String passwordLabel;
+
+   private List<String> language = new ArrayList<String>();
 
     SigninDTO signinDTO;
 
@@ -75,7 +82,7 @@ public class SigninActivity extends BasePracticeActivity {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CognitoAppHelper.init(this);
-        signinDTO=getConvertedDTO(SigninDTO.class);
+        signinDTO = getConvertedDTO(SigninDTO.class);
         setContentView(R.layout.activity_signin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setSystemUiVisibility();
@@ -83,36 +90,67 @@ public class SigninActivity extends BasePracticeActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         initViews();
-        setClicables();
         setEditTexts();
+        setClicables();
+
+        isEmptyEmail = true;
+        isEmptyPassword = true;
+
     }
 
-    /** Initailizing the view
+    /**
+     * Initailizing the view
      */
     public void initViews() {
         signinButton = (TextView) findViewById(R.id.signinTextview);
-        signinButton.setEnabled(false);
-        if (!signinButton.isEnabled()) {
-            rightarrow = (ImageView) findViewById(R.id.rightarrow);
-            rightarrow.setAlpha(50);
-        }
-        signinButton.setTextColor(signinButton.getTextColors().withAlpha(50));
+        rightarrow = (ImageView) findViewById(R.id.rightarrow);
         forgotPasswordButton = (TextView) findViewById(R.id.forgot_passwordTextview);
         languageButton = (TextView) findViewById(R.id.languageTextview);
+        passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
+        emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
         signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
-        initializeLebals();
-    }
+        signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
+        languageButton.setVisibility(View.VISIBLE);
+        int langaugelsitsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
 
-    private void initializeLebals(){
-        if(signinDTO!=null){
-            SigninLabelsDTO signinLabelsDTO=signinDTO.getMetadata().getLabels();
-            if(signinLabelsDTO!=null){
-                signinButton.setText(signinLabelsDTO.getSigninButton());
-            }
+        for (int i = 0; i < langaugelsitsize; i++) {
+            language.add(i, signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i).getName());
         }
+
+        initializeLebals();
+        // disable sign-in button
+        setEnabledSigninButton(false);
     }
 
+    private void initializeLebals() {
+        if (signinDTO != null) {
+            SigninLabelsDTO signinLabelsDTO = signinDTO.getMetadata().getLabels();
+            if (signinLabelsDTO != null) {
+                signinButton.setText(signinLabelsDTO.getSigninButton());
+                signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
+                forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
+                emailLabel=signinLabelsDTO.getSigninEmailAddress();
+                passwordLabel=signinLabelsDTO.getSigninPassword();
+                passwordEditText.setHint(passwordLabel);
+                emailEditText.setHint(emailLabel);
+            }
+
+        }
+
+
+    }
+
+    private void setEnabledSigninButton(boolean enabled) {
+        if (!enabled) {
+            signinButton.setTextColor(signinButton.getTextColors().withAlpha(50));
+            rightarrow.setAlpha(50);
+        } else {
+            signinButton.setTextColor(signinButton.getTextColors().withAlpha(255));
+            rightarrow.setAlpha(255);
+        }
+        signinButton.setEnabled(enabled);
+    }
 
     private void setClicables() {
 
@@ -139,17 +177,18 @@ public class SigninActivity extends BasePracticeActivity {
                 });
                 View customView = LayoutInflater.from(SigninActivity.this).inflate(R.layout.alert_list_practice_layout, null, false);
                 ListView listView = (ListView) customView.findViewById(R.id.dialoglist_practice);
-                CustomAlertAdapter adapter = new CustomAlertAdapter(SigninActivity.this, Arrays.asList(language));
+                CustomAlertAdapter adapter = new CustomAlertAdapter(SigninActivity.this, language);
                 listView.setAdapter(adapter);
                 dialog.setView(customView);
 
                 final AlertDialog alert = dialog.create();
                 alert.show();
-                alert.getWindow().setLayout(500,350);
+                alert.getWindow().setLayout(500, 350);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        languageButton.setText(language[position]);
+
+                        languageButton.setText(signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(position).getCode().toUpperCase());
                         alert.dismiss();
                     }
                 });
@@ -248,17 +287,15 @@ public class SigninActivity extends BasePracticeActivity {
 
 
     private void setEditTexts() {
-        signInEmailTextInputLayout.setTag("Not Defined");
-        emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
-        emailEditText.setHint("Not Defined");
+        signInEmailTextInputLayout.setTag(emailLabel);
         emailEditText.setTag(signInEmailTextInputLayout);
 
-        passwordTextInputLayout.setTag("Not Defined");
-        passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
+        passwordTextInputLayout.setTag(passwordLabel);
         passwordEditText.setTag(passwordTextInputLayout);
 
         setTextListeners();
         setChangeFocusListeners();
+
 
         emailEditText.clearFocus();
         passwordEditText.clearFocus();
@@ -287,7 +324,7 @@ public class SigninActivity extends BasePracticeActivity {
 
     private void enableSigninButton() {
         boolean areAllNonEmpty = !(isEmptyEmail || isEmptyPassword);
-        signinButton.setEnabled(areAllNonEmpty);
+        setEnabledSigninButton(areAllNonEmpty);
     }
 
     private void signInUser() {
@@ -302,12 +339,10 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onLoginSuccess() {
             progressBar.setVisibility(View.INVISIBLE);
-            SignInTransitionsDTO signInTransitionsDTO=signinDTO.getMetadata().getTransitions();
-            if(signInTransitionsDTO!=null) {
-                WorkflowServiceHelper.getInstance().executeGetRequest(signInTransitionsDTO.getAuthenticate().getUrl(),signinCallback);
-            }
-            //launchHomescreen();
+            launchHomescreen();
         }
+        //launchHomescreen
+
 
 
 
@@ -358,5 +393,11 @@ public class SigninActivity extends BasePracticeActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+
+
+    public void setTypeFace(){
+        setProximaNovaRegularTypeface(this, emailEditText);
+        setProximaNovaRegularTypeface(this, passwordEditText);
     }
 }
