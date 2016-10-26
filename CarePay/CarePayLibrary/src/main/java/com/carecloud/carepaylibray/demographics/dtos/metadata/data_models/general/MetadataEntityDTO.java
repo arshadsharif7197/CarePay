@@ -19,33 +19,33 @@ import java.util.List;
 public class MetadataEntityDTO {
 
     @SerializedName("label") @Expose
-    private String labelMeta;
+    private String label;
 
     @SerializedName("type") @Expose
-    public String typeMeta;
+    public String type;
 
-    @SerializedName("action") @Expose
-    public MetadataActionDTO actionMetaDTO;
+    @SerializedName("method") @Expose
+    public MetadataActionDTO method;
 
     @SerializedName("options") @Expose
-    public List<MetadataOptionDTO> optionsMetaListDTO;
+    public List<MetadataOptionDTO> options;
 
     @SerializedName("validations") @Expose
-    public List<MetadataValidationDTO> validationsMetaListDTO;
+    public List<MetadataValidationDTO> validations;
 
     /**
      * Getter
      * @return The label
      */
-    public String getLabelMeta() {
-        return StringUtil.isNullOrEmpty(labelMeta) ? "undefined label" : labelMeta;
+    public String getLabel() {
+        return StringUtil.isNullOrEmpty(label) ? "undefined label" : label;
     }
 
     /**
      * Setter
      * @param label The label
      */
-    public void setLabelMeta(String label) {
-        this.labelMeta = label;
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

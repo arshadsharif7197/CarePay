@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityAddressDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.GenericEditsFragment;
@@ -80,6 +82,10 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private boolean isNextVisible = false;
     private DemographicAddressPayloadDTO     modelAddress;
     private DemographicPersDetailsPayloadDTO modelPersDetails;
+
+    private DemographicMetadataEntityAddressDTO     addressEntityMetaDTO;
+    private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
+
 
     @Nullable
     @Override
@@ -793,6 +799,14 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         }
 
         return isPhoneValid && isStateValid && isCityValid;
+    }
+
+    public void setAddressEntityMetaDTO(DemographicMetadataEntityAddressDTO addressEntityMetaDTO) {
+        this.addressEntityMetaDTO = addressEntityMetaDTO;
+    }
+
+    public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
+        this.persDetailsMetaDTO = persDetailsMetaDTO;
     }
 
     /**

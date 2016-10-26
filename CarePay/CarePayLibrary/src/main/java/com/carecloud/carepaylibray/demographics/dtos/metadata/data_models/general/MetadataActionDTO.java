@@ -11,14 +11,14 @@ import java.util.List;
  */
 public class MetadataActionDTO {
     @SerializedName("method") @Expose
-    public String methodMeta;
+    public String method;
 
     @SerializedName("url") @Expose
-    public String urlMeta;
+    public String url;
 
     @SerializedName("allowed_ops") @Expose
-    public List<MetadataAllowedOpDTO> allowedOpsMetaListDTO;
+    public List<MetadataAllowedOpDTO> allowedOps;
 
     @SerializedName("path") @Expose
-    public String pathMeta;
+    public String path;
 }

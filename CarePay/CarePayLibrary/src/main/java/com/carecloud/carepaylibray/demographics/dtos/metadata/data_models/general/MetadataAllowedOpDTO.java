@@ -12,17 +12,17 @@ import com.google.gson.annotations.SerializedName;
  */
 public class MetadataAllowedOpDTO {
     @SerializedName("name") @Expose
-    public String operationMeta;
+    public String name;
 
     @SerializedName("label") @Expose
-    private String labelMeta;
+    private String label;
 
     /**
      * Getter
      * @return The labelMeta
      */
-    public String getLabelMeta() {
-        return StringUtil.isNullOrEmpty(labelMeta) ? "undefined labelMeta" : labelMeta;
+    public String getLabel() {
+        return StringUtil.isNullOrEmpty(label) ? "Un-defined" : label;
     }
 
     /**
@@ -30,6 +30,6 @@ public class MetadataAllowedOpDTO {
      * @param labelMeta The labelMeta
      */
     public void setLabelMeta(String labelMeta) {
-        this.labelMeta = labelMeta;
+        this.label = labelMeta;
     }
 }

@@ -11,32 +11,32 @@ import com.google.gson.annotations.SerializedName;
 
 public class DemographicMetadataPropertiesPersDetailsDTO {
     @SerializedName("first_name") @Expose
-    public MetadataEntityDTO firstNameMetaDTO;
+    public MetadataEntityDTO firstName;
 
     @SerializedName("last_name") @Expose
-    public MetadataEntityDTO lastNameMetaDTO;
+    public MetadataEntityDTO lastName;
 
     @SerializedName("middle_name") @Expose
-    public MetadataEntityDTO middleNameMetaDTO;
+    public MetadataEntityDTO middleName;
 
     @SerializedName("date_of_birth") @Expose
-    public MetadataEntityDTO dateOfBirthbMetaDTO;
+    public MetadataEntityDTO dateOfBirth;
 
     @SerializedName("gender") @Expose
-    public MetadataEntityDTO genderMetaDTO;
+    public MetadataEntityDTO gender;
 
     @SerializedName("primary_race") @Expose
-    public MetadataEntityDTO primaryRaceMetaDTO;
+    public MetadataEntityDTO primaryRace;
 
     @SerializedName("secondary_race") @Expose
-    public MetadataEntityDTO secRaceMetaDTO;
+    public MetadataEntityDTO secondaryRace;
 
     @SerializedName("ethnicity") @Expose
-    public MetadataEntityDTO ethnicityMetaDTO;
+    public MetadataEntityDTO ethnicity;
 
     @SerializedName("preferred_language") @Expose
-    public MetadataEntityDTO prefLangMetaDTO;
+    public MetadataEntityDTO preferredLanguage;
 
     @SerializedName("profile_photo") @Expose
-    public MetadataEntityDTO profPhotoMetaDTO;
+    public MetadataEntityDTO profilePhoto;
 }

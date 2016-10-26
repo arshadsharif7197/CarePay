@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsAllergiesAdapter;
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsMedicationsAdapter;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -78,7 +79,8 @@ public class DemographicsDetailsFragment extends Fragment
     private RecyclerView    medicRecyclerView;
     private TextInputLayout dobInputText;
 
-    private DemographicPersDetailsPayloadDTO model;
+    private DemographicPersDetailsPayloadDTO        model;
+    private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
 
     @Nullable
     @Override
@@ -129,6 +131,7 @@ public class DemographicsDetailsFragment extends Fragment
 
         dobEdit.addTextChangedListener(new TextWatcher() {
             int prevLen = 0;
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
                 prevLen = charSequence.length();
@@ -472,7 +475,10 @@ public class DemographicsDetailsFragment extends Fragment
         setProximaNovaRegularTypeface(context, addUnlistedMedTextView);
 
         setGothamRoundedMediumTypeface(context, nextButton);
+    }
 
+    public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
+        this.persDetailsMetaDTO = persDetailsMetaDTO;
     }
 
     @Override

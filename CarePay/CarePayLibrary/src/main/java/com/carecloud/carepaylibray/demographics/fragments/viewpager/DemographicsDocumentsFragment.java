@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityIdDocsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
@@ -34,21 +36,24 @@ import java.util.List;
  */
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private FragmentManager            fm;
-    private View                       view;
-    private ScrollView                 detailsScrollView;
-    private FrameLayout                insCardContainer1;
-    private FrameLayout                insCardContainer2;
-    private FrameLayout                insCardContainer3;
-    private boolean                    isSecondCardAdded;
-    private boolean                    isThirdCardAdded;
-    private TextView                   addCardButton;
-    private Button                     nextButton;
-    private DemographicIdDocPayloadDTO demPayloadIdDocDTO;
-    private List<DemographicInsurancePayloadDTO> insuranceModelList;
-    private DemographicInsurancePayloadDTO       insuranceModel1;
-    private DemographicInsurancePayloadDTO       insuranceModel2;
-    private DemographicInsurancePayloadDTO       insuranceModel3;
+    private FragmentManager                        fm;
+    private View                                   view;
+    private ScrollView                             detailsScrollView;
+    private FrameLayout                            insCardContainer1;
+    private FrameLayout                            insCardContainer2;
+    private FrameLayout                            insCardContainer3;
+    private boolean                                isSecondCardAdded;
+    private boolean                                isThirdCardAdded;
+    private TextView                               addCardButton;
+    private Button                                 nextButton;
+    private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
+    private List<DemographicInsurancePayloadDTO>   insuranceModelList;
+    private DemographicInsurancePayloadDTO         insuranceModel1;
+    private DemographicInsurancePayloadDTO         insuranceModel2;
+    private DemographicInsurancePayloadDTO         insuranceModel3;
+    private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+
 
     @Nullable
     @Override
@@ -299,5 +304,13 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             }
         });
 //        switchCompat.setChecked(false);
+    }
+
+    public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
+        this.idDocsMetaDTO = idDocsMetaDTO;
+    }
+
+    public void setInsurancesMetaDTO(DemographicMetadataEntityInsurancesDTO insurancesMetaDTO) {
+        this.insurancesMetaDTO = insurancesMetaDTO;
     }
 }

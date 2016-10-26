@@ -14,17 +14,17 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemographicMetadataEntitiesDTO {
     @SerializedName("address") @Expose
-    public DemographicMetadataEntityAddressDTO addressMetaDTO;
+    public DemographicMetadataEntityAddressDTO address;
 
     @SerializedName("personal_details") @Expose
-    public DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
+    public DemographicMetadataEntityPersDetailsDTO personalDetails;
 
     @SerializedName("identity_documents") @Expose
-    public DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    public DemographicMetadataEntityIdDocsDTO identityDocuments;
 
     @SerializedName("insurances") @Expose
-    public DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    public DemographicMetadataEntityInsurancesDTO insurances;
 
     @SerializedName("updates") @Expose
-    public DemographicMetadataEntityUpdatesDTO updatesMetaDTO;
+    public DemographicMetadataEntityUpdatesDTO updates;
 }

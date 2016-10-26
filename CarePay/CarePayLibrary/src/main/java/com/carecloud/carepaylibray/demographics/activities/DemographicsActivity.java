@@ -48,30 +48,29 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
  * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
-    private int currentPageIndex;
+
+    private int       currentPageIndex;
     // views
-    private TextView titleTextView;
+    private TextView  titleTextView;
     private ViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
-    private DemographicAddressPayloadDTO addressModel;
+    private DemographicAddressPayloadDTO     addressModel;
     private DemographicPersDetailsPayloadDTO detailsModel;
-    private DemographicIdDocPayloadDTO idDocModel;
+    private DemographicIdDocPayloadDTO       idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
     // jsons (metadata)
-    private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
+    private DemographicMetadataEntityAddressDTO     addressEntityMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
-    private DemographicMetadataEntityUpdatesDTO updateMetaDTO;
-
+    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
+    private DemographicLabelsDTO                    labelsDTO;
 
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
@@ -125,6 +124,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             Gson gson = new Gson();
             modelGet = gson.fromJson(demographicsModelString, DemographicDTO.class);
         }
+        // init DTOs
+        initDTOsForFragments();
 
         // set the progress bar
         ProgressBar demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
@@ -134,9 +135,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
         isStoragePermissionGranted();
         setupPager();
-
-        initDTOsForFragments();
-
 //        createDTOsForTest();
     }
 
@@ -245,7 +243,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     /**
      * Adapter for the viewpager
      */
-    public static class DemographicPagerAdapter extends FragmentPagerAdapter {
+    public class DemographicPagerAdapter extends FragmentPagerAdapter {
 
         final int PAGE_COUNT = 4;
 
@@ -264,11 +262,19 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
             switch (position) {
                 case 0:
-                    return new DemographicsAddressFragment();
+                    DemographicsAddressFragment addressFragment = new DemographicsAddressFragment();
+                    addressFragment.setAddressEntityMetaDTO(addressEntityMetaDTO);
+                    addressFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
+                    return addressFragment;
                 case 1:
-                    return new DemographicsDetailsFragment();
+                    DemographicsDetailsFragment demographicsDetailsFragment = new DemographicsDetailsFragment();
+                    demographicsDetailsFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
+                    return demographicsDetailsFragment;
                 case 2:
-                    return new DemographicsDocumentsFragment();
+                    DemographicsDocumentsFragment demographicsDocumentsFragment = new DemographicsDocumentsFragment();
+                    demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
+                    demographicsDocumentsFragment.setInsurancesMetaDTO(insurancesMetaDTO);
+                    return demographicsDocumentsFragment;
                 case 3:
                     return new DemographicsMoreDetailsFragment();
                 default:
@@ -294,8 +300,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -334,7 +340,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             addressModel = infoModel.getAddress();
             detailsModel = infoModel.getPersonalDetails();
             List<DemographicIdDocPayloadDTO> idDocDTOs = infoModel.getIdDocuments();
-            if(idDocDTOs != null && idDocDTOs.size() > 0) {
+            if (idDocDTOs != null && idDocDTOs.size() > 0) {
                 idDocModel = infoModel.getIdDocuments().get(0);
             }
             insuranceModelList = infoModel.getInsurances();
@@ -346,14 +352,14 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         // init metadata DTOs
         DemographicMetadataDTO metadataDTO = modelGet.getMetadata();
-        DemographicLabelsDTO labelsDTO = metadataDTO.getLabels();
-        addressEntityMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.addressMetaDTO;
-        persDetailsMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.persDetailsMetaDTO;
-        idDocsMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.idDocsMetaDTO;
-        insurancesMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.insurancesMetaDTO;
-        updateMetaDTO = metadataDTO.getDataModels().entitiesMetaDTO.updatesMetaDTO;
+        labelsDTO = metadataDTO.getLabels();
+        addressEntityMetaDTO = metadataDTO.getDataModels().demographic.address;
+        persDetailsMetaDTO = metadataDTO.getDataModels().demographic.personalDetails;
+        idDocsMetaDTO = metadataDTO.getDataModels().demographic.identityDocuments;
+        insurancesMetaDTO = metadataDTO.getDataModels().demographic.insurances;
+    }
 
-        int dummy = 0;
-
+    public DemographicLabelsDTO getLabelsDTO() {
+        return labelsDTO;
     }
 }

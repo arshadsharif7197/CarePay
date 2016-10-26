@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.properties.items;
 
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.properties.DemographicMetadataPropertiesUpdateDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityItemUpdateDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by lsoco_user on 10/25/2016.
  * Specific metadata DTO for 'updates' -> 'items' -> 'update'
  */
-public class DemographicMetadataUpdateItemDTO {
+public class DemographicMetadataItemUpdateDTO {
     @SerializedName("update") @Expose
-    public DemographicMetadataPropertiesUpdateDTO updateMetaDTO;
+    public DemographicMetadataEntityItemUpdateDTO update;
 }

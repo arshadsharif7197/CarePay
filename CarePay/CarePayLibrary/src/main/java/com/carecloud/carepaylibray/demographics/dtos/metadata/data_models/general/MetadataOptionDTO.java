@@ -11,17 +11,17 @@ import com.google.gson.annotations.SerializedName;
  */
 public class MetadataOptionDTO {
     @SerializedName("name") @Expose
-    public String nameMeta;
+    public String name;
 
     @SerializedName("label") @Expose
-    private String labelMeta;
+    private String label;
 
     /**
      * Getter
      * @return The lable
      */
     public String getLabel() {
-        return labelMeta;
+        return label;
     }
 
     /**
@@ -29,6 +29,6 @@ public class MetadataOptionDTO {
      * @param label The lsbel
      */
     public void setLabel(String label) {
-        this.labelMeta = label;
+        this.label = label;
     }
 }

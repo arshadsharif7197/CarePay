@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.properties.lists;
 
 
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.properties.items.DemographicMetadataInsuranceItemDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.properties.items.DemographicMetadataItemInsuranceDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,5 +12,5 @@ import com.google.gson.annotations.SerializedName;
 
 public class DemographicMetadataPropertiesListInsuranceDTO {
     @SerializedName("items") @Expose
-    public DemographicMetadataInsuranceItemDTO insuranceMetaDTO;
+    public DemographicMetadataItemInsuranceDTO items;
 }

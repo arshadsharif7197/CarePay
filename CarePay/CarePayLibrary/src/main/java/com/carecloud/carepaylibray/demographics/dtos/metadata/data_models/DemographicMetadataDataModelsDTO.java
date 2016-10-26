@@ -9,5 +9,5 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemographicMetadataDataModelsDTO {
     @SerializedName("demographic") @Expose
-    public DemographicMetadataEntitiesDTO entitiesMetaDTO;
+    public DemographicMetadataEntitiesDTO demographic;
 }

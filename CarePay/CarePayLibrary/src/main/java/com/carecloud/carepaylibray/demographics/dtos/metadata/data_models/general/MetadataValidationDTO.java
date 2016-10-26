@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.general;
 
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,11 +9,11 @@ import com.google.gson.annotations.SerializedName;
  */
 public class MetadataValidationDTO {
     @SerializedName("type") @Expose
-    public String typeMeta;
+    public String type;
 
     @SerializedName("value") @Expose
-    public Object valueMeta;
+    public Object value;
 
     @SerializedName("error_message") @Expose
-    public String errorMessageMeta;
+    public String errorMessage;
 }

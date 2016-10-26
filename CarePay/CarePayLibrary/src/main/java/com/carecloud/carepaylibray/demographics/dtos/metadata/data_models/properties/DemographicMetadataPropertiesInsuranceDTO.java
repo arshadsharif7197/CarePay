@@ -11,14 +11,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class DemographicMetadataPropertiesInsuranceDTO {
     @SerializedName("insurance_photos") @Expose
-    public MetadataEntityDTO insurancePhotosMetaDTO;
+    public MetadataEntityDTO insurancePhotos;
 
     @SerializedName("insurance_provider") @Expose
-    public MetadataEntityDTO insuranceProviderMetaDTO;
+    public MetadataEntityDTO insuranceProvider;
 
     @SerializedName("insurance_plan") @Expose
-    public MetadataEntityDTO insurancePlanMetaDTO;
+    public MetadataEntityDTO insurancePlan;
 
     @SerializedName("insurance_member_id") @Expose
-    public MetadataEntityDTO insuranceMemberIdMetaDTO;
+    public MetadataEntityDTO insuranceMemberId;
 }

@@ -11,23 +11,23 @@ import com.google.gson.annotations.SerializedName;
 
 public class DemographicMetadataPropertiesAddressDTO {
     @SerializedName("phone") @Expose
-    public MetadataEntityDTO phoneMetaDTO;
+    public MetadataEntityDTO phone;
 
     @SerializedName("zipcode") @Expose
-    public MetadataEntityDTO zipcodeMetaDTO;
+    public MetadataEntityDTO zipcode;
 
     @SerializedName("address1") @Expose
-    public MetadataEntityDTO address1MetaDTO;
+    public MetadataEntityDTO address1;
 
     @SerializedName("address2") @Expose
-    public MetadataEntityDTO address2MetaDTO;
+    public MetadataEntityDTO address2;
 
     @SerializedName("city") @Expose
-    public MetadataEntityDTO cityMetaDTO;
+    public MetadataEntityDTO city;
 
     @SerializedName("state") @Expose
-    public MetadataEntityDTO stateMetaDTO;
+    public MetadataEntityDTO state;
 
     @SerializedName("country") @Expose
-    public MetadataEntityDTO countryMetaDTO;
+    public MetadataEntityDTO country;
 }
