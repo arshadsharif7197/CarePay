@@ -93,7 +93,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
             demographicPayloadDTO.setAddress(addressModel);
         }
 
-        DemographicPersDetailsPayloadDTO detailsModel = ((DemographicsActivity)getActivity()).getDetailsModel();
+        DemographicPersDetailsPayloadDTO detailsModel = ((DemographicsActivity)getActivity()).getDetailsDTO();
         if(detailsModel != null) {
             demographicPayloadDTO.setPersonalDetails(detailsModel);
         }

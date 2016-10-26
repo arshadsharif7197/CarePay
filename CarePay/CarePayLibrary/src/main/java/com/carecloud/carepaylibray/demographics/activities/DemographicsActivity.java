@@ -202,7 +202,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return modelGet;
     }
 
-    public DemographicPersDetailsPayloadDTO getDetailsModel() {
+    public DemographicPersDetailsPayloadDTO getDetailsDTO() {
         return detailsModel;
     }
 

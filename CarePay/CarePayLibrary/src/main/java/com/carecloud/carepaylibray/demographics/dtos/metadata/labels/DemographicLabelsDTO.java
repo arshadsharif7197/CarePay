@@ -28,7 +28,6 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_documents_section") @Expose
     private String demographicsDocumentsSection;
 
-
     @SerializedName("demographics_updates_section") @Expose
     private String demographicsUpdatesSection;
 
@@ -46,6 +45,45 @@ public class DemographicLabelsDTO {
 
 //    @SerializedName("demographics_required") @Expose
     private String demographicsRequired;
+
+//    @SerializedName("demographics_details_header") @Expose
+    private String demographicsDetailsHeader;
+
+    //    @SerializedName("demographics_details_subheader") @Expose
+    private String demographicsDetailsSubheader;
+
+//    @SerializedName("demographics_details_dob_hint") @Expose
+    private String demographicsDetailsDobHint;
+
+//    @SerializedName("demographics_choose") @Expose
+    private String choose;
+
+//    @SerializedName("demographics_details_capture_picture_caption") @Expose
+    private String demographicsProfileCaptureCaption;
+
+    //    @SerializedName("demographics_details_capture_picture_caption") @Expose
+    private String demographicsProfileReCaptureCaption;
+
+//    @SerializedName("demographics_details_allergies_section") @Expose
+    private String demographicsDetailsAllergiesSection;
+
+    //    @SerializedName("demographics_details_optional_hint") @Expose
+    private String demographicsDetailsOptionalHint;
+
+    //    @SerializedName("demographics_details_medications_section") @Expose
+    private String demographicsDetailsMedicationsSection;
+
+//    @SerializedName("demographics_details_allergy") @Expose
+    private String demographicsDetailAllergyLabel;
+
+    //    @SerializedName("demographics_details_medication") @Expose
+    private String demographicsDetailMedicationLabel;
+
+    //    @SerializedName("demographics_details_allergy_add_unlisted") @Expose
+    private String demographicsDetailsAllergyAddUnlistedLabel;
+
+    //    @SerializedName("demographics_details_medication_add_unlisted") @Expose
+    private String demographicsDetailsMedAddUnlistedLabel;
 
     /**
      *
@@ -208,5 +246,121 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsRequired(String demographicsRequired) {
         this.demographicsRequired = demographicsRequired;
+    }
+
+    public String getDemographicsDetailsHeader() {
+        return StringUtil.isNullOrEmpty(demographicsDetailsHeader) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsHeader;
+    }
+
+    public void setDemographicsDetailsHeader(String demographicsDetailsHeader) {
+        this.demographicsDetailsHeader = demographicsDetailsHeader;
+    }
+
+    public String getDemographicsDetailsSubheader() {
+        return StringUtil.isNullOrEmpty(demographicsDetailsSubheader) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsSubheader;
+    }
+
+    public void setDemographicsDetailsSubheader(String demographicsDetailsSubheader) {
+        this.demographicsDetailsSubheader = demographicsDetailsSubheader;
+    }
+
+    public String getDemographicsDetailsDobHint() {
+        return StringUtil.isNullOrEmpty(demographicsDetailsDobHint) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsDobHint;
+    }
+
+    public void setDemographicsDetailsDobHint(String demographicsDetailsDobHint) {
+        this.demographicsDetailsDobHint = demographicsDetailsDobHint;
+    }
+
+    public String getChoose() {
+        return StringUtil.isNullOrEmpty(choose) ? CarePayConstants.NOT_DEFINED : choose;
+    }
+
+    public void setChoose(String choose) {
+        this.choose = choose;
+    }
+
+    public String getDemographicsProfileCaptureCaption() {
+        return StringUtil.isNullOrEmpty(demographicsProfileCaptureCaption) ?
+                CarePayConstants.NOT_DEFINED : demographicsProfileCaptureCaption;
+    }
+
+    public void setDemographicsProfileCaptureCaption(String demographicsProfileCaptureCaption) {
+        this.demographicsProfileCaptureCaption = demographicsProfileCaptureCaption;
+    }
+
+    public String getDemographicsProfileReCaptureCaption() {
+        return StringUtil.isNullOrEmpty(demographicsProfileReCaptureCaption) ?
+                CarePayConstants.NOT_DEFINED : demographicsProfileReCaptureCaption;
+    }
+
+    public void setDemographicsProfileReCaptureCaption(String demographicsProfileReCaptureCaption) {
+        this.demographicsProfileReCaptureCaption = demographicsProfileReCaptureCaption;
+    }
+
+    public String getDemographicsDetailsAllergiesSection() {
+        return StringUtil.isNullOrEmpty(demographicsDetailsAllergiesSection) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsAllergiesSection;
+    }
+
+    public void setDemographicsDetailsAllergiesSection(String demographicsDetailsAllergiesSection) {
+        this.demographicsDetailsAllergiesSection = demographicsDetailsAllergiesSection;
+    }
+
+    public String getDemographicsDetailsOptionalHint() {
+        return StringUtil.isNullOrEmpty(demographicsDetailsOptionalHint) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsOptionalHint;
+    }
+
+    public void setDemographicsDetailsOptionalHint(String demographicsDetailsOptionalHint) {
+        this.demographicsDetailsOptionalHint = demographicsDetailsOptionalHint;
+    }
+
+    public String getDemographicsDetailsMedicationsSection() {
+        return StringUtil.isNullOrEmpty(demographicsDetailsMedicationsSection) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsMedicationsSection;
+    }
+
+    public void setDemographicsDetailsMedicationsSection(String demographicsDetailsMedicationsSection) {
+        this.demographicsDetailsMedicationsSection = demographicsDetailsMedicationsSection;
+    }
+
+    public String getDemographicsDetailAllergyLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDetailAllergyLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailAllergyLabel;
+    }
+
+    public void setDemographicsDetailAllergyLabel(String demographicsDetailAllergyLabel) {
+        this.demographicsDetailAllergyLabel = demographicsDetailAllergyLabel;
+    }
+
+    public String getDemographicsDetailMedicationLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDetailMedicationLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailMedicationLabel;
+    }
+
+    public void setDemographicsDetailMedicationLabel(String demographicsDetailMedicationLabel) {
+        this.demographicsDetailMedicationLabel = demographicsDetailMedicationLabel;
+    }
+
+    public String getDemographicsDetailsAllergyAddUnlistedLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDetailsAllergyAddUnlistedLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsAllergyAddUnlistedLabel;
+    }
+
+    public void setDemographicsDetailsAllergyAddUnlistedLabel(String demographicsDetailsAllergyAddUnlistedLabel) {
+        this.demographicsDetailsAllergyAddUnlistedLabel = demographicsDetailsAllergyAddUnlistedLabel;
+    }
+
+    public String getDemographicsDetailsMedAddUnlistedLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDetailsMedAddUnlistedLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsMedAddUnlistedLabel;
+    }
+
+    public void setDemographicsDetailsMedAddUnlistedLabel(String demographicsDetailsMedAddUnlistedLabel) {
+        this.demographicsDetailsMedAddUnlistedLabel = demographicsDetailsMedAddUnlistedLabel;
     }
 }

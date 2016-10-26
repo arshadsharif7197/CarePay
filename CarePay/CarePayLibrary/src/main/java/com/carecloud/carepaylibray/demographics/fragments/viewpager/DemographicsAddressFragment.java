@@ -66,8 +66,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private EditText cityEditText;
     private EditText firstNameText;
     private EditText lastNameText;
-
-    private Button nextButton;
+    private TextView firstNameReqHint;
+    private TextView lastNameReqHint;
+    private TextView header;
+    private TextView subheader;
+    private Button   nextButton;
 
     private AutoCompleteTextView stateAutoCompleteTextView;
     private String stateAbbr = null;
@@ -80,18 +83,14 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     private boolean isCityEmpty;
     private boolean isStateEmtpy;
     private boolean isZipEmpty;
-
     private boolean isNextVisible = false;
-    private DemographicAddressPayloadDTO     addressDTO;
-    private DemographicPersDetailsPayloadDTO persDetailsDTO;
 
+    private DemographicAddressPayloadDTO            addressDTO;
+    private DemographicPersDetailsPayloadDTO        persDetailsDTO;
     private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelsMetaDTO;
-    private TextView                                firstNameReqHint;
-    private TextView                                lastNameReqHint;
-    private TextView                                header;
-    private TextView                                subheader;
+
 
     @Nullable
     @Override
@@ -157,7 +156,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         String hint;
 
-//        hint = getString(R.string.firstname_text);
         hint = persDetailsMetaDTO.properties.firstName.getLabel();
         firstNameText = (EditText) view.findViewById(R.id.demogrAddressFirstNameEdit);
         firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressFirstNameTextInput);
@@ -165,7 +163,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         firstNameText.setTag(firstNameInputLayout);
         firstNameText.setHint(hint);
 
-//        hint = getString(R.string.lastname_text);
         hint = persDetailsMetaDTO.properties.lastName.getLabel();
         lastNameText = (EditText) view.findViewById(R.id.demogrAddressLastNameEdit);
         lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressLastNameTextInput);
@@ -173,7 +170,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         lastNameText.setTag(lastNameInputLayout);
         lastNameText.setHint(hint);
 
-//        hint = getString(R.string.Address1EditText);
         hint = addressMetaDTO.properties.address1.getLabel();
         address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
@@ -181,7 +177,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         address1EditText.setTag(address1TextInputLayout);
         address1EditText.setHint(hint);
 
-//        hint = getString(R.string.Address2EditText);
         hint = addressMetaDTO.properties.address2.getLabel();
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
@@ -189,7 +184,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         address2EditText.setTag(address2TextInputLayout);
         address2EditText.setHint(hint);
 
-//        hint = getString(R.string.ZipCodeEditText);
         hint = addressMetaDTO.properties.zipcode.getLabel();
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
         zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
@@ -197,7 +191,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         zipCodeEditText.setTag(zipCodeTextInputLayout);
         zipCodeEditText.setHint(hint);
 
-//        hint = getString(R.string.CityEditText);
         hint = addressMetaDTO.properties.city.getLabel();
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
@@ -205,7 +198,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         cityEditText.setTag(cityTextInputLayout);
         cityEditText.setHint(hint);
 
-//        hint = getString(R.string.StateEditText);
         hint = addressMetaDTO.properties.state.getLabel();
         stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
@@ -225,7 +217,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
         });
 
-//        hint = getString(R.string.PhoneNumberEditText);
         hint = addressMetaDTO.properties.phone.getLabel();
         phoneNumberEditText = (EditText) view.findViewById(R.id.phNoEditText);
         phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
@@ -280,7 +271,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         if (addressDTO == null) {
             addressDTO = new DemographicAddressPayloadDTO();
         }
-        persDetailsDTO = ((DemographicsActivity) getActivity()).getDetailsModel();
+        persDetailsDTO = ((DemographicsActivity) getActivity()).getDetailsDTO();
         if (persDetailsDTO == null) {
             persDetailsDTO = new DemographicPersDetailsPayloadDTO();
         }

@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -38,12 +41,18 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     private ImageCaptureHelper               imageCaptureHelper;
     private Button                           buttonChangeCurrentPhoto;
     private DemographicPersDetailsPayloadDTO model;
+    private DemographicLabelsDTO             labelsMetaDTO;
+    private String                           recaptureCaption;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_demographics_picture, container, false);
+        // set label for capture button
+        labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        String captureCaption = labelsMetaDTO.getDemographicsProfileCaptureCaption();
+        recaptureCaption = labelsMetaDTO.getDemographicsProfileReCaptureCaption();
 
+        View view = inflater.inflate(R.layout.fragment_demographics_picture, container, false);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage);
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
@@ -53,6 +62,8 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                 selectImage(imageCaptureHelper);
             }
         });
+        buttonChangeCurrentPhoto.setText(captureCaption);
+
 
         populateViewsFromModel();
 
@@ -86,6 +97,8 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                             .transform(new CircleImageTransform())
                             .resize(imageCaptureHelper.getImgWidth(), imageCaptureHelper.getImgWidth())
                             .into(imageCaptureHelper.getImageViewTarget());
+                    // successfully load a profile image
+                    buttonChangeCurrentPhoto.setText(recaptureCaption);
                     return;
                 } catch (MalformedURLException e) {
                     // just log
@@ -109,7 +122,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         super.onActivityResult(requestCode, resultCode, data);
         // change the caption of the button
         if (bitmap != null) {
-            buttonChangeCurrentPhoto.setText(getString(R.string.changeCurrentPhotoButton));
+            buttonChangeCurrentPhoto.setText(recaptureCaption);
         }
         buttonsStatusCallback.enableNextButton(true);
     }
@@ -119,7 +132,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.ROUND_IMAGE;
     }
 
-    public void setModel(DemographicPersDetailsPayloadDTO model) {
+    public void setPayloadDTO(DemographicPersDetailsPayloadDTO model) {
         this.model = model;
     }
 }
