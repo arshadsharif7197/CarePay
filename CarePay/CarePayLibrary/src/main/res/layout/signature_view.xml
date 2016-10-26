@@ -30,7 +30,6 @@
         android:layout_below="@+id/signature_view"
         android:textColor="@color/rich_electric_blue"
         android:layout_marginTop="@dimen/consent_top"
-        android:text="@string/Btn_Clr"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/consent_top"/>
 

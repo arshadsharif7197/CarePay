@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 
 public class CloverMainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -29,10 +30,10 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
         // getDemographicInformation();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         findViewById(R.id.checkinTextView).setOnClickListener(this);
         findViewById(R.id.paymentTextView).setOnClickListener(this);
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
+
     }
 
     public void setSystemUiVisibility() {

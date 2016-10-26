@@ -1,0 +1,25 @@
+package com.carecloud.carepay.service.library;
+
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
+
+/**
+ * Created by Jahirul Bhuiyan on 10/24/2016.
+ * Workflow service interface that handle all possible HTTP request using Retrofit
+ */
+
+interface WorkflowService {
+    @GET
+    Call<WorkflowDTO> executeGet(@Url String url);
+
+    @GET
+    Call<WorkflowDTO> executeGet(@Url String url,  @QueryMap Map<String,String> queryMap);
+
+}
