@@ -23,11 +23,9 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.NavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
-import com.carecloud.carepay.practice.library.signin.dtos.SignInTransitionsDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -40,7 +38,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -73,7 +70,7 @@ public class SigninActivity extends BasePracticeActivity {
     private String emailLabel;
     private String passwordLabel;
 
-   private List<String> language = new ArrayList<String>();
+    private List<String> language = new ArrayList<String>();
 
     SigninDTO signinDTO;
 
@@ -130,8 +127,8 @@ public class SigninActivity extends BasePracticeActivity {
                 signinButton.setText(signinLabelsDTO.getSigninButton());
                 signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
                 forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
-                emailLabel=signinLabelsDTO.getSigninEmailAddress();
-                passwordLabel=signinLabelsDTO.getSigninPassword();
+                emailLabel = signinLabelsDTO.getSigninEmailAddress();
+                passwordLabel = signinLabelsDTO.getSigninPassword();
                 passwordEditText.setHint(passwordLabel);
                 emailEditText.setHint(emailLabel);
             }
@@ -344,8 +341,6 @@ public class SigninActivity extends BasePracticeActivity {
         //launchHomescreen
 
 
-
-
         @Override
         public void onBeforeLogin() {
             SystemUtil.hideSoftKeyboard(SigninActivity.this);
@@ -361,7 +356,7 @@ public class SigninActivity extends BasePracticeActivity {
         }
     };
 
-    WorkflowServiceCallback signinCallback=new WorkflowServiceCallback() {
+    WorkflowServiceCallback signinCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
 
@@ -396,7 +391,7 @@ public class SigninActivity extends BasePracticeActivity {
     }
 
 
-    public void setTypeFace(){
+    public void setTypeFace() {
         setProximaNovaRegularTypeface(this, emailEditText);
         setProximaNovaRegularTypeface(this, passwordEditText);
     }
