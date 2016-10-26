@@ -177,8 +177,8 @@ public class ConsentForm2Fragment extends Fragment {
         View customView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.alert_list_layout, null, false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), gender);
-        listView.setAdapter(mAdapter);
+        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), gender);
+        listView.setAdapter(alertAdapter);
         dialog.setView(customView);
         final AlertDialog alert = dialog.create();
         alert.show();
