@@ -78,7 +78,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         nameTextView.setText(payload.getProvider().getName());
 
         TextView typeTextView = ((TextView) findViewById(R.id.appointTypeTextView));
-        typeTextView.setText(payload.getProvider().getSpecialty());
+        typeTextView.setText(payload.getProvider().getSpecialty().getName());
 
         // Appointment Place name
         final TextView addressHeaderTextView = ((TextView) findViewById(R.id.appointAddressHeaderTextView));

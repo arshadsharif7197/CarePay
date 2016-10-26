@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/dialogQRHeaderTextView"
+            android:id="@+id/cancelImageView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/apt_imgview_ht"
             android:layout_gravity="start"
@@ -35,31 +35,22 @@
         android:paddingLeft="@dimen/apt_dl_margin"
         android:paddingRight="@dimen/apt_dl_margin">
 
-        <TextView
+        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/qr_code_header_text_padding"
             android:layout_marginRight="@dimen/qr_code_header_text_padding"
-            android:layout_marginTop="@dimen/apt_dl_margin"
+            android:layout_marginTop="@dimen/dimen_26dp"
             android:text="@string/checkin_scan_code_message"
-            android:textSize="@dimen/qr_code_header_text"/>
+            android:textSize="@dimen/qr_code_header_text"
+            android:textColor="@color/payne_gray"/>
 
         <ImageView
+            android:id="@+id/qrCodeImageView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="@dimen/apt_dl_margin"
             android:contentDescription="@string/scan_code"
-            android:src="@drawable/qr_code"/>
-
-        <Button
-            android:id="@+id/qrcodeCancelButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/apt_dl_margin"
-            android:background="@drawable/button_blue_border"
-            android:text="@string/cancel_button"
-            android:textAllCaps="true"
-            android:textColor="@color/blue_cerulian"
-            android:textSize="@dimen/apt_dl_textview_size"/>
+            android:layout_marginBottom="@dimen/apt_dl_margin"/>
     </LinearLayout>
 </LinearLayout>

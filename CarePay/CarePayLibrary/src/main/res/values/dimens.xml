@@ -13,7 +13,15 @@
     <dimen name="dimen_21dp">21dp</dimen>
     <dimen name="dimen_22dp">22dp</dimen>
     <dimen name="dimen_25dp">25dp</dimen>
+    <dimen name="dimen_26dp">26dp</dimen>
     <dimen name="dimen_33dp">33dp</dimen>
+    <dimen name="dimen_24dp">24dp</dimen>
+    <dimen name="dimen_500dp">500dp</dimen>
+    <dimen name="dimen_400dp">400dp</dimen>
+    <dimen name="dimen_220dp">220dp</dimen>
+    <dimen name="dimen_48dp">48dp</dimen>
+
+
 
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
@@ -253,7 +261,7 @@
     <dimen name="choose_provider_title_margin_start">17dp</dimen>
     <dimen name="checked_in_label_font">14sp</dimen>
     <dimen name="qr_code_header_text">22sp</dimen>
-    <dimen name="qr_code_header_text_padding">79dp</dimen>
+    <dimen name="qr_code_header_text_padding">62dp</dimen>
     <dimen name="apt_skicky_header_height">35dp</dimen>
     <dimen name="optional_text_edit">-20dp</dimen>
 

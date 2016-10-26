@@ -231,7 +231,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkReadyForNext()) { // if all valid; // TODO: 9/27/2016 uncomment
+                if (checkReadyForNext()) { // if all valid...
                     // update personal details
                     persDetailsDTO.setFirstName(firstNameText.getText().toString());
                     persDetailsDTO.setLastName(lastNameText.getText().toString());
