@@ -25,8 +25,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entiti
 import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityPersDetailsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityUpdatesDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.properties.DemographicMetadataPropertiesAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
@@ -263,7 +261,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             switch (position) {
                 case 0:
                     DemographicsAddressFragment addressFragment = new DemographicsAddressFragment();
-                    addressFragment.setAddressEntityMetaDTO(addressEntityMetaDTO);
+                    addressFragment.setAddressMetaDTO(addressEntityMetaDTO);
                     addressFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
                     return addressFragment;
                 case 1:

@@ -158,7 +158,6 @@
 
     <style name="CityEditTextStyle" parent="EditTextStyle">
         <item name="android:digits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</item>
-        <item name="android:hint">@string/CityEditText</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:maxLength">255</item>
     </style>

@@ -36,6 +36,12 @@ public class StringUtil {
         return matcher.matches();
     }
 
+    public static boolean isValidPhoneNumber(String phoneNumber, String validationString) {
+        Pattern pattern = Pattern.compile(validationString);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
     public static boolean isValidmail(String email) {
         if (email != null) {
             Pattern pattern = Pattern.compile(EMAIL_PATTERN);

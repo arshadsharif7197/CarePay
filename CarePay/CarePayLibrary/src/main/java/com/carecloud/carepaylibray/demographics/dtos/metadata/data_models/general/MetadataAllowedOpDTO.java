@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.general;
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -22,7 +23,7 @@ public class MetadataAllowedOpDTO {
      * @return The labelMeta
      */
     public String getLabel() {
-        return StringUtil.isNullOrEmpty(label) ? "Un-defined" : label;
+        return StringUtil.isNullOrEmpty(label) ? CarePayConstants.NOT_DEFINED : label;
     }
 
     /**

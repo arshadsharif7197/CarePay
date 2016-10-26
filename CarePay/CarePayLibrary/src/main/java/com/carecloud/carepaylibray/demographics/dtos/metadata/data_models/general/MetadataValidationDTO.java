@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.general;
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,5 +17,13 @@ public class MetadataValidationDTO {
     public Object value;
 
     @SerializedName("error_message") @Expose
-    public String errorMessage;
+    private String errorMessage;
+
+    public String getErrorMessage() {
+        return StringUtil.isNullOrEmpty(errorMessage) ? CarePayConstants.NOT_DEFINED : errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 }

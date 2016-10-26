@@ -1,4 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.labels;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -33,10 +35,21 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_add_another_insurance_link") @Expose
     private String demographicsAddAnotherInsuranceLink;
 
+//    @SerializedName("demographics_next") @Expose
+    private String demographicsNext;
+
+//    @SerializedName("demographics_address_header") @Expose
+    private String demographicsAddressHeader;
+
+//    @SerializedName("demographics_address_subheader") @Expose
+    private String demographicsAddressSubheader;
+
+//    @SerializedName("demographics_required") @Expose
+    private String demographicsRequired;
+
     /**
      *
-     * @return
-     * The demographicsUpdateButton
+     * @return The demographicsUpdateButton
      */
     public String getDemographicsUpdateButton() {
         return demographicsUpdateButton;
@@ -44,8 +57,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @param demographicsUpdateButton
-     * The demographics_update_button
+     * @param demographicsUpdateButton The demographics_update_button
      */
     public void setDemographicsUpdateButton(String demographicsUpdateButton) {
         this.demographicsUpdateButton = demographicsUpdateButton;
@@ -53,8 +65,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @return
-     * The demographicsUpdateProfilePhotoLink
+     * @return The demographicsUpdateProfilePhotoLink
      */
     public String getDemographicsUpdateProfilePhotoLink() {
         return demographicsUpdateProfilePhotoLink;
@@ -62,8 +73,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @param demographicsUpdateProfilePhotoLink
-     * The demographics_update_profile_photo_link
+     * @param demographicsUpdateProfilePhotoLink The demographics_update_profile_photo_link
      */
     public void setDemographicsUpdateProfilePhotoLink(String demographicsUpdateProfilePhotoLink) {
         this.demographicsUpdateProfilePhotoLink = demographicsUpdateProfilePhotoLink;
@@ -71,8 +81,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @return
-     * The demographicsUpdateEmailAndPasswordLink
+     * @return The demographicsUpdateEmailAndPasswordLink
      */
     public String getDemographicsUpdateEmailAndPasswordLink() {
         return demographicsUpdateEmailAndPasswordLink;
@@ -80,8 +89,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @param demographicsUpdateEmailAndPasswordLink
-     * The demographics_update_email_and_password_link
+     * @param demographicsUpdateEmailAndPasswordLink The demographics_update_email_and_password_link
      */
     public void setDemographicsUpdateEmailAndPasswordLink(String demographicsUpdateEmailAndPasswordLink) {
         this.demographicsUpdateEmailAndPasswordLink = demographicsUpdateEmailAndPasswordLink;
@@ -89,8 +97,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @return
-     * The demographicsAddressSection
+     * @return The demographicsAddressSection
      */
     public String getDemographicsAddressSection() {
         return demographicsAddressSection;
@@ -98,8 +105,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @param demographicsAddressSection
-     * The demographics_address_section
+     * @param demographicsAddressSection The demographics_address_section
      */
     public void setDemographicsAddressSection(String demographicsAddressSection) {
         this.demographicsAddressSection = demographicsAddressSection;
@@ -107,8 +113,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @return
-     * The demographicsDetailsSection
+     * @return The demographicsDetailsSection
      */
     public String getDemographicsDetailsSection() {
         return demographicsDetailsSection;
@@ -116,8 +121,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @param demographicsDetailsSection
-     * The demographics_details_section
+     * @param demographicsDetailsSection The demographics_details_section
      */
     public void setDemographicsDetailsSection(String demographicsDetailsSection) {
         this.demographicsDetailsSection = demographicsDetailsSection;
@@ -125,8 +129,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @return
-     * The demographicsDocumentsSection
+     * @return The demographicsDocumentsSection
      */
     public String getDemographicsDocumentsSection() {
         return demographicsDocumentsSection;
@@ -134,8 +137,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @param demographicsDocumentsSection
-     * The demographics_documents_section
+     * @param demographicsDocumentsSection The demographics_documents_section
      */
     public void setDemographicsDocumentsSection(String demographicsDocumentsSection) {
         this.demographicsDocumentsSection = demographicsDocumentsSection;
@@ -143,8 +145,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @return
-     * The demographicsUpdatesSection
+     * @return The demographicsUpdatesSection
      */
     public String getDemographicsUpdatesSection() {
         return demographicsUpdatesSection;
@@ -152,8 +153,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @param demographicsUpdatesSection
-     * The demographics_updates_section
+     * @param demographicsUpdatesSection The demographics_updates_section
      */
     public void setDemographicsUpdatesSection(String demographicsUpdatesSection) {
         this.demographicsUpdatesSection = demographicsUpdatesSection;
@@ -161,8 +161,7 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @return
-     * The demographicsAddAnotherInsuranceLink
+     * @return The demographicsAddAnotherInsuranceLink
      */
     public String getDemographicsAddAnotherInsuranceLink() {
         return demographicsAddAnotherInsuranceLink;
@@ -170,10 +169,44 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @param demographicsAddAnotherInsuranceLink
-     * The demographics_add_another_insurance_link
+     * @param demographicsAddAnotherInsuranceLink The demographics_add_another_insurance_link
      */
     public void setDemographicsAddAnotherInsuranceLink(String demographicsAddAnotherInsuranceLink) {
         this.demographicsAddAnotherInsuranceLink = demographicsAddAnotherInsuranceLink;
+    }
+
+    public String getDemographicsNext() {
+        return StringUtil.isNullOrEmpty(demographicsNext) ? CarePayConstants.NOT_DEFINED : demographicsNext;
+    }
+
+    public void setDemographicsNext(String demographicsNext) {
+        this.demographicsNext = demographicsNext;
+    }
+
+    public String getDemographicsAddressHeader() {
+        return StringUtil.isNullOrEmpty(demographicsAddressHeader) ?
+                CarePayConstants.NOT_DEFINED : demographicsAddressHeader;
+    }
+
+    public void setDemographicsAddressHeader(String demographicsAddressHeader) {
+        this.demographicsAddressHeader = demographicsAddressHeader;
+    }
+
+    public String getDemographicsAddressSubheader() {
+        return StringUtil.isNullOrEmpty(demographicsAddressSubheader) ?
+                CarePayConstants.NOT_DEFINED : demographicsAddressSubheader;
+    }
+
+    public void setDemographicsAddressSubheader(String demographicsAddressSubheader) {
+        this.demographicsAddressSubheader = demographicsAddressSubheader;
+    }
+
+    public String getDemographicsRequired() {
+        return StringUtil.isNullOrEmpty(demographicsRequired)
+                ? CarePayConstants.NOT_DEFINED : demographicsRequired;
+    }
+
+    public void setDemographicsRequired(String demographicsRequired) {
+        this.demographicsRequired = demographicsRequired;
     }
 }
