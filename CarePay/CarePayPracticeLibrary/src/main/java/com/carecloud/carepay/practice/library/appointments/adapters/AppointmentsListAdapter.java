@@ -10,10 +10,14 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.utils.DateUtil;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -48,11 +52,18 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
     public void onBindViewHolder(final AppointmentsListViewHolder holder, int position) {
         final Object object = appointmentsArrayList.get(position);
         final AppointmentsPayloadDTO item = ((AppointmentDTO) object).getPayload();
-        holder.doctorName.setText(R.string.not_defined);
-        holder.doctorType.setText(R.string.not_defined);
-        holder.appointmentLocation.setText(R.string.not_defined);
-        holder.appointmentDate.setText(R.string.not_defined);
-        holder.appointmentTime.setText(R.string.not_defined);
+        holder.doctorName.setText(item.getProvider().getName());
+        holder.doctorType.setText(item.getProvider().getSpecialty().getName());
+        holder.appointmentLocation.setText(item.getLocation().getName());
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
+        DateUtil.getInstance().setDateRaw(item.getStartTime());
+        holder.appointmentDate.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+        String startDay = StringUtils.substringBefore(DateUtil.getInstance().getDateAsDayMonthDayOrdinal(), ",");
+        String endDay =DateUtil.getInstance().getDateAsDayMonthDayOrdinal().
+                substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
+        String strToday = startDay.replace(startDay, "Today")+ endDay ;
+        holder.appointmentDate.setText(strToday);
+        holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckInTextview.setText(R.string.not_defined);
     }
 
