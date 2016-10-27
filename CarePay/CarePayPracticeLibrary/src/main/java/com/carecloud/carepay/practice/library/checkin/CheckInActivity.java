@@ -9,8 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.NavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 
@@ -50,10 +54,29 @@ public class CheckInActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getDemographicInformation();
+        String url="https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/practice_mode/practice_checkin?practice_mgmt=carecloud&practice_id=77b81aa8-1155-4da7-9fd9-2f6967b09a93";
+        WorkflowServiceHelper.getInstance().executeGetRequest(url,signinCallback);
+        //getDemographicInformation();
     }
 
-    private void getDemographicInformation() {
+    WorkflowServiceCallback signinCallback=new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+
+        }
+    };
+
+    /*private void getDemographicInformation() {
         AppointmentService apptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class); //, String token, String searchString
         Call<AppointmentsResultModel> call = apptService.getCheckedInAppointments();
         call.enqueue(new Callback<AppointmentsResultModel>() {
@@ -75,5 +98,5 @@ public class CheckInActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 }
