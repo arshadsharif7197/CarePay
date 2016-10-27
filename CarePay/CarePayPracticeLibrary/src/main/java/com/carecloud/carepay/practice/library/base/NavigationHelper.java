@@ -9,9 +9,6 @@ import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
-import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_APPOINTMENTS;
-import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_HOME;
-import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_MODE_SIGNIN;
 
 /**
  * Created by Jahirul Bhuiyan on 10/10/2016.
@@ -42,19 +39,19 @@ public class NavigationHelper {
         Intent intent=null;
 
         switch (workflowDTO.getState()) {
-            case PRACTICE_MODE_SIGNIN: {
+            case NavigationStateConstants.PRACTICE_MODE_SIGNIN: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
             }
-            case PRACTICE_HOME: {
+            case NavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
             }
-            case PRACTICE_APPOINTMENTS: {
+            case NavigationStateConstants.PRACTICE_APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
