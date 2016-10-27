@@ -13,15 +13,21 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
+import com.carecloud.carepay.practice.library.base.NavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
+import com.carecloud.carepay.practice.library.splash.SplashActivity;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 public class CloverMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static int count;
     TextView checkedInCounterTextview;
+    WorkflowServiceCallback applicationStartCallback = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +84,28 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
 
                 @Override
                 public void onPatientModeSelected() {
-                    Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
+
+                    WorkflowServiceHelper.getInstance().executeGetRequest("https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/patient_mode/authenticate/start",applicationStartCallback);
+                    applicationStartCallback = new WorkflowServiceCallback() {
+                        @Override
+                        public void onPreExecute() {
+
+                        }
+
+                        @Override
+                        public void onPostExecute(WorkflowDTO workflowDTO) {
+                            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+
+                        }
+
+                        @Override
+                        public void onFailure(String exceptionMessage) {
+
+                        }
+                    };
+                   /* Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
                     appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(appointmentIntent);
+                    startActivity(appointmentIntent);*/
                     Toast.makeText(CloverMainActivity.this, "Patient Mode selected...", Toast.LENGTH_SHORT).show();
                 }
             }, new ChangeModeDialog.LogoutClickListener() {
