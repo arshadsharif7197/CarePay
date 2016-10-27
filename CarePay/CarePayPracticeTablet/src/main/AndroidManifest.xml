@@ -20,11 +20,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemePractice"
         tools:replace="android:theme">
-        <activity android:name="com.carecloud.carepay.practice.library.checkin.CheckInActivity">
-        </activity>
-        <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity" />
-        <activity android:name=".payments.TabletPaymentActivity"></activity>
-
         <activity android:name="com.carecloud.carepay.practice.library.splash.SplashActivity"
             android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
@@ -33,6 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.carecloud.carepay.practice.library.signin.SigninActivity"></activity>
+        <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"></activity>
+        <activity android:name="com.carecloud.carepay.practice.library.checkin.CheckInActivity"></activity>
     </application>
-
 </manifest>
