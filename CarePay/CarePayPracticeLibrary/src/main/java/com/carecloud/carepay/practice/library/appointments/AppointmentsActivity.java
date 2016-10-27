@@ -94,7 +94,9 @@ public class AppointmentsActivity extends AppCompatActivity {
                                  appointmentsLayoutManager = new LinearLayoutManager(AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
                                  appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
                              }else {
-                                 noAppointmentView.setVisibility(View.VISIBLE);                             }
+
+                                 noAppointmentView.setVisibility(View.VISIBLE);
+                             }
                          }
 
                          @Override

@@ -17,9 +17,11 @@ import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
+
 
 /**
  * Created by harshal_patil on 10/19/2016.
@@ -59,8 +61,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         DateUtil.getInstance().setDateRaw(item.getStartTime());
         holder.appointmentDate.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
         String startDay = StringUtils.substringBefore(DateUtil.getInstance().getDateAsDayMonthDayOrdinal(), ",");
-        String endDay =DateUtil.getInstance().getDateAsDayMonthDayOrdinal().
-                substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
+        String endDay =DateUtil.getInstance().getDateAsDayMonthDayOrdinal()
+                .substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
         String strToday = startDay.replace(startDay, "Today")+ endDay ;
         holder.appointmentDate.setText(strToday);
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
