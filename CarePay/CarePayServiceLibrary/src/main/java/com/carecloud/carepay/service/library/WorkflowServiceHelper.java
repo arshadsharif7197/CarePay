@@ -26,6 +26,11 @@ public class WorkflowServiceHelper {
 
     private static ApplicationType applicationType;
 
+    /**
+     * Application type inizialization Patient or Practice
+     * @param applicationType Patient or Practice
+     */
+
     public static void initialization(ApplicationType applicationType){
         if (instance == null) {
             instance = new WorkflowServiceHelper();
