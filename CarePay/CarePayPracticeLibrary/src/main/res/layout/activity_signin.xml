@@ -4,47 +4,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_default"
-    android:orientation="vertical"
-   >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.5"
-        android:layout_marginTop="20.0dp"
         android:layout_marginEnd="20.0dp"
+        android:layout_marginTop="20.0dp"
+        android:layout_weight="2.5"
         android:orientation="horizontal">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="34.2dp"
-        android:src="@drawable/cp_logo"
-        android:id="@+id/imageView" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                android:id="@+id/goBackButtonTextview"
+                android:layout_width="wrap_content"
+                android:layout_height="51dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="21.4dp"
+                android:background="@drawable/bg_blue_overlay"
+                android:drawableStart="@drawable/icn_arrow_left"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:paddingEnd="20dp"
+                android:paddingStart="15dp"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34.2dp"
+                android:src="@drawable/cp_logo" />
 
 
-    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
-        android:id="@+id/languageTextview"
-        android:layout_width="112dp"
-        android:layout_height="51dp"
-        android:background="@drawable/bg_blue_overlay"
-        android:drawableEnd="@drawable/icn_down_white"
-        android:includeFontPadding="false"
-        android:gravity="center_vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="15dp"
-        android:layout_marginTop="21.4dp"
-        android:text="Not"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:layout_alignParentEnd="true" />
-    </RelativeLayout>
-</LinearLayout>
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                android:id="@+id/languageTextview"
+                android:layout_width="112dp"
+                android:layout_height="51dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="21.4dp"
+                android:background="@drawable/bg_blue_overlay"
+                android:drawableEnd="@drawable/icn_down_white"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:paddingEnd="15dp"
+                android:paddingStart="20dp"
+                android:text="EN"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -58,17 +77,17 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_15dp"
             android:gravity="center"
-            android:text="@string/not_defined"
-            android:textSize="@dimen/signin_title_textsize"
             android:textColor="@color/white"
+            android:textSize="@dimen/signin_title_textsize"
             app:customAssetFont="gotham_rounded_medium" />
+
         <ProgressBar
             android:id="@+id/signInProgress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="-8dp"
-            android:indeterminate="true"/>
+            android:indeterminate="true" />
 
     </LinearLayout>
 
@@ -80,94 +99,86 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-    <RelativeLayout
-        android:id="@+id/mainLayout"
-        android:layout_width="500.0dp"
-        android:layout_height="220.0dp"
-        android:background="@drawable/layout_shadow"
-        android:elevation="20dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:layout_marginTop="21dp">
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/signInEmailTextInputLayout"
-            style="@style/TextInputLayoutStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
-
-        <EditText
-            android:id="@+id/signinEmailpracticeEditText"
-            style="@style/EditTextStyle"
-            android:hint="@string/not_defined"
-            android:imeOptions="actionNext"
-            android:inputType="textEmailAddress"/>
-        </android.support.design.widget.TextInputLayout>
+        <LinearLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="500.0dp"
+            android:layout_height="220.0dp"
+            android:layout_marginTop="21dp"
+            android:background="@drawable/layout_shadow"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
 
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/passwordTextInputLayout"
-            android:layout_below="@+id/signInEmailTextInputLayout"
-            style="@style/TextInputLayoutStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:passwordToggleEnabled="false">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/signInEmailTextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            <EditText
-                android:id="@+id/passwordpracticeEditText"
-                style="@style/EditTextStyle"
-                android:hint="@string/not_defined"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"/>
+                <EditText
+                    android:id="@+id/signinEmailpracticeEditText"
+                    style="@style/EditTextStyle"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordTextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:passwordToggleEnabled="false">
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="51dp"
-    android:layout_below="@id/passwordTextInputLayout"
-    android:gravity="center_horizontal">
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/signinTextview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:customAssetFont="gotham_rounded_medium"
-            android:text="@string/not_defined"
-            android:paddingBottom="10dp"
-            android:textColor="@color/bright_cerulean"
-            android:textSize="18sp" />
+                <EditText
+                    android:id="@+id/passwordpracticeEditText"
+                    style="@style/EditTextStyle"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="6dp"
-        android:paddingBottom="10dp"
-        android:src="@drawable/icn_right_arrow"
-        android:id="@+id/rightarrow"
-        android:layout_alignBottom="@+id/signinTextview"
-        android:layout_toEndOf="@+id/signinTextview"
-        android:layout_marginStart="21dp" />
+            </android.support.design.widget.TextInputLayout>
 
-</RelativeLayout>
 
-    </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/signinTextview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/bright_cerulean"
+                    android:textSize="17sp"
+                    app:customAssetFont="gotham_rounded_medium" />
+
+                <ImageView
+                    android:id="@+id/rightarrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/icn_right_arrow" />
+
+            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:gravity="center_horizontal"
-        android:layout_weight="4">
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/forgot_passwordTextview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/not_defined"
-        android:textSize="@dimen/forgotpassword_textsize"
-        android:textColor="@color/white"
-        app:customAssetFont="proxima_nova_regular"
-        android:layout_below="@+id/mainLayout"
-        android:layout_alignParentStart="true" />
+        android:layout_weight="4"
+        android:gravity="center_horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/forgot_passwordTextview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/forgotpassword_textsize"
+            app:customAssetFont="proxima_nova_regular" />
 
     </LinearLayout>
 

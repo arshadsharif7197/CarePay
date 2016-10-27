@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.patientmode;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
+import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 
 import java.util.Arrays;
@@ -50,6 +54,10 @@ public class PatientModeSplashActivity extends AppCompatActivity {
         getStartededButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent checkedInIntent = new Intent(PatientModeSplashActivity.this, HowToCheckInActivity.class);
+                checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(checkedInIntent);
+
 
             }
         });
