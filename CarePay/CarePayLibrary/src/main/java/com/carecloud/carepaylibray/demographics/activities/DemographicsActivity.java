@@ -109,7 +109,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         fragLabels[0] = labelsDTO.getDemographicsAddressSection();
         fragLabels[1] = labelsDTO.getDemographicsDetailsSection();
         fragLabels[2] = labelsDTO.getDemographicsDocumentsSection();
-        fragLabels[3] = labelsDTO.getDemographicsUpdatesSection();
+        fragLabels[3] = labelsDTO.getDemographicsAllSetSection();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);

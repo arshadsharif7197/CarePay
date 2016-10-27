@@ -30,8 +30,8 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_documents_section") @Expose
     private String demographicsDocumentsSection;
 
-    @SerializedName("demographics_updates_section") @Expose
-    private String demographicsUpdatesSection;
+    @SerializedName("demographics_allset_section") @Expose
+    private String demographicsAllSetSection;
 
     @SerializedName("demographics_add_another_insurance_link") @Expose
     private String demographicsAddAnotherInsuranceLink;
@@ -255,19 +255,19 @@ public class DemographicLabelsDTO {
 
     /**
      *
-     * @return The demographicsUpdatesSection
+     * @return The demographicsAllSetSection
      */
-    public String getDemographicsUpdatesSection() {
-        return StringUtil.isNullOrEmpty(demographicsUpdatesSection) ?
-                CarePayConstants.NOT_DEFINED : demographicsUpdatesSection;
+    public String getDemographicsAllSetSection() {
+        return StringUtil.isNullOrEmpty(demographicsAllSetSection) ?
+                CarePayConstants.NOT_DEFINED : demographicsAllSetSection;
     }
 
     /**
      *
-     * @param demographicsUpdatesSection The demographics_updates_section
+     * @param demographicsAllSetSection The demographics_updates_section
      */
-    public void setDemographicsUpdatesSection(String demographicsUpdatesSection) {
-        this.demographicsUpdatesSection = demographicsUpdatesSection;
+    public void setDemographicsAllSetSection(String demographicsAllSetSection) {
+        this.demographicsAllSetSection = demographicsAllSetSection;
     }
 
     /**
