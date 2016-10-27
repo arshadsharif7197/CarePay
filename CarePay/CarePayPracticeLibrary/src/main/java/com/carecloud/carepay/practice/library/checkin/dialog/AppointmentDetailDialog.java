@@ -126,21 +126,21 @@ public class AppointmentDetailDialog extends Dialog {
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
 
         }
     };
 
     private View.OnClickListener assistActionListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
 
         }
     };
 
     private View.OnClickListener pageActionListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
 
         }
     };
