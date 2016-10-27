@@ -243,7 +243,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         if (insuranceFragment == null) {
             insuranceFragment = new InsuranceScannerFragment();
             insuranceFragment.setButtonsStatusCallback(null);
-            insuranceFragment.setModel(insuranceModel); // set the model (if avail)
+            insuranceFragment.setInsuranceDTO(insuranceModel); // set the model (if avail)
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance")

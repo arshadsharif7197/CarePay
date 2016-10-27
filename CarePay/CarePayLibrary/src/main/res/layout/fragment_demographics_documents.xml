@@ -88,7 +88,7 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/demographicsAddMedInfoButton"
+        android:id="@+id/demographicsDocumentsMultipleInsClickable"
         style="@style/SigninSignupClickableTextView"
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/demographics_docs_header_top"

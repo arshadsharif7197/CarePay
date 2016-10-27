@@ -147,8 +147,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         });
 
         // add button
-        multipleInsClickable = (TextView) view.findViewById(R.id.demographicsAddMedInfoButton);
-        label = globalLabelsMetaDTO.demographicsDocumentsMultiInsLabel;
+        multipleInsClickable = (TextView) view.findViewById(R.id.demographicsDocumentsMultipleInsClickable);
+        label = globalLabelsMetaDTO.getDemographicsDocumentsMultiInsLabel();
         multipleInsClickable.setText(label);
         multipleInsClickable.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,7 +203,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (insuranceFragment == null) {
             insuranceFragment = new InsuranceScannerFragment();
             insuranceFragment.setButtonsStatusCallback(this);
-            insuranceFragment.setModel(insuranceModel1); // set the model (if avail)
+            insuranceFragment.setInsuranceDTO(insuranceModel1); // set the model (if avail)
+            insuranceFragment.setInsuranceMetadataDTO(insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance1")
@@ -219,7 +220,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (extraInsuranceFrag1 == null) {
             extraInsuranceFrag1 = new InsuranceScannerFragment();
             extraInsuranceFrag1.setButtonsStatusCallback(this);
-            extraInsuranceFrag1.setModel(insuranceModel2); // set the model (if avail)
+            extraInsuranceFrag1.setInsuranceDTO(insuranceModel2); // set the model (if avail)
+            extraInsuranceFrag1.setInsuranceMetadataDTO(insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance2, extraInsuranceFrag1, "insurance2")
@@ -235,7 +237,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (extraInsuranceFrag2 == null) {
             extraInsuranceFrag2 = new InsuranceScannerFragment();
             extraInsuranceFrag2.setButtonsStatusCallback(this);
-            extraInsuranceFrag2.setModel(insuranceModel3); // set the model (if avail)
+            extraInsuranceFrag2.setInsuranceDTO(insuranceModel3); // set the model (if avail)
+            extraInsuranceFrag2.setInsuranceMetadataDTO(insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance3, extraInsuranceFrag2, "insurance3")

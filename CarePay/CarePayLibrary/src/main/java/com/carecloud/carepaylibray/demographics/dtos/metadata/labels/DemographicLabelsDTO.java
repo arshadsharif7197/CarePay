@@ -121,18 +121,26 @@ public class DemographicLabelsDTO {
     //    @SerializedName("demographics_documents_title_select_provider") @Expose
     public String demographicsTitleSelectProvider;
 
-    //    @SerializedName("demographics_demographics_title_select_gender") @Expose
+    //    @SerializedName("demographics_documents_title_select_gender") @Expose
     public String demographicsTitleSelectGender;
 
-    //    @SerializedName("demographics_demographics_title_select_ethnicity") @Expose
+    //    @SerializedName("demographics_documents_title_select_ethnicity") @Expose
     public String demographicsTitleSelectEthnicity;
 
-    //    @SerializedName("demographics_demographics_title_select_race") @Expose
+    //    @SerializedName("demographics_documents_title_select_race") @Expose
     public String demographicsTitleSelectRace;
 
-    //    @SerializedName("demographics_demographics_title_select_id_type") @Expose
+    //    @SerializedName("demographics_documents_title_select_id_type") @Expose
     public String demographicsTitleSelectIdType;
 
+//    @SerializedName("demographics_documents_choose_provider") @Expose
+    public String demographicsDocumentsChooseProviderLabel;
+
+//    @SerializedName("demographics_documents_ins_type_label") @Expose
+    public String demographicsDocumentsInsTypeLabel;
+
+//    @SerializedName("demographics_documents_title_card_type") @Expose
+    public String demographicsTitleCardType;
 
     /**
      *
@@ -555,5 +563,32 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsTitleSelectIdType(String demographicsTitleSelectIdType) {
         this.demographicsTitleSelectIdType = demographicsTitleSelectIdType;
+    }
+
+    public String getDemographicsDocumentsChooseProviderLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsChooseProviderLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsChooseProviderLabel;
+    }
+
+    public void setDemographicsDocumentsChooseProviderLabel(String demographicsDocumentsChooseProviderLabel) {
+        this.demographicsDocumentsChooseProviderLabel = demographicsDocumentsChooseProviderLabel;
+    }
+
+    public String getDemographicsDocumentsInsTypeLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsInsTypeLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsInsTypeLabel;
+    }
+
+    public void setDemographicsDocumentsInsTypeLabel(String demographicsDocumentsInsTypeLabel) {
+        this.demographicsDocumentsInsTypeLabel = demographicsDocumentsInsTypeLabel;
+    }
+
+    public String getDemographicsTitleCardType() {
+        return StringUtil.isNullOrEmpty(demographicsTitleCardType) ?
+                CarePayConstants.NOT_DEFINED : demographicsTitleCardType;
+    }
+
+    public void setDemographicsTitleCardType(String demographicsTitleCardType) {
+        this.demographicsTitleCardType = demographicsTitleCardType;
     }
 }
