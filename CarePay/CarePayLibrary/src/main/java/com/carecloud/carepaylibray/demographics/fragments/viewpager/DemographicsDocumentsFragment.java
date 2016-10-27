@@ -25,11 +25,12 @@ import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScanne
 import com.carecloud.carepaylibray.demographics.fragments.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -245,12 +246,12 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 .commit();
     }
 
-    private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int i) {
+    private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int index) {
         DemographicInsurancePayloadDTO model = null;
         if (insuranceModelList != null) {
             int numOfInsurances = insuranceModelList.size();
-            if (numOfInsurances > i) { // check if the list has an item at index i
-                model = insuranceModelList.get(i);
+            if (numOfInsurances > index) { // check if the list has an item at index i
+                model = insuranceModelList.get(index);
             }
         }
         return model;
