@@ -35,6 +35,7 @@ public class SplashActivity extends Activity {
         //setTheme(R.style.AppThemeNoActionBar);
         Message msg = new Message();
         msg.what = STOPSPLASH;
+
         splashHandler.sendMessageDelayed(msg, SPLASHTIME);
     }
 

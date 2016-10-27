@@ -328,7 +328,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="demogr_section_name_label">Name</string>
     <string name="demogr_section_address_label">ADDRESS</string>
 
-    <string name="choose">Choose</string>
+    <string name="demographicsChooseLabel">Choose</string>
     <string name="Other">Other</string>
 
     <string name="no_apt_title">No appointments yet</string>

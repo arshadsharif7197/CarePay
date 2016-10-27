@@ -31,18 +31,18 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
-
-
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
@@ -54,35 +54,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
-
-
 
 public class DemographicReviewFragment extends Fragment implements View.OnClickListener {
 
     private Button buttonAddDemographicInfo;
-    private View view;
+    private View   view;
 
     private String[] raceDataArray;
     private String[] ethnicityDataArray;
     private String[] genderSelectArray;
 
     int selectedDataArray;
-    private TextView raceDataTextView;
-    private TextView ethnicityDataTextView;
-    private TextView selectGender;
-    private ProgressBar demographicProgressBar;
-    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
-    private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
+    private TextView                             raceDataTextView;
+    private TextView                             ethnicityDataTextView;
+    private TextView                             selectGender;
+    private ProgressBar                          demographicProgressBar;
+    private DemographicPersDetailsPayloadDTO     demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO         demographicAddressPayloadDTO;
     private List<DemographicInsurancePayloadDTO> insurances;
-    private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
+    private DemographicIdDocPayloadDTO           demographicIdDocPayloadDTO;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -107,7 +102,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private TextInputLayout stateLabel;
     private TextInputLayout zipcodeLabel;
     private TextInputLayout doblabel;
-    private LinearLayout rootview;
+    private LinearLayout    rootview;
 
 
     public static DemographicReviewFragment newInstance() {
@@ -662,7 +657,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             if (SystemUtil.isNotEmptyString( getGender)) {
                 selectGender.setText(getGender);
             } else {
-                selectGender.setText(R.string.choose);
+                selectGender.setText(R.string.chooseTextView);
 
             }
 
@@ -670,13 +665,13 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             if ( SystemUtil.isNotEmptyString(getRace)) {
                 raceDataTextView.setText(getRace);
             } else {
-                raceDataTextView.setText(R.string.choose);
+                raceDataTextView.setText(R.string.chooseTextView);
             }
             String getethnicity = demographicPersDetailsPayloadDTO.getEthnicity();
             if ( SystemUtil.isNotEmptyString(getethnicity)) {
                 ethnicityDataTextView.setText(getethnicity);
             } else {
-                ethnicityDataTextView.setText(R.string.choose);
+                ethnicityDataTextView.setText(R.string.chooseTextView);
             }
 
         } else {
@@ -766,7 +761,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.detailsReviewHeading));
+                                       (TextView) view.findViewById(R.id.detailsReviewHeading));
 
         if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
             setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
@@ -837,29 +832,29 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
 
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel));
+                                       (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demographicsLabel));
+                                       (TextView) view.findViewById(R.id.demographicsLabel));
 
 
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.raceDataTextView));
+                                      (TextView) view.findViewById(R.id.raceDataTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.raceListDataTextView));
+                                       (TextView) view.findViewById(R.id.raceListDataTextView));
 
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.genderTextView));
+                                      (TextView) view.findViewById(R.id.genderTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.chooseGenderTextView));
+                                       (TextView) view.findViewById(R.id.chooseGenderTextView));
 
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demographicsAddressAddressSectionLabel));
+                                       (TextView) view.findViewById(R.id.demographicsAddressAddressSectionLabel));
 
 
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.ethnicityDataTextView));
+                                      (TextView) view.findViewById(R.id.ethnicityDataTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.ethnicityListDataTextView));
+                                       (TextView) view.findViewById(R.id.ethnicityListDataTextView));
     }
 
 
