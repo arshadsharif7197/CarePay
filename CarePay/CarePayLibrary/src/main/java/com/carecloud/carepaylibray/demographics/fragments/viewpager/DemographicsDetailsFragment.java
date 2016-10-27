@@ -424,15 +424,19 @@ public class DemographicsDetailsFragment extends Fragment
 
     @Override
     public void onClick(View view) {
+        final String cancelLabel = globalLabelDTO.getDemographicsCancelLabel();
         if (view == raceTextView) {
             selectedArray = 1;
-            showAlertDialogWithListview(raceArray, getString(R.string.select_race));
+            final String title = globalLabelDTO.getDemographicsTitleSelectRace();
+            showAlertDialogWithListview(raceArray, title, cancelLabel);
         } else if (view == ethnicityTextView) {
             selectedArray = 2;
-            showAlertDialogWithListview(ethnicityArray, getString(R.string.select_ethnicity));
+            final String title = globalLabelDTO.getDemographicsTitleSelectEthnicity();
+            showAlertDialogWithListview(ethnicityArray, title, cancelLabel);
         } else if (view == genderTextView) {
             selectedArray = 3;
-            showAlertDialogWithListview(genderArray, getString(R.string.select_gender));
+            final String title = globalLabelDTO.getDemographicsTitleSelectGender();
+            showAlertDialogWithListview(genderArray, title, cancelLabel);
         } else if (view == addUnlistedAllergyTextView) {
             Snackbar.make(view, "In progress", Snackbar.LENGTH_SHORT).show();
         } else if (view == addUnlistedMedTextView) {
@@ -475,10 +479,10 @@ public class DemographicsDetailsFragment extends Fragment
         ((DemographicsActivity) getActivity()).setDetailsModel(persDetailsDTO); // save the updated persDetailsDTO in the activity
     }
 
-    private void showAlertDialogWithListview(final String[] dataArray, String title) {
+    private void showAlertDialogWithListview(final String[] dataArray, String title, String cancelLabel) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
-        dialog.setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
