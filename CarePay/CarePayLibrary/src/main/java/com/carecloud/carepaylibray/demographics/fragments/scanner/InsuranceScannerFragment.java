@@ -44,7 +44,6 @@ import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
-
 /**
  * Created by lsoco_user on 9/13/2016.
  * Fragment with insurance scanning functionality
@@ -108,21 +107,21 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         providerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(providerDataArray, "Select Provider", providerTextView);
+                showChooseDialog(providerDataArray, "Select Provider", "Cancel", providerTextView);
             }
         });
         planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
         planTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(planDataArray, "Select Plan", planTextView);
+                showChooseDialog(planDataArray, "Select Plan", "Cancel", planTextView);
             }
         });
         cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
         cardTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(cardTypeDataArray, "Select Card Type", cardTypeTextView);
+                showChooseDialog(cardTypeDataArray, "Select Card Type", "Cancel", cardTypeTextView);
             }
         });
 

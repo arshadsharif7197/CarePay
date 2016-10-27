@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:text="@string/choose" />
+            android:text="@string/demographicsChooseLabel" />
 
     </RelativeLayout>
     <View

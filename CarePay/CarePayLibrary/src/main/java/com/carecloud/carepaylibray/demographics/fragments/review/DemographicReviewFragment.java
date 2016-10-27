@@ -662,7 +662,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             if (!getGender.isEmpty()) {
                 selectGender.setText(getGender);
             } else {
-                selectGender.setText(R.string.choose);
+                selectGender.setText(R.string.chooseTextView);
 
             }
 
@@ -670,13 +670,13 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             if (!getRace.isEmpty()) {
                 raceDataTextView.setText(getRace);
             } else {
-                raceDataTextView.setText(R.string.choose);
+                raceDataTextView.setText(R.string.chooseTextView);
             }
             String getethnicity = demographicPersDetailsPayloadDTO.getEthnicity();
             if (!getethnicity.isEmpty()) {
                 ethnicityDataTextView.setText(getethnicity);
             } else {
-                ethnicityDataTextView.setText(R.string.choose);
+                ethnicityDataTextView.setText(R.string.chooseTextView);
             }
 
         } else {

@@ -28,8 +28,6 @@ import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.base.NavigationHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;

@@ -56,7 +56,7 @@ public class DemographicLabelsDTO {
     private String demographicsDetailsDobHint;
 
 //    @SerializedName("demographics_choose") @Expose
-    private String choose;
+    private String demographicsChooseLabel;
 
 //    @SerializedName("demographics_details_capture_picture_caption") @Expose
     private String demographicsProfileCaptureCaption;
@@ -84,6 +84,55 @@ public class DemographicLabelsDTO {
 
     //    @SerializedName("demographics_details_medication_add_unlisted") @Expose
     private String demographicsDetailsMedAddUnlistedLabel;
+
+//    @SerializedName("demographics_documents_header") @Expose
+    public String demographicsDocumentsHeader;
+
+    //    @SerializedName("demographics_documents_subheader") @Expose
+    public String demographicsDocumentsSubheader;
+
+    //    @SerializedName("demographics_documents_switch_insurance") @Expose
+    public String demographicsDocumentsSwitchLabel;
+
+    //    @SerializedName("demographics_documents_multiple_insurances") @Expose
+    public String demographicsDocumentsMultiInsLabel;
+
+    //    @SerializedName("demographics_documents_scan_front") @Expose
+    public String demographicsDocumentsScanFrontLabel;
+
+    //    @SerializedName("demographics_documents_scan_back") @Expose
+    public String demographicsDocumentsScanBackLabel;
+
+    //    @SerializedName("demographics_documents_rescan_front") @Expose
+    public String demographicsDocumentsRescanFrontLabel;
+
+    //    @SerializedName("demographics_documents_rescan_back") @Expose
+    public String demographicsDocumentsRescanBackLabel;
+
+//    @SerializedName("demographics_cancel_label") @Expose
+    public String demographicsCancelLabel;
+
+    //    @SerializedName("demographics_documents_title_select_state") @Expose
+    public String demographicsTitleSelectState;
+
+    //    @SerializedName("demographics_documents_title_select_plan") @Expose
+    public String demographicsTitleSelectPlan;
+
+    //    @SerializedName("demographics_documents_title_select_provider") @Expose
+    public String demographicsTitleSelectProvider;
+
+    //    @SerializedName("demographics_demographics_title_select_gender") @Expose
+    public String demographicsTitleSelectGender;
+
+    //    @SerializedName("demographics_demographics_title_select_ethnicity") @Expose
+    public String demographicsTitleSelectEthnicity;
+
+    //    @SerializedName("demographics_demographics_title_select_race") @Expose
+    public String demographicsTitleSelectRace;
+
+    //    @SerializedName("demographics_demographics_title_select_id_type") @Expose
+    public String demographicsTitleSelectIdType;
+
 
     /**
      *
@@ -275,12 +324,12 @@ public class DemographicLabelsDTO {
         this.demographicsDetailsDobHint = demographicsDetailsDobHint;
     }
 
-    public String getChoose() {
-        return StringUtil.isNullOrEmpty(choose) ? CarePayConstants.NOT_DEFINED : choose;
+    public String getDemographicsChooseLabel() {
+        return StringUtil.isNullOrEmpty(demographicsChooseLabel) ? CarePayConstants.NOT_DEFINED : demographicsChooseLabel;
     }
 
-    public void setChoose(String choose) {
-        this.choose = choose;
+    public void setDemographicsChooseLabel(String demographicsChooseLabel) {
+        this.demographicsChooseLabel = demographicsChooseLabel;
     }
 
     public String getDemographicsProfileCaptureCaption() {
@@ -362,5 +411,149 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsDetailsMedAddUnlistedLabel(String demographicsDetailsMedAddUnlistedLabel) {
         this.demographicsDetailsMedAddUnlistedLabel = demographicsDetailsMedAddUnlistedLabel;
+    }
+
+    public String getDemographicsDocumentsSwitchLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsSwitchLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsSwitchLabel;
+    }
+
+    public void setDemographicsDocumentsSwitchLabel(String demographicsDocumentsSwitchLabel) {
+        this.demographicsDocumentsSwitchLabel = demographicsDocumentsSwitchLabel;
+    }
+
+    public String getDemographicsDocumentsHeader() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsHeader) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsHeader;
+    }
+
+    public void setDemographicsDocumentsHeader(String demographicsDocumentsHeader) {
+        this.demographicsDocumentsHeader = demographicsDocumentsHeader;
+    }
+
+    public String getDemographicsDocumentsSubheader() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsSubheader) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsSubheader;
+    }
+
+    public void setDemographicsDocumentsSubheader(String demographicsDocumentsSubheader) {
+        this.demographicsDocumentsSubheader = demographicsDocumentsSubheader;
+    }
+
+    public String getDemographicsDocumentsMultiInsLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsMultiInsLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsMultiInsLabel;
+    }
+
+    public void setDemographicsDocumentsMultiInsLabel(String demographicsDocumentsMultiInsLabel) {
+        this.demographicsDocumentsMultiInsLabel = demographicsDocumentsMultiInsLabel;
+    }
+
+    public String getDemographicsDocumentsScanFrontLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsScanFrontLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsScanFrontLabel;
+    }
+
+    public void setDemographicsDocumentsScanFrontLabel(String demographicsDocumentsScanFrontLabel) {
+        this.demographicsDocumentsScanFrontLabel = demographicsDocumentsScanFrontLabel;
+    }
+
+    public String getDemographicsDocumentsScanBackLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsScanBackLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsScanBackLabel;
+    }
+
+    public void setDemographicsDocumentsScanBackLabel(String demographicsDocumentsScanBackLabel) {
+        this.demographicsDocumentsScanBackLabel = demographicsDocumentsScanBackLabel;
+    }
+
+    public String getDemographicsDocumentsRescanFrontLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsRescanFrontLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsRescanFrontLabel;
+    }
+
+    public void setDemographicsDocumentsRescanFrontLabel(String demographicsDocumentsRescanFrontLabel) {
+        this.demographicsDocumentsRescanFrontLabel = demographicsDocumentsRescanFrontLabel;
+    }
+
+    public String getDemographicsDocumentsRescanBackLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsRescanBackLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsRescanBackLabel;
+    }
+
+    public void setDemographicsDocumentsRescanBackLabel(String demographicsDocumentsRescanBackLabel) {
+        this.demographicsDocumentsRescanBackLabel = demographicsDocumentsRescanBackLabel;
+    }
+
+    public String getDemographicsCancelLabel() {
+        return StringUtil.isNullOrEmpty(demographicsCancelLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsCancelLabel;
+    }
+
+    public void setDemographicsCancelLabel(String demographicsCancelLabel) {
+        this.demographicsCancelLabel = demographicsCancelLabel;
+    }
+
+    public String getDemographicsTitleSelectState() {
+        return StringUtil.isNullOrEmpty(demographicsTitleSelectState) ?
+                CarePayConstants.NOT_DEFINED : demographicsTitleSelectState;
+    }
+
+    public void setDemographicsTitleSelectState(String demographicsTitleSelectState) {
+        this.demographicsTitleSelectState = demographicsTitleSelectState;
+    }
+
+    public String getDemographicsTitleSelectPlan() {
+        return StringUtil.isNullOrEmpty(demographicsTitleSelectPlan) ?
+                CarePayConstants.NOT_DEFINED : demographicsTitleSelectPlan;
+    }
+
+    public void setDemographicsTitleSelectPlan(String demographicsTitleSelectPlan) {
+        this.demographicsTitleSelectPlan = demographicsTitleSelectPlan;
+    }
+
+    public String getDemographicsTitleSelectProvider() {
+        return StringUtil.isNullOrEmpty(demographicsTitleSelectProvider) ?
+                CarePayConstants.NOT_DEFINED : demographicsTitleSelectProvider;
+    }
+
+    public void setDemographicsTitleSelectProvider(String demographicsTitleSelectProvider) {
+        this.demographicsTitleSelectProvider = demographicsTitleSelectProvider;
+    }
+
+    public String getDemographicsTitleSelectGender() {
+        return StringUtil.isNullOrEmpty(demographicsTitleSelectGender) ?
+                CarePayConstants.NOT_DEFINED : demographicsTitleSelectGender;
+    }
+
+    public void setDemographicsTitleSelectGender(String demographicsTitleSelectGender) {
+        this.demographicsTitleSelectGender = demographicsTitleSelectGender;
+    }
+
+    public String getDemographicsTitleSelectEthnicity() {
+        return StringUtil.isNullOrEmpty(demographicsTitleSelectEthnicity) ?
+                CarePayConstants.NOT_DEFINED : demographicsTitleSelectEthnicity;
+    }
+
+    public void setDemographicsTitleSelectEthnicity(String demographicsTitleSelectEthnicity) {
+        this.demographicsTitleSelectEthnicity = demographicsTitleSelectEthnicity;
+    }
+
+    public String getDemographicsTitleSelectRace() {
+        return StringUtil.isNullOrEmpty(demographicsTitleSelectRace) ?
+                CarePayConstants.NOT_DEFINED : demographicsTitleSelectRace;
+    }
+
+    public void setDemographicsTitleSelectRace(String demographicsTitleSelectRace) {
+        this.demographicsTitleSelectRace = demographicsTitleSelectRace;
+    }
+
+    public String getDemographicsTitleSelectIdType() {
+        return StringUtil.isNullOrEmpty(demographicsTitleSelectIdType) ?
+                CarePayConstants.NOT_DEFINED : demographicsTitleSelectIdType;
+    }
+
+    public void setDemographicsTitleSelectIdType(String demographicsTitleSelectIdType) {
+        this.demographicsTitleSelectIdType = demographicsTitleSelectIdType;
     }
 }

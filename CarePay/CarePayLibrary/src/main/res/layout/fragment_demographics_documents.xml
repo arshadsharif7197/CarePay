@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"/>
 
             <android.support.v7.widget.SwitchCompat
-                android:id="@+id/demographicsInsuranceSwitch"
+                android:id="@+id/demographicsDocumentsInsuranceSwitch"
                 style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_marginStart="0dp"

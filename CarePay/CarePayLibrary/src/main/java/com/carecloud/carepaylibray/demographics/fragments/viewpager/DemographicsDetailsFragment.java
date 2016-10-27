@@ -287,7 +287,7 @@ public class DemographicsDetailsFragment extends Fragment
         dobHint.setText(label);
 
         // init click-ables and dob edit
-        chooseCaption = globalLabelDTO.getChoose();
+        chooseCaption = globalLabelDTO.getDemographicsChooseLabel();
 
         raceTextView = (TextView) view.findViewById(R.id.demogrDetailsRaceListTextView);
         raceTextView.setText(chooseCaption);
@@ -454,15 +454,15 @@ public class DemographicsDetailsFragment extends Fragment
 
     private void updateViewsFromModel() {
         String race = raceTextView.getText().toString();
-        if (!StringUtil.isNullOrEmpty(race) && !race.equals(getString(R.string.choose))) {
+        if (!StringUtil.isNullOrEmpty(race) && !race.equals(getString(R.string.chooseTextView))) {
             persDetailsDTO.setPrimaryRace(race);
         }
         String ethnicity = ethnicityTextView.getText().toString();
-        if (!StringUtil.isNullOrEmpty(ethnicity) && !ethnicity.equals(getString(R.string.choose))) {
+        if (!StringUtil.isNullOrEmpty(ethnicity) && !ethnicity.equals(getString(R.string.chooseTextView))) {
             persDetailsDTO.setEthnicity(ethnicity);
         }
         String gender = genderTextView.getText().toString();
-        if (!StringUtil.isNullOrEmpty(gender) && !gender.equals(getString(R.string.choose))) {
+        if (!StringUtil.isNullOrEmpty(gender) && !gender.equals(getString(R.string.chooseTextView))) {
             persDetailsDTO.setGender(gender);
         }
         // at this point date of birth has been validated (if not empty nor null)
