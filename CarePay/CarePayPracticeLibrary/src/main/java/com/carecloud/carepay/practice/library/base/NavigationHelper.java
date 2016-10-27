@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
+import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
@@ -53,6 +54,12 @@ public class NavigationHelper {
             }
             case NavigationStateConstants.PRACTICE_APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                break;
+            }
+            case NavigationStateConstants.PATIENT_MODE_SPLASH:{
+                intent = new Intent(context, PatientModeSplashActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
