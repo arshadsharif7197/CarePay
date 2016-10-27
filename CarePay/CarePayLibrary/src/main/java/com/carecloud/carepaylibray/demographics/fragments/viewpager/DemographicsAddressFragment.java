@@ -100,6 +100,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_address, container, false);
+
         // used to detect soft keyboard hide/show and thus toggle the next button visible/invisible
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override

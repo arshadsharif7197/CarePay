@@ -205,7 +205,8 @@ public class DemographicLabelsDTO {
      * @return The demographicsAddressSection
      */
     public String getDemographicsAddressSection() {
-        return demographicsAddressSection;
+        return StringUtil.isNullOrEmpty(demographicsAddressSection) ?
+                CarePayConstants.NOT_DEFINED : demographicsAddressSection;
     }
 
     /**
@@ -221,7 +222,8 @@ public class DemographicLabelsDTO {
      * @return The demographicsDetailsSection
      */
     public String getDemographicsDetailsSection() {
-        return demographicsDetailsSection;
+        return StringUtil.isNullOrEmpty(demographicsDetailsSection) ?
+                CarePayConstants.NOT_DEFINED : demographicsDetailsSection;
     }
 
     /**
@@ -237,7 +239,8 @@ public class DemographicLabelsDTO {
      * @return The demographicsDocumentsSection
      */
     public String getDemographicsDocumentsSection() {
-        return demographicsDocumentsSection;
+        return StringUtil.isNullOrEmpty(demographicsDocumentsSection) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsSection;
     }
 
     /**
@@ -253,7 +256,8 @@ public class DemographicLabelsDTO {
      * @return The demographicsUpdatesSection
      */
     public String getDemographicsUpdatesSection() {
-        return demographicsUpdatesSection;
+        return StringUtil.isNullOrEmpty(demographicsUpdatesSection) ?
+                CarePayConstants.NOT_DEFINED : demographicsUpdatesSection;
     }
 
     /**

@@ -85,34 +85,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return infoModel;
     }
 
-    private final String[] fragLabels = {"Address", "Details", "Documents", "All Set"}; // these will come from meta-data
-
-    @Override
-    public int getLayoutRes() {
-        return R.layout.activity_demographics;
-    }
-
-    @Override
-    public int getContentsHolderId() {
-        return R.id.demogr_content_holder;
-    }
-
-    @Override
-    public int getKeyboardHolderId() {
-        return R.id.demogr_keyboard_holder;
-    }
+    private String[] fragLabels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
-        titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
-        toolbar.setTitle("");
-        titleTextView.setText(fragLabels[0]);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
-        (DemographicsActivity.this).setSupportActionBar(toolbar);
 
         // set the language
         Intent intent = getIntent();
@@ -123,8 +100,24 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             Gson gson = new Gson();
             modelGet = gson.fromJson(demographicsModelString, DemographicDTO.class);
         }
+
         // init DTOs
         initDTOsForFragments();
+
+        // init frag labels
+        fragLabels = new String[4];
+        fragLabels[0] = labelsDTO.getDemographicsAddressSection();
+        fragLabels[1] = labelsDTO.getDemographicsDetailsSection();
+        fragLabels[2] = labelsDTO.getDemographicsDocumentsSection();
+        fragLabels[3] = labelsDTO.getDemographicsUpdatesSection();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
+        titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
+        SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
+        toolbar.setTitle("");
+        titleTextView.setText(fragLabels[0]);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
+        (DemographicsActivity.this).setSupportActionBar(toolbar);
 
         // set the progress bar
         ProgressBar demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
@@ -367,5 +360,20 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     public DemographicLabelsDTO getLabelsDTO() {
         return labelsDTO;
+    }
+
+    @Override
+    public int getLayoutRes() {
+        return R.layout.activity_demographics;
+    }
+
+    @Override
+    public int getContentsHolderId() {
+        return R.id.demogr_content_holder;
+    }
+
+    @Override
+    public int getKeyboardHolderId() {
+        return R.id.demogr_keyboard_holder;
     }
 }
