@@ -30,15 +30,21 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsAllergiesAdapter;
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsMedicationsAdapter;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityPersDetailsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.general.MetadataOptionDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
-import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
-import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
+import com.carecloud.carepaylibray.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -46,13 +52,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -383,6 +382,10 @@ public class DemographicsDetailsFragment extends Fragment
         setTypefaces(view);
     }
 
+    /**
+     * Getter
+     * @return The DTO for personal details
+     */
     public DemographicPersDetailsPayloadDTO getPersDetailsDTO() {
         DemographicPayloadDTO payload
                 = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
@@ -484,7 +487,7 @@ public class DemographicsDetailsFragment extends Fragment
         dialog.setTitle(title);
         dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int ii) {
                 dialogInterface.dismiss();
             }
         });
@@ -501,7 +504,7 @@ public class DemographicsDetailsFragment extends Fragment
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long ll) {
                 switch (selectedArray) {
                     case 1:
                         String race = dataArray[position];
@@ -517,6 +520,8 @@ public class DemographicsDetailsFragment extends Fragment
                         String gender = dataArray[position];
                         genderTextView.setText(gender);
                         persDetailsDTO.setGender(gender);
+                    default:
+                        break;
                 }
                 alert.dismiss();
             }

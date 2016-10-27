@@ -1,4 +1,5 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.labels;
+
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
@@ -8,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Jahirul Bhuiyan on 9/19/2016.
  * MOdel for label.
  */
+
 public class DemographicLabelsDTO {
     @SerializedName("demographics_update_button") @Expose
     private String demographicsUpdateButton;

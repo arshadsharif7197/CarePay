@@ -15,21 +15,18 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.data_models.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
  * Created by lsoco_user on 9/17/2016.
@@ -41,14 +38,13 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     private ImageCaptureHelper               imageCaptureHelper;
     private Button                           buttonChangeCurrentPhoto;
     private DemographicPersDetailsPayloadDTO model;
-    private DemographicLabelsDTO             labelsMetaDTO;
     private String                           recaptureCaption;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // set label for capture button
-        labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        DemographicLabelsDTO labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
         String captureCaption = labelsMetaDTO.getDemographicsProfileCaptureCaption();
         recaptureCaption = labelsMetaDTO.getDemographicsProfileReCaptureCaption();
 
