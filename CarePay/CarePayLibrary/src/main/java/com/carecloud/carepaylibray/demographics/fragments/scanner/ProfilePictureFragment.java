@@ -23,10 +23,11 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
  * Created by lsoco_user on 9/17/2016.
@@ -44,7 +45,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // set label for capture button
-        DemographicLabelsDTO labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        final DemographicLabelsDTO labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
         String captureCaption = labelsMetaDTO.getDemographicsProfileCaptureCaption();
         recaptureCaption = labelsMetaDTO.getDemographicsProfileReCaptureCaption();
 

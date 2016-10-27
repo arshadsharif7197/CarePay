@@ -27,10 +27,7 @@ class DemographicTransitionsDataObjectDTO {
 
     @SerializedName("updates")
     @Expose
-    // TODO
     private Object updates;
-
-
 
     /**
      *

@@ -91,7 +91,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private void getOptions() {
         // init states
-        // TODO: 10/27/2016 read from options instead
         states = new String[]{
                 "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
                 "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",

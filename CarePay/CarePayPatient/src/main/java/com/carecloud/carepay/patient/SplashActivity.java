@@ -35,6 +35,10 @@ public class SplashActivity extends Activity {
         //setTheme(R.style.AppThemeNoActionBar);
         Message msg = new Message();
         msg.what = STOPSPLASH;
+        // TODO: 10/25/2016 remove
+        CognitoAppHelper.getPool().getUser().signOut(); // log out
+        CognitoAppHelper.setUser(null);
+
         splashHandler.sendMessageDelayed(msg, SPLASHTIME);
     }
 

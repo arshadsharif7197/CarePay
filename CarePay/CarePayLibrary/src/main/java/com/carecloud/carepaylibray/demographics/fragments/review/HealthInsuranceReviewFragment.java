@@ -24,7 +24,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -32,6 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoMetaDataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;

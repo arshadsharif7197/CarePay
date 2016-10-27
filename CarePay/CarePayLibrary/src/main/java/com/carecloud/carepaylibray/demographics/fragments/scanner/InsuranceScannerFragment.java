@@ -199,8 +199,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
         planDataArray = plans.toArray(new String[0]);
 
-        // TODO: 10/27/2016 add options in json
         cardTypeDataArray = getResources().getStringArray(R.array.cardtypes);
+        // potions must be read from json
     }
 
     @Override

@@ -28,7 +28,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoMetaDataDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoModel;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
@@ -78,7 +78,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private ProgressBar demographicProgressBar;
 
     private DemographicPayloadResponseDTO        demographicPayloadResponseDTO;
-    private DemographicPayloadInfoModel          demographics;
+    private DemographicPayloadInfoDTO            demographics;
     private DemographicPayloadInfoMetaDataDTO    metadamodel;
     private DemographicPayloadDTO                payloadinfomodel;
     private DemographicPersDetailsPayloadDTO     demographicPersDetailsPayloadDTO;

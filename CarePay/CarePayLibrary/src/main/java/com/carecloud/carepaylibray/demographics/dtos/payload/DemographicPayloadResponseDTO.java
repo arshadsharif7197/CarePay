@@ -10,13 +10,13 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicPayloadResponseDTO {
     @SerializedName("demographics")
     @Expose
-    private DemographicPayloadInfoModel demographics;
+    private DemographicPayloadInfoDTO demographics;
 
-    public DemographicPayloadInfoModel getDemographics() {
+    public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
     }
 
-    public void setDemographics(DemographicPayloadInfoModel demographics) {
+    public void setDemographics(DemographicPayloadInfoDTO demographics) {
         this.demographics = demographics;
     }
 

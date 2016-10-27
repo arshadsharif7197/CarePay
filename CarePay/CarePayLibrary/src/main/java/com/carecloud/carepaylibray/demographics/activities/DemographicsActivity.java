@@ -31,7 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoModel;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
@@ -76,7 +76,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         if (modelGet != null) {
             DemographicPayloadResponseDTO response = modelGet.getPayload();
             if (response != null) {
-                DemographicPayloadInfoModel infoModelPayload = response.getDemographics();
+                DemographicPayloadInfoDTO infoModelPayload = response.getDemographics();
                 if (infoModelPayload != null) {
                     infoModel = infoModelPayload.getPayload();
                 }

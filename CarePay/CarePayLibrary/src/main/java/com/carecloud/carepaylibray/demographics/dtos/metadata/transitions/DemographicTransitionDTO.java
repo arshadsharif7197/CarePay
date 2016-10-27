@@ -11,5 +11,4 @@ class DemographicTransitionDTO extends BaseTransitionsModel {
     public DemographicTransitionsDataObjectDTO getData(){
         return super.getData(DemographicTransitionsDataObjectDTO.class);
     }
-
 }

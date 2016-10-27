@@ -349,13 +349,33 @@ public class DateUtil {
     }
 
     /**
-     * Format a date as mm/dd/yyyy
+     * Verify if a date has mm/dd/yyyy format
      *
      * @param dateString The date whose format is to be changed
      * @return The dat in the new format as a string
      */
     public static boolean isValidateStringDateMMDDYYYY(String dateString) {
         String formatString = "MM/dd/yyyy";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
+            format.setLenient(false);
+            format.parse(dateString);
+        } catch (ParseException e) {
+            return false;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Verifies if a date has a certain format
+     *
+     * @param formatString The format string
+     * @param dateString The date whose format is to be changed
+     * @return The dat in the new format as a string
+     */
+    public static boolean isValidateStringDate(String dateString, String formatString) {
         try {
             SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
             format.setLenient(false);
