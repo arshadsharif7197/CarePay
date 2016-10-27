@@ -8,10 +8,9 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by lsoco_user on 10/24/2016.
  * DTO for an allowed operation on a metadata entity
- *
  * 'labelMeta' is undefined as
  */
-public class MetadataAllowedOpDTO {
+class MetadataAllowedOpDTO {
     @SerializedName("name") @Expose
     public String name;
 
