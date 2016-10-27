@@ -86,4 +86,12 @@
     <color name="manatee_lite">#4Dd7d7d7</color>
 
     <color name="change_mode_divider_color">#0295d7</color>
+
+    <!-- Custom Appointment Detail Dialog -->
+    <color name="charcoal_78">#c637474f</color>
+    <color name="taupe_gray_78">#c6848e93</color>
+    <color name="rose_madder">#ffe22b41</color>
+    <color name="manatee_20">#32979797</color>
+    <color name="timberwolf_20">#32d8d8d8</color>
+    <color name="timberwolf">#ffd8d8d8</color>
 </resources>
