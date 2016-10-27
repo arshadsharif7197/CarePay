@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLab
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customdialogs.CancelAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -85,7 +86,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             final AppointmentsPayloadDTO item = ((AppointmentDTO) object).getPayload();
             holder.doctorName.setText(item.getProvider().getName());
-            holder.doctorType.setText(item.getProvider().getSpecialty());
+            holder.doctorType.setText(item.getProvider().getSpecialty().getName());
 
             // Date of Upcoming appointment
             String upcomingStartTime = item.getStartTime();
@@ -106,7 +107,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 if(isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckedInLabel()));
+                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(
+                            appointmentLabels.getAppointmentsCheckedInLabel()));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
@@ -121,7 +123,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                 if(isCheckedIn) {
-                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckedInLabel()));
+                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(
+                            appointmentLabels.getAppointmentsCheckedInLabel()));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
                     holder.todayTimeTextView.setText(time12Hour);
@@ -139,12 +142,16 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         AppointmentDTO item = ((AppointmentDTO) object);
                         AppointmentsActivity.model = item;
 
-                        if (isPending) {
-                            new CheckInOfficeNowAppointmentDialog(context, item).show();
-                        } else if (isCheckedIn) {
-                            new QueueAppointmentDialog(context, item).show();
+                        if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)) {
+                            new CancelAppointmentDialog(context, item).show();
                         } else {
-                            new CheckInOfficeNowAppointmentDialog(context, item).show();
+                            if (isPending) {
+                                new CheckInOfficeNowAppointmentDialog(context, item).show();
+                            } else if (isCheckedIn) {
+                                new QueueAppointmentDialog(context, item).show();
+                            } else {
+                                new CheckInOfficeNowAppointmentDialog(context, item).show();
+                            }
                         }
                     }
                 }
@@ -173,7 +180,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)) {
                 holder.missedAppointmentTextView.setVisibility(View.VISIBLE);
-                holder.missedAppointmentTextView.setText(StringUtil.getLabelForView(appointmentLabels.getMissedAppointmentsHeading()));
+                holder.missedAppointmentTextView.setText(StringUtil.getLabelForView(
+                        appointmentLabels.getMissedAppointmentsHeading()));
                 holder.missedAppointmentTextView.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
 
@@ -200,13 +208,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             }
         } else {
             AppointmentSectionHeaderModel item = (AppointmentSectionHeaderModel) object;
-            String title = item.getAppointmentHeader();
-            if (title.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
-                    title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-                title = StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
-            } else {
-                title = StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
-            }
+            String title = getSectionHeaderTitleByDay(item.getAppointmentHeader());
 
             if (position == 0) {
                 holder.appointmentSectionLinearLayout.setVisibility(View.GONE);
@@ -221,6 +223,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.appointmentSectionLinearLayout.setVisibility(View.VISIBLE);
                 holder.appointmentItemLinearLayout.setVisibility(View.GONE);
                 holder.appointmentSectionHeaderTitle.setText(title);
+                holder.appointmentSectionHeaderTitle.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
             }
         }
 
@@ -252,22 +255,27 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             if (isCheckedIn) {
                                 appointmentStickyHeaderTitle.setVisibility(View.GONE);
                             } else {
-                                String sectionHeaderTitle = getSectionHeaderTitle(item.getPayload().getStartTime());
-                                if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
-                                        sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-                                    sectionHeaderTitle = StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
-                                } else {
-                                    sectionHeaderTitle = StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
-                                }
+                                String sectionHeaderTitle = getSectionHeaderTitleByDay(
+                                        getSectionHeaderTitle(item.getPayload().getStartTime()));
 
                                 appointmentStickyHeaderTitle.setText(sectionHeaderTitle);
                                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
+                                appointmentStickyHeaderTitle.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                             }
                         }
                     }
                 }
             }
         });
+    }
+
+    private String getSectionHeaderTitleByDay(String day) {
+        if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
+                day.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+            return StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
+        } else {
+            return StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
+        }
     }
 
     /**
@@ -334,6 +342,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
 
             shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
+            shortName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
+
             cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
             profileImage = (ImageView) itemView.findViewById(R.id.providerPicImageView);
 

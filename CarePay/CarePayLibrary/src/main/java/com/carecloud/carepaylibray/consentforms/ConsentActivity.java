@@ -7,27 +7,82 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.activities.SignatureActivity;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm1Fragment;
 import com.carecloud.carepaylibray.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
+import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
+import com.carecloud.carepaylibray.consentforms.services.ConsentFormService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.intake.activities.InTakeActivity;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
+
+
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
 
+
+    private ConsentFormLabelsDTO consentFormLabelsDTO;
+
+
+    private AppointmentsPayloadDTO appointmentsPayloadDTO;
+    private AppointmentsResultModel appointmentsResultModel;
+
+
+    private ConsentFormDTO consentFormDTO;
+    private ConsentFormMetadataDTO consentFormMetadataDTO;
     private TextView title;
     private FormId showingForm = FormId.FORM1;
     private View indicator0, indicator1, indicator2;
+
+    private String authorizationTitle;
+    private String medicareTitle;
+    private String hippaTitle;
+    private String medicareDescription;
+    private String authorizationDescription1;
+    private String authorizationDescription2;
+    private String hippaDescription;
+    private String readCarefullySign;
+    private String consentMainTitle;
+    private String signAuthLabel;
+    private String signMedicareLabel;
+    private String signHippaLabel;
+    private String legalFirstNameLabel;
+    private String legalLastNameLabel;
+    private String clearSignLabel;
+    private String beforeSignWarning;
+    private String unabletoSignLabel;
+    private String signButtonLabel;
+    private String patientSignLabel;
+    private String legalsignLabel;
+    private String providerName;
+    private String patienFirstName;
+    private String patientLastName;
+    private String medicareForm;
+    private String authForm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +97,13 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
         setGothamRoundedMediumTypeface(this, title);
-        toolbar.setTitle("");
+
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(toolbar);
 
-        replaceFragment(getConsentForm(), false);
+        getConsentFormInformation();
+
+
     }
 
     private void replaceFragment(Fragment fragment, boolean addToBackStack) {
@@ -61,14 +118,26 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     @Override
     public void signButtonClicked() {
         Intent intent = new Intent(this, SignatureActivity.class);
-        intent.putExtra("consentform", showingForm);
-        if (showingForm == FormId.FORM1)
-            intent.putExtra("Header_Title", "Sign Consent For Medical Care");
-        else if (showingForm == FormId.FORM2)
-            intent.putExtra("Header_Title", "Sign Authorization Form");
-        else
-            intent.putExtra("Header_Title", "Sign HIPPA Confidentiality Agreement");
+        intent.putExtra("legalFirstName", legalFirstNameLabel);
+        intent.putExtra("legalLastName", legalLastNameLabel);
+        intent.putExtra("signclearbutton", clearSignLabel);
+        intent.putExtra("unabletosign", unabletoSignLabel);
+        intent.putExtra("confirmsign", signButtonLabel);
+        intent.putExtra("beforesignwarnig", beforeSignWarning);
+        intent.putExtra("patientsign", patientSignLabel);
+        intent.putExtra("legalsign", legalsignLabel);
 
+//       intent.putExtra("consentform", (Serializable) consentFormDTO);
+
+        intent.putExtra("consentform", showingForm);
+        if (showingForm == FormId.FORM1) {
+            intent.putExtra("Header_Title", signMedicareLabel);
+
+        } else if (showingForm == FormId.FORM2) {
+            intent.putExtra("Header_Title", signAuthLabel);
+        } else {
+            intent.putExtra("Header_Title", signHippaLabel);
+        }
         startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
 
     }
@@ -80,7 +149,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         if (requestCode == CarePayConstants.SIGNATURE_REQ_CODE) {
             if (SignatureActivity.isBackButtonClicked) {
                 SignatureActivity.isBackButtonClicked = false;
-            }else {
+            } else {
                 Fragment fragment = getNextConsentForm();
                 if (fragment != null) {
                     replaceFragment(fragment, true);
@@ -92,7 +161,110 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         }
     }
 
+    private void getConsentFormInformation() {
+
+        ConsentFormService apptService = (new BaseServiceGenerator(getApplicationContext()))
+                .createService(ConsentFormService.class);
+        Call<ConsentFormDTO> call = apptService.fetchConnsentFormInformation();
+        call.enqueue(new Callback<ConsentFormDTO>() {
+            @Override
+            public void onResponse(Call<ConsentFormDTO> call, Response<ConsentFormDTO> response) {
+                if (response.code() == 200) {
+                    //   demographicProgressBar.setVisibility(View.GONE);
+                    consentFormDTO = response.body();
+                    if (consentFormDTO != null) {
+
+                        consentFormMetadataDTO = consentFormDTO.getMetadata();
+
+                        if (consentFormMetadataDTO != null) {
+                            consentFormLabelsDTO = consentFormMetadataDTO.getLabel();
+
+                            if (consentFormLabelsDTO != null) {
+                                authorizationTitle = consentFormLabelsDTO.getAuthorizationFormTitle();
+                                medicareTitle = consentFormLabelsDTO.getConsentForMedicareTitle();
+                                hippaTitle = consentFormLabelsDTO.getHipaaAgreementTitle();
+                                medicareDescription = consentFormLabelsDTO.getConsentForMedicareText();
+                                readCarefullySign = consentFormLabelsDTO.getConsentReadCarefullyWarning();
+                                authorizationDescription1 = consentFormLabelsDTO.getAuthorizationGrantText();
+                                authorizationDescription2 = consentFormLabelsDTO.getAuthorizationLegalText();
+                                hippaDescription = consentFormLabelsDTO.getHipaaConfidentialityAgreementText();
+                                consentMainTitle = consentFormLabelsDTO.getConsentMainTitle();
+                                signAuthLabel = consentFormLabelsDTO.getSignAuthorizationFormTitle();
+                                signMedicareLabel = consentFormLabelsDTO.getSignConsentForMedicareTitle();
+                                signHippaLabel = consentFormLabelsDTO.getSignHipaaAgreementTitle();
+                                legalFirstNameLabel = consentFormLabelsDTO.getLegalFirstNameLabel();
+                                legalLastNameLabel = consentFormLabelsDTO.getLegalLastNameLabel();
+                                clearSignLabel = consentFormLabelsDTO.getSignClearButton();
+                                signButtonLabel = consentFormLabelsDTO.getConfirmSignatureButton();
+                                unabletoSignLabel = consentFormLabelsDTO.getUnableToSignText();
+                                beforeSignWarning = consentFormLabelsDTO.getBeforeSignatureWarningText();
+                                legalsignLabel = consentFormLabelsDTO.getLegalSignatureLabel();
+                                patientSignLabel = consentFormLabelsDTO.getPatientSignatureHeading();
+                                formbuilder();
+
+                                replaceFragment(getConsentForm(), false);
+                                Log.d(LOG_TAG, "consent form information");
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ConsentFormDTO> call, Throwable throwable) {
+                Log.d(LOG_TAG, "consent form information failed", throwable);
+            }
+        });
+
+        AppointmentService aptService = (new BaseServiceGenerator(getApplicationContext())).createService(AppointmentService.class);
+        Call<AppointmentsResultModel> callapp = aptService.getAppointmentsList();
+        callapp.enqueue(new Callback<AppointmentsResultModel>() {
+            @Override
+            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
+                appointmentsResultModel = response.body();
+                if (appointmentsResultModel.getMetadata() != null) {
+                    if (appointmentsPayloadDTO.getPatient() != null) {
+                        patienFirstName = appointmentsPayloadDTO.getPatient().getFirstName();
+                        patientLastName = appointmentsPayloadDTO.getPatient().getLastName();
+                    } else {
+                        Log.d(LOG_TAG, "consent form information failed");
+                    }
+                    if (appointmentsPayloadDTO.getProvider() != null) {
+                        providerName = appointmentsPayloadDTO.getProvider().getName();
+                    } else {
+                        Log.d(LOG_TAG, "consent form information failed");
+                    }
+                } else {
+                    Log.d(LOG_TAG, "consent form information failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
+                Log.d(LOG_TAG, "consent form information failed", throwable);
+            }
+
+        });
+    }
+
+
+    private void formbuilder() {
+        // insert the patient's first and last names
+        int indexFirstComma = medicareDescription.indexOf(',');
+        String upToFirstCommaSubstring = medicareDescription.substring(0, indexFirstComma + 1);
+        String fromSecCommaOnSubstring = medicareDescription.substring(medicareDescription.indexOf(',', indexFirstComma + 1), medicareDescription.length());
+        medicareForm = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstCommaSubstring, patienFirstName, patientLastName, fromSecCommaOnSubstring);
+
+        int indexFirstPercent = authorizationDescription2.indexOf('%');
+        String upToFirspercentSubstring = authorizationDescription2.substring(0, indexFirstPercent);
+        String fromSecpercentOnSubstring = authorizationDescription2.substring(authorizationDescription2.indexOf(',', indexFirstComma + 1), authorizationDescription2.length());
+        authForm = String.format(Locale.getDefault(), "%s %s %s", upToFirspercentSubstring, providerName, fromSecpercentOnSubstring);
+    }
+
     private Fragment getConsentForm() {
+
         if (showingForm == FormId.FORM1) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form1"));
@@ -119,26 +291,27 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
 
     /**
      * Updates the title to show the form number and the corresponding bulleted tab
+     *
      * @param currentForm The id of the current form
      */
     private void updateTitle(FormId currentForm) {
         switch (currentForm) {
             case FORM1:
-                title.setText("Consent Form 1 of 3");
+                title.setText(consentMainTitle + "1 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_gray);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_gray);
                 break;
 
             case FORM2:
-                title.setText("Consent Form 2 of 3");
+                title.setText(consentMainTitle + " 2 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_gray);
                 break;
 
             case FORM3:
-                title.setText("Consent Form 3 of 3");
+                title.setText(consentMainTitle + " 3 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_blue);
@@ -148,34 +321,35 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
 
     private FormData getConsentFormData(String formName) {
         FormData formData = new FormData();
-
         DateUtil.getInstance().setToCurrent(); // set the date to current
         if (formName.equals("form1")) {
-            formData.setTitle("Consent for Medical Care");
-            formData.setDescription("Please fill in this form about general cardiac symptoms you may have had in the past.");
-            formData.setContent("I, Sarah Hughes, understand that I have a condition thar requires medical treatment. Lorem ipsum dolor sit amet. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas sed diam eget risus varius blandit sit amet non magna.\n" +
-                                        "Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere consectetur est at lobortis.");
+            formData.setTitle(medicareTitle);
+            formData.setDescription(readCarefullySign);
+            formData.setContent(medicareForm);
+            formData.setButtonLabel(signMedicareLabel.toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else if (formName.equals("form2")) {
-            formData.setTitle("Authorization Form");
-            formData.setDescription("Please read this form carefully and completely before signing it.");
-            formData.setContent("This form grants temporary authority to a designated adult to provide and arrange for medical care for a minor in the event of an emergency, where the minor is not accompanied by either parents or legal guardians, and it may not be feasible or practical to contact them. This form should be given to the trip leader or shown to the trip leader and then carried by the designated adult.");
-            formData.setContent2("I do hereby state that I have legal custody of the aforementioned Minor. I grant my authorization and consent for Dr. Joshua Wellington to administer general first aid treatment for any minor injuries or illnesses experienced by the Minor. If the injury or illness is life threatening or in need of emergency treatment, I authorize the Designated Adult to summon any and all professional emergency personnel to attend, transport, and treat the minor and to issue consent for any X-ray, anesthetic, blood transfusion, medication, or other medical diagnosis, treatment, or hospital care deemed advisable by, and to be rendered under the general supervision of, any licensed physician, surgeon, dentist, hospital, or other medical professional or institution duly licensed to practice in the state in which such treatment is to occur. I agree to assume financial responsibility for all expenses of such care. \n" +
-                                         "It is understood that this authorization is given in advance of any such medical treatment, but is given to provide authority and power on the part of the Designated Adult in the exercise of his or her best judgment upon the advice of any such medical or emergency personnel.");
+            formData.setTitle(authorizationTitle);
+            formData.setDescription(readCarefullySign);
+            formData.setContent(authorizationDescription1);
+            formData.setContent2(authForm);
+            formData.setButtonLabel(signAuthLabel.toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else { //form3
-            formData.setTitle("HIPAA Confidentiality Agreement");
-            formData.setDescription("Please read this form carefully and completely before signing it.");
-            formData.setContent("Employees and partners of the practice will have access to confidential information, both written and oral, in the course of their employment and job responsibilities. It is imperative that this information is not disclosed to any unauthorized individuals to maintain the integrity of the patient information. An unauthorized individual would be any person that is not currently an employee of the practice and/or any information. Any other disclosures may only occur at the direction may only occur at the direction of the Privacy Office or by patient authorization. \n" +
-                                        "I have read and understand the practice’s policies with regards to privacy and Security of personal health information. I agree to maintain confidentiality of all information obtained in the course of my employment including, but not limited to, financial, technical, or propriety information of the organization and personal and sensitive information regarding patients, employees, and vendors. I understand that inappropriate disclosure or release of patient information is grounds for termination.");
+            formData.setTitle(hippaTitle);
+            formData.setDescription(readCarefullySign);
+            formData.setContent(hippaDescription);
+            formData.setButtonLabel(signHippaLabel.toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         }
+
         return formData;
+
     }
 
     private Fragment getNextConsentForm() {
         showingForm = showingForm.next();
-        if(showingForm != FormId.NONE) {
+        if (showingForm != FormId.NONE) {
             return getConsentForm();
         }
         return null;
@@ -184,7 +358,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     @Override
     public void onBackPressed() {
         showingForm = showingForm.prev();
-        if(showingForm != FormId.NONE) {
+        if (showingForm != FormId.NONE) {
             updateTitle(showingForm);
         }
         super.onBackPressed();
@@ -192,7 +366,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return true;
@@ -208,9 +382,9 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
          * Go to next
          */
         public FormId next() {
-            if(this.equals(FORM1)) {
+            if (this.equals(FORM1)) {
                 return FORM2;
-            } else if(this.equals(FORM2)){
+            } else if (this.equals(FORM2)) {
                 return FORM3;
             }
             return NONE;
@@ -220,12 +394,38 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
          * Go to prev
          */
         public FormId prev() {
-            if(this.equals(FORM3)) {
+            if (this.equals(FORM3)) {
                 return FORM2;
-            } else if(this.equals(FORM2)){
+            } else if (this.equals(FORM2)) {
                 return FORM1;
             }
             return NONE;
         }
     }
+
+    public ConsentFormLabelsDTO getConsentFormLabelsDTO() {
+        return consentFormLabelsDTO;
+    }
+
+    public void setConsentFormLabelsDTO(ConsentFormLabelsDTO consentFormLabelsDTO) {
+        this.consentFormLabelsDTO = consentFormLabelsDTO;
+
+    }
+
+    public ConsentFormDTO getConsentFormDTO() {
+        return consentFormDTO;
+    }
+
+    public void setConsentFormDTO(ConsentFormDTO consentFormDTO) {
+        this.consentFormDTO = consentFormDTO;
+    }
+
+    public AppointmentsPayloadDTO getAppointmentsPayloadDTO() {
+        return appointmentsPayloadDTO;
+    }
+
+    public void setAppointmentsPayloadDTO(AppointmentsPayloadDTO appointmentsPayloadDTO) {
+        this.appointmentsPayloadDTO = appointmentsPayloadDTO;
+    }
+
 }

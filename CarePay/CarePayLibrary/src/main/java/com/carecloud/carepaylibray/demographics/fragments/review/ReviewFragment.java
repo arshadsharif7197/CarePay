@@ -161,7 +161,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                     }
                                     String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
                                     if (datetime != null) {
-                                        String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyy();
+                                        String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
                                         dobTExtView.setText(dateOfBirthString);
                                     }
                                     String gender=demographicPersDetailsPayloadDTO.getGender();

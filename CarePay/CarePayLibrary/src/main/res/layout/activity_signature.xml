@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/munsell"
@@ -26,13 +27,12 @@
             android:id="@+id/switchButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/descriptionTv"
+            android:layout_below="@+id/beforesignwarnigTextView"
             android:layout_marginLeft="@dimen/marginleftright"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
             android:layout_marginRight="@dimen/marginleftright"
             android:layout_marginTop="@dimen/margintop"
-            android:text="I'm unable to sign"
             android:textColor="@color/charcoal"
             android:textSize="17sp" />
         <View
@@ -50,17 +50,21 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/switchButton"
             android:layout_marginTop="10dp"
-            style="@style/TextInputLayoutStyle">
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            style="@style/TextInputLayoutStyle"
+            android:visibility="gone">
         <EditText
             android:id="@+id/legalFirstNameET"
             style="@style/SigninSignupEditStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint"
             android:layout_below="@+id/switchButton"
             android:layout_marginStart="@dimen/marginleftright"
             android:layout_marginEnd="@dimen/marginleftright"
             android:imeOptions="actionNext"
+            app:customAssetFont="proxima_nova_regular"
+            android:inputType="textPersonName"
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
             android:visibility="gone"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -70,6 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/legalFirstName"
             style="@style/TextInputLayoutStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/consentform_textinput_margintop">
             <EditText
                 android:id="@+id/legalLastNameET"
@@ -78,7 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginleftright"
                 android:layout_marginEnd="@dimen/marginleftright"
-                android:hint="@string/hint_last"
+                app:customAssetFont="proxima_nova_regular"
+                android:inputType="textPersonName"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
                 android:layout_below="@+id/legalFirstName"
                 android:imeOptions="actionDone"
                 android:visibility="gone"/>
@@ -106,17 +114,15 @@
             android:layout_marginBottom="@dimen/marginleftright"
             android:background="@drawable/button_selector"
             android:enabled="false"
-            android:text="@string/yes_sig"
             android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/descriptionTv"
+            android:id="@+id/beforesignwarnigTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginLeft="@dimen/marginleftright"
             android:layout_marginRight="@dimen/marginleftright"
-            android:text="Make sure you’ve read the whole consent form and sign in the box below. If you're unable to sign, you can ask for a legal representative to sign for you."
             android:textColor="@color/cadet_gray"
             android:textSize="@dimen/demographics_docs_button_text_size"
             android:layout_below="@+id/titleTv"

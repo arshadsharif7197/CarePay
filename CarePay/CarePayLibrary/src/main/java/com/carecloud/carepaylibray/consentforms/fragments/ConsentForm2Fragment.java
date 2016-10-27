@@ -24,12 +24,20 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.ConsentActivity;
 import com.carecloud.carepaylibray.consentforms.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDataModelDTO;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorDateofBirthDTO;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorFirstNameDTO;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorGenderDTO;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorLastNameDTO;
+import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -37,7 +45,6 @@ import java.util.Date;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
@@ -45,6 +52,9 @@ public class ConsentForm2Fragment extends Fragment {
 
     private TextView titleTextView, descriptionTextView, contentTextView, content2TextView, dateTextView,
             dobTextView, chooseGenderTextView;
+    private TextView minorDOB;
+    private TextView minorInformation;
+
     private TextInputLayout minorFirstNameTextView;
     private TextInputLayout minorLastNameTextView;
     private Button signButton;
@@ -53,7 +63,32 @@ public class ConsentForm2Fragment extends Fragment {
     private ScrollView consentFormScrollView;
     private EditText minorFirstNameEditText, minorLastNameEditText;
     private String[] gender = {"Male", "Female"};
-    Date date=new Date();
+
+    private TextView minorGender;
+
+    private ConsentFormDTO consentFormDTO;
+    private ConsentFormDataModelDTO consentFormDataModelDTO;
+    private ConsentFormLabelsDTO consentFormLabelsDTO;
+    private ConsentFormMinorFirstNameDTO consentFormMinorFirstNameDTO;
+    private ConsentFormMinorLastNameDTO consentFormMinorLastNameDTO;
+    private ConsentFormMinorDateofBirthDTO consentFormMinorDateofBirthDTO;
+    private ConsentFormMinorGenderDTO consentFormMinorGenderDTO;
+    private AppointmentsPayloadDTO appointmentsPayloadDTO;
+    Date date = new Date();
+
+    private String firstNameLabel;
+    private String lastNameLabel;
+    private String genderLabel;
+    private String minordobLabel;
+    private String nextButtonLabel;
+    private String maleLabel;
+    private String femaleLabel;
+    private String selectGenderLabel;
+    private String selectDateLabel;
+    private String minorInformationLabel;
+    private String providerName;
+    private String patienFirstName;
+    private String patientLastName;
 
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -72,16 +107,22 @@ public class ConsentForm2Fragment extends Fragment {
         dateTextView = (TextView) view.findViewById(R.id.dateTv);
         signButton = (Button) view.findViewById(R.id.signButton);
         signButton.setEnabled(false);
+        minorDOB = (TextView) view.findViewById(R.id.minor_dateofbirth);
+        minorGender = (TextView) view.findViewById(R.id.minor_gender);
+        minorInformation = (TextView) view.findViewById(R.id.minor_information);
         minorFirstNameTextView = (TextInputLayout) view.findViewById(R.id.text_input_layout);
         minorLastNameTextView = (TextInputLayout) view.findViewById(R.id.minorLastName);
         minorFirstNameEditText = (EditText) view.findViewById(R.id.minorFirstNameET);
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
         dobTextView = (TextView) view.findViewById(R.id.dobET);
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
+        initViewFromModels();
+        getLabels();
         setTypefaces(view);
-        setTextListeners();
+        setEditTexts();
         onClickListners();
         setEnableNextButtonOnFullScroll();
+
 
         return view;
     }
@@ -116,6 +157,8 @@ public class ConsentForm2Fragment extends Fragment {
         contentTextView.setText(formData.getContent());
         content2TextView.setText(formData.getContent2());
         dateTextView.setText(formData.getDate());
+        signButton.setText(formData.getButtonLabel());
+        initviews();
     }
 
     private void showAlertDialogWithListview(final String[] genderArray, String title) {
@@ -142,11 +185,11 @@ public class ConsentForm2Fragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (position) {
                     case 0:
-                        chooseGenderTextView.setText("Male");
+                        chooseGenderTextView.setText(maleLabel);
                         isGenderSelected = true;
                         break;
                     case 1:
-                        chooseGenderTextView.setText("Female");
+                        chooseGenderTextView.setText(femaleLabel);
                         isGenderSelected = true;
                         break;
 
@@ -156,12 +199,14 @@ public class ConsentForm2Fragment extends Fragment {
         });
     }
 
-    private void onClickListners(){
+    private void onClickListners() {
         dobTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
-                DatePickerDialog datepickerDialog = new DatePickerDialog(getActivity(), myDateListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+                DatePickerDialog datepickerDialog = new DatePickerDialog(getActivity(),
+                        myDateListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1,
+                        cal.get(Calendar.DAY_OF_MONTH));
                 datepickerDialog.show();
                 datepickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             }
@@ -176,50 +221,91 @@ public class ConsentForm2Fragment extends Fragment {
 
     }
 
-    private void setTextListeners() {
+    private void initViewFromModels() {
+
+        consentFormDTO = ((ConsentActivity) getActivity())
+                .getConsentFormDTO();
+
+        consentFormLabelsDTO = ((ConsentActivity) getActivity())
+                .getConsentFormLabelsDTO();
+
+        appointmentsPayloadDTO = ((ConsentActivity) getActivity()).getAppointmentsPayloadDTO();
+
+
+    }
+
+
+    private void getLabels() {
+
+        consentFormMinorFirstNameDTO = consentFormDTO.getMetadata().getDataModels().getPost()
+                .getConsentForAuthorization().getProperties().getMinorFirstName();
+
+        consentFormMinorLastNameDTO = consentFormDTO.getMetadata().getDataModels().getPost()
+                .getConsentForAuthorization().getProperties().getMinorLastName();
+
+        consentFormMinorGenderDTO = consentFormDTO.getMetadata().getDataModels().getPost()
+                .getConsentForAuthorization().getProperties().getMinorGender();
+
+        consentFormMinorDateofBirthDTO = consentFormDTO.getMetadata().getDataModels().getPost()
+                .getConsentForAuthorization().getProperties().getMinorDateOfBirth();
+
+        firstNameLabel = consentFormMinorFirstNameDTO.getLabel();
+        lastNameLabel = consentFormMinorLastNameDTO.getLabel();
+        nextButtonLabel = consentFormLabelsDTO.getSignAuthorizationFormTitle().toUpperCase();
+        genderLabel = consentFormMinorGenderDTO.getLabel();
+        minordobLabel = consentFormMinorDateofBirthDTO.getLabel();
+        selectGenderLabel = consentFormLabelsDTO.getSelectGenderLabel();
+        minorInformationLabel = consentFormLabelsDTO.getMinorsInformation();
+        selectDateLabel = consentFormLabelsDTO.getSelectDateLabel();
+        maleLabel = consentFormMinorGenderDTO.getOptions().get(0).toString();
+        femaleLabel = consentFormMinorGenderDTO.getOptions().get(1).toString();
+
+    }
+
+    private void initviews() {
+        minorFirstNameEditText.setHint(firstNameLabel);
+        minorLastNameEditText.setHint(lastNameLabel);
+        minorGender.setText(genderLabel);
+        dobTextView.setText(selectDateLabel);
+        minorDOB.setText(minordobLabel);
+        minorInformation.setText(minorInformationLabel);
+    }
+
+
+    private void setEditTexts() {
+
+        minorFirstNameTextView.setTag(firstNameLabel);
+        minorFirstNameEditText.setTag(minorFirstNameTextView);
+
+        minorLastNameTextView.setTag(lastNameLabel);
+        minorLastNameEditText.setTag(minorLastNameTextView);
+
+        setChangeFocusListeners();
+    }
+
+    private void setChangeFocusListeners() {
+
         minorFirstNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                String hint = "Minor's First Name";
-                String hintCaps = hint.toUpperCase();
-                if (hasFocus) {
-                    // change hint to all caps
-                    minorFirstNameTextView.setHint(hintCaps);
-                    setProximaNovaSemiboldTextInputLayout(getActivity(), minorFirstNameTextView);
-                } else {
-                    if (StringUtil.isNullOrEmpty(minorFirstNameEditText.getText().toString())) {
-                        // change hint to lower
-                        minorFirstNameTextView.setHint(hint);
-
-                    } else {
-                        minorFirstNameEditText.setHint(hint);
-                    }
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
                 }
+                SystemUtil.handleHintChange(view, bool);
             }
-
         });
+
+
         minorLastNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                String hint = "Minor's Last Name";
-                String hintCaps = hint.toUpperCase();
-                if (hasFocus) {
-                    // change hint to all caps
-                    minorLastNameTextView.setHint(hintCaps);
-                    setProximaNovaSemiboldTextInputLayout(getActivity(), minorLastNameTextView);
-                } else {
-                    if (StringUtil.isNullOrEmpty(minorLastNameEditText.getText().toString())) {
-                        // change hint to lower
-                        minorLastNameTextView.setHint(hint);
-
-                    } else {
-                        minorLastNameEditText.setHint(hint);
-                    }
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
                 }
-
+                SystemUtil.handleHintChange(view, bool);
             }
-
         });
+
     }
 
     private void setEnableNextButtonOnFullScroll() {
@@ -240,7 +326,7 @@ public class ConsentForm2Fragment extends Fragment {
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            String dob = new StringBuilder().append(i1+1).append("/").append(i2).append("/")
+            String dob = new StringBuilder().append(i1 + 1).append("/").append(i2).append("/")
                     .append(i).toString();
             dobTextView.setText(dob);
             isDatePicked = !(dob.equals(R.string.pick_date));

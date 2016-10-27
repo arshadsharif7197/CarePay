@@ -36,6 +36,15 @@ public class ApplicationPreferences {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, "");
     }
 
+    public void setPracticeLanguage(String language) {
+        editor.putString(CarePayConstants.PREFERENCE_PRACTICE_SELECTED_LANGUAGE, language);
+        editor.apply();
+    }
+
+    public String getPracticeLanguage() {
+        return sharedPreferences.getString(CarePayConstants.PREFERENCE_PRACTICE_SELECTED_LANGUAGE, "");
+    }
+
     public void writeStringToSharedPref(String key, String value) {
         editor.putString(key, value);
         editor.apply();
