@@ -12,9 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
+import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 
 public class CloverMainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -31,7 +33,8 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         findViewById(R.id.checkinTextView).setOnClickListener(this);
-        findViewById(R.id.paymentTextView).setOnClickListener(this);
+        findViewById(R.id.appointmentTextView).setOnClickListener(this);
+        findViewById(R.id.modeswitch).setOnClickListener(this);
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
 
     }
@@ -69,12 +72,15 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
             checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(checkedInIntent);
 
-        } else if (viewId == R.id.paymentTextView) {
+        } else if (viewId == R.id.modeswitch) {
 
             ChangeModeDialog changeModeDialog = new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
 
                 @Override
                 public void onPatientModeSelected() {
+                    Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
+                    appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(appointmentIntent);
                     Toast.makeText(CloverMainActivity.this, "Patient Mode selected...", Toast.LENGTH_SHORT).show();
                 }
             }, new ChangeModeDialog.LogoutClickListener() {
@@ -86,6 +92,11 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
             });
 
             changeModeDialog.show();
+        } else if (viewId == R.id.appointmentTextView){
+            Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
+            appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(appointmentIntent);
+
         }
     }
 

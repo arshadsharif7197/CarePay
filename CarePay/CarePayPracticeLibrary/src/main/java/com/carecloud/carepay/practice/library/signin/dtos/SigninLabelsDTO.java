@@ -10,18 +10,21 @@ public class SigninLabelsDTO {
     @SerializedName("signin_button")
     @Expose
     private String signinButton;
-    @SerializedName("signup_link")
+    @SerializedName("welcome_signin_text")
     @Expose
-    private String signupLink;
-    @SerializedName("signup_button")
+    private String welcomeSigninText;
+    @SerializedName("signin_email_address")
     @Expose
-    private String signupButton;
+    private String signinEmailAddress;
+    @SerializedName("signin_password")
+    @Expose
+    private String signinPassword;
+    @SerializedName("goback_button")
+    @Expose
+    private String gobackButton;
     @SerializedName("forgot_password")
     @Expose
     private String forgotPassword;
-    @SerializedName("already_have_account_link")
-    @Expose
-    private String alreadyHaveAccountLink;
 
     /**
      *
@@ -44,37 +47,73 @@ public class SigninLabelsDTO {
     /**
      *
      * @return
-     * The signupLink
+     * The welcomeSigninText
      */
-    public String getSignupLink() {
-        return signupLink;
+    public String getWelcomeSigninText() {
+        return welcomeSigninText;
     }
 
     /**
      *
-     * @param signupLink
-     * The signup_link
+     * @param welcomeSigninText
+     * The welcome_signin_text
      */
-    public void setSignupLink(String signupLink) {
-        this.signupLink = signupLink;
+    public void setWelcomeSigninText(String welcomeSigninText) {
+        this.welcomeSigninText = welcomeSigninText;
     }
 
     /**
      *
      * @return
-     * The signupButton
+     * The signinEmailAddress
      */
-    public String getSignupButton() {
-        return signupButton;
+    public String getSigninEmailAddress() {
+        return signinEmailAddress;
     }
 
     /**
      *
-     * @param signupButton
-     * The signup_button
+     * @param signinEmailAddress
+     * The signin_email_address
      */
-    public void setSignupButton(String signupButton) {
-        this.signupButton = signupButton;
+    public void setSigninEmailAddress(String signinEmailAddress) {
+        this.signinEmailAddress = signinEmailAddress;
+    }
+
+    /**
+     *
+     * @return
+     * The signinPassword
+     */
+    public String getSigninPassword() {
+        return signinPassword;
+    }
+
+    /**
+     *
+     * @param signinPassword
+     * The signin_password
+     */
+    public void setSigninPassword(String signinPassword) {
+        this.signinPassword = signinPassword;
+    }
+
+    /**
+     *
+     * @return
+     * The gobackButton
+     */
+    public String getGobackButton() {
+        return gobackButton;
+    }
+
+    /**
+     *
+     * @param gobackButton
+     * The goback_button
+     */
+    public void setGobackButton(String gobackButton) {
+        this.gobackButton = gobackButton;
     }
 
     /**
@@ -95,21 +134,4 @@ public class SigninLabelsDTO {
         this.forgotPassword = forgotPassword;
     }
 
-    /**
-     *
-     * @return
-     * The alreadyHaveAccountLink
-     */
-    public String getAlreadyHaveAccountLink() {
-        return alreadyHaveAccountLink;
-    }
-
-    /**
-     *
-     * @param alreadyHaveAccountLink
-     * The already_have_account_link
-     */
-    public void setAlreadyHaveAccountLink(String alreadyHaveAccountLink) {
-        this.alreadyHaveAccountLink = alreadyHaveAccountLink;
-    }
 }

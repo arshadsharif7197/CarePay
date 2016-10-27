@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLab
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customdialogs.CancelAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -141,12 +142,16 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         AppointmentDTO item = ((AppointmentDTO) object);
                         AppointmentsActivity.model = item;
 
-                        if (isPending) {
-                            new CheckInOfficeNowAppointmentDialog(context, item).show();
-                        } else if (isCheckedIn) {
-                            new QueueAppointmentDialog(context, item).show();
+                        if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)) {
+                            new CancelAppointmentDialog(context, item).show();
                         } else {
-                            new CheckInOfficeNowAppointmentDialog(context, item).show();
+                            if (isPending) {
+                                new CheckInOfficeNowAppointmentDialog(context, item).show();
+                            } else if (isCheckedIn) {
+                                new QueueAppointmentDialog(context, item).show();
+                            } else {
+                                new CheckInOfficeNowAppointmentDialog(context, item).show();
+                            }
                         }
                     }
                 }
@@ -218,6 +223,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.appointmentSectionLinearLayout.setVisibility(View.VISIBLE);
                 holder.appointmentItemLinearLayout.setVisibility(View.GONE);
                 holder.appointmentSectionHeaderTitle.setText(title);
+                holder.appointmentSectionHeaderTitle.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
             }
         }
 
@@ -254,6 +260,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
                                 appointmentStickyHeaderTitle.setText(sectionHeaderTitle);
                                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
+                                appointmentStickyHeaderTitle.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                             }
                         }
                     }
@@ -335,6 +342,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
 
             shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
+            shortName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
+
             cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
             profileImage = (ImageView) itemView.findViewById(R.id.providerPicImageView);
 
