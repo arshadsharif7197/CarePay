@@ -36,6 +36,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 
 import java.util.Locale;
 
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,9 +78,9 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     private String signButtonLabel;
     private String patientSignLabel;
     private String legalsignLabel;
-    private String providerName;
-    private String patienFirstName;
-    private String patientLastName;
+    private String providerName=" ";
+    private String patienFirstName =" ";
+    private String patientLastName=" ";
     private String medicareForm;
     private String authForm;
 
@@ -218,21 +219,20 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
             }
         });
 
-        AppointmentService aptService = (new BaseServiceGenerator(getApplicationContext())).createService(AppointmentService.class);
+      /*  AppointmentService aptService = (new BaseServiceGenerator(getApplicationContext())).createService(AppointmentService.class);
         Call<AppointmentsResultModel> callapp = aptService.getAppointmentsList();
         callapp.enqueue(new Callback<AppointmentsResultModel>() {
             @Override
             public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
                 appointmentsResultModel = response.body();
-                if (appointmentsResultModel.getMetadata() != null) {
-                    if (appointmentsPayloadDTO.getPatient() != null) {
-                        patienFirstName = appointmentsPayloadDTO.getPatient().getFirstName();
-                        patientLastName = appointmentsPayloadDTO.getPatient().getLastName();
-                    } else {
-                        Log.d(LOG_TAG, "consent form information failed");
-                    }
-                    if (appointmentsPayloadDTO.getProvider() != null) {
-                        providerName = appointmentsPayloadDTO.getProvider().getName();
+                if (appointmentsResultModel!=null && appointmentsResultModel.getPayload() != null) {
+                  *//*  if ( appointmentsResultModel.getPayload().getProviders()!= null) {
+                      //  patienFirstName = appointmentsPayloadDTO.getPatient().getFirstName();
+                      //  patientLastName = appointmentsPayloadDTO.getPatient().getLastName();
+                   } else {
+                       Log.d(LOG_TAG, "consent form information failed");}*//*
+                    if (appointmentsResultModel.getPayload().getProviders()!= null) {
+                        providerName = appointmentsResultModel.getPayload().getProviders().get(0).getName();
                     } else {
                         Log.d(LOG_TAG, "consent form information failed");
                     }
@@ -246,7 +246,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
                 Log.d(LOG_TAG, "consent form information failed", throwable);
             }
 
-        });
+        });*/
     }
 
 

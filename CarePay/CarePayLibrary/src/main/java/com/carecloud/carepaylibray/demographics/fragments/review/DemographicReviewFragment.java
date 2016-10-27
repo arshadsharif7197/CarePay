@@ -626,19 +626,19 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if (demographicPersDetailsPayloadDTO != null) {
             //Personal Details
             String firstName = demographicPersDetailsPayloadDTO.getFirstName();
-            if (firstName != null) {
+            if (SystemUtil.isNotEmptyString(firstName )) {
                 firstNameText.setText(firstName);
                 firstNameText.requestFocus();
             }
 
             String lastName = demographicPersDetailsPayloadDTO.getLastName();
-            if (lastName != null) {
+            if (SystemUtil.isNotEmptyString(lastName) ) {
                 lastNameText.setText(lastName);
                 lastNameText.requestFocus();
             }
 
             String middleName = demographicPersDetailsPayloadDTO.getMiddleName();
-            if (middleName != null) {
+            if (SystemUtil.isNotEmptyString(middleName)) {
                 middleNameText.setText(middleName);
                 middleNameText.requestFocus();
 
@@ -653,7 +653,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                 Log.v(LOG_TAG, "date is null");
             }
             String getGender = demographicPersDetailsPayloadDTO.getGender();
-            if (!getGender.isEmpty()) {
+            if (SystemUtil.isNotEmptyString( getGender)) {
                 selectGender.setText(getGender);
             } else {
                 selectGender.setText(R.string.chooseTextView);
@@ -661,13 +661,13 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
 
             String getRace = demographicPersDetailsPayloadDTO.getPrimaryRace();
-            if (!getRace.isEmpty()) {
+            if ( SystemUtil.isNotEmptyString(getRace)) {
                 raceDataTextView.setText(getRace);
             } else {
                 raceDataTextView.setText(R.string.chooseTextView);
             }
             String getethnicity = demographicPersDetailsPayloadDTO.getEthnicity();
-            if (!getethnicity.isEmpty()) {
+            if ( SystemUtil.isNotEmptyString(getethnicity)) {
                 ethnicityDataTextView.setText(getethnicity);
             } else {
                 ethnicityDataTextView.setText(R.string.chooseTextView);
@@ -690,37 +690,37 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if (demographicAddressPayloadDTO != null) {
             //Address
             String addressLine1 = demographicAddressPayloadDTO.getAddress1();
-            if (addressLine1 != null) {
+            if (SystemUtil.isNotEmptyString(addressLine1)) {
                 address1EditText.setText(addressLine1);
                 address1EditText.requestFocus();
 
             }
 
             String addressLine2 = demographicAddressPayloadDTO.getAddress2();
-            if (addressLine2 != null) {
+            if (SystemUtil.isNotEmptyString(addressLine2 )) {
                 address2EditText.setText(addressLine2);
                 address2EditText.requestFocus();
             }
 
             String city = demographicAddressPayloadDTO.getCity();
-            if (city != null) {
+            if (SystemUtil.isNotEmptyString(city )) {
                 cityEditText.setText(city);
                 cityEditText.requestFocus();
             }
             String state = demographicAddressPayloadDTO.getState();
-            if (state != null) {
+            if (SystemUtil.isNotEmptyString(state )) {
                 stateEditText.setText(state);
                 stateEditText.requestFocus();
             }
             String zipcode = demographicAddressPayloadDTO.getZipcode();
-            if (zipcode != null) {
+            if (SystemUtil.isNotEmptyString(zipcode)) {
                 zipCodeEditText.setText(StringUtil.formatZipCode(zipcode));
                 zipCodeEditText.requestFocus();
 
             }
 
             String phoneumber = demographicAddressPayloadDTO.getPhone();
-            if (phoneumber != null) {
+            if (SystemUtil.isNotEmptyString(phoneumber )) {
                 phoneNumberEditText.setText(StringUtil.formatPhoneNumber(phoneumber));
             }
 
