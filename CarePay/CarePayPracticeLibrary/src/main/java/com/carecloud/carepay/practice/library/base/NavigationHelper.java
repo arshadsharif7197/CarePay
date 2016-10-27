@@ -7,11 +7,11 @@ import android.os.Bundle;
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_APPOINTMENTS;
-import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_MODE_SIGNIN;
 import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_HOME;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import static com.carecloud.carepay.practice.library.base.NavigationStateConstants.PRACTICE_MODE_SIGNIN;
 
 /**
  * Created by Jahirul Bhuiyan on 10/10/2016.
