@@ -9,8 +9,7 @@
         android:id="@+id/signButton"
         style="@style/Consent_form_Button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/tiltle1_3" />
+        android:layout_height="wrap_content"/>
 
     <ScrollView
         android:id="@+id/consentform_scrollView"

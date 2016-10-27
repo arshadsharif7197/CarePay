@@ -13,21 +13,26 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name="com.carecloud.carepay.practice.tablet.CarePayApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        tools:replace="android:theme"
-        android:theme="@style/AppThemePractice">
-        <activity android:name="com.carecloud.carepay.practice.library.signin.SigninActivity">
+        android:theme="@style/AppThemePractice"
+        tools:replace="android:theme">
+        <activity android:name="com.carecloud.carepay.practice.library.checkin.CheckInActivity">
+        </activity>
+        <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity" />
+        <activity android:name=".payments.TabletPaymentActivity"></activity>
+
+        <activity android:name="com.carecloud.carepay.practice.library.splash.SplashActivity"
+            android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"></activity>
-
     </application>
 
 </manifest>

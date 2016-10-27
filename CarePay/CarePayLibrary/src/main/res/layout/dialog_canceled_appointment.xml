@@ -7,12 +7,10 @@
     android:orientation="vertical">
 
     <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
-        android:id="@+id/canceledLabel"
+        android:id="@+id/appointmentStatusLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="APPOINTMENT CANCELED"
         android:layout_marginTop="@dimen/apt_dl_margin"
-        android:textColor="@color/harvard_crimson"
         android:textSize="@dimen/apt_dl_textview_size"
         android:textStyle="bold" />
 </LinearLayout>

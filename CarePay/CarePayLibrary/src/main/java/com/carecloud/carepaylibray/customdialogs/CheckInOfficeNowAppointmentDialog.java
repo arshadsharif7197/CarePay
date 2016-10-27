@@ -57,6 +57,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         int viewId = view.getId();
         if (viewId == R.id.checkOfficeButton) {
             onCheckInAtOffice();
+            cancel();
         } else if (viewId == R.id.checkOfficeNowButton) {
             onCheckInAtNow();
             cancel();

@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,17 +20,26 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.base.NavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
+import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.Arrays;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -41,11 +49,12 @@ import java.util.Arrays;
  * On success authentication screen will navigate next screen from the transition Json
  * On failed showing the authentication failure dialog with no navigation
  */
-public class SigninActivity extends AppCompatActivity {
+public class SigninActivity extends BasePracticeActivity {
 
     private TextView signinButton;
     private TextView forgotPasswordButton;
     private TextView languageButton;
+    private TextView signinTitle;
 
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
@@ -59,14 +68,19 @@ public class SigninActivity extends AppCompatActivity {
     private boolean isEmptyPassword;
     private ImageView rightarrow;
 
-    private String[] language = {"EN", "SP"};
+    private String emailLabel;
+    private String passwordLabel;
+
+    private List<String> language = new ArrayList<String>();
+
+    SigninDTO signinDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CognitoAppHelper.init(this);
-
+        signinDTO = getConvertedDTO(SigninDTO.class);
         setContentView(R.layout.activity_signin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setSystemUiVisibility();
@@ -74,26 +88,68 @@ public class SigninActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         initViews();
-        setClicables();
         setEditTexts();
+        setClicables();
+        setTypeFace();
+
+        isEmptyEmail = true;
+        isEmptyPassword = true;
+
     }
 
-    /** Initailizing the view
+    /**
+     * Initailizing the view
      */
     public void initViews() {
         signinButton = (TextView) findViewById(R.id.signinTextview);
-        signinButton.setEnabled(false);
-        if (!signinButton.isEnabled()) {
-            rightarrow = (ImageView) findViewById(R.id.rightarrow);
-            rightarrow.setAlpha(50);
-        }
-        signinButton.setTextColor(signinButton.getTextColors().withAlpha(50));
+        rightarrow = (ImageView) findViewById(R.id.rightarrow);
         forgotPasswordButton = (TextView) findViewById(R.id.forgot_passwordTextview);
         languageButton = (TextView) findViewById(R.id.languageTextview);
+        passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
+        emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
         signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
+        signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
+        languageButton.setVisibility(View.VISIBLE);
+        int langaugelistsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
+
+        for (int i = 0; i < langaugelistsize; i++) {
+            language.add(i, signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i).getName());
+        }
+
+        initializeLebals();
+        // disable sign-in button
+        setEnabledSigninButton(false);
     }
 
+    private void initializeLebals() {
+        if (signinDTO != null) {
+            SigninLabelsDTO signinLabelsDTO = signinDTO.getMetadata().getLabels();
+            if (signinLabelsDTO != null) {
+                signinButton.setText(signinLabelsDTO.getSigninButton());
+                signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
+                forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
+                emailLabel = signinLabelsDTO.getSigninEmailAddress();
+                passwordLabel = signinLabelsDTO.getSigninPassword();
+                passwordEditText.setHint(passwordLabel);
+                emailEditText.setHint(emailLabel);
+            }
+
+        }
+
+
+    }
+
+    private void setEnabledSigninButton(boolean enabled) {
+        if (!enabled) {
+            signinButton.setTextColor(signinButton.getTextColors().withAlpha(50));
+            rightarrow.setAlpha(50);
+        } else {
+            signinButton.setTextColor(signinButton.getTextColors().withAlpha(255));
+            rightarrow.setAlpha(255);
+        }
+        signinButton.setEnabled(enabled);
+    }
 
     private void setClicables() {
 
@@ -120,17 +176,18 @@ public class SigninActivity extends AppCompatActivity {
                 });
                 View customView = LayoutInflater.from(SigninActivity.this).inflate(R.layout.alert_list_practice_layout, null, false);
                 ListView listView = (ListView) customView.findViewById(R.id.dialoglist_practice);
-                CustomAlertAdapter adapter = new CustomAlertAdapter(SigninActivity.this, Arrays.asList(language));
+                CustomAlertAdapter adapter = new CustomAlertAdapter(SigninActivity.this, language);
                 listView.setAdapter(adapter);
                 dialog.setView(customView);
 
                 final AlertDialog alert = dialog.create();
                 alert.show();
-                alert.getWindow().setLayout(500,350);
+                alert.getWindow().setLayout(500, 350);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        languageButton.setText(language[position]);
+
+                        languageButton.setText(signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(position).getCode().toUpperCase());
                         alert.dismiss();
                     }
                 });
@@ -229,17 +286,15 @@ public class SigninActivity extends AppCompatActivity {
 
 
     private void setEditTexts() {
-        signInEmailTextInputLayout.setTag("Not Defined");
-        emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
-        emailEditText.setHint("Not Defined");
+        signInEmailTextInputLayout.setTag(emailLabel);
         emailEditText.setTag(signInEmailTextInputLayout);
 
-        passwordTextInputLayout.setTag("Not Defined");
-        passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
+        passwordTextInputLayout.setTag(passwordLabel);
         passwordEditText.setTag(passwordTextInputLayout);
 
         setTextListeners();
         setChangeFocusListeners();
+
 
         emailEditText.clearFocus();
         passwordEditText.clearFocus();
@@ -268,7 +323,7 @@ public class SigninActivity extends AppCompatActivity {
 
     private void enableSigninButton() {
         boolean areAllNonEmpty = !(isEmptyEmail || isEmptyPassword);
-        signinButton.setEnabled(areAllNonEmpty);
+        setEnabledSigninButton(areAllNonEmpty);
     }
 
     private void signInUser() {
@@ -285,6 +340,8 @@ public class SigninActivity extends AppCompatActivity {
             progressBar.setVisibility(View.INVISIBLE);
             launchHomescreen();
         }
+        //launchHomescreen
+
 
         @Override
         public void onBeforeLogin() {
@@ -297,6 +354,23 @@ public class SigninActivity extends AppCompatActivity {
             SystemUtil.showDialogMessage(SigninActivity.this,
                     "Sign-in failed",
                     "Invalid user id or password");
+
+        }
+    };
+
+    WorkflowServiceCallback signinCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
 
         }
     };
@@ -316,5 +390,11 @@ public class SigninActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+
+
+    public void setTypeFace() {
+        setProximaNovaRegularTypeface(this, emailEditText);
+        setProximaNovaRegularTypeface(this, passwordEditText);
     }
 }
