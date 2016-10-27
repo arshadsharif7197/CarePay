@@ -142,6 +142,16 @@ public class DemographicLabelsDTO {
 //    @SerializedName("demographics_documents_title_card_type") @Expose
     public String demographicsTitleCardType;
 
+//    @SerializedName("demographics_allset_header") @Expose
+    public String demographicsAllSetHeader;
+
+    //    @SerializedName("demographics_allset_subheader") @Expose
+    public String demographicsAllSetSubheader;
+
+    //    @SerializedName("demographics_allset_go_button") @Expose
+    public String demographicsAllSetGoButton;
+
+
     /**
      *
      * @return The demographicsUpdateButton
@@ -590,5 +600,32 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsTitleCardType(String demographicsTitleCardType) {
         this.demographicsTitleCardType = demographicsTitleCardType;
+    }
+
+    public String getDemographicsAllSetHeader() {
+        return StringUtil.isNullOrEmpty(demographicsAllSetHeader) ?
+                CarePayConstants.NOT_DEFINED : demographicsAllSetHeader;
+    }
+
+    public void setDemographicsAllSetHeader(String demographicsAllSetHeader) {
+        this.demographicsAllSetHeader = demographicsAllSetHeader;
+    }
+
+    public String getDemographicsAllSetSubheader() {
+        return StringUtil.isNullOrEmpty(demographicsAllSetSubheader) ?
+                CarePayConstants.NOT_DEFINED : demographicsAllSetSubheader;
+    }
+
+    public void setDemographicsAllSetSubheader(String demographicsAllSetSubheader) {
+        this.demographicsAllSetSubheader = demographicsAllSetSubheader;
+    }
+
+    public String getDemographicsAllSetGoButton() {
+        return StringUtil.isNullOrEmpty(demographicsAllSetGoButton) ?
+                CarePayConstants.NOT_DEFINED : demographicsAllSetGoButton;
+    }
+
+    public void setDemographicsAllSetGoButton(String demographicsAllSetGoButton) {
+        this.demographicsAllSetGoButton = demographicsAllSetGoButton;
     }
 }

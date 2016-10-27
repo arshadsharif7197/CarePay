@@ -1,7 +1,5 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +15,7 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -30,6 +29,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,75 +39,80 @@ import retrofit2.Response;
  * Created by lsoco_user on 9/2/2016.
  * Screen for demographics onboarding confirmation
  */
-public class DemographicsMoreDetailsFragment extends Fragment implements View.OnClickListener {
-    View view;
-    String[] getUpdateItemList;
-    Button gotoCarePay;
-    private Context context;
+public class DemographicsMoreDetailsFragment extends Fragment {
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
+    private View                 view;
+    private Button               gotoCarePay;
+    private DemographicLabelsDTO globalLabelsDTO;
+    private TextView             header;
+    private TextView             subheader;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
-        getUpdateItemList = getResources().getStringArray(R.array.UpdatesMode);
-        setTypefaces(view);
+        // fetch the global labels
+        globalLabelsDTO = ((DemographicsActivity)getActivity()).getLabelsDTO();
 
-        gotoCarePay = (Button) view.findViewById(R.id.demographicsGoToCarePayButton);
-        onClick(view);
+        // create the view
+        view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
+        initializeUIFields();
 
         return view;
     }
 
-    @Override
-    public void onClick(View view) {
+    private void initializeUIFields() {
+        String label;
+        header = (TextView) view.findViewById(R.id.moreDetailsHeading);
+        label = globalLabelsDTO.getDemographicsAllSetHeader();
+        header.setText(label);
+
+        subheader = (TextView) view.findViewById(R.id.moreDetailsSubHeading);
+        label = globalLabelsDTO.getDemographicsAllSetSubheader();
+        subheader.setText(label);
+
+        gotoCarePay = (Button) view.findViewById(R.id.demographicsGoToCarePayButton);
+        label = globalLabelsDTO.getDemographicsAllSetGoButton();
+        gotoCarePay.setText(label);
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDemographicInformation(); // post the updates
             }
         });
+
+        setTypefaces(view);
     }
 
     private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsHeading));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.moreDetailsSubHeading));
-        setGothamRoundedMediumTypeface(getActivity(),(Button)view.findViewById(R.id.demographicsGoToCarePayButton));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.placeHolderIconTextViewId));
+        setGothamRoundedMediumTypeface(getActivity(), header);
+        setProximaNovaRegularTypeface(getActivity(), subheader);
+        setGothamRoundedMediumTypeface(getActivity(), gotoCarePay);
     }
 
     public void confirmDemographicInformation() {
         DemographicPayloadDTO demographicPayloadDTO = new DemographicPayloadDTO();
 
-//        List<DemographicPayloadUpdateDTO> updates = new ArrayList<>();
-//        demographicPayloadDTO.setUpdates(updates);
-
         // obtain the updated models from the pager fragments
-        DemographicAddressPayloadDTO addressModel = ((DemographicsActivity)getActivity()).getAddressModel();
-        if(addressModel != null) {
+        DemographicAddressPayloadDTO addressModel = ((DemographicsActivity) getActivity()).getAddressModel();
+        if (addressModel != null) {
             demographicPayloadDTO.setAddress(addressModel);
         }
 
-        DemographicPersDetailsPayloadDTO detailsModel = ((DemographicsActivity)getActivity()).getDetailsDTO();
-        if(detailsModel != null) {
+        DemographicPersDetailsPayloadDTO detailsModel = ((DemographicsActivity) getActivity()).getDetailsDTO();
+        if (detailsModel != null) {
             demographicPayloadDTO.setPersonalDetails(detailsModel);
         }
 
-        DemographicIdDocPayloadDTO idDocPojo = ((DemographicsActivity)getActivity()).getIdDocModel();
-        if(idDocPojo != null) { // add the doc
+        DemographicIdDocPayloadDTO idDocPojo = ((DemographicsActivity) getActivity()).getIdDocModel();
+        if (idDocPojo != null) { // add the doc
             List<DemographicIdDocPayloadDTO> idDocPayloadDTOs = new ArrayList<>();
             idDocPojo.setIdCountry("USA"); // to remove
             idDocPayloadDTOs.add(idDocPojo);
             demographicPayloadDTO.setIdDocuments(idDocPayloadDTOs);
         }
 
-        List<DemographicInsurancePayloadDTO> insuranceModelList = ((DemographicsActivity)getActivity()).getInsuranceModelList();
-        if(insuranceModelList != null) {
+        List<DemographicInsurancePayloadDTO> insuranceModelList = ((DemographicsActivity) getActivity()).getInsuranceModelList();
+        if (insuranceModelList != null) {
             demographicPayloadDTO.setInsurances(insuranceModelList);
         }
 
@@ -116,7 +121,7 @@ public class DemographicsMoreDetailsFragment extends Fragment implements View.On
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Intent appointmentIntent = new Intent(context, AppointmentsActivity.class);
+                Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
                 startActivity(appointmentIntent);
                 getActivity().finish();
             }
