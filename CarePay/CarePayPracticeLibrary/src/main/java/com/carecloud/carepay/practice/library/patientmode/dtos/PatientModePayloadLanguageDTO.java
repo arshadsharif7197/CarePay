@@ -4,10 +4,12 @@ package com.carecloud.carepay.practice.library.patientmode.dtos;
  * Created by Rahul on 10/27/16.
  */
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
-        import java.util.List;
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import java.util.List;
+
 
 public class PatientModePayloadLanguageDTO {
 
@@ -16,18 +18,14 @@ public class PatientModePayloadLanguageDTO {
     private List<PatientModeOptionDTO> options = new ArrayList<PatientModeOptionDTO>();
 
     /**
-     *
-     * @return
-     * The options
+     * @return The options
      */
     public List<PatientModeOptionDTO> getOptions() {
         return options;
     }
 
     /**
-     *
-     * @param options
-     * The options
+     * @param options The options
      */
     public void setOptions(List<PatientModeOptionDTO> options) {
         this.options = options;

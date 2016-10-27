@@ -33,7 +33,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     private List<String> language = new ArrayList<String>();
 
     PatientModeSplashDTO patientModeSplashDTO;
-PatientModePayloadDTO patientModePayloadDTO;
+    PatientModePayloadDTO patientModePayloadDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,26 +54,26 @@ PatientModePayloadDTO patientModePayloadDTO;
         practicelogo = (ImageView) findViewById(R.id.practicelogo);
 
     }
+
     private void initializeLebals() {
         if (patientModeSplashDTO != null) {
             PatientModeLabelsDTO patientModeLabelsDTO = patientModeSplashDTO.getMetadata().getLabel();
-            patientModePayloadDTO=patientModeSplashDTO.getPayload();
+            patientModePayloadDTO = patientModeSplashDTO.getPayload();
 
             if (patientModeLabelsDTO != null) {
                 getStartedButton.setText(patientModeLabelsDTO.getGetStartedHeading());
                 praticewelcomeText.setText(patientModeLabelsDTO.getWelcomeHeading());
 
-                }
+            }
 
-            if(patientModePayloadDTO != null) {
+            if (patientModePayloadDTO != null) {
                 int langaugelistsize = patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().size();
 
                 for (int i = 0; i < langaugelistsize; i++) {
                     language.add(i, patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i).getLabel());
-                   if( patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i).getDefault().equals(true))
-                   {
-                       languageButton.setText(patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i).getCode().toUpperCase());
-                   }
+                    if (patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i).getDefault().equals(true)) {
+                        languageButton.setText(patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i).getCode().toUpperCase());
+                    }
                 }
             }
 
@@ -107,7 +107,7 @@ PatientModePayloadDTO patientModePayloadDTO;
                 });
                 View customView = LayoutInflater.from(PatientModeSplashActivity.this).inflate(R.layout.alert_list_practice_layout, null, false);
                 ListView listView = (ListView) customView.findViewById(R.id.dialoglist_practice);
-                CustomAlertAdapter adapter = new CustomAlertAdapter(PatientModeSplashActivity.this,language);
+                CustomAlertAdapter adapter = new CustomAlertAdapter(PatientModeSplashActivity.this, language);
                 listView.setAdapter(adapter);
                 dialog.setView(customView);
                 final AlertDialog alert = dialog.create();
