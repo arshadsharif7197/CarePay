@@ -63,7 +63,7 @@ public class DemographicLabelsDTO {
 //    @SerializedName("demographics_details_capture_picture_caption") @Expose
     private String demographicsProfileCaptureCaption;
 
-    //    @SerializedName("demographics_details_capture_picture_caption") @Expose
+    //    @SerializedName("demographics_details_recapture_picture_caption") @Expose
     private String demographicsProfileReCaptureCaption;
 
 //    @SerializedName("demographics_details_allergies_section") @Expose
