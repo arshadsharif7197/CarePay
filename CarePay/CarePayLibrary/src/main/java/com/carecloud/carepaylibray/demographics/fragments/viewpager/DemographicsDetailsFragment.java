@@ -523,6 +523,7 @@ public class DemographicsDetailsFragment extends Fragment
                         String gender = dataArray[position];
                         genderTextView.setText(gender);
                         persDetailsDTO.setGender(gender);
+                        break;
                     default:
                         break;
                 }
