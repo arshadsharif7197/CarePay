@@ -18,15 +18,25 @@ import retrofit2.Response;
 
 public class WorkflowServiceHelper {
 
+    public enum ApplicationType{
+        PATIENT,PRACTICE
+    }
+
     private static WorkflowServiceHelper instance;
+
+    private static ApplicationType applicationType;
+
+    public static void initialization(ApplicationType applicationType){
+        if (instance == null) {
+            instance = new WorkflowServiceHelper();
+        }
+        WorkflowServiceHelper.applicationType=applicationType;
+    }
 
     private WorkflowServiceHelper() {
     }
 
     public static WorkflowServiceHelper getInstance() {
-        if (instance == null) {
-            instance = new WorkflowServiceHelper();
-        }
         return instance;
     }
 

@@ -5,7 +5,6 @@ import android.os.Build;
 import android.provider.Settings;
 
 import com.carecloud.carepay.practice.library.base.NavigationHelper;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 
@@ -23,7 +22,6 @@ public class CarePayApplication extends Application {
         deviceIdentifierDTO.setDeviceType("Android Tablet");
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
-        WorkflowServiceHelper.initialization(WorkflowServiceHelper.ApplicationType.PRACTICE);
         NavigationHelper.initInstance(this);
     }
 }
