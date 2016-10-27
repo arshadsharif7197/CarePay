@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -24,7 +25,8 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     private Context context;
     private AppointmentDTO appointmentDTO;
     private boolean isCanceled = false;
-    private CustomGothamRoundedMediumLabel canceledLabel;
+    private boolean isMissed = false;
+    private CustomGothamRoundedMediumLabel appointmentStatusLabel;
 
     /**
      * Contractor for   dialog.
@@ -36,6 +38,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
+        this.isMissed = true;
     }
 
     /**
@@ -49,6 +52,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.isCanceled = isCanceled;
+        this.isMissed = false;
     }
 
     @Override
@@ -56,7 +60,8 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         super.onCreate(savedInstanceState);
         rootLayout = (LinearLayout) getRootView();
         mainLayout = (LinearLayout) getAddActionChildView();
-        if (isCanceled) {
+
+        if (isCanceled || isMissed) {
             setActionButtonCanceled();
         } else {
             setActionButton();
@@ -75,11 +80,18 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
     private void setActionButtonCanceled() {
 
-        LayoutInflater inflater = (LayoutInflater) this.context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_canceled_appointment, null);
-        canceledLabel = (CustomGothamRoundedMediumLabel) childActionView.findViewById(R.id.canceledLabel);
-        canceledLabel.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
+
+        appointmentStatusLabel = (CustomGothamRoundedMediumLabel) childActionView.findViewById(R.id.appointmentStatusLabel);
+        if (isMissed) {
+            appointmentStatusLabel.setText(StringUtil.getLabelForView(""));
+            appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.lightningyellow));
+        } else {
+            appointmentStatusLabel.setText(StringUtil.getLabelForView(""));
+            appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
+        }
+
         findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.Feldgrau);
         ((TextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
         ((TextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));

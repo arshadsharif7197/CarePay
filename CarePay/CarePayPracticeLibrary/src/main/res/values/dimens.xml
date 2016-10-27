@@ -60,4 +60,12 @@
     <dimen name="button_delete_key_width">40dp</dimen>
     <dimen name="button_delete_key_height">27dp</dimen>
 
+    <!--Change mode dialog-->
+    <dimen name="change_mode_dialog_padding_end">45.5dp</dimen>
+    <dimen name="change_mode_dialog_padding_start">33.5dp</dimen>
+    <dimen name="change_mode_divider_margin_end">35.5dp</dimen>
+    <dimen name="change_mode_divider_margin_start">35dp</dimen>
+    <dimen name="patient_mode_padding_top">65dp</dimen>
+    <dimen name="logout_padding_top">57dp</dimen>
+
 </resources>
