@@ -190,6 +190,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
     }
 
+    /**
+     * Set the current screen in the view pages
+     * @param item Index of the current item
+     * @param smoothScroll Whether smooth scroll
+     */
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
         if (item > 0) {
