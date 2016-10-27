@@ -21,7 +21,7 @@ public class PatientModeOptionDTO {
     private String code;
     @SerializedName("default")
     @Expose
-    private Boolean aBoolean;
+    private Boolean booleanValue;
 
     /**
      * @return The name
@@ -69,14 +69,14 @@ public class PatientModeOptionDTO {
      * @return The aBoolean
      */
     public Boolean getDefault() {
-        return aBoolean;
+        return booleanValue;
     }
 
     /**
-     * @param _default The default
+     * @param booleanValue The default
      */
-    public void setDefault(Boolean _default) {
-        this.aBoolean = _default;
+    public void setDefault(Boolean booleanValue) {
+        this.booleanValue = booleanValue;
     }
 
 }
