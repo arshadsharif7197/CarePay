@@ -111,10 +111,13 @@ public class SigninActivity extends BasePracticeActivity {
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
         signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
         languageButton.setVisibility(View.VISIBLE);
-        int langaugelistsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
+      int langaugelistsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
 
         for (int i = 0; i < langaugelistsize; i++) {
-            language.add(i, signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i).getName());
+            language.add(i, signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i).getLabel());
+            if(signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i).getDefault().equals(true)){
+                languageButton.setText(signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i).getCode().toUpperCase());
+            }
         }
 
         initializeLebals();
