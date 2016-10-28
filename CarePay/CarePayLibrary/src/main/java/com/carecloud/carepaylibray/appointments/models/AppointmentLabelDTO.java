@@ -325,320 +325,280 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsDescription
      */
     public String getAppointmentsDescription() {
         return appointmentsDescription;
     }
 
     /**
-     *
-     * @param appointmentsDescription
+     * @param appointmentsDescription The appointments_description
      */
     public void setAppointmentsDescription(String appointmentsDescription) {
         this.appointmentsDescription = appointmentsDescription;
     }
 
     /**
-     *
-     * @return
+     * @return The addAppointmentTitle
      */
     public String getAddAppointmentTitle() {
         return addAppointmentTitle;
     }
 
     /**
-     *
-     * @param addAppointmentTitle
+     * @param addAppointmentTitle The add_appointment_title
      */
     public void setAddAppointmentTitle(String addAppointmentTitle) {
         this.addAppointmentTitle = addAppointmentTitle;
     }
 
     /**
-     *
-     * @return
+     * @return The cancelRequestTitle
      */
     public String getCancelRequestTitle() {
         return cancelRequestTitle;
     }
 
     /**
-     *
-     * @param cancelRequestTitle
+     * @param cancelRequestTitle The cancel_request_title
      */
     public void setCancelRequestTitle(String cancelRequestTitle) {
         this.cancelRequestTitle = cancelRequestTitle;
     }
 
     /**
-     *
-     * @return
+     * @return The emptyAppointmentCardTodayText
      */
     public String getEmptyAppointmentCardTodayText() {
         return emptyAppointmentCardTodayText;
     }
 
     /**
-     *
-     * @param emptyAppointmentCardTodayText
+     * @param emptyAppointmentCardTodayText The empty_appointment_card_today_text
      */
     public void setEmptyAppointmentCardTodayText(String emptyAppointmentCardTodayText) {
         this.emptyAppointmentCardTodayText = emptyAppointmentCardTodayText;
     }
 
     /**
-     *
-     * @return
+     * @return The emptyAppointmentCardUpcomingText
      */
     public String getEmptyAppointmentCardUpcomingText() {
         return emptyAppointmentCardUpcomingText;
     }
 
     /**
-     *
-     * @param emptyAppointmentCardUpcomingText
+     * @param emptyAppointmentCardUpcomingText The empty_appointment_card_upcoming_text
      */
     public void setEmptyAppointmentCardUpcomingText(String emptyAppointmentCardUpcomingText) {
         this.emptyAppointmentCardUpcomingText = emptyAppointmentCardUpcomingText;
     }
 
     /**
-     *
-     * @return
+     * @return The emptyAppointmentCardHistoryText
      */
     public String getEmptyAppointmentCardHistoryText() {
         return emptyAppointmentCardHistoryText;
     }
 
     /**
-     *
-     * @param emptyAppointmentCardHistoryText
+     * @param emptyAppointmentCardHistoryText The empty_appointment_card_history_text
      */
     public void setEmptyAppointmentCardHistoryText(String emptyAppointmentCardHistoryText) {
         this.emptyAppointmentCardHistoryText = emptyAppointmentCardHistoryText;
     }
 
     /**
-     *
-     * @return
+     * @return The emptyAppointmentCardRandomText
      */
     public String getEmptyAppointmentCardRandomText() {
         return emptyAppointmentCardRandomText;
     }
 
     /**
-     *
-     * @param emptyAppointmentCardRandomText
+     * @param emptyAppointmentCardRandomText The empty_appointment_card_random_text
      */
     public void setEmptyAppointmentCardRandomText(String emptyAppointmentCardRandomText) {
         this.emptyAppointmentCardRandomText = emptyAppointmentCardRandomText;
     }
 
     /**
-     *
-     * @return
+     * @return The addAppointmentWhenEmptyTitle
      */
     public String getAddAppointmentWhenEmptyTitle() {
         return addAppointmentWhenEmptyTitle;
     }
 
     /**
-     *
-     * @param addAppointmentWhenEmptyTitle
+     * @param addAppointmentWhenEmptyTitle The add_appointment_when_empty_title
      */
     public void setAddAppointmentWhenEmptyTitle(String addAppointmentWhenEmptyTitle) {
         this.addAppointmentWhenEmptyTitle = addAppointmentWhenEmptyTitle;
     }
 
     /**
-     *
-     * @return
+     * @return The historyAppointmentsHeading
      */
     public String getHistoryAppointmentsHeading() {
         return historyAppointmentsHeading;
     }
 
     /**
-     *
-     * @param historyAppointmentsHeading
+     * @param historyAppointmentsHeading The history_appointments_heading
      */
     public void setHistoryAppointmentsHeading(String historyAppointmentsHeading) {
         this.historyAppointmentsHeading = historyAppointmentsHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsCheckInAtOffice
      */
     public String getAppointmentsCheckInAtOffice() {
         return appointmentsCheckInAtOffice;
     }
 
     /**
-     *
-     * @param appointmentsCheckInAtOffice
+     * @param appointmentsCheckInAtOffice The appointments_check_in_at_office
      */
     public void setAppointmentsCheckInAtOffice(String appointmentsCheckInAtOffice) {
         this.appointmentsCheckInAtOffice = appointmentsCheckInAtOffice;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsCheckInNow
      */
     public String getAppointmentsCheckInNow() {
         return appointmentsCheckInNow;
     }
 
     /**
-     *
-     * @param appointmentsCheckInNow
+     * @param appointmentsCheckInNow The appointments_check_in_now
      */
     public void setAppointmentsCheckInNow(String appointmentsCheckInNow) {
         this.appointmentsCheckInNow = appointmentsCheckInNow;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsPlaceNameHeading
      */
     public String getAppointmentsPlaceNameHeading() {
         return appointmentsPlaceNameHeading;
     }
 
     /**
-     *
-     * @param appointmentsPlaceNameHeading
+     * @param appointmentsPlaceNameHeading The appointments_place_name_heading
      */
     public void setAppointmentsPlaceNameHeading(String appointmentsPlaceNameHeading) {
         this.appointmentsPlaceNameHeading = appointmentsPlaceNameHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsReasonForVisitHeading
      */
     public String getAppointmentsReasonForVisitHeading() {
         return appointmentsReasonForVisitHeading;
     }
 
     /**
-     *
-     * @param appointmentsReasonForVisitHeading
+     * @param appointmentsReasonForVisitHeading The appointments_reason_for_visit_heading
      */
     public void setAppointmentsReasonForVisitHeading(String appointmentsReasonForVisitHeading) {
         this.appointmentsReasonForVisitHeading = appointmentsReasonForVisitHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsOptionalHeading
      */
     public String getAppointmentsOptionalHeading() {
         return appointmentsOptionalHeading;
     }
 
     /**
-     *
-     * @param appointmentsOptionalHeading
+     * @param appointmentsOptionalHeading The appointments_optional_heading
      */
     public void setAppointmentsOptionalHeading(String appointmentsOptionalHeading) {
         this.appointmentsOptionalHeading = appointmentsOptionalHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsQueueHeading
      */
     public String getAppointmentsQueueHeading() {
         return appointmentsQueueHeading;
     }
 
     /**
-     *
-     * @param appointmentsQueueHeading
+     * @param appointmentsQueueHeading The appointments_queue_heading
      */
     public void setAppointmentsQueueHeading(String appointmentsQueueHeading) {
         this.appointmentsQueueHeading = appointmentsQueueHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsCancelHeading
      */
     public String getAppointmentsCancelHeading() {
         return appointmentsCancelHeading;
     }
 
     /**
-     *
-     * @param appointmentsCancelHeading
+     * @param appointmentsCancelHeading The appointments_cancel_heading
      */
     public void setAppointmentsCancelHeading(String appointmentsCancelHeading) {
         this.appointmentsCancelHeading = appointmentsCancelHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsCanceledHeading
      */
     public String getAppointmentsCanceledHeading() {
         return appointmentsCanceledHeading;
     }
 
     /**
-     *
-     * @param appointmentsCanceledHeading
+     * @param appointmentsCanceledHeading The appointments_canceled_heading
      */
     public void setAppointmentsCanceledHeading(String appointmentsCanceledHeading) {
         this.appointmentsCanceledHeading = appointmentsCanceledHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsRequestHeading
      */
     public String getAppointmentsRequestHeading() {
         return appointmentsRequestHeading;
     }
 
     /**
-     *
-     * @param appointmentsRequestHeading
+     * @param appointmentsRequestHeading The appointments_request_heading
      */
     public void setAppointmentsRequestHeading(String appointmentsRequestHeading) {
         this.appointmentsRequestHeading = appointmentsRequestHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsRequestPendingHeading
      */
     public String getAppointmentsRequestPendingHeading() {
         return appointmentsRequestPendingHeading;
     }
 
     /**
-     *
-     * @param appointmentsRequestPendingHeading
+     * @param appointmentsRequestPendingHeading The appointments_request_pending_heading
      */
     public void setAppointmentsRequestPendingHeading(String appointmentsRequestPendingHeading) {
         this.appointmentsRequestPendingHeading = appointmentsRequestPendingHeading;
     }
 
     /**
-     *
-     * @return
+     * @return The appointmentsMissedHeading
      */
     public String getAppointmentsMissedHeading() {
         return appointmentsMissedHeading;
     }
 
     /**
-     *
-     * @param appointmentsMissedHeading
+     * @param appointmentsMissedHeading The appointments_missed_heading
      */
     public void setAppointmentsMissedHeading(String appointmentsMissedHeading) {
         this.appointmentsMissedHeading = appointmentsMissedHeading;
