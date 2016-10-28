@@ -137,8 +137,8 @@ public class WorkflowServiceHelper {
 
     /**
      * @Deprecated use execute
-     * @param url
-     * @param callback
+     * @param url url
+     * @param callback call back
      */
     @Deprecated
     public void executeGetRequest(@NonNull String url, @NonNull final WorkflowServiceCallback callback) {
