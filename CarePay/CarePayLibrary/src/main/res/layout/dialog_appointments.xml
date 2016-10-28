@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootDialogAppointLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent_apt"
-    android:id="@+id/rootDialogAppointLayout"
     android:orientation="vertical">
 
     <LinearLayout
@@ -16,21 +16,19 @@
             android:id="@+id/dialogAppointHeaderTextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/apt_imgview_ht"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
-            android:gravity="left"
-            android:text="@string/close"
+            android:gravity="start"
             android:src="@drawable/icn_patient_mode_nav_close"
             android:textColor="@color/white" />
 
-        <TextView
-            android:id="@+id/dialogEditOrCancelAppointTextView"
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+            android:id="@+id/dialogCancelAppointTextView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/apt_imgview_ht"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
-            android:gravity="right"
-            android:text="@string/cancel_appointment_dialog"
+            android:gravity="end"
             android:textColor="@color/white"
             android:textSize="@dimen/textview_textsize"
             android:visibility="gone" />
@@ -53,7 +51,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel
                 android:id="@+id/appointDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +60,7 @@
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/apt_dl_text_date" />
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
                 android:id="@+id/appointTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,7 +93,7 @@
                 android:src="@drawable/icn_signup_step_2_user_on" />
         </android.support.v7.widget.CardView>
 
-        <TextView
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
             android:id="@+id/appointShortnameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -104,7 +102,6 @@
             android:gravity="center_vertical|center_horizontal"
             android:textColor="@color/white"
             android:textSize="@dimen/apt_dl_text_big"
-            android:textStyle="bold"
             android:visibility="visible" />
 
         <LinearLayout
@@ -117,7 +114,7 @@
             android:paddingLeft="@dimen/apt_dl_margin"
             android:paddingRight="@dimen/apt_dl_margin">
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
                 android:id="@+id/appointNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +122,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/apt_dl_text_big" />
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
                 android:id="@+id/appointTypeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -153,20 +150,20 @@
                     android:layout_weight="0.7"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold
                         android:id="@+id/appointAddressHeaderTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:ellipsize="none"
                         android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
-                        android:maxLines="3"
                         android:scrollHorizontally="false"
                         android:singleLine="true"
                         android:textColor="@color/payne_gray"
-                        android:textSize="@dimen/textview_textsize" />
+                        android:textSize="@dimen/textview_textsize"
+                        android:textStyle="bold" />
 
-                    <TextView
+                    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
                         android:id="@+id/appointAddressTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -191,7 +188,7 @@
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
-                    android:layout_marginLeft="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_marginStart="@dimen/apt_dialog_appoint_dail_margin"
                     android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
                     android:layout_weight="0.15"
                     android:src="@drawable/icn_appointment_card_call" />
@@ -202,8 +199,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_boader_ht"
                 android:background="@color/light_gray_dialog" />
-
-
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
