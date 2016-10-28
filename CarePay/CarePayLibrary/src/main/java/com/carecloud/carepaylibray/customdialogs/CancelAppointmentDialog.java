@@ -6,13 +6,14 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by prem_mourya on 10/12/2016.
@@ -24,21 +25,25 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private Context context;
     private AppointmentDTO appointmentDTO;
+    private AppointmentLabelDTO appointmentLabels;
+
     private boolean isCanceled = false;
     private boolean isMissed = false;
-    private CustomGothamRoundedMediumLabel appointmentStatusLabel;
 
     /**
      * Contractor for   dialog.
-     *
-     * @param context          the String to evaluate
+     * @param context the String to evaluate
      * @param appointmentDTO the DTO to evaluate
+     * @param appointmentLabels Screen labels
      */
-    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                   AppointmentLabelDTO appointmentLabels) {
+
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.isMissed = true;
+        this.appointmentLabels = appointmentLabels;
     }
 
     /**
@@ -69,32 +74,32 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     }
 
     private void setActionButton() {
-
-        TextView editAppointmentTextView = (TextView) rootLayout.findViewById(R.id.dialogEditOrCancelAppointTextView);
+        CustomGothamRoundedMediumLabel editAppointmentTextView = (CustomGothamRoundedMediumLabel)
+                rootLayout.findViewById(R.id.dialogCancelAppointTextView);
         editAppointmentTextView.setVisibility(View.VISIBLE);
-        editAppointmentTextView.setText(R.string.cancel_appointment_dialog);
+        editAppointmentTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCancelHeading()));
         editAppointmentTextView.setTextColor(context.getResources().getColor(R.color.glitter));
-        SystemUtil.setGothamRoundedMediumTypeface(context, editAppointmentTextView);
         editAppointmentTextView.setOnClickListener(this);
     }
 
     private void setActionButtonCanceled() {
-
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_canceled_appointment, null);
 
-        appointmentStatusLabel = (CustomGothamRoundedMediumLabel) childActionView.findViewById(R.id.appointmentStatusLabel);
+        CustomGothamRoundedMediumLabel appointmentStatusLabel = (CustomGothamRoundedMediumLabel)
+                childActionView.findViewById(R.id.appointmentStatusLabel);
+
         if (isMissed) {
-            appointmentStatusLabel.setText(StringUtil.getLabelForView(""));
+            appointmentStatusLabel.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsMissedHeading()));
             appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.lightningyellow));
         } else {
-            appointmentStatusLabel.setText(StringUtil.getLabelForView(""));
+            appointmentStatusLabel.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCanceledHeading()));
             appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
 
         findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.Feldgrau);
-        ((TextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
-        ((TextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
+        ((CustomProxyNovaLightLabel) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
+        ((CustomGothamRoundedBoldLabel) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
         mainLayout.addView(childActionView);
     }
 
@@ -102,7 +107,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     public void onClick(View view) {
         super.onClick(view);
         int viewId = view.getId();
-        if (viewId == R.id.dialogEditOrCancelAppointTextView) {
+        if (viewId == R.id.dialogCancelAppointTextView) {
             onCancelAppointment();
             cancel();
         }

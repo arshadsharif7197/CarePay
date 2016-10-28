@@ -10,21 +10,24 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
     private Context context;
     private LinearLayout mainLayout;
+    private AppointmentLabelDTO appointmentLabels;
 
-    public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+    public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO, AppointmentLabelDTO appointmentLabels) {
         super(context, appointmentDTO);
         this.context = context;
+        this.appointmentLabels = appointmentLabels;
     }
 
     @Override
@@ -42,11 +45,13 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_request_appointment, null);
 
         Button appointmentRequestButton = (Button) childActionView.findViewById(R.id.requestAppointmentButton);
+        appointmentRequestButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsRequestHeading()));
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 
-        TextView optionalTextView = (TextView) childActionView.findViewById(R.id.optionalTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(context, optionalTextView);
+        CustomProxyNovaSemiBoldLabel optionalTextView = (CustomProxyNovaSemiBoldLabel)
+                childActionView.findViewById(R.id.optionalTextView);
+        optionalTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsOptionalHeading()));
 
         EditText reasonEditText = (EditText) childActionView.findViewById(R.id.reasonEditText);
         reasonEditText.setOnTouchListener(new View.OnTouchListener() {
