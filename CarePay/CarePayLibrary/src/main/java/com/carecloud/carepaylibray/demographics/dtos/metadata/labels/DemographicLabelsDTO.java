@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class DemographicLabelsDTO {
+
     @SerializedName("demographics_update_button") @Expose
     private String demographicsUpdateButton;
 
@@ -36,126 +37,124 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_add_another_insurance_link") @Expose
     private String demographicsAddAnotherInsuranceLink;
 
-//    @SerializedName("demographics_next") @Expose
+    @SerializedName("demographics_next") @Expose
     private String demographicsNext;
 
-//    @SerializedName("demographics_address_header") @Expose
+    @SerializedName("demographics_address_header") @Expose
     private String demographicsAddressHeader;
 
-//    @SerializedName("demographics_address_subheader") @Expose
+    @SerializedName("demographics_address_subheader") @Expose
     private String demographicsAddressSubheader;
 
-//    @SerializedName("demographics_required") @Expose
+    @SerializedName("demographics_required") @Expose
     private String demographicsRequired;
 
-//    @SerializedName("demographics_details_header") @Expose
+    @SerializedName("demographics_details_header") @Expose
     private String demographicsDetailsHeader;
 
-    //    @SerializedName("demographics_details_subheader") @Expose
+    @SerializedName("demographics_details_subheader") @Expose
     private String demographicsDetailsSubheader;
 
-//    @SerializedName("demographics_details_dob_hint") @Expose
+    @SerializedName("demographics_details_dob_hint") @Expose
     private String demographicsDetailsDobHint;
 
-//    @SerializedName("demographics_choose") @Expose
+    @SerializedName("demographics_choose") @Expose
     private String demographicsChooseLabel;
 
-//    @SerializedName("demographics_details_capture_picture_caption") @Expose
+    @SerializedName("demographics_details_capture_picture_caption") @Expose
     private String demographicsProfileCaptureCaption;
 
-    //    @SerializedName("demographics_details_recapture_picture_caption") @Expose
+    @SerializedName("demographics_details_recapture_picture_caption") @Expose
     private String demographicsProfileReCaptureCaption;
 
-//    @SerializedName("demographics_details_allergies_section") @Expose
+    @SerializedName("demographics_details_allergies_section") @Expose
     private String demographicsDetailsAllergiesSection;
 
-    //    @SerializedName("demographics_details_optional_hint") @Expose
+    @SerializedName("demographics_details_optional_hint") @Expose
     private String demographicsDetailsOptionalHint;
 
-    //    @SerializedName("demographics_details_medications_section") @Expose
+    @SerializedName("demographics_details_medications_section") @Expose
     private String demographicsDetailsMedicationsSection;
 
-//    @SerializedName("demographics_details_allergy") @Expose
+    @SerializedName("demographics_details_allergy") @Expose
     private String demographicsDetailAllergyLabel;
 
-    //    @SerializedName("demographics_details_medication") @Expose
+    @SerializedName("demographics_details_medication") @Expose
     private String demographicsDetailMedicationLabel;
 
-    //    @SerializedName("demographics_details_allergy_add_unlisted") @Expose
+    @SerializedName("demographics_details_allergy_add_unlisted") @Expose
     private String demographicsDetailsAllergyAddUnlistedLabel;
 
-    //    @SerializedName("demographics_details_medication_add_unlisted") @Expose
+    @SerializedName("demographics_details_medication_add_unlisted") @Expose
     private String demographicsDetailsMedAddUnlistedLabel;
 
-//    @SerializedName("demographics_documents_header") @Expose
-    public String demographicsDocumentsHeader;
+    @SerializedName("demographics_documents_header") @Expose
+    private String demographicsDocumentsHeader;
 
-    //    @SerializedName("demographics_documents_subheader") @Expose
-    public String demographicsDocumentsSubheader;
+    @SerializedName("demographics_documents_subheader") @Expose
+    private String demographicsDocumentsSubheader;
 
-    //    @SerializedName("demographics_documents_switch_insurance") @Expose
-    public String demographicsDocumentsSwitchLabel;
+    @SerializedName("demographics_documents_switch_insurance") @Expose
+    private String demographicsDocumentsSwitchLabel;
 
-    //    @SerializedName("demographics_documents_multiple_insurances") @Expose
-    public String demographicsDocumentsMultiInsLabel;
+    @SerializedName("demographics_documents_multiple_insurances") @Expose
+    private String demographicsDocumentsMultiInsLabel;
 
-    //    @SerializedName("demographics_documents_scan_front") @Expose
-    public String demographicsDocumentsScanFrontLabel;
+    @SerializedName("demographics_documents_scan_front") @Expose
+    private String demographicsDocumentsScanFrontLabel;
 
-    //    @SerializedName("demographics_documents_scan_back") @Expose
-    public String demographicsDocumentsScanBackLabel;
+    @SerializedName("demographics_documents_scan_back") @Expose
+    private String demographicsDocumentsScanBackLabel;
 
-    //    @SerializedName("demographics_documents_rescan_front") @Expose
-    public String demographicsDocumentsRescanFrontLabel;
+    @SerializedName("demographics_documents_rescan_front") @Expose
+    private String demographicsDocumentsRescanFrontLabel;
 
-    //    @SerializedName("demographics_documents_rescan_back") @Expose
-    public String demographicsDocumentsRescanBackLabel;
+    @SerializedName("demographics_documents_rescan_back") @Expose
+    private String demographicsDocumentsRescanBackLabel;
 
-//    @SerializedName("demographics_cancel_label") @Expose
-    public String demographicsCancelLabel;
+    @SerializedName("demographics_cancel_label") @Expose
+    private String demographicsCancelLabel;
 
-    //    @SerializedName("demographics_documents_title_select_state") @Expose
-    public String demographicsTitleSelectState;
+    @SerializedName("demographics_documents_title_select_state") @Expose
+    private String demographicsTitleSelectState;
 
-    //    @SerializedName("demographics_documents_title_select_plan") @Expose
-    public String demographicsTitleSelectPlan;
+    @SerializedName("demographics_documents_title_select_plan") @Expose
+    private String demographicsTitleSelectPlan;
 
-    //    @SerializedName("demographics_documents_title_select_provider") @Expose
-    public String demographicsTitleSelectProvider;
+    @SerializedName("demographics_documents_title_select_provider") @Expose
+    private String demographicsTitleSelectProvider;
 
-    //    @SerializedName("demographics_documents_title_select_gender") @Expose
-    public String demographicsTitleSelectGender;
+    @SerializedName("demographics_documents_title_select_gender") @Expose
+    private String demographicsTitleSelectGender;
 
-    //    @SerializedName("demographics_documents_title_select_ethnicity") @Expose
-    public String demographicsTitleSelectEthnicity;
+    @SerializedName("demographics_documents_title_select_ethnicity") @Expose
+    private String demographicsTitleSelectEthnicity;
 
-    //    @SerializedName("demographics_documents_title_select_race") @Expose
-    public String demographicsTitleSelectRace;
+    @SerializedName("demographics_documents_title_select_race") @Expose
+    private String demographicsTitleSelectRace;
 
-    //    @SerializedName("demographics_documents_title_select_id_type") @Expose
-    public String demographicsTitleSelectIdType;
+    @SerializedName("demographics_documents_title_select_id_type") @Expose
+    private String demographicsTitleSelectIdType;
 
-//    @SerializedName("demographics_documents_choose_provider") @Expose
-    public String demographicsDocumentsChooseProviderLabel;
+    @SerializedName("demographics_documents_choose_plan") @Expose
+    private String demographicsDocumentsChoosePlanLabel;
 
-//    @SerializedName("demographics_documents_ins_type_label") @Expose
-    public String demographicsDocumentsInsTypeLabel;
+    @SerializedName("demographics_documents_ins_type_label") @Expose
+    private String demographicsDocumentsInsTypeLabel;
 
-//    @SerializedName("demographics_documents_title_card_type") @Expose
-    public String demographicsTitleCardType;
+    @SerializedName("demographics_documents_title_card_type") @Expose
+    private String demographicsTitleCardType;
 
-//    @SerializedName("demographics_allset_header") @Expose
-    public String demographicsAllSetHeader;
+    @SerializedName("demographics_allset_header") @Expose
+    private String demographicsAllSetHeader;
 
-    //    @SerializedName("demographics_allset_subheader") @Expose
-    public String demographicsAllSetSubheader;
+    @SerializedName("demographics_allset_subheader") @Expose
+    private String demographicsAllSetSubheader;
 
-    //    @SerializedName("demographics_allset_go_button") @Expose
-    public String demographicsAllSetGoButton;
-
+    @SerializedName("demographics_allset_go_button") @Expose
+    private String demographicsAllSetGoButton;
 
     /**
-     *
      * @return The demographicsUpdateButton
      */
     public String getDemographicsUpdateButton() {
@@ -163,7 +162,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @param demographicsUpdateButton The demographics_update_button
      */
     public void setDemographicsUpdateButton(String demographicsUpdateButton) {
@@ -171,7 +169,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @return The demographicsUpdateProfilePhotoLink
      */
     public String getDemographicsUpdateProfilePhotoLink() {
@@ -179,7 +176,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @param demographicsUpdateProfilePhotoLink The demographics_update_profile_photo_link
      */
     public void setDemographicsUpdateProfilePhotoLink(String demographicsUpdateProfilePhotoLink) {
@@ -187,7 +183,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @return The demographicsUpdateEmailAndPasswordLink
      */
     public String getDemographicsUpdateEmailAndPasswordLink() {
@@ -195,7 +190,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @param demographicsUpdateEmailAndPasswordLink The demographics_update_email_and_password_link
      */
     public void setDemographicsUpdateEmailAndPasswordLink(String demographicsUpdateEmailAndPasswordLink) {
@@ -203,7 +197,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @return The demographicsAddressSection
      */
     public String getDemographicsAddressSection() {
@@ -212,7 +205,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @param demographicsAddressSection The demographics_address_section
      */
     public void setDemographicsAddressSection(String demographicsAddressSection) {
@@ -220,7 +212,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @return The demographicsDetailsSection
      */
     public String getDemographicsDetailsSection() {
@@ -229,7 +220,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @param demographicsDetailsSection The demographics_details_section
      */
     public void setDemographicsDetailsSection(String demographicsDetailsSection) {
@@ -237,7 +227,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @return The demographicsDocumentsSection
      */
     public String getDemographicsDocumentsSection() {
@@ -246,7 +235,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @param demographicsDocumentsSection The demographics_documents_section
      */
     public void setDemographicsDocumentsSection(String demographicsDocumentsSection) {
@@ -254,7 +242,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @return The demographicsAllSetSection
      */
     public String getDemographicsAllSetSection() {
@@ -263,7 +250,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @param demographicsAllSetSection The demographics_updates_section
      */
     public void setDemographicsAllSetSection(String demographicsAllSetSection) {
@@ -271,7 +257,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @return The demographicsAddAnotherInsuranceLink
      */
     public String getDemographicsAddAnotherInsuranceLink() {
@@ -279,7 +264,6 @@ public class DemographicLabelsDTO {
     }
 
     /**
-     *
      * @param demographicsAddAnotherInsuranceLink The demographics_add_another_insurance_link
      */
     public void setDemographicsAddAnotherInsuranceLink(String demographicsAddAnotherInsuranceLink) {
@@ -581,13 +565,13 @@ public class DemographicLabelsDTO {
         this.demographicsTitleSelectIdType = demographicsTitleSelectIdType;
     }
 
-    public String getDemographicsDocumentsChooseProviderLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsChooseProviderLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsChooseProviderLabel;
+    public String getDemographicsDocumentsChoosePlanLabel() {
+        return StringUtil.isNullOrEmpty(demographicsDocumentsChoosePlanLabel) ?
+                CarePayConstants.NOT_DEFINED : demographicsDocumentsChoosePlanLabel;
     }
 
-    public void setDemographicsDocumentsChooseProviderLabel(String demographicsDocumentsChooseProviderLabel) {
-        this.demographicsDocumentsChooseProviderLabel = demographicsDocumentsChooseProviderLabel;
+    public void setDemographicsDocumentsChoosePlanLabel(String demographicsDocumentsChoosePlanLabel) {
+        this.demographicsDocumentsChoosePlanLabel = demographicsDocumentsChoosePlanLabel;
     }
 
     public String getDemographicsDocumentsInsTypeLabel() {

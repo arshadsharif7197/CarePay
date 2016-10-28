@@ -145,7 +145,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         // 'Cancel' label
         final String cancelLabel = globalLabelsDTO.getDemographicsCancelLabel();
-        label = globalLabelsDTO.getDemographicsDocumentsChooseProviderLabel();
+        // 'Choose' label
+        label = globalLabelsDTO.getDemographicsChooseLabel();
+
         providerTextView = (TextView) view.findViewById(R.id.demogr_docs_provider);
         providerTextView.setText(label);
         final String selectProviderTitle = globalLabelsDTO.getDemographicsTitleSelectProvider();
@@ -156,17 +158,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             }
         });
 
-        // 'Choose' label
-        label = globalLabelsDTO.getDemographicsChooseLabel();
-        planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
-        planTextView.setText(label);
-        final String selectPlanTitle = globalLabelsDTO.getDemographicsTitleSelectPlan();
-        planTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showChooseDialog(planDataArray, selectPlanTitle, cancelLabel, planTextView);
-            }
-        });
         cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
         cardTypeTextView.setText(label);
         final String selectTypeTitle = globalLabelsDTO.getDemographicsTitleCardType();
@@ -174,6 +165,17 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             @Override
             public void onClick(View view) {
                 showChooseDialog(cardTypeDataArray, selectTypeTitle, cancelLabel, cardTypeTextView);
+            }
+        });
+
+        planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
+        label = globalLabelsDTO.getDemographicsDocumentsChoosePlanLabel();
+        planTextView.setText(label);
+        final String selectPlanTitle = globalLabelsDTO.getDemographicsTitleSelectPlan();
+        planTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChooseDialog(planDataArray, selectPlanTitle, cancelLabel, planTextView);
             }
         });
 

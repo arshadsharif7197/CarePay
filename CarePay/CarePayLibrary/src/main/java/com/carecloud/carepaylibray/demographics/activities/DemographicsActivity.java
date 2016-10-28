@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
@@ -70,6 +71,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
     private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
     private DemographicLabelsDTO                    labelsDTO;
+    private Toolbar                                 toolbar;
 
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
@@ -111,12 +113,12 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         fragLabels[2] = labelsDTO.getDemographicsDocumentsSection();
         fragLabels[3] = labelsDTO.getDemographicsAllSetSection();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
         toolbar.setTitle("");
         titleTextView.setText(fragLabels[0]);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
+//        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
         (DemographicsActivity.this).setSupportActionBar(toolbar);
 
         // set the progress bar
@@ -188,8 +190,18 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
     }
 
+    /**
+     * Set the current screen in the view pages
+     * @param item Index of the current item
+     * @param smoothScroll Whether smooth scroll
+     */
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
+        if (item > 0) {
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
+        } else {
+            toolbar.setNavigationIcon(null);
+        }
     }
 
     public DemographicDTO getModel() {
@@ -323,9 +335,12 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     public void onBackPressed() {
         if (currentPageIndex == 0) {
             SystemUtil.hideSoftKeyboard(this);
-            // re-launch SigninSignupActivity
-            Intent intent = new Intent(this, SigninSignupActivity.class);
-            startActivity(intent);
+            // sign-out from Cognito
+            CognitoAppHelper.getPool().getUser().signOut();
+            CognitoAppHelper.setUser(null);
+
+            // finish the app
+            DemographicsActivity.this.finishAffinity();
         } else {
             setCurrentItem(currentPageIndex - 1, true);
         }
