@@ -14,10 +14,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
-    dexOptions {
-        maxProcessCount 4
-        javaMaxHeapSize "12g"
-    }
     buildTypes {
         release {
             minifyEnabled false

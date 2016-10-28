@@ -11,9 +11,7 @@ import com.carecloud.carepaylibrary.R;
 
 /**
  * Created by harshal_patil on 22/09/16.
- * @Deprecated use CarePayTextView
  */
-@Deprecated
 public class CustomProxyNovaSemiBoldLabel extends TextView {
     private Context context;
     public CustomProxyNovaSemiBoldLabel(Context context, AttributeSet attrs, int defStyle) {

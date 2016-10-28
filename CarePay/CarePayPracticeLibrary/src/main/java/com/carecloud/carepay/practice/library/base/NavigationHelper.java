@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
-import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
@@ -38,44 +37,37 @@ public class NavigationHelper {
     }
 
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-        Intent intent = null;
-        if (workflowDTO == null)
-            return;
+        Intent intent=null;
+
         switch (workflowDTO.getState()) {
             case NavigationStateConstants.PRACTICE_MODE_SIGNIN: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
             }
             case NavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
             }
             case NavigationStateConstants.PRACTICE_APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
             }
-            case NavigationStateConstants.PATIENT_MODE_SPLASH: {
+            case NavigationStateConstants.PATIENT_MODE_SPLASH:{
                 intent = new Intent(context, PatientModeSplashActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                break;
-            }
-            case NavigationStateConstants.PRACTICE_CHECKIN: {
-                intent = new Intent(context, CheckInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
             }
             default: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 break;
 
             }

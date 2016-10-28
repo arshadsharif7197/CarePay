@@ -26,7 +26,6 @@ import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -342,8 +341,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onLoginSuccess() {
             progressBar.setVisibility(View.INVISIBLE);
-            //launchHomescreen();
-            WorkflowServiceHelper.getInstance().execute(signinDTO.getMetadata().getTransitions().getAuthenticate(),signinCallback);
+            launchHomescreen();
         }
         //launchHomescreen
 

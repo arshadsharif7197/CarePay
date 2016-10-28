@@ -1,20 +1,26 @@
 package com.carecloud.carepay.practice.library.checkin.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCartView;
+import com.carecloud.carepay.practice.library.payments.RotateActivity;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentPatientDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
 
 /**
  * Created by Jahirul Bhuiyan on 10/17/2016.
@@ -62,11 +68,10 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     @Override
     public void onBindViewHolder(CheckedInAppointmentAdapter.CartViewHolder holder, final int position) {
         AppointmentDTO appointmentItem = appointmentArrayList.get(position);
-        PatientDTO patientModel = appointmentItem.getPayload().getPatient();
+        AppointmentPatientDTO patientModel = appointmentItem.getPayload().getPatient();
         holder.appointmentStatusCartView.setPatientName(patientModel.getFirstName() + " " + patientModel.getLastName());
-        holder.appointmentStatusCartView.setAppointmentId(appointmentItem.getPayload().getId());
-        //holder.appointmentStatusCartView.setAmount(patientModel.getTotalBalance());
-        //holder.appointmentStatusCartView.setPatientImage(patientModel.getPhoto());
+        holder.appointmentStatusCartView.setAmount(patientModel.getTotalBalance());
+        holder.appointmentStatusCartView.setPatientImage(patientModel.getPhoto());
         holder.appointmentStatusCartView.setProviderName(appointmentItem.getPayload().getProvider().getName());
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
 

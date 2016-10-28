@@ -6,72 +6,41 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
-import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.NavigationHelper;
+import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
-import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
-import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
+import com.carecloud.carepay.practice.library.splash.SplashActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
-public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
+public class CloverMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static int count;
     TextView checkedInCounterTextview;
-    TextView alertTextView;
-    TextView modeSwitchTextView;
-
-    HomeScreenDTO homeScreenDTO;
-
-    public enum HomeScreenMode{
-        PATIENT_HOME, PRACTICE_HOME
-    }
-
-    private HomeScreenMode homeScreenMode;
-
-
+    WorkflowServiceCallback applicationStartCallback = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setSystemUiVisibility();
-        homeScreenDTO=getConvertedDTO(HomeScreenDTO.class);
-        homeScreenMode=HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
         setContentView(R.layout.activity_main_clover);
         checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
-        alertTextView = (TextView) findViewById(R.id.alertTextView);
-        modeSwitchTextView= (TextView) findViewById(R.id.modeSwitchTextView);
         // getDemographicInformation();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         findViewById(R.id.checkinTextView).setOnClickListener(this);
         findViewById(R.id.appointmentTextView).setOnClickListener(this);
-        modeSwitchTextView.setOnClickListener(this);
-        if(homeScreenMode==HomeScreenMode.PATIENT_HOME){
-            checkedInCounterTextview.setVisibility(View.GONE);
-            alertTextView.setVisibility(View.GONE);
-            modeSwitchTextView.setVisibility(View.GONE);
-        }else{
-            if(homeScreenDTO!=null && homeScreenDTO.getPayload()!=null) {
-                if(homeScreenDTO.getPayload().getUserPractices()!=null) {
-                    WorkflowServiceHelper.getInstance().setUserPracticeDTO(homeScreenDTO.getPayload().getUserPractices().get(0));
-                }
-                HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO=homeScreenDTO.getPayload().getAppointmentCounts();
-                if(homeScreenAppointmentCountsDTO!=null){
-                    checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPending()+ homeScreenAppointmentCountsDTO.getPending()));
-                }
-            }
-        }
-
+        findViewById(R.id.modeswitch).setOnClickListener(this);
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
 
     }
@@ -105,22 +74,38 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         int viewId = view.getId();
 
         if (viewId == R.id.checkinTextView) {
-            /*Intent checkedInIntent = new Intent(CloverMainActivity.this, CheckInActivity.class);
+            Intent checkedInIntent = new Intent(CloverMainActivity.this, CheckInActivity.class);
             checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(checkedInIntent);*/
-            if(homeScreenDTO!=null && homeScreenDTO.getMetadata()!=null && homeScreenDTO.getMetadata().getTransitions()!=null) {
-                WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(),checkInCallback);
-            }
+            startActivity(checkedInIntent);
 
-        } else if (viewId == R.id.modeSwitchTextView) {
+        } else if (viewId == R.id.modeswitch) {
 
             ChangeModeDialog changeModeDialog = new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
 
                 @Override
                 public void onPatientModeSelected() {
-                    Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
+
+                    WorkflowServiceHelper.getInstance().executeGetRequest("https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/patient_mode/authenticate/start",applicationStartCallback);
+                    applicationStartCallback = new WorkflowServiceCallback() {
+                        @Override
+                        public void onPreExecute() {
+
+                        }
+
+                        @Override
+                        public void onPostExecute(WorkflowDTO workflowDTO) {
+                            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+
+                        }
+
+                        @Override
+                        public void onFailure(String exceptionMessage) {
+
+                        }
+                    };
+                   /* Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
                     appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(appointmentIntent);
+                    startActivity(appointmentIntent);*/
                     Toast.makeText(CloverMainActivity.this, "Patient Mode selected...", Toast.LENGTH_SHORT).show();
                 }
             }, new ChangeModeDialog.LogoutClickListener() {
@@ -139,23 +124,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         }
     }
-
-    WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-
-        }
-    };
 
     /*private void getDemographicInformation() {
         AppointmentService apptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class); //, String token, String searchString
