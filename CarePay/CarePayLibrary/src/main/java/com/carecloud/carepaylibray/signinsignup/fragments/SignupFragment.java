@@ -34,7 +34,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 
-import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -236,10 +236,7 @@ public class SignupFragment extends Fragment {
         });
     }
 
-    /**
-     * Set listener to capture focus change and toggle the hint text to caps on/off
-     */
-    public void setChangeFocusListeners() {
+    private void setChangeFocusListeners() {
         emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
