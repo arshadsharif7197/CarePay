@@ -22,6 +22,12 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private AppointmentLabelDTO appointmentLabels;
 
+    /**
+     * Constructor.
+     * @param context activity context
+     * @param appointmentDTO appointment model
+     * @param appointmentLabels screen labels
+     */
     public PendingAppointmentRequestDialog(Context context, AppointmentDTO appointmentDTO,
                                            AppointmentLabelDTO appointmentLabels) {
         super(context, appointmentDTO);

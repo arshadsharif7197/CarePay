@@ -19,6 +19,12 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private AppointmentLabelDTO appointmentLabels;
 
+    /**
+     * Constructor.
+     * @param context context
+     * @param appointmentDTO appointment Item
+     * @param appointmentLabels screen labels
+     */
     public CheckInEarlyAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                          AppointmentLabelDTO appointmentLabels) {
         super(context, appointmentDTO);

@@ -47,17 +47,21 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     }
 
     /**
-     * Contractor for   dialog.
-     *
-     * @param context          the String to evaluate
-     * @param appointmentDTO the DTO to evaluate
+     * Contractor for dialog.
+     * @param context context
+     * @param appointmentDTO appointment item
+     * @param isCanceled isCanceled
+     * @param appointmentLabels screen labels
      */
-    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO, boolean isCanceled) {
+    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                   boolean isCanceled, AppointmentLabelDTO appointmentLabels) {
+
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.isCanceled = isCanceled;
         this.isMissed = false;
+        this.appointmentLabels = appointmentLabels;
     }
 
     @Override
@@ -117,7 +121,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
      * call cancel at office api.
      */
     private void onCancelAppointment() {
-        new CancelReasonAppointmentDialog(context, appointmentDTO).show();
+        new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentLabels).show();
     }
 
 }

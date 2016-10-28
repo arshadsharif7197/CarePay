@@ -24,7 +24,15 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private AppointmentLabelDTO appointmentLabels;
 
-    public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO, AppointmentLabelDTO appointmentLabels) {
+    /**
+     * Constructor.
+     * @param context activity context
+     * @param appointmentDTO appointment model
+     * @param appointmentLabels screen labels
+     */
+    public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                    AppointmentLabelDTO appointmentLabels) {
+
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentLabels = appointmentLabels;
