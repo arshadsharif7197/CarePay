@@ -39,8 +39,9 @@ public class NavigationHelper {
 
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         Intent intent = null;
-        if (workflowDTO == null)
+        if (workflowDTO == null) {
             return;
+        }
         switch (workflowDTO.getState()) {
             case NavigationStateConstants.PRACTICE_MODE_SIGNIN: {
                 intent = new Intent(context, SigninActivity.class);

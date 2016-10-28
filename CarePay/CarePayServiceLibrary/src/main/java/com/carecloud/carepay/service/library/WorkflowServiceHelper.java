@@ -55,6 +55,7 @@ public class WorkflowServiceHelper {
 
     // use for seting practice maganement information
     private  UserPracticeDTO userPracticeDTO;
+
     public  UserPracticeDTO getUserPracticeDTO() {
         return userPracticeDTO;
     }
@@ -110,7 +111,10 @@ public class WorkflowServiceHelper {
         return appStartHeaders;
     }
 
-
+    /**
+     * Application Start request
+     * @param callback UI callback
+     */
     public void executeApplicationStartRequest(final WorkflowServiceCallback callback) {
         TransitionDTO transitionDTO=new TransitionDTO();
         transitionDTO.setMethod("GET");
@@ -120,8 +124,8 @@ public class WorkflowServiceHelper {
 
     /**
      * @Deprecated use execute
-     * @param url
-     * @param callback
+     * @param url url
+     * @param callback ui callback
      */
     @Deprecated
     public void executeGetRequest(@NonNull String url, @NonNull Map<String, String> customHeaders, @NonNull final WorkflowServiceCallback callback) {
@@ -152,6 +156,7 @@ public class WorkflowServiceHelper {
     public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody) {
         executeRequest(transitionDTO,callback,jsonBody,new HashMap<String, String>(),getUserAuthenticationHeaders());
     }
+
     public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, Map<String,String> queryMap) {
         executeRequest(transitionDTO,callback,null,queryMap,getUserAuthenticationHeaders());
     }
