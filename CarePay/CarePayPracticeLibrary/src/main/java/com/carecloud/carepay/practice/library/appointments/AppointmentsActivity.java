@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -18,13 +19,16 @@ import com.carecloud.carepay.practice.library.appointments.adapters.Appointments
 import com.carecloud.carepay.practice.library.appointments.services.AppointmentService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
+import com.carecloud.carepaylibray.utils.DateUtil;
+
 
 import java.util.ArrayList;
+
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -42,9 +46,10 @@ public class AppointmentsActivity extends AppCompatActivity {
     private TextView logOutTextview;
     private CustomProxyNovaRegularLabel appointmentForTextview;
     private CustomGothamRoundedMediumLabel selectAppointmentTextview;
+    private CustomGothamRoundedMediumLabel noAppointmentsLabel;
     private Bundle bundle;
     private LinearLayout noAppointmentView;
-
+    private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentListWithToday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,7 @@ public class AppointmentsActivity extends AppCompatActivity {
         appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
         noAppointmentView = (LinearLayout) findViewById(R.id.no_appointment_layout);
+        noAppointmentsLabel = (CustomGothamRoundedMediumLabel) findViewById(R.id.no_apt_message_title);
 
         getAppointmentInformation();
 
@@ -86,16 +92,23 @@ public class AppointmentsActivity extends AppCompatActivity {
                                  noAppointmentView.setVisibility(View.GONE);
                                  appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
 
-                                 if (appointmentsItems != null) {
-                                     appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentsItems);
+                                 appointmentListWithToday = new ArrayList<>();
+
+                                 for (AppointmentDTO appointmentDTO : appointmentsItems) {
+                                     String title = getToday(appointmentDTO.getPayload().getStartTime());
+                                     if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+                                         appointmentListWithToday.add(appointmentDTO);
+                                     }
+
+                                 }
+                                 if (appointmentListWithToday != null) {
+                                     appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday);
                                      appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
                                  }
+
                                  //Layout manager for the Recycler View
                                  appointmentsLayoutManager = new LinearLayoutManager(AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
                                  appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
-                             }else {
-
-                                 noAppointmentView.setVisibility(View.VISIBLE);
                              }
                          }
 
@@ -108,4 +121,27 @@ public class AppointmentsActivity extends AppCompatActivity {
         );
     }
 
+    private String getToday(String appointmentRawDate) {
+        // Current date
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
+        String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
+        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
+
+        // Appointment date
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
+        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
+
+        String strDay;
+        if (convertedAppointmentDate.after(currentConvertedDate)
+                && !appointmentDate.equalsIgnoreCase(currentDate)) {
+            strDay = CarePayConstants.DAY_UPCOMING;
+
+        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
+            strDay = CarePayConstants.DAY_TODAY;
+        } else {
+            strDay = CarePayConstants.DAY_TODAY;
+        }
+
+        return strDay;
+    }
 }
