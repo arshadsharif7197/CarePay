@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -64,15 +65,15 @@ public class DemographicsMoreDetailsFragment extends Fragment {
     private void initializeUIFields() {
         String label;
         header = (TextView) view.findViewById(R.id.moreDetailsHeading);
-        label = globalLabelsDTO.getDemographicsAllSetHeader();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsAllSetHeader();
         header.setText(label);
 
         subheader = (TextView) view.findViewById(R.id.moreDetailsSubHeading);
-        label = globalLabelsDTO.getDemographicsAllSetSubheader();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsAllSetSubheader();
         subheader.setText(label);
 
         gotoCarePay = (Button) view.findViewById(R.id.demographicsGoToCarePayButton);
-        label = globalLabelsDTO.getDemographicsAllSetGoButton();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsAllSetGoButton();
         gotoCarePay.setText(label);
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
             @Override

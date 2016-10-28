@@ -104,7 +104,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             states[0] = CarePayConstants.NOT_DEFINED;
 
             docTypes = new String[1];
-            docTypes[1] = CarePayConstants.NOT_DEFINED;
+            docTypes[0] = CarePayConstants.NOT_DEFINED;
 
             return;
         }

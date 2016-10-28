@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
@@ -108,10 +109,10 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
         // init frag labels
         fragLabels = new String[4];
-        fragLabels[0] = labelsDTO.getDemographicsAddressSection();
-        fragLabels[1] = labelsDTO.getDemographicsDetailsSection();
-        fragLabels[2] = labelsDTO.getDemographicsDocumentsSection();
-        fragLabels[3] = labelsDTO.getDemographicsAllSetSection();
+        fragLabels[0] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsAddressSection();
+        fragLabels[1] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsDetailsSection();
+        fragLabels[2] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsDocumentsSection();
+        fragLabels[3] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsAllSetSection();
 
         toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);

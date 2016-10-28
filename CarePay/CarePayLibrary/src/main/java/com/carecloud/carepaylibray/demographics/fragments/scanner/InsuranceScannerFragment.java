@@ -338,37 +338,40 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
      * @return insurance insuranceDTO
      */
     public DemographicInsurancePayloadDTO getBitmapsFromImageViews() {
-        Bitmap bitmapFront;
-        Bitmap bitmapBack;
-        bitmapBack = ((BitmapDrawable) insuranceBackScanHelper
-                .getImageViewTarget().getDrawable()).getBitmap();
-        bitmapFront = ((BitmapDrawable) insuranceFrontScanHelper
-                .getImageViewTarget().getDrawable()).getBitmap();
+        Bitmap bitmapFront = null;
+        Bitmap bitmapBack = null;
+        BitmapDrawable frontDrawable = (BitmapDrawable) insuranceBackScanHelper.getImageViewTarget().getDrawable();
+        BitmapDrawable backDrawable = (BitmapDrawable) insuranceFrontScanHelper.getImageViewTarget().getDrawable();
 
-        insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
-        insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
+        if(frontDrawable != null && backDrawable != null) {
+            bitmapBack = frontDrawable.getBitmap();
+            bitmapFront = backDrawable.getBitmap();
 
-        insurancebackPhotoDto.setInsurancePhoto(SystemUtil.encodeToBase64(
-                bitmapBack, Bitmap.CompressFormat.JPEG, 100));
+            insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
+            insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
 
-        insurancefrontPhotoDto.setInsurancePhoto(SystemUtil.encodeToBase64(
-                bitmapFront, Bitmap.CompressFormat.JPEG, 100));
+            insurancebackPhotoDto.setInsurancePhoto(SystemUtil.encodeToBase64(
+                    bitmapBack, Bitmap.CompressFormat.JPEG, 100));
 
-        List<DemographicInsurancePhotoDTO> photos = insuranceDTO.getInsurancePhotos();
-        if (photos == null) {
-            photos = new ArrayList<>();
-        } else {
-            photos.clear();
+            insurancefrontPhotoDto.setInsurancePhoto(SystemUtil.encodeToBase64(
+                    bitmapFront, Bitmap.CompressFormat.JPEG, 100));
+
+            List<DemographicInsurancePhotoDTO> photos = insuranceDTO.getInsurancePhotos();
+            if (photos == null) {
+                photos = new ArrayList<>();
+            } else {
+                photos.clear();
+            }
+
+            photos.add(0, insurancefrontPhotoDto);
+            photos.add(1, insurancebackPhotoDto);
+            insuranceDTO.setInsurancePhotos(photos);
+            insuranceDTO.setInsuranceMemberId(insuranceCardNumEditText.getText().toString());
+            insuranceDTO.setInsurancePlan(planTextView.getText().toString());
+            insuranceDTO.setInsuranceProvider(providerTextView.getText().toString());
         }
 
-        photos.add(0, insurancefrontPhotoDto);
-        photos.add(1, insurancebackPhotoDto);
-        insuranceDTO.setInsurancePhotos(photos);
-        insuranceDTO.setInsuranceMemberId(insuranceCardNumEditText.getText().toString());
-        insuranceDTO.setInsurancePlan(planTextView.getText().toString());
-        insuranceDTO.setInsuranceProvider(providerTextView.getText().toString());
         return insuranceDTO;
-
     }
 
     public void resetViewsContent() {
