@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.carecloud.carepay.practice.library.base.NavigationHelper;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 
@@ -23,6 +24,7 @@ public class CarePayApplication extends MultiDexApplication {
         deviceIdentifierDTO.setDeviceType("Clover");
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
+        WorkflowServiceHelper.initialization(WorkflowServiceHelper.ApplicationType.PRACTICE);
         NavigationHelper.initInstance(this);
     }
 }

@@ -9,15 +9,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20.0dp"
         android:layout_marginTop="20.0dp"
         android:layout_weight="2.5"
         android:orientation="horizontal">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
             <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
                 android:id="@+id/goBackButtonTextview"
@@ -37,11 +33,10 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="34.2dp"
+                android:layout_weight="1"
                 android:src="@drawable/cp_logo" />
 
 
@@ -49,7 +44,6 @@
                 android:id="@+id/languageTextview"
                 android:layout_width="112dp"
                 android:layout_height="51dp"
-                android:layout_alignParentEnd="true"
                 android:layout_marginTop="21.4dp"
                 android:background="@drawable/bg_blue_overlay"
                 android:drawableEnd="@drawable/icn_down_white"
@@ -57,11 +51,10 @@
                 android:includeFontPadding="false"
                 android:paddingEnd="15dp"
                 android:paddingStart="20dp"
-                android:text="EN"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:visibility="gone"/>
-        </RelativeLayout>
+
     </LinearLayout>
 
     <LinearLayout

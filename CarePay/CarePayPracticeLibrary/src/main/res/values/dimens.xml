@@ -68,4 +68,32 @@
     <dimen name="patient_mode_padding_top">65dp</dimen>
     <dimen name="logout_padding_top">57dp</dimen>
 
+    <!-- Custom Appointment details dialog -->
+    <dimen name="appointment_detail_dialog_width">714dp</dimen>
+    <dimen name="appointment_detail_dialog_height">465dp</dimen>
+    <dimen name="custom_appointment_dialog_view_margin">9dp</dimen>
+    <dimen name="custom_appointment_dialog_view_padding">10dp</dimen>
+    <dimen name="custom_appointment_dialog_view_textsize_small">14sp</dimen>
+    <dimen name="custom_appointment_dialog_view_textsize_medium">24sp</dimen>
+    <dimen name="custom_appointment_dialog_view_textsize_large">32sp</dimen>
+    <dimen name="custom_appointment_dialog_label_margin">16dp</dimen>
+    <dimen name="appointment_detail_dialog_divider_width">400dp</dimen>
+    <dimen name="appointment_detail_dialog_divider_margin">12dp</dimen>
+    <dimen name="custom_appointment_dialog_layout_margin">14dp</dimen>
+    <dimen name="custom_appointment_dialog_layout_padding">20dp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_margin">10dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_width">100dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_height">4dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_margin">-165dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_margin_top">20dp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_textsize">16sp</dimen>
+    <dimen name="custom_appointment_dialog_button_textsize">22sp</dimen>
+
+    <dimen name="custom_appointment_dialog_background_shape_radius">7dp</dimen>
+    <dimen name="custom_appointment_dialog_button_shape_radius">25dp</dimen>
+    <dimen name="custom_appointment_dialog_button_shape_padding_top">16dp</dimen>
+    <dimen name="custom_appointment_dialog_button_shape_padding_left">38dp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_normal_size">16dp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_normal_end_size">24dp</dimen>
+
 </resources>

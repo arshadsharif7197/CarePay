@@ -63,7 +63,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_confirmation_pin);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        onLabelsServiceCall();
+        getPracticeSetting();
         setCancelable(false);
         onInitialization();
         onSettingStyle();
@@ -145,7 +145,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
         }
     }
 
-    private void onLabelsServiceCall(){
+    private void getPracticeSetting(){
         PracticeSettingService aptService = (new BaseServiceGenerator(context)).createService(PracticeSettingService.class);
         Call<PracticeSettingDTO> call = aptService.getPracticeSettingInformation();
         call.enqueue(new Callback<PracticeSettingDTO>() {
