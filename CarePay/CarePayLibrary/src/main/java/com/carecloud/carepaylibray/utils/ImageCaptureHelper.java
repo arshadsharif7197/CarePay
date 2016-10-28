@@ -47,7 +47,7 @@ public class ImageCaptureHelper {
         imageViewTarget = targetImageView;
         imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
         imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
-        Log.v(LOG_TAG, "ctor viewWidth=" + imageViewTarget.getWidth() + " viewHeight=" + imageViewTarget.getHeight());
+        resetTargetView();
     }
 
     public int getImgHeight() {

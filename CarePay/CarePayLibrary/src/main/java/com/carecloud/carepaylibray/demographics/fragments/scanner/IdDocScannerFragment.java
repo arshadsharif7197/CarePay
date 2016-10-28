@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
@@ -54,7 +57,7 @@ import java.util.List;
  */
 public class IdDocScannerFragment extends DocumentScannerFragment {
 
-    private static final String   LOG_TAG = IdDocScannerFragment.class.getSimpleName();
+    private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
     private View               view;
     private ImageCaptureHelper scannerFront;
     private ImageCaptureHelper scannerBack;
@@ -64,22 +67,27 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     private EditText           idNumberEdit;
     private TextInputLayout    idNumberInputText;
     private TextView           idStateClickable;
-    private TextView idDocTypeLabel;
-    private TextView stateLabel;
+    private TextView           idDocTypeLabel;
+    private TextView           stateLabel;
 
     private DemographicIdDocPayloadDTO            model;
     private DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
     private DemographicLabelsDTO                  globalLabelsDTO;
 
     private static String[] states;
-    private String[] docTypes;
+    private        String[] docTypes;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         // fetch the labels
-        globalLabelsDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        Activity activity = getActivity();
+        if (activity instanceof DemographicsActivity) {
+            globalLabelsDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        } else if (activity instanceof DemographicReviewActivity) {
+            // instantiate the global labels here
+        }
 
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
@@ -90,6 +98,17 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     private void getOptions() {
+        if(idDocsMetaDTO == null) {
+            // init arrays with 'not-defined's
+            states = new String[1];
+            states[0] = CarePayConstants.NOT_DEFINED;
+
+            docTypes = new String[1];
+            docTypes[0] = CarePayConstants.NOT_DEFINED;
+
+            return;
+        }
+
         // init states
         states = new String[]{
                 "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
@@ -98,7 +117,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         // init doc types
         List<String> docTypesStrings = new ArrayList<>();
-        for(MetadataOptionDTO o : idDocsMetaDTO.properties.identityDocumentType.options) {
+        for (MetadataOptionDTO o : idDocsMetaDTO.properties.identityDocumentType.options) {
             docTypesStrings.add(o.getLabel());
         }
         docTypes = docTypesStrings.toArray(new String[0]);
@@ -110,16 +129,16 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         // init views (labels and logic)
         String label;
-        final String labelCancel = globalLabelsDTO.getDemographicsCancelLabel();
+        final String labelCancel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
 
         idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
-        label = idDocsMetaDTO.properties.identityDocumentType.getLabel();
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentType.getLabel();
         idDocTypeLabel.setText(label);
 
         idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
-        label = globalLabelsDTO.getDemographicsChooseLabel();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
         idTypeClickable.setText(label);
-        final String titleSelIdDoc = globalLabelsDTO.getDemographicsTitleSelectIdType();
+        final String titleSelIdDoc = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectIdType();
         idTypeClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,7 +157,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         // add click listener
         scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
-        label = globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
         scanFrontButton.setText(label);
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,7 +167,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         });
 
         scanBackButton = (Button) view.findViewById(R.id.demogrDocsBackScanButton);
-        label = globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
         scanBackButton.setText(label);
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,13 +177,13 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         });
 
         stateLabel = (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel);
-        label = idDocsMetaDTO.properties.identityDocumentState.getLabel();
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentState.getLabel();
         stateLabel.setText(label);
 
         idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);
-        label = globalLabelsDTO.getDemographicsChooseLabel();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
         idStateClickable.setText(label);
-        final String titleSelectState = globalLabelsDTO.getDemographicsTitleSelectState();
+        final String titleSelectState = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectState();
         idStateClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,7 +202,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
 
-        label = idDocsMetaDTO.properties.identityDocumentNumber.getLabel();
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentNumber.getLabel();
         idNumberInputText.setTag(label);
         idNumberEdit.setTag(idNumberInputText);
         idNumberEdit.setHint(label);
@@ -344,11 +363,11 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         String label;
-        if(imageCaptureHelper == scannerFront) {
-            label = globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
+        if (imageCaptureHelper == scannerFront) {
+            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
             scanFrontButton.setText(label);
-        } else if(imageCaptureHelper == scannerBack) {
-            label = globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
+        } else if (imageCaptureHelper == scannerBack) {
+            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
             scanBackButton.setText(label);
         }
 

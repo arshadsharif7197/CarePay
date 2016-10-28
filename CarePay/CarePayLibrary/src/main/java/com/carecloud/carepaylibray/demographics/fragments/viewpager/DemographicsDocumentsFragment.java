@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
@@ -87,11 +88,11 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         String label;
         // set primary views on parent fragment (ie, all views except sub-fragments)
         header = (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle);
-        label = globalLabelsMetaDTO.getDemographicsDocumentsHeader();
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsHeader();
         header.setText(label);
 
         subheader = (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle);
-        label = globalLabelsMetaDTO.getDemographicsDocumentsSubheader();
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSubheader();
         subheader.setText(label);
 
         setButtons();
@@ -122,7 +123,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         // next button
         nextButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
-        label = globalLabelsMetaDTO.getDemographicsNext();
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsNext();
         nextButton.setText(label);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +150,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         // add button
         multipleInsClickable = (TextView) view.findViewById(R.id.demographicsDocumentsMultipleInsClickable);
-        label = globalLabelsMetaDTO.getDemographicsDocumentsMultiInsLabel();
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsMultiInsLabel();
         multipleInsClickable.setText(label);
         multipleInsClickable.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,7 +192,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             idDocFragment = new IdDocScannerFragment();
             idDocFragment.setButtonsStatusCallback(this);
             idDocFragment.setModel(demPayloadIdDocDTO); // set the model
-            idDocFragment.setIdDocsMetaDTO(idDocsMetaDTO.properties.items.identityDocument);
+            idDocFragment.setIdDocsMetaDTO(idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
         }
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, "license").commit();
 
@@ -205,7 +206,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             insuranceFragment = new InsuranceScannerFragment();
             insuranceFragment.setButtonsStatusCallback(this);
             insuranceFragment.setInsuranceDTO(insuranceModel1); // set the model (if avail)
-            insuranceFragment.setInsuranceMetadataDTO(insurancesMetaDTO.properties.items.insurance);
+            insuranceFragment.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance1")
@@ -222,7 +223,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             extraInsuranceFrag1 = new InsuranceScannerFragment();
             extraInsuranceFrag1.setButtonsStatusCallback(this);
             extraInsuranceFrag1.setInsuranceDTO(insuranceModel2); // set the model (if avail)
-            extraInsuranceFrag1.setInsuranceMetadataDTO(insurancesMetaDTO.properties.items.insurance);
+            extraInsuranceFrag1.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance2, extraInsuranceFrag1, "insurance2")
@@ -239,7 +240,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             extraInsuranceFrag2 = new InsuranceScannerFragment();
             extraInsuranceFrag2.setButtonsStatusCallback(this);
             extraInsuranceFrag2.setInsuranceDTO(insuranceModel3); // set the model (if avail)
-            extraInsuranceFrag2.setInsuranceMetadataDTO(insurancesMetaDTO.properties.items.insurance);
+            extraInsuranceFrag2.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance3, extraInsuranceFrag2, "insurance3")
@@ -295,7 +296,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 showAddCardButton(on && !isThirdCardAdded);
             }
         });
-        String label = globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
+        String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
         switchCompat.setText(label);
     }
 
