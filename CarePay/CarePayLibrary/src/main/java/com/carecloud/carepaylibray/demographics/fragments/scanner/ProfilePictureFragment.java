@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
@@ -46,8 +48,13 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // set label for capture button
-        final DemographicLabelsDTO labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
-        recaptureCaption = labelsMetaDTO.getDemographicsProfileReCaptureCaption();
+        Activity activity = getActivity();
+        DemographicLabelsDTO labelsMetaDTO = null;
+        if(activity instanceof DemographicsActivity) {
+            labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        }
+
+        recaptureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileReCaptureCaption();
 
         View view = inflater.inflate(R.layout.fragment_demographics_picture, container, false);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
@@ -59,7 +66,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                 selectImage(imageCaptureHelper);
             }
         });
-        String captureCaption = labelsMetaDTO.getDemographicsProfileCaptureCaption();
+        String captureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileCaptureCaption();
         buttonChangeCurrentPhoto.setText(captureCaption);
 
 
