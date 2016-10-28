@@ -88,9 +88,9 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                      */
 
                     // Launch dialog of appointment request
-                    AppointmentsActivity baseActivity = new AppointmentsActivity();
+                  /*  AppointmentsActivity baseActivity = new AppointmentsActivity();
                     baseActivity.setAppointmentModel(appointmentDTO);
-                    new RequestAppointmentDialog(context, appointmentDTO).show();
+                    new RequestAppointmentDialog(context, appointmentDTO,appointmentDTO).show();*/
                 }
             }
         });
