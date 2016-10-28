@@ -1,23 +1,18 @@
 package com.carecloud.carepaylibray.demographics.activities;
 
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-
 import android.view.MenuItem;
 
 import com.carecloud.carepaylibrary.R;
-
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 
 import java.util.List;
-
-
 
 public class DemographicReviewActivity extends AppCompatActivity {
 
@@ -26,7 +21,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     private List<DemographicInsurancePayloadDTO> insurances;
     private DemographicIdDocPayloadDTO           demPayloadIdDocPojo;
 
-    public static boolean isFromReview=false;
+    public static boolean isFromReview = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,22 +31,22 @@ public class DemographicReviewActivity extends AppCompatActivity {
 
         FragmentManager fm = getSupportFragmentManager();
         ReviewFragment fragment = (ReviewFragment) fm.findFragmentByTag(ReviewFragment.class.getSimpleName());
-        if(fragment == null) {
+        if (fragment == null) {
             fragment = ReviewFragment.newInstance();
         }
-            getSupportFragmentManager()
-                    .beginTransaction().addToBackStack("reviewscreen")
-                    .replace(R.id.root_layout, fragment, ReviewFragment.class.getName())
-                    .commit();
+        getSupportFragmentManager()
+                .beginTransaction().addToBackStack("reviewscreen")
+                .replace(R.id.root_layout, fragment, ReviewFragment.class.getName())
+                .commit();
 
     }
 
     @Override
     public void onBackPressed() {
-        if(isFromReview){
+        if (isFromReview) {
             this.finish();
 
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
