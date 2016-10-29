@@ -94,4 +94,8 @@
     <color name="manatee_20">#32979797</color>
     <color name="timberwolf_20">#32d8d8d8</color>
     <color name="timberwolf">#ffd8d8d8</color>
+
+    <!-- Home Screen -->
+    <color name="home_button_pressed_shadow_margin">#d1d6d9</color>
+    <color name="home_news_background">#CAE5F2</color>
 </resources>
