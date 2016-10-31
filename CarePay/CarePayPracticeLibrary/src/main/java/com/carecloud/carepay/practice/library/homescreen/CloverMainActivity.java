@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.homescreen;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,12 +39,11 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
         checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
 
         // set click listeners
-//        findViewById(R.id.checkinTextView).setOnClickListener(this);
-//        findViewById(R.id.appointmentTextView).setOnClickListener(this);
-//        findViewById(R.id.modeswitch).setOnClickListener(this);
+        findViewById(R.id.homeCheckinClickable).setOnClickListener(this);
+        findViewById(R.id.homeAppointmentsClickable).setOnClickListener(this);
+        findViewById(R.id.homeModeSwitchClickable).setOnClickListener(this);
 
-        // TODO: 10/29/2016 uncomment
-//        registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
+        registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
     }
 
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
@@ -116,23 +116,4 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(CloverMainActivity.this, "Logout selected...", Toast.LENGTH_SHORT).show();
         }
     };
-
-    /*private void getDemographicInformation() {
-        AppointmentService apptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class); //, String token, String searchString
-        Call<AppointmentsResultModel> call = apptService.fetchCheckedInAppointments();
-        call.enqueue(new Callback<AppointmentsResultModel>() {
-            @Override
-            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-
-                if (response.code() == 200 && response.body().getPayload() != null && response.body().getPayload().getAppointments() != null) {
-                    checkedInCounterTextview.setText(String.valueOf(response.body().getPayload().getAppointments().size()));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-
-            }
-        });
-    }*/
 }
