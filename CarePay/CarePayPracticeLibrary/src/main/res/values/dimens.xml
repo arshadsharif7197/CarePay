@@ -97,35 +97,41 @@
     <dimen name="custom_appointment_dialog_checkbox_normal_end_size">24dp</dimen>
 
     <!-- Home Screen -->
-    <dimen name="home_alert_checkin_number_wrapper_height">45dp</dimen>
-    <dimen name="home_alert_checkin_number_wrapper_width">45dp</dimen>
+    <dimen name="home_alert_text_padding_start">7dp</dimen>
+    <dimen name="home_alert_text_padding_end">4dp</dimen>
 
-    <dimen name="home_main_margin_top">23dp</dimen>
-    <dimen name="home_main_margin_start">30dp</dimen>
-    <dimen name="home_main_margin_end">30dp</dimen>
+    <dimen name="home_alert_checkin_number_wrapper_height">19dp</dimen>
+    <dimen name="home_alert_checkin_number_wrapper_width">19dp</dimen>
 
-    <dimen name="home_logo_margin_top">11dp</dimen>
+    <dimen name="home_main_margin_top">8dp</dimen>
+    <dimen name="home_main_margin_start">13dp</dimen>
+    <dimen name="home_main_margin_end">13dp</dimen>
 
-    <dimen name="home_alert_font_size">22sp</dimen>
-    <dimen name="home_button_font_size">28sp</dimen>
+    <dimen name="home_logo_margin_top">4dp</dimen>
 
-    <dimen name="home_alert_margin_start">11dp</dimen>
+    <dimen name="home_alert_font_size">9sp</dimen>
+    <dimen name="home_button_font_size">10sp</dimen>
 
-    <dimen name="home_alert_text_padding_start">20dp</dimen>
-    <dimen name="home_alert_text_padding_end">10dp</dimen>
+    <dimen name="home_alert_margin_start">4dp</dimen>
 
-    <dimen name="home_logo_width">175dp</dimen>
-    <dimen name="home_logo_heigth">54dp</dimen>
+    <dimen name="home_logo_width">100dp</dimen>
 
     <dimen name="home_main_container_margin_top">61dp</dimen>
 
-    <dimen name="home_main_container_width">910dp</dimen>
-    <dimen name="home_main_container_heigth">521dp</dimen>
+    <dimen name="home_button_icon_width" format="float">22.0dp</dimen>
+    <dimen name="home_button_icon_height" format="float">38.0dp</dimen>
 
-    <dimen name="home_button_icon_width" format="float">76.0dp</dimen>
-    <dimen name="home_button_icon_height" format="float">109.0dp</dimen>
-
-    <dimen name="home_button_icon_margin_top">58dp</dimen>
+    <dimen name="home_button_icon_margin_top">24dp</dimen>
     <dimen name="home_button_text_margin_bottom">21dp</dimen>
+
+    <dimen name="home_button_width">87dp</dimen>
+    <dimen name="home_button_height">91dp</dimen>
+
+    <dimen name="home_shadow_width">262dp</dimen>
+
+    <dimen name="home_shadow_margin_top">-36dp</dimen>
+
+    <dimen name="home_settings_icon_width">18dp</dimen>
+    <dimen name="home_settings_icon_height">18dp</dimen>
 
 </resources>

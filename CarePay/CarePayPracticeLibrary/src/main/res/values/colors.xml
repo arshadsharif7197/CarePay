@@ -98,4 +98,6 @@
     <!-- Home Screen -->
     <color name="home_button_pressed_shadow_margin">#d1d6d9</color>
     <color name="home_news_background">#CAE5F2</color>
+
+    <color name="home_background_checkin_counter">#35A5E1</color>
 </resources>
