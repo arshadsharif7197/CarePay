@@ -113,8 +113,7 @@
                 <EditText
                     android:id="@+id/signinEmailpracticeEditText"
                     style="@style/EditTextStyle"
-                    android:imeOptions="actionNext"
-                    android:text=""
+                    android:imeOptions="actionNext"                   
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
 
@@ -128,7 +127,6 @@
                     android:id="@+id/passwordpracticeEditText"
                     style="@style/EditTextStyle"
                     android:imeOptions="actionDone"
-                    android:text=""
                     android:inputType="textPassword" />
 
             </android.support.design.widget.TextInputLayout>
