@@ -113,7 +113,7 @@
                 <EditText
                     android:id="@+id/signinEmailpracticeEditText"
                     style="@style/EditTextStyle"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="actionNext"                   
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
 

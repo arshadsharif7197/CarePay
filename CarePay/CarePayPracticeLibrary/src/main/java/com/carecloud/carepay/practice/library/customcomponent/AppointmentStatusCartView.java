@@ -71,7 +71,7 @@ public class AppointmentStatusCartView extends CardView {
         timeTextView = (CarePayTextView) findViewById(R.id.timeTextView);
         containerLayout = (RelativeLayout) findViewById(R.id.containerLayout);
         this.setOnLongClickListener(onLongClickListener);
-        this.setOnDragListener(onDragListener);
+        //this.setOnDragListener(onDragListener);
         try {
             TypedArray typedArray = context.getTheme().obtainStyledAttributes(
                     attrs,
@@ -122,6 +122,8 @@ public class AppointmentStatusCartView extends CardView {
     public String getAppointmentId() {
         return appointmentId;
     }
+
+
 
     public void setAppointmentId(String appointmentId) {
         this.appointmentId = appointmentId;
@@ -202,7 +204,7 @@ public class AppointmentStatusCartView extends CardView {
             ClipData dragData = new ClipData((CharSequence) appointmentStatusCartView.getAppointmentId(), new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}, item);
 
             // Instantiates the drag shadow builder.
-            View.DragShadowBuilder myShadow = new AppDragShadowBuilder(view);
+            View.DragShadowBuilder myShadow = new AppDragShadowBuilder(appointmentStatusCartView);
 
             // Starts the drag
 

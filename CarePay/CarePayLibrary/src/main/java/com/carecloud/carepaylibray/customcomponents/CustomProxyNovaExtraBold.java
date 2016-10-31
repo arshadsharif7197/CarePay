@@ -11,7 +11,9 @@ import com.carecloud.carepaylibrary.R;
 
 /**
  * Created by harshal_patil on 22/09/16.
+ * @Deprecated use CarePayTextView
  */
+@Deprecated
 public class CustomProxyNovaExtraBold extends TextView {
 
     Context context;

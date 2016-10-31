@@ -7,12 +7,11 @@
     android:gravity="center_horizontal"
     android:orientation="horizontal">
 
-    <TextView
+    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
         android:id="@+id/appointRequestPendingTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/apt_dl_margin"
-        android:text="APPOINTMENT REQUEST PENDING"
         android:textColor="@color/lightningyellow"
         android:textSize="@dimen/apt_dl_btn_txt_size" />
 </LinearLayout>
