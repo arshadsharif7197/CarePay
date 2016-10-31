@@ -45,42 +45,34 @@ public class NavigationHelper {
         switch (workflowDTO.getState()) {
             case NavigationStateConstants.PRACTICE_MODE_SIGNIN: {
                 intent = new Intent(context, SigninActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
             case NavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
             case NavigationStateConstants.PRACTICE_APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
             case NavigationStateConstants.PATIENT_MODE_SPLASH: {
                 intent = new Intent(context, PatientModeSplashActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
             case NavigationStateConstants.PRACTICE_CHECKIN: {
                 intent = new Intent(context, CheckInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
             default: {
                 intent = new Intent(context, SigninActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
 
             }
         }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Bundle bundle = new Bundle();
         bundle.putSerializable(context.getClass().getSimpleName(), workflowDTO.toString());
         intent.putExtras(bundle);

@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +17,6 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
-import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCartView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +59,7 @@ public class CheckInActivity extends BasePracticeActivity {
                 onBackPressed();
             }
         });
-        populateLis();
+        populateList();
     }
 
     @Override
@@ -70,7 +68,7 @@ public class CheckInActivity extends BasePracticeActivity {
 
     }
 
-    private void populateLis() {
+    private void populateList() {
         if (checkInDTO != null && checkInDTO.getPayload() != null && checkInDTO.getPayload().getAppointments().size() > 0) {
 
             for (AppointmentDTO appointmentDTO : checkInDTO.getPayload().getAppointments()) {
@@ -87,88 +85,93 @@ public class CheckInActivity extends BasePracticeActivity {
             checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments);
             checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
             checkinginRecyclerView.setAdapter(checkedInAdapter);
-
             waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments);
             waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
             waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
-
-            waitingRoomRecyclerView.setOnDragListener(new View.OnDragListener() {
-                @Override
-                public boolean onDrag(View view, DragEvent dragEvent) {
-                    switch (dragEvent.getAction()) {
-                        //signal for the start of a drag and drop operation.
-                        case DragEvent.ACTION_DRAG_STARTED:
-                            // do nothing
-                            break;
-                        //the drag point has entered the bounding box of the View
-                        case DragEvent.ACTION_DRAG_ENTERED:
-                            break;
-                        //the user has moved the drag shadow outside the bounding box of the View
-                        case DragEvent.ACTION_DRAG_EXITED:
-                            break;
-                        //drag shadow has been released,the drag point is within the bounding box of the View
-                        case DragEvent.ACTION_DROP:
-                            AppointmentDTO appointmentDTO = getAppintmentById(dragEvent.getClipDescription().getLabel().toString(), checkingInAppointments);
-                            checkingInAppointments.remove(appointmentDTO);
-                            appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-In");
-                            waitingRoomAppointments.add(appointmentDTO);
-                            applySort(waitingRoomAppointments);
-                            applySort(checkingInAppointments);
-                            waitingRoomAdapter.notifyDataSetChanged();
-                            checkedInAdapter.notifyDataSetChanged();
-                            checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
-                            waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
-                            break;
-                        //the drag and drop operation has concluded.
-                        case DragEvent.ACTION_DRAG_ENDED:
-                            //rv.updateState(customState);
-                            break;
-                        default:
-                            break;
-                    }
-                    return true;
-                }
-            });
-
-            checkinginRecyclerView.setOnDragListener(new View.OnDragListener() {
-                @Override
-                public boolean onDrag(View view, DragEvent dragEvent) {
-                    switch (dragEvent.getAction()) {
-                        //signal for the start of a drag and drop operation.
-                        case DragEvent.ACTION_DRAG_STARTED:
-                            // do nothing
-                            break;
-                        //the drag point has entered the bounding box of the View
-                        case DragEvent.ACTION_DRAG_ENTERED:
-                            break;
-                        //the user has moved the drag shadow outside the bounding box of the View
-                        case DragEvent.ACTION_DRAG_EXITED:
-                            break;
-                        //drag shadow has been released,the drag point is within the bounding box of the View
-                        case DragEvent.ACTION_DROP:
-                            AppointmentDTO appointmentDTO = getAppintmentById(dragEvent.getClipDescription().getLabel().toString(), waitingRoomAppointments);
-                            waitingRoomAppointments.remove(appointmentDTO);
-                            appointmentDTO.getPayload().getAppointmentStatus().setName("Pending");
-                            checkingInAppointments.add(appointmentDTO);
-                            applySort(waitingRoomAppointments);
-                            applySort(checkingInAppointments);
-                            waitingRoomAdapter.notifyDataSetChanged();
-                            checkedInAdapter.notifyDataSetChanged();
-                            checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
-                            waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
-                            break;
-                        //the drag and drop operation has concluded.
-                        case DragEvent.ACTION_DRAG_ENDED:
-                            //rv.updateState(customState);
-                            break;
-                        default:
-                            break;
-                    }
-                    return true;
-                }
-            });
+            waitingRoomRecyclerView.setOnDragListener(onWaitListDragListener);
+            checkinginRecyclerView.setOnDragListener(onCheckingInListDragListener);
         }
     }
+
+    View.OnDragListener onCheckingInListDragListener = new View.OnDragListener() {
+        @Override
+        public boolean onDrag(View view, DragEvent dragEvent) {
+            switch (dragEvent.getAction()) {
+                //signal for the start of a drag and drop operation.
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // do nothing
+                    break;
+                //the drag point has entered the bounding box of the View
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    break;
+                //the user has moved the drag shadow outside the bounding box of the View
+                case DragEvent.ACTION_DRAG_EXITED:
+                    break;
+                //drag shadow has been released,the drag point is within the bounding box of the View
+                case DragEvent.ACTION_DROP:
+                    AppointmentDTO appointmentDTO = getAppintmentById(dragEvent.getClipDescription().getLabel().toString(), waitingRoomAppointments);
+                    waitingRoomAppointments.remove(appointmentDTO);
+                    if (appointmentDTO != null) {
+                        appointmentDTO.getPayload().getAppointmentStatus().setName("Pending");
+                    }
+                    checkingInAppointments.add(appointmentDTO);
+                    applySort(waitingRoomAppointments);
+                    applySort(checkingInAppointments);
+                    waitingRoomAdapter.notifyDataSetChanged();
+                    checkedInAdapter.notifyDataSetChanged();
+                    checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
+                    waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
+                    break;
+                //the drag and drop operation has concluded.
+                case DragEvent.ACTION_DRAG_ENDED:
+                    //rv.updateState(customState);
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    };
+
+    View.OnDragListener onWaitListDragListener = new View.OnDragListener() {
+        @Override
+        public boolean onDrag(View view, DragEvent dragEvent) {
+            switch (dragEvent.getAction()) {
+                //signal for the start of a drag and drop operation.
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // do nothing
+                    break;
+                //the drag point has entered the bounding box of the View
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    break;
+                //the user has moved the drag shadow outside the bounding box of the View
+                case DragEvent.ACTION_DRAG_EXITED:
+                    break;
+                //drag shadow has been released,the drag point is within the bounding box of the View
+                case DragEvent.ACTION_DROP:
+                    AppointmentDTO appointmentDTO = getAppintmentById(dragEvent.getClipDescription().getLabel().toString(), checkingInAppointments);
+                    checkingInAppointments.remove(appointmentDTO);
+                    if (appointmentDTO != null) {
+                        appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-In");
+                    }
+                    waitingRoomAppointments.add(appointmentDTO);
+                    applySort(waitingRoomAppointments);
+                    applySort(checkingInAppointments);
+                    waitingRoomAdapter.notifyDataSetChanged();
+                    checkedInAdapter.notifyDataSetChanged();
+                    checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
+                    waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
+                    break;
+                //the drag and drop operation has concluded.
+                case DragEvent.ACTION_DRAG_ENDED:
+                    //rv.updateState(customState);
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    };
 
     private void applySort(ArrayList<AppointmentDTO> appointments) {
         Collections.sort(appointments, new Comparator<AppointmentDTO>() {
@@ -189,28 +192,4 @@ public class CheckInActivity extends BasePracticeActivity {
         return null;
     }
 
-
-    /*private void getDemographicInformation() {
-        AppointmentService apptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class); //, String token, String searchString
-        Call<AppointmentsResultModel> call = apptService.getCheckedInAppointments();
-        call.enqueue(new Callback<AppointmentsResultModel>() {
-            @Override
-            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-
-                if(response.code()==200 && response.body().getPayload()!=null && response.body().getPayload().getAppointments()!=null) {
-                    CheckedInAppointmentAdapter checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, new ArrayList<>(response.body().getPayload().getAppointments()));
-                    checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
-                    checkinginRecyclerView.setAdapter(checkedInAdapter);
-
-                    waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
-                    waitingRoomRecyclerView.setAdapter(checkedInAdapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-
-            }
-        });
-    }*/
 }
