@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,9 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setSystemUiVisibility();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setSystemUiVisibility();
         setContentView(R.layout.activity_main_clover);
 
         checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
@@ -85,6 +86,8 @@ public class CloverMainActivity extends AppCompatActivity implements View.OnClic
                         | View.SYSTEM_UI_FLAG_LOW_PROFILE
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     private ChangeModeDialog.PatientModeClickListener patientModeClickListener = new ChangeModeDialog.PatientModeClickListener() {
