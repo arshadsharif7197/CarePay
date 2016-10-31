@@ -114,6 +114,7 @@
                     android:id="@+id/signinEmailpracticeEditText"
                     style="@style/EditTextStyle"
                     android:imeOptions="actionNext"
+                    android:text="practice@cc.co"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
 
@@ -127,6 +128,7 @@
                     android:id="@+id/passwordpracticeEditText"
                     style="@style/EditTextStyle"
                     android:imeOptions="actionDone"
+                    android:text="Practice123!"
                     android:inputType="textPassword" />
 
             </android.support.design.widget.TextInputLayout>
