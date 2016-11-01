@@ -37,5 +37,5 @@
     <dimen name="home_settings_icon_width">28dp</dimen>
     <dimen name="home_settings_icon_height">28dp</dimen>
 
-
+    <dimen name="home_spinner_width">79dp</dimen>
 </resources>

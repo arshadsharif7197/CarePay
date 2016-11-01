@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="home_shadow_margin_top">-35dp</dimen>
+
+    <dimen name="home_spinner_width">39dp</dimen>
+
 </resources>

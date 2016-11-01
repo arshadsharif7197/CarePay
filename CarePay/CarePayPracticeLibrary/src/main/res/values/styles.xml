@@ -51,4 +51,9 @@
         <item name="android:layout_marginTop">@dimen/home_button_icon_margin_top</item>
     </style>
 
+    <style name="HomeSpinnerItemStyle">
+        <item name="android:textSize">@dimen/home_alert_font_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
