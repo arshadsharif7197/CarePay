@@ -146,6 +146,7 @@
                     android:src="@drawable/icn_check_in_png"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homeCheckinLabel"
                     style="@style/HomeButtonTextStyle"
                     android:hint="@string/home_icon_check_in"/>
             </FrameLayout>
@@ -164,6 +165,7 @@
                     android:src="@drawable/icn_payments_png"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homePaymentsLabel"
                     style="@style/HomeButtonTextStyle"
                     android:hint="Payments"/>
             </FrameLayout>
@@ -181,6 +183,7 @@
                     android:src="@drawable/icn_appointements_png"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homeAppointmentsLabel"
                     style="@style/HomeButtonTextStyle"
                     android:hint="Appointment"/>
             </FrameLayout>
@@ -207,6 +210,7 @@
                     android:src="@drawable/icn_checkout_png"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homeCheckoutLabel"
                     style="@style/HomeButtonTextStyle"
                     android:hint="Check-Out"/>
             </FrameLayout>
@@ -225,6 +229,7 @@
                     android:src="@drawable/icn_retail_png"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homeShopLabel"
                     style="@style/HomeButtonTextStyle"
                     android:hint="Shop"/>
             </FrameLayout>
