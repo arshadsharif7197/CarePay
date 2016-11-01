@@ -8,10 +8,8 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +40,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private       ImageView     modeSwitchImageView;
     private       ImageView     homeLockImageView;
     private       HomeScreenDTO homeScreenDTO;
-    private       Spinner       homeSpinner;
     private       LinearLayout  homeCheckinLl;
     private       LinearLayout  homeAlertLinearLl;
     private       TextView      homeQueueLabel;
@@ -54,7 +51,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private       TextView      homeShopLabel;
 
     private List<String> modeSwitchOptions = new ArrayList<>();
-    private List<String> langs             = new ArrayList<>();
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -80,12 +76,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         populateWithLabels();
 
         modeSwitchImageView.setOnClickListener(this);
-
-        // set the spinner
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, langs);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        homeSpinner.setAdapter(spinnerArrayAdapter);
-
 
         findViewById(R.id.homeCheckinClickable).setOnClickListener(this);
         findViewById(R.id.homeAppointmentsClickable).setOnClickListener(this);
@@ -113,7 +103,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
         alertTextView = (TextView) findViewById(R.id.alertTextView);
         modeSwitchImageView = (ImageView) findViewById(R.id.homeModeSwitchClickable);
-        homeSpinner = (Spinner) findViewById(R.id.homePatientLangSpinner);
         homeQueueLabel = (TextView) findViewById(R.id.queueTitleTextView);
         homeAlertsLabel = (TextView) findViewById(R.id.alaertTitleTextView);
         homeCheckinLabel = (TextView) findViewById(R.id.homeCheckinLabel);
@@ -148,13 +137,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             homeAlertLinearLl.setVisibility(View.GONE);
             modeSwitchImageView.setVisibility(View.GONE);
             homeLockImageView.setVisibility(View.VISIBLE);
-            homeSpinner.setVisibility(View.VISIBLE);
         } else {
             homeCheckinLl.setVisibility(View.VISIBLE);
             homeAlertLinearLl.setVisibility(View.VISIBLE);
             modeSwitchImageView.setVisibility(View.VISIBLE);
             homeLockImageView.setVisibility(View.GONE);
-            homeSpinner.setVisibility(View.GONE);
         }
     }
 

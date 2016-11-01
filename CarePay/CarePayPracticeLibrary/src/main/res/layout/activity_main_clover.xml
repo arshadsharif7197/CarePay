@@ -89,22 +89,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_blue_overlay"
-                android:paddingEnd="4dp"
-                android:layout_marginStart="@dimen/home_alert_margin_start">
-
-                <Spinner
-                    android:id="@+id/homePatientLangSpinner"
-                    android:layout_width="@dimen/home_spinner_width"
-                    android:layout_height="@dimen/home_alert_checkin_number_wrapper_height"
-                    android:background="@drawable/bg_blue_overlay"
-                    android:visibility="gone"/>
-
-            </LinearLayout>
-
         </LinearLayout>
 
         <ImageView
