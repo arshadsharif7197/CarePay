@@ -8,7 +8,10 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,44 +27,63 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
-    public static int count;
-    TextView  checkedInCounterTextview;
-    TextView  alertTextView;
-    ImageView modeSwitchImageView;
-
-    HomeScreenDTO homeScreenDTO;
+    public static int           count;
+    private       TextView      checkedInCounterTextview;
+    private       TextView      alertTextView;
+    private       ImageView     modeSwitchImageView;
+    private       ImageView     homeLockImageView;
+    private       HomeScreenDTO homeScreenDTO;
+    private       Spinner       homeSpinner;
+    private       LinearLayout  homeCheckinLl;
+    private       LinearLayout  homeAlertLinearLl;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
     }
-
-    private HomeScreenMode homeScreenMode;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setSystemUiVisibility();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
-        homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
+
+        HomeScreenMode homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
         setContentView(R.layout.activity_main_clover);
+
+        // init UI handlers
+        homeCheckinLl = (LinearLayout) findViewById(R.id.homeQueueLayout);
+        homeAlertLinearLl = (LinearLayout) findViewById(R.id.homeAlertLayout);
+        homeLockImageView = (ImageView) findViewById(R.id.homeLockIcon);
         checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
         alertTextView = (TextView) findViewById(R.id.alertTextView);
         modeSwitchImageView = (ImageView) findViewById(R.id.homeModeSwitchClickable);
-        // getDemographicInformation();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        modeSwitchImageView.setOnClickListener(this);
+
+        populateWithLabels();
+
+        // set the spinner
+        homeSpinner = (Spinner) findViewById(R.id.homePatientLangSpinner);
+        List<String> langs = new ArrayList<>();
+        langs.add("EN");
+        langs.add("ES");
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, langs);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        homeSpinner.setAdapter(spinnerArrayAdapter);
+
+
         findViewById(R.id.homeCheckinClickable).setOnClickListener(this);
         findViewById(R.id.homeAppointmentsClickable).setOnClickListener(this);
-        modeSwitchImageView.setOnClickListener(this);
-        if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            checkedInCounterTextview.setVisibility(View.GONE);
-            alertTextView.setVisibility(View.GONE);
-            modeSwitchImageView.setVisibility(View.GONE);
-        } else {
+
+        changeScreenMode(homeScreenMode);
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             if (homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
                 if (homeScreenDTO.getPayload().getUserPractices() != null) {
                     WorkflowServiceHelper.getInstance().setUserPracticeDTO(homeScreenDTO.getPayload().getUserPractices().get(0));
@@ -74,7 +96,26 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
 
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
+    }
 
+    private void populateWithLabels() {
+
+    }
+
+    private void changeScreenMode(HomeScreenMode homeScreenMode) {
+        if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            homeCheckinLl.setVisibility(View.GONE);
+            homeAlertLinearLl.setVisibility(View.GONE);
+            modeSwitchImageView.setVisibility(View.GONE);
+            homeLockImageView.setVisibility(View.VISIBLE);
+            homeSpinner.setVisibility(View.VISIBLE);
+        } else {
+            homeCheckinLl.setVisibility(View.VISIBLE);
+            homeAlertLinearLl.setVisibility(View.VISIBLE);
+            modeSwitchImageView.setVisibility(View.VISIBLE);
+            homeLockImageView.setVisibility(View.GONE);
+            homeSpinner.setVisibility(View.GONE);
+        }
     }
 
     public void setSystemUiVisibility() {
@@ -87,7 +128,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
     }
 
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
@@ -115,7 +155,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             if (homeScreenDTO != null && homeScreenDTO.getMetadata() != null && homeScreenDTO.getMetadata().getTransitions() != null) {
                 WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback);
             }
-
         } else if (viewId == R.id.homeModeSwitchClickable) {
 
             ChangeModeDialog changeModeDialog = new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {

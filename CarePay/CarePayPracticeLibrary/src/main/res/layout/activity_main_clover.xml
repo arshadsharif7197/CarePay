@@ -3,7 +3,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:tools="http://schemas.android.com/tools"
               android:background="@drawable/background_default"
               android:orientation="vertical">
 
@@ -25,6 +24,14 @@
                 android:layout_height="@dimen/home_settings_icon_height"
                 android:layout_gravity="start"
                 android:background="@drawable/icn_gear"/>
+
+            <ImageView
+                android:id="@+id/homeLockIcon"
+                android:layout_width="@dimen/home_settings_icon_width"
+                android:layout_height="@dimen/home_settings_icon_height"
+                android:src="@drawable/icn_lock"
+                android:layout_gravity="start"
+                android:visibility="gone"/>
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -93,7 +100,8 @@
                     android:id="@+id/homePatientLangSpinner"
                     android:layout_width="@dimen/home_spinner_width"
                     android:layout_height="@dimen/home_alert_checkin_number_wrapper_height"
-                    android:background="@drawable/bg_blue_overlay"/>
+                    android:background="@drawable/bg_blue_overlay"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
