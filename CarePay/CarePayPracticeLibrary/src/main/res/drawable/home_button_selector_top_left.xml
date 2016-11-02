@@ -10,7 +10,7 @@
                 </shape>
             </item>
 
-            <item android:drawable="@drawable/home_hover_shadow"
+            <item android:drawable="@drawable/home_hover_shadow_vd"
                   android:top="2dp"
                   android:left="3dp"/>
         </layer-list>
