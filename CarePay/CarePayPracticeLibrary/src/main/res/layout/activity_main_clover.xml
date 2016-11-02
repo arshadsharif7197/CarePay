@@ -23,7 +23,7 @@
                 android:layout_width="@dimen/home_settings_icon_width"
                 android:layout_height="@dimen/home_settings_icon_height"
                 android:layout_gravity="start"
-                android:background="@drawable/icn_gear"/>
+                android:background="@drawable/icn_gear_vd"/>
 
             <ImageView
                 android:id="@+id/homeLockIcon"
@@ -127,7 +127,7 @@
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="@string/home_icon_check_in"
-                    android:src="@drawable/icn_check_in_png"/>
+                    android:src="@drawable/icn_check_in"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
                     android:id="@+id/homeCheckinLabel"
@@ -146,7 +146,7 @@
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="Payments"
-                    android:src="@drawable/icn_payments_png"/>
+                    android:src="@drawable/icn_payments"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
                     android:id="@+id/homePaymentsLabel"
@@ -164,7 +164,7 @@
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="Appointments"
-                    android:src="@drawable/icn_appointements_png"/>
+                    android:src="@drawable/icn_appointements"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
                     android:id="@+id/homeAppointmentsLabel"
@@ -191,7 +191,7 @@
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="Check-Out"
-                    android:src="@drawable/icn_checkout_png"/>
+                    android:src="@drawable/icn_checkout"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
                     android:id="@+id/homeCheckoutLabel"
@@ -210,7 +210,7 @@
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="Shop"
-                    android:src="@drawable/icn_retail_png"/>
+                    android:src="@drawable/icn_retail"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
                     android:id="@+id/homeShopLabel"
