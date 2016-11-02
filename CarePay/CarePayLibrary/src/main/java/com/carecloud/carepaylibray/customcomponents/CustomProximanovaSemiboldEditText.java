@@ -2,7 +2,10 @@ package com.carecloud.carepaylibray.customcomponents;
 
 /**
  * Created by harshal_patil on 9/26/2016.
+ * @Deprecated use CarePayTextView
  */
+
+
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -19,6 +22,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+@Deprecated
 public class CustomProximanovaSemiboldEditText extends CustomEditTextBase {
     Context context;
     EditText input;

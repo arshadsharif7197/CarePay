@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsAllergiesAdapter;
@@ -98,7 +99,6 @@ public class DemographicsDetailsFragment extends Fragment
     private DemographicPersDetailsPayloadDTO        persDetailsDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelDTO;
-    private String                                  chooseCaption;
 
     @Nullable
     @Override
@@ -123,6 +123,16 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void setOptions() {
+        if(persDetailsMetaDTO == null) {
+            raceArray = new String[1];
+            raceArray[0] = CarePayConstants.NOT_DEFINED;
+            ethnicityArray = new String[1];
+            ethnicityArray[0] = CarePayConstants.NOT_DEFINED;
+            genderArray = new String[1];
+            genderArray[0] = CarePayConstants.NOT_DEFINED;
+            return;
+        }
+
         List<MetadataOptionDTO> options = persDetailsMetaDTO.properties.primaryRace.options;
         List<String> races = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
@@ -148,7 +158,7 @@ public class DemographicsDetailsFragment extends Fragment
     private void setupEdit() {
         dobInputText = (TextInputLayout) view.findViewById(R.id.demogrDetailsDobInputText);
         dobEdit = (EditText) view.findViewById(R.id.demogrDetailsDobEdit);
-        String hint = persDetailsMetaDTO.properties.dateOfBirth.getLabel();
+        String hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.getLabel();
         dobInputText.setTag(hint);
         dobEdit.setTag(dobInputText);
         dobEdit.setHint(hint);
@@ -209,7 +219,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private boolean isDateOfBirthValid() {
-        final String errorMessage = persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
+        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
         String dob = dobEdit.getText().toString();
         if (!StringUtil.isNullOrEmpty(dob)) {
             boolean isValid = DateUtil.isValidateStringDateMMDDYYYY(dob);
@@ -265,31 +275,31 @@ public class DemographicsDetailsFragment extends Fragment
         String label;
 
         header = (TextView) view.findViewById(R.id.detailsHeading);
-        label = globalLabelDTO.getDemographicsDetailsHeader();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsHeader();
         header.setText(label);
 
         subheader = (TextView) view.findViewById(R.id.detailsSubHeading);
-        label = globalLabelDTO.getDemographicsDetailsSubheader();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsSubheader();
         subheader.setText(label);
 
         raceLabel = (TextView) view.findViewById(R.id.demogrDetailsRaceLabel);
-        label = persDetailsMetaDTO.properties.primaryRace.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.primaryRace.getLabel();
         raceLabel.setText(label);
 
         ethnicityLabel = (TextView) view.findViewById(R.id.demogrDetailsEthnicityLabel);
-        label = persDetailsMetaDTO.properties.ethnicity.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.ethnicity.getLabel();
         ethnicityLabel.setText(label);
 
         genderLabel = (TextView) view.findViewById(R.id.demogrDetailsGenderLabel);
-        label = persDetailsMetaDTO.properties.gender.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.gender.getLabel();
         genderLabel.setText(label);
 
         dobHint = (TextView) view.findViewById(R.id.demogrDetailsDobHint);
-        label = globalLabelDTO.getDemographicsDetailsDobHint();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsDobHint();
         dobHint.setText(label);
 
         // init click-ables and dob edit
-        chooseCaption = globalLabelDTO.getDemographicsChooseLabel();
+        String chooseCaption = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsChooseLabel();
 
         raceTextView = (TextView) view.findViewById(R.id.demogrDetailsRaceListTextView);
         raceTextView.setText(chooseCaption);
@@ -307,38 +317,38 @@ public class DemographicsDetailsFragment extends Fragment
 
         allergiesOptionalHint = (TextView) view.findViewById(R.id.demogrDetailsAllergiesHint);
         medicationsOptionalHint = (TextView) view.findViewById(R.id.demogrDetailsMedHint);
-        label = globalLabelDTO.getDemographicsDetailsOptionalHint();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsOptionalHint();
         allergiesOptionalHint.setText(label);
         medicationsOptionalHint.setText(label);
 
         allergiesSectionHeader = (TextView) view.findViewById(R.id.demogrDetailsAllergiesLabel);
-        label = globalLabelDTO.getDemographicsDetailsAllergiesSection();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsAllergiesSection();
         allergiesSectionHeader.setText(label);
 
         addAllergyLabel = (TextView) view.findViewById(R.id.demogrDetailsAddAllergyLabel);
-        label = globalLabelDTO.getDemographicsDetailAllergyLabel();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailAllergyLabel();
         addAllergyLabel.setText(label);
 
         medicationsSectionHeader = (TextView) view.findViewById(R.id.demogrDetailsMedLabel);
-        label = globalLabelDTO.getDemographicsDetailsMedicationsSection();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsMedicationsSection();
         medicationsSectionHeader.setText(label);
 
         addMedLabel = (TextView) view.findViewById(R.id.demogrDetailsMedAddLabel);
-        label = globalLabelDTO.getDemographicsDetailMedicationLabel();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailMedicationLabel();
         addMedLabel.setText(label);
 
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
-        label = globalLabelDTO.getDemographicsNext();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsNext();
         nextButton.setText(label);
         nextButton.setOnClickListener(this);
 
         addUnlistedAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
-        label = globalLabelDTO.getDemographicsDetailsAllergyAddUnlistedLabel();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsAllergyAddUnlistedLabel();
         addUnlistedAllergyTextView.setText(label);
         addUnlistedAllergyTextView.setOnClickListener(this);
 
         addUnlistedMedTextView = (TextView) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
-        label = globalLabelDTO.getDemographicsDetailsMedAddUnlistedLabel();
+        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsMedAddUnlistedLabel();
         addUnlistedMedTextView.setText(label);
         addUnlistedMedTextView.setOnClickListener(this);
 
@@ -430,18 +440,18 @@ public class DemographicsDetailsFragment extends Fragment
 
     @Override
     public void onClick(View view) {
-        final String cancelLabel = globalLabelDTO.getDemographicsCancelLabel();
+        final String cancelLabel = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsCancelLabel();
         if (view == raceTextView) {
             selectedArray = 1;
-            final String title = globalLabelDTO.getDemographicsTitleSelectRace();
+            final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectRace();
             showAlertDialogWithListview(raceArray, title, cancelLabel);
         } else if (view == ethnicityTextView) {
             selectedArray = 2;
-            final String title = globalLabelDTO.getDemographicsTitleSelectEthnicity();
+            final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectEthnicity();
             showAlertDialogWithListview(ethnicityArray, title, cancelLabel);
         } else if (view == genderTextView) {
             selectedArray = 3;
-            final String title = globalLabelDTO.getDemographicsTitleSelectGender();
+            final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectGender();
             showAlertDialogWithListview(genderArray, title, cancelLabel);
         } else if (view == addUnlistedAllergyTextView) {
             Snackbar.make(view, "In progress", Snackbar.LENGTH_SHORT).show();
