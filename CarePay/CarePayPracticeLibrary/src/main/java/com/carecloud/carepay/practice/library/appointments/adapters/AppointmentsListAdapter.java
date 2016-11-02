@@ -17,9 +17,9 @@ import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 
 

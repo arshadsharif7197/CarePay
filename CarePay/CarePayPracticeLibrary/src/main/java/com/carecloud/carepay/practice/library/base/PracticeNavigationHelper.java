@@ -10,6 +10,7 @@ import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 
 /**
@@ -17,51 +18,51 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
  * Dynamic screen navigation helper
  */
 
-public class NavigationHelper {
+public class PracticeNavigationHelper {
 
-    private static NavigationHelper instance = null;
+    private static PracticeNavigationHelper instance = null;
     private static Context context;
 
-    private NavigationHelper() {
+    private PracticeNavigationHelper() {
 
     }
 
     public static void initInstance(Context context) {
-        NavigationHelper.context = context;
+        PracticeNavigationHelper.context = context;
         if (instance == null) {
-            instance = new NavigationHelper();
+            instance = new PracticeNavigationHelper();
         }
     }
 
-    public static NavigationHelper getInstance() {
+    public static PracticeNavigationHelper getInstance() {
         return instance;
     }
 
-    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+    public void navigateToWorkflow(Context context, WorkflowDTO workflowDTO){
         Intent intent = null;
-        if (workflowDTO == null) {
+        if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
         }
         switch (workflowDTO.getState()) {
-            case NavigationStateConstants.PRACTICE_MODE_SIGNIN: {
+            case PracticeNavigationStateConstants.PRACTICE_MODE_SIGNIN: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
-            case NavigationStateConstants.PRACTICE_HOME: {
+            case PracticeNavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
-            case NavigationStateConstants.PRACTICE_APPOINTMENTS: {
+            case PracticeNavigationStateConstants.PRACTICE_APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
                 break;
             }
-            case NavigationStateConstants.PATIENT_MODE_SPLASH: {
+            case PracticeNavigationStateConstants.PATIENT_MODE_SPLASH: {
                 intent = new Intent(context, PatientModeSplashActivity.class);
                 break;
             }
-            case NavigationStateConstants.PRACTICE_CHECKIN: {
+            case PracticeNavigationStateConstants.PRACTICE_CHECKIN: {
                 intent = new Intent(context, CheckInActivity.class);
                 break;
             }
@@ -72,11 +73,15 @@ public class NavigationHelper {
 
             }
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(context.getClass().getSimpleName(), workflowDTO.toString());
+        bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
         intent.putExtras(bundle);
         context.startActivity(intent);
+
     }
 
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        navigateToWorkflow(PracticeNavigationHelper.context,workflowDTO);
+    }
 }

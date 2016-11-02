@@ -660,4 +660,20 @@ public class AppointmentPayloadDTO {
     public void setResource(ResourceDTO resource) {
         this.resource = resource;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AppointmentPayloadDTO)) return false;
+
+        AppointmentPayloadDTO that = (AppointmentPayloadDTO) o;
+
+        return getId().equals(that.getId());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

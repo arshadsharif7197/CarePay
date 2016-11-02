@@ -10,6 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#056DA3"
         android:padding="16dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -25,6 +26,26 @@
             android:textColor="#ffffff"
             android:textSize="20sp"
             app:customAssetFont="gotham_rounded_medium" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/filterOnOffTextView"
+            android:layout_width="140dp"
+            android:layout_height="53dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_green_overlay"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="Filters: On"
+            android:textColor="#34590C"
+            android:textSize="18sp"
+            app:customAssetFont="proxima_nova_semi_bold" />
+        <ImageView
+            android:layout_width="20dp"
+            android:id="@+id/filterImageView"
+            android:layout_height="25dp" android:src="@drawable/icn_filter"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/filterOnOffTextView" />
     </RelativeLayout>
 
     <LinearLayout

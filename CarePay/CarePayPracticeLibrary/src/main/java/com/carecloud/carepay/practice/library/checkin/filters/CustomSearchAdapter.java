@@ -12,41 +12,41 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Custom adapter for displaying an array of FilterableDataDTO objects.
  */
-public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements Filterable {
 
     // The items to display in your RecyclerView
     private List<FilterDataDTO> filterableDataDTOList;
     private List<FilterDataDTO> origFilterableDataDTOList;
     private Context context;
-    private static final int ROW_SECTION_HEADER = 0;
-    private static final int ROW_ITEM = 1;
     private Filter filterableDataDTOFilter;
 
     // private boolean isPatientListData = false;
-    private OnFilterOptionChangedListener onFilterOptionChangedListener;
+    private OnSearchChangedListener onFilterOptionChangedListener;
 
     /**
      * The callback used to indicate the user selected the filter.
      */
-    public interface OnFilterOptionChangedListener {
+    public interface OnSearchChangedListener {
 
         /**
          * Called upon a filter change.
          *
-         * @param filteredDataDTO The Data DTO that is filtered.
+         * @param filteredData The Data DTO that is filtered.
          */
-        void onFilterChanged(FilterDataDTO filteredDataDTO);
+        void onSearchChanged(FilterDataDTO filteredData);
     }
 
     /**
@@ -55,8 +55,8 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
      * @param context context
      * @param items   list of occurrence
      */
-    public CustomFilterListAdapter(Context context, OnFilterOptionChangedListener onFilterOptionChangedListener,
-                                   List<FilterDataDTO> items) {
+    public CustomSearchAdapter(Context context, OnSearchChangedListener onFilterOptionChangedListener,
+                               List<FilterDataDTO> items) {
         this.context = context;
         this.filterableDataDTOList = items;
         this.origFilterableDataDTOList = items;
@@ -70,44 +70,21 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public int getItemViewType(int position) {
-        FilterDataDTO filterDataDTO = filterableDataDTOList.get(position);
-        if (filterDataDTO.getFilterDataType() == FilterDataDTO.FilterDataType.HEADER) {
-            return ROW_SECTION_HEADER;
-        } else {
-            return ROW_ITEM;
-        }
-
-    }
-
-    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        RecyclerView.ViewHolder viewHolder = null;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        if (viewType == ROW_SECTION_HEADER) {
-            View customFilterListHeaderRow = inflater.inflate(R.layout.custom_filter_patient_list_header_item,
-                    viewGroup, false);
-            viewHolder = new ViewHolderFilterableSectionHeader(customFilterListHeaderRow);
-        } else if (viewType == ROW_ITEM) {
-            View customFilterListDataRow = inflater.inflate(R.layout.custom_filter_patient_list_item,
-                    viewGroup, false);
-            viewHolder = new ViewHolderFilterableDataItem(customFilterListDataRow);
-        }
+        View customFilterListDataRow = inflater.inflate(R.layout.custom_filter_patient_list_item,
+                viewGroup, false);
+        RecyclerView.ViewHolder viewHolder = new ViewHolderFilterableDataItem(customFilterListDataRow);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         FilterDataDTO filterDataDTO = this.filterableDataDTOList.get(position);
-        if (viewHolder.getItemViewType() == ROW_SECTION_HEADER) {
-            ViewHolderFilterableSectionHeader vhSectionHeader = (ViewHolderFilterableSectionHeader) viewHolder;
-            vhSectionHeader.getTextView().setText(filterDataDTO.getDisplayText());
-            viewHolder.itemView.setTag(vhSectionHeader);
-        } else {
-            ViewHolderFilterableDataItem vhDataItem = (ViewHolderFilterableDataItem) viewHolder;
-            vhDataItem.setFilterDataDTO(filterDataDTO);
-            viewHolder.itemView.setTag(vhDataItem);
-        }
+        ViewHolderFilterableDataItem vhDataItem = (ViewHolderFilterableDataItem) viewHolder;
+        vhDataItem.setFilterDataDTO(filterDataDTO);
+        viewHolder.itemView.setTag(vhDataItem);
+
     }
 
     /**
@@ -116,14 +93,17 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private class ViewHolderFilterableDataItem extends RecyclerView.ViewHolder {
 
         private CheckBox checkBox;
+        private ImageView patientImageView;
         private ImageView selectedItemImageView;
         private FilterDataDTO filterDataDTO;
 
         ViewHolderFilterableDataItem(View view) {
             super(view);
             checkBox = (CheckBox) view.findViewById(R.id.patientItemCheckBox);
+            patientImageView = (ImageView) view.findViewById(R.id.patientImageView);
             selectedItemImageView = (ImageView) view.findViewById(R.id.selectedItemImageView);
             SystemUtil.setProximaNovaSemiboldTypeface(context, checkBox);
+            patientImageView.setVisibility(View.VISIBLE);
             checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
         }
 
@@ -136,11 +116,12 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else {
                     selectedItemImageView.setVisibility(View.GONE);
                 }
-                onFilterOptionChangedListener.onFilterChanged(filterDataDTO);
+                onFilterOptionChangedListener.onSearchChanged(filterDataDTO);
             }
         };
 
-        void setFilterDataDTO(FilterDataDTO filterDataDTO) {
+
+        public void setFilterDataDTO(FilterDataDTO filterDataDTO) {
             this.filterDataDTO = filterDataDTO;
             checkBox.setText(filterDataDTO.getDisplayText());
             checkBox.setChecked(filterDataDTO.isChecked());
@@ -152,31 +133,56 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    /*
+     * Create our filter
+	 */
+    @Override
+    public Filter getFilter() {
+        if (filterableDataDTOFilter == null) {
+            filterableDataDTOFilter = new FilterableDataDTOFilter();
+        }
+        return filterableDataDTOFilter;
+    }
+
     /**
-     * Custom ViewHolder for displaying an FilterableSectionHeader in RecyclerView.
+     * Custom Filter for filtering an filterable data in RecyclerView.
      */
-    private class ViewHolderFilterableSectionHeader extends RecyclerView.ViewHolder {
+    private class FilterableDataDTOFilter extends Filter {
 
-        private TextView headerItemTextView;
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            // We implement here the filter logic
+            if (constraint == null || constraint.length() == 0) {
+                // No filter implemented we return all the list
+                results.values = origFilterableDataDTOList;
+                results.count = origFilterableDataDTOList.size();
+            } else {
+                // We perform filtering operation
+                List<FilterDataDTO> filterableDataDTOList = new ArrayList<>();
 
-        ViewHolderFilterableSectionHeader(View view) {
-            super(view);
-            headerItemTextView = (TextView) view.findViewById(R.id.headerItemTextView);
-            SystemUtil.setGothamRoundedBoldTypeface(context, headerItemTextView);
+                for (Object object : filterableDataDTOList) {
+                    try {
+                        FilterDataDTO dataDTO = (FilterDataDTO) object;
+                        if (dataDTO.getDisplayText().toUpperCase().startsWith(constraint.toString().toUpperCase())) {
+                            filterableDataDTOList.add(dataDTO);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                results.values = filterableDataDTOList;
+                results.count = filterableDataDTOList.size();
+            }
+            return results;
         }
 
-        TextView getTextView() {
-            return headerItemTextView;
-        }
-
-        public void setTextView(TextView textViewSectionHeader) {
-            this.headerItemTextView = textViewSectionHeader;
+        @Override
+        protected void publishResults(CharSequence constraint,
+                                      FilterResults results) {
+            // Now we have to inform the adapter about the new list filtered
+            filterableDataDTOList = (List<FilterDataDTO>) results.values;
+            notifyDataSetChanged();
         }
     }
-
-    void resetData() {
-        filterableDataDTOList = origFilterableDataDTOList;
-    }
-
-
 }

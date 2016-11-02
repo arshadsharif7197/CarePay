@@ -3,11 +3,9 @@ package com.carecloud.carepay.practice.library.appointments;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
-
 import com.carecloud.carepay.practice.library.appointments.services.AppointmentService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -25,9 +22,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLab
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
-
 import java.util.ArrayList;
-
 import java.util.Date;
 import java.util.List;
 

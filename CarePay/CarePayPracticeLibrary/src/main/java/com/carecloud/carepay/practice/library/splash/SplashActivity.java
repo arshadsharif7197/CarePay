@@ -1,12 +1,13 @@
 package com.carecloud.carepay.practice.library.splash;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.NavigationHelper;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -36,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
             SplashActivity.this.finish();
         }
 

@@ -9,6 +9,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -203,9 +204,16 @@ public class WorkflowServiceHelper {
         call.enqueue(new Callback<WorkflowDTO>() {
             @Override
             public void onResponse(Call<WorkflowDTO> call, Response<WorkflowDTO> response) {
-
-                if (response.code() == 200 && response.body() != null) {
-                    callback.onPostExecute(response.body());
+                if (response.code() == 200) {
+                    WorkflowDTO workflowDTO=response.body();
+                    if(workflowDTO!=null && !isNullOrEmpty(workflowDTO.getState()))
+                        callback.onPostExecute(response.body());
+                }else{
+                    try {
+                        callback.onFailure(response.raw().body().string());
+                    } catch (IOException exection) {
+                        callback.onFailure(exection.getMessage());
+                    }
                 }
             }
 

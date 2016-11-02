@@ -5,8 +5,8 @@ package com.carecloud.carepay.practice.library.patientmode.dtos;
  */
 
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class PatientModeQueryStringDTO {
 

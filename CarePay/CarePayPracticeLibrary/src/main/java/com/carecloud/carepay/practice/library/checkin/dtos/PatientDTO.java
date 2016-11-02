@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -27,7 +28,7 @@ public class PatientDTO {
     private String lastName;
     @SerializedName("middle_initial")
     @Expose
-    private Object middleInitial;
+    private String middleInitial;
     @SerializedName("gender_id")
     @Expose
     private String genderId;
@@ -40,6 +41,8 @@ public class PatientDTO {
     @SerializedName("primary_phone_number")
     @Expose
     private Object primaryPhoneNumber;
+
+    private boolean isFilterChecked;
 
     /**
      *
@@ -136,7 +139,7 @@ public class PatientDTO {
      * @return
      * The middleInitial
      */
-    public Object getMiddleInitial() {
+    public String getMiddleInitial() {
         return middleInitial;
     }
 
@@ -145,7 +148,7 @@ public class PatientDTO {
      * @param middleInitial
      * The middle_initial
      */
-    public void setMiddleInitial(Object middleInitial) {
+    public void setMiddleInitial(String middleInitial) {
         this.middleInitial = middleInitial;
     }
 
@@ -219,5 +222,33 @@ public class PatientDTO {
      */
     public void setPrimaryPhoneNumber(Object primaryPhoneNumber) {
         this.primaryPhoneNumber = primaryPhoneNumber;
+    }
+
+    public boolean isFilterChecked() {
+        return isFilterChecked;
+    }
+
+    public void setFilterChecked(boolean filterChecked) {
+        isFilterChecked = filterChecked;
+    }
+
+    public String getFullName(){
+        return firstName + (StringUtil.isNullOrEmpty(middleInitial)?"": " " + middleInitial)+" "+lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PatientDTO)) return false;
+
+        PatientDTO that = (PatientDTO) o;
+
+        return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return  getId().hashCode();
     }
 }

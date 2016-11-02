@@ -110,7 +110,7 @@
             android:layout_alignParentBottom="true"
             android:background="@color/clear_filter_button_background"
             android:text="@string/not_defined"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/filterableDataRecyclerView"

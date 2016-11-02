@@ -19,9 +19,11 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
+
+import org.joda.time.DateTime;
+
 import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs;
 import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs_appointmentListType;
-import org.joda.time.DateTime;
 
 
 /**
