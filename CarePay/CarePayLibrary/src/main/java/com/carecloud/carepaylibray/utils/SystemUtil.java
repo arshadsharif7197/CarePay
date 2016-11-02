@@ -6,27 +6,35 @@ package com.carecloud.carepaylibray.utils;
  */
 
 import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
 
+import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 
 public class SystemUtil {
 
@@ -225,6 +233,7 @@ public class SystemUtil {
 
     /**
      * Utility to convert dp to pixels.
+     *
      * @param context   The context
      * @param valueInDp The dps
      * @return The pxs
@@ -236,6 +245,7 @@ public class SystemUtil {
 
     /**
      * Converts drawable to gray scale
+     *
      * @param drawable drawable
      * @return drawable
      */
@@ -249,4 +259,63 @@ public class SystemUtil {
         return res;
     }
 
+    /**
+     * Creates a generic dialog that contains a list of choices; the selected option is set
+     * to the destination TextView and a callback is executed
+     *
+     * @param activity             The activity
+     * @param options              The choices
+     * @param title                The dlg title
+     * @param selectionDestination The textview where the selected option will be displayed
+     * @param callback             An optional callback to be executed on click
+     */
+    public static void showChooseDialog(Activity activity,
+                                        final String[] options, String title, String cancelLabel,
+                                        final TextView selectionDestination,
+                                        final OnClickItemCallback callback) {
+        final android.support.v7.app.AlertDialog.Builder dialog
+                = new AlertDialog.Builder(activity);
+        dialog.setTitle(title);
+        // add cancel button
+        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        // create dialog layout
+        View customView = LayoutInflater.from(activity).inflate(R.layout.alert_list_layout,
+                                                                (ViewGroup) activity.getWindow().getDecorView().getRootView(),
+                                                                false);
+        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        // create the adapter
+        CustomAlertAdapter mAdapter = new CustomAlertAdapter(activity, Arrays.asList(options));
+        listView.setAdapter(mAdapter);
+        // show the dialog
+        dialog.setView(customView);
+        final android.support.v7.app.AlertDialog alert = dialog.create();
+        alert.show();
+
+        // set item click listener
+        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String selectedOption = options[position];
+                if (callback != null) {
+                    callback.executeOnClick(selectionDestination, selectedOption);
+                }
+                alert.dismiss();
+            }
+        };
+        listView.setOnItemClickListener(clickListener);
+    }
+
+    /**
+     * Interface to be used with the showChooseDialog utility
+     */
+    public interface OnClickItemCallback {
+
+        void executeOnClick(TextView destination, String selectedOption);
+    }
 }

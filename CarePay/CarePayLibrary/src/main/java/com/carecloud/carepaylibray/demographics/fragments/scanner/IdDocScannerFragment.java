@@ -62,12 +62,12 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     private ImageCaptureHelper scannerFront;
     private ImageCaptureHelper scannerBack;
     private TextView           idTypeClickable;
+    private TextView           idDocTypeLabel;
     private Button             scanFrontButton;
     private Button             scanBackButton;
     private EditText           idNumberEdit;
     private TextInputLayout    idNumberInputText;
     private TextView           idStateClickable;
-    private TextView           idDocTypeLabel;
     private TextView           stateLabel;
 
     private DemographicIdDocPayloadDTO            model;
@@ -98,7 +98,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     private void getOptions() {
-        if(idDocsMetaDTO == null) {
+        if (idDocsMetaDTO == null) {
             // init arrays with 'not-defined's
             states = new String[1];
             states[0] = CarePayConstants.NOT_DEFINED;
@@ -143,7 +143,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             @Override
             public void onClick(View view) {
                 showChooseDialog(docTypes, titleSelIdDoc, labelCancel, idTypeClickable);
-
             }
         });
 
