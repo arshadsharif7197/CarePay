@@ -117,7 +117,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void setOptions() {
-        if (persDetailsMetaDTO == null) {
+        if(persDetailsMetaDTO == null) {
             raceArray = new String[1];
             raceArray[0] = CarePayConstants.NOT_DEFINED;
             ethnicityArray = new String[1];
@@ -391,7 +391,6 @@ public class DemographicsDetailsFragment extends Fragment
 
     /**
      * Getter
-     *
      * @return The DTO for personal details
      */
     public DemographicPersDetailsPayloadDTO getPersDetailsDTO() {

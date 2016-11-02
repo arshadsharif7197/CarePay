@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,15 +20,18 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +64,10 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private TextView                               header;
     private TextView                               subheader;
     private SwitchCompat                           switchCompat;
+    private TextView                               idTypeClickable;
+    private TextView                               idDocTypeLabel;
+    private        String[] docTypes;
+
 
 
     @Nullable
@@ -82,6 +90,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     }
 
     private void initializeUIFields() {
+        getOptions();
+
         // set the fragment
         setCardContainers();
 
@@ -95,14 +105,54 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSubheader();
         subheader.setText(label);
 
+        final String labelCancel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
+
+        idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.items.identityDocument.getLabel();
+        idDocTypeLabel.setText(label);
+
+        idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
+        idTypeClickable.setText(label);
+        final String titleSelIdDoc = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectIdType();
+        idTypeClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SystemUtil.showChooseDialog(getActivity(),
+                                            docTypes, titleSelIdDoc, labelCancel,
+                                            idTypeClickable,
+                                            new SystemUtil.OnClickItemCallback() {
+                                                @Override
+                                                public void executeOnClick(TextView destination, String selectedOption) {
+                                                    demPayloadIdDocDTO.setIdType(selectedOption);
+                                                }
+                                            });
+            }
+        });
+
         setButtons();
         setSwitch();
 
         // set the fonts
-        setTypefaces(view);
+        setTypefaces();
 
         // hide add card button
         showAddCardButton(false);
+    }
+
+    private void getOptions() {
+        if (idDocsMetaDTO == null) {
+            docTypes = new String[1];
+            docTypes[0] = CarePayConstants.NOT_DEFINED;
+
+            return;
+        }
+        // init doc types
+        List<String> docTypesStrings = new ArrayList<>();
+        for (MetadataOptionDTO o : idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options) {
+            docTypesStrings.add(o.getLabel());
+        }
+        docTypes = docTypesStrings.toArray(new String[0]);
     }
 
     private void getPayloadDTOs() {
@@ -266,12 +316,16 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         }
     }
 
-    private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), header);
-        setProximaNovaRegularTypeface(getActivity(), subheader);
-        setProximaNovaRegularTypeface(getActivity(), switchCompat);
-        setGothamRoundedMediumTypeface(getActivity(), multipleInsClickable);
-        setGothamRoundedMediumTypeface(getActivity(), nextButton);
+    private void setTypefaces() {
+        Context context = getActivity();
+        setProximaNovaRegularTypeface(context, idDocTypeLabel);
+        setProximaNovaSemiboldTypeface(context, idTypeClickable);
+
+        setGothamRoundedMediumTypeface(context, header);
+        setProximaNovaRegularTypeface(context, subheader);
+        setProximaNovaRegularTypeface(context, switchCompat);
+        setGothamRoundedMediumTypeface(context, multipleInsClickable);
+        setGothamRoundedMediumTypeface(context, nextButton);
     }
 
     private void setSwitch() {

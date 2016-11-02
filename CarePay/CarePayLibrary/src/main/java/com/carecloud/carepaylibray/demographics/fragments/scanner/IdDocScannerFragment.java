@@ -61,8 +61,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     private View               view;
     private ImageCaptureHelper scannerFront;
     private ImageCaptureHelper scannerBack;
-    private TextView           idTypeClickable;
-    private TextView           idDocTypeLabel;
     private Button             scanFrontButton;
     private Button             scanBackButton;
     private EditText           idNumberEdit;
@@ -75,7 +73,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     private DemographicLabelsDTO                  globalLabelsDTO;
 
     private static String[] states;
-    private        String[] docTypes;
 
     @Nullable
     @Override
@@ -102,10 +99,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             // init arrays with 'not-defined's
             states = new String[1];
             states[0] = CarePayConstants.NOT_DEFINED;
-
-            docTypes = new String[1];
-            docTypes[0] = CarePayConstants.NOT_DEFINED;
-
             return;
         }
 
@@ -115,36 +108,16 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
                 "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
 
-        // init doc types
-        List<String> docTypesStrings = new ArrayList<>();
-        for (MetadataOptionDTO o : idDocsMetaDTO.properties.identityDocumentType.options) {
-            docTypesStrings.add(o.getLabel());
-        }
-        docTypes = docTypesStrings.toArray(new String[0]);
     }
 
     private void initializeUIFields() {
         // fetch the options
         getOptions();
 
+
         // init views (labels and logic)
         String label;
         final String labelCancel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
-
-        idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
-        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentType.getLabel();
-        idDocTypeLabel.setText(label);
-
-        idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
-        idTypeClickable.setText(label);
-        final String titleSelIdDoc = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectIdType();
-        idTypeClickable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showChooseDialog(docTypes, titleSelIdDoc, labelCancel, idTypeClickable);
-            }
-        });
 
         setEditText();
 
@@ -254,12 +227,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void updateModel(TextView selectionDestination) {
-        if (selectionDestination == idTypeClickable) { // update 'id type' field in the model
-            String idType = selectionDestination.getText().toString();
-            if (!StringUtil.isNullOrEmpty(idType)) {
-                model.setIdType(idType);
-            }
-        } else if (selectionDestination == idStateClickable) { // update 'state' field in the model
+        if (selectionDestination == idStateClickable) { // update 'state' field in the model
             String state = idStateClickable.getText().toString();
             if (!StringUtil.isNullOrEmpty(state)) {
                 model.setIdState(state);
@@ -290,10 +258,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     @Override
     public void populateViewsFromModel() {
         if (model != null) {
-            String idType = model.getIdType();
-            if (!StringUtil.isNullOrEmpty(idType)) {
-                idTypeClickable.setText(idType);
-            }
             String licenseNum = model.getIdNumber();
             if (!StringUtil.isNullOrEmpty(licenseNum)) {
                 idNumberEdit.setText(licenseNum);
@@ -341,8 +305,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     @Override
     protected void setTypefaces(View view) {
         Context context = getActivity();
-        setProximaNovaRegularTypeface(context, idDocTypeLabel);
-        setProximaNovaSemiboldTypeface(context, idTypeClickable);
         setGothamRoundedMediumTypeface(context, scanFrontButton);
         setGothamRoundedMediumTypeface(context, scanBackButton);
 
