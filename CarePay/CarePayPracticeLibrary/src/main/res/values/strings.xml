@@ -16,5 +16,7 @@
     <string name="amount_required">Valid amount is required</string>
 
     <string name="forgotpassword">Forgot password</string>
+    <string name="home_logo">Home Logo</string>
+    <string name="home_icon_check_in">Check-in</string>
 
 </resources>
