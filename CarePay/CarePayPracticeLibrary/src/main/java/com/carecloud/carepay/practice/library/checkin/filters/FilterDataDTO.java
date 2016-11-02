@@ -72,7 +72,7 @@ public class FilterDataDTO {
 
     @Override
     public boolean equals(Object filterDataDTO) {
-        if (this == filterDataDTO) return true;
+        if (this == filterDataDTO) {return true;}
         if (!(filterDataDTO instanceof FilterDataDTO)) {return false;}
 
         FilterDataDTO that = (FilterDataDTO) filterDataDTO;
