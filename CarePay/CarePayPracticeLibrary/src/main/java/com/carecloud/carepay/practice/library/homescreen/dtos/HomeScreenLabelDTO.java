@@ -8,172 +8,161 @@ import com.google.gson.annotations.SerializedName;
 
 public class HomeScreenLabelDTO {
 
-    @SerializedName("checkin_button")
-    @Expose
+    @SerializedName("checkin_button") @Expose
     private String checkinButton;
-    @SerializedName("payments_button")
-    @Expose
+
+    @SerializedName("payments_button") @Expose
     private String paymentsButton;
-    @SerializedName("appointments_button")
-    @Expose
+
+    @SerializedName("appointments_button") @Expose
     private String appointmentsButton;
-    @SerializedName("checkout_button")
-    @Expose
+
+    @SerializedName("checkout_button") @Expose
     private String checkoutButton;
-    @SerializedName("shop_button")
-    @Expose
+
+    @SerializedName("shop_button") @Expose
     private String shopButton;
-    @SerializedName("officenews_button")
-    @Expose
+
+    @SerializedName("officenews_button")  @Expose
     private String officenewsButton;
-    @SerializedName("checkingin_notifications")
-    @Expose
+
+    @SerializedName("checkingin_notifications") @Expose
     private String checkinginNotifications;
-    @SerializedName("alerts")
-    @Expose
+
+    @SerializedName("alerts") @Expose
     private String alerts;
 
+    @SerializedName("patient_mode_button") @Expose
+    private String patientModeLabel;
+
+    @SerializedName("logout_button") @Expose
+    private String logoutLabel;
+
     /**
-     *
-     * @return
-     * The checkinButton
+     * @return The checkinButton
      */
     public String getCheckinButton() {
         return checkinButton;
     }
 
     /**
-     *
-     * @param checkinButton
-     * The checkin_button
+     * @param checkinButton The checkin_button
      */
     public void setCheckinButton(String checkinButton) {
         this.checkinButton = checkinButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentsButton
+     * @return The paymentsButton
      */
     public String getPaymentsButton() {
         return paymentsButton;
     }
 
     /**
-     *
-     * @param paymentsButton
-     * The payments_button
+     * @param paymentsButton The payments_button
      */
     public void setPaymentsButton(String paymentsButton) {
         this.paymentsButton = paymentsButton;
     }
 
     /**
-     *
-     * @return
-     * The appointmentsButton
+     * @return The appointmentsButton
      */
     public String getAppointmentsButton() {
         return appointmentsButton;
     }
 
     /**
-     *
-     * @param appointmentsButton
-     * The appointments_button
+     * @param appointmentsButton The appointments_button
      */
     public void setAppointmentsButton(String appointmentsButton) {
         this.appointmentsButton = appointmentsButton;
     }
 
     /**
-     *
-     * @return
-     * The checkoutButton
+     * @return The checkoutButton
      */
     public String getCheckoutButton() {
         return checkoutButton;
     }
 
     /**
-     *
-     * @param checkoutButton
-     * The checkout_button
+     * @param checkoutButton The checkout_button
      */
     public void setCheckoutButton(String checkoutButton) {
         this.checkoutButton = checkoutButton;
     }
 
     /**
-     *
-     * @return
-     * The shopButton
+     * @return The shopButton
      */
     public String getShopButton() {
         return shopButton;
     }
 
     /**
-     *
-     * @param shopButton
-     * The shop_button
+     * @param shopButton The shop_button
      */
     public void setShopButton(String shopButton) {
         this.shopButton = shopButton;
     }
 
     /**
-     *
-     * @return
-     * The officenewsButton
+     * @return The officenewsButton
      */
     public String getOfficenewsButton() {
         return officenewsButton;
     }
 
     /**
-     *
-     * @param officenewsButton
-     * The officenews_button
+     * @param officenewsButton  The officenews_button
      */
     public void setOfficenewsButton(String officenewsButton) {
         this.officenewsButton = officenewsButton;
     }
 
     /**
-     *
-     * @return
-     * The checkinginNotifications
+     * @return The checkinginNotifications
      */
     public String getCheckinginNotifications() {
         return checkinginNotifications;
     }
 
     /**
-     *
-     * @param checkinginNotifications
-     * The checkingin_notifications
+     * @param checkinginNotifications  The checkingin_notifications
      */
     public void setCheckinginNotifications(String checkinginNotifications) {
         this.checkinginNotifications = checkinginNotifications;
     }
 
     /**
-     *
-     * @return
-     * The alerts
+     * @return The alerts
      */
     public String getAlerts() {
         return alerts;
     }
 
     /**
-     *
-     * @param alerts
-     * The alerts
+     * @param alerts The alerts
      */
     public void setAlerts(String alerts) {
         this.alerts = alerts;
+    }
+
+    public String getPatientModeLabel() {
+        return patientModeLabel;
+    }
+
+    public void setPatientModeLabel(String patientModeLabel) {
+        this.patientModeLabel = patientModeLabel;
+    }
+
+    public String getLogoutLabel() {
+        return logoutLabel;
+    }
+
+    public void setLogoutLabel(String logoutLabel) {
+        this.logoutLabel = logoutLabel;
     }
 }

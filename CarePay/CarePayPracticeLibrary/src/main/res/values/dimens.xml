@@ -134,4 +134,5 @@
     <dimen name="home_settings_icon_width">18dp</dimen>
     <dimen name="home_settings_icon_height">18dp</dimen>
 
+    <dimen name="home_spinner_width">39dp</dimen>
 </resources>
