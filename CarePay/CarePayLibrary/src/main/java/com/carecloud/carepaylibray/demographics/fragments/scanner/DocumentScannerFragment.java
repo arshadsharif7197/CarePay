@@ -97,7 +97,6 @@ public abstract class DocumentScannerFragment extends Fragment {
                                     new SystemUtil.OnClickItemCallback() {
                                         @Override
                                         public void executeOnClick(TextView destination, String selectedOption) {
-                                            selectionDestination.setText(selectedOption); // set the selected option in the target textview
                                             updateModel(selectionDestination);
                                         }
                                     });

@@ -302,6 +302,7 @@ public class SystemUtil {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String selectedOption = options[position];
+                selectionDestination.setText(selectedOption); // set the selected option in the target textview
                 if (callback != null) {
                     callback.executeOnClick(selectionDestination, selectedOption);
                 }

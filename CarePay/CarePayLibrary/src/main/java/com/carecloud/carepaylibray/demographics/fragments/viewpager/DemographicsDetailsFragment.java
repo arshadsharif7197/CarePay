@@ -1,14 +1,12 @@
 package com.carecloud.carepaylibray.demographics.fragments.viewpager;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -19,16 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsAllergiesAdapter;
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsMedicationsAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
@@ -52,7 +47,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -123,7 +117,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void setOptions() {
-        if(persDetailsMetaDTO == null) {
+        if (persDetailsMetaDTO == null) {
             raceArray = new String[1];
             raceArray[0] = CarePayConstants.NOT_DEFINED;
             ethnicityArray = new String[1];
@@ -397,6 +391,7 @@ public class DemographicsDetailsFragment extends Fragment
 
     /**
      * Getter
+     *
      * @return The DTO for personal details
      */
     public DemographicPersDetailsPayloadDTO getPersDetailsDTO() {
@@ -444,15 +439,15 @@ public class DemographicsDetailsFragment extends Fragment
         if (view == raceTextView) {
             selectedArray = 1;
             final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectRace();
-            showAlertDialogWithListview(raceArray, title, cancelLabel);
+            showAlertDialogWithListview(raceArray, title, cancelLabel, raceTextView);
         } else if (view == ethnicityTextView) {
             selectedArray = 2;
             final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectEthnicity();
-            showAlertDialogWithListview(ethnicityArray, title, cancelLabel);
+            showAlertDialogWithListview(ethnicityArray, title, cancelLabel, ethnicityTextView);
         } else if (view == genderTextView) {
             selectedArray = 3;
             final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectGender();
-            showAlertDialogWithListview(genderArray, title, cancelLabel);
+            showAlertDialogWithListview(genderArray, title, cancelLabel, genderTextView);
         } else if (view == addUnlistedAllergyTextView) {
             Snackbar.make(view, "In progress", Snackbar.LENGTH_SHORT).show();
         } else if (view == addUnlistedMedTextView) {
@@ -495,51 +490,33 @@ public class DemographicsDetailsFragment extends Fragment
         ((DemographicsActivity) getActivity()).setDetailsModel(persDetailsDTO); // save the updated persDetailsDTO in the activity
     }
 
-    private void showAlertDialogWithListview(final String[] dataArray, String title, String cancelLabel) {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int ii) {
-                dialogInterface.dismiss();
-            }
-        });
-        View customView = LayoutInflater
-                .from(getActivity()).inflate(R.layout.alert_list_layout,
-                                             (ViewGroup) getView(),
-                                             false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter adapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
-        listView.setAdapter(adapter);
-        dialog.setView(customView);
-        final AlertDialog alert = dialog.create();
-        alert.show();
+    private void updateModelWithSelectedOption(String selectedOption) {
+        switch (selectedArray) {
+            case 1:
+                persDetailsDTO.setPrimaryRace(selectedOption);
+                break;
+            case 2:
+                persDetailsDTO.setEthnicity(selectedOption);
+                break;
+            case 3:
+                persDetailsDTO.setGender(selectedOption);
+                break;
+            default:
+                break;
+        }
+    }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long ll) {
-                switch (selectedArray) {
-                    case 1:
-                        String race = dataArray[position];
-                        raceTextView.setText(race);
-                        persDetailsDTO.setPrimaryRace(race);
-                        break;
-                    case 2:
-                        String ethnicity = ethnicityArray[position];
-                        ethnicityTextView.setText(ethnicity);
-                        persDetailsDTO.setEthnicity(ethnicity);
-                        break;
-                    case 3:
-                        String gender = dataArray[position];
-                        genderTextView.setText(gender);
-                        persDetailsDTO.setGender(gender);
-                        break;
-                    default:
-                        break;
-                }
-                alert.dismiss();
-            }
-        });
+    private void showAlertDialogWithListview(final String[] dataArray, String title, String cancelLabel,
+                                             final TextView selectionDestination) {
+        SystemUtil.showChooseDialog(getActivity(),
+                                    dataArray, title, cancelLabel,
+                                    selectionDestination,
+                                    new SystemUtil.OnClickItemCallback() {
+                                        @Override
+                                        public void executeOnClick(TextView destination, String selectedOption) {
+                                            updateModelWithSelectedOption(selectedOption);
+                                        }
+                                    });
     }
 
     private void setTypefaces(View view) {
