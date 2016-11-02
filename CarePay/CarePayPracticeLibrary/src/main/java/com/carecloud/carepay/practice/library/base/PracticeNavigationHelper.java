@@ -16,6 +16,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 /**
  * Created by Jahirul Bhuiyan on 10/10/2016.
  * Dynamic screen navigation helper
+ * Singleton
+ * initialize from application class
  */
 
 public class PracticeNavigationHelper {
@@ -27,6 +29,10 @@ public class PracticeNavigationHelper {
 
     }
 
+    /**
+     * PracticeNavigationHelper singleton initialization from Application class
+     * @param context application context
+     */
     public static void initInstance(Context context) {
         PracticeNavigationHelper.context = context;
         if (instance == null) {
@@ -38,6 +44,11 @@ public class PracticeNavigationHelper {
         return instance;
     }
 
+    /**
+     * Navigation using activity context
+     * @param context activity context
+     * @param workflowDTO WorkflowDTO
+     */
     public void navigateToWorkflow(Context context, WorkflowDTO workflowDTO){
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
@@ -81,6 +92,10 @@ public class PracticeNavigationHelper {
 
     }
 
+    /**
+     * Navigation using application context
+     * @param workflowDTO WorkflowDTO
+     */
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         navigateToWorkflow(PracticeNavigationHelper.context,workflowDTO);
     }

@@ -206,8 +206,9 @@ public class WorkflowServiceHelper {
             public void onResponse(Call<WorkflowDTO> call, Response<WorkflowDTO> response) {
                 if (response.code() == 200) {
                     WorkflowDTO workflowDTO=response.body();
-                    if(workflowDTO!=null && !isNullOrEmpty(workflowDTO.getState()))
+                    if(workflowDTO!=null && !isNullOrEmpty(workflowDTO.getState())) {
                         callback.onPostExecute(response.body());
+                    }
                 }else{
                     try {
                         callback.onFailure(response.raw().body().string());

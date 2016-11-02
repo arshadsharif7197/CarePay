@@ -662,11 +662,11 @@ public class AppointmentPayloadDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AppointmentPayloadDTO)) return false;
+    public boolean equals(Object payloadObj) {
+        if (this == payloadObj) {return true;}
+        if (!(payloadObj instanceof AppointmentPayloadDTO)) {return false;}
 
-        AppointmentPayloadDTO that = (AppointmentPayloadDTO) o;
+        AppointmentPayloadDTO that = (AppointmentPayloadDTO) payloadObj;
 
         return getId().equals(that.getId());
 

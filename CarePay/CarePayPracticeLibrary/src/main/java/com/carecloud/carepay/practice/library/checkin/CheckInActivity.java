@@ -130,7 +130,8 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     }
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList, AppointmentPayloadDTO appointmentPayloadDTO) {
-        FilterDataDTO filterDataDTO;LocationDTO locationDTO=appointmentPayloadDTO.getLocation();
+        FilterDataDTO filterDataDTO;
+        LocationDTO locationDTO=appointmentPayloadDTO.getLocation();
         filterDataDTO =new FilterDataDTO(locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if( locationsList.indexOf(filterDataDTO)<0) {
             //filterDataDTO.setFilterId(locationDTO.getId());

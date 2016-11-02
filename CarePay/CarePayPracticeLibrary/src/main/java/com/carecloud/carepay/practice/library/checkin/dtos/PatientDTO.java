@@ -237,11 +237,11 @@ public class PatientDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PatientDTO)) return false;
+    public boolean equals(Object patientObj) {
+        if (this == patientObj) {return true;}
+        if (!(patientObj instanceof PatientDTO)) {return false;}
 
-        PatientDTO that = (PatientDTO) o;
+        PatientDTO that = (PatientDTO) patientObj;
 
         return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
 

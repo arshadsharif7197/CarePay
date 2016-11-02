@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Created by sudhir_pingale on 10/19/2016.
+ * This class use for filtering the checkin screen
  */
 
 public class FilterDataDTO {
@@ -22,20 +23,18 @@ public class FilterDataDTO {
     private List<String> appointmentList;
 
     private FilterDataDTO(){}
+
+    /**
+     * Constructor with text and type
+     * @param displayText text
+     * @param filterDataType type PATIENT, PROVIDER,LOCATION or HEADER
+     */
     public FilterDataDTO(String displayText,FilterDataType filterDataType) {
         this.filterDataType=filterDataType;
         this.displayText=displayText;
         appointmentList=new ArrayList<>();
 
     }
-
-    /*public int getFilterId() {
-        return filterId;
-    }
-
-    public void setFilterId(int filterId) {
-        this.filterId = filterId;
-    }*/
 
 
     public String getDisplayText() {
@@ -74,11 +73,11 @@ public class FilterDataDTO {
     @Override
     public boolean equals(Object filterDataDTO) {
         if (this == filterDataDTO) return true;
-        if (!(filterDataDTO instanceof FilterDataDTO)) return false;
+        if (!(filterDataDTO instanceof FilterDataDTO)) {return false;}
 
         FilterDataDTO that = (FilterDataDTO) filterDataDTO;
 
-        if (!getDisplayText().equals(that.getDisplayText())) return false;
+        if (!getDisplayText().equals(that.getDisplayText())) {return false;}
         return getFilterDataType() == that.getFilterDataType();
 
     }
