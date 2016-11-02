@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;

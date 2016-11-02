@@ -143,14 +143,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         AppointmentsActivity.model = item;
 
                         if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)) {
-                            new CancelAppointmentDialog(context, item).show();
+                            new CancelAppointmentDialog(context, item, appointmentLabels).show();
                         } else {
                             if (isPending) {
-                                new CheckInOfficeNowAppointmentDialog(context, item).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels).show();
                             } else if (isCheckedIn) {
-                                new QueueAppointmentDialog(context, item).show();
+                                new QueueAppointmentDialog(context, item, appointmentLabels).show();
                             } else {
-                                new CheckInOfficeNowAppointmentDialog(context, item).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels).show();
                             }
                         }
                     }

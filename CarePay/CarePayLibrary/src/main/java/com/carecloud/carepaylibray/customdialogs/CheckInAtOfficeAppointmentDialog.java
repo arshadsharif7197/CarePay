@@ -11,16 +11,27 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
 
-    private LinearLayout mainLayout;
     private Context context;
+    private LinearLayout mainLayout;
+    private AppointmentLabelDTO appointmentLabels;
 
-    public CheckInAtOfficeAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+    /**
+     * Constructor.
+     * @param context context
+     * @param appointmentDTO appointment Item
+     * @param appointmentLabels Screen labels
+     */
+    public CheckInAtOfficeAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                            AppointmentLabelDTO appointmentLabels) {
         super(context, appointmentDTO);
         this.context = context;
+        this.appointmentLabels = appointmentLabels;
     }
 
     @Override
@@ -35,7 +46,9 @@ public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_checkin_at_office_appointment, null);
+
         Button checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkAtOfficeButton);
+        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInAtOffice()));
         checkInAtOfficeButton.setOnClickListener(this);
 
         mainLayout.addView(childActionView);

@@ -19,36 +19,35 @@ import android.widget.RadioGroup;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by prem_mourya on 10/12/2016.
  */
 
-public class CancelReasonAppointmentDialog extends Dialog implements
-        View.OnClickListener {
+public class CancelReasonAppointmentDialog extends Dialog implements View.OnClickListener {
+
     private Context context;
     private AppointmentDTO appointmentDTO;
+    private AppointmentLabelDTO appointmentLabels;
+
     private RadioGroup cancelReasonRadioGroup;
     private Button cancelAppointmentButton;
     private EditText reasonEditText;
-    private TextInputLayout reasonTextInputLayout;
-    private AppCompatRadioButton rescheduleAppointmentRadioButtom;
-    private AppCompatRadioButton officeRescheduleAppointmentRadioButtom;
-    private AppCompatRadioButton forgotAppointmentRadioButtom;
-    private AppCompatRadioButton noLongerAppointmentRadioButtom;
-    private AppCompatRadioButton otherAppointmentRadioButtom;
 
     /**
-     * Contractor for   dialog.
-     *
-     * @param context the String to evaluate
-     * @param appointmentDTO the DTO to evaluate
+     * Contractor for dialog.
+     * @param context context
+     * @param appointmentDTO appointment Item
+     * @param appointmentLabels screen labels
      */
-    public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+    public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                         AppointmentLabelDTO appointmentLabels) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
+        this.appointmentLabels = appointmentLabels;
     }
 
     @Override
@@ -63,29 +62,40 @@ public class CancelReasonAppointmentDialog extends Dialog implements
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
         onInitialization();
-        onSetListner();
+        onSetListener();
     }
 
     private void onInitialization() {
-        cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
-        cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
+
         reasonEditText = (EditText) findViewById(R.id.reasonEditText);
-        reasonTextInputLayout = (TextInputLayout) findViewById(R.id.reasonTextInputLayout);
-        rescheduleAppointmentRadioButtom = (AppCompatRadioButton) findViewById(R.id.rescheduleAppointmentRadioButtom);
-        officeRescheduleAppointmentRadioButtom = (AppCompatRadioButton) findViewById(R.id.officeRescheduleAppointmentRadioButtom);
-        forgotAppointmentRadioButtom = (AppCompatRadioButton) findViewById(R.id.forgotAppointmentRadioButtom);
-        noLongerAppointmentRadioButtom = (AppCompatRadioButton) findViewById(R.id.noLongerAppointmentRadioButtom);
-        otherAppointmentRadioButtom = (AppCompatRadioButton) findViewById(R.id.otherAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, rescheduleAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, officeRescheduleAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, forgotAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, noLongerAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, otherAppointmentRadioButtom);
+        cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
+
+        cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
         SystemUtil.setProximaNovaRegularTypeface(context, cancelAppointmentButton);
 
+        TextInputLayout reasonTextInputLayout = (TextInputLayout) findViewById(R.id.reasonTextInputLayout);
+        AppCompatRadioButton rescheduleAppointmentRadioButton = (AppCompatRadioButton)
+                findViewById(R.id.rescheduleAppointmentRadioButtom);
+        SystemUtil.setProximaNovaRegularTypeface(context, rescheduleAppointmentRadioButton);
+
+        AppCompatRadioButton officeRescheduleAppointmentRadioButton = (AppCompatRadioButton)
+                findViewById(R.id.officeRescheduleAppointmentRadioButtom);
+        SystemUtil.setProximaNovaRegularTypeface(context, officeRescheduleAppointmentRadioButton);
+
+        AppCompatRadioButton forgotAppointmentRadioButton = (AppCompatRadioButton)
+                findViewById(R.id.forgotAppointmentRadioButtom);
+        SystemUtil.setProximaNovaRegularTypeface(context, forgotAppointmentRadioButton);
+
+        AppCompatRadioButton noLongerAppointmentRadioButton = (AppCompatRadioButton)
+                findViewById(R.id.noLongerAppointmentRadioButtom);
+        SystemUtil.setProximaNovaRegularTypeface(context, noLongerAppointmentRadioButton);
+
+        AppCompatRadioButton otherAppointmentRadioButton = (AppCompatRadioButton)
+                findViewById(R.id.otherAppointmentRadioButtom);
+        SystemUtil.setProximaNovaRegularTypeface(context, otherAppointmentRadioButton);
     }
 
-    private void onSetListner() {
+    private void onSetListener() {
         findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(this);
         cancelReasonRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -95,6 +105,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements
                 onSelectionRadioCancel(checkedRadioButton.isChecked(), checkedRadioButtonId);
             }
         });
+
         reasonEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -103,6 +114,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements
                 return false;
             }
         });
+
         cancelAppointmentButton.setOnClickListener(this);
     }
 
@@ -112,7 +124,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements
         if (viewId == R.id.dialogCloseHeaderImageView) {
             cancel();
         } else if (viewId == R.id.cancelAppointmentButton) {
-            new CancelAppointmentDialog(context, appointmentDTO,true).show();
+            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentLabels).show();
             cancel();
         }
     }
@@ -123,6 +135,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements
             cancelAppointmentButton.setEnabled(true);
             cancelAppointmentButton.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
+
         if (id == R.id.otherAppointmentRadioButtom) {
             reasonEditText.setEnabled(true);
             reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
@@ -146,6 +159,4 @@ public class CancelReasonAppointmentDialog extends Dialog implements
         appCompatRadioButton.setSupportButtonTintList(colorStateList);
         appCompatRadioButton.setTextColor(colorStateList);
     }
-
-
 }

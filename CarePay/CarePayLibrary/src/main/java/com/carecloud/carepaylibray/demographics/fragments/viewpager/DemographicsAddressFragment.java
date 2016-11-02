@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
@@ -145,11 +146,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
      */
     private void initialiseUIFields() {
         header = (TextView) view.findViewById(R.id.addressHeading);
-        header.setText(globalLabelsMetaDTO.getDemographicsAddressHeader());
+        header.setText(globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsAddressHeader());
         subheader = (TextView) view.findViewById(R.id.addressSubHeading);
-        subheader.setText(globalLabelsMetaDTO.getDemographicsAddressSubheader());
+        subheader.setText(globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsAddressSubheader());
 
-        String reqLabel = globalLabelsMetaDTO.getDemographicsRequired();
+        String reqLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsRequired();
         firstNameReqHint = (TextView) view.findViewById(R.id.demogrAddressFirstNameReqHint);
         firstNameReqHint.setText(reqLabel);
         lastNameReqHint = (TextView) view.findViewById(R.id.demogrAddressLastNameReqHint);
@@ -157,49 +158,49 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         String hint;
 
-        hint = persDetailsMetaDTO.properties.firstName.getLabel();
+        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.getLabel();
         firstNameText = (EditText) view.findViewById(R.id.demogrAddressFirstNameEdit);
         firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressFirstNameTextInput);
         firstNameInputLayout.setTag(hint);
         firstNameText.setTag(firstNameInputLayout);
         firstNameText.setHint(hint);
 
-        hint = persDetailsMetaDTO.properties.lastName.getLabel();
+        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.getLabel();
         lastNameText = (EditText) view.findViewById(R.id.demogrAddressLastNameEdit);
         lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressLastNameTextInput);
         lastNameInputLayout.setTag(hint);
         lastNameText.setTag(lastNameInputLayout);
         lastNameText.setHint(hint);
 
-        hint = addressMetaDTO.properties.address1.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.getLabel();
         address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address1TextInputLayout.setTag(hint);
         address1EditText.setTag(address1TextInputLayout);
         address1EditText.setHint(hint);
 
-        hint = addressMetaDTO.properties.address2.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address2.getLabel();
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         address2TextInputLayout.setTag(hint);
         address2EditText.setTag(address2TextInputLayout);
         address2EditText.setHint(hint);
 
-        hint = addressMetaDTO.properties.zipcode.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.zipcode.getLabel();
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
         zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipCodeTextInputLayout.setTag(hint);
         zipCodeEditText.setTag(zipCodeTextInputLayout);
         zipCodeEditText.setHint(hint);
 
-        hint = addressMetaDTO.properties.city.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.city.getLabel();
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         cityTextInputLayout.setTag(hint);
         cityEditText.setTag(cityTextInputLayout);
         cityEditText.setHint(hint);
 
-        hint = addressMetaDTO.properties.state.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.getLabel();
         stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         stateTextInputLayout.setTag(hint);
@@ -218,7 +219,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             }
         });
 
-        hint = addressMetaDTO.properties.phone.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.getLabel();
         phoneNumberEditText = (EditText) view.findViewById(R.id.phNoEditText);
         phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
         phNoTextInputLayout.setTag(hint);
@@ -227,7 +228,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         // get label from global metadata
         nextButton = (Button) view.findViewById(R.id.demographicsAddressNextButton);
-        String nextLabel = globalLabelsMetaDTO.getDemographicsNext();
+        String nextLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsNext();
         nextButton.setText(nextLabel);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -693,7 +694,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private boolean checkState() {
-        final String stateError = addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
+        final String stateError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
         if (!isStateEmtpy) {
             boolean isStateAbbrUnknown = true; // check valid state
             for (String state : AddressUtil.states) {
@@ -713,7 +714,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private boolean checkCity() {
-        final String cityError = addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
+        final String cityError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
         if (!isCityEmpty) {
             String city = cityEditText.getText().toString();
             if (!StringUtil.isNullOrEmpty(city) && city.trim().length() < 3) {
@@ -728,8 +729,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private boolean checkPhoneNumber() {
-        final String phoneError = addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
-        final String phoneValidation = (String) addressMetaDTO.properties.phone.validations.get(0).value;
+        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
         if (!isPhoneEmpty) { // check validity only if non-empty
             String phone = phoneNumberEditText.getText().toString();
             if (!StringUtil.isNullOrEmpty(phone)
