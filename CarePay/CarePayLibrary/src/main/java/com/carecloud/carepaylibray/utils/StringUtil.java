@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.utils;
 import android.text.Editable;
 import android.util.Log;
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -258,7 +260,7 @@ public class StringUtil {
      */
     public static String getLabelForView(String label) {
         if (isNullOrEmpty(label)) {
-            return "Not Defined";
+            return CarePayConstants.NOT_DEFINED;
         } else {
             return label;
         }
