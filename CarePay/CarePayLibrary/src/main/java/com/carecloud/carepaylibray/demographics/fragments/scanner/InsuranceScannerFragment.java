@@ -177,6 +177,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         });
 
         planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
+        enablePlanClickable(false);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsChoosePlanLabel();
         planTextView.setText(label);
         final String selectPlanTitle = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectPlan();
@@ -515,5 +516,35 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
     public void setInsuranceMetadataDTO(DemographicMetadataEntityItemInsuranceDTO insuranceMetadataDTO) {
         this.insuranceMetadataDTO = insuranceMetadataDTO;
+    }
+
+    private void enablePlanClickable(boolean enabled) {
+        if(enabled) {
+            String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
+            planTextView.setText(label);
+            planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.blue_cerulian));
+            planTextView.setEnabled(true);
+        } else {
+            planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray));
+            planTextView.setEnabled(false);
+        }
+    }
+
+    @Override
+    protected void showChooseDialog(final String[] options, String title, String cancelLabel,
+                                    final TextView selectionDestination) {
+        SystemUtil.showChooseDialog(getActivity(),
+                                    options, title, cancelLabel,
+                                    selectionDestination,
+                                    new SystemUtil.OnClickItemCallback() {
+                                        @Override
+                                        public void executeOnClick(TextView destination, String selectedOption) {
+                                            updateModel(selectionDestination);
+                                            if(selectionDestination == providerTextView) {
+                                                Log.v("XXX", "enabled plan after screen");
+                                                enablePlanClickable(true);
+                                            }
+                                        }
+                                    });
     }
 }
