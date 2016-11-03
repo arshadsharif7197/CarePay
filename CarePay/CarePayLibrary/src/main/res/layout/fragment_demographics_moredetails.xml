@@ -7,8 +7,8 @@
 
         <FrameLayout
             android:layout_marginTop="@dimen/demographics_docs_header_top"
-            android:gravity="center"
-            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
@@ -16,14 +16,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/circle_shape"/>
-
-            <TextView
-                android:id="@+id/placeHolderIconTextViewId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/PlaceHolderIcon"/>
+                android:background="@drawable/icn_allset"/>
         </FrameLayout>
 
     <LinearLayout
