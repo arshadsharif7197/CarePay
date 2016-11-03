@@ -113,6 +113,8 @@ public class HowToCheckInActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             /*To implement click event for Create CarePay Account*/
+            Intent intent = new Intent(HowToCheckInActivity.this, PersonalInformationActivity.class);
+            startActivity(intent);
         }
     };
 
