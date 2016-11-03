@@ -2,6 +2,8 @@ package com.carecloud.carepaylibray.utils;
 
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
+import org.joda.time.DateTime;
+
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -160,6 +162,27 @@ public class DateUtil {
         return out.format(date);
     }
 
+
+    public static String getTodayStart() {
+        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+        SimpleDateFormat out = new SimpleDateFormat(rawFmt, Locale.getDefault());
+        Calendar cal = Calendar.getInstance(); // locale-specific
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return out.format(new Date(cal.getTimeInMillis()));
+    }
+    public static String getTodayEnd() {
+        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+        SimpleDateFormat out = new SimpleDateFormat(rawFmt, Locale.getDefault());
+        Calendar cal = Calendar.getInstance(); // locale-specific
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 0);
+        return out.format(new Date(cal.getTimeInMillis()));
+    }
     /**
      * Creates a Date object from a string representing a date formatted as MM/dd/yyyy
      *

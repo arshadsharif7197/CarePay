@@ -666,9 +666,9 @@ public class AppointmentPayloadDTO {
         if (this == payloadObj) {return true;}
         if (!(payloadObj instanceof AppointmentPayloadDTO)) {return false;}
 
-        AppointmentPayloadDTO that = (AppointmentPayloadDTO) payloadObj;
+        AppointmentPayloadDTO appointmentPayloadDTO = (AppointmentPayloadDTO) payloadObj;
 
-        return getId().equals(that.getId());
+        return getId().equals(appointmentPayloadDTO.getId());
 
     }
 

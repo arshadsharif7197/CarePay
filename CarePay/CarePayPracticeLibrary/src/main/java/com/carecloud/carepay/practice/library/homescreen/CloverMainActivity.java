@@ -28,10 +28,13 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
@@ -184,7 +187,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         int viewId = view.getId();
 
         if (viewId == R.id.homeCheckinClickable) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback);
+            Map<String,String> queryMap=new HashMap<>();
+            queryMap.put("start_date", DateUtil.getTodayStart());
+            queryMap.put("end_date",DateUtil.getTodayEnd());
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback,queryMap);
         } else if (viewId == R.id.homeModeSwitchClickable) {
             createChangeModeDialog().show();
         } else if (viewId == R.id.homeAppointmentsClickable) {

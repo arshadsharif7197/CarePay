@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.checkin;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,6 @@ import java.util.List;
 public class CheckInActivity extends BasePracticeActivity implements CustomFilterPopupWindow.FilterCallBack {
 
     private RecyclerView checkinginRecyclerView;
-
     private RecyclerView waitingRoomRecyclerView;
 
     CheckInDTO checkInDTO;
@@ -41,33 +41,61 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     CheckedInAppointmentAdapter checkedInAdapter;
     CheckedInAppointmentAdapter waitingRoomAdapter;
+
     TextView checkingInCounterTextview;
     TextView waitingCounterTextview;
-    ArrayList<FilterDataDTO> filterableDoctorLocationList =new ArrayList<>();
+
+    ArrayList<FilterDataDTO> filterableDoctorLocationList = new ArrayList<>();
     ArrayList<FilterDataDTO> patientList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         checkInDTO = getConvertedDTO(CheckInDTO.class);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
+
         checkinginRecyclerView = (RecyclerView) findViewById(R.id.checkinginRecyclerView);
         checkinginRecyclerView.setHasFixedSize(true);
         checkinginRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
+        checkinginRecyclerView.setOnDragListener(onCheckingInListDragListener);
+
         waitingRoomRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
         waitingRoomRecyclerView.setHasFixedSize(true);
         waitingRoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        checkingInCounterTextview= (TextView) findViewById(R.id.checkingInCounterTextview);
-        waitingCounterTextview= (TextView) findViewById(R.id.waitingCounterTextview);
-        findViewById(R.id.goBackTextview).setOnClickListener(new View.OnClickListener() {
+        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
+        waitingRoomRecyclerView.setOnDragListener(onWaitListDragListener);
+
+        checkingInCounterTextview = (TextView) findViewById(R.id.checkingInCounterTextview);
+        waitingCounterTextview = (TextView) findViewById(R.id.waitingCounterTextview);
+        findViewById(R.id.goBackTextview).setOnClickListener(onGobackButtonClick());
+        findViewById(R.id.filterImageView).setOnClickListener(onFilterIconClick());
+
+        populateList();
+    }
+
+    @NonNull
+    private View.OnClickListener onGobackButtonClick() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
-        });
-        populateList();
+        };
+    }
+
+    @NonNull
+    private View.OnClickListener onFilterIconClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new CustomFilterPopupWindow(CheckInActivity.this, findViewById(R.id.activity_checked_in), filterableDoctorLocationList, patientList).showPopWindow();
+            }
+        };
     }
 
     @Override
@@ -78,14 +106,14 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     private void populateList() {
         if (checkInDTO != null && checkInDTO.getPayload() != null && checkInDTO.getPayload().getAppointments().size() > 0) {
-            final List<AppointmentDTO> appointments= checkInDTO.getPayload().getAppointments();
+            List<AppointmentDTO> appointments = checkInDTO.getPayload().getAppointments();
 
             ArrayList<FilterDataDTO> doctorsList = new ArrayList<>();
             ArrayList<FilterDataDTO> locationsList = new ArrayList<>();
             patientList = new ArrayList<>();
 
             for (AppointmentDTO appointmentDTO : appointments) {
-                AppointmentPayloadDTO appointmentPayloadDTO=appointmentDTO.getPayload();
+                AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
                 if (appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase("Checked-In")) {
                     waitingRoomAppointments.add(appointmentPayloadDTO);
                 } else {
@@ -93,7 +121,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                 }
                 addProviderOnProviderFilterList(doctorsList, appointmentPayloadDTO);
                 addLocationOnFilterList(locationsList, appointmentPayloadDTO);
-                addPatientOnFilterList(patientList,appointmentPayloadDTO);
+                addPatientOnFilterList(patientList, appointmentPayloadDTO);
             }
             applySortByAppointmentTime(waitingRoomAppointments);
             applySortByAppointmentTime(checkingInAppointments);
@@ -103,20 +131,12 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
             checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
             waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
+
             checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments);
-            checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
             checkinginRecyclerView.setAdapter(checkedInAdapter);
+
             waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments);
-            waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
             waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
-            waitingRoomRecyclerView.setOnDragListener(onWaitListDragListener);
-            checkinginRecyclerView.setOnDragListener(onCheckingInListDragListener);
-            findViewById(R.id.filterImageView).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new CustomFilterPopupWindow(CheckInActivity.this,findViewById(R.id.activity_checked_in), filterableDoctorLocationList,patientList).showPopWindow();
-                }
-            });
         }
     }
 
@@ -131,43 +151,43 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;
-        LocationDTO locationDTO=appointmentPayloadDTO.getLocation();
-        filterDataDTO =new FilterDataDTO(locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
-        if( locationsList.indexOf(filterDataDTO)<0) {
+        LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
+        filterDataDTO = new FilterDataDTO(locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+        if (locationsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(locationDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             locationsList.add(filterDataDTO);
-        }else{
-            filterDataDTO=locationsList.get(locationsList.indexOf(filterDataDTO));
+        } else {
+            filterDataDTO = locationsList.get(locationsList.indexOf(filterDataDTO));
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
     }
 
     private void addPatientOnFilterList(ArrayList<FilterDataDTO> patientsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;
-        PatientDTO patientDTO=appointmentPayloadDTO.getPatient();
+        PatientDTO patientDTO = appointmentPayloadDTO.getPatient();
 
-        filterDataDTO =new FilterDataDTO(patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
-        if( patientsList.indexOf(filterDataDTO)<0) {
+        filterDataDTO = new FilterDataDTO(patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
+        if (patientsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(patientDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             patientsList.add(filterDataDTO);
-        }else{
-            filterDataDTO=patientsList.get(patientsList.indexOf(filterDataDTO));
+        } else {
+            filterDataDTO = patientsList.get(patientsList.indexOf(filterDataDTO));
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
     }
 
     private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctorsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;// For filtering
-        ProviderDTO providerDTO=appointmentPayloadDTO.getProvider();
-        filterDataDTO =new FilterDataDTO(providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
-        if( doctorsList.indexOf(filterDataDTO)<0) {
+        ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
+        filterDataDTO = new FilterDataDTO(providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
+        if (doctorsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(providerDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             doctorsList.add(filterDataDTO);
-        }else{
-            filterDataDTO=doctorsList.get(doctorsList.indexOf(filterDataDTO));
+        } else {
+            filterDataDTO = doctorsList.get(doctorsList.indexOf(filterDataDTO));
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
     }
@@ -283,13 +303,13 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     @Override
     public void applyFilter(HashSet<String> appointments) {
-        List<AppointmentDTO> appointmentDTOs= checkInDTO.getPayload().getAppointments();
+        List<AppointmentDTO> appointmentDTOs = checkInDTO.getPayload().getAppointments();
         checkingInAppointments.clear();
         waitingRoomAppointments.clear();
         for (AppointmentDTO appointmentDTO : appointmentDTOs) {
-            AppointmentPayloadDTO appointmentPayloadDTO=appointmentDTO.getPayload();
-            if(appointments.contains(appointmentPayloadDTO.getId())) {
-                if (appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase("Checked-In")) {
+            AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+            if (appointments.contains(appointmentPayloadDTO.getId())) {
+                if (appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase(getString(R.string.checked_in))) {
                     waitingRoomAppointments.add(appointmentPayloadDTO);
                 } else {
                     checkingInAppointments.add(appointmentPayloadDTO);

@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.carecloud.carepay.practice.library.R;
@@ -30,7 +31,7 @@ import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStat
  * Created by Jahirul Bhuiyan on 10/18/2016.
  */
 
-public class AppointmentStatusCartView extends CardView {
+public class AppointmentStatusCartView extends LinearLayout {
     private static final int APPOINTMENT_CARD_TYPE_CHECKING_IN_ATTRIBUTE = 0;
     private static final int APPOINTMENT_CARD_TYPE_WAITING_ROOM_ATTRIBUTE = 1;
     public static final String APPOINTMENT_CARD_TYPE_CHECKING_IN = "appointment_card_type_checking_in";

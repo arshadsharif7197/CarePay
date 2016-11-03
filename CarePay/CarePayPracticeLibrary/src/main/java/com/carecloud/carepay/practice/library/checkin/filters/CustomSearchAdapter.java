@@ -29,7 +29,7 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     // The items to display in your RecyclerView
     private List<FilterDataDTO> filterableDataDTOList;
-    private List<FilterDataDTO> origFilterableDataDTOList;
+    private List<FilterDataDTO> originalFilterableDataDTOList;
     private Context context;
     private Filter filterableDataDTOFilter;
 
@@ -59,7 +59,7 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                List<FilterDataDTO> items) {
         this.context = context;
         this.filterableDataDTOList = items;
-        this.origFilterableDataDTOList = items;
+        this.originalFilterableDataDTOList = items;
         this.onFilterOptionChangedListener = onFilterOptionChangedListener;
     }
 
@@ -155,8 +155,8 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             // We implement here the filter logic
             if (constraint == null || constraint.length() == 0) {
                 // No filter implemented we return all the list
-                results.values = origFilterableDataDTOList;
-                results.count = origFilterableDataDTOList.size();
+                results.values = originalFilterableDataDTOList;
+                results.count = originalFilterableDataDTOList.size();
             } else {
                 // We perform filtering operation
                 List<FilterDataDTO> filterableDataDTOList = new ArrayList<>();
