@@ -7,6 +7,9 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,63 +20,129 @@ import com.carecloud.carepay.practice.library.base.NavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
-    public static int count;
-    TextView checkedInCounterTextview;
-    TextView alertTextView;
-    TextView modeSwitchTextView;
+    public static int           count;
+    private       TextView      checkedInCounterTextview;
+    private       TextView      alertTextView;
+    private       ImageView     modeSwitchImageView;
+    private       ImageView     homeLockImageView;
+    private       HomeScreenDTO homeScreenDTO;
+    private       LinearLayout  homeCheckinLl;
+    private       LinearLayout  homeAlertLinearLl;
+    private       TextView      homeQueueLabel;
+    private       TextView      homeAlertsLabel;
+    private       TextView      homeCheckinLabel;
+    private       TextView      homePaymentsLabel;
+    private       TextView      homeAppointmentsLabel;
+    private       TextView      homeCheckoutLabel;
+    private       TextView      homeShopLabel;
 
-    HomeScreenDTO homeScreenDTO;
+    private List<String> modeSwitchOptions = new ArrayList<>();
 
-    public enum HomeScreenMode{
+    public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
     }
-
-    private HomeScreenMode homeScreenMode;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setSystemUiVisibility();
-        homeScreenDTO=getConvertedDTO(HomeScreenDTO.class);
-        homeScreenMode=HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
-        setContentView(R.layout.activity_main_clover);
-        checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
-        alertTextView = (TextView) findViewById(R.id.alertTextView);
-        modeSwitchTextView= (TextView) findViewById(R.id.modeSwitchTextView);
-        // getDemographicInformation();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        findViewById(R.id.checkinTextView).setOnClickListener(this);
-        findViewById(R.id.appointmentTextView).setOnClickListener(this);
-        modeSwitchTextView.setOnClickListener(this);
-        if(homeScreenMode==HomeScreenMode.PATIENT_HOME){
-            checkedInCounterTextview.setVisibility(View.GONE);
-            alertTextView.setVisibility(View.GONE);
-            modeSwitchTextView.setVisibility(View.GONE);
-        }else{
-            if(homeScreenDTO!=null && homeScreenDTO.getPayload()!=null) {
-                if(homeScreenDTO.getPayload().getUserPractices()!=null) {
+
+        homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
+
+        HomeScreenMode homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
+        setContentView(R.layout.activity_main_clover);
+
+        // init UI fields
+        initUIFields();
+
+        createChangeModeDialog();
+
+        populateWithLabels();
+
+        modeSwitchImageView.setOnClickListener(this);
+
+        findViewById(R.id.homeCheckinClickable).setOnClickListener(this);
+        findViewById(R.id.homeAppointmentsClickable).setOnClickListener(this);
+
+        changeScreenMode(homeScreenMode);
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            if (homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
+                if (homeScreenDTO.getPayload().getUserPractices() != null) {
                     WorkflowServiceHelper.getInstance().setUserPracticeDTO(homeScreenDTO.getPayload().getUserPractices().get(0));
                 }
-                HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO=homeScreenDTO.getPayload().getAppointmentCounts();
-                if(homeScreenAppointmentCountsDTO!=null){
-                    checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPending()+ homeScreenAppointmentCountsDTO.getPending()));
+                HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = homeScreenDTO.getPayload().getAppointmentCounts();
+                if (homeScreenAppointmentCountsDTO != null) {
+                    checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPending() + homeScreenAppointmentCountsDTO.getPending()));
                 }
             }
         }
 
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
+    }
 
+    private void initUIFields() {
+        homeCheckinLl = (LinearLayout) findViewById(R.id.homeQueueLayout);
+        homeAlertLinearLl = (LinearLayout) findViewById(R.id.homeAlertLayout);
+        homeLockImageView = (ImageView) findViewById(R.id.homeLockIcon);
+        checkedInCounterTextview = (TextView) findViewById(R.id.checkedInCounterTextview);
+        alertTextView = (TextView) findViewById(R.id.alertTextView);
+        modeSwitchImageView = (ImageView) findViewById(R.id.homeModeSwitchClickable);
+        homeQueueLabel = (TextView) findViewById(R.id.queueTitleTextView);
+        homeAlertsLabel = (TextView) findViewById(R.id.alaertTitleTextView);
+        homeCheckinLabel = (TextView) findViewById(R.id.homeCheckinLabel);
+        homePaymentsLabel = (TextView) findViewById(R.id.homePaymentsLabel);
+        homeAppointmentsLabel = (TextView) findViewById(R.id.homeAppointmentsLabel);
+        homeCheckoutLabel = (TextView) findViewById(R.id.homeCheckoutLabel);
+        homeShopLabel = (TextView) findViewById(R.id.homeShopLabel);
+    }
+
+    private void populateWithLabels() {
+        HomeScreenMetadataDTO metadataDTO = homeScreenDTO.getMetadata();
+
+        HomeScreenLabelDTO labels = metadataDTO.getLabel();
+
+        homeQueueLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getCheckinginNotifications()));
+        homeAlertsLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAlerts()));
+        homeCheckinLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getCheckinButton()));
+        homePaymentsLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getPaymentsButton()));
+        homeAppointmentsLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsButton()));
+        homeCheckoutLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getCheckoutButton()));
+        homeShopLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getShopButton()));
+
+        // load mode switch options
+        modeSwitchOptions.clear();
+        modeSwitchOptions.add(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getPatientModeLabel()));
+        modeSwitchOptions.add(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getLogoutLabel()));
+    }
+
+    private void changeScreenMode(HomeScreenMode homeScreenMode) {
+        if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            homeCheckinLl.setVisibility(View.GONE);
+            homeAlertLinearLl.setVisibility(View.GONE);
+            modeSwitchImageView.setVisibility(View.GONE);
+            homeLockImageView.setVisibility(View.VISIBLE);
+        } else {
+            homeCheckinLl.setVisibility(View.VISIBLE);
+            homeAlertLinearLl.setVisibility(View.VISIBLE);
+            modeSwitchImageView.setVisibility(View.VISIBLE);
+            homeLockImageView.setVisibility(View.GONE);
+        }
     }
 
     public void setSystemUiVisibility() {
@@ -84,6 +153,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                         | View.SYSTEM_UI_FLAG_LOW_PROFILE
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
@@ -104,39 +175,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     public void onClick(View view) {
         int viewId = view.getId();
 
-        if (viewId == R.id.checkinTextView) {
-            /*Intent checkedInIntent = new Intent(CloverMainActivity.this, CheckInActivity.class);
-            checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(checkedInIntent);*/
-            if(homeScreenDTO!=null && homeScreenDTO.getMetadata()!=null && homeScreenDTO.getMetadata().getTransitions()!=null) {
-                WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(),checkInCallback);
-            }
-
-        } else if (viewId == R.id.modeSwitchTextView) {
-
-            ChangeModeDialog changeModeDialog = new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
-
-                @Override
-                public void onPatientModeSelected() {
-                    Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
-                    appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(appointmentIntent);
-                    Toast.makeText(CloverMainActivity.this, "Patient Mode selected...", Toast.LENGTH_SHORT).show();
-                }
-            }, new ChangeModeDialog.LogoutClickListener() {
-
-                @Override
-                public void onLogoutSelected() {
-                    Toast.makeText(CloverMainActivity.this, "Logout selected...", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            changeModeDialog.show();
-        } else if (viewId == R.id.appointmentTextView){
+        if (viewId == R.id.homeCheckinClickable) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback);
+        } else if (viewId == R.id.homeModeSwitchClickable) {
+            createChangeModeDialog().show();
+        } else if (viewId == R.id.homeAppointmentsClickable) {
             Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
             appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(appointmentIntent);
-
         }
     }
 
@@ -157,23 +203,20 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     };
 
-    /*private void getDemographicInformation() {
-        AppointmentService apptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class); //, String token, String searchString
-        Call<AppointmentsResultModel> call = apptService.fetchCheckedInAppointments();
-        call.enqueue(new Callback<AppointmentsResultModel>() {
+    private ChangeModeDialog createChangeModeDialog() {
+        return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
             @Override
-            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-
-                if (response.code() == 200 && response.body().getPayload() != null && response.body().getPayload().getAppointments() != null) {
-                    checkedInCounterTextview.setText(String.valueOf(response.body().getPayload().getAppointments().size()));
-                }
+            public void onPatientModeSelected() {
+                Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
+                appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(appointmentIntent);
+                Toast.makeText(CloverMainActivity.this, "Patient Mode selected...", Toast.LENGTH_SHORT).show();
             }
-
+        }, new ChangeModeDialog.LogoutClickListener() {
             @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-
+            public void onLogoutSelected() {
+                Toast.makeText(CloverMainActivity.this, "Logout selected...", Toast.LENGTH_SHORT).show();
             }
-        });
-    }*/
-
+        }, modeSwitchOptions);
+    }
 }

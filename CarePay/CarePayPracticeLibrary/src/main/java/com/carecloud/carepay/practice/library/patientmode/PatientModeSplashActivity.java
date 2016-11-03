@@ -1,14 +1,12 @@
 package com.carecloud.carepay.practice.library.patientmode;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -16,9 +14,10 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
 
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabelsDTO;
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeOptionDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
-import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
 import java.util.ArrayList;
 
@@ -26,14 +25,14 @@ import java.util.List;
 
 public class PatientModeSplashActivity extends BasePracticeActivity {
 
-    private TextView getStartedButton;
-    private TextView languageButton;
-    private TextView praticewelcomeText;
+    private TextView  getStartedButton;
+    private TextView  praticewelcomeText;
     private ImageView practicelogo;
-    private List<String> language = new ArrayList<String>();
+    private List<String> languages = new ArrayList<String>();
 
-    PatientModeSplashDTO patientModeSplashDTO;
+    PatientModeSplashDTO  patientModeSplashDTO;
     PatientModePayloadDTO patientModePayloadDTO;
+    private Spinner langSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +46,10 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     }
 
     private void initViews() {
-
         getStartedButton = (TextView) findViewById(R.id.getstartedTextview);
-        languageButton = (TextView) findViewById(R.id.languageTextview);
         praticewelcomeText = (TextView) findViewById(R.id.welcomeTitleTextview);
         practicelogo = (ImageView) findViewById(R.id.practicelogo);
-
+        langSpinner = (Spinner) findViewById(R.id.splashPatientLangSpinner);
     }
 
     private void initializeLebals() {
@@ -67,21 +64,30 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
             }
 
             if (patientModePayloadDTO != null) {
+                // set the languages spinner
                 int langaugelistsize = patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().size();
-
+                PatientModeOptionDTO defaultLangOption = null;
+                int indexDefault = 0;
                 for (int i = 0; i < langaugelistsize; i++) {
-                    language.add(i, patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i).getLabel());
-                    if (patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i).getDefault().equals(true)) {
-                        languageButton.setText(patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i).getCode().toUpperCase());
+                    PatientModeOptionDTO languageOption = patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i);
+                    languages.add(i, languageOption.getCode().toUpperCase());
+                    if (languageOption.getDefault()) {
+                        defaultLangOption = languageOption;
+                        indexDefault = i;
                     }
                 }
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+                spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                langSpinner.setAdapter(spinnerArrayAdapter);
+                if (defaultLangOption != null) { // this should be always true, as there's always a default option
+                    langSpinner.setSelection(indexDefault);
+                    ApplicationPreferences.Instance.setUserLanguage(defaultLangOption.getCode());
+                }
             }
-
         }
     }
 
     private void setClicables() {
-
         getStartedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,39 +99,18 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
             }
         });
 
-
-        languageButton.setOnClickListener(new View.OnClickListener() {
+        langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(PatientModeSplashActivity.this);
-                dialog.setTitle("Select Language");
-                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                View customView = LayoutInflater.from(PatientModeSplashActivity.this).inflate(R.layout.alert_list_practice_layout, null, false);
-                ListView listView = (ListView) customView.findViewById(R.id.dialoglist_practice);
-                CustomAlertAdapter adapter = new CustomAlertAdapter(PatientModeSplashActivity.this, language);
-                listView.setAdapter(adapter);
-                dialog.setView(customView);
-                final AlertDialog alert = dialog.create();
-                alert.show();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // save selected in preferences
+                if(languages != null && languages.size() > position) {
+                    ApplicationPreferences.Instance.setUserLanguage(languages.get(position).toLowerCase());
+                }
+            }
 
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        languageButton.setText(patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(position).getCode().toUpperCase());
-                        alert.dismiss();
-                    }
-                });
-
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-
     }
-
-
 }

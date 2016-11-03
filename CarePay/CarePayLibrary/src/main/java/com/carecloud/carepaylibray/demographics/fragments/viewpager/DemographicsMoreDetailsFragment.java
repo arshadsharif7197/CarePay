@@ -133,7 +133,7 @@ public class DemographicsMoreDetailsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.d(LOG_TAG, "demogr post failed", throwable);
+                Log.e(LOG_TAG, "Confirm demographics POST failed.", throwable);
             }
         });
     }

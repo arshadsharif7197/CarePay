@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
+       android:shape="oval">
 
-    <solid android:color="@color/brick_red" />
+    <solid android:color="@color/brick_red"/>
     <size
-        android:width="45dp"
-        android:height="45dp" />
-    <stroke android:color="@color/white" android:width="3dp"/>
+        android:width="@dimen/home_alert_checkin_number_wrapper_width"
+        android:height="@dimen/home_alert_checkin_number_wrapper_height"/>
+    <stroke
+        android:width="3dp"
+        android:color="@color/white"/>
 
 </shape>

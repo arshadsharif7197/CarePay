@@ -40,22 +40,21 @@
                 android:src="@drawable/cp_logo" />
 
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
-                android:id="@+id/languageTextview"
-                android:layout_width="112dp"
-                android:layout_height="51dp"
-                android:layout_marginTop="21.4dp"
-                android:background="@drawable/bg_blue_overlay"
-                android:drawableEnd="@drawable/icn_down_white"
-                android:gravity="center_vertical"
-                android:includeFontPadding="false"
-                android:paddingEnd="15dp"
-                android:paddingStart="20dp"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:visibility="gone"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_overlay"
+            android:paddingEnd="4dp"
+            android:layout_marginStart="@dimen/home_alert_margin_start">
 
-    </LinearLayout>
+            <Spinner
+                android:id="@+id/signinLangSpinner"
+                android:layout_width="@dimen/home_spinner_width"
+                android:layout_height="@dimen/home_alert_checkin_number_wrapper_height"
+                android:background="@drawable/bg_blue_overlay"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
