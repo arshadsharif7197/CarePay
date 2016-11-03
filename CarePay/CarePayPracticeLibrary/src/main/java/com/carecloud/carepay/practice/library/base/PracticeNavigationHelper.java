@@ -22,7 +22,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PracticeNavigationHelper {
 
-    private static PracticeNavigationHelper instance = null;
+    private static PracticeNavigationHelper instance;
     private static Context context;
 
     private PracticeNavigationHelper() {

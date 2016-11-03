@@ -14,11 +14,12 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActi
 
 /**
  * Created by Jahirul Bhuiyan on 10/10/2016.
+ * Will be move to patient application module
  */
 @Deprecated
 public class PatientNavigationHelper {
 
-    private static PatientNavigationHelper instance = null;
+    private static PatientNavigationHelper instance;
     private static Context context;
 
     private PatientNavigationHelper() {
