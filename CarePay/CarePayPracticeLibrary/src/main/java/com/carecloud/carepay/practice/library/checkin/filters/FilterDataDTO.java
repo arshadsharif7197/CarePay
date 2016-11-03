@@ -11,7 +11,7 @@ import java.util.List;
 public class FilterDataDTO {
 
     public enum FilterDataType{
-        PROVIDER,LOCATION,HEADER
+        PATIENT,PROVIDER,LOCATION,HEADER
     }
 
     //private int filterId = -1;
