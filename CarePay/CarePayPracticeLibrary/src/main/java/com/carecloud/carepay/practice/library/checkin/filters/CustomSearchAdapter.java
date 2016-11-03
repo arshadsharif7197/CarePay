@@ -132,9 +132,11 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
     }
+
     public void resetData() {
         filterableDataDTOList = originalFilterableDataDTOList;
     }
+
     /*
      * Create our filter
 	 */

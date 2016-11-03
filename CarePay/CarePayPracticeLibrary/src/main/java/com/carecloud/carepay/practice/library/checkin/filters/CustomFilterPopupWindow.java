@@ -150,9 +150,11 @@ public class CustomFilterPopupWindow extends PopupWindow
     public void setSearchHint(String hint){
         searchPatientEditText.setHint(hint);
     }
+
     public void setClearFiltersButtonText(String text){
         clearFiltersButton.setText(text);
     }
+
     public void showPopWindow() {
         showAtLocation(parentView, Gravity.TOP | Gravity.RIGHT, 0, 0);
     }
