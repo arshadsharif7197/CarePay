@@ -18,18 +18,20 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by sudhir_pingale on 10/19/2016.
  */
 
 public class CustomFilterPopupWindow extends PopupWindow
-        implements CustomFilterListAdapter.OnFilterOptionChangedListener {
+        implements CustomFilterListAdapter.OnFilterOptionChangedListener, CustomSearchAdapter.OnSearchChangedListener {
 
     private Context context;
     private View parentView;
@@ -39,15 +41,26 @@ public class CustomFilterPopupWindow extends PopupWindow
     private RecyclerView filterableDataRecyclerView;
     private CustomFilterListAdapter listAdapter;
     private CustomFilterPopupWindow popupWindow;
-    private HashMap<Integer, FilterableDataDTO> filteredDataMap;
+    private CarePayTextView titleTextView;
+
+    private ArrayList<FilterDataDTO> filterableDoctorsLocationList;
+
+    private ArrayList<FilterDataDTO> filterablePatientsList;
+
+    private HashSet<String> appointments;
+    private HashSet<FilterDataDTO> selectedFilters;
+    private HashSet<FilterDataDTO> searchedPatients = new HashSet<>();
+
+    private FilterCallBack filterCallBack;
 
     /**
      * @param context    the context to inflate custom popup layout
      * @param parentView a parent view to get the {@link View#getWindowToken()} token from
      */
-    public CustomFilterPopupWindow(Context context, View parentView) {
+    public CustomFilterPopupWindow(Context context, View parentView, ArrayList<FilterDataDTO> filterableList, ArrayList<FilterDataDTO> filterablePatientsList) {
 
         super(context);
+        filterCallBack = (FilterCallBack) context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.custom_filter_popup_window_layout, null);
         setContentView(contentView);
@@ -57,25 +70,56 @@ public class CustomFilterPopupWindow extends PopupWindow
         update();
         setOutsideTouchable(false);
         setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
+        this.filterableDoctorsLocationList = filterableList;
+        this.filterablePatientsList = filterablePatientsList;
+        selectedFilters = new HashSet<>();
+        searchedPatients = new HashSet<>();
+        appointments = getAllAppointment();
         this.popupWindow = this;
         this.context = context;
         this.parentView = parentView;
-        filteredDataMap = new HashMap<>();
-
         initialiseViews();
-
         displayRecyclerView();
     }
 
+    public interface FilterCallBack {
+        void applyFilter(HashSet<String> appointments);
+    }
+
+
     private void displayRecyclerView() {
         // Set our custom adapter as the ListView's adapter.
-        listAdapter = new CustomFilterListAdapter(context, popupWindow, getProviderAndLocationData());
+        listAdapter = new CustomFilterListAdapter(context, popupWindow, filterableDoctorsLocationList);
         LinearLayoutManager filterableListLayoutManager = new LinearLayoutManager(context);
         filterableListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         filterableListLayoutManager.setAutoMeasureEnabled(false);
         filterableDataRecyclerView.setLayoutManager(filterableListLayoutManager);
         filterableDataRecyclerView.setAdapter(listAdapter);
+    }
+
+    private HashSet<String> getAllAppointment() {
+        HashSet<String> strings = new HashSet<>();
+        for (FilterDataDTO patient : filterablePatientsList) {
+            strings.addAll(patient.getAppointmentList());
+        }
+        return strings;
+    }
+
+    private HashSet<String> getFilteredAppointment() {
+        HashSet<String> strings = new HashSet<>();
+        for (FilterDataDTO patient : selectedFilters) {
+            strings.addAll(patient.getAppointmentList());
+        }
+
+        return strings;
+    }
+
+    private HashSet<String> getPatientAppointment() {
+        HashSet<String> strings = new HashSet<>();
+        for (FilterDataDTO patient : searchedPatients) {
+            strings.addAll(patient.getAppointmentList());
+        }
+        return strings;
     }
 
     private void initialiseViews() {
@@ -86,34 +130,47 @@ public class CustomFilterPopupWindow extends PopupWindow
         clearFiltersButton = (Button) popupWindowLayout.findViewById(R.id.clearFiltersButton);
         ImageView closeFilterWindowImageView = (ImageView) popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
 
+        titleTextView= (CarePayTextView) popupWindowLayout.findViewById(R.id.titleTextView);
+
         closeFilterWindowImageView.setOnClickListener(closeFilterWindowListener);
         clearSearchImageView.setOnClickListener(clearSearchTextListener);
         searchPatientEditText.addTextChangedListener(searchEditTextWatcher);
         searchPatientEditText.setOnFocusChangeListener(searchPatientEditTextFocusChangeListener);
         clearFiltersButton.setOnClickListener(clearFilterListener);
+        clearFiltersButton.setVisibility(View.GONE);
 
-        SystemUtil.setProximaNovaSemiboldTypefaceEdittext(context,searchPatientEditText);
-        SystemUtil.setGothamRoundedMediumTypeface(context,clearFiltersButton);
+        SystemUtil.setProximaNovaSemiboldTypefaceEdittext(context, searchPatientEditText);
+        SystemUtil.setGothamRoundedMediumTypeface(context, clearFiltersButton);
+    }
+
+    public void setTitle(String title){
+        titleTextView.setText(title);
+    }
+
+    public void setSearchHint(String hint){
+        searchPatientEditText.setHint(hint);
+    }
+
+    public void setClearFiltersButtonText(String text){
+        clearFiltersButton.setText(text);
     }
 
     public void showPopWindow() {
         showAtLocation(parentView, Gravity.TOP | Gravity.RIGHT, 0, 0);
     }
 
+
     private View.OnFocusChangeListener searchPatientEditTextFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
             if (hasFocus) {
                 clearSearchImageView.setVisibility(View.VISIBLE);
-                CustomFilterListAdapter adapter = new CustomFilterListAdapter(context, popupWindow,
-                        getPatientData());
+                CustomSearchAdapter adapter = new CustomSearchAdapter(context, popupWindow, getFilteredPatientList());
                 filterableDataRecyclerView.setAdapter(adapter);
-                adapter.changeAdapterDataSetType(true);
             } else {
                 clearSearchImageView.setVisibility(View.GONE);
                 filterableDataRecyclerView.setAdapter(listAdapter);
-                listAdapter.changeAdapterDataSetType(false);
-                if (!filteredDataMap.isEmpty()) {
+                if (!selectedFilters.isEmpty() || !searchedPatients.isEmpty()) {
                     clearFiltersButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -131,15 +188,23 @@ public class CustomFilterPopupWindow extends PopupWindow
         @Override
         public void onClick(View view) {
             clearSearchImageView.performClick();
-            listAdapter = new CustomFilterListAdapter(context, popupWindow, getProviderAndLocationData());
+            clearSelection();
+            searchedPatients.clear();
+            selectedFilters.clear();
+            listAdapter = new CustomFilterListAdapter(context, popupWindow, filterableDoctorsLocationList);
             filterableDataRecyclerView.setAdapter(listAdapter);
-            clearFiltersButton.setVisibility(View.GONE);
-            filteredDataMap.clear();
-            /*
-             * To give callback to the parent screen that all filters cleared
-             */
+            setAppointment();
         }
     };
+
+    private void clearSelection(){
+        for (FilterDataDTO filterDataDTO:filterableDoctorsLocationList) {
+            filterDataDTO.setChecked(false);
+        }
+        for (FilterDataDTO filterDataDTO:filterablePatientsList) {
+            filterDataDTO.setChecked(false);
+        }
+    }
 
     private View.OnClickListener clearSearchTextListener = new View.OnClickListener() {
         @Override
@@ -157,11 +222,15 @@ public class CustomFilterPopupWindow extends PopupWindow
 
         @Override
         public void onTextChanged(CharSequence string, int start, int before, int count) {
+            if(filterableDataRecyclerView.getAdapter() instanceof  CustomFilterListAdapter){
+                return;
+            }
+
             if (count < before) {
                 // We're deleting char so we need to reset the adapter data
-                ((CustomFilterListAdapter) filterableDataRecyclerView.getAdapter()).resetData();
+                ((CustomSearchAdapter) filterableDataRecyclerView.getAdapter()).resetData();
             }
-            ((CustomFilterListAdapter) filterableDataRecyclerView.getAdapter()).getFilter()
+            ((CustomSearchAdapter) filterableDataRecyclerView.getAdapter()).getFilter()
                     .filter(string.toString());
         }
 
@@ -177,72 +246,54 @@ public class CustomFilterPopupWindow extends PopupWindow
         }
     };
 
-    /*
-     * To get the provider and location data from Check-In screen when DTO is finalised
-     */
-    private ArrayList<Object> getProviderAndLocationData() {
-        Object[] filterableProviderDataDTOs;
-        filterableProviderDataDTOs = new Object[]{"Doctors",
-            new FilterableDataDTO(0, "1-Dr. Name"), new FilterableDataDTO(1, "2-Dr. Name"),
-            new FilterableDataDTO(2, "3-Dr. Name"), new FilterableDataDTO(3, "4-Dr. Name"),
-            new FilterableDataDTO(4, "5-Dr. Name"), new FilterableDataDTO(5, "6-Dr. Name"),
-            new FilterableDataDTO(6, "7-Dr. Name")
-        };
+    @Override
+    public void onFilterChanged(FilterDataDTO filteredDataDTO) {
 
-        Object[] filterableLocationDataDTOs;
-        filterableLocationDataDTOs = new Object[]{"Locations",
-                new FilterableDataDTO(7, "8-Location Name"), new FilterableDataDTO(8, "9-Location Name"),
-                new FilterableDataDTO(9, "10-Location Name"), new FilterableDataDTO(10, "11-Location Name"),
-                new FilterableDataDTO(11, "12-Location Name"), new FilterableDataDTO(12, "13-Location Name")
-        };
-        ArrayList<Object> filterableDataDTOList = new ArrayList<>();
-        filterableDataDTOList.addAll(Arrays.asList(filterableProviderDataDTOs));
-        filterableDataDTOList.addAll(Arrays.asList(filterableLocationDataDTOs));
-
-        return filterableDataDTOList;
+        if (filteredDataDTO.isChecked()) {
+            selectedFilters.add(filteredDataDTO);
+        } else {
+            selectedFilters.remove(filteredDataDTO);
+        }
+        searchedPatients.clear();
+        setAppointment();
     }
 
-    /*
-     * To get the patient data from Check-In screen when DTO is finalised
-     */
-    private ArrayList<Object> getPatientData() {
-        Object[] filterablePatientDataDTOs;
-        filterablePatientDataDTOs = new Object[]{
-            new FilterableDataDTO(0, "1-Patient Name"), new FilterableDataDTO(1, "2-Patient Name"),
-            new FilterableDataDTO(2, "3-Patient Name"), new FilterableDataDTO(3, "4-Patient Name"),
-            new FilterableDataDTO(4, "5-Patient Name"), new FilterableDataDTO(5, "6-Patient Name"),
-            new FilterableDataDTO(6, "7-Patient Name"), new FilterableDataDTO(7, "8-Patient Name"),
-            new FilterableDataDTO(8, "9-Patient Name"), new FilterableDataDTO(9, "10-Patient Name"),
-            new FilterableDataDTO(10, "11-Patient Name"), new FilterableDataDTO(11, "12-Patient Name"),
-            new FilterableDataDTO(12, "13-Patient Name"), new FilterableDataDTO(13, "14-Patient Name"),
-            new FilterableDataDTO(14, "15-Patient Name"), new FilterableDataDTO(15, "16-Patient Name"),
-            new FilterableDataDTO(16, "17-Patient Name"), new FilterableDataDTO(17, "18-Patient Name"),
-            new FilterableDataDTO(18, "19-Patient Name"), new FilterableDataDTO(19, "111-Patient Name"),
-            new FilterableDataDTO(20, "112-Patient Name"), new FilterableDataDTO(21, "113-Patient Name"),
-            new FilterableDataDTO(22, "114-Patient Name"), new FilterableDataDTO(23, "115-Patient Name")
-        };
-        ArrayList<Object> filterableDataDTOList = new ArrayList<>();
-        filterableDataDTOList.addAll(Arrays.asList(filterablePatientDataDTOs));
+    private void setAppointment() {
+        appointments.clear();
+        if (!searchedPatients.isEmpty()) {
+            appointments = getPatientAppointment();
+            clearFiltersButton.setVisibility(View.VISIBLE);
+        } else if (!selectedFilters.isEmpty()) {
+            appointments = getFilteredAppointment();
+            clearFiltersButton.setVisibility(View.VISIBLE);
+        } else {
+            appointments = getAllAppointment();
+            clearFiltersButton.setVisibility(View.GONE);
+        }
+        filterCallBack.applyFilter(appointments);
+    }
 
-        return filterableDataDTOList;
+    private List<FilterDataDTO> getFilteredPatientList() {
+        List<FilterDataDTO> patientList = new ArrayList<>();
+        for (FilterDataDTO filterDataDTO : filterablePatientsList) {
+            filterDataDTO.setChecked(false);
+            for (String appointment : filterDataDTO.getAppointmentList()) {
+                if (appointments.contains(appointment)) {
+                    patientList.add(filterDataDTO);
+                    break;
+                }
+            }
+        }
+        return patientList;
     }
 
     @Override
-    public void onFilterChanged(boolean isPatientListFilter, boolean isOptionEnabled,
-                                FilterableDataDTO filteredDataDTO) {
-        if (isOptionEnabled) {
-            filteredDataMap.put(filteredDataDTO.getId(), filteredDataDTO);
+    public void onSearchChanged(FilterDataDTO filteredData) {
+        if (filteredData.isChecked()) {
+            searchedPatients.add(filteredData);
         } else {
-            filteredDataMap.remove(filteredDataDTO.getId());
+            searchedPatients.remove(filteredData);
         }
-
-        if (filteredDataMap.isEmpty()) {
-            clearFiltersButton.setVisibility(View.GONE);
-        } else {
-            clearFiltersButton.setVisibility(View.VISIBLE);
-        }
-       /*
-        * To give callback to the parent screen wherever Custom Filter used
-        */
+        setAppointment();
     }
 }

@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.base.NavigationHelper;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
@@ -31,15 +31,16 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.ArrayList;
 import java.util.List;
+
+
+
 
 
 /**
@@ -357,7 +358,7 @@ public class SigninActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override

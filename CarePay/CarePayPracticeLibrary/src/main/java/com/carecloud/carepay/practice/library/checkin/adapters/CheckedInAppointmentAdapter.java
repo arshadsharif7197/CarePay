@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCartView;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInAppointmentAdapter.CartViewHolder> {
 
     private Context context;
-    private ArrayList<AppointmentDTO> appointmentArrayList;
+    private ArrayList<AppointmentPayloadDTO> appointmentArrayList;
 
     /**
      * Constructor.
@@ -31,15 +31,15 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
      * @param context context
      * @param data    list of appointments
      */
-    public CheckedInAppointmentAdapter(Context context, ArrayList<AppointmentDTO> data) {
+    public CheckedInAppointmentAdapter(Context context, ArrayList<AppointmentPayloadDTO> data) {
         this.context = context;
         appointmentArrayList = data;
         System.out.println("size: " + data.size());
     }
 
-    private AppointmentDTO getAppointmentById(String id) {
-        for (AppointmentDTO model : appointmentArrayList) {
-            if (id.equals(model.getPayload().getId())) {
+    private AppointmentPayloadDTO getAppointmentById(String id) {
+        for (AppointmentPayloadDTO model : appointmentArrayList) {
+            if (id.equals(model.getId())) {
                 return model;
             }
         }
@@ -61,16 +61,15 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
     @Override
     public void onBindViewHolder(CheckedInAppointmentAdapter.CartViewHolder holder, final int position) {
-        AppointmentDTO appointmentItem = appointmentArrayList.get(position);
-        PatientDTO patientModel = appointmentItem.getPayload().getPatient();
+        AppointmentPayloadDTO appointmentItem = appointmentArrayList.get(position);
+        PatientDTO patientModel = appointmentItem.getPatient();
         holder.appointmentStatusCartView.setPatientName(patientModel.getFirstName() + " " + patientModel.getLastName());
-        holder.appointmentStatusCartView.setAppointmentId(appointmentItem.getPayload().getId());
+        holder.appointmentStatusCartView.setAppointmentId(appointmentItem.getId());
         //holder.appointmentStatusCartView.setAmount(patientModel.getTotalBalance());
         //holder.appointmentStatusCartView.setPatientImage(patientModel.getPhoto());
-        holder.appointmentStatusCartView.setProviderName(appointmentItem.getPayload().getProvider().getName());
+        holder.appointmentStatusCartView.setProviderName(appointmentItem.getProvider().getName());
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-
-        holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getPayload().getStartTime()).getDate().getTime());
+        holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getStartTime()).getDate().getTime());
 
         /*Picasso.with(context).load(patientModel.getPhoto()).transform(
                 new CircleImageTransform()).resize(160, 160).into(holder.patientPicImageView);
@@ -86,7 +85,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         return 0;
     }
 
-    public void setData(ArrayList<AppointmentDTO> appointmentArrayList) {
+    public void setData(ArrayList<AppointmentPayloadDTO> appointmentArrayList) {
         this.appointmentArrayList = appointmentArrayList;
     }
 

@@ -16,39 +16,44 @@ import android.widget.Toast;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.base.NavigationHelper;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
-    public static int           count;
-    private       TextView      checkedInCounterTextview;
-    private       TextView      alertTextView;
-    private       ImageView     modeSwitchImageView;
-    private       ImageView     homeLockImageView;
-    private       HomeScreenDTO homeScreenDTO;
-    private       LinearLayout  homeCheckinLl;
-    private       LinearLayout  homeAlertLinearLl;
-    private       TextView      homeQueueLabel;
-    private       TextView      homeAlertsLabel;
-    private       TextView      homeCheckinLabel;
-    private       TextView      homePaymentsLabel;
-    private       TextView      homeAppointmentsLabel;
-    private       TextView      homeCheckoutLabel;
-    private       TextView      homeShopLabel;
+    public static int count;
+    private TextView checkedInCounterTextview;
+    private TextView alertTextView;
+    private ImageView modeSwitchImageView;
+    private ImageView homeLockImageView;
+    private HomeScreenDTO homeScreenDTO;
+    private LinearLayout homeCheckinLl;
+    private LinearLayout homeAlertLinearLl;
+    private TextView homeQueueLabel;
+    private TextView homeAlertsLabel;
+    private TextView homeCheckinLabel;
+    private TextView homePaymentsLabel;
+    private TextView homeAppointmentsLabel;
+    private TextView homeCheckoutLabel;
+    private TextView homeShopLabel;
 
     private List<String> modeSwitchOptions = new ArrayList<>();
 
@@ -81,17 +86,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         findViewById(R.id.homeAppointmentsClickable).setOnClickListener(this);
 
         changeScreenMode(homeScreenMode);
-        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            if (homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
-                if (homeScreenDTO.getPayload().getUserPractices() != null) {
-                    WorkflowServiceHelper.getInstance().setUserPracticeDTO(homeScreenDTO.getPayload().getUserPractices().get(0));
-                }
-                HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = homeScreenDTO.getPayload().getAppointmentCounts();
-                if (homeScreenAppointmentCountsDTO != null) {
-                    checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPending() + homeScreenAppointmentCountsDTO.getPending()));
-                }
-            }
-        }
 
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
     }
@@ -142,6 +136,24 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             homeAlertLinearLl.setVisibility(View.VISIBLE);
             modeSwitchImageView.setVisibility(View.VISIBLE);
             homeLockImageView.setVisibility(View.GONE);
+            if ( homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
+                HomeScreenPayloadDTO homeScreenPayloadDTO=homeScreenDTO.getPayload();
+                setPracticeUser(homeScreenPayloadDTO);
+                setAppointmentCount(homeScreenPayloadDTO);
+            }
+        }
+    }
+
+    private void setAppointmentCount(HomeScreenPayloadDTO homeScreenPayloadDTO) {
+        HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = homeScreenPayloadDTO.getAppointmentCounts();
+        if (homeScreenAppointmentCountsDTO != null) {
+            checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPending() + homeScreenAppointmentCountsDTO.getPending()));
+        }
+    }
+
+    private void setPracticeUser(HomeScreenPayloadDTO homeScreenPayloadDTO) {
+        if (homeScreenPayloadDTO.getUserPractices() != null) {
+            WorkflowServiceHelper.getInstance().setUserPracticeDTO(homeScreenPayloadDTO.getUserPractices().get(0));
         }
     }
 
@@ -154,7 +166,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
@@ -176,7 +188,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         int viewId = view.getId();
 
         if (viewId == R.id.homeCheckinClickable) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback);
+            Map<String,String> queryMap=new HashMap<>();
+            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("end_date",DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback,queryMap);
         } else if (viewId == R.id.homeModeSwitchClickable) {
             createChangeModeDialog().show();
         } else if (viewId == R.id.homeAppointmentsClickable) {
@@ -194,7 +209,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
         }
 
         @Override
