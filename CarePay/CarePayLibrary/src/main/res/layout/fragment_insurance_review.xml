@@ -31,15 +31,13 @@
                 android:id="@+id/reviewtitle"
                 style="@style/DemographicsFragmentsHeadingStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/review_screen_header" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/reviewSubtitle"
                 style="@style/DemographicsFragmentsSubHeadingStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/review_subtitle" />
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,8 +48,7 @@
                     android:id="@+id/reviewpersonalInformationLabel"
                     style="@style/reviewDemographicBlue."
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/review_PersonalInforamation_label" />
+                    android:layout_height="wrap_content" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -62,8 +59,7 @@
                         android:id="@+id/reviewFirstNameLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_firstname_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewFirstNameTextView"
@@ -87,8 +83,7 @@
                         android:id="@+id/reviewMiddleNameLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_middlename_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewMiddelNameTextView"
@@ -111,8 +106,7 @@
                         android:id="@+id/reviewLastNameLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_lastname_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewLastNameTextView"
@@ -135,8 +129,7 @@
                         android:id="@+id/reviewDOBLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_dateofbirth_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewDOBTextView"
@@ -159,8 +152,7 @@
                         android:id="@+id/reviewPhoneNumberLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_phone_number_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewPhoneNumberTextView"
@@ -184,11 +176,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/demographicSubTitle"
+                    android:id="@+id/demographicSectionLabel"
                     style="@style/reviewDemographicBlue."
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/review_screen_demographic" />
+                    android:layout_height="wrap_content" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -199,8 +190,7 @@
                         android:id="@+id/reviewGenderLabel"
                         style="@style/reviewDemographicrelativelayout"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_gender_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewGenderTextView"
@@ -225,8 +215,7 @@
                         android:id="@+id/reviewRaceLabel"
                         style="@style/reviewDemographicrelativelayout"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_race_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewRaceTextView"
@@ -251,8 +240,7 @@
                         android:id="@+id/reviewEthnicityLabel"
                         style="@style/reviewDemographicrelativelayout"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_ethnicity_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewEthnicityTextView"
@@ -277,8 +265,7 @@
                         android:id="@+id/reviewDriverLicenseLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_driverlicense_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewDriverLicenseTextView"
@@ -305,8 +292,7 @@
                     android:id="@+id/reviewAddress"
                     style="@style/reviewDemographicBlue."
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/review_address_lable" />
+                    android:layout_height="wrap_content" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -317,8 +303,7 @@
                         android:id="@+id/reviewAddress1label"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_address1_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewAddress1TextView"
@@ -334,16 +319,15 @@
                     android:layout_width="match_parent" />
 
                 <FrameLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/address2layout"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/review_default_heaight">
 
                     <TextView
                         android:id="@+id/reviewAddress2label"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_address2_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewAddress2TextView"
@@ -355,9 +339,10 @@
                 </FrameLayout>
 
                 <View
-                    style="@style/Review_Screen_View_Style"
                     android:id="@+id/address2labelview"
+                    style="@style/Review_Screen_View_Style"
                     android:layout_width="match_parent" />
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/review_default_heaight">
@@ -366,8 +351,8 @@
                         android:id="@+id/reviewZipcodeLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_zipcode_label" />
+                        android:layout_height="wrap_content" />
+
                     <TextView
                         android:id="@+id/reviewZipcodeTextView"
                         style="@style/reviewDemographictext."
@@ -391,20 +376,21 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/review_default_heaight">
-                    <TextView
-                        android:id="@+id/reviewCityLabel"
-                        style="@style/reviewDemographiclabel."
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:text="@string/review_city_label" />
+
+                        <TextView
+                            android:id="@+id/reviewCityLabel"
+                            style="@style/reviewDemographiclabel."
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start" />
+
                         <TextView
                             android:id="@+id/reviewCityTextView"
                             style="@style/reviewDemographictext."
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="start"
                             android:layout_marginTop="23.5dp"
+                            android:gravity="start"
                             android:text="" />
 
                         <FrameLayout
@@ -412,20 +398,22 @@
                             android:layout_height="@dimen/review_default_heaight"
                             android:layout_gravity="end"
                             android:layout_marginStart="150dp">
-                        <TextView
-                            android:id="@+id/reviewStateLabel"
-                            style="@style/reviewDemographiclabel."
-                            android:layout_width="211dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/review_state_label" />
 
-                        <TextView
-                            android:id="@+id/reviewStateTextView"
-                            style="@style/reviewDemographictext."
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="23.5dp"
-                            android:text="" />
+                            <TextView
+                                android:id="@+id/reviewStateLabel"
+                                style="@style/reviewDemographiclabel."
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="100dp"/>
+
+                            <TextView
+                                android:id="@+id/reviewStateTextView"
+                                style="@style/reviewDemographictext."
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="100dp"
+                                android:layout_marginTop="23.5dp"
+                                android:text="" />
                         </FrameLayout>
 
                     </FrameLayout>
@@ -438,21 +426,20 @@
                     android:layout_width="match_parent" />
 
 
-
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/insurance1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/healthInsuranceSubTitle"
+                    android:id="@+id/healthInsurance1SubTitle"
                     style="@style/reviewDemographicBlue."
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/review_screen_healthinsurance" />
+                    android:layout_height="wrap_content" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -463,8 +450,7 @@
                         android:id="@+id/reviewCompanyLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_screen_company_lable" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewCompanyTextView"
@@ -487,8 +473,7 @@
                         android:id="@+id/reviewPlanLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_plan_label" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewPlanTextView"
@@ -512,11 +497,187 @@
                         android:id="@+id/reviewInsuranceCardNoLabel"
                         style="@style/reviewDemographiclabel."
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/review_screen_insurancepolicy_number_lable" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewInsurancePolicyNoTextView"
+                        style="@style/reviewDemographictext."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="23.5dp"
+                        android:text="" />
+                </FrameLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/insurnace2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/healthInsurance2SubTitle"
+                    style="@style/reviewDemographicBlue."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/review_screen_healthinsurance" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/review_default_heaight"
+                    android:layout_marginTop="@dimen/review_header_lablemargin_top">
+
+                    <TextView
+                        android:id="@+id/reviewCompany2Label"
+                        style="@style/reviewDemographiclabel."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/reviewCompany2TextView"
+                        style="@style/reviewDemographictext."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="23.5dp"
+                        android:text="" />
+                </FrameLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/review_default_heaight">
+
+                    <TextView
+                        android:id="@+id/reviewPlan2Label"
+                        style="@style/reviewDemographiclabel."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/reviewPlan2TextView"
+                        style="@style/reviewDemographictext."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="23.5dp"
+                        android:text="" />
+                </FrameLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent" />
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/review_default_heaight">
+
+                    <TextView
+                        android:id="@+id/reviewInsurance2CardNoLabel"
+                        style="@style/reviewDemographiclabel."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/reviewInsurance2PolicyNoTextView"
+                        style="@style/reviewDemographictext."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="23.5dp"
+                        android:text="" />
+                </FrameLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/insurance3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/healthInsurance3SubTitle"
+                    style="@style/reviewDemographicBlue."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/review_default_heaight"
+                    android:layout_marginTop="@dimen/review_header_lablemargin_top">
+
+                    <TextView
+                        android:id="@+id/reviewCompany3Label"
+                        style="@style/reviewDemographiclabel."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/reviewCompany3TextView"
+                        style="@style/reviewDemographictext."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="23.5dp"
+                        android:text="" />
+                </FrameLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/review_default_heaight">
+
+                    <TextView
+                        android:id="@+id/reviewPlan3Label"
+                        style="@style/reviewDemographiclabel."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/reviewPlan3TextView"
+                        style="@style/reviewDemographictext."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="23.5dp"
+                        android:text="" />
+                </FrameLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent" />
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/review_default_heaight">
+
+                    <TextView
+                        android:id="@+id/reviewInsurance3CardNoLabel"
+                        style="@style/reviewDemographiclabel."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/reviewInsurance3PolicyNoTextView"
                         style="@style/reviewDemographictext."
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -543,7 +704,6 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="27.0dp"
                     android:background="@drawable/button_selector"
-                    android:text="YES, THESE ARE CORRECT"
                     android:textColor="@color/white" />
 
 
@@ -555,7 +715,6 @@
                     android:layout_marginBottom="30dp"
                     android:layout_marginTop="14dp"
                     android:background="@drawable/button_background"
-                    android:text="I NEED TO UPDATE THIS INFORMATION"
                     android:textColor="@color/bright_cerulean" />
             </LinearLayout>
 

@@ -1,5 +1,7 @@
 package com.carecloud.carepay.practice.library.signin.dtos;
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**
@@ -32,7 +34,8 @@ public class SigninLabelsDTO {
      * The signinButton
      */
     public String getSigninButton() {
-        return signinButton;
+        return StringUtil.isNullOrEmpty(signinButton) ?
+                CarePayConstants.NOT_DEFINED : signinButton;
     }
 
     /**
@@ -50,7 +53,8 @@ public class SigninLabelsDTO {
      * The welcomeSigninText
      */
     public String getWelcomeSigninText() {
-        return welcomeSigninText;
+        return StringUtil.isNullOrEmpty(welcomeSigninText) ?
+                CarePayConstants.NOT_DEFINED : welcomeSigninText;
     }
 
     /**
@@ -68,7 +72,8 @@ public class SigninLabelsDTO {
      * The signinEmailAddress
      */
     public String getSigninEmailAddress() {
-        return signinEmailAddress;
+        return StringUtil.isNullOrEmpty(signinEmailAddress) ?
+                CarePayConstants.NOT_DEFINED : signinEmailAddress;
     }
 
     /**
@@ -86,8 +91,8 @@ public class SigninLabelsDTO {
      * The signinPassword
      */
     public String getSigninPassword() {
-        return signinPassword;
-    }
+        return StringUtil.isNullOrEmpty(signinPassword) ?
+                CarePayConstants.NOT_DEFINED : signinPassword;    }
 
     /**
      *
@@ -104,7 +109,8 @@ public class SigninLabelsDTO {
      * The gobackButton
      */
     public String getGobackButton() {
-        return gobackButton;
+        return StringUtil.isNullOrEmpty(gobackButton) ?
+                CarePayConstants.NOT_DEFINED : gobackButton;
     }
 
     /**
@@ -122,7 +128,8 @@ public class SigninLabelsDTO {
      * The forgotPassword
      */
     public String getForgotPassword() {
-        return forgotPassword;
+        return StringUtil.isNullOrEmpty(forgotPassword) ?
+                CarePayConstants.NOT_DEFINED : forgotPassword;
     }
 
     /**
