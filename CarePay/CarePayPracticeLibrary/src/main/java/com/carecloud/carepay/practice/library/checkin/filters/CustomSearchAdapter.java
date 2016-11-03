@@ -132,7 +132,9 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
     }
-
+    public void resetData() {
+        filterableDataDTOList = originalFilterableDataDTOList;
+    }
     /*
      * Create our filter
 	 */
@@ -161,9 +163,8 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 // We perform filtering operation
                 List<FilterDataDTO> filterableDataDTOList = new ArrayList<>();
 
-                for (Object object : filterableDataDTOList) {
+                for (FilterDataDTO dataDTO : originalFilterableDataDTOList) {
                     try {
-                        FilterDataDTO dataDTO = (FilterDataDTO) object;
                         if (dataDTO.getDisplayText().toUpperCase().startsWith(constraint.toString().toUpperCase())) {
                             filterableDataDTOList.add(dataDTO);
                         }

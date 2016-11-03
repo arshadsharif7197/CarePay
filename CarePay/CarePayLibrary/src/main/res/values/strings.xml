@@ -410,5 +410,5 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="demogr_docs_document_type">Document Type</string>
     <string name="insurance_scan_front">Insurance scan front</string>
     <string name="insurance_scan_back">Insurance scan back</string>
-
+    <string name="not_defined">Not Defined</string>
 </resources>

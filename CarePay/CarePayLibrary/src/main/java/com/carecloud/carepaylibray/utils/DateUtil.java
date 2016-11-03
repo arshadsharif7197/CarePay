@@ -188,6 +188,17 @@ public class DateUtil {
         return outDateFormat.format(new Date(cal.getTimeInMillis()));
     }
 
+
+    /**
+     * Get today end time
+     * @return APPOINTMENT_DATE_TIME_FORMAT formated date string
+     */
+    public static String toDateStringAsYYYYMMDD(Date date) {
+        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT;
+        SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
+        return outDateFormat.format(date);
+    }
+
     /**
      * Creates a Date object from a string representing a date formatted as MM/dd/yyyy
      *

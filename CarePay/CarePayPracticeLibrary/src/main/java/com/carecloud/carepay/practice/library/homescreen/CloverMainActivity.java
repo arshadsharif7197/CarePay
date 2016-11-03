@@ -32,6 +32,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,8 +189,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         if (viewId == R.id.homeCheckinClickable) {
             Map<String,String> queryMap=new HashMap<>();
-            queryMap.put("start_date", DateUtil.getTodayStart());
-            queryMap.put("end_date",DateUtil.getTodayEnd());
+            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("end_date",DateUtil.toDateStringAsYYYYMMDD(new Date()));
             WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback,queryMap);
         } else if (viewId == R.id.homeModeSwitchClickable) {
             createChangeModeDialog().show();

@@ -20,16 +20,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemePractice"
         tools:replace="android:theme">
-        <activity
-            android:name="com.carecloud.carepay.practice.library.splash.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Translucent">
+        <activity android:name="com.carecloud.carepay.practice.library.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.carecloud.carepay.practice.library.signin.SigninActivity"/>
+        <activity android:name="com.carecloud.carepay.practice.library.signin.SigninActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

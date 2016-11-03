@@ -18,9 +18,11 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class CustomFilterPopupWindow extends PopupWindow
     private RecyclerView filterableDataRecyclerView;
     private CustomFilterListAdapter listAdapter;
     private CustomFilterPopupWindow popupWindow;
+    private CarePayTextView titleTextView;
 
     private ArrayList<FilterDataDTO> filterableDoctorsLocationList;
 
@@ -46,7 +49,7 @@ public class CustomFilterPopupWindow extends PopupWindow
 
     private HashSet<String> appointments;
     private HashSet<FilterDataDTO> selectedFilters;
-    private HashSet<FilterDataDTO> searchedPatients=new HashSet<>();
+    private HashSet<FilterDataDTO> searchedPatients = new HashSet<>();
 
     private FilterCallBack filterCallBack;
 
@@ -57,7 +60,7 @@ public class CustomFilterPopupWindow extends PopupWindow
     public CustomFilterPopupWindow(Context context, View parentView, ArrayList<FilterDataDTO> filterableList, ArrayList<FilterDataDTO> filterablePatientsList) {
 
         super(context);
-        filterCallBack= (FilterCallBack) context;
+        filterCallBack = (FilterCallBack) context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.custom_filter_popup_window_layout, null);
         setContentView(contentView);
@@ -69,8 +72,8 @@ public class CustomFilterPopupWindow extends PopupWindow
         setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.filterableDoctorsLocationList = filterableList;
         this.filterablePatientsList = filterablePatientsList;
-        selectedFilters=new HashSet<>();
-        searchedPatients=new HashSet<>();
+        selectedFilters = new HashSet<>();
+        searchedPatients = new HashSet<>();
         appointments = getAllAppointment();
         this.popupWindow = this;
         this.context = context;
@@ -79,7 +82,7 @@ public class CustomFilterPopupWindow extends PopupWindow
         displayRecyclerView();
     }
 
-    public interface FilterCallBack{
+    public interface FilterCallBack {
         void applyFilter(HashSet<String> appointments);
     }
 
@@ -127,16 +130,29 @@ public class CustomFilterPopupWindow extends PopupWindow
         clearFiltersButton = (Button) popupWindowLayout.findViewById(R.id.clearFiltersButton);
         ImageView closeFilterWindowImageView = (ImageView) popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
 
+        titleTextView= (CarePayTextView) popupWindowLayout.findViewById(R.id.titleTextView);
+
         closeFilterWindowImageView.setOnClickListener(closeFilterWindowListener);
         clearSearchImageView.setOnClickListener(clearSearchTextListener);
         searchPatientEditText.addTextChangedListener(searchEditTextWatcher);
         searchPatientEditText.setOnFocusChangeListener(searchPatientEditTextFocusChangeListener);
         clearFiltersButton.setOnClickListener(clearFilterListener);
+        clearFiltersButton.setVisibility(View.GONE);
 
         SystemUtil.setProximaNovaSemiboldTypefaceEdittext(context, searchPatientEditText);
         SystemUtil.setGothamRoundedMediumTypeface(context, clearFiltersButton);
     }
 
+    public void setTitle(String title){
+        titleTextView.setText(title);
+    }
+
+    public void setSearchHint(String hint){
+        searchPatientEditText.setHint(hint);
+    }
+    public void setClearFiltersButtonText(String text){
+        clearFiltersButton.setText(text);
+    }
     public void showPopWindow() {
         showAtLocation(parentView, Gravity.TOP | Gravity.RIGHT, 0, 0);
     }
@@ -152,7 +168,7 @@ public class CustomFilterPopupWindow extends PopupWindow
             } else {
                 clearSearchImageView.setVisibility(View.GONE);
                 filterableDataRecyclerView.setAdapter(listAdapter);
-                if (!selectedFilters.isEmpty() || !searchedPatients.isEmpty() ) {
+                if (!selectedFilters.isEmpty() || !searchedPatients.isEmpty()) {
                     clearFiltersButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -170,13 +186,23 @@ public class CustomFilterPopupWindow extends PopupWindow
         @Override
         public void onClick(View view) {
             clearSearchImageView.performClick();
-            listAdapter = new CustomFilterListAdapter(context, popupWindow, filterableDoctorsLocationList);
+            clearSelection();
             searchedPatients.clear();
             selectedFilters.clear();
+            listAdapter = new CustomFilterListAdapter(context, popupWindow, filterableDoctorsLocationList);
             filterableDataRecyclerView.setAdapter(listAdapter);
-            clearFiltersButton.setVisibility(View.GONE);
+            setAppointment();
         }
     };
+
+    private void clearSelection(){
+        for (FilterDataDTO filterDataDTO:filterableDoctorsLocationList) {
+            filterDataDTO.setChecked(false);
+        }
+        for (FilterDataDTO filterDataDTO:filterablePatientsList) {
+            filterDataDTO.setChecked(false);
+        }
+    }
 
     private View.OnClickListener clearSearchTextListener = new View.OnClickListener() {
         @Override
@@ -194,9 +220,13 @@ public class CustomFilterPopupWindow extends PopupWindow
 
         @Override
         public void onTextChanged(CharSequence string, int start, int before, int count) {
+            if(filterableDataRecyclerView.getAdapter() instanceof  CustomFilterListAdapter){
+                return;
+            }
+
             if (count < before) {
                 // We're deleting char so we need to reset the adapter data
-                ((CustomFilterListAdapter) filterableDataRecyclerView.getAdapter()).resetData();
+                ((CustomSearchAdapter) filterableDataRecyclerView.getAdapter()).resetData();
             }
             ((CustomSearchAdapter) filterableDataRecyclerView.getAdapter()).getFilter()
                     .filter(string.toString());
@@ -217,7 +247,7 @@ public class CustomFilterPopupWindow extends PopupWindow
     @Override
     public void onFilterChanged(FilterDataDTO filteredDataDTO) {
 
-       if (filteredDataDTO.isChecked()) {
+        if (filteredDataDTO.isChecked()) {
             selectedFilters.add(filteredDataDTO);
         } else {
             selectedFilters.remove(filteredDataDTO);
@@ -230,26 +260,29 @@ public class CustomFilterPopupWindow extends PopupWindow
         appointments.clear();
         if (!searchedPatients.isEmpty()) {
             appointments = getPatientAppointment();
+            clearFiltersButton.setVisibility(View.VISIBLE);
         } else if (!selectedFilters.isEmpty()) {
             appointments = getFilteredAppointment();
+            clearFiltersButton.setVisibility(View.VISIBLE);
         } else {
             appointments = getAllAppointment();
+            clearFiltersButton.setVisibility(View.GONE);
         }
         filterCallBack.applyFilter(appointments);
     }
 
-    private List<FilterDataDTO> getFilteredPatientList(){
-        List<FilterDataDTO> patientList=new ArrayList<>();
-        for (FilterDataDTO filterDataDTO: filterablePatientsList) {
-            for (String appointment:filterDataDTO.getAppointmentList()) {
-                if( appointments.contains(appointment))
-                {
+    private List<FilterDataDTO> getFilteredPatientList() {
+        List<FilterDataDTO> patientList = new ArrayList<>();
+        for (FilterDataDTO filterDataDTO : filterablePatientsList) {
+            filterDataDTO.setChecked(false);
+            for (String appointment : filterDataDTO.getAppointmentList()) {
+                if (appointments.contains(appointment)) {
                     patientList.add(filterDataDTO);
                     break;
                 }
             }
         }
-       return patientList;
+        return patientList;
     }
 
     @Override
