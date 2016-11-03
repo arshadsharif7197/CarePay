@@ -241,9 +241,9 @@ public class PatientDTO {
         if (this == patientObj) {return true;}
         if (!(patientObj instanceof PatientDTO)) {return false;}
 
-        PatientDTO that = (PatientDTO) patientObj;
+        PatientDTO patientDTO = (PatientDTO) patientObj;
 
-        return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
+        return getId() != null ? getId().equals(patientDTO.getId()) : patientDTO.getId() == null;
 
     }
 
