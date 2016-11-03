@@ -46,6 +46,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private FragmentManager                        fm;
     private View                                   view;
     private ScrollView                             detailsScrollView;
+    private FrameLayout                            idCardContainer;
     private FrameLayout                            insCardContainer1;
     private FrameLayout                            insCardContainer2;
     private FrameLayout                            insCardContainer3;
@@ -66,8 +67,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private SwitchCompat                           switchCompat;
     private TextView                               idTypeClickable;
     private TextView                               idDocTypeLabel;
-    private        String[] docTypes;
-
+    private String[]                               docTypes;
 
 
     @Nullable
@@ -108,13 +108,13 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         final String labelCancel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
 
         idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
-        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.items.identityDocument.getLabel();
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectIdType();
         idDocTypeLabel.setText(label);
 
         idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
         label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
         idTypeClickable.setText(label);
-        final String titleSelIdDoc = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectIdType();
+        final String titleSelIdDoc = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
         idTypeClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,6 +125,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                                                 @Override
                                                 public void executeOnClick(TextView destination, String selectedOption) {
                                                     demPayloadIdDocDTO.setIdType(selectedOption);
+                                                    showCard(idCardContainer, true);
                                                 }
                                             });
             }
@@ -207,10 +208,10 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             public void onClick(View buttonView) {
                 if (!isSecondCardAdded) {
                     isSecondCardAdded = true;
-                    showInsuranceCard(insCardContainer2, true);
+                    showCard(insCardContainer2, true);
                 } else if (!isThirdCardAdded) {
                     isThirdCardAdded = true;
-                    showInsuranceCard(insCardContainer3, true);
+                    showCard(insCardContainer3, true);
                     showAddCardButton(false);
                 }
                 scrollToBottom();
@@ -228,6 +229,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     private void setCardContainers() {
 
         // fetch nested fragments containers
+        idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
         insCardContainer1 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance1);
         insCardContainer2 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance2);
         insCardContainer3 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance3);
@@ -308,7 +310,7 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         return model;
     }
 
-    private void showInsuranceCard(FrameLayout cardContainer, boolean isVisible) {
+    private void showCard(FrameLayout cardContainer, boolean isVisible) {
         if (isVisible) {
             cardContainer.setVisibility(View.VISIBLE);
         } else {
@@ -336,16 +338,16 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-                showInsuranceCard(insCardContainer1, on);
+                showCard(insCardContainer1, on);
                 if (isSecondCardAdded) {
-                    showInsuranceCard(insCardContainer2, on);
+                    showCard(insCardContainer2, on);
                 } else {
-                    showInsuranceCard(insCardContainer2, false);
+                    showCard(insCardContainer2, false);
                 }
                 if (isThirdCardAdded) {
-                    showInsuranceCard(insCardContainer3, on);
+                    showCard(insCardContainer3, on);
                 } else {
-                    showInsuranceCard(insCardContainer3, false);
+                    showCard(insCardContainer3, false);
                 }
                 showAddCardButton(on && !isThirdCardAdded);
             }

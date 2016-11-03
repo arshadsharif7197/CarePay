@@ -59,7 +59,8 @@
             <FrameLayout
                 android:id="@+id/demographicsDocsLicense"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/demographicsDocumentsInsuranceSwitch"
@@ -109,6 +110,7 @@
         android:id="@+id/demographicsDocumentsMultipleInsClickable"
         style="@style/SigninSignupClickableTextView"
         android:layout_width="match_parent"
+        android:layout_marginTop="0dp"
         android:layout_marginBottom="@dimen/demographics_docs_header_top"
         android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left"
         android:text="@string/demogr_docs_add_card"/>
