@@ -26,7 +26,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.appointments.utils.CustomPopupNotification;
-import com.carecloud.carepaylibray.base.NavigationHelper;
+import com.carecloud.carepaylibray.base.PatientNavigationHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -161,8 +161,8 @@ public class AppointmentsListFragment extends Fragment {
             ApplicationPreferences.Instance.writeStringToSharedPref(
                     CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
-            NavigationHelper.initInstance(getContext());
-            NavigationHelper.instance().navigateToWorkflow(appointmentInfo.getState());
+            PatientNavigationHelper.initInstance(getContext());
+            PatientNavigationHelper.instance().navigateToWorkflow(appointmentInfo.getState());
 
         }
     };
