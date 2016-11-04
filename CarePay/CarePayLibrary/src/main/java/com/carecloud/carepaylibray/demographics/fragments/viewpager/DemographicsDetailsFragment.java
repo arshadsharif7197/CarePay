@@ -117,7 +117,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void setOptions() {
-        if(persDetailsMetaDTO == null) {
+        if (persDetailsMetaDTO == null) {
             raceArray = new String[1];
             raceArray[0] = CarePayConstants.NOT_DEFINED;
             ethnicityArray = new String[1];
@@ -213,15 +213,24 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private boolean isDateOfBirthValid() {
-        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
         String dob = dobEdit.getText().toString();
-        if (!StringUtil.isNullOrEmpty(dob)) {
-            boolean isValid = DateUtil.isValidateStringDateMMDDYYYY(dob);
-            dobInputText.setErrorEnabled(!isValid);
-            dobInputText.setError(isValid ? null : errorMessage);
-            return isValid;
+        boolean isEmpty = StringUtil.isNullOrEmpty(dob);
+        if (isEmpty) { // if no DOB, allow to go next
+            return true;
         }
-        return true;
+
+        // apply pattern validation from backend
+        boolean isValidFormat = SystemUtil.applyPatternValidation(dobEdit, dobInputText, persDetailsMetaDTO.properties.dateOfBirth);
+        if (!isValidFormat) {
+            return false;
+        }
+
+        // apply local extra validation
+        final String errorMessage = "Must be MM/DD/YYYY and between 01/01/1901 and today";
+        boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
+        dobInputText.setErrorEnabled(!isValid);
+        dobInputText.setError(isValid ? null : errorMessage);
+        return isValid;
     }
 
     private void setupRecyclerViews() {
@@ -391,6 +400,7 @@ public class DemographicsDetailsFragment extends Fragment
 
     /**
      * Getter
+     *
      * @return The DTO for personal details
      */
     public DemographicPersDetailsPayloadDTO getPersDetailsDTO() {

@@ -23,8 +23,10 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataValidationDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
@@ -33,6 +35,7 @@ import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static android.media.CamcorderProfile.get;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -40,6 +43,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import com.smartystreets.api.us_zipcode.City;
+
+import java.util.List;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -135,6 +140,10 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         // enable/disable next button
         nextButton.setEnabled(!isFirstNameEmpty && !isLastNameEmpty);
+
+        // TODO: 11/2/2016 remove
+        firstNameText.setText("liv");
+        lastNameText.setText("vic");
 
         return view;
     }
@@ -694,7 +703,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private boolean checkState() {
-        final String stateError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
+        final String stateError = "Invalid state";
         if (!isStateEmtpy) {
             boolean isStateAbbrUnknown = true; // check valid state
             for (String state : AddressUtil.states) {
@@ -714,35 +723,84 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private boolean checkCity() {
-        final String cityError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
-        if (!isCityEmpty) {
-            String city = cityEditText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(city) && city.trim().length() < 3) {
-                cityTextInputLayout.setErrorEnabled(true);
-                cityTextInputLayout.setError(cityError);
-                return false;
-            }
-            cityTextInputLayout.setError(null);
-            cityTextInputLayout.setErrorEnabled(false);
+        if (isCityEmpty) {
+            return true;
         }
-        return true;
+
+        // apply validation from backend
+        boolean isValidFormat = SystemUtil.applyPatternValidation(cityEditText,
+                                                                  cityTextInputLayout,
+                                                                  addressMetaDTO.properties.city);
+        if(!isValidFormat) {
+            return false;
+        }
+
+        // local extra validation
+        final String cityError = "Invalid city";
+        String city = cityEditText.getText().toString();
+        boolean isGoodLength = city.trim().length() > 2;
+        cityTextInputLayout.setErrorEnabled(isGoodLength);
+        if (!isGoodLength) {
+            cityTextInputLayout.setError(cityError);
+            return false;
+        }
+        cityTextInputLayout.setError(null);
+        cityTextInputLayout.setErrorEnabled(false);
+
+        return isValidFormat;
     }
 
     private boolean checkPhoneNumber() {
-        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
-        if (!isPhoneEmpty) { // check validity only if non-empty
-            String phone = phoneNumberEditText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(phone)
-                    && !StringUtil.isValidPhoneNumber(phone.trim(), phoneValidation)) {
-                phNoTextInputLayout.setErrorEnabled(true);
-                phNoTextInputLayout.setError(phoneError);
+        // not require validation
+        if (isPhoneEmpty) {
+            return true;
+        }
+
+        // apply validation from backend
+        boolean isValidFormat = SystemUtil.applyPatternValidation(phoneNumberEditText,
+                                                                  phNoTextInputLayout,
+                                                                  addressMetaDTO.properties.phone);
+        if(!isValidFormat) {
+            return false;
+        }
+
+        // local extra validation
+        String phone = phoneNumberEditText.getText().toString();
+        boolean isGoodLength = phone.length() == 12;
+        phNoTextInputLayout.setErrorEnabled(isGoodLength);
+        if (!isGoodLength) {
+            phNoTextInputLayout.setError("Invalid phone");
+            return false;
+        }
+        phNoTextInputLayout.setError(null);
+        phNoTextInputLayout.setErrorEnabled(false);
+
+        return true;
+    }
+
+    private boolean checkZip() {
+        // apply validation from backend
+        boolean isValidFormat = SystemUtil.applyPatternValidation(zipCodeEditText,
+                                                                  zipCodeTextInputLayout,
+                                                                  addressMetaDTO.properties.zipcode);
+        if(!isValidFormat) {
+            return false;
+        }
+
+        // local extra validation
+        final String zipError = "Invalid zip";
+        String zip = zipCodeEditText.getText().toString();
+        if (zip.length() > 0) {
+            boolean isZipValid = zip.length() == 5 || zip.length() == 10;
+            zipCodeTextInputLayout.setErrorEnabled(isZipValid);
+            if (!isZipValid) {
+                zipCodeTextInputLayout.setError(zipError);
                 return false;
             }
-            phNoTextInputLayout.setError(null);
-            phNoTextInputLayout.setErrorEnabled(false);
+            zipCodeTextInputLayout.setError(null);
         }
-        return true;
+
+        return isValidFormat; // if no zip, then 'valid' zip
     }
 
     private void setTypefaces(View view) {
@@ -828,7 +886,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             cityEditText.requestFocus();
         }
 
-        return isPhoneValid && isStateValid && isCityValid;
+        boolean isZipValid = checkZip();
+        if (!isZipValid) {
+            zipCodeEditText.requestFocus();
+        }
+
+        return isPhoneValid && isStateValid && isCityValid && isZipValid;
     }
 
     public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {

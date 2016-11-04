@@ -29,15 +29,15 @@ public class StringUtil {
     }
 
     /**
-     * Validates the format of a phone number
+     * Checks a string against a pattern
      *
-     * @param phoneNumber      The phone number
+     * @param string           The string
      * @param validationString The format string (as regex)
      * @return Whether correctly formatted
      */
-    public static boolean isValidPhoneNumber(String phoneNumber, String validationString) {
+    public static boolean isValidString(String string, String validationString) {
         Pattern pattern = Pattern.compile(validationString);
-        Matcher matcher = pattern.matcher(phoneNumber);
+        Matcher matcher = pattern.matcher(string);
         return matcher.matches();
     }
 
@@ -191,12 +191,8 @@ public class StringUtil {
         int currentLength = zipcode.length();
         if (lengthBefore < currentLength) {
             char lastChar = zipcode.charAt(currentLength - 1);
-            if (currentLength == 5 && lastChar != '-') { // insert separator
-                zipcode.append("-");
-            }
-
-            if (currentLength == 6 && lastChar != '-') { // re-insert separator
-                zipcode.replace(currentLength - 1, currentLength, "-" + lastChar);
+            if (currentLength == 6 && lastChar != '-') { // insert separator
+                zipcode.insert(currentLength - 1, "-");
             }
 
             if (lengthBefore != 5 && lastChar == '-') { // discard separator except for position 5
