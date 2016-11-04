@@ -120,7 +120,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         // fetch the options
         getOptions();
 
-
         setEditText();
 
         ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);

@@ -25,6 +25,9 @@ public class DemographicInsurancePayloadDTO extends BasePersonModel {
     @SerializedName("insurance_member_id") @Expose
     private String insuranceMemberId;
 
+    @SerializedName("insurance_type") @Expose
+    private String insuranceType;
+
     /**
      * @return The insuranceProvider
      */
@@ -73,5 +76,13 @@ public class DemographicInsurancePayloadDTO extends BasePersonModel {
      */
     public void setInsuranceMemberId(String insuranceMemberId) {
         this.insuranceMemberId = insuranceMemberId;
+    }
+
+    public String getInsuranceType() {
+        return insuranceType;
+    }
+
+    public void setInsuranceType(String insuranceType) {
+        this.insuranceType = insuranceType;
     }
 }

@@ -106,6 +106,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     private void initializeUIFields() {
+        getOptions();
+
         String label;
 
         insurancePlanLabel = (TextView) view.findViewById(R.id.demogr_insurance_plan_label);
@@ -188,7 +190,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             }
         });
 
-        getOptions();
 
         setEditTexts(view);
         setTypefaces(view);
@@ -223,8 +224,14 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
         planDataArray = plans.toArray(new String[0]);
 
-        cardTypeDataArray = getResources().getStringArray(R.array.cardtypes);
+//        cardTypeDataArray = getResources().getStringArray(R.array.cardtypes);
         // potions must be read from json
+        optionDTOs = insuranceMetadataDTO.properties.insuranceType.options;
+        List<String> cardTypes = new ArrayList<>();
+        for(MetadataOptionDTO o : optionDTOs) {
+            cardTypes.add(o.getLabel());
+        }
+        cardTypeDataArray = cardTypes.toArray(new String[0]);
     }
 
     @Override
@@ -242,7 +249,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         } else if (selectionDestination == cardTypeTextView) {
             String type = cardTypeTextView.getText().toString();
             if (!StringUtil.isNullOrEmpty(type)) {
-                Log.v(LOG_TAG, "needed field in json");
+                insuranceDTO.setInsuranceType(type);
             }
         }
     }
@@ -272,7 +279,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
      */
     @Override
     public void populateViewsFromModel() {
-//        resetViewsContent();
         if (insuranceDTO != null) {
             // populate with images
             List<DemographicInsurancePhotoDTO> photos = insuranceDTO.getInsurancePhotos();
@@ -330,6 +336,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                 insuranceCardNumEditText.requestFocus(); // required for CAPS hint
                 view.requestFocus();
             }
+            String insCardType = insuranceDTO.getInsuranceType();
+            if(!StringUtil.isNullOrEmpty(insCardType)) {
+                cardTypeTextView.setText(insCardType);
+            }
         }
     }
 
@@ -373,19 +383,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
 
         return insuranceDTO;
-    }
-
-    public void resetViewsContent() {
-        Log.v(LOG_TAG, "resetViewsContent()");
-
-        btnScanFrontInsurance.setText(R.string.demogr_docs_scan_insurance_front_label);
-        btnScanBackInsurance.setText(R.string.demogr_docs_scan_insurance_backlabel);
-        insuranceCardNumEditText.setText("");
-        planTextView.setText(getString(R.string.demogr_tv_choose_label));
-        providerTextView.setText(getString(R.string.demogr_docs_tv_chose_company));
-        cardTypeTextView.setText(getString(R.string.demogr_tv_choose_label));
-        insuranceFrontScanHelper.resetTargetView();
-        insuranceBackScanHelper.resetTargetView();
     }
 
     private void setEditTexts(final View view) {
