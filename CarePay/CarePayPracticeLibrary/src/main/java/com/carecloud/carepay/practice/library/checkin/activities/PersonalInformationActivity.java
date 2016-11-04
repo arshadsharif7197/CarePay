@@ -20,8 +20,11 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumBut
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldButton;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import org.joda.time.LocalDate;
 
 import java.util.Calendar;
 
@@ -274,7 +277,9 @@ public class PersonalInformationActivity extends AppCompatActivity {
             DatePickerDialog datePickerDialog = new DatePickerDialog(PersonalInformationActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                    selectDateButton.setText(new StringBuilder().append(month + 1).append("/").append(day).append("/").append(year));
+                    LocalDate date = new LocalDate(year,month+1,day);
+                    DateUtil.getInstance().setDate(date.toDate());
+                    selectDateButton.setText(DateUtil.getInstance().getDateAsMMddyyyyWithSlash());
                 }
             }, year, month, day);
 
