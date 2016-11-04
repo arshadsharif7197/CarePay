@@ -226,7 +226,7 @@ public class DemographicsDetailsFragment extends Fragment
         }
 
         // apply local extra validation
-        final String errorMessage = "Must be MM/DD/YYYY and between 01/01/1901 and today";
+        final String errorMessage = "Invalid date; Must be MM/DD/YYYY and between 01/01/1901 and today";
         boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
         dobInputText.setErrorEnabled(!isValid);
         dobInputText.setError(isValid ? null : errorMessage);

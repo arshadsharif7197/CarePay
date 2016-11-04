@@ -9,8 +9,7 @@
     android:layout_marginTop="@dimen/demographics_docs_section_container_margin_top"
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
-    android:orientation="vertical"
-    android:background="@color/demographics_scan_insurance_bg">
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/DemographicsDocsImageButtonContainerStyle">
@@ -145,14 +144,6 @@
 
     <View
         style="@style/Consent_Form_View_Style"
-        android:layout_marginBottom="1dp"
         android:layout_width="match_parent"/>
-
-    <View
-        style="@style/Consent_Form_View_Style"
-        android:layout_marginTop="1dp"
-        android:layout_width="match_parent"/>
-
-
 
 </LinearLayout>

@@ -695,7 +695,8 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private boolean checkState() {
-        final String stateError = "Invalid state";
+        final String stateError = "Invalid state"; // TODO: 11/4/2016 create an utility to apply this validation
+
         if (!isStateEmtpy) {
             boolean isStateAbbrUnknown = true; // check valid state
             for (String state : AddressUtil.states) {
@@ -728,7 +729,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         }
 
         // local extra validation
-        final String cityError = "Invalid city";
+        final String cityError = "At least three letters";
         String city = cityEditText.getText().toString();
         boolean isGoodLength = city.trim().length() > 2;
         cityTextInputLayout.setErrorEnabled(isGoodLength);
@@ -761,7 +762,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         boolean isGoodLength = phone.length() == 12;
         phNoTextInputLayout.setErrorEnabled(isGoodLength);
         if (!isGoodLength) {
-            phNoTextInputLayout.setError("Invalid phone");
+            phNoTextInputLayout.setError("Invalid phone; must be ddd-ddd-dddd");
             return false;
         }
         phNoTextInputLayout.setError(null);
@@ -780,7 +781,7 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         }
 
         // local extra validation
-        final String zipError = "Invalid zip";
+        final String zipError = "Invalid zip; must be ddddd or ddddd-dddd";
         String zip = zipCodeEditText.getText().toString();
         if (zip.length() > 0) {
             boolean isZipValid = zip.length() == 5 || zip.length() == 10;

@@ -65,7 +65,6 @@
         <EditText
             android:id="@+id/demogrDocsLicenseNumEdit"
             style="@style/SigninSignupEditStyle"
-            android:hint="@string/demogrDocsNumberHint"
             android:imeOptions="actionNone"
             android:nextFocusDown="@+id/scanIdRootLayout"
             android:maxLength="10"/>
