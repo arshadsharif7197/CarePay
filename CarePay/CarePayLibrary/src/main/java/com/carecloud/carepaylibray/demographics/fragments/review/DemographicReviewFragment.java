@@ -32,6 +32,9 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
+
+import static com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView;
+
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
@@ -46,7 +49,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 
-import static com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView;
 
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
 
