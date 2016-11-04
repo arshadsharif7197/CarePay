@@ -37,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 public class AppointmentsActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {

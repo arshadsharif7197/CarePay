@@ -42,6 +42,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO labelsDTO;
 
+    // Updating payload model
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
         if (modelGet != null) {

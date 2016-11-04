@@ -173,6 +173,9 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    /** Initialize the models from main Demographic Review Activity
+     */
+
     public void initModels() {
         demographicAddressPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicAddressPayloadDTO();
         if (demographicAddressPayloadDTO == null) {
