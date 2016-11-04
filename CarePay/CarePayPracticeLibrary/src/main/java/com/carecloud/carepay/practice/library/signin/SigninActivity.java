@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.signin;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
@@ -31,11 +29,14 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class SigninActivity extends BasePracticeActivity {
     private TextView signinButton;
     private TextView forgotPasswordButton;
     private TextView signinTitle;
+    private TextView gobackButton;
 
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
@@ -60,8 +62,10 @@ public class SigninActivity extends BasePracticeActivity {
 
     private ProgressBar progressBar;
 
-    private boolean   isEmptyEmail;
-    private boolean   isEmptyPassword;
+    private boolean isEmptyEmail;
+    private boolean isEmptyPassword;
+    private ImageView homeButton;
+
     private ImageView rightarrow;
 
     private String emailLabel;
@@ -71,25 +75,28 @@ public class SigninActivity extends BasePracticeActivity {
 
     SigninDTO signinDTO;
     private Spinner langSpinner;
+    private List<String> modeSwitchOptions = new ArrayList<>();
+
+    public enum SignInScreenMode {
+        PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CognitoAppHelper.init(this);
-        ApplicationPreferences.createPreferences(this); // init preferences
         signinDTO = getConvertedDTO(SigninDTO.class);
+        SignInScreenMode signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
+        changeScreenMode(signinScreenMode);
+        ApplicationPreferences.createPreferences(this); // init preferences
         setContentView(R.layout.activity_signin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setSystemUiVisibility();
-        progressBar = (ProgressBar) findViewById(R.id.signInProgress);
-        progressBar.setVisibility(View.INVISIBLE);
-
         initViews();
         setEditTexts();
         setClicables();
         setTypeFace();
-
         isEmptyEmail = true;
         isEmptyPassword = true;
     }
@@ -100,14 +107,15 @@ public class SigninActivity extends BasePracticeActivity {
     public void initViews() {
         signinButton = (TextView) findViewById(R.id.signinTextview);
         rightarrow = (ImageView) findViewById(R.id.rightarrow);
+        homeButton = (ImageView) findViewById(R.id.signInHome);
+        gobackButton = (TextView) findViewById(R.id.goBackButtonTextview);
         forgotPasswordButton = (TextView) findViewById(R.id.forgot_passwordTextview);
         passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
         emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
+        langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
         signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
         signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
-
-        // set the language spinner
         int langaugelistsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
         LanguageOptionDTO defaultLangOption = null;
         int indexDefault = 0;
@@ -128,6 +136,7 @@ public class SigninActivity extends BasePracticeActivity {
             ApplicationPreferences.Instance.setUserLanguage(defaultLangOption.getCode());
         }
 
+
         initializeLebals();
         // disable sign-in button
         setEnabledSigninButton(true);
@@ -140,8 +149,9 @@ public class SigninActivity extends BasePracticeActivity {
                 signinButton.setText(signinLabelsDTO.getSigninButton());
                 signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
                 forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
-                emailLabel = StringUtil.getLabelForView(signinLabelsDTO.getSigninEmailAddress());
-                passwordLabel = StringUtil.getLabelForView(signinLabelsDTO.getSigninPassword());
+                gobackButton.setText(signinLabelsDTO.getGobackButton());
+                emailLabel = signinDTO.getMetadata().getDataModels().getSignin().getProperties().getEmail().getLabel();
+                passwordLabel = signinDTO.getMetadata().getDataModels().getSignin().getProperties().getPassword().getLabel();
                 passwordEditText.setHint(passwordLabel);
                 emailEditText.setHint(emailLabel);
             }
@@ -179,6 +189,13 @@ public class SigninActivity extends BasePracticeActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -271,6 +288,18 @@ public class SigninActivity extends BasePracticeActivity {
         });
     }
 
+    private void changeScreenMode(SignInScreenMode signInScreenMode) {
+        if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN) {
+            homeButton.setVisibility(View.VISIBLE);
+            gobackButton.setVisibility(View.VISIBLE);
+            langSpinner.setVisibility(View.GONE);
+        } else {
+            homeButton.setVisibility(View.GONE);
+            gobackButton.setVisibility(View.GONE);
+            langSpinner.setVisibility(View.VISIBLE);
+
+        }
+    }
 
     private void setEditTexts() {
         signInEmailTextInputLayout.setTag(emailLabel);
@@ -324,7 +353,6 @@ public class SigninActivity extends BasePracticeActivity {
     CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
-            progressBar.setVisibility(View.INVISIBLE);
             //launchHomescreen();
             WorkflowServiceHelper.getInstance().execute(signinDTO.getMetadata().getTransitions().getAuthenticate(), signinCallback);
         }
@@ -334,7 +362,6 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onBeforeLogin() {
             SystemUtil.hideSoftKeyboard(SigninActivity.this);
-            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -359,7 +386,7 @@ public class SigninActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(SigninActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showDialogMessage(SigninActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
