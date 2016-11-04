@@ -62,6 +62,14 @@ public class ValidationHelper {
         return extraValidation == null || extraValidation.validate(patternValidation);
     }
 
+    /**
+     * Applies validation
+     * @param editText The edit text
+     * @param wrapperLayout The wrapping input text
+     * @param metadataEntityDTO The metadta
+     * @param extraValidation The extra validation
+     * @return Whether value in edit passes the validation
+     */
     public static boolean applyIsInOptionsValidationToWrappedEdit(EditText editText,
                                                                   TextInputLayout wrapperLayout,
                                                                   MetadataEntityDTO metadataEntityDTO,
