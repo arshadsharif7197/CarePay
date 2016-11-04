@@ -39,10 +39,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
  * This is the Launcher activity for the practice app
@@ -134,7 +130,7 @@ public class SigninActivity extends BasePracticeActivity {
 
         initializeLebals();
         // disable sign-in button
-        setEnabledSigninButton(false);
+        setEnabledSigninButton(true);
     }
 
     private void initializeLebals() {
@@ -344,8 +340,8 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onLoginFailure(String exceptionMessage) {
             SystemUtil.showDialogMessage(SigninActivity.this,
-                                         "Sign-in failed",
-                                         "Invalid user id or password");
+                    "Sign-in failed",
+                    "Invalid user id or password");
 
         }
     };
@@ -363,27 +359,9 @@ public class SigninActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            SystemUtil.showDialogMessage(SigninActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-    private void launchHomescreen() {
-        Intent intent = new Intent(this, CloverMainActivity.class);
-        startActivity(intent);
-        this.finish();
-    }
-
-    public void setSystemUiVisibility() {
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LOW_PROFILE
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
-
 
     public void setTypeFace() {
         setProximaNovaRegularTypeface(this, emailEditText);

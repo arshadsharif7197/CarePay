@@ -24,12 +24,14 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
+import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,8 +67,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setSystemUiVisibility();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
 
@@ -157,18 +157,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     }
 
-    public void setSystemUiVisibility() {
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LOW_PROFILE
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -214,7 +202,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

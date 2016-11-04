@@ -14,11 +14,13 @@ public class HttpConstants {
 
     public static final int WRITE_TIMEOUT_MS = 15000;
 
-    public static final String API_BASE_URL = "https://g8r79tifa4.execute-api.us-east-1.amazonaws.com";
+    private static String apiBaseUrl;
 
-    public static final String API_START_URL = "dev/workflow/carepay/practice_mode/practice_mode_signin/start";
+    private static String apiStartUrl;
 
-    public static final String X_API_KEY = "VXlNfYaZYk4sxti0C4caw1v0J0dEDHXH9oQ3bPsA";
+    private static  String xApiKey;
+
+    private static  String pushNotificationWebclientUrl;
 
 
     private static DeviceIdentifierDTO deviceInformation;
@@ -29,5 +31,37 @@ public class HttpConstants {
 
     public static void setDeviceInformation(DeviceIdentifierDTO deviceInformation) {
         HttpConstants.deviceInformation = deviceInformation;
+    }
+
+    public static String getApiBaseUrl() {
+        return apiBaseUrl;
+    }
+
+    public static void setApiBaseUrl(String apiBaseUrl) {
+        HttpConstants.apiBaseUrl = apiBaseUrl;
+    }
+
+    public static String getApiStartUrl() {
+        return apiStartUrl;
+    }
+
+    public static void setApiStartUrl(String apiStartUrl) {
+        HttpConstants.apiStartUrl = apiStartUrl;
+    }
+
+    public static String getxApiKey() {
+        return xApiKey;
+    }
+
+    public static void setxApiKey(String xApiKey) {
+        HttpConstants.xApiKey = xApiKey;
+    }
+
+    public static String getPushNotificationWebclientUrl() {
+        return pushNotificationWebclientUrl;
+    }
+
+    public static void setPushNotificationWebclientUrl(String pushNotificationWebclientUrl) {
+        HttpConstants.pushNotificationWebclientUrl = pushNotificationWebclientUrl;
     }
 }
