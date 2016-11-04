@@ -70,4 +70,6 @@
 
     <color name="white_transparent">#26ffffff</color>
     <color name="manatee">#9ba4a9</color>
+
+    <color name="demographics_scan_insurance_bg">#f4f6f7</color>
 </resources>

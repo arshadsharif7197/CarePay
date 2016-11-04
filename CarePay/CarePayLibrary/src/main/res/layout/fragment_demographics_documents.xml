@@ -110,10 +110,11 @@
         android:id="@+id/demographicsDocumentsMultipleInsClickable"
         style="@style/SigninSignupClickableTextView"
         android:layout_width="match_parent"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="@dimen/demographics_docs_header_top"
-        android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left"
-        android:text="@string/demogr_docs_add_card"/>
+        android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
+        android:layout_marginEnd="7dp"
+        android:layout_marginTop="7dp"
+        android:text="@string/demogr_docs_add_card"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
 
     <Button
         android:id="@+id/demographicsDocsNextButton"

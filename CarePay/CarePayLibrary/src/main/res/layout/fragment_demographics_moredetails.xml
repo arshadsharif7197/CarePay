@@ -5,19 +5,19 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_marginTop="@dimen/demographics_docs_header_top"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/demogr_onboard_allset_icon_margin_top">
 
-            <ImageView
-                android:id="@+id/placeHolderIconImageViewId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/icn_allset"/>
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/placeHolderIconImageViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/icn_allset"/>
+    </FrameLayout>
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
@@ -34,22 +34,19 @@
             android:id="@+id/moreDetailsSubHeading"
             style="@style/DemographicsDocsHeaderSubtitleStyle"
             android:text="@string/moreDetailsSubHeadingTextView"/>
-    </LinearLayout>
-
-
-    <LinearLayout
-        style="@style/DemographicsDocsHeaderStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
 
         <Button
             android:id="@+id/demographicsGoToCarePayButton"
             style="@style/DemographicsNextButtonStyle"
             android:background="@drawable/button_selector"
-            android:text="@string/GoToCarePayButton"/>
-
+            android:text="@string/GoToCarePayButton"
+            android:layout_marginTop="@dimen/demogr_onboard_button_margin_top"/>
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"/>
 
 </LinearLayout>
