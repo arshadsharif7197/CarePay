@@ -114,10 +114,8 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         // fetch the options
         getOptions();
 
-
         // init views (labels and logic)
         String label;
-        final String labelCancel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
 
         setEditText();
 
@@ -127,6 +125,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         ImageView imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
         scannerBack = new ImageCaptureHelper(getActivity(), imageBack);
 
+        final String labelCancel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
         // add click listener
         scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();

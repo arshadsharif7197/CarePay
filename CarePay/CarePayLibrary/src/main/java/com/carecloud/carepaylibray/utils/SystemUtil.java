@@ -282,7 +282,7 @@ public class SystemUtil {
         // add cancel button
         dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int pos) {
                 dialogInterface.dismiss();
             }
         });
@@ -293,8 +293,8 @@ public class SystemUtil {
                                                                 false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         // create the adapter
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(activity, Arrays.asList(options));
-        listView.setAdapter(mAdapter);
+        CustomAlertAdapter customAlertAdapter = new CustomAlertAdapter(activity, Arrays.asList(options));
+        listView.setAdapter(customAlertAdapter);
         // show the dialog
         dialog.setView(customView);
         final android.support.v7.app.AlertDialog alert = dialog.create();
@@ -303,7 +303,7 @@ public class SystemUtil {
         // set item click listener
         AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
                 String selectedOption = options[position];
                 selectionDestination.setText(selectedOption); // set the selected option in the target textview
                 if (callback != null) {
@@ -315,7 +315,8 @@ public class SystemUtil {
         listView.setOnItemClickListener(clickListener);
     }
 
-    public static MetadataValidationDTO getPatterUtility(MetadataEntityDTO addressMetaDTO) {
+
+    private static MetadataValidationDTO getPatterUtility(MetadataEntityDTO addressMetaDTO) {
         if(addressMetaDTO != null) {
             List<MetadataValidationDTO> validations = addressMetaDTO.validations;
             for (int i = 0; i < validations.size(); i++) {
@@ -328,6 +329,13 @@ public class SystemUtil {
         return null;
     }
 
+    /**
+     * Applies a pattern validation to an edit text wrapped into textinput layout
+     * @param editText The edit
+     * @param wrappingTextInputLayout The input text layout
+     * @param phoneDTO The (meta) dto containing the validation
+     * @return Whether matches
+     */
     public static boolean applyPatternValidation(EditText editText, TextInputLayout wrappingTextInputLayout, MetadataEntityDTO phoneDTO) {
 
         // retrieve the 'pattern' validation

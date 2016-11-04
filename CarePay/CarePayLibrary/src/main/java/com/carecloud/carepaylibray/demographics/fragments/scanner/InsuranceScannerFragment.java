@@ -541,7 +541,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                                         public void executeOnClick(TextView destination, String selectedOption) {
                                             updateModel(selectionDestination);
                                             if(selectionDestination == providerTextView) {
-                                                Log.v("XXX", "enabled plan after screen");
                                                 enablePlanClickable(true);
                                             }
                                         }
