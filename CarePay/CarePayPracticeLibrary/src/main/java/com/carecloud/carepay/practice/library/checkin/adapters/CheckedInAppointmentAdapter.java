@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
-import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCartView;
+import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
@@ -101,7 +101,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         TextView paymentTextview;
         TextView assistTextview;
         ImageView patientPicImageView;*/
-        AppointmentStatusCartView appointmentStatusCartView;
+        AppointmentStatusCardView appointmentStatusCartView;
         /**
          * Constructor.
          * @param view view
@@ -109,7 +109,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         CartViewHolder(View view) {
             super(view);
-            appointmentStatusCartView= (AppointmentStatusCartView) view;
+            appointmentStatusCartView= (AppointmentStatusCardView) view;
             /*container = view;
 
             view.setOnClickListener(this);
