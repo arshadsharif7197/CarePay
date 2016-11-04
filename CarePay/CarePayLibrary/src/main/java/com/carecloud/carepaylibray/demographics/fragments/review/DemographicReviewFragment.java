@@ -69,7 +69,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.ResponseBody;
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -296,6 +295,9 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     }
 
+    /**
+     * Initialize the models from main Demographic Review Activity
+     */
     public void initModels() {
         demographicAddressPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicAddressPayloadDTO();
         if (demographicAddressPayloadDTO == null) {
@@ -645,8 +647,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         View customView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.alert_list_layout, (ViewGroup) getView(), false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
-        listView.setAdapter(mAdapter);
+        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
+        listView.setAdapter(alertAdapter);
         dialog.setView(customView);
         final AlertDialog alert = dialog.create();
         alert.show();

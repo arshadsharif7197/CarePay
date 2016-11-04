@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.demographics.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -22,7 +21,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.fragments.review.DemographicReviewFragment;
 import com.carecloud.carepaylibray.demographics.fragments.review.ReviewFragment;
 import com.google.gson.Gson;
 
@@ -75,13 +73,8 @@ public class DemographicReviewActivity extends AppCompatActivity {
         }
         initDTOsForFragments();
         ReviewFragment reviewFragment = new ReviewFragment();
-       FragmentManager fm = getSupportFragmentManager();
-       // ReviewFragment fragment = (ReviewFragment) fm.findFragmentByTag(ReviewFragment.class.getSimpleName());
-      /*  if (fragment == null) {
-            fragment = ReviewFragment.newInstance();
-        }*/
-
-                fm.beginTransaction().addToBackStack("reviewscreen")
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().addToBackStack("reviewscreen")
                 .replace(R.id.root_layout, reviewFragment, ReviewFragment.class.getName())
                 .commit();
 
@@ -161,6 +154,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     public void setDemographicPayloadIdDocDTO(DemographicIdDocPayloadDTO demPayloadIdDocPojo) {
         this.demPayloadIdDocPojo = demPayloadIdDocPojo;
     }
+
     public DemographicMetadataEntityPersDetailsDTO getPersDetailsMetaDTO() {
         return persDetailsMetaDTO;
     }
@@ -168,6 +162,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
         this.persDetailsMetaDTO = persDetailsMetaDTO;
     }
+
     public DemographicMetadataEntityAddressDTO getAddressEntityMetaDTO() {
         return addressEntityMetaDTO;
     }
@@ -175,6 +170,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     public void setAddressEntityMetaDTO(DemographicMetadataEntityAddressDTO addressEntityMetaDTO) {
         this.addressEntityMetaDTO = addressEntityMetaDTO;
     }
+
     public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
         return idDocsMetaDTO;
     }
@@ -182,6 +178,7 @@ public class DemographicReviewActivity extends AppCompatActivity {
     public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
         this.idDocsMetaDTO = idDocsMetaDTO;
     }
+
     public DemographicMetadataEntityInsurancesDTO getInsurancesMetaDTO() {
         return insurancesMetaDTO;
     }
