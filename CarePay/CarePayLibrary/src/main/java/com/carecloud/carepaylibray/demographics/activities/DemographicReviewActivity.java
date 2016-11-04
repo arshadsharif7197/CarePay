@@ -42,7 +42,10 @@ public class DemographicReviewActivity extends AppCompatActivity {
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO labelsDTO;
 
-    // Updating payload model
+    /**
+     * Updating with info model
+      * @return updated model
+     */
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
         if (modelGet != null) {
