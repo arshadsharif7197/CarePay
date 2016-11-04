@@ -160,6 +160,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     }
 
+    /**
+     * When no practice user show anauthorized user and logout
+     */
     public void showUnAuthorizedDialog() {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);

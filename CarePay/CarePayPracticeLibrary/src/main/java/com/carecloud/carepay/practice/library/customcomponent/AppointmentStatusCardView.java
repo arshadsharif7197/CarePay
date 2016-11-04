@@ -20,10 +20,12 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
-
 import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs;
 import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs_appointmentListType;
+
+import org.joda.time.DateTime;
+
+
 
 
 /**
@@ -46,24 +48,40 @@ public class AppointmentStatusCardView extends LinearLayout {
     private String appointmentId;
     private String appointmentListType;
 
+    /**
+     * AppointmentStatusCardView with context
+     * @param context context
+     */
     public AppointmentStatusCardView(Context context) {
         super(context);
         this.context = context;
         addViews(null);
     }
 
+    /**
+     * AppointmentStatusCardView with context & attrs
+     * @param context context
+     */
     public AppointmentStatusCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         addViews(attrs);
     }
 
+    /**
+     * AppointmentStatusCardView with context, attrs & defStyleAttr
+     * @param context context
+     */
     public AppointmentStatusCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         addViews(attrs);
     }
 
+    /**
+     * initialization view
+     * @param attrs AttributeSet
+     */
     private void addViews(AttributeSet attrs) {
         inflate(context, R.layout.cardview_appointment_status, this);
         patientPicImageView = (ImageView) findViewById(R.id.patientPicImageView);
@@ -99,6 +117,10 @@ public class AppointmentStatusCardView extends LinearLayout {
 
     }
 
+    /**
+     * Set Image
+     * @param patientImageURL image Url
+     */
     public void setPatientImage(String patientImageURL) {
         if (!StringUtil.isNullOrEmpty(patientImageURL)) {
             Picasso.with(context).load(patientImageURL).transform(
@@ -135,6 +157,10 @@ public class AppointmentStatusCardView extends LinearLayout {
         return appointmentListType;
     }
 
+    /**
+     * Appointment time set
+     * @param appointmentTime appointment Time
+     */
     public void setAppointmentTime(long appointmentTime) {
         final DateTime appointmentDateTime = new DateTime(appointmentTime);
         timeTextView.setText(appointmentDateTime.toString("hh:mm a"));
