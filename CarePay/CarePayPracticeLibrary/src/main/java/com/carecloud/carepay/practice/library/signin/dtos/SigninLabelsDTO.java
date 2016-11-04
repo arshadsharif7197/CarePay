@@ -4,6 +4,7 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Jahirul Bhuiyan on 10/25/2016.
  */
@@ -29,9 +30,7 @@ public class SigninLabelsDTO {
     private String forgotPassword;
 
     /**
-     *
-     * @return
-     * The signinButton
+     * @return The signinButton
      */
     public String getSigninButton() {
         return StringUtil.isNullOrEmpty(signinButton) ?
@@ -39,18 +38,14 @@ public class SigninLabelsDTO {
     }
 
     /**
-     *
-     * @param signinButton
-     * The signin_button
+     * @param signinButton The signin_button
      */
     public void setSigninButton(String signinButton) {
         this.signinButton = signinButton;
     }
 
     /**
-     *
-     * @return
-     * The welcomeSigninText
+     * @return The welcomeSigninText
      */
     public String getWelcomeSigninText() {
         return StringUtil.isNullOrEmpty(welcomeSigninText) ?
@@ -58,18 +53,14 @@ public class SigninLabelsDTO {
     }
 
     /**
-     *
-     * @param welcomeSigninText
-     * The welcome_signin_text
+     * @param welcomeSigninText The welcome_signin_text
      */
     public void setWelcomeSigninText(String welcomeSigninText) {
         this.welcomeSigninText = welcomeSigninText;
     }
 
     /**
-     *
-     * @return
-     * The signinEmailAddress
+     * @return The signinEmailAddress
      */
     public String getSigninEmailAddress() {
         return StringUtil.isNullOrEmpty(signinEmailAddress) ?
@@ -77,36 +68,29 @@ public class SigninLabelsDTO {
     }
 
     /**
-     *
-     * @param signinEmailAddress
-     * The signin_email_address
+     * @param signinEmailAddress The signin_email_address
      */
     public void setSigninEmailAddress(String signinEmailAddress) {
         this.signinEmailAddress = signinEmailAddress;
     }
 
     /**
-     *
-     * @return
-     * The signinPassword
+     * @return The signinPassword
      */
     public String getSigninPassword() {
         return StringUtil.isNullOrEmpty(signinPassword) ?
-                CarePayConstants.NOT_DEFINED : signinPassword;    }
+                CarePayConstants.NOT_DEFINED : signinPassword;
+    }
 
     /**
-     *
-     * @param signinPassword
-     * The signin_password
+     * @param signinPassword The signin_password
      */
     public void setSigninPassword(String signinPassword) {
         this.signinPassword = signinPassword;
     }
 
     /**
-     *
-     * @return
-     * The gobackButton
+     * @return The gobackButton
      */
     public String getGobackButton() {
         return StringUtil.isNullOrEmpty(gobackButton) ?
@@ -114,18 +98,14 @@ public class SigninLabelsDTO {
     }
 
     /**
-     *
-     * @param gobackButton
-     * The goback_button
+     * @param gobackButton The goback_button
      */
     public void setGobackButton(String gobackButton) {
         this.gobackButton = gobackButton;
     }
 
     /**
-     *
-     * @return
-     * The forgotPassword
+     * @return The forgotPassword
      */
     public String getForgotPassword() {
         return StringUtil.isNullOrEmpty(forgotPassword) ?
@@ -133,9 +113,7 @@ public class SigninLabelsDTO {
     }
 
     /**
-     *
-     * @param forgotPassword
-     * The forgot_password
+     * @param forgotPassword The forgot_password
      */
     public void setForgotPassword(String forgotPassword) {
         this.forgotPassword = forgotPassword;

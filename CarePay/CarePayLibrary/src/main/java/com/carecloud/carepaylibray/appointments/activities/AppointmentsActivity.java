@@ -134,10 +134,11 @@ public class AppointmentsActivity extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.navigation, menu);
         return true;
     }
+
     private void launchDemographics(DemographicDTO demographicDTO) {
         // do to Demographics
         Intent intent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
-        if(demographicDTO != null) {
+        if (demographicDTO != null) {
             // pass the object into the gson
             Gson gson = new Gson();
             String dtostring = gson.toJson(demographicDTO, DemographicDTO.class);
@@ -146,6 +147,7 @@ public class AppointmentsActivity extends AppCompatActivity implements
         }
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -156,7 +158,7 @@ public class AppointmentsActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if(id == R.id.action_launch_demogr_review) {
+        } else if (id == R.id.action_launch_demogr_review) {
             // temporary launch Demographics Review for QA testing
             // (please do not remove!)
             DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
@@ -169,8 +171,8 @@ public class AppointmentsActivity extends AppCompatActivity implements
                 }
 
                 @Override
-                public void onFailure(Call<DemographicDTO> call, Throwable t) {
-                    Log.e(LOG_TAG, "failed fetching demogr info", t);
+                public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
+                    Log.e(LOG_TAG, "failed fetching demogr info", throwable);
                 }
             });
 

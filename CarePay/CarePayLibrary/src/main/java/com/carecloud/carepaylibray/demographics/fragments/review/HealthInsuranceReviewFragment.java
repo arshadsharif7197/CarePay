@@ -128,7 +128,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
                 .getDemographicPersDetailsPayloadDTO();
         demographicPayloadDriversLicenseModel = ((DemographicReviewActivity) getActivity())
                 .getDemographicPayloadIdDocDTO();
-        insuranceModelList=((DemographicReviewActivity) getActivity()).getInsurances();
+        insuranceModelList = ((DemographicReviewActivity) getActivity()).getInsurances();
 
     }
 
@@ -149,11 +149,11 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         haveMultipleHealthInsuranceTextView.setText(globalLabelsMetaDTO.getDemographicsDocumentsMultiInsLabel());
         haveMultipleHealthInsuranceTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (! isSecondCardAdded) {
-                   // isSecondCardAdded = true;
+            public void onClick(View listener) {
+                if (!isSecondCardAdded) {
+                    // isSecondCardAdded = true;
                     showInsuranceCard(insCardContainer2, true);
-                } else if (! isThirdCardAdded) {
+                } else if (!isThirdCardAdded) {
                     showInsuranceCard(insCardContainer3, true);
                     showAddCardButton(false);
                 }
@@ -174,7 +174,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         postPayloadModel.setIdDocuments(idDocDTOs);
         // clear the list
         //   insuranceModelList.clear();
-       // insuranceFragment.getBitmapsFromImageViews();
+        // insuranceFragment.getBitmapsFromImageViews();
         // add non trivial insurance models
         if (isInsuaranceNonTrivial(insuranceModel1)) {
             insuranceModelList.add(insuranceModel1);
@@ -277,25 +277,6 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         }
     }
 
-/*    private void setCardContainers() {
-        getTheModels();
-        insCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance1);
-
-        if (insuranceModel == null) {
-            insuranceModel = new DemographicInsurancePayloadDTO();
-        }
-        insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance");
-        if (insuranceFragment == null) {
-            insuranceFragment = new InsuranceScannerFragment();
-            insuranceFragment.setButtonsStatusCallback(null);
-            insuranceFragment.setInsuranceDTO(insuranceModel); // set the model (if avail)
-        }
-        fm.beginTransaction()
-                .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance")
-                .commit();
-
-    }*/
-
     private void setCardContainers() {
 
         // fetch nested fragments containers
@@ -394,12 +375,12 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 showInsuranceCard(insCardContainer1, on);
-                if (insuranceModelList.size()>1) {
+                if (insuranceModelList.size() > 1) {
                     showInsuranceCard(insCardContainer2, on);
                 } else {
                     showInsuranceCard(insCardContainer2, false);
                 }
-                if (insuranceModelList.size()>2) {
+                if (insuranceModelList.size() > 2) {
                     showInsuranceCard(insCardContainer3, on);
                 } else {
                     showInsuranceCard(insCardContainer3, false);
@@ -411,15 +392,19 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
     }
 
+    /**
+     * @param isVisible checking add card button is visible or not
+     */
     public void showAddCardButton(boolean isVisible) {
         if (!isVisible) {
             haveMultipleHealthInsuranceTextView.setVisibility(View.GONE);
         } else {
-            if (insuranceModelList.size()<2) { // show only if there is another add possibility
+            if (insuranceModelList.size() < 2) { // show only if there is another add possibility
                 haveMultipleHealthInsuranceTextView.setVisibility(View.VISIBLE);
             }
         }
     }
+
     public void scrollToBottom() {
         View bottomView = view.findViewById(R.id.updateInsuranceDocsScroll);
         detailsScrollView.scrollTo(0, bottomView.getBottom());

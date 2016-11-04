@@ -34,7 +34,6 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
@@ -51,12 +50,10 @@ import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.smartystreets.api.us_zipcode.City;
 
-
-import static com.carecloud.carepaylibrary.R.id.choose_alleryTextView;
-import static com.carecloud.carepaylibrary.R.id.genderTextView;
 import static com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView;
+
+
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -64,6 +61,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import com.smartystreets.api.us_zipcode.City;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -331,11 +330,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                 if (!isFirstNameEmpty) {
                     firstNameLabel.setError(null);
                     firstNameLabel.setErrorEnabled(false);
-                } else{
+                } else {
                     final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage();
-                firstNameLabel.setError(firstNameError);
+                    firstNameLabel.setError(firstNameError);
                     firstNameLabel.setErrorEnabled(true);
-            }
+                }
             }
         });
 
@@ -455,7 +454,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                 if (!isLastNameEmpty) {
                     lastNameLabel.setError(null);
                     lastNameLabel.setErrorEnabled(false);
-                } else{
+                } else {
                     final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage();
                     lastNameLabel.setError(lastNameError);
                     lastNameLabel.setErrorEnabled(true);
@@ -578,7 +577,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     }
 
 
-
     private boolean isDateOfBirthValid() {
         final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
         String dob = dobEditText.getText().toString();
@@ -590,6 +588,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         }
         return true;
     }
+
     private boolean checkReadyForNext() {
 
         boolean isPhoneValid = checkPhoneNumber();
@@ -598,14 +597,14 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             phoneNumberEditText.requestFocus();
         }
 
-        return isPhoneValid ;
+        return isPhoneValid;
     }
 
     @Override
     public void onClick(View view) {
-      String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
+        String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
         if (view == buttonAddDemographicInfo) {
-            if (checkReadyForNext() && isDateOfBirthValid()&& ! isFirstNameEmpty && ! isLastNameEmpty) {
+            if (checkReadyForNext() && isDateOfBirthValid() && !isFirstNameEmpty && !isLastNameEmpty) {
                 // update the model
                 updateModels();
                 // post the changes
@@ -617,7 +616,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         } else if (view == selectGender) {
             selectedDataArray = 1;
             final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectGender();
-           showAlertDialogWithListview(gender, title, cancelLabel);
+            showAlertDialogWithListview(gender, title, cancelLabel);
 
         } else if (view == raceDataTextView) {
             selectedDataArray = 2;
@@ -646,7 +645,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         View customView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.alert_list_layout, (ViewGroup) getView(), false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(),Arrays.asList(dataArray));
+        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
         listView.setAdapter(mAdapter);
         dialog.setView(customView);
         final AlertDialog alert = dialog.create();
@@ -661,12 +660,12 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                         selectGender.setText(gender);
                         break;
                     case 2:
-                        String race=dataArray[position];
+                        String race = dataArray[position];
                         raceDataTextView.setText(race);
 
                         break;
                     case 3:
-                        String ethnicity=dataArray[position];
+                        String ethnicity = dataArray[position];
                         ethnicityDataTextView.setText(ethnicity);
 
                         break;

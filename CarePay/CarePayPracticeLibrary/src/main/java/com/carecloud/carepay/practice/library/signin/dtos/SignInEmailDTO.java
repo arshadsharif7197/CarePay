@@ -4,11 +4,12 @@ package com.carecloud.carepay.practice.library.signin.dtos;
  * Created by Rahul on 11/2/16.
  */
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 public class SignInEmailDTO {
     @SerializedName("type")
