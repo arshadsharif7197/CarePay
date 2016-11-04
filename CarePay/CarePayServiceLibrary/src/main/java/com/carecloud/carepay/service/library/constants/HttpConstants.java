@@ -18,7 +18,7 @@ public class HttpConstants {
 
     private static String apiStartUrl;
 
-    private static  String xApiKey;
+    private static  String apiStartKey;
 
     private static  String pushNotificationWebclientUrl;
 
@@ -49,12 +49,12 @@ public class HttpConstants {
         HttpConstants.apiStartUrl = apiStartUrl;
     }
 
-    public static String getxApiKey() {
-        return xApiKey;
+    public static String getApiStartKey() {
+        return apiStartKey;
     }
 
-    public static void setxApiKey(String xApiKey) {
-        HttpConstants.xApiKey = xApiKey;
+    public static void setApiStartKey(String apiStartKey) {
+        HttpConstants.apiStartKey = apiStartKey;
     }
 
     public static String getPushNotificationWebclientUrl() {

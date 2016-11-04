@@ -1,7 +1,6 @@
 package com.carecloud.carepay.service.library;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -109,7 +108,7 @@ public class WorkflowServiceHelper {
 
     private Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
-        appStartHeaders.put("x-api-key", HttpConstants.getxApiKey());
+        appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
         return appStartHeaders;
     }
 

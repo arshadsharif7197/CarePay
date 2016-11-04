@@ -37,7 +37,7 @@ public class CarePayPatientApplication extends Application {
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
         HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
-        HttpConstants.setxApiKey(BuildConfig.X_API_KEY);
+        HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
     }
 }
