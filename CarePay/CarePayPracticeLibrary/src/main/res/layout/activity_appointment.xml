@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
-
             android:paddingBottom="@dimen/dimen_22dp"
             android:paddingTop="@dimen/dimen_22dp"
             android:src="@drawable/logo_light" />

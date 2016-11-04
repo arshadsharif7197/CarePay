@@ -1,12 +1,15 @@
 package com.carecloud.carepay.practice.library.splash;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
+
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.NavigationHelper;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -24,6 +27,8 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         WorkflowServiceHelper.getInstance().executeApplicationStartRequest(applicationStartCallback);
     }
@@ -36,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            NavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
             SplashActivity.this.finish();
         }
 
