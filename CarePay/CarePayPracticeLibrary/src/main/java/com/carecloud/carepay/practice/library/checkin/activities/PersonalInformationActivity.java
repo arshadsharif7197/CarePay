@@ -24,9 +24,8 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import org.joda.time.LocalDate;
-
 import java.util.Calendar;
+import org.joda.time.LocalDate;
 
 public class PersonalInformationActivity extends AppCompatActivity {
     private CustomProxyNovaSemiBoldButton selectDateButton;
