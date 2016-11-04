@@ -141,10 +141,6 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
         // enable/disable next button
         nextButton.setEnabled(!isFirstNameEmpty && !isLastNameEmpty);
 
-        // TODO: 11/2/2016 remove
-        firstNameText.setText("liv");
-        lastNameText.setText("vic");
-
         return view;
     }
 
