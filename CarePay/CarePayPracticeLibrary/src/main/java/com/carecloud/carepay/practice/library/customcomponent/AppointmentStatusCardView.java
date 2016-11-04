@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.DragEvent;
 import android.view.View;
@@ -31,7 +30,7 @@ import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStat
  * Created by Jahirul Bhuiyan on 10/18/2016.
  */
 
-public class AppointmentStatusCartView extends LinearLayout {
+public class AppointmentStatusCardView extends LinearLayout {
     private static final int APPOINTMENT_CARD_TYPE_CHECKING_IN_ATTRIBUTE = 0;
     private static final int APPOINTMENT_CARD_TYPE_WAITING_ROOM_ATTRIBUTE = 1;
     public static final String APPOINTMENT_CARD_TYPE_CHECKING_IN = "appointment_card_type_checking_in";
@@ -47,19 +46,19 @@ public class AppointmentStatusCartView extends LinearLayout {
     private String appointmentId;
     private String appointmentListType;
 
-    public AppointmentStatusCartView(Context context) {
+    public AppointmentStatusCardView(Context context) {
         super(context);
         this.context = context;
         addViews(null);
     }
 
-    public AppointmentStatusCartView(Context context, AttributeSet attrs) {
+    public AppointmentStatusCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         addViews(attrs);
     }
 
-    public AppointmentStatusCartView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AppointmentStatusCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         addViews(attrs);
@@ -159,7 +158,7 @@ public class AppointmentStatusCartView extends LinearLayout {
     OnDragListener onDragListener = new OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
-            AppointmentStatusCartView appointmentStatusCartView = (AppointmentStatusCartView) view;
+            AppointmentStatusCardView appointmentStatusCartView = (AppointmentStatusCardView) view;
             switch (dragEvent.getAction()) {
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -197,7 +196,7 @@ public class AppointmentStatusCartView extends LinearLayout {
 
             // Create a new ClipData.Item from the ImageView object's tag
 
-            AppointmentStatusCartView appointmentStatusCartView = (AppointmentStatusCartView) view;
+            AppointmentStatusCardView appointmentStatusCartView = (AppointmentStatusCardView) view;
 
             ClipData.Item item = new ClipData.Item(appointmentStatusCartView.getAppointmentId());
 
