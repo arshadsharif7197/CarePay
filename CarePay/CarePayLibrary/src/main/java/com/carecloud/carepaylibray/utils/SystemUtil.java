@@ -15,15 +15,14 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TextInputLayout;
-
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -198,21 +197,32 @@ public class SystemUtil {
      * @param body    The message
      */
     public static void showDialogMessage(Context context, String title, String body) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title)
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+        // set title
+        alertDialogBuilder.setTitle(title);
+
+        // set dialog message
+        alertDialogBuilder
                 .setMessage(body)
-                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            dialog.dismiss();
-                        } catch (Exception e) {
-                            Log.e(LOG_TAG, e.getMessage());
-                        }
+                .setCancelable(false)
+                .setPositiveButton(context.getString(R.string.alert_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        dialog.dismiss();
                     }
                 });
-        AlertDialog userDialog = builder.create();
-        userDialog.show();
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+        alertDialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.icn_notification_error);
+
+        // show it
+        alertDialog.show();
+
     }
 
     public static boolean isNotEmptyString(String string) {
