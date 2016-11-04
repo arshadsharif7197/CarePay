@@ -55,34 +55,31 @@ import java.util.List;
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
-    private int       currentPageIndex;
+    private int currentPageIndex;
     // views
-    private TextView  titleTextView;
+    private TextView titleTextView;
     private ViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
-    private DemographicAddressPayloadDTO     addressModel;
+    private DemographicAddressPayloadDTO addressModel;
     private DemographicPersDetailsPayloadDTO detailsModel;
-    private DemographicIdDocPayloadDTO       idDocModel;
+    private DemographicIdDocPayloadDTO idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
     // jsons (metadata)
-    private DemographicMetadataEntityAddressDTO     addressEntityMetaDTO;
+    private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
-    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
-    private DemographicLabelsDTO                    labelsDTO;
-    private Toolbar                                 toolbar;
+    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private DemographicLabelsDTO labelsDTO;
+    private Toolbar toolbar;
 
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
-        if (modelGet != null) {
-            DemographicPayloadResponseDTO response = modelGet.getPayload();
-            if (response != null) {
-                DemographicPayloadInfoDTO infoModelPayload = response.getDemographics();
-                if (infoModelPayload != null) {
-                    infoModel = infoModelPayload.getPayload();
-                }
+        if (modelGet != null && modelGet.getPayload() != null) {
+            DemographicPayloadInfoDTO infoModelPayload = modelGet.getPayload().getDemographics();
+            if (infoModelPayload != null) {
+                infoModel = infoModelPayload.getPayload();
             }
         }
         return infoModel;
@@ -193,7 +190,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     /**
      * Set the current screen in the view pages
-     * @param item Index of the current item
+     *
+     * @param item         Index of the current item
      * @param smoothScroll Whether smooth scroll
      */
     public void setCurrentItem(int item, boolean smoothScroll) {
@@ -305,8 +303,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation

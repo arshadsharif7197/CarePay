@@ -89,12 +89,14 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         // fetch global labels
         Activity activity = getActivity();
         if(activity instanceof DemographicsActivity) {
             globalLabelsDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
         } else if(activity instanceof DemographicReviewActivity) {
             // init global labels DTO here
+            globalLabelsDTO = ((DemographicReviewActivity) getActivity()).getLabelsDTO();
         }
 
         // create the view
@@ -117,7 +119,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceProviderLabel.setText(label);
 
         insuranceTypeLabel = (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsInsTypeLabel();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleCardType();
         insuranceTypeLabel.setText(label);
 
         insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
@@ -177,7 +179,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         });
 
         planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsChoosePlanLabel();
         planTextView.setText(label);
         final String selectPlanTitle = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectPlan();
         planTextView.setOnClickListener(new View.OnClickListener() {
@@ -286,6 +287,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         Picasso.with(getContext()).load(photoFrontURL)
                                 .resize(insuranceFrontScanHelper.getImgWidth(), insuranceFrontScanHelper.getImgHeight())
                                 .into(frontInsuranceImageView);
+                      String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
+                        btnScanFrontInsurance.setText(label);
                     } catch (MalformedURLException e) {
                         Log.d(LOG_TAG, "invalid url: " + photoFrontURL);
                         // (re)load the placeholder
@@ -302,6 +305,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         Picasso.with(getContext()).load(photoBackURL)
                                 .resize(insuranceBackScanHelper.getImgWidth(), insuranceBackScanHelper.getImgHeight())
                                 .into(backInsuranceImageView);
+                        String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
+                        btnScanBackInsurance.setText(label1);
                     } catch (MalformedURLException e) {
                         Log.d(LOG_TAG, "invalid url: " + photoBackURL);
                         // (re)load  the placeholder
