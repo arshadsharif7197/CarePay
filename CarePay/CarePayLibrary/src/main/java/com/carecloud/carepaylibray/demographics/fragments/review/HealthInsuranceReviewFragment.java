@@ -151,7 +151,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
             @Override
             public void onClick(View listener) {
                 if (!isSecondCardAdded) {
-                    // isSecondCardAdded = true;
+                    isSecondCardAdded = true;
                     showInsuranceCard(insCardContainer2, true);
                 } else if (!isThirdCardAdded) {
                     showInsuranceCard(insCardContainer3, true);
@@ -375,12 +375,12 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 showInsuranceCard(insCardContainer1, on);
-                if (insuranceModelList.size() > 1) {
+                if (isSecondCardAdded) {
                     showInsuranceCard(insCardContainer2, on);
                 } else {
                     showInsuranceCard(insCardContainer2, false);
                 }
-                if (insuranceModelList.size() > 2) {
+                if (isThirdCardAdded) {
                     showInsuranceCard(insCardContainer3, on);
                 } else {
                     showInsuranceCard(insCardContainer3, false);
@@ -399,7 +399,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         if (!isVisible) {
             haveMultipleHealthInsuranceTextView.setVisibility(View.GONE);
         } else {
-            if (insuranceModelList.size() < 2) { // show only if there is another add possibility
+            if (!isThirdCardAdded) { // show only if there is another add possibility
                 haveMultipleHealthInsuranceTextView.setVisibility(View.VISIBLE);
             }
         }

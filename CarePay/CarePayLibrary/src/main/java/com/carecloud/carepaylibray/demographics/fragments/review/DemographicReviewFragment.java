@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView;
 
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
@@ -233,7 +232,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
 
-        stateEditText = (EditText) view.findViewById(stateAutoCompleteTextView);
+        stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
         stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
 
         driverlicenseEditText = (EditText) view.findViewById(R.id.driverLicenseEditText);
@@ -387,30 +386,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
         });
 
-        zipCodeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dobEditText.setSelection(dobEditText.length());
-            }
-        });
-        zipCodeEditText.addTextChangedListener(new TextWatcher() {
-            int prevLen = 0;
-
-            @Override
-            public void beforeTextChanged(CharSequence zipcode, int start, int count, int after) {
-                prevLen = zipcode.length();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence zipcode, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable zipcode) {
-                StringUtil.autoFormatZipcode(zipcode, prevLen);
-            }
-        });
 
         phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -466,100 +441,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                     lastNameLabel.setErrorEnabled(true);
                 }
 
-            }
-        });
-        address1EditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String addr1 = address1EditText.getText().toString();
-                isAddressEmpty = StringUtil.isNullOrEmpty(addr1);
-                if (!isAddressEmpty) {
-                    address1Label.setError(null);
-                    address1Label.setErrorEnabled(false);
-
-                }
-            }
-        });
-
-        zipCodeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                zipCodeEditText.setSelection(zipCodeEditText.length());
-            }
-        });
-        zipCodeEditText.addTextChangedListener(new TextWatcher() {
-            int prevLen = 0;
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-                prevLen = charSequence.length();
-                zipCodeEditText.setSelection(charSequence.length());
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String zip = zipCodeEditText.getText().toString();
-                isZipEmpty = StringUtil.isNullOrEmpty(zip);
-                if (!isZipEmpty) {
-                    zipcodeLabel.setError(null);
-                    zipcodeLabel.setErrorEnabled(false);
-                }
-
-                StringUtil.autoFormatZipcode(editable, prevLen);
-            }
-        });
-        cityEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String city = cityEditText.getText().toString();
-                isCityEmpty = StringUtil.isNullOrEmpty(city);
-                if (!isCityEmpty) {
-                    cityLabel.setError(null);
-                    cityLabel.setErrorEnabled(false);
-                }
-            }
-        });
-        stateEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String state = stateEditText.getText().toString();
-                isStateEmtpy = StringUtil.isNullOrEmpty(state);
-                if (!isStateEmtpy) {
-                    stateLabel.setError(null);
-                    stateLabel.setErrorEnabled(false);
-                }
             }
         });
 
@@ -1061,12 +942,12 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
 
             String city = demographicAddressPayloadDTO.getCity();
-            if (SystemUtil.isNotEmptyString(city)) {
+            if (SystemUtil.isNotEmptyString(city) || ! cityEditText.getText().toString().isEmpty()) {
                 cityEditText.setText(city);
                 cityEditText.requestFocus();
             }
             String state = demographicAddressPayloadDTO.getState();
-            if (SystemUtil.isNotEmptyString(state)) {
+            if (SystemUtil.isNotEmptyString(state) || ! stateEditText.getText().toString().isEmpty()) {
                 stateEditText.setText(state);
                 stateEditText.requestFocus();
             }

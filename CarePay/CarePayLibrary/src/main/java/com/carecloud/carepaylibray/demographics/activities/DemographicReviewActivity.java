@@ -48,14 +48,12 @@ public class DemographicReviewActivity extends AppCompatActivity {
      */
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
-        if (modelGet != null) {
-            DemographicPayloadResponseDTO response = modelGet.getPayload();
-            if (response != null) {
-                DemographicPayloadInfoDTO infoModelPayload = response.getDemographics();
+        if (modelGet != null && modelGet.getPayload() != null) {
+                DemographicPayloadInfoDTO infoModelPayload = modelGet.getPayload().getDemographics();
                 if (infoModelPayload != null) {
                     infoModel = infoModelPayload.getPayload();
                 }
-            }
+
         }
         return infoModel;
     }
