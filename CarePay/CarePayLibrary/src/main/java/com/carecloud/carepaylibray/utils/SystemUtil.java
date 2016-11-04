@@ -32,12 +32,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataEntityDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataValidationDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
-import java.util.List;
 
 public class SystemUtil {
 
@@ -315,57 +312,6 @@ public class SystemUtil {
         listView.setOnItemClickListener(clickListener);
     }
 
-
-    private static MetadataValidationDTO getPatterUtility(MetadataEntityDTO addressMetaDTO) {
-        if(addressMetaDTO != null) {
-            List<MetadataValidationDTO> validations = addressMetaDTO.validations;
-            for (int i = 0; i < validations.size(); i++) {
-                MetadataValidationDTO metadataValidationDTO = validations.get(i);
-                if (metadataValidationDTO.type.equals("pattern")) {
-                    return metadataValidationDTO;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Applies a pattern validation to an edit text wrapped into textinput layout
-     * @param editText The edit
-     * @param wrappingTextInputLayout The input text layout
-     * @param phoneDTO The (meta) dto containing the validation
-     * @return Whether matches
-     */
-    public static boolean applyPatternValidation(EditText editText, TextInputLayout wrappingTextInputLayout, MetadataEntityDTO phoneDTO) {
-
-        // retrieve the 'pattern' validation
-        MetadataValidationDTO patternValidation = SystemUtil.getPatterUtility(phoneDTO);
-
-        // if no validation, valid by default
-        if(patternValidation == null) {
-            return true; // no 'pattern' validation; field valid by default
-        }
-
-        // if there is validation, but the string is null or empty, then invalid by default
-        String string = editText.getText().toString();
-        if(StringUtil.isNullOrEmpty(string)) {
-           return false;
-        }
-
-        // there is a 'pattern' validation; match against
-        final String phoneError = patternValidation.getErrorMessage();
-        final String phoneValidationRegex = (String) patternValidation.value;
-        if (!StringUtil.isValidString(string, phoneValidationRegex)) {
-            wrappingTextInputLayout.setErrorEnabled(true);
-            wrappingTextInputLayout.setError(phoneError);
-            return false;
-        }
-        wrappingTextInputLayout.setError(null);
-        wrappingTextInputLayout.setErrorEnabled(false);
-
-        return true;
-    }
-
     /**
      * Interface to be used with the showChooseDialog utility
      */
@@ -373,4 +319,5 @@ public class SystemUtil {
 
         void executeOnClick(TextView destination, String selectedOption);
     }
+
 }

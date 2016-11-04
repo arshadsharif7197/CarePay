@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsAlle
 import com.carecloud.carepaylibray.demographics.adapters.DemographicsDetailsMedicationsAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataValidationDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
@@ -39,6 +40,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
@@ -213,24 +215,30 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private boolean isDateOfBirthValid() {
-        String dob = dobEdit.getText().toString();
+        final String dob = dobEdit.getText().toString();
         boolean isEmpty = StringUtil.isNullOrEmpty(dob);
         if (isEmpty) { // if no DOB, allow to go next
             return true;
         }
 
-        // apply pattern validation from backend
-        boolean isValidFormat = SystemUtil.applyPatternValidation(dobEdit, dobInputText, persDetailsMetaDTO.properties.dateOfBirth);
-        if (!isValidFormat) {
-            return false;
-        }
+        // apply pattern validate from backend
+        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(
+                dobEdit,
+                dobInputText,
+                persDetailsMetaDTO.properties.dateOfBirth,
+                new ValidationHelper.LocalValidation() {
+                    @Override
+                    public boolean validate(MetadataValidationDTO validation) {
+                        // apply local extra validate
+                        final String errorMessage = "Invalid date; Must be MM/DD/YYYY and between 01/01/1901 and today";
+                        boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
+                        dobInputText.setErrorEnabled(!isValid);
+                        dobInputText.setError(isValid ? null : errorMessage);
+                        return isValid;
+                    }
+                });
 
-        // apply local extra validation
-        final String errorMessage = "Invalid date; Must be MM/DD/YYYY and between 01/01/1901 and today";
-        boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
-        dobInputText.setErrorEnabled(!isValid);
-        dobInputText.setError(isValid ? null : errorMessage);
-        return isValid;
+        return isValidFormat;
     }
 
     private void setupRecyclerViews() {

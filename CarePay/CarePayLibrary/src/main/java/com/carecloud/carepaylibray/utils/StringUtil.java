@@ -30,19 +30,6 @@ public class StringUtil {
         return (string == null || string.equals(""));
     }
 
-    /**
-     * Checks a string against a pattern
-     *
-     * @param string           The string
-     * @param validationString The format string (as regex)
-     * @return Whether correctly formatted
-     */
-    public static boolean isValidString(String string, String validationString) {
-        Pattern pattern = Pattern.compile(validationString);
-        Matcher matcher = pattern.matcher(string);
-        return matcher.matches();
-    }
-
     public static boolean isValidmail(String email) {
         if (email != null) {
             Pattern pattern = Pattern.compile(EMAIL_PATTERN);

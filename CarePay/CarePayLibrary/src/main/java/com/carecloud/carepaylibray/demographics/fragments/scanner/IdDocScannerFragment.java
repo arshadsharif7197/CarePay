@@ -108,6 +108,12 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
                 "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
 
+//        List<MetadataOptionDTO> optionDTOs = idDocsMetaDTO.properties.identityDocumentState.options;
+//        List<String> statesStrings = new ArrayList<>();
+//        for(MetadataOptionDTO optionDTO : optionDTOs) {
+//            statesStrings.add(optionDTO.getLabel());
+//        }
+//        states = statesStrings.toArray(new String[0]);
     }
 
     private void initializeUIFields() {
