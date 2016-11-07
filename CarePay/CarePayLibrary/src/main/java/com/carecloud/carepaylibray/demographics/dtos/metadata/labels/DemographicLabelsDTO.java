@@ -12,146 +12,238 @@ import com.google.gson.annotations.SerializedName;
 
 public class DemographicLabelsDTO {
 
-    @SerializedName("demographics_update_button") @Expose
+    @SerializedName("demographics_review_toolbar_title")
+    @Expose
+    private String demographicsReviewToolbarTitle;
+    @SerializedName("demographics_section")
+    @Expose
+    private String demographicSectionTitle;
+    @SerializedName("demographics_update_insurance_toolbar_title")
+    @Expose
+    private String demographicsUpdateInsuranceToolbarTitle;
+    @SerializedName("demographics_review_update_button")
+    @Expose
+    private String demographicsReviewUpdateButton;
+    @SerializedName("demographics_insurance_update_button")
+    @Expose
+    private String demographicsInsuranceUpdateButton;
+    @SerializedName("demographics_review_correct_button")
+    @Expose
+    private String demographicsReviewCorrectButton;
+    @SerializedName("demographics_update_insurance_button")
+    @Expose
+    private String demographicsUpdateInsuranceButton;
+    @SerializedName("demographics_review_peronsonalinfo_section")
+    @Expose
+    private String demographicsReviewPeronsonalinfoSection;
+    @SerializedName("demographics_review_screen_title")
+    @Expose
+    private String demographicsReviewScreenTitle;
+    @SerializedName("demographics_upadte_insurance_screen_title")
+    @Expose
+    private String demographicsUpdateInsuranceScreenTitle;
+    @SerializedName("demographics_review_screen_subtitle")
+    @Expose
+    private String demographicsReviewScreenSubtitle;
+    @SerializedName("demographics_healthinsurance_1_section")
+    @Expose
+    private String demographicsHealthinsurance1Section;
+    @SerializedName("demographics_healthinsurance_2_section")
+    @Expose
+    private String demographicsHealthinsurance2Section;
+    @SerializedName("demographics_healthinsurance_3_section")
+    @Expose
+    private String demographicsHealthinsurance3Section;
+    @SerializedName("demographics_update_demographic_title")
+    @Expose
+    private String demographicsUpdateDemographicTitle;
+    @SerializedName("demographics_update_button")
+    @Expose
     private String demographicsUpdateButton;
 
-    @SerializedName("demographics_update_profile_photo_link") @Expose
+    @SerializedName("demographics_update_profile_photo_link")
+    @Expose
     private String demographicsUpdateProfilePhotoLink;
 
-    @SerializedName("demographics_update_email_and_password_link") @Expose
+    @SerializedName("demographics_update_email_and_password_link")
+    @Expose
     private String demographicsUpdateEmailAndPasswordLink;
 
-    @SerializedName("demographics_address_section") @Expose
+    @SerializedName("demographics_address_section")
+    @Expose
     private String demographicsAddressSection;
 
 
-    @SerializedName("demographics_details_section") @Expose
+    @SerializedName("demographics_details_section")
+    @Expose
     private String demographicsDetailsSection;
 
-    @SerializedName("demographics_documents_section") @Expose
+    @SerializedName("demographics_documents_section")
+    @Expose
     private String demographicsDocumentsSection;
 
-    @SerializedName("demographics_allset_section") @Expose
+    @SerializedName("demographics_allset_section")
+    @Expose
     private String demographicsAllSetSection;
 
-    @SerializedName("demographics_add_another_insurance_link") @Expose
+    @SerializedName("demographics_add_another_insurance_link")
+    @Expose
     private String demographicsAddAnotherInsuranceLink;
 
-    @SerializedName("demographics_next") @Expose
+    @SerializedName("demographics_next")
+    @Expose
     private String demographicsNext;
 
-    @SerializedName("demographics_address_header") @Expose
+    @SerializedName("demographics_address_header")
+    @Expose
     private String demographicsAddressHeader;
 
-    @SerializedName("demographics_address_subheader") @Expose
+    @SerializedName("demographics_address_subheader")
+    @Expose
     private String demographicsAddressSubheader;
 
-    @SerializedName("demographics_required") @Expose
+    @SerializedName("demographics_required")
+    @Expose
     private String demographicsRequired;
 
-    @SerializedName("demographics_details_header") @Expose
+    @SerializedName("demographics_details_header")
+    @Expose
     private String demographicsDetailsHeader;
 
-    @SerializedName("demographics_details_subheader") @Expose
+    @SerializedName("demographics_details_subheader")
+    @Expose
     private String demographicsDetailsSubheader;
 
-    @SerializedName("demographics_details_dob_hint") @Expose
+    @SerializedName("demographics_details_dob_hint")
+    @Expose
     private String demographicsDetailsDobHint;
 
-    @SerializedName("demographics_choose") @Expose
+    @SerializedName("demographics_choose")
+    @Expose
     private String demographicsChooseLabel;
 
-    @SerializedName("demographics_details_capture_picture_caption") @Expose
+    @SerializedName("demographics_details_capture_picture_caption")
+    @Expose
     private String demographicsProfileCaptureCaption;
 
-    @SerializedName("demographics_details_recapture_picture_caption") @Expose
+    @SerializedName("demographics_details_recapture_picture_caption")
+    @Expose
     private String demographicsProfileReCaptureCaption;
 
-    @SerializedName("demographics_details_allergies_section") @Expose
+    @SerializedName("demographics_details_allergies_section")
+    @Expose
     private String demographicsDetailsAllergiesSection;
 
-    @SerializedName("demographics_details_optional_hint") @Expose
+    @SerializedName("demographics_details_optional_hint")
+    @Expose
     private String demographicsDetailsOptionalHint;
 
-    @SerializedName("demographics_details_medications_section") @Expose
+    @SerializedName("demographics_details_medications_section")
+    @Expose
     private String demographicsDetailsMedicationsSection;
 
-    @SerializedName("demographics_details_allergy") @Expose
+    @SerializedName("demographics_details_allergy")
+    @Expose
     private String demographicsDetailAllergyLabel;
 
-    @SerializedName("demographics_details_medication") @Expose
+    @SerializedName("demographics_details_medication")
+    @Expose
     private String demographicsDetailMedicationLabel;
 
-    @SerializedName("demographics_details_allergy_add_unlisted") @Expose
+    @SerializedName("demographics_details_allergy_add_unlisted")
+    @Expose
     private String demographicsDetailsAllergyAddUnlistedLabel;
 
-    @SerializedName("demographics_details_medication_add_unlisted") @Expose
+    @SerializedName("demographics_details_medication_add_unlisted")
+    @Expose
     private String demographicsDetailsMedAddUnlistedLabel;
 
-    @SerializedName("demographics_documents_header") @Expose
+    @SerializedName("demographics_documents_header")
+    @Expose
     private String demographicsDocumentsHeader;
 
-    @SerializedName("demographics_documents_subheader") @Expose
+    @SerializedName("demographics_documents_subheader")
+    @Expose
     private String demographicsDocumentsSubheader;
 
-    @SerializedName("demographics_documents_switch_insurance") @Expose
+    @SerializedName("demographics_documents_switch_insurance")
+    @Expose
     private String demographicsDocumentsSwitchLabel;
 
-    @SerializedName("demographics_documents_multiple_insurances") @Expose
+    @SerializedName("demographics_documents_multiple_insurances")
+    @Expose
     private String demographicsDocumentsMultiInsLabel;
 
-    @SerializedName("demographics_documents_scan_front") @Expose
+    @SerializedName("demographics_documents_scan_front")
+    @Expose
     private String demographicsDocumentsScanFrontLabel;
 
-    @SerializedName("demographics_documents_scan_back") @Expose
+    @SerializedName("demographics_documents_scan_back")
+    @Expose
     private String demographicsDocumentsScanBackLabel;
 
-    @SerializedName("demographics_documents_rescan_front") @Expose
+    @SerializedName("demographics_documents_rescan_front")
+    @Expose
     private String demographicsDocumentsRescanFrontLabel;
 
-    @SerializedName("demographics_documents_rescan_back") @Expose
+    @SerializedName("demographics_documents_rescan_back")
+    @Expose
     private String demographicsDocumentsRescanBackLabel;
 
-    @SerializedName("demographics_cancel_label") @Expose
+    @SerializedName("demographics_cancel_label")
+    @Expose
     private String demographicsCancelLabel;
 
-    @SerializedName("demographics_documents_title_select_state") @Expose
+    @SerializedName("demographics_documents_title_select_state")
+    @Expose
     private String demographicsTitleSelectState;
 
-    @SerializedName("demographics_documents_title_select_plan") @Expose
+    @SerializedName("demographics_documents_title_select_plan")
+    @Expose
     private String demographicsTitleSelectPlan;
 
-    @SerializedName("demographics_documents_title_select_provider") @Expose
+    @SerializedName("demographics_documents_title_select_provider")
+    @Expose
     private String demographicsTitleSelectProvider;
 
-    @SerializedName("demographics_documents_title_select_gender") @Expose
+    @SerializedName("demographics_documents_title_select_gender")
+    @Expose
     private String demographicsTitleSelectGender;
 
-    @SerializedName("demographics_documents_title_select_ethnicity") @Expose
+    @SerializedName("demographics_documents_title_select_ethnicity")
+    @Expose
     private String demographicsTitleSelectEthnicity;
 
-    @SerializedName("demographics_documents_title_select_race") @Expose
+    @SerializedName("demographics_documents_title_select_race")
+    @Expose
     private String demographicsTitleSelectRace;
 
-    @SerializedName("demographics_documents_title_select_id_type") @Expose
+    @SerializedName("demographics_documents_title_select_id_type")
+    @Expose
     private String demographicsTitleSelectIdType;
 
-    @SerializedName("demographics_documents_choose_plan") @Expose
+    @SerializedName("demographics_documents_choose_plan")
+    @Expose
     private String demographicsDocumentsChoosePlanLabel;
 
-    @SerializedName("demographics_documents_ins_type_label") @Expose
+    @SerializedName("demographics_documents_ins_type_label")
+    @Expose
     private String demographicsDocumentsInsTypeLabel;
 
-    @SerializedName("demographics_documents_title_card_type") @Expose
+    @SerializedName("demographics_documents_title_card_type")
+    @Expose
     private String demographicsTitleCardType;
 
-    @SerializedName("demographics_allset_header") @Expose
+    @SerializedName("demographics_allset_header")
+    @Expose
     private String demographicsAllSetHeader;
 
-    @SerializedName("demographics_allset_subheader") @Expose
+    @SerializedName("demographics_allset_subheader")
+    @Expose
     private String demographicsAllSetSubheader;
 
-    @SerializedName("demographics_allset_go_button") @Expose
+    @SerializedName("demographics_allset_go_button")
+    @Expose
     private String demographicsAllSetGoButton;
 
     /**
@@ -618,4 +710,224 @@ public class DemographicLabelsDTO {
     public void setDemographicsAllSetGoButton(String demographicsAllSetGoButton) {
         this.demographicsAllSetGoButton = demographicsAllSetGoButton;
     }
+
+    /**
+     * @return The demographicsReviewToolbarTitle
+     */
+    public String getDemographicsReviewToolbarTitle() {
+        return StringUtil.isNullOrEmpty(demographicsReviewToolbarTitle) ?
+                CarePayConstants.NOT_DEFINED : demographicsReviewToolbarTitle;
+    }
+
+    /**
+     * @param demographicsReviewToolbarTitle The demographics_review_toolbar_title
+     */
+    public void setDemographicsReviewToolbarTitle(String demographicsReviewToolbarTitle) {
+        this.demographicsReviewToolbarTitle = demographicsReviewToolbarTitle;
+    }
+
+    /**
+     * @return The demographicsUpdateInsuranceToolbarTitle
+     */
+    public String getDemographicsUpdateInsuranceToolbarTitle() {
+        return StringUtil.isNullOrEmpty(demographicsUpdateInsuranceToolbarTitle) ?
+                CarePayConstants.NOT_DEFINED : demographicsUpdateInsuranceToolbarTitle;
+    }
+
+    /**
+     * @param demographicsUpdateInsuranceToolbarTitle The demographics_update_insurance_toolbar_title
+     */
+    public void setDemographicsUpdateInsuranceToolbarTitle(String demographicsUpdateInsuranceToolbarTitle) {
+        this.demographicsUpdateInsuranceToolbarTitle = demographicsUpdateInsuranceToolbarTitle;
+    }
+
+    /**
+     * @return The demographicsReviewUpdateButton
+     */
+    public String getDemographicsReviewUpdateButton() {
+        return StringUtil.isNullOrEmpty(demographicsReviewUpdateButton) ?
+                CarePayConstants.NOT_DEFINED : demographicsReviewUpdateButton;
+    }
+
+    /**
+     * @param demographicsReviewUpdateButton The demographics_review_update_button
+     */
+    public void setDemographicsReviewUpdateButton(String demographicsReviewUpdateButton) {
+        this.demographicsReviewUpdateButton = demographicsReviewUpdateButton;
+    }
+
+    /**
+     * @return The demographicsInsuranceUpdateButton
+     */
+    public String getDemographicsInsuranceUpdateButton() {
+        return StringUtil.isNullOrEmpty(demographicsInsuranceUpdateButton) ?
+                CarePayConstants.NOT_DEFINED : demographicsInsuranceUpdateButton;
+    }
+
+    /**
+     * @param demographicsInsuranceUpdateButton The demographics_insurance_update_button
+     */
+    public void setDemographicsInsuranceUpdateButton(String demographicsInsuranceUpdateButton) {
+        this.demographicsInsuranceUpdateButton = demographicsInsuranceUpdateButton;
+    }
+
+    /**
+     * @return The demographicsReviewCorrectButton
+     */
+    public String getDemographicsReviewCorrectButton() {
+        return StringUtil.isNullOrEmpty(demographicsReviewCorrectButton) ?
+                CarePayConstants.NOT_DEFINED : demographicsReviewCorrectButton;
+    }
+
+    /**
+     * @param demographicsReviewCorrectButton The demographics_review_correct_button
+     */
+    public void setDemographicsReviewCorrectButton(String demographicsReviewCorrectButton) {
+        this.demographicsReviewCorrectButton = demographicsReviewCorrectButton;
+    }
+
+    /**
+     * @return The demographicsUpdateInsuranceButton
+     */
+    public String getDemographicsUpdateInsuranceButton() {
+        return StringUtil.isNullOrEmpty(demographicsUpdateInsuranceButton) ?
+                CarePayConstants.NOT_DEFINED : demographicsUpdateInsuranceButton;
+    }
+
+    /**
+     * @param demographicsUpdateInsuranceButton The demographics_update_insurance_button
+     */
+    public void setDemographicsUpdateInsuranceButton(String demographicsUpdateInsuranceButton) {
+        this.demographicsUpdateInsuranceButton = demographicsUpdateInsuranceButton;
+    }
+
+    /**
+     * @return The demographicsReviewPeronsonalinfoSection
+     */
+    public String getDemographicsReviewPeronsonalinfoSection() {
+        return StringUtil.isNullOrEmpty(demographicsReviewPeronsonalinfoSection) ?
+                CarePayConstants.NOT_DEFINED : demographicsReviewPeronsonalinfoSection;
+    }
+
+    /**
+     * @param demographicsReviewPeronsonalinfoSection The demographics_review_peronsonalinfo_section
+     */
+    public void setDemographicsReviewPeronsonalinfoSection(String demographicsReviewPeronsonalinfoSection) {
+        this.demographicsReviewPeronsonalinfoSection = demographicsReviewPeronsonalinfoSection;
+    }
+
+    /**
+     * @return The demographicsReviewScreenTitle
+     */
+    public String getDemographicsReviewScreenTitle() {
+        return StringUtil.isNullOrEmpty(demographicsReviewScreenTitle) ?
+                CarePayConstants.NOT_DEFINED : demographicsReviewScreenTitle;
+    }
+
+    /**
+     * @param demographicsReviewScreenTitle The demographics_review_screen_title
+     */
+    public void setDemographicsReviewScreenTitle(String demographicsReviewScreenTitle) {
+        this.demographicsReviewScreenTitle = demographicsReviewScreenTitle;
+    }
+
+    /**
+     * @return The demographicsUpadteInsuranceScreenTitle
+     */
+    public String getDemographicsUpdateInsuranceScreenTitle() {
+        return StringUtil.isNullOrEmpty(demographicsUpdateInsuranceScreenTitle) ?
+                CarePayConstants.NOT_DEFINED : demographicsUpdateInsuranceScreenTitle;
+    }
+
+    /**
+     * @param demographicsUpdateInsuranceScreenTitle The demographics_upadte_insurance_screen_title
+     */
+    public void setDemographicsUpdateInsuranceScreenTitle(String demographicsUpdateInsuranceScreenTitle) {
+        this.demographicsUpdateInsuranceScreenTitle = demographicsUpdateInsuranceScreenTitle;
+    }
+
+    /**
+     * @return The demographicsReviewScreenSubtitle
+     */
+    public String getDemographicsReviewScreenSubtitle() {
+        return StringUtil.isNullOrEmpty(demographicsReviewScreenSubtitle) ?
+                CarePayConstants.NOT_DEFINED : demographicsReviewScreenSubtitle;
+    }
+
+    /**
+     * @param demographicsReviewScreenSubtitle The demographics_review_screen_subtitle
+     */
+    public void setDemographicsReviewScreenSubtitle(String demographicsReviewScreenSubtitle) {
+        this.demographicsReviewScreenSubtitle = demographicsReviewScreenSubtitle;
+    }
+
+    /**
+     * @return The demographicsHelathinsurance1Section
+     */
+    public String getDemographicsHealthinsurance1Section() {
+        return StringUtil.isNullOrEmpty(demographicsHealthinsurance1Section) ?
+                CarePayConstants.NOT_DEFINED : demographicsHealthinsurance1Section;
+    }
+
+    /**
+     * @param demographicsHelathinsurance1Section The demographics_helathinsurance_1_section
+     */
+    public void setDemographicsHealthinsurance1Section(String demographicsHelathinsurance1Section) {
+        this.demographicsHealthinsurance1Section = demographicsHealthinsurance1Section;
+    }
+
+    /**
+     * @return The demographicsHelathinsurance2Section
+     */
+    public String getDemographicsHealthinsurance2Section() {
+        return StringUtil.isNullOrEmpty(demographicsHealthinsurance2Section) ?
+                CarePayConstants.NOT_DEFINED : demographicsHealthinsurance2Section;
+    }
+
+    /**
+     * @param demographicsHelathinsurance2Section The demographics_helathinsurance_2_section
+     */
+    public void setDemographicsHealthinsurance2Section(String demographicsHelathinsurance2Section) {
+        this.demographicsHealthinsurance2Section = demographicsHelathinsurance2Section;
+    }
+
+    /**
+     * @return The demographicsHelathinsurance3Section
+     */
+    public String getDemographicsHealthinsurance3Section() {
+        return StringUtil.isNullOrEmpty(demographicsHealthinsurance3Section) ?
+                CarePayConstants.NOT_DEFINED : demographicsHealthinsurance3Section;
+    }
+
+    /**
+     * @param demographicsHealthinsurance3Section The demographics_healthinsurance_3_section
+     */
+    public void setDemographicsHealthinsurance3Section(String demographicsHealthinsurance3Section) {
+        this.demographicsHealthinsurance3Section = demographicsHealthinsurance3Section;
+    }
+
+    /**
+     * @return The demographicsUpdateDemographicTitle
+     */
+    public String getDemographicsUpdateDemographicTitle() {
+        return StringUtil.isNullOrEmpty(demographicsUpdateDemographicTitle) ?
+                CarePayConstants.NOT_DEFINED : demographicsUpdateDemographicTitle;
+    }
+
+    /**
+     * @param demographicsUpdateDemographicTitle The demographics_update_demographic_title
+     */
+    public void setDemographicsUpdateDemographicTitle(String demographicsUpdateDemographicTitle) {
+        this.demographicsUpdateDemographicTitle = demographicsUpdateDemographicTitle;
+    }
+
+    public String getDemographicSectionTitle() {
+        return StringUtil.isNullOrEmpty(demographicSectionTitle) ?
+                CarePayConstants.NOT_DEFINED : demographicSectionTitle;
+    }
+
+    public void setDemographicSectionTitle(String demographicSectionTitle) {
+        this.demographicSectionTitle = demographicSectionTitle;
+    }
+
 }

@@ -20,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemePractice"
         tools:replace="android:theme">
-        <activity android:name="com.carecloud.carepay.practice.library.splash.SplashActivity">
+        <activity
+            android:name="com.carecloud.carepay.practice.library.splash.SplashActivity"
+            android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

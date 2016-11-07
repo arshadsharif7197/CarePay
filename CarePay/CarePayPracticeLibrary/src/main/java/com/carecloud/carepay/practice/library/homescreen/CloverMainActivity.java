@@ -2,12 +2,13 @@ package com.carecloud.carepay.practice.library.homescreen;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,8 +67,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setSystemUiVisibility();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
 
@@ -147,26 +147,51 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void setAppointmentCount(HomeScreenPayloadDTO homeScreenPayloadDTO) {
         HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = homeScreenPayloadDTO.getAppointmentCounts();
         if (homeScreenAppointmentCountsDTO != null) {
-            checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPending() + homeScreenAppointmentCountsDTO.getPending()));
+            checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPendingCount() + homeScreenAppointmentCountsDTO.getPendingCount()));
         }
     }
 
     private void setPracticeUser(HomeScreenPayloadDTO homeScreenPayloadDTO) {
-        if (homeScreenPayloadDTO.getUserPractices() != null) {
+        if (homeScreenPayloadDTO.getUserPractices() != null && homeScreenPayloadDTO.getUserPractices().size()>0) {
             WorkflowServiceHelper.getInstance().setUserPracticeDTO(homeScreenPayloadDTO.getUserPractices().get(0));
+        }else{
+            showUnAuthorizedDialog();
+            //SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.unauthorized),getString(R.string.unauthorized_practice_user));
         }
     }
 
-    public void setSystemUiVisibility() {
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LOW_PROFILE
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    /**
+     * When no practice user show anauthorized user and logout
+     */
+    public void showUnAuthorizedDialog() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle(getString(R.string.unauthorized));
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(getString(R.string.unauthorized_practice_user))
+                .setCancelable(false)
+                .setPositiveButton(getString(com.carecloud.carepaylibrary.R.string.alert_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        WorkflowServiceHelper.getInstance().executeApplicationStartRequest( logOutCall);
+                        //CloverMainActivity.this.onBackPressed();
+                        dialog.dismiss();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+        alertDialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, com.carecloud.carepaylibrary.R.drawable.icn_notification_error);
+
+        // show it
+        alertDialog.show();
+
     }
 
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
@@ -214,7 +239,25 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 
+    WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            CloverMainActivity.this.finish();
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

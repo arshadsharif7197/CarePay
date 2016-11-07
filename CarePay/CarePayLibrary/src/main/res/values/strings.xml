@@ -411,4 +411,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="insurance_scan_front">Insurance scan front</string>
     <string name="insurance_scan_back">Insurance scan back</string>
     <string name="not_defined">Not Defined</string>
+    <string name="alert_ok">OK</string>
+    <string name="alert_title">Alert</string>
+    <string name="alert_title_server_error">Server Error</string>
 </resources>

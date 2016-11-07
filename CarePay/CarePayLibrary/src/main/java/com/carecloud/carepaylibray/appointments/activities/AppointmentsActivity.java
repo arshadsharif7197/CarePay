@@ -26,13 +26,17 @@ import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.payment.PaymentActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class AppointmentsActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -130,6 +134,19 @@ public class AppointmentsActivity extends AppCompatActivity implements
         return true;
     }
 
+    private void launchDemographics(DemographicDTO demographicDTO) {
+        // do to Demographics
+        Intent intent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
+        if (demographicDTO != null) {
+            // pass the object into the gson
+            Gson gson = new Gson();
+            String dtostring = gson.toJson(demographicDTO, DemographicDTO.class);
+            intent.putExtra("demographics_model", dtostring);
+            startActivity(intent);
+        }
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -140,12 +157,24 @@ public class AppointmentsActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if(id == R.id.action_launch_demogr_review) {
+        } else if (id == R.id.action_launch_demogr_review) {
             // temporary launch Demographics Review for QA testing
             // (please do not remove!)
-            Intent intent = new Intent(this, DemographicReviewActivity.class);
-            startActivity(intent);
-            finish();
+            DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
+            Call<DemographicDTO> call = apptService.fetchDemographicsVerify();
+            call.enqueue(new Callback<DemographicDTO>() {
+                @Override
+                public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
+                    DemographicDTO demographicDTO = response.body();
+                    launchDemographics(demographicDTO);
+                }
+
+                @Override
+                public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
+                    Log.e(LOG_TAG, "failed fetching demogr info", throwable);
+                }
+            });
+
         }
 
         return super.onOptionsItemSelected(item);

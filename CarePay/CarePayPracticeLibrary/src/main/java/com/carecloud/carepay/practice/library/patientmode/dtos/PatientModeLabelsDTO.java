@@ -5,6 +5,8 @@ package com.carecloud.carepay.practice.library.patientmode.dtos;
  */
 
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,7 +23,8 @@ public class PatientModeLabelsDTO {
      * @return The welcomeHeading
      */
     public String getWelcomeHeading() {
-        return welcomeHeading;
+        return StringUtil.isNullOrEmpty(welcomeHeading) ?
+                CarePayConstants.NOT_DEFINED : welcomeHeading;
     }
 
     /**
@@ -35,7 +38,8 @@ public class PatientModeLabelsDTO {
      * @return The getStartedHeading
      */
     public String getGetStartedHeading() {
-        return getStartedHeading;
+        return StringUtil.isNullOrEmpty(getStartedHeading) ?
+                CarePayConstants.NOT_DEFINED : getStartedHeading;
     }
 
     /**

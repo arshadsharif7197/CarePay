@@ -18,12 +18,21 @@ public class CarePayApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        setHttpConstants();
+
+        WorkflowServiceHelper.initialization(WorkflowServiceHelper.ApplicationType.PRACTICE);
+        PracticeNavigationHelper.initInstance(this);
+    }
+
+    private void setHttpConstants() {
         DeviceIdentifierDTO deviceIdentifierDTO=new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
         deviceIdentifierDTO.setDeviceType("Clover");
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
-        WorkflowServiceHelper.initialization(WorkflowServiceHelper.ApplicationType.PRACTICE);
-        PracticeNavigationHelper.initInstance(this);
+        HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
+        HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
+        HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
+        HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
     }
 }

@@ -17,58 +17,63 @@ public class SigninMetadataDTO {
     @SerializedName("transitions")
     @Expose
     private SignInTransitionsDTO transitions;
+    @SerializedName("data_models")
+    @Expose
+    private SignInDataModelDTO dataModels;
 
     /**
-     *
-     * @return
-     * The labels
+     * @return The labels
      */
     public SigninLabelsDTO getLabels() {
         return labels;
     }
 
     /**
-     *
-     * @param labels
-     * The labels
+     * @param labels The labels
      */
     public void setLabels(SigninLabelsDTO labels) {
         this.labels = labels;
     }
 
     /**
-     *
-     * @return
-     * The links
+     * @return The links
      */
     public SigninLinksDTO getLinks() {
         return links;
     }
 
     /**
-     *
-     * @param links
-     * The links
+     * @param links The links
      */
     public void setLinks(SigninLinksDTO links) {
         this.links = links;
     }
 
     /**
-     *
-     * @return
-     * The transitions
+     * @return The transitions
      */
     public SignInTransitionsDTO getTransitions() {
         return transitions;
     }
 
     /**
-     *
-     * @param transitions
-     * The transitions
+     * @param transitions The transitions
      */
     public void setTransitions(SignInTransitionsDTO transitions) {
         this.transitions = transitions;
+    }
+
+    /**
+     * @return The dataModels
+     */
+    public SignInDataModelDTO getDataModels() {
+        return dataModels;
+    }
+
+    /**
+     * @param dataModels The data_models
+     */
+    public void setDataModels(SignInDataModelDTO dataModels) {
+        this.dataModels = dataModels;
     }
 }
