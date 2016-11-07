@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 class ServiceGenerator {
 
-    private static String API_BASE_URL = HttpConstants.API_BASE_URL;
+    private static String API_BASE_URL = HttpConstants.getApiBaseUrl();
 
     private static Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(API_BASE_URL)

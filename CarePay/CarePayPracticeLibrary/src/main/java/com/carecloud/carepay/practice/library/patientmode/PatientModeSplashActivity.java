@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
-
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabelsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeOptionDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
@@ -20,7 +19,6 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplash
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 public class PatientModeSplashActivity extends BasePracticeActivity {

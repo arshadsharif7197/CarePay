@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.utils;
 
+import android.content.Context;
 import android.text.Editable;
 import android.util.Log;
 
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
 import java.util.regex.Matcher;
@@ -64,6 +66,11 @@ public class StringUtil {
             return matcher.matches();
         }
         return false;
+    }
+
+
+    public static String getFormatedLabal(Context context, String labal){
+        return isNullOrEmpty(labal)?context.getString(R.string.not_defined):labal;
     }
 
     /**

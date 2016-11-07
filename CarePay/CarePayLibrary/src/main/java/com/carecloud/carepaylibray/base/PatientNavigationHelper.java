@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 
-import static com.carecloud.carepaylibray.base.NavigationStateConstants.APPOINTMENTS;
+import static com.carecloud.carepaylibray.base.PatientNavigationStateConstants.APPOINTMENTS;
 
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 
@@ -14,14 +14,15 @@ import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActi
 
 /**
  * Created by Jahirul Bhuiyan on 10/10/2016.
+ * Will be move to patient application module
  */
+@Deprecated
+public class PatientNavigationHelper {
 
-public class NavigationHelper {
-
-    private static NavigationHelper instance = null;
+    private static PatientNavigationHelper instance;
     private static Context context;
 
-    private NavigationHelper() {
+    private PatientNavigationHelper() {
 
     }
 
@@ -30,13 +31,13 @@ public class NavigationHelper {
      * @param context context
      */
     public static void initInstance(Context context) {
-        NavigationHelper.context = context;
+        PatientNavigationHelper.context = context;
         if (instance == null) {
-            instance = new NavigationHelper();
+            instance = new PatientNavigationHelper();
         }
     }
 
-    public static NavigationHelper instance() {
+    public static PatientNavigationHelper instance() {
         return instance;
     }
 

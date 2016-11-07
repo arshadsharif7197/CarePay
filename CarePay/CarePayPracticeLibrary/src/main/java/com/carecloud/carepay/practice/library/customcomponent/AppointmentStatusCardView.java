@@ -7,11 +7,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.carecloud.carepay.practice.library.R;
@@ -19,16 +19,20 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
+
 import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs;
 import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs_appointmentListType;
+
 import org.joda.time.DateTime;
+
+
 
 
 /**
  * Created by Jahirul Bhuiyan on 10/18/2016.
  */
 
-public class AppointmentStatusCartView extends CardView {
+public class AppointmentStatusCardView extends LinearLayout {
     private static final int APPOINTMENT_CARD_TYPE_CHECKING_IN_ATTRIBUTE = 0;
     private static final int APPOINTMENT_CARD_TYPE_WAITING_ROOM_ATTRIBUTE = 1;
     public static final String APPOINTMENT_CARD_TYPE_CHECKING_IN = "appointment_card_type_checking_in";
@@ -44,24 +48,40 @@ public class AppointmentStatusCartView extends CardView {
     private String appointmentId;
     private String appointmentListType;
 
-    public AppointmentStatusCartView(Context context) {
+    /**
+     * AppointmentStatusCardView with context
+     * @param context context
+     */
+    public AppointmentStatusCardView(Context context) {
         super(context);
         this.context = context;
         addViews(null);
     }
 
-    public AppointmentStatusCartView(Context context, AttributeSet attrs) {
+    /**
+     * AppointmentStatusCardView with context & attrs
+     * @param context context
+     */
+    public AppointmentStatusCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         addViews(attrs);
     }
 
-    public AppointmentStatusCartView(Context context, AttributeSet attrs, int defStyleAttr) {
+    /**
+     * AppointmentStatusCardView with context, attrs & defStyleAttr
+     * @param context context
+     */
+    public AppointmentStatusCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         addViews(attrs);
     }
 
+    /**
+     * initialization view
+     * @param attrs AttributeSet
+     */
     private void addViews(AttributeSet attrs) {
         inflate(context, R.layout.cardview_appointment_status, this);
         patientPicImageView = (ImageView) findViewById(R.id.patientPicImageView);
@@ -97,6 +117,10 @@ public class AppointmentStatusCartView extends CardView {
 
     }
 
+    /**
+     * Set Image
+     * @param patientImageURL image Url
+     */
     public void setPatientImage(String patientImageURL) {
         if (!StringUtil.isNullOrEmpty(patientImageURL)) {
             Picasso.with(context).load(patientImageURL).transform(
@@ -133,6 +157,10 @@ public class AppointmentStatusCartView extends CardView {
         return appointmentListType;
     }
 
+    /**
+     * Appointment time set
+     * @param appointmentTime appointment Time
+     */
     public void setAppointmentTime(long appointmentTime) {
         final DateTime appointmentDateTime = new DateTime(appointmentTime);
         timeTextView.setText(appointmentDateTime.toString("hh:mm a"));
@@ -156,7 +184,7 @@ public class AppointmentStatusCartView extends CardView {
     OnDragListener onDragListener = new OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
-            AppointmentStatusCartView appointmentStatusCartView = (AppointmentStatusCartView) view;
+            AppointmentStatusCardView appointmentStatusCartView = (AppointmentStatusCardView) view;
             switch (dragEvent.getAction()) {
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -194,7 +222,7 @@ public class AppointmentStatusCartView extends CardView {
 
             // Create a new ClipData.Item from the ImageView object's tag
 
-            AppointmentStatusCartView appointmentStatusCartView = (AppointmentStatusCartView) view;
+            AppointmentStatusCardView appointmentStatusCartView = (AppointmentStatusCardView) view;
 
             ClipData.Item item = new ClipData.Item(appointmentStatusCartView.getAppointmentId());
 

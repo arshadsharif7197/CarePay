@@ -35,7 +35,7 @@ public class BaseServiceGenerator {
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
     public BaseServiceGenerator(Context context) {
-        API_BASE_URL=HttpConstants.API_BASE_URL;
+        API_BASE_URL=HttpConstants.getApiBaseUrl();
         generateBuilder();
     }
 
@@ -50,9 +50,9 @@ public class BaseServiceGenerator {
                 .addConverterFactory(GsonConverterFactory.create());
     }
     /**
-    * Create the retrofil service for the specific service class
-    * @param serviceClass Specific service class for converting in to retrofit service model
-    * */
+     * Create the retrofil service for the specific service class
+     * @param serviceClass Specific service class for converting in to retrofit service model
+     * */
     public  <S> S createService(Class<S> serviceClass) {
         return createService(serviceClass,null);
     }
@@ -95,7 +95,7 @@ public class BaseServiceGenerator {
 
         return retrofit.create(serviceClass);
     }
-    
+
     public static boolean isNullOrEmpty(String string) {
         return (string == null || string.trim().equals(""));
     }
