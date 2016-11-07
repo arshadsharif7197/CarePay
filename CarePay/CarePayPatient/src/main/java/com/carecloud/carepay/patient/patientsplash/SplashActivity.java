@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient;
+package com.carecloud.carepay.patient.patientsplash;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity;
