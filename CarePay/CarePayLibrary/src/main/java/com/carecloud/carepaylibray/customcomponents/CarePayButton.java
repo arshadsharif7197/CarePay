@@ -106,9 +106,8 @@ public class CarePayButton extends Button {
             typedArray.recycle();
         } catch (Exception exception) {
             fontAttribute = PROXIMA_NOVA_REGULAR;
-        } finally {
-
         }
+
         String assetFontName = "";
         switch (fontAttribute) {
             case GOTHAM_ROUNDED_BOLD: {
