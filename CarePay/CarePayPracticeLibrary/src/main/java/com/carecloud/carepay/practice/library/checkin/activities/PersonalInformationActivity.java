@@ -16,10 +16,8 @@ import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldButton;
+import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -28,11 +26,11 @@ import java.util.Calendar;
 import org.joda.time.LocalDate;
 
 public class PersonalInformationActivity extends AppCompatActivity {
-    private CustomProxyNovaSemiBoldButton selectDateButton;
+    private CarePayButton selectDateButton;
     private EditText firstNameEditText;
     private EditText lastNameEditText;
     private EditText phoneNumberEditText;
-    private CustomGothamRoundedMediumButton findMyAppointmentButton;
+    private CarePayButton findMyAppointmentButton;
     private boolean isEmptyFirstName;
     private boolean isEmptyLastName;
     private boolean isEmptyPhoneNumber;
@@ -52,18 +50,18 @@ public class PersonalInformationActivity extends AppCompatActivity {
      * Method to initialise view
      */
     void initViews() {
-        CustomGothamRoundedMediumButton goBackButton = (CustomGothamRoundedMediumButton)
+        CarePayButton goBackButton = (CarePayButton)
                 findViewById(R.id.goBackButton);
         goBackButton.setText(getResources().getString(R.string.not_defined));
         goBackButton.setOnClickListener(goBackButtonListener);
 
-        CustomGothamRoundedMediumLabel personalInformationTextView =
-                (CustomGothamRoundedMediumLabel) findViewById(R.id.personalInformationTextView);
+        CarePayTextView personalInformationTextView =
+                (CarePayTextView) findViewById(R.id.personalInformationTextView);
         personalInformationTextView.setText(getResources().getString(R.string.not_defined));
         personalInformationTextView.setTextColor(ContextCompat.getColor(getBaseContext(),
                 R.color.white));
 
-        CustomProxyNovaRegularLabel identifyYourselfTextView = (CustomProxyNovaRegularLabel)
+        CarePayTextView identifyYourselfTextView = (CarePayTextView)
                 findViewById(R.id.identifyYourselfTextView);
         identifyYourselfTextView.setText(getResources().getString(R.string.not_defined));
         identifyYourselfTextView.setTextColor(ContextCompat.getColor(getBaseContext(),
@@ -95,15 +93,15 @@ public class PersonalInformationActivity extends AppCompatActivity {
 
         setChangeFocusListeners();
 
-        CustomProxyNovaRegularLabel dateOfBirthTextView = (CustomProxyNovaRegularLabel)
+        CarePayTextView dateOfBirthTextView = (CarePayTextView)
                 findViewById(R.id.dateOfBirthTextView);
         dateOfBirthTextView.setText(getResources().getString(R.string.not_defined));
 
-        selectDateButton = (CustomProxyNovaSemiBoldButton) findViewById(R.id.selectDateButton);
+        selectDateButton = (CarePayButton) findViewById(R.id.selectDateButton);
         selectDateButton.setText(getResources().getString(R.string.not_defined));
         selectDateButton.setOnClickListener(selectDateButtonListener);
 
-        findMyAppointmentButton = (CustomGothamRoundedMediumButton)
+        findMyAppointmentButton = (CarePayButton)
                 findViewById(R.id.findMyAppointmentButton);
         findMyAppointmentButton.setText(getResources().getString(R.string.not_defined));
         findMyAppointmentButton.setEnabled(false);
@@ -227,11 +225,7 @@ public class PersonalInformationActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 String dateVal = selectDateButton.getText().toString();
 
-                if (dateVal.equalsIgnoreCase(getResources().getString(R.string.not_defined))) {
-                    isEmptyDate = true;
-                } else {
-                    isEmptyDate = false;
-                }
+                isEmptyDate = dateVal.equalsIgnoreCase(getResources().getString(R.string.not_defined));
                 enableFindMyAppointmentButton();
             }
         });
@@ -276,7 +270,7 @@ public class PersonalInformationActivity extends AppCompatActivity {
             DatePickerDialog datePickerDialog = new DatePickerDialog(PersonalInformationActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                    LocalDate date = new LocalDate(year,month+1,day);
+                    LocalDate date = new LocalDate(year, month + 1, day);
                     DateUtil.getInstance().setDate(date.toDate());
                     selectDateButton.setText(DateUtil.getInstance().getDateAsMMddyyyyWithSlash());
                 }

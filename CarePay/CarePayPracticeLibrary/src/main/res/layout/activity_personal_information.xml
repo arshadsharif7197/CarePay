@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/goBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +30,8 @@
             android:paddingRight="@dimen/dimen_15dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22sp" />
+            android:textSize="@dimen/text_size_22sp"
+            app:customAssetFont="gotham_rounded_medium" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -57,20 +58,22 @@
         android:layout_marginTop="@dimen/dimen_36dp"
         android:orientation="vertical">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/personalInformationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textSize="@dimen/text_size_36sp" />
+            android:textSize="@dimen/text_size_36sp"
+            app:customAssetFont="gotham_rounded_medium" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/identifyYourselfTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_12dp"
-            android:textSize="@dimen/text_size_20sp" />
+            android:textSize="@dimen/text_size_20sp"
+            app:customAssetFont="proxima_nova_regular" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -135,16 +138,17 @@
                 android:layout_width="@dimen/dimen_500dp"
                 android:layout_height="@dimen/dimen_57dp">
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/dateOfBirthTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/dimen_14dp"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_18sp" />
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_regular" />
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldButton
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/selectDateButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -153,7 +157,8 @@
                     android:background="@color/transparent_apt"
                     android:textAllCaps="false"
                     android:textColor="@color/bright_cerulean"
-                    android:textSize="@dimen/text_size_16sp" />
+                    android:textSize="@dimen/text_size_16sp"
+                    app:customAssetFont="proxima_nova_semi_bold" />
             </RelativeLayout>
 
             <TextView
@@ -161,7 +166,7 @@
                 android:layout_height="@dimen/dimen_1dp"
                 android:background="@color/light_gray" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/findMyAppointmentButton"
                 android:layout_width="@dimen/dimen_500dp"
                 android:layout_height="@dimen/dimen_57dp"
@@ -169,7 +174,8 @@
                 android:enabled="false"
                 android:textAllCaps="false"
                 android:textColor="@color/bleu_de_france"
-                android:textSize="@dimen/text_size_18sp" />
+                android:textSize="@dimen/text_size_18sp"
+                app:customAssetFont="gotham_rounded_medium" />
 
         </LinearLayout>
     </LinearLayout>
