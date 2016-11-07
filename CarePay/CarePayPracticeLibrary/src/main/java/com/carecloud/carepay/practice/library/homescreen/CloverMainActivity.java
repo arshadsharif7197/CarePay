@@ -12,7 +12,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
@@ -268,12 +267,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                 Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
                 appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(appointmentIntent);
-                Toast.makeText(CloverMainActivity.this, "Patient Mode selected...", Toast.LENGTH_SHORT).show();
             }
         }, new ChangeModeDialog.LogoutClickListener() {
             @Override
             public void onLogoutSelected() {
-                Toast.makeText(CloverMainActivity.this, "Logout selected...", Toast.LENGTH_SHORT).show();
+                WorkflowServiceHelper.getInstance().executeApplicationStartRequest(logOutCall);
             }
         }, modeSwitchOptions);
     }
