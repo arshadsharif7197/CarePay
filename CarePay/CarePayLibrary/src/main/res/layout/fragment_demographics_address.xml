@@ -52,7 +52,7 @@
                         android:nextFocusForward="@+id/middleNameEditText"
                         android:inputType="text"
                         android:maxLength="100"
-                        android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
+                        android:digits="@string/restrict_digits_letters_space"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
@@ -75,7 +75,7 @@
                         android:imeOptions="actionNext"
                         android:nextFocusForward="@+id/addressEditTextId"
                         android:maxLength="100"
-                        android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
+                        android:digits="@string/restrict_digits_letters_space"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -95,7 +95,7 @@
                     android:imeOptions="actionNext"
                     android:nextFocusForward="@+id/addressEditText2Id"
                     android:maxLength="50"
-                    android:digits="1234567890abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
+                    android:digits="@string/restrict_digits_letters_space"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -110,7 +110,7 @@
                     android:imeOptions="actionNext"
                     android:nextFocusForward="@+id/zipCodeId"
                     android:maxLength="50"
-                    android:digits="1234567890abcdefghijklmnopqrstuvxywz ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
+                    android:digits="@string/restrict_digits_letters_space"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -140,7 +140,7 @@
                     android:layout_weight="1"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     android:maxLength="30"
-                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ">
+                    android:digits="@string/restrict_letters_space">
 
                     <EditText
                         android:id="@+id/cityId"
@@ -162,7 +162,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="textAutoComplete"
                         android:maxLength="2"
-                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        android:digits="@string/restrict_letters"
                         android:nextFocusForward="@+id/phNoEditText"/>
 
                 </android.support.design.widget.TextInputLayout>
