@@ -3,11 +3,9 @@ package com.carecloud.carepay.practice.library.appointments;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
-
 import com.carecloud.carepay.practice.library.appointments.services.AppointmentService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -25,9 +22,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLab
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
-
 import java.util.ArrayList;
-
 import java.util.Date;
 import java.util.List;
 
@@ -54,9 +49,9 @@ public class AppointmentsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_appointment);
+        setContentView(R.layout.activity_appointments_practice);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        appointmentsRecyclerView = (RecyclerView) findViewById(R.id.appointment_recycler_view);
+        appointmentsRecyclerView = (RecyclerView) findViewById(R.id.appointments_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
         appointmentsItems = new ArrayList<AppointmentDTO>();
         appointmentForTextview = (CustomProxyNovaRegularLabel) findViewById(R.id.titleSelectappointmentsubheader);

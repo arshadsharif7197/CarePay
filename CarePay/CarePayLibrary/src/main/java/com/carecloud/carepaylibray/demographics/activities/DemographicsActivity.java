@@ -19,21 +19,27 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPhotoDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePhotoDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadInfoModel;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
@@ -43,66 +49,47 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Created by Jahirul Bhuiyan on 8/31/2016.
  * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends KeyboardHolderActivity {
 
-    private TextView titleTextView;
     private int currentPageIndex;
+    // views
+    private TextView titleTextView;
     private ViewPager viewPager;
     private ImageView tabImageView;
-
+    // jsons (payload)
     private DemographicDTO modelGet = null;
     private DemographicAddressPayloadDTO addressModel;
     private DemographicPersDetailsPayloadDTO detailsModel;
     private DemographicIdDocPayloadDTO idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
+    // jsons (metadata)
+    private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
+    private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
+    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private DemographicLabelsDTO labelsDTO;
+    private Toolbar toolbar;
 
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
-        if (modelGet != null) {
-            DemographicPayloadResponseDTO response = modelGet.getPayload();
-            if (response != null) {
-                DemographicPayloadInfoModel infoModelPayload = response.getDemographics();
-                if (infoModelPayload != null) {
-                    infoModel = infoModelPayload.getPayload();
-                }
+        if (modelGet != null && modelGet.getPayload() != null) {
+            DemographicPayloadInfoDTO infoModelPayload = modelGet.getPayload().getDemographics();
+            if (infoModelPayload != null) {
+                infoModel = infoModelPayload.getPayload();
             }
         }
         return infoModel;
     }
 
-    private final String[] fragLabels = {"Address", "Details", "Documents", "All Set"}; // these will come from meta-data
-
-    @Override
-    public int getLayoutRes() {
-        return R.layout.activity_demographics;
-    }
-
-    @Override
-    public int getContentsHolderId() {
-        return R.id.demogr_content_holder;
-    }
-
-    @Override
-    public int getKeyboardHolderId() {
-        return R.id.demogr_keyboard_holder;
-    }
+    private String[] fragLabels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
-        titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
-        toolbar.setTitle("");
-        titleTextView.setText(fragLabels[0]);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
-        (DemographicsActivity.this).setSupportActionBar(toolbar);
 
         // set the language
         Intent intent = getIntent();
@@ -114,6 +101,24 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             modelGet = gson.fromJson(demographicsModelString, DemographicDTO.class);
         }
 
+        // init DTOs
+        initDTOsForFragments();
+
+        // init frag labels
+        fragLabels = new String[4];
+        fragLabels[0] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsAddressSection();
+        fragLabels[1] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsDetailsSection();
+        fragLabels[2] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsDocumentsSection();
+        fragLabels[3] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsAllSetSection();
+
+        toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
+        titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
+        SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
+        toolbar.setTitle("");
+        titleTextView.setText(fragLabels[0]);
+//        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
+        (DemographicsActivity.this).setSupportActionBar(toolbar);
+
         // set the progress bar
         ProgressBar demographicProgressBar = (ProgressBar) findViewById(R.id.demographicProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
@@ -122,9 +127,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
         isStoragePermissionGranted();
         setupPager();
-
-        initDTOsForFragments();
-
 //        createDTOsForTest();
     }
 
@@ -186,15 +188,26 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
     }
 
+    /**
+     * Set the current screen in the view pages
+     *
+     * @param item         Index of the current item
+     * @param smoothScroll Whether smooth scroll
+     */
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
+        if (item > 0) {
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
+        } else {
+            toolbar.setNavigationIcon(null);
+        }
     }
 
     public DemographicDTO getModel() {
         return modelGet;
     }
 
-    public DemographicPersDetailsPayloadDTO getDetailsModel() {
+    public DemographicPersDetailsPayloadDTO getDetailsDTO() {
         return detailsModel;
     }
 
@@ -233,7 +246,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     /**
      * Adapter for the viewpager
      */
-    public static class DemographicPagerAdapter extends FragmentPagerAdapter {
+    public class DemographicPagerAdapter extends FragmentPagerAdapter {
 
         final int PAGE_COUNT = 4;
 
@@ -252,11 +265,19 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
             switch (position) {
                 case 0:
-                    return new DemographicsAddressFragment();
+                    DemographicsAddressFragment addressFragment = new DemographicsAddressFragment();
+                    addressFragment.setAddressMetaDTO(addressEntityMetaDTO);
+                    addressFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
+                    return addressFragment;
                 case 1:
-                    return new DemographicsDetailsFragment();
+                    DemographicsDetailsFragment demographicsDetailsFragment = new DemographicsDetailsFragment();
+                    demographicsDetailsFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
+                    return demographicsDetailsFragment;
                 case 2:
-                    return new DemographicsDocumentsFragment();
+                    DemographicsDocumentsFragment demographicsDocumentsFragment = new DemographicsDocumentsFragment();
+                    demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
+                    demographicsDocumentsFragment.setInsurancesMetaDTO(insurancesMetaDTO);
+                    return demographicsDocumentsFragment;
                 case 3:
                     return new DemographicsMoreDetailsFragment();
                 default:
@@ -313,21 +334,26 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     public void onBackPressed() {
         if (currentPageIndex == 0) {
             SystemUtil.hideSoftKeyboard(this);
-            // re-launch SigninSignupActivity
-            Intent intent = new Intent(this, SigninSignupActivity.class);
-            startActivity(intent);
+            // sign-out from Cognito
+            CognitoAppHelper.getPool().getUser().signOut();
+            CognitoAppHelper.setUser(null);
+
+            // finish the app
+            DemographicsActivity.this.finishAffinity();
         } else {
             setCurrentItem(currentPageIndex - 1, true);
         }
     }
 
     private void initDTOsForFragments() {
+        // init payload DTOs
         DemographicPayloadDTO infoModel = getDemographicInfoPayloadModel();
         if (infoModel != null) {
+            // init payload DTOs
             addressModel = infoModel.getAddress();
             detailsModel = infoModel.getPersonalDetails();
             List<DemographicIdDocPayloadDTO> idDocDTOs = infoModel.getIdDocuments();
-            if(idDocDTOs != null && idDocDTOs.size() > 0) {
+            if (idDocDTOs != null && idDocDTOs.size() > 0) {
                 idDocModel = infoModel.getIdDocuments().get(0);
             }
             insuranceModelList = infoModel.getInsurances();
@@ -337,5 +363,31 @@ public class DemographicsActivity extends KeyboardHolderActivity {
             idDocModel = new DemographicIdDocPayloadDTO();
             insuranceModelList = new ArrayList<>();
         }
+        // init metadata DTOs
+        DemographicMetadataDTO metadataDTO = modelGet.getMetadata();
+        labelsDTO = metadataDTO.getLabels();
+        addressEntityMetaDTO = metadataDTO.getDataModels().demographic.address;
+        persDetailsMetaDTO = metadataDTO.getDataModels().demographic.personalDetails;
+        idDocsMetaDTO = metadataDTO.getDataModels().demographic.identityDocuments;
+        insurancesMetaDTO = metadataDTO.getDataModels().demographic.insurances;
+    }
+
+    public DemographicLabelsDTO getLabelsDTO() {
+        return labelsDTO;
+    }
+
+    @Override
+    public int getLayoutRes() {
+        return R.layout.activity_demographics;
+    }
+
+    @Override
+    public int getContentsHolderId() {
+        return R.id.demogr_content_holder;
+    }
+
+    @Override
+    public int getKeyboardHolderId() {
+        return R.id.demogr_keyboard_holder;
     }
 }

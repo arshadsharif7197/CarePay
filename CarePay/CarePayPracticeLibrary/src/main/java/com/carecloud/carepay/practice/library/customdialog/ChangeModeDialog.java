@@ -12,8 +12,11 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.util.List;
+
 public class ChangeModeDialog extends Dialog implements View.OnClickListener {
 
+    private List<String> options;
     private Context context;
     private PatientModeClickListener patientModeClickListener;
     private LogoutClickListener logoutClickListener;
@@ -33,11 +36,12 @@ public class ChangeModeDialog extends Dialog implements View.OnClickListener {
      * @param logoutClickListener logout click listener
      */
     public ChangeModeDialog(Context context, PatientModeClickListener patientModeClickListener,
-                            LogoutClickListener logoutClickListener) {
+                            LogoutClickListener logoutClickListener, List<String> options) {
         super(context);
         this.context = context;
         this.patientModeClickListener = patientModeClickListener;
         this.logoutClickListener = logoutClickListener;
+        this.options = options;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -51,14 +55,14 @@ public class ChangeModeDialog extends Dialog implements View.OnClickListener {
 
         CustomProxyNovaSemiBoldLabel patientMode = (CustomProxyNovaSemiBoldLabel)
                 findViewById(R.id.dialog_patient_mode_option);
-        patientMode.setText(StringUtil.getLabelForView(""));
+        patientMode.setText(StringUtil.getLabelForView(options.get(0)));
         patientMode.setTextColor(ContextCompat.getColor(context,
                 com.carecloud.carepaylibrary.R.color.textview_default_textcolor));
         patientMode.setOnClickListener(this);
 
         CustomProxyNovaSemiBoldLabel logout = (CustomProxyNovaSemiBoldLabel)
                 findViewById(R.id.dialog_logout_option);
-        logout.setText(StringUtil.getLabelForView(""));
+        logout.setText(StringUtil.getLabelForView(options.get(1)));
         logout.setTextColor(ContextCompat.getColor(context,
                 com.carecloud.carepaylibrary.R.color.textview_default_textcolor));
         logout.setOnClickListener(this);

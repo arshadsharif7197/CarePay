@@ -8,8 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by kkannan on 9/13/16.
@@ -158,6 +156,47 @@ public class DateUtil {
         String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
         SimpleDateFormat out = new SimpleDateFormat(rawFmt, Locale.getDefault());
         return out.format(date);
+    }
+
+    /**
+     * Get today starting time
+     * @return APPOINTMENT_DATE_TIME_FORMAT formated date string
+     */
+    public static String getTodayStart() {
+        Calendar cal = Calendar.getInstance(); // locale-specific
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+        SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
+        return outDateFormat.format(new Date(cal.getTimeInMillis()));
+    }
+
+    /**
+     * Get today end time
+     * @return APPOINTMENT_DATE_TIME_FORMAT formated date string
+     */
+    public static String getTodayEnd() {
+        Calendar cal = Calendar.getInstance(); // locale-specific
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 0);
+        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+        SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
+        return outDateFormat.format(new Date(cal.getTimeInMillis()));
+    }
+
+
+    /**
+     * Get today end time
+     * @return APPOINTMENT_DATE_TIME_FORMAT formated date string
+     */
+    public static String toDateStringAsYYYYMMDD(Date date) {
+        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT;
+        SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
+        return outDateFormat.format(date);
     }
 
     /**
@@ -349,13 +388,33 @@ public class DateUtil {
     }
 
     /**
-     * Format a date as mm/dd/yyyy
+     * Verify if a date has mm/dd/yyyy format
      *
      * @param dateString The date whose format is to be changed
      * @return The dat in the new format as a string
      */
     public static boolean isValidateStringDateMMDDYYYY(String dateString) {
         String formatString = "MM/dd/yyyy";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
+            format.setLenient(false);
+            format.parse(dateString);
+        } catch (ParseException e) {
+            return false;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Verifies if a date has a certain format
+     *
+     * @param formatString The format string
+     * @param dateString The date whose format is to be changed
+     * @return The dat in the new format as a string
+     */
+    public static boolean isValidateStringDate(String dateString, String formatString) {
         try {
             SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
             format.setLenient(false);

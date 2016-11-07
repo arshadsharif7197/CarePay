@@ -14,7 +14,6 @@
         android:layout_marginTop="@dimen/apt_dl_margin"
         android:layout_height="match_parent"
         android:background="@drawable/button_green_fill_background"
-        android:text="@string/checkin_early"
         android:textColor="@color/white"
         android:textSize="@dimen/apt_dl_textview_size" />
 </LinearLayout>

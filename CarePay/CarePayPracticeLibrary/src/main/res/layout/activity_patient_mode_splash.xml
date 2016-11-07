@@ -1,84 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_patient_mode_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_default"
+    android:orientation="vertical"
     tools:context="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="34.2dp"
-        android:src="@drawable/cp_logo"
-        android:id="@+id/logoimageView" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="20.0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20.0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/lockicnimageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:src="@drawable/icn_lock" />
+
+        <ImageView
+            android:id="@+id/logoimageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/cp_logo" />
 
 
-    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
-        android:id="@+id/languageTextview"
-        android:layout_width="112dp"
-        android:layout_height="51dp"
-        android:background="@drawable/bg_blue_overlay"
-        android:drawableEnd="@drawable/icn_down_white"
-        android:includeFontPadding="false"
-        android:gravity="center_vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="15dp"
-        android:layout_marginTop="21.4dp"
-        android:text="EN"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:layout_alignParentEnd="true" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_overlay"
+            android:paddingEnd="4dp"
+            android:layout_marginStart="@dimen/home_alert_margin_start">
+
+            <Spinner
+                android:id="@+id/splashPatientLangSpinner"
+                android:layout_width="@dimen/home_spinner_width"
+                android:layout_height="@dimen/home_alert_checkin_number_wrapper_height"
+                android:background="@drawable/bg_blue_overlay"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icn_lock"
-        android:id="@+id/lockicnimageView"
-        android:layout_alignBottom="@+id/languageTextview"
-        android:layout_alignParentStart="true" />
-
-    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
-        android:id="@+id/getstartedTextview"
-        android:layout_width="150dp"
-        android:layout_height="51dp"
-        android:background="@drawable/bg_blue_overlay"
-        android:includeFontPadding="false"
-        android:gravity="center"
-        android:text="Get Started"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:layout_marginTop="62dp"
-        android:layout_below="@+id/welcomeTitleTextview"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/checkin_patient_pic_rounded_border"
-        android:id="@+id/practicelogo"
-        android:layout_marginTop="97dp"
-        android:layout_below="@+id/logoimageView"
-        android:layout_centerHorizontal="true" />
-
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/welcomeTitleTextview"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="53dp"
-        android:paddingLeft="@dimen/dimen_20dp"
-        android:gravity="center"
-        android:text="Welcome to the offices of Dr. Jack Carr"
-        android:textSize="@dimen/signin_title_textsize"
-        android:textColor="@color/white"
-        app:customAssetFont="gotham_rounded_medium"
-        android:layout_below="@+id/practicelogo"
-        android:layout_alignParentStart="true" />
+        android:layout_weight="0.5"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/practicelogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/checkin_patient_pic_rounded_border" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/welcomeTitleTextview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_15dp"
+            android:gravity="center"
+            android:text="fdhdsfhsfdhs"
+            android:textColor="@color/white"
+            android:textSize="@dimen/signin_title_textsize"
+            app:customAssetFont="gotham_rounded_medium" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
 
-</RelativeLayout>
+        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+            android:id="@+id/getstartedTextview"
+            android:layout_width="150dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="62dp"
+            android:background="@drawable/bg_blue_overlay"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+
+</LinearLayout>
