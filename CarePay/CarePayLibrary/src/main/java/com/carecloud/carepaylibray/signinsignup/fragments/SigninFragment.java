@@ -27,6 +27,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+import com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity;
 import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInMetaDataDTO;
@@ -47,6 +48,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SigninFragment extends Fragment {
 
+    SignInSignUpDTO signInSignUpDTO;
     private TextInputLayout emailTextInput;
     private TextInputLayout passwordTexInput;
     private EditText emailEditText;
@@ -56,13 +58,31 @@ public class SigninFragment extends Fragment {
     private Button signinButton;
     private Button signupButton;
     private ProgressBar progressBar;
-    private LinearLayout parentLayout;
+    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            getDemographicInformation();
+            progressBar.setVisibility(View.INVISIBLE);
+        }
 
+        @Override
+        public void onBeforeLogin() {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(getContext(),
+                    "Sign-in failed",
+                    "Invalid user id or password");
+
+        }
+    };
+    private LinearLayout parentLayout;
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
-
     private SignInLablesDTO signInLablesDTO;
-    SignInSignUpDTO signInSignUpDTO;
     private SignInMetaDataDTO signInMetaDataDTO;
 
     @Nullable
@@ -76,7 +96,7 @@ public class SigninFragment extends Fragment {
 
         progressBar = (ProgressBar) view.findViewById(R.id.signInProgress);
         progressBar.setVisibility(View.INVISIBLE);
-        initview( view);
+        initview(view);
         setEditTexts(view);
 
         setClickbles(view);
@@ -88,7 +108,6 @@ public class SigninFragment extends Fragment {
 
         return view;
     }
-
 
     private void initview(View view) {
         signinButton = (Button) view.findViewById(R.id.signin_button);
@@ -140,7 +159,7 @@ public class SigninFragment extends Fragment {
 
 
 
-      /*  changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
+     changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // relaunch select language
@@ -148,7 +167,7 @@ public class SigninFragment extends Fragment {
                 startActivity(intent);
                 getActivity().finish();
             }
-        });*/
+        });
     }
 
     private void setTypefaces() {
@@ -348,28 +367,6 @@ public class SigninFragment extends Fragment {
         CognitoAppHelper.signIn(userName, password, cognitoActionCallback);
 
     }
-
-    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
-        @Override
-        public void onLoginSuccess() {
-            getDemographicInformation();
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onBeforeLogin() {
-            SystemUtil.hideSoftKeyboard(getActivity());
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(getContext(),
-                    "Sign-in failed",
-                    "Invalid user id or password");
-
-        }
-    };
 
     private void getDemographicInformation() {
         progressBar.setVisibility(View.VISIBLE);
