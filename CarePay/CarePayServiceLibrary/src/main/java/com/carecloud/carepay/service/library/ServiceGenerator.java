@@ -23,13 +23,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 class ServiceGenerator {
 
-    private static String API_BASE_URL = HttpConstants.API_BASE_URL;
+    private static String API_BASE_URL = HttpConstants.getApiBaseUrl();
 
     private static Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create());
 
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    //private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
     private static ServiceGenerator instance;
 
@@ -53,6 +53,7 @@ class ServiceGenerator {
     }
 
     <S> S createService(Class<S> serviceClass, Map<String, String> headers) {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.connectTimeout(HttpConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.writeTimeout(HttpConstants.WRITE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
@@ -64,8 +65,11 @@ class ServiceGenerator {
                         .header("Content-Type", "application/json")
                         .header("Accept", "application/json")
                         .header("Cache-Control", "no-cache, no-store")
+                        .removeHeader("x-api-key")
+                        .removeHeader("username")
+                        .removeHeader("practice_mgmt")
+                        .removeHeader("practice_id")
                         .method(original.method(), original.body());
-
                 DeviceIdentifierDTO deviceIdentifierDTO=HttpConstants.getDeviceInformation();
                 if(deviceIdentifierDTO!=null){
                     requestBuilderWithToken.header("deviceInformation", deviceIdentifierDTO.toString());

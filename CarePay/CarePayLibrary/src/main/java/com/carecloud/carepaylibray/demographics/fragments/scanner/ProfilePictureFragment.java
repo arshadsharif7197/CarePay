@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,10 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -27,6 +30,7 @@ import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 
 /**
  * Created by lsoco_user on 9/17/2016.
@@ -38,12 +42,21 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     private ImageCaptureHelper               imageCaptureHelper;
     private Button                           buttonChangeCurrentPhoto;
     private DemographicPersDetailsPayloadDTO model;
+    private String                           recaptureCaption;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_demographics_picture, container, false);
+        // set label for capture button
+        Activity activity = getActivity();
+        DemographicLabelsDTO labelsMetaDTO = null;
+        if(activity instanceof DemographicsActivity) {
+            labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        }
 
+        recaptureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileReCaptureCaption();
+
+        View view = inflater.inflate(R.layout.fragment_demographics_picture, container, false);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage);
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
@@ -53,6 +66,9 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                 selectImage(imageCaptureHelper);
             }
         });
+        String captureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileCaptureCaption();
+        buttonChangeCurrentPhoto.setText(captureCaption);
+
 
         populateViewsFromModel();
 
@@ -86,6 +102,8 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                             .transform(new CircleImageTransform())
                             .resize(imageCaptureHelper.getImgWidth(), imageCaptureHelper.getImgWidth())
                             .into(imageCaptureHelper.getImageViewTarget());
+                    // successfully load a profile image
+                    buttonChangeCurrentPhoto.setText(recaptureCaption);
                     return;
                 } catch (MalformedURLException e) {
                     // just log
@@ -109,7 +127,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         super.onActivityResult(requestCode, resultCode, data);
         // change the caption of the button
         if (bitmap != null) {
-            buttonChangeCurrentPhoto.setText(getString(R.string.changeCurrentPhotoButton));
+            buttonChangeCurrentPhoto.setText(recaptureCaption);
         }
         buttonsStatusCallback.enableNextButton(true);
     }
@@ -119,7 +137,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.ROUND_IMAGE;
     }
 
-    public void setModel(DemographicPersDetailsPayloadDTO model) {
+    public void setPayloadDTO(DemographicPersDetailsPayloadDTO model) {
         this.model = model;
     }
 }

@@ -15,12 +15,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.scanner.InsuranceScannerFragment;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -28,41 +32,69 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private FragmentManager            fm;
-    private View                       view;
-    private ScrollView                 detailsScrollView;
-    private FrameLayout                insCardContainer1;
-    private FrameLayout                insCardContainer2;
-    private FrameLayout                insCardContainer3;
-    private boolean                    isSecondCardAdded;
-    private boolean                    isThirdCardAdded;
-    private TextView                   addCardButton;
-    private Button                     nextButton;
-    private DemographicIdDocPayloadDTO demPayloadIdDocDTO;
-    private List<DemographicInsurancePayloadDTO> insuranceModelList;
-    private DemographicInsurancePayloadDTO       insuranceModel1;
-    private DemographicInsurancePayloadDTO       insuranceModel2;
-    private DemographicInsurancePayloadDTO       insuranceModel3;
+    private FragmentManager                        fm;
+    private View                                   view;
+    private ScrollView                             detailsScrollView;
+    private FrameLayout                            insCardContainer1;
+    private FrameLayout                            insCardContainer2;
+    private FrameLayout                            insCardContainer3;
+    private boolean                                isSecondCardAdded;
+    private boolean                                isThirdCardAdded;
+    private TextView                               multipleInsClickable;
+    private Button                                 nextButton;
+    private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
+    private List<DemographicInsurancePayloadDTO>   insuranceModelList;
+    private DemographicInsurancePayloadDTO         insuranceModel1;
+    private DemographicInsurancePayloadDTO         insuranceModel2;
+    private DemographicInsurancePayloadDTO         insuranceModel3;
+    private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private DemographicLabelsDTO                   globalLabelsMetaDTO;
+    private TextView                               header;
+    private TextView                               subheader;
+    private SwitchCompat                           switchCompat;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
+        // fetch the global labels
+        globalLabelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        // create the view
         view = inflater.inflate(R.layout.fragment_demographics_documents, container, false);
-
         // fetch the models
-        getTheModels();
+        getPayloadDTOs();
 
         // fetch the scroll view
         detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
 
+        initializeUIFields();
+
+        return view;
+    }
+
+    private void initializeUIFields() {
+        // set the fragment
         setCardContainers();
+
+        String label;
+        // set primary views on parent fragment (ie, all views except sub-fragments)
+        header = (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle);
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsHeader();
+        header.setText(label);
+
+        subheader = (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle);
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSubheader();
+        subheader.setText(label);
+
         setButtons();
         setSwitch();
 
@@ -71,11 +103,9 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         // hide add card button
         showAddCardButton(false);
-
-        return view;
     }
 
-    private void getTheModels() {
+    private void getPayloadDTOs() {
         demPayloadIdDocDTO = ((DemographicsActivity) getActivity()).getIdDocModel();
         insuranceModelList = ((DemographicsActivity) getActivity()).getInsuranceModelList();
 
@@ -88,12 +118,13 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         }
     }
 
-    /**
-     * Helper to set the buttons
-     */
     private void setButtons() {
+        String label;
+
         // next button
         nextButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsNext();
+        nextButton.setText(label);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,8 +149,10 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         });
 
         // add button
-        addCardButton = (TextView) view.findViewById(R.id.demographicsAddMedInfoButton);
-        addCardButton.setOnClickListener(new View.OnClickListener() {
+        multipleInsClickable = (TextView) view.findViewById(R.id.demographicsDocumentsMultipleInsClickable);
+        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsMultiInsLabel();
+        multipleInsClickable.setText(label);
+        multipleInsClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) {
                 if (!isSecondCardAdded) {
@@ -142,9 +175,6 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 insModel.getInsuranceMemberId() != null;
     }
 
-    /**
-     * Helper to create the nested fragments containing the insurance card details
-     */
     private void setCardContainers() {
 
         // fetch nested fragments containers
@@ -157,13 +187,14 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
 
         fm = getChildFragmentManager();
         // add license fragment
-        IdDocScannerFragment licenseFragment = (IdDocScannerFragment) fm.findFragmentByTag("license");
-        if (licenseFragment == null) {
-            licenseFragment = new IdDocScannerFragment();
-            licenseFragment.setButtonsStatusCallback(this);
-            licenseFragment.setModel(demPayloadIdDocDTO); // set the model
+        IdDocScannerFragment idDocFragment = (IdDocScannerFragment) fm.findFragmentByTag("license");
+        if (idDocFragment == null) {
+            idDocFragment = new IdDocScannerFragment();
+            idDocFragment.setButtonsStatusCallback(this);
+            idDocFragment.setModel(demPayloadIdDocDTO); // set the model
+            idDocFragment.setIdDocsMetaDTO(idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
         }
-        fm.beginTransaction().replace(R.id.demographicsDocsLicense, licenseFragment, "license").commit();
+        fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, "license").commit();
 
         // add insurance fragments
         insuranceModel1 = getInsuranceModelAtIndex(0);
@@ -174,7 +205,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (insuranceFragment == null) {
             insuranceFragment = new InsuranceScannerFragment();
             insuranceFragment.setButtonsStatusCallback(this);
-            insuranceFragment.setModel(insuranceModel1); // set the model (if avail)
+            insuranceFragment.setInsuranceDTO(insuranceModel1); // set the model (if avail)
+            insuranceFragment.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance1")
@@ -190,7 +222,8 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (extraInsuranceFrag1 == null) {
             extraInsuranceFrag1 = new InsuranceScannerFragment();
             extraInsuranceFrag1.setButtonsStatusCallback(this);
-            extraInsuranceFrag1.setModel(insuranceModel2); // set the model (if avail)
+            extraInsuranceFrag1.setInsuranceDTO(insuranceModel2); // set the model (if avail)
+            extraInsuranceFrag1.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance2, extraInsuranceFrag1, "insurance2")
@@ -206,30 +239,25 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         if (extraInsuranceFrag2 == null) {
             extraInsuranceFrag2 = new InsuranceScannerFragment();
             extraInsuranceFrag2.setButtonsStatusCallback(this);
-            extraInsuranceFrag2.setModel(insuranceModel3); // set the model (if avail)
+            extraInsuranceFrag2.setInsuranceDTO(insuranceModel3); // set the model (if avail)
+            extraInsuranceFrag2.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
         }
         fm.beginTransaction()
                 .replace(R.id.demographicsDocsInsurance3, extraInsuranceFrag2, "insurance3")
                 .commit();
     }
 
-    private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int i) {
+    private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int index) {
         DemographicInsurancePayloadDTO model = null;
         if (insuranceModelList != null) {
             int numOfInsurances = insuranceModelList.size();
-            if (numOfInsurances > i) { // check if the list has an item at index i
-                model = insuranceModelList.get(i);
+            if (numOfInsurances > index) { // check if the list has an item at index i
+                model = insuranceModelList.get(index);
             }
         }
         return model;
     }
 
-    /**
-     * Toggles visible/invisible a container of an insurance card details
-     *
-     * @param cardContainer The container
-     * @param isVisible     Whether visible
-     */
     private void showInsuranceCard(FrameLayout cardContainer, boolean isVisible) {
         if (isVisible) {
             cardContainer.setVisibility(View.VISIBLE);
@@ -238,48 +266,18 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
         }
     }
 
-    /**
-     * Helper to set the typeface to all textviews
-     *
-     * @param view The parent view
-     */
     private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.demographicsInsuranceSwitch));
-        setGothamRoundedMediumTypeface(getActivity(), addCardButton);
+        setGothamRoundedMediumTypeface(getActivity(), header);
+        setProximaNovaRegularTypeface(getActivity(), subheader);
+        setProximaNovaRegularTypeface(getActivity(), switchCompat);
+        setGothamRoundedMediumTypeface(getActivity(), multipleInsClickable);
         setGothamRoundedMediumTypeface(getActivity(), nextButton);
     }
 
-    @Override
-    public void showAddCardButton(boolean isVisible) {
-        if (!isVisible) {
-            addCardButton.setVisibility(View.GONE);
-        } else {
-            if (!isThirdCardAdded) { // show only if there is another add possibility
-                addCardButton.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    @Override
-    public void enableNextButton(boolean isEnabled) {
-        nextButton.setEnabled(isEnabled);
-    }
-
-    @Override
-    public void scrollToBottom() {
-        View bottomView = view.findViewById(R.id.demographicsDocsBottomView);
-        detailsScrollView.scrollTo(0, bottomView.getBottom());
-    }
-
-    /**
-     * Helper to set the switch
-     */
     private void setSwitch() {
         // set the switch
         fm.executePendingTransactions();
-        SwitchCompat switchCompat = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
+        switchCompat = (SwitchCompat) view.findViewById(R.id.demographicsDocumentsInsuranceSwitch);
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -298,6 +296,37 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
                 showAddCardButton(on && !isThirdCardAdded);
             }
         });
-//        switchCompat.setChecked(false);
+        String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
+        switchCompat.setText(label);
+    }
+
+    public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
+        this.idDocsMetaDTO = idDocsMetaDTO;
+    }
+
+    public void setInsurancesMetaDTO(DemographicMetadataEntityInsurancesDTO insurancesMetaDTO) {
+        this.insurancesMetaDTO = insurancesMetaDTO;
+    }
+
+    @Override
+    public void showAddCardButton(boolean isVisible) {
+        if (!isVisible) {
+            multipleInsClickable.setVisibility(View.GONE);
+        } else {
+            if (!isThirdCardAdded) { // show only if there is another add possibility
+                multipleInsClickable.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public void enableNextButton(boolean isEnabled) {
+        nextButton.setEnabled(isEnabled);
+    }
+
+    @Override
+    public void scrollToBottom() {
+        View bottomView = view.findViewById(R.id.demographicsDocsBottomView);
+        detailsScrollView.scrollTo(0, bottomView.getBottom());
     }
 }

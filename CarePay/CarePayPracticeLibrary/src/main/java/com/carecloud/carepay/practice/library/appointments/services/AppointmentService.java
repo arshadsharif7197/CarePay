@@ -6,6 +6,6 @@ import retrofit2.http.GET;
 
 public interface AppointmentService {
 
-    @GET(value = "dev/workflow/carepay/patient_checkin/appointments")
+    @GET(value = "dev/workflow/carepay/patient_mode/appointments")
     Call<com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel> fetchAppointmentInformation();
 }
