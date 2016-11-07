@@ -65,6 +65,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
 
 import java.util.ArrayList;
@@ -452,7 +453,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if (!isPhoneEmpty) { // check validity only if non-empty
             String phone = phoneNumberEditText.getText().toString();
             if (!StringUtil.isNullOrEmpty(phone)
-                    && !StringUtil.isValidPhoneNumber(phone.trim(), phoneValidation)) {
+                    && !ValidationHelper.isValidString(phone.trim(), phoneValidation)) {
                 phoneNumberLabel.setErrorEnabled(true);
                 phoneNumberLabel.setError(phoneError);
                 return false;
@@ -468,7 +469,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
         String dob = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dob)) {
-            boolean isValid = DateUtil.isValidateStringDateMMDDYYYY(dob);
+            boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
             doblabel.setErrorEnabled(!isValid);
             doblabel.setError(isValid ? null : errorMessage);
             return isValid;

@@ -30,19 +30,6 @@ public class StringUtil {
         return (string == null || string.equals(""));
     }
 
-    /**
-     * Validates the format of a phone number
-     *
-     * @param phoneNumber      The phone number
-     * @param validationString The format string (as regex)
-     * @return Whether correctly formatted
-     */
-    public static boolean isValidPhoneNumber(String phoneNumber, String validationString) {
-        Pattern pattern = Pattern.compile(validationString);
-        Matcher matcher = pattern.matcher(phoneNumber);
-        return matcher.matches();
-    }
-
     public static boolean isValidmail(String email) {
         if (email != null) {
             Pattern pattern = Pattern.compile(EMAIL_PATTERN);
@@ -198,12 +185,8 @@ public class StringUtil {
         int currentLength = zipcode.length();
         if (lengthBefore < currentLength) {
             char lastChar = zipcode.charAt(currentLength - 1);
-            if (currentLength == 5 && lastChar != '-') { // insert separator
-                zipcode.append("-");
-            }
-
-            if (currentLength == 6 && lastChar != '-') { // re-insert separator
-                zipcode.replace(currentLength - 1, currentLength, "-" + lastChar);
+            if (currentLength == 6 && lastChar != '-') { // insert separator
+                zipcode.insert(currentLength - 1, "-");
             }
 
             if (lengthBefore != 5 && lastChar == '-') { // discard separator except for position 5

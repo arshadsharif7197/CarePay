@@ -330,4 +330,6 @@
     <dimen name="cancel_radio_text_size">19sp</dimen>
     <dimen name="cancel_edittext_size">16sp</dimen>
     <dimen name="cancel_button_height">48dp</dimen>
+    <dimen name="demogr_onboard_allset_icon_margin_top">60dp</dimen>
+    <dimen name="demogr_onboard_button_margin_top">43dp</dimen>
 </resources>

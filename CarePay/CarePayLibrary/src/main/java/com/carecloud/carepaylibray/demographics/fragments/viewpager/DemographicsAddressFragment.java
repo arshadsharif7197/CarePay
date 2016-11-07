@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataValidationDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
@@ -39,7 +40,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
+
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -664,11 +667,11 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
 
         cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
 
@@ -694,55 +697,54 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
     }
 
     private boolean checkState() {
-        final String stateError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
-        if (!isStateEmtpy) {
-            boolean isStateAbbrUnknown = true; // check valid state
-            for (String state : AddressUtil.states) {
-                if (state.equals(stateAbbr)) {
-                    isStateAbbrUnknown = false;
-                }
-            }
-            if (stateAbbr == null || isStateAbbrUnknown) {
-                stateTextInputLayout.setErrorEnabled(true);
-                stateTextInputLayout.setError(stateError);
-                return false;
-            }
-            stateTextInputLayout.setError(null);
-            stateTextInputLayout.setErrorEnabled(false);
-        }
-        return true;
+        return ValidationHelper.applyIsInOptionsValidationToWrappedEdit(stateAutoCompleteTextView,
+                                                                 stateTextInputLayout,
+                                                                 addressMetaDTO.properties.state,
+                                                                 null);
     }
 
     private boolean checkCity() {
-        final String cityError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
-        if (!isCityEmpty) {
-            String city = cityEditText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(city) && city.trim().length() < 3) {
-                cityTextInputLayout.setErrorEnabled(true);
-                cityTextInputLayout.setError(cityError);
-                return false;
-            }
-            cityTextInputLayout.setError(null);
-            cityTextInputLayout.setErrorEnabled(false);
+        if (isCityEmpty) {
+            return true;
         }
+
+        // apply validate from backend
+        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(cityEditText,
+                                                                                     cityTextInputLayout,
+                                                                                     addressMetaDTO.properties.city,
+                                                                                     null);
+        if (!isValidFormat) {
+            return false;
+        }
+
         return true;
     }
 
     private boolean checkPhoneNumber() {
-        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
-        if (!isPhoneEmpty) { // check validity only if non-empty
-            String phone = phoneNumberEditText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(phone)
-                    && !StringUtil.isValidPhoneNumber(phone.trim(), phoneValidation)) {
-                phNoTextInputLayout.setErrorEnabled(true);
-                phNoTextInputLayout.setError(phoneError);
-                return false;
-            }
-            phNoTextInputLayout.setError(null);
-            phNoTextInputLayout.setErrorEnabled(false);
+        // not require validate
+        if (isPhoneEmpty) {
+            return true;
         }
-        return true;
+        // apply validate from backend
+        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(
+                phoneNumberEditText,
+                phNoTextInputLayout,
+                addressMetaDTO.properties.phone, null);
+
+        return isValidFormat;
+    }
+
+    private boolean checkZip() {
+        String zipCode = zipCodeEditText.getText().toString();
+        if (StringUtil.isNullOrEmpty(zipCode)) {
+            return true;
+        }
+        // apply validate from backend
+        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
+                                                                                     zipCodeTextInputLayout,
+                                                                                     addressMetaDTO.properties.zipcode,
+                                                                                     null);
+        return isValidFormat;
     }
 
     private void setTypefaces(View view) {
@@ -828,7 +830,12 @@ public class DemographicsAddressFragment extends GenericEditsFragment {
             cityEditText.requestFocus();
         }
 
-        return isPhoneValid && isStateValid && isCityValid;
+        boolean isZipValid = checkZip();
+        if (!isZipValid) {
+            zipCodeEditText.requestFocus();
+        }
+
+        return isPhoneValid && isStateValid && isCityValid && isZipValid;
     }
 
     public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {

@@ -22,6 +22,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Arrays;
 
@@ -88,39 +89,17 @@ public abstract class DocumentScannerFragment extends Fragment {
      * @param title                The dlg title
      * @param selectionDestination The textview where the selected option will be displayed
      */
-    protected void showChooseDialog(final String[] options, String title, String cancelLabel, final TextView selectionDestination) {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        // add cancel button
-        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        // create dialog layout
-        View customView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_list_layout,
-                                                                     (ViewGroup) getView(),
-                                                                     false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        // create the adapter
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(options));
-        listView.setAdapter(mAdapter);
-        // show the dialog
-        dialog.setView(customView);
-        final AlertDialog alert = dialog.create();
-        alert.show();
-        // set item click listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String selectedOption = options[position];
-                selectionDestination.setText(selectedOption); // set the selected option in the target textview
-                updateModel(selectionDestination);
-                alert.dismiss();
-            }
-        });
+    protected void showChooseDialog(final String[] options, String title, String cancelLabel,
+                                    final TextView selectionDestination) {
+        SystemUtil.showChooseDialog(getActivity(),
+                                    options, title, cancelLabel,
+                                    selectionDestination,
+                                    new SystemUtil.OnClickItemCallback() {
+                                        @Override
+                                        public void executeOnClick(TextView destination, String selectedOption) {
+                                            updateModel(selectionDestination);
+                                        }
+                                    });
     }
 
     protected abstract void updateModel(TextView selectionDestination);
