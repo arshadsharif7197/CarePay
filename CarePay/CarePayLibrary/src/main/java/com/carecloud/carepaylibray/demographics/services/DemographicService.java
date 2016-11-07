@@ -21,6 +21,9 @@ public interface DemographicService {
     @GET(value = "dev/workflow/carepay/patient_checkin/demographics")
     Call<DemographicDTO> fetchDemographics( );
 
+    @GET(value = "dev/workflow/carepay/patient_checkin/demographics_verify")
+    Call<DemographicDTO> fetchDemographicsVerify( );
+
 
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
     Call<ResponseBody> confirmDemographicInformation(

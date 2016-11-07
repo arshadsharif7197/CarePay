@@ -63,6 +63,7 @@ public class PracticeNavigationHelper {
             case PracticeNavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 break;
             }
             case PracticeNavigationStateConstants.PRACTICE_APPOINTMENTS: {

@@ -1,7 +1,6 @@
 package com.carecloud.carepay.service.library;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -109,7 +108,7 @@ public class WorkflowServiceHelper {
 
     private Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
-        appStartHeaders.put("x-api-key", HttpConstants.X_API_KEY);
+        appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
         return appStartHeaders;
     }
 
@@ -121,34 +120,8 @@ public class WorkflowServiceHelper {
     public void executeApplicationStartRequest(final WorkflowServiceCallback callback) {
         TransitionDTO transitionDTO = new TransitionDTO();
         transitionDTO.setMethod("GET");
-        transitionDTO.setUrl(HttpConstants.API_START_URL);
+        transitionDTO.setUrl(HttpConstants.getApiStartUrl());
         executeRequest(transitionDTO, callback, null, null, getApplicationStartHeaders());
-    }
-
-    /**
-     * @param url      url
-     * @param callback ui callback
-     * @Deprecated use execute
-     */
-    @Deprecated
-    public void executeGetRequest(@NonNull String url, @NonNull Map<String, String> customHeaders, @NonNull final WorkflowServiceCallback callback) {
-        TransitionDTO transitionDTO = new TransitionDTO();
-        transitionDTO.setMethod(url);
-        transitionDTO.setUrl(HttpConstants.API_START_URL);
-        executeRequest(transitionDTO, callback, null, null, addCustomHeaders(customHeaders));
-    }
-
-    /**
-     * @param url      url
-     * @param callback call back
-     * @Deprecated use execute
-     */
-    @Deprecated
-    public void executeGetRequest(@NonNull String url, @NonNull final WorkflowServiceCallback callback) {
-        TransitionDTO transitionDTO = new TransitionDTO();
-        transitionDTO.setMethod(url);
-        transitionDTO.setUrl(HttpConstants.API_START_URL);
-        executeRequest(transitionDTO, callback, null, null, getUserAuthenticationHeaders());
     }
 
     public void execute(@NonNull TransitionDTO transitionDTO, @NonNull WorkflowServiceCallback callback) {
@@ -215,7 +188,7 @@ public class WorkflowServiceHelper {
                     callback.onPostExecute(response.body());
                 } else {
                     try {
-                        callback.onFailure(response.raw().body().string());
+                        callback.onFailure(response.errorBody().string());
                     } catch (IOException exection) {
                         callback.onFailure(exection.getMessage());
                     }

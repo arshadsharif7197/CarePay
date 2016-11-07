@@ -10,45 +10,45 @@ import com.google.gson.annotations.SerializedName;
 public class HomeScreenAppointmentCountsDTO {
     @SerializedName("Pending")
     @Expose
-    private Integer pending;
+    private Integer pendingCount;
     @SerializedName("Checked-In")
     @Expose
-    private Integer checkedIn;
+    private Integer checkedInCount;
 
     /**
      *
      * @return
-     * The pending
+     * The pendingCount
      */
-    public Integer getPending() {
-        return pending;
+    public Integer getPendingCount() {
+        return pendingCount ==null?0: pendingCount;
     }
 
     /**
      *
-     * @param pending
+     * @param pendingCount
      * The Pending
      */
-    public void setPending(Integer pending) {
-        this.pending = pending;
+    public void setPendingCount(Integer pendingCount) {
+        this.pendingCount = pendingCount;
     }
 
     /**
      *
      * @return
-     * The checkedIn
+     * The checkedInCount
      */
-    public Integer getCheckedIn() {
-        return checkedIn;
+    public Integer getCheckedInCount() {
+        return checkedInCount ==null?0: checkedInCount;
     }
 
     /**
      *
-     * @param checkedIn
+     * @param checkedInCount
      * The Checked-In
      */
-    public void setCheckedIn(Integer checkedIn) {
-        this.checkedIn = checkedIn;
+    public void setCheckedInCount(Integer checkedInCount) {
+        this.checkedInCount = checkedInCount;
     }
 
 }
