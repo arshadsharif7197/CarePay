@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <include layout="@layout/toolbar_health_insurance" />
 
     <ProgressBar
@@ -16,7 +17,7 @@
         android:indeterminate="true" />
 
     <ScrollView
-        android:id="@+id/demographicsDocsScroll"
+        android:id="@+id/updateInsuranceDocsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -30,8 +31,7 @@
 
             <TextView
                 android:id="@+id/demographicsDocsHeaderTitle"
-                style="@style/DemographicsDocsHeaderTitleStyle"
-                android:text="@string/health_Insurance_Information"/>
+                style="@style/DemographicsDocsHeaderTitleStyle" />
 
             <TextView
                 android:id="@+id/demographicsDocsHeaderSubtitle"
@@ -57,18 +57,30 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                 android:layout_marginStart="14dp"
+                app:thumbTint="@color/blue_cerulian"
                 android:checked="false"
-                android:layout_marginEnd="15dp"
-                android:text="@string/demogr_insurance_switch_text"/>
+                android:layout_marginEnd="15dp" />
 
             <View
                 style="@style/Review_Screen_View_Style"
                 android:layout_width="match_parent" />
 
             <FrameLayout
-                android:id="@+id/demographicsDocsInsurance1"
+                android:id="@+id/insuranceDocument1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"/>
+            <FrameLayout
+                android:id="@+id/insuranceDocument2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <FrameLayout
+                android:id="@+id/insuranceDocument3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:visibility="gone"/>
 
 
@@ -81,13 +93,17 @@
         </LinearLayout>
 
     </ScrollView>
-
+    <TextView
+        android:id="@+id/multipleInsurancesClickable"
+        style="@style/SigninSignupClickableTextView"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/demographics_docs_header_top"
+        android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left" />
     <Button
         android:id="@+id/demographicsDocsNextButton"
         android:layout_width="match_parent"
         android:layout_height="52.0dp"
         android:background="@drawable/language_button_selector"
-        android:textColor="@color/white"
-        android:text="@string/add_Health_InsuranceInfo"/>
+        android:textColor="@color/white" />
 
 </LinearLayout>

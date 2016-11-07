@@ -4,7 +4,8 @@ import android.app.Application;
 import android.os.Build;
 import android.provider.Settings;
 
-import com.carecloud.carepay.practice.library.base.NavigationHelper;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 
@@ -17,11 +18,20 @@ public class CarePayApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setHttpConstants();
+        WorkflowServiceHelper.initialization(WorkflowServiceHelper.ApplicationType.PRACTICE);
+        PracticeNavigationHelper.initInstance(this);
+    }
+
+    private void setHttpConstants() {
         DeviceIdentifierDTO deviceIdentifierDTO=new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
-        deviceIdentifierDTO.setDeviceType("Android Tablet");
+        deviceIdentifierDTO.setDeviceType("Android");
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
-        NavigationHelper.initInstance(this);
+        HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
+        HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
+        HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
+        HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
     }
 }

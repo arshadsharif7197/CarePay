@@ -12,7 +12,7 @@
         <item name="android:overScrollMode">never</item>
         <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
 
-        <!-- Hint color and label color in FALSE state -->
+        <!-- Hint color and labelMeta color in FALSE state -->
         <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
 
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
@@ -58,7 +58,7 @@
     </style>
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
-        <!-- Hint color and label color in FALSE state -->
+        <!-- Hint color and labelMeta color in FALSE state -->
         <item name="android:textColorHint">@color/colorAccent</item>
         <item name="android:textSize">20sp</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
@@ -158,7 +158,6 @@
 
     <style name="CityEditTextStyle" parent="EditTextStyle">
         <item name="android:digits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</item>
-        <item name="android:hint">@string/CityEditText</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:maxLength">255</item>
     </style>

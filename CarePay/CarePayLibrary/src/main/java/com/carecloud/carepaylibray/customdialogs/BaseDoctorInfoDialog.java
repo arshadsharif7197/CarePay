@@ -14,12 +14,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
+import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -65,38 +70,30 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         DateUtil.getInstance().setDateRaw(payload.getStartTime());
 
-        TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
+        CustomProxyNovaLightLabel dateTextView = ((CustomProxyNovaLightLabel) findViewById(R.id.appointDateTextView));
         dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
 
-        TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
+        CustomGothamRoundedBoldLabel timeTextView = ((CustomGothamRoundedBoldLabel) findViewById(R.id.appointTimeTextView));
         timeTextView.setText(DateUtil.getInstance().getTime12Hour());
 
-        TextView shortNameTextView = ((TextView) findViewById(R.id.appointShortnameTextView));
+        CustomGothamRoundedMediumLabel shortNameTextView = ((CustomGothamRoundedMediumLabel) findViewById(R.id.appointShortnameTextView));
         shortNameTextView.setText(StringUtil.onShortDrName(payload.getProvider().getName()));
 
-        TextView nameTextView = ((TextView) findViewById(R.id.appointNameTextView));
+        CustomProxyNovaSemiBoldLabel nameTextView = ((CustomProxyNovaSemiBoldLabel) findViewById(R.id.appointNameTextView));
         nameTextView.setText(payload.getProvider().getName());
 
-        TextView typeTextView = ((TextView) findViewById(R.id.appointTypeTextView));
+        CustomProxyNovaRegularLabel typeTextView = ((CustomProxyNovaRegularLabel) findViewById(R.id.appointTypeTextView));
         typeTextView.setText(payload.getProvider().getSpecialty().getName());
 
         // Appointment Place name
-        final TextView addressHeaderTextView = ((TextView) findViewById(R.id.appointAddressHeaderTextView));
+        final CustomProxyNovaExtraBold addressHeaderTextView = ((CustomProxyNovaExtraBold) findViewById(R.id.appointAddressHeaderTextView));
         placeName = payload.getLocation().getName();
         addressHeaderTextView.setText(placeName);
 
         // Appointment Place address
-        final TextView addressTextView = ((TextView) findViewById(R.id.appointAddressTextView));
+        final CustomProxyNovaRegularLabel addressTextView = ((CustomProxyNovaRegularLabel) findViewById(R.id.appointAddressTextView));
         placeAddress = payload.getLocation().getAddress().getPlaceAddressString();
         addressTextView.setText(placeAddress);
-
-        SystemUtil.setProximaNovaLightTypeface(context, dateTextView);
-        SystemUtil.setGothamRoundedBoldTypeface(context, timeTextView);
-        SystemUtil.setProximaNovaRegularTypeface(context, shortNameTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(context, nameTextView);
-        SystemUtil.setProximaNovaRegularTypeface(context, typeTextView);
-        SystemUtil.setProximaNovaRegularTypeface(context, addressTextView);
-        SystemUtil.setProximaNovaExtraboldTypeface(context, addressHeaderTextView);
 
         findViewById(R.id.dialogAppointHeaderTextView).setOnClickListener(this);
         findViewById(R.id.appointLocationImageView).setOnClickListener(this);
