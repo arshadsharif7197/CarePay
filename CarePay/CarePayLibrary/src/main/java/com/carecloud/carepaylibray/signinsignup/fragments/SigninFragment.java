@@ -27,7 +27,10 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
-import com.carecloud.carepaylibray.selectlanguage.SelectLangaugeActivity;
+import com.carecloud.carepaylibray.signinsignup.SigninSignupActivity;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInMetaDataDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -46,28 +49,34 @@ public class SigninFragment extends Fragment {
 
     private TextInputLayout emailTextInput;
     private TextInputLayout passwordTexInput;
-    private EditText        emailEditText;
-    private EditText        passwordEditText;
-    private TextView        changeLanguageTextView;
-    private TextView        forgotPasswordTextView;
-    private Button          signinButton;
-    private Button          signupButton;
-    private ProgressBar     progressBar;
-    private LinearLayout    parentLayout;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private TextView changeLanguageTextView;
+    private TextView forgotPasswordTextView;
+    private Button signinButton;
+    private Button signupButton;
+    private ProgressBar progressBar;
+    private LinearLayout parentLayout;
 
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
+
+    private SignInLablesDTO signInLablesDTO;
+    SignInSignUpDTO signInSignUpDTO;
+    private SignInMetaDataDTO signInMetaDataDTO;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
 
+        signInLablesDTO = ((SigninSignupActivity) getActivity()).getSignInLablesDTO();
+        signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
         parentLayout = (LinearLayout) view.findViewById(R.id.signin_layout);
 
         progressBar = (ProgressBar) view.findViewById(R.id.signInProgress);
         progressBar.setVisibility(View.INVISIBLE);
-
+        initview( view);
         setEditTexts(view);
 
         setClickbles(view);
@@ -80,10 +89,28 @@ public class SigninFragment extends Fragment {
         return view;
     }
 
-    private void setClickbles(View view) {
+
+    private void initview(View view) {
         signinButton = (Button) view.findViewById(R.id.signin_button);
         signinButton.setEnabled(false);
         signupButton = (Button) view.findViewById(R.id.signup_button);
+        changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
+        forgotPasswordTextView = (TextView) view.findViewById(R.id.forgotPasswordTextView);
+        if (signInLablesDTO != null) {
+            String signinLabel = signInLablesDTO.getSigninButton();
+            String createAcountLabel = signInLablesDTO.getCreateNewAccountButton();
+            String forgotpassword = signInLablesDTO.getForgotPasswordLink();
+            String changeLangugae = signInLablesDTO.getChangeLanguageLink();
+
+            signinButton.setText(signinLabel);
+            signupButton.setText(createAcountLabel);
+            forgotPasswordTextView.setText(forgotpassword);
+            changeLanguageTextView.setText(changeLangugae);
+        }
+
+    }
+
+    private void setClickbles(View view) {
 
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +121,6 @@ public class SigninFragment extends Fragment {
             }
         });
 
-        signupButton = (Button) view.findViewById(R.id.signup_button);
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,10 +138,9 @@ public class SigninFragment extends Fragment {
             }
         });
 
-        changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
-        forgotPasswordTextView = (TextView) view.findViewById(R.id.forgotPasswordTextView);
 
-        changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
+
+      /*  changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // relaunch select language
@@ -123,7 +148,7 @@ public class SigninFragment extends Fragment {
                 startActivity(intent);
                 getActivity().finish();
             }
-        });
+        });*/
     }
 
     private void setTypefaces() {
@@ -142,15 +167,26 @@ public class SigninFragment extends Fragment {
 
     private void setEditTexts(View view) {
         emailTextInput = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-        emailTextInput.setTag(getString(R.string.signin_signup_email_hint));
         emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
-        emailEditText.setTag(emailTextInput);
-
-        passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
-        passwordTexInput.setTag(getString(R.string.password_text));
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
-        passwordEditText.setTag(passwordTexInput);
+        passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
+        if (signInSignUpDTO != null) {
+            String emailAddress = signInSignUpDTO.getMetadata().getDataModels().getSignin().getProperties().getEmail().getLabel();
+            if (SystemUtil.isNotEmptyString(emailAddress)) {
+                emailTextInput.setTag(emailAddress);
+            }
 
+            emailEditText.setHint(emailAddress);
+            emailEditText.setTag(emailTextInput);
+
+            String password = signInSignUpDTO.getMetadata().getDataModels().getSignin().getProperties().getPassword().getLabel();
+            if (SystemUtil.isNotEmptyString(password)) {
+                passwordTexInput.setTag(password);
+            }
+
+            passwordEditText.setHint(password);
+            passwordEditText.setTag(passwordTexInput);
+        }
         setTextListeners();
         setChangeFocusListeners();
         setActionListeners();
@@ -309,11 +345,11 @@ public class SigninFragment extends Fragment {
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        CognitoAppHelper.signIn(userName, password,cognitoActionCallback);
+        CognitoAppHelper.signIn(userName, password, cognitoActionCallback);
 
     }
 
-    CognitoActionCallback cognitoActionCallback= new CognitoActionCallback() {
+    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
             getDemographicInformation();
@@ -334,6 +370,7 @@ public class SigninFragment extends Fragment {
 
         }
     };
+
     private void getDemographicInformation() {
         progressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
@@ -354,6 +391,7 @@ public class SigninFragment extends Fragment {
             }
         });
     }
+
     private void launchAppointments(DemographicDTO demographicDTO) {
         // do to Demographics
         Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
