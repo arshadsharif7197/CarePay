@@ -22,7 +22,7 @@ public class OptionsDTO {
     private String code;
     @SerializedName("default")
     @Expose
-    private Boolean aBoolean;
+    private Boolean aboolean;
 
     /**
      * @return The name
@@ -67,17 +67,17 @@ public class OptionsDTO {
     }
 
     /**
-     * @return The aBoolean
+     * @return The aboolean
      */
     public Boolean getDefault() {
-        return aBoolean;
+        return aboolean;
     }
 
     /**
      * @param bool The default
      */
     public void setDefault(Boolean bool) {
-        this.aBoolean = bool;
+        this.aboolean = bool;
     }
 
 }

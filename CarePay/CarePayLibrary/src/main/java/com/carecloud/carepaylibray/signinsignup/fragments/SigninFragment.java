@@ -117,13 +117,12 @@ public class SigninFragment extends Fragment {
         forgotPasswordTextView = (TextView) view.findViewById(R.id.forgotPasswordTextView);
         if (signInLablesDTO != null) {
             String signinLabel = signInLablesDTO.getSigninButton();
-            String createAcountLabel = signInLablesDTO.getCreateNewAccountButton();
-            String forgotpassword = signInLablesDTO.getForgotPasswordLink();
-            String changeLangugae = signInLablesDTO.getChangeLanguageLink();
-
             signinButton.setText(signinLabel);
+            String createAcountLabel = signInLablesDTO.getCreateNewAccountButton();
             signupButton.setText(createAcountLabel);
+            String forgotpassword = signInLablesDTO.getForgotPasswordLink();
             forgotPasswordTextView.setText(forgotpassword);
+            String changeLangugae = signInLablesDTO.getChangeLanguageLink();
             changeLanguageTextView.setText(changeLangugae);
         }
 
