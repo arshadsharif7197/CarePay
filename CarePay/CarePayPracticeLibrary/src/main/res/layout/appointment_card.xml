@@ -1,0 +1,139 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    >
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="@dimen/dimen_400dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:gravity="center"
+        card_view:cardCornerRadius="@dimen/dimen_10dp"
+        card_view:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+                android:id="@+id/appointmentLocationTextview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/munsell"
+                android:gravity="center_horizontal"
+                android:paddingBottom="@dimen/dimen_5dp"
+                android:paddingTop="@dimen/dimen_5dp"
+                android:textColor="@color/charcoal"
+                android:textSize="@dimen/payment_receipt_layout_margin" />
+
+            <LinearLayout
+                android:id="@+id/headerlayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/apt_dl_header_ht"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold
+                    android:id="@+id/appointmentDateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/apt_dl_text_date" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+                    android:id="@+id/appointmentTimeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_20dp"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/slateGray"
+                    android:textSize="@dimen/dimen_18dp" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/appointUserPicCardView"
+                android:layout_width="@dimen/apt_dl_image_ht_wdh"
+                android:layout_height="@dimen/apt_dl_image_ht_wdh"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/apt_dl_appt_shortname_margin"
+                android:elevation="@dimen/apt_dl_image_elevation"
+                android:innerRadius="@dimen/apt_dl_zero_ht_wdh"
+                android:shape="ring"
+                android:thicknessRatio="1.9"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/apt_dl_image_radius">
+
+                <ImageView
+                    android:id="@+id/appointUserPicImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/apt_dl_image_ht_wdh"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/icn_signup_step_2_user_on" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/appointmentShortnameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/apt_dl_appt_shortname_margin"
+                android:background="@drawable/round_tv"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="@dimen/apt_dl_text_big"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/actionAddLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/apt_dl_appt_time_margin"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/apt_dl_margin"
+                android:paddingLeft="@dimen/apt_dl_margin"
+                android:paddingRight="@dimen/apt_dl_margin">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                    android:id="@+id/appointmentNameTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/bright_cerulean"
+                    android:textSize="@dimen/dimen_24dp" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    android:id="@+id/appointmentTypeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/dimen_18dp" />
+
+                <TextView
+                    android:id="@+id/checkInTextview"
+                    android:layout_width="@dimen/dimen_220dp"
+                    android:layout_height="@dimen/action_bar_height"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+                    android:background="@drawable/bg_yellow_overlay"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_22dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

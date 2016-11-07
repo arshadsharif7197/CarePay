@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments.scanner;
 
-
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,8 +23,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPhotoDTO;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.demographics.activities.DemographicsActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -45,7 +51,6 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-
 /**
  * Created by lsoco_user on 9/13/2016.
  * Fragment for with scanning driver's license functionality
@@ -53,11 +58,6 @@ import java.util.List;
 public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
-    private static final String[] states = new String[]{
-            "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
-            "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
-            "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",};
-
     private View               view;
     private ImageCaptureHelper scannerFront;
     private ImageCaptureHelper scannerBack;
@@ -67,20 +67,82 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     private EditText           idNumberEdit;
     private TextInputLayout    idNumberInputText;
     private TextView           idStateClickable;
+    private TextView           idDocTypeLabel;
+    private TextView           stateLabel;
 
-    private DemographicIdDocPayloadDTO model;
-    private String[] docTypes = {"Driver's License"}; // these will come from b/e
+    private DemographicIdDocPayloadDTO            model;
+    private DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
+    private DemographicLabelsDTO                  globalLabelsDTO;
+
+    private static String[] states;
+    private        String[] docTypes;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        // fetch the labels
+        Activity activity = getActivity();
+        if (activity instanceof DemographicsActivity) {
+            globalLabelsDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        } else if (activity instanceof DemographicReviewActivity) {
+            // instantiate the global labels here
+        }
+
+        // create the view
         view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
 
+        initializeUIFields();
+
+        return view;
+    }
+
+    private void getOptions() {
+        if(idDocsMetaDTO == null) {
+            // init arrays with 'not-defined's
+            states = new String[1];
+            states[0] = CarePayConstants.NOT_DEFINED;
+
+            docTypes = new String[1];
+            docTypes[0] = CarePayConstants.NOT_DEFINED;
+
+            return;
+        }
+
+        // init states
+        states = new String[]{
+                "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
+                "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
+                "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
+
+        // init doc types
+        List<String> docTypesStrings = new ArrayList<>();
+        for (MetadataOptionDTO o : idDocsMetaDTO.properties.identityDocumentType.options) {
+            docTypesStrings.add(o.getLabel());
+        }
+        docTypes = docTypesStrings.toArray(new String[0]);
+    }
+
+    private void initializeUIFields() {
+        // fetch the options
+        getOptions();
+
+        // init views (labels and logic)
+        String label;
+        final String labelCancel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
+
+        idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentType.getLabel();
+        idDocTypeLabel.setText(label);
+
         idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
+        idTypeClickable.setText(label);
+        final String titleSelIdDoc = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectIdType();
         idTypeClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(docTypes, "Select document type", idTypeClickable);
+                showChooseDialog(docTypes, titleSelIdDoc, labelCancel, idTypeClickable);
 
             }
         });
@@ -95,45 +157,55 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         // add click listener
         scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
+        scanFrontButton.setText(label);
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(LOG_TAG, "scan front");
                 selectImage(scannerFront);
             }
         });
 
         scanBackButton = (Button) view.findViewById(R.id.demogrDocsBackScanButton);
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
+        scanBackButton.setText(label);
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(LOG_TAG, "scan back");
                 selectImage(scannerBack);
             }
         });
 
+        stateLabel = (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel);
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentState.getLabel();
+        stateLabel.setText(label);
 
         idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
+        idStateClickable.setText(label);
+        final String titleSelectState = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectState();
         idStateClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(states, "Select state", idStateClickable);
+                showChooseDialog(states, titleSelectState, labelCancel, idStateClickable);
             }
         });
 
         setTypefaces(view);
 
         populateViewsFromModel();
-
-        return view;
     }
 
     private void setEditText() {
+        String label;
 
         idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
-        idNumberInputText.setTag(getString(R.string.demogrDocsNumberHint));
+
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentNumber.getLabel();
+        idNumberInputText.setTag(label);
         idNumberEdit.setTag(idNumberInputText);
+        idNumberEdit.setHint(label);
 
         idNumberEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -261,7 +333,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
                     scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                                                                                 R.drawable.icn_camera));
+                                                                                                R.drawable.icn_camera));
                 }
             }
         }
@@ -270,13 +342,15 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     @Override
     protected void setTypefaces(View view) {
         Context context = getActivity();
-        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel));
+        setProximaNovaRegularTypeface(context, idDocTypeLabel);
         setProximaNovaSemiboldTypeface(context, idTypeClickable);
         setGothamRoundedMediumTypeface(context, scanFrontButton);
         setGothamRoundedMediumTypeface(context, scanBackButton);
-        setProximaNovaRegularTypeface(context, (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel));
+
+        setProximaNovaRegularTypeface(context, stateLabel);
         setProximaNovaSemiboldTypeface(context, idStateClickable);
         setProximaNovaSemiboldTypeface(context, idNumberEdit);
+
         if (!StringUtil.isNullOrEmpty(idNumberEdit.getText().toString())) {
             setProximaNovaExtraboldTypefaceInput(context, idNumberInputText);
         } else {
@@ -287,6 +361,15 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        String label;
+        if (imageCaptureHelper == scannerFront) {
+            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
+            scanFrontButton.setText(label);
+        } else if (imageCaptureHelper == scannerBack) {
+            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
+            scanBackButton.setText(label);
+        }
 
         // invoke parent fragment to enable Next Button
         buttonsStatusCallback.enableNextButton(true);
@@ -324,5 +407,9 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
     public DemographicIdDocPayloadDTO getModel() {
         return model;
+    }
+
+    public void setIdDocsMetaDTO(DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO) {
+        this.idDocsMetaDTO = idDocsMetaDTO;
     }
 }

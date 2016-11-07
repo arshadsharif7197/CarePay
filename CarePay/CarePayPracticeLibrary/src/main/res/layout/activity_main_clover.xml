@@ -1,214 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_default"
-    android:orientation="vertical"
-    android:padding="32dp">
 
-    <RelativeLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/background_default"
+              android:orientation="vertical">
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginEnd="@dimen/home_main_margin_end"
+        android:layout_marginStart="@dimen/home_main_margin_start"
+        android:layout_marginTop="@dimen/home_main_margin_top">
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/icn_gear" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/homeModeSwitchClickable"
+                android:layout_width="@dimen/home_settings_icon_width"
+                android:layout_height="@dimen/home_settings_icon_height"
+                android:layout_gravity="start"
+                android:background="@drawable/icn_gear_vd"/>
+
+            <ImageView
+                android:id="@+id/homeLockIcon"
+                android:layout_width="@dimen/home_settings_icon_width"
+                android:layout_height="@dimen/home_settings_icon_height"
+                android:src="@drawable/icn_lock"
+                android:layout_gravity="start"
+                android:visibility="gone"/>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:id="@+id/homeQueueLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@drawable/bg_blue_overlay"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                    android:id="@+id/queueTitleTextView"
+                    style="@style/HomeScreenAlertStyle"
+                    android:paddingEnd="@dimen/home_alert_text_padding_end"
+                    android:paddingStart="@dimen/home_alert_text_padding_start"
+                    android:text="Checking In"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                    android:id="@+id/checkedInCounterTextview"
+                    style="@style/HomeScreenAlertStyle"
+                    android:background="@drawable/queue_counter_background"
+                    android:gravity="center"
+                    android:text="0"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/homeAlertLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="@dimen/home_alert_margin_start"
+                android:background="@drawable/bg_blue_overlay"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                    android:id="@+id/alaertTitleTextView"
+                    style="@style/HomeScreenAlertStyle"
+                    android:paddingEnd="@dimen/home_alert_text_padding_end"
+                    android:paddingStart="@dimen/home_alert_text_padding_start"
+                    android:text="Alerts"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                    android:id="@+id/alertTextView"
+                    style="@style/HomeScreenAlertStyle"
+                    android:background="@drawable/alert_counter_background"
+                    android:gravity="center"
+                    android:text="5"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/titleHeaderTextview"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/home_logo_width"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/cp_logo" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/home_logo_margin_top"
+            android:contentDescription="@string/home_logo"
+            android:src="@drawable/cp_logo"/>
 
-
-        <LinearLayout
-            android:id="@+id/alertLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/bg_blue_overlay"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
-                android:id="@+id/alaertTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="10dp"
-                android:text="Alerts"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp" />
-
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
-                android:id="@+id/alertTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/alert_counter_background"
-                android:gravity="center"
-                android:text="5"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/queueLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="12dp"
-            android:layout_toStartOf="@+id/alertLayout"
-            android:background="@drawable/bg_blue_overlay"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
-                android:id="@+id/queueTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="10dp"
-                android:text="Checking In"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp" />
-
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
-                android:id="@+id/checkedInCounterTextview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/queue_counter_background"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp" />
-        </LinearLayout>
-
-
-    </RelativeLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/mainLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="40dp"
-        android:paddingLeft="220dp"
-        android:paddingRight="220dp"
-        android:paddingTop="40dp">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
-                android:id="@+id/checkinTextView"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@drawable/top_left_rounded_background"
-                android:drawableTop="@drawable/icn_check_in"
-                android:gravity="bottom|center_horizontal"
-                android:paddingBottom="20dp"
-                android:paddingTop="70dp"
-                android:text="Check-In"
-                android:textColor="@color/charcoal"
-                android:textSize="28sp" />
+            <FrameLayout
+                android:id="@+id/homeCheckinClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/home_button_selector_top_left"
+                android:clickable="true">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
-                android:id="@+id/textView"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:drawableTop="@drawable/icn_payments"
-                android:gravity="bottom|center_horizontal"
-                android:paddingBottom="20dp"
-                android:paddingTop="70dp"
-                android:text="Payments"
-                android:textColor="@color/charcoal"
-                android:textSize="28sp" />
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:contentDescription="@string/home_icon_check_in"
+                    android:src="@drawable/icn_check_in"/>
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/top_right_rounded_background"
-                android:drawableTop="@drawable/icn_appointements"
-                android:gravity="bottom|center_horizontal"
-                android:paddingBottom="20dp"
-                android:paddingTop="70dp"
-                android:text="Appointments"
-                android:textColor="@color/charcoal"
-                android:textSize="28sp"
-                android:id="@+id/customGothamRoundedBookLabel" />
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homeCheckinLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:hint="@string/home_icon_check_in"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/homePaymentsClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/home_button_selector"
+                android:clickable="true">
+
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:contentDescription="Payments"
+                    android:src="@drawable/icn_payments"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homePaymentsLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:hint="Payments"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/homeAppointmentsClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:background="@drawable/home_button_selector_top_right"
+                android:clickable="true">
+
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:contentDescription="Appointments"
+                    android:src="@drawable/icn_appointements"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homeAppointmentsLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:hint="Appointment"/>
+            </FrameLayout>
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            android:layout_weight="1"
             android:orientation="horizontal">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
-                android:id="@+id/textView2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@drawable/bottom_left_rounded_background"
-                android:drawableTop="@drawable/icn_checkout"
-                android:gravity="bottom|center_horizontal"
-                android:paddingBottom="20dp"
-                android:paddingTop="70dp"
-                android:text="Check-Out"
-                android:textColor="@color/charcoal"
-                android:textSize="28sp" />
+            <FrameLayout
+                android:id="@+id/homeCheckoutClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/home_button_selector_bottom_left"
+                android:clickable="true">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="#ffffff"
-                android:drawableTop="@drawable/icn_retail"
-                android:gravity="bottom|center_horizontal"
-                android:paddingBottom="20dp"
-                android:paddingTop="70dp"
-                android:text="Shop"
-                android:textColor="@color/charcoal"
-                android:textSize="28sp" />
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:contentDescription="Check-Out"
+                    android:src="@drawable/icn_checkout"/>
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
-                android:id="@+id/textView3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bottom_right_rounded_background"
-                android:gravity="bottom|center_horizontal"
-                android:paddingBottom="20dp"
-                android:paddingTop="70dp"
-                android:textColor="@color/charcoal"
-                android:textSize="28sp" />
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homeCheckoutLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:hint="Check-Out"/>
+            </FrameLayout>
 
+            <FrameLayout
+                android:id="@+id/homeShopClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/home_button_selector"
+                android:clickable="true">
+
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:contentDescription="Shop"
+                    android:src="@drawable/icn_retail"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel
+                    android:id="@+id/homeShopLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:hint="Shop"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/homeNewsClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:background="@drawable/home_button_selector_bottom_right"
+                android:clickable="true"/>
 
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="@dimen/home_shadow_width"
+            android:layout_height="wrap_content"
+            android:contentDescription="Shadow"
+            android:src="@drawable/home_shadow"
+            android:layout_marginTop="@dimen/home_shadow_margin_top"/>
     </LinearLayout>
 
 </LinearLayout>

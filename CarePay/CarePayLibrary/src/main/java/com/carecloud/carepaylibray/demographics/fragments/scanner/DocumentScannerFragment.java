@@ -88,8 +88,7 @@ public abstract class DocumentScannerFragment extends Fragment {
      * @param title                The dlg title
      * @param selectionDestination The textview where the selected option will be displayed
      */
-    protected void showChooseDialog(final String[] options, String title, final TextView selectionDestination) {
-        final String cancelLabel = "Cancel";
+    protected void showChooseDialog(final String[] options, String title, String cancelLabel, final TextView selectionDestination) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
         // add cancel button

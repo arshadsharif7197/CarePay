@@ -2,6 +2,7 @@
 package com.carecloud.carepaylibray.demographics.fragments.review;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -14,10 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,20 +32,32 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
+
+
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.demographics.models.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.models.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 
 
 import com.carecloud.carepaylibray.demographics.services.DemographicService;
+
+import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
@@ -50,19 +65,16 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+import com.smartystreets.api.us_zipcode.City;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
-
 
 
 public class DemographicReviewFragment extends Fragment implements View.OnClickListener {
@@ -70,15 +82,17 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private Button buttonAddDemographicInfo;
     private View view;
 
-    private String[] raceDataArray;
-    private String[] ethnicityDataArray;
-    private String[] genderSelectArray;
-
+    private String[] gender;
+    private String[] race;
+    private String[] ethnicity;
     int selectedDataArray;
-    private TextView raceDataTextView;
-    private TextView ethnicityDataTextView;
-    private TextView selectGender;
+
     private ProgressBar demographicProgressBar;
+
+    private DemographicMetadataEntityAddressDTO addressMetaDTO;
+    private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
+    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    private DemographicLabelsDTO globalLabelsMetaDTO;
     private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private List<DemographicInsurancePayloadDTO> insurances;
@@ -109,6 +123,30 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private TextInputLayout doblabel;
     private LinearLayout rootview;
 
+    private TextView addressSectionTextView;
+    private TextView peronalInfoSectionTextview;
+    private TextView demographicSectionTextView;
+    private TextView raceDataTextView;
+    private TextView raceLabelTextView;
+    private TextView ethnicityDataTextView;
+    private TextView ethnicityLabelTextView;
+    private TextView selectGender;
+    private TextView genderLabelTextView;
+    private TextView updateDemoGraphicTitleTextView;
+    private TextView dateformatLabelTextView;
+    private TextView optinalLabelTextView;
+
+    private boolean isFirstNameEmpty;
+    private boolean isLastNameEmpty;
+    private boolean isPhoneEmpty;
+    private boolean isAddressEmpty;
+    private boolean isCityEmpty;
+    private boolean isStateEmtpy;
+    private boolean isZipEmpty;
+
+    private String stateAbbr = null;
+    private City smartyStreetsResponse;
+
 
     public static DemographicReviewFragment newInstance() {
         return new DemographicReviewFragment();
@@ -122,7 +160,12 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
         DemographicReviewActivity.isFromReview = false;
+        globalLabelsMetaDTO = ((DemographicReviewActivity) getActivity()).getLabelsDTO();
+        addressMetaDTO = ((DemographicReviewActivity) getActivity()).getAddressEntityMetaDTO();
+        persDetailsMetaDTO = ((DemographicReviewActivity) getActivity()).getPersDetailsMetaDTO();
+        idDocsMetaDTO = ((DemographicReviewActivity) getActivity()).getIdDocsMetaDTO();
 
+        initModels();
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
@@ -138,38 +181,87 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         initViewFromModels();
 
         formatEditText();
-
-
         return view;
     }
 
     private void initialiseUIFields() {
 
+        updateDemoGraphicTitleTextView = (TextView) view.findViewById(R.id.detailsReviewHeading);
+        updateDemoGraphicTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateDemographicTitle());
+
+        peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
+        peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
+
+        demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
+        demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
+
+        addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);
+        addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
+
+        optinalLabelTextView = (TextView) view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
+        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
+
+        dateformatLabelTextView = (TextView) view.findViewById(R.id.dobformatlabel);
+        dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
+
+
         phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+        phoneNumberEditText.setHint(addressMetaDTO.properties.phone.getLabel());
+
         firstNameText = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
+        firstNameText.setHint(persDetailsMetaDTO.properties.firstName.getLabel());
+
         lastNameText = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
+        lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
+
         middleNameText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
+        middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
+
         dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+        dobEditText.setHint(persDetailsMetaDTO.properties.dateOfBirth.getLabel());
+
         address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
+        address1EditText.setHint(addressMetaDTO.properties.address1.getLabel());
+
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
+        address2EditText.setHint(addressMetaDTO.properties.address2.getLabel());
+
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
+        zipCodeEditText.setHint(addressMetaDTO.properties.zipcode.getLabel());
+
         cityEditText = (EditText) view.findViewById(R.id.cityId);
+        cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
+
         stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
+        stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
+
         driverlicenseEditText = (EditText) view.findViewById(R.id.driverLicenseEditText);
+        driverlicenseEditText.setHint(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
 
         buttonAddDemographicInfo = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         buttonAddDemographicInfo.setOnClickListener(this);
+        buttonAddDemographicInfo.setText(globalLabelsMetaDTO.getDemographicsUpdateButton().toUpperCase());
+
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
+        raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
         raceDataTextView.setOnClickListener(this);
+        raceLabelTextView = (TextView) view.findViewById(R.id.raceDataTextView);
+        raceLabelTextView.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
+
         ethnicityDataTextView = (TextView) view.findViewById(R.id.ethnicityListDataTextView);
         ethnicityDataTextView.setOnClickListener(this);
+        ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        ethnicityLabelTextView = (TextView) view.findViewById(R.id.ethnicityDataTextView);
+        ethnicityLabelTextView.setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
+
+
         selectGender = (TextView) view.findViewById(R.id.chooseGenderTextView);
+        selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
         selectGender.setOnClickListener(this);
-        raceDataArray = getResources().getStringArray(R.array.Race);
-        ethnicityDataArray = getResources().getStringArray(R.array.Ethnicity);
-        genderSelectArray = getResources().getStringArray(R.array.Gender);
+        genderLabelTextView = (TextView) view.findViewById(R.id.genderTextView);
+        genderLabelTextView.setText(persDetailsMetaDTO.properties.gender.getLabel());
 
         firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
         middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
@@ -183,11 +275,74 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         stateLabel = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
 
+        List<MetadataOptionDTO> options = persDetailsMetaDTO.properties.primaryRace.options;
+        List<String> races = new ArrayList<>();
+        for (MetadataOptionDTO o : options) {
+            races.add(o.getLabel());
+        }
+        race = races.toArray(new String[0]);
+
+        options = persDetailsMetaDTO.properties.ethnicity.options;
+        List<String> ethnicities = new ArrayList<>();
+        for (MetadataOptionDTO o : options) {
+            ethnicities.add(o.getLabel());
+        }
+        ethnicity = ethnicities.toArray(new String[0]);
+
+        options = persDetailsMetaDTO.properties.gender.options;
+        List<String> genders = new ArrayList<>();
+        for (MetadataOptionDTO o : options) {
+            genders.add(o.getLabel());
+        }
+        gender = genders.toArray(new String[0]);
 
     }
 
+    /**
+     * Initialize the models from main Demographic Review Activity
+     */
+    public void initModels() {
+        demographicAddressPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicAddressPayloadDTO();
+        if (demographicAddressPayloadDTO == null) {
+            demographicAddressPayloadDTO = new DemographicAddressPayloadDTO();
+        }
+        demographicPersDetailsPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicPersDetailsPayloadDTO();
+        if (demographicPersDetailsPayloadDTO == null) {
+            demographicPersDetailsPayloadDTO = new DemographicPersDetailsPayloadDTO();
+        }
+        demographicIdDocPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicPayloadIdDocDTO();
+        if (demographicIdDocPayloadDTO == null) {
+            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
+        }
+    }
 
     private void formatEditText() {
+
+        firstNameText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isFirstNameEmpty = StringUtil.isNullOrEmpty(firstNameText.getText().toString());
+                if (!isFirstNameEmpty) {
+                    firstNameLabel.setError(null);
+                    firstNameLabel.setErrorEnabled(false);
+                } else {
+                    final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage();
+                    firstNameLabel.setError(firstNameError);
+                    firstNameLabel.setErrorEnabled(true);
+                }
+            }
+        });
+
         dobEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,35 +364,28 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
 
             @Override
-            public void afterTextChanged(Editable dob) {
-                StringUtil.autoFormatDateOfBirth(dob, prevLen);
+            public void afterTextChanged(Editable editable) {
+                String dob = dobEditText.getText().toString();
+                if (!StringUtil.isNullOrEmpty(dob)) {
+                    doblabel.setErrorEnabled(false);
+                    doblabel.setError(null);
+                }
+                StringUtil.autoFormatDateOfBirth(editable, prevLen);
+            }
+        });
+        dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT || inputType == EditorInfo.IME_ACTION_DONE) {
+                    SystemUtil.hideSoftKeyboard(getActivity());
+                    dobEditText.clearFocus();
+                    view.requestFocus();
+                    return true;
+                }
+                return false;
             }
         });
 
-        zipCodeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dobEditText.setSelection(dobEditText.length());
-            }
-        });
-        zipCodeEditText.addTextChangedListener(new TextWatcher() {
-            int prevLen = 0;
-
-            @Override
-            public void beforeTextChanged(CharSequence zipcode, int start, int count, int after) {
-                prevLen = zipcode.length();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence zipcode, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable zipcode) {
-                StringUtil.autoFormatZipcode(zipcode, prevLen);
-            }
-        });
 
         phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,57 +394,136 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
-
-            int length_before = 0;
+            int len = 0;
 
             @Override
-            public void beforeTextChanged(CharSequence phonenumber, int start, int count, int after) {
-                length_before = phonenumber.length();
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+                len = charSequence.length();
             }
 
             @Override
-            public void onTextChanged(CharSequence phonenumber, int start, int before, int count) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+
             }
 
             @Override
             public void afterTextChanged(Editable phonenumber) {
-                StringUtil.autoFormatPhone(phonenumber, length_before);
+                String phone = phoneNumberEditText.getText().toString();
+                isPhoneEmpty = StringUtil.isNullOrEmpty(phone);
+                if (!isPhoneEmpty) {
+                    phoneNumberLabel.setError(null);
+                    phoneNumberLabel.setErrorEnabled(false);
+                }
+                // auto-format as typing
+                StringUtil.autoFormatPhone(phonenumber, len);
+            }
+        });
+        lastNameText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isLastNameEmpty = StringUtil.isNullOrEmpty(lastNameText.getText().toString());
+                if (!isLastNameEmpty) {
+                    lastNameLabel.setError(null);
+                    lastNameLabel.setErrorEnabled(false);
+                } else {
+                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage();
+                    lastNameLabel.setError(lastNameError);
+                    lastNameLabel.setErrorEnabled(true);
+                }
+
             }
         });
 
+    }
 
+    private boolean checkPhoneNumber() {
+        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
+        if (!isPhoneEmpty) { // check validity only if non-empty
+            String phone = phoneNumberEditText.getText().toString();
+            if (!StringUtil.isNullOrEmpty(phone)
+                    && !StringUtil.isValidPhoneNumber(phone.trim(), phoneValidation)) {
+                phoneNumberLabel.setErrorEnabled(true);
+                phoneNumberLabel.setError(phoneError);
+                return false;
+            }
+            phoneNumberLabel.setError(null);
+            phoneNumberLabel.setErrorEnabled(false);
+        }
+        return true;
+    }
+
+
+    private boolean isDateOfBirthValid() {
+        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
+        String dob = dobEditText.getText().toString();
+        if (!StringUtil.isNullOrEmpty(dob)) {
+            boolean isValid = DateUtil.isValidateStringDateMMDDYYYY(dob);
+            doblabel.setErrorEnabled(!isValid);
+            doblabel.setError(isValid ? null : errorMessage);
+            return isValid;
+        }
+        return true;
+    }
+
+    private boolean checkReadyForNext() {
+
+        boolean isPhoneValid = checkPhoneNumber();
+        // for non-required field, check validity only if non-empty
+        if (!isPhoneValid) {
+            phoneNumberEditText.requestFocus();
+        }
+
+        return isPhoneValid;
     }
 
     @Override
     public void onClick(View view) {
+        String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
         if (view == buttonAddDemographicInfo) {
-            // update the model
-            updateModels();
-            // post the changes
-            postUpdates();
-            // hide the keyboard
-            SystemUtil.hideSoftKeyboard(getActivity());
+            if (checkReadyForNext() && isDateOfBirthValid() && !isFirstNameEmpty && !isLastNameEmpty) {
+                // update the model
+                updateModels();
+                // post the changes
+                postUpdates();
+                // hide the keyboard
+                SystemUtil.hideSoftKeyboard(getActivity());
+            }
 
         } else if (view == selectGender) {
             selectedDataArray = 1;
-            showAlertDialogWithListview(genderSelectArray, "Select Gender");
+            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectGender();
+            showAlertDialogWithListview(gender, title, cancelLabel);
 
         } else if (view == raceDataTextView) {
             selectedDataArray = 2;
-            showAlertDialogWithListview(raceDataArray, "Select Race");
+            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectRace();
+            showAlertDialogWithListview(race, title, cancelLabel);
+
 
         } else if (view == ethnicityDataTextView) {
             selectedDataArray = 3;
-            showAlertDialogWithListview(ethnicityDataArray, "Select Ethnicity");
+            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectEthnicity();
+            showAlertDialogWithListview(ethnicity, title, cancelLabel);
 
         }
     }
 
-    private void showAlertDialogWithListview(final String[] listArray, String title) {
+    private void showAlertDialogWithListview(final String[] dataArray, String title, String cancelLabel) {
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -305,8 +532,8 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         View customView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.alert_list_layout, (ViewGroup) getView(), false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter mAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(listArray));
-        listView.setAdapter(mAdapter);
+        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
+        listView.setAdapter(alertAdapter);
         dialog.setView(customView);
         final AlertDialog alert = dialog.create();
         alert.show();
@@ -316,15 +543,17 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (selectedDataArray) {
                     case 1:
-                        selectGender.setText(genderSelectArray[position]);
-
+                        String gender = dataArray[position];
+                        selectGender.setText(gender);
                         break;
                     case 2:
-                        raceDataTextView.setText(raceDataArray[position]);
+                        String race = dataArray[position];
+                        raceDataTextView.setText(race);
 
                         break;
                     case 3:
-                        ethnicityDataTextView.setText(ethnicityDataArray[position]);
+                        String ethnicity = dataArray[position];
+                        ethnicityDataTextView.setText(ethnicity);
 
                         break;
                 }
@@ -332,6 +561,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
         });
     }
+
 
     private void updateModels() {
 
@@ -422,48 +652,47 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     private void setEditTexts(View view) {
 
-        firstNameLabel.setTag(getString(R.string.demofirstNameLabel));
+        firstNameLabel.setTag(persDetailsMetaDTO.properties.firstName.getLabel());
         firstNameText.setTag(firstNameLabel);
 
 
-        middleNameLabel.setTag(getString(R.string.demomiddleNameLabel));
+        middleNameLabel.setTag(persDetailsMetaDTO.properties.middleName.getLabel());
         middleNameText.setTag(middleNameLabel);
-        middleNameText.clearFocus();
 
 
-        lastNameLabel.setTag(getString(R.string.demolastNameLabel));
+        lastNameLabel.setTag(persDetailsMetaDTO.properties.lastName.getLabel());
         lastNameText.setTag(lastNameLabel);
 
 
-        doblabel.setTag(getString(R.string.demoDobLabel));
+        doblabel.setTag(persDetailsMetaDTO.properties.dateOfBirth.getLabel());
         dobEditText.setTag(doblabel);
 
 
-        phoneNumberLabel.setTag(getString(R.string.demoPhoneNumberLabel));
+        phoneNumberLabel.setTag(addressMetaDTO.properties.phone.getLabel());
         phoneNumberEditText.setTag(phoneNumberLabel);
 
 
-        driverLicenseLabel.setTag(getString(R.string.demodriverlicenseLabel));
+        driverLicenseLabel.setTag(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
         driverlicenseEditText.setTag(driverLicenseLabel);
 
 
-        address1Label.setTag(getString(R.string.demoAddress1Label));
+        address1Label.setTag(addressMetaDTO.properties.address1.getLabel());
         address1EditText.setTag(address1Label);
 
 
-        address2Label.setTag(getString(R.string.demoAddress2Label));
+        address2Label.setTag(addressMetaDTO.properties.address2.getLabel());
         address2EditText.setTag(address2Label);
 
 
-        zipcodeLabel.setTag(getString(R.string.demoZipcodeLabel));
+        zipcodeLabel.setTag(addressMetaDTO.properties.zipcode.getLabel());
         zipCodeEditText.setTag(zipcodeLabel);
 
 
-        cityLabel.setTag(getString(R.string.demoCityLabel));
+        cityLabel.setTag(addressMetaDTO.properties.city.getLabel());
         cityEditText.setTag(cityLabel);
 
 
-        stateLabel.setTag(getString(R.string.demoStateLabel));
+        stateLabel.setTag(addressMetaDTO.properties.state.getLabel());
         stateEditText.setTag(stateLabel);
 
 
@@ -558,6 +787,9 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, bool);
+                if (!bool) { // for SmartyStreets
+                    getCityAndState(zipCodeEditText.getText().toString());
+                }
             }
         });
 
@@ -632,19 +864,19 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if (demographicPersDetailsPayloadDTO != null) {
             //Personal Details
             String firstName = demographicPersDetailsPayloadDTO.getFirstName();
-            if (firstName != null) {
+            if (SystemUtil.isNotEmptyString(firstName)) {
                 firstNameText.setText(firstName);
                 firstNameText.requestFocus();
             }
 
             String lastName = demographicPersDetailsPayloadDTO.getLastName();
-            if (lastName != null) {
+            if (SystemUtil.isNotEmptyString(lastName)) {
                 lastNameText.setText(lastName);
                 lastNameText.requestFocus();
             }
 
             String middleName = demographicPersDetailsPayloadDTO.getMiddleName();
-            if (middleName != null) {
+            if (SystemUtil.isNotEmptyString(middleName)) {
                 middleNameText.setText(middleName);
                 middleNameText.requestFocus();
 
@@ -655,28 +887,29 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             if (datetime != null) {
                 String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
                 dobEditText.setText(dateOfBirthString);
+                dobEditText.requestFocus();
             } else {
                 Log.v(LOG_TAG, "date is null");
             }
             String getGender = demographicPersDetailsPayloadDTO.getGender();
-            if (!getGender.isEmpty()) {
+            if (SystemUtil.isNotEmptyString(getGender)) {
                 selectGender.setText(getGender);
             } else {
-                selectGender.setText(R.string.choose);
+                selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
 
             }
 
             String getRace = demographicPersDetailsPayloadDTO.getPrimaryRace();
-            if (!getRace.isEmpty()) {
+            if (SystemUtil.isNotEmptyString(getRace)) {
                 raceDataTextView.setText(getRace);
             } else {
-                raceDataTextView.setText(R.string.choose);
+                raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
             }
             String getethnicity = demographicPersDetailsPayloadDTO.getEthnicity();
-            if (!getethnicity.isEmpty()) {
+            if (SystemUtil.isNotEmptyString(getethnicity)) {
                 ethnicityDataTextView.setText(getethnicity);
             } else {
-                ethnicityDataTextView.setText(R.string.choose);
+                ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
             }
 
         } else {
@@ -696,38 +929,39 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if (demographicAddressPayloadDTO != null) {
             //Address
             String addressLine1 = demographicAddressPayloadDTO.getAddress1();
-            if (addressLine1 != null) {
+            if (SystemUtil.isNotEmptyString(addressLine1)) {
                 address1EditText.setText(addressLine1);
                 address1EditText.requestFocus();
 
             }
 
             String addressLine2 = demographicAddressPayloadDTO.getAddress2();
-            if (addressLine2 != null) {
+            if (SystemUtil.isNotEmptyString(addressLine2)) {
                 address2EditText.setText(addressLine2);
                 address2EditText.requestFocus();
             }
 
             String city = demographicAddressPayloadDTO.getCity();
-            if (city != null) {
+            if (SystemUtil.isNotEmptyString(city) || ! cityEditText.getText().toString().isEmpty()) {
                 cityEditText.setText(city);
                 cityEditText.requestFocus();
             }
             String state = demographicAddressPayloadDTO.getState();
-            if (state != null) {
+            if (SystemUtil.isNotEmptyString(state) || ! stateEditText.getText().toString().isEmpty()) {
                 stateEditText.setText(state);
                 stateEditText.requestFocus();
             }
             String zipcode = demographicAddressPayloadDTO.getZipcode();
-            if (zipcode != null) {
+            if (SystemUtil.isNotEmptyString(zipcode)) {
                 zipCodeEditText.setText(StringUtil.formatZipCode(zipcode));
                 zipCodeEditText.requestFocus();
 
             }
 
             String phoneumber = demographicAddressPayloadDTO.getPhone();
-            if (phoneumber != null) {
+            if (SystemUtil.isNotEmptyString(phoneumber)) {
                 phoneNumberEditText.setText(StringUtil.formatPhoneNumber(phoneumber));
+                phoneNumberEditText.requestFocus();
             }
 
         } else {
@@ -763,6 +997,31 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                 .setDemographicPayloadIdDocDTO(demographicIdDocPayloadDTO);
 
     }
+
+    public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
+        return idDocsMetaDTO;
+    }
+
+    public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
+        this.idDocsMetaDTO = idDocsMetaDTO;
+    }
+
+    public DemographicMetadataEntityPersDetailsDTO getPersDetailsMetaDTO() {
+        return persDetailsMetaDTO;
+    }
+
+    public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
+        this.persDetailsMetaDTO = persDetailsMetaDTO;
+    }
+
+    public DemographicMetadataEntityAddressDTO getAddressMetaDTO() {
+        return addressMetaDTO;
+    }
+
+    public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {
+        this.addressMetaDTO = addressMetaDTO;
+    }
+
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
@@ -836,31 +1095,51 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         }
 
 
-        setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel));
-        setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demographicsLabel));
+        setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
+        setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
 
 
-        setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.raceDataTextView));
-        setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.raceListDataTextView));
+        setProximaNovaRegularTypeface(getActivity(), raceLabelTextView);
+        setProximaNovaSemiboldTypeface(getActivity(), raceDataTextView);
 
-        setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.genderTextView));
-        setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.chooseGenderTextView));
+        setProximaNovaRegularTypeface(getActivity(), genderLabelTextView);
+        setProximaNovaSemiboldTypeface(getActivity(), selectGender);
 
-        setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.demographicsAddressAddressSectionLabel));
+        setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
 
 
-        setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.ethnicityDataTextView));
-        setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.ethnicityListDataTextView));
+        setProximaNovaRegularTypeface(getActivity(), ethnicityLabelTextView);
+        setProximaNovaSemiboldTypeface(getActivity(), ethnicityDataTextView);
     }
 
+    /**
+     * Background task to call smarty streets zip code lookup.
+     * The response is a com.smartystreets.api.us_zipcode.City object,
+     * that contains city, mailableCity, stateAbbreviation and state.
+     */
+    private void getCityAndState(String zipcode) {
 
+        new AsyncTask<String, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(String... params) {
+                smartyStreetsResponse = AddressUtil.getCityAndStateByZipCode(params[0]);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+
+                if (smartyStreetsResponse != null) {
+                    cityEditText.setText(smartyStreetsResponse.getCity());
+
+                    stateAbbr = smartyStreetsResponse.getStateAbbreviation();
+                    stateEditText.setText(stateAbbr);
+                }
+            }
+
+
+        }.execute(zipcode);
+    }
 }

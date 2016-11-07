@@ -1,11 +1,11 @@
 package com.carecloud.carepaylibray.utils;
 
-
+import android.content.Context;
 import android.text.Editable;
-
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
+
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,8 +30,15 @@ public class StringUtil {
         return (string == null || string.equals(""));
     }
 
-    public static boolean isValidPhoneNumber(String phoneNumber) {
-        Pattern pattern = Pattern.compile(PHONE_NUMBER_REGEX);
+    /**
+     * Validates the format of a phone number
+     *
+     * @param phoneNumber      The phone number
+     * @param validationString The format string (as regex)
+     * @return Whether correctly formatted
+     */
+    public static boolean isValidPhoneNumber(String phoneNumber, String validationString) {
+        Pattern pattern = Pattern.compile(validationString);
         Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.matches();
     }
@@ -59,6 +66,11 @@ public class StringUtil {
             return matcher.matches();
         }
         return false;
+    }
+
+
+    public static String getFormatedLabal(Context context, String labal){
+        return isNullOrEmpty(labal)?context.getString(R.string.not_defined):labal;
     }
 
     /**
@@ -170,7 +182,7 @@ public class StringUtil {
                 phoneNumber.replace(currentLength - 1, currentLength, "-" + lastChar);
             }
 
-            if(lengthBefore != 3 && lengthBefore != 7 && lastChar == '-') {
+            if (lengthBefore != 3 && lengthBefore != 7 && lastChar == '-') {
                 phoneNumber.replace(currentLength - 1, currentLength, "");
             }
         }
@@ -228,7 +240,7 @@ public class StringUtil {
                 dob.replace(currentLength - 1, currentLength, "/" + lastChar);
             }
 
-            if(lengthBefore != 2 && lengthBefore != 5 && lastChar == '/') {
+            if (lengthBefore != 2 && lengthBefore != 5 && lastChar == '/') {
                 dob.replace(currentLength - 1, currentLength, "");
             }
         }
@@ -255,7 +267,7 @@ public class StringUtil {
      */
     public static String getLabelForView(String label) {
         if (isNullOrEmpty(label)) {
-            return "Not Defined";
+            return CarePayConstants.NOT_DEFINED;
         } else {
             return label;
         }

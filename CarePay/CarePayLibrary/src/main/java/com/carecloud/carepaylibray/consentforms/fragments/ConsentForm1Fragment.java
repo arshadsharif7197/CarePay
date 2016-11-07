@@ -19,6 +19,8 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.ConsentActivity;
 import com.carecloud.carepaylibray.consentforms.FormData;
 import com.carecloud.carepaylibray.consentforms.interfaces.IFragmentCallback;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
 import java.util.Date;
@@ -33,6 +35,9 @@ public class ConsentForm1Fragment extends Fragment {
     private Button            signButton;
     private IFragmentCallback fragmentCallback;
     private ScrollView        consentFormScrollView;
+
+    private ConsentFormLabelsDTO consentFormLabelsDTO;
+    private ConsentFormDTO consentFormDTO;
     Date date = new Date();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -71,6 +76,8 @@ public class ConsentForm1Fragment extends Fragment {
 
     }
 
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -81,10 +88,12 @@ public class ConsentForm1Fragment extends Fragment {
 
         FormData formData = (FormData) getArguments().getSerializable(CarePayConstants.FORM_DATA);
 
+   //     titleTextView.setText(consentFormLabelsDTO.getConsentForMedicareTitle());
         titleTextView.setText(formData.getTitle());
         descriptionTextView.setText(formData.getDescription());
         contentTextView.setText(formData.getContent());
         dateTextView.setText(formData.getDate());
+        signButton.setText(formData.getButtonLabel());
 
         // enable next button on scrolling all the way to the bottom
         setEnableNextButtonOnFullScroll();

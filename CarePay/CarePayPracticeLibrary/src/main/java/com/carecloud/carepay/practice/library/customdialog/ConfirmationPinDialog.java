@@ -7,24 +7,16 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingLabelDTO;
-import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingMetadataDTO;
 import com.carecloud.carepay.practice.library.practicesetting.services.PracticeSettingService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
-import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,7 +55,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_confirmation_pin);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        onLabelsServiceCall();
+        getPracticeSetting();
         setCancelable(false);
         onInitialization();
         onSettingStyle();
@@ -145,7 +137,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
         }
     }
 
-    private void onLabelsServiceCall(){
+    private void getPracticeSetting(){
         PracticeSettingService aptService = (new BaseServiceGenerator(context)).createService(PracticeSettingService.class);
         Call<PracticeSettingDTO> call = aptService.getPracticeSettingInformation();
         call.enqueue(new Callback<PracticeSettingDTO>() {
