@@ -30,7 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
