@@ -21,16 +21,13 @@
 
     <dimen name="home_main_container_margin_top">43dp</dimen>
 
-    <dimen name="home_button_width">179dp</dimen>
-    <dimen name="home_button_height">205dp</dimen>
+    <dimen name="home_button_width">268dp</dimen>
+    <dimen name="home_button_height">232dp</dimen>
 
     <dimen name="home_button_icon_width" format="float">44.0dp</dimen>
     <dimen name="home_button_icon_height" format="float">85.0dp</dimen>
 
     <dimen name="home_shadow_width">536dp</dimen>
-
-    <dimen name="home_button_icon_margin_top">54dp</dimen>
-    <dimen name="home_button_text_margin_bottom">20dp</dimen>
 
     <dimen name="home_shadow_margin_top">-19dp</dimen>
 

@@ -131,11 +131,8 @@
     <dimen name="home_button_icon_width" format="float">22.0dp</dimen>
     <dimen name="home_button_icon_height" format="float">38.0dp</dimen>
 
-    <dimen name="home_button_icon_margin_top">24dp</dimen>
-    <dimen name="home_button_text_margin_bottom">21dp</dimen>
-
-    <dimen name="home_button_width">87dp</dimen>
-    <dimen name="home_button_height">91dp</dimen>
+    <dimen name="home_button_width">104dp</dimen>
+    <dimen name="home_button_height">131dp</dimen>
 
     <dimen name="home_shadow_width">262dp</dimen>
 
