@@ -18,8 +18,8 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -39,9 +39,9 @@ public class AppointmentsActivity extends AppCompatActivity {
 
     private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentsItems;
     private TextView logOutTextview;
-    private CustomProxyNovaRegularLabel appointmentForTextview;
-    private CustomGothamRoundedMediumLabel selectAppointmentTextview;
-    private CustomGothamRoundedMediumLabel noAppointmentsLabel;
+    private CarePayTextView appointmentForTextview;
+    private CarePayTextView  selectAppointmentTextview;
+    private CarePayTextView  noAppointmentsLabel;
     private Bundle bundle;
     private LinearLayout noAppointmentView;
     private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentListWithToday;
@@ -54,17 +54,17 @@ public class AppointmentsActivity extends AppCompatActivity {
         appointmentsRecyclerView = (RecyclerView) findViewById(R.id.appointments_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
         appointmentsItems = new ArrayList<AppointmentDTO>();
-        appointmentForTextview = (CustomProxyNovaRegularLabel) findViewById(R.id.titleSelectappointmentsubheader);
+        appointmentForTextview = (CarePayTextView ) findViewById(R.id.titleSelectappointmentsubheader);
         appointmentForTextview.setTextColor(Color.WHITE);
         appointmentForTextview.setText(R.string.not_defined);
         logOutTextview = (TextView) findViewById(R.id.logoutTextview);
         logOutTextview.setText(R.string.not_defined);
-        selectAppointmentTextview = (CustomGothamRoundedMediumLabel) findViewById(R.id.titleSelectappointmentcheckin);
+        selectAppointmentTextview = (CarePayTextView ) findViewById(R.id.titleSelectappointmentcheckin);
         selectAppointmentTextview.setText(R.string.not_defined);
         appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
         noAppointmentView = (LinearLayout) findViewById(R.id.no_appointment_layout);
-        noAppointmentsLabel = (CustomGothamRoundedMediumLabel) findViewById(R.id.no_apt_message_title);
+        noAppointmentsLabel = (CarePayTextView ) findViewById(R.id.no_apt_message_title);
 
         getAppointmentInformation();
 

@@ -206,6 +206,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.appointmentItemLinearLayout.setBackgroundColor(
                         ContextCompat.getColor(context, R.color.white));
             }
+
+            // Check if this item is last in section and hide it's divider
+            if (appointmentItems.size() > (position + 1)) {
+                Object nextItem = appointmentItems.get(position + 1);
+                if (nextItem.getClass() == AppointmentSectionHeaderModel.class) {
+                    holder.listItemDivider.setVisibility(View.GONE);
+                }
+            }
         } else {
             AppointmentSectionHeaderModel item = (AppointmentSectionHeaderModel) object;
             String title = getSectionHeaderTitleByDay(item.getAppointmentHeader());
@@ -332,6 +340,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         private LinearLayout appointmentItemLinearLayout;
         private LinearLayout todayTimeLinearLayout;
         private LinearLayout upcomingDateLinearLayout;
+        private View listItemDivider;
 
         AppointmentViewHolder(View itemView) {
             super(itemView);
@@ -365,6 +374,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             // Missed
             missedAppointmentTextView = (CustomProxyNovaSemiBoldLabel)
                     itemView.findViewById(R.id.missed_appointment_text_view);
+
+            listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
         }
     }
 }
