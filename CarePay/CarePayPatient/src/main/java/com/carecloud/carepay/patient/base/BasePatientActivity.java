@@ -18,7 +18,7 @@ public abstract class BasePatientActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
     }
 
@@ -30,11 +30,12 @@ public abstract class BasePatientActivity extends AppCompatActivity {
      * @return Dynamic converted class object
      */
     public <S> S getConvertedDTO(Class<S> dtoClass) {
-        Bundle bundle = this.getIntent().getExtras();
+        Bundle bundle = this.getIntent().getBundleExtra(PatientNavigationHelper.class.getSimpleName());
 
         if (bundle != null) {
             Gson gson = new Gson();
-            return gson.fromJson(bundle.getString(getApplicationContext().getClass().getSimpleName()), dtoClass);
+            String jsonString = bundle.getString(PatientNavigationHelper.class.getSimpleName());
+            return gson.fromJson(jsonString, dtoClass);
         }
         return null;
     }

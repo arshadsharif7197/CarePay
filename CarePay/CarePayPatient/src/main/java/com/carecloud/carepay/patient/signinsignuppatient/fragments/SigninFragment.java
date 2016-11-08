@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.demographics.services.DemographicService;
-import com.carecloud.carepay.patient.selectlanguage.SelectLangaugeActivity;
+import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
@@ -162,7 +162,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // relaunch select language
-                Intent intent = new Intent(getActivity(), SelectLangaugeActivity.class);
+                Intent intent = new Intent(getActivity(), SelectLanguageActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }

@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
-import com.carecloud.carepay.patient.selectlanguage.models.languageOptionModel;
+
+import com.carecloud.carepay.patient.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -22,12 +23,12 @@ import java.util.List;
 
 public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapter.ViewHolder> {
 
-    List<languageOptionModel> languageListLanguageOptionModels;
+    List<LanguageOptionModel> languageListLanguageOptionModels;
     Context context;
     RadioButton selectedLanguage;
     private OnItemClickListener itemClickListener;
 
-    public LanguageListAdapter(List<languageOptionModel> languageListLanguageOptionModels, OnItemClickListener itemClickListener, Context mContext) {
+    public LanguageListAdapter(List<LanguageOptionModel> languageListLanguageOptionModels, OnItemClickListener itemClickListener, Context mContext) {
         this.languageListLanguageOptionModels = languageListLanguageOptionModels;
         this.itemClickListener = itemClickListener;
         this.context = mContext;
@@ -41,7 +42,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        languageOptionModel languageSelected = languageListLanguageOptionModels.get(position);
+        LanguageOptionModel languageSelected = languageListLanguageOptionModels.get(position);
         String languageName = languageSelected.getValue();
         holder.languageNameRadioButton.setText(languageName);
         if (ApplicationPreferences.Instance.getUserLanguage().equals(languageName)) {

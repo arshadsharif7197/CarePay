@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Model for language list
  */
-public class languageOptionModel {
+public class LanguageOptionModel {
 
     @SerializedName("languageId")
     @Expose
