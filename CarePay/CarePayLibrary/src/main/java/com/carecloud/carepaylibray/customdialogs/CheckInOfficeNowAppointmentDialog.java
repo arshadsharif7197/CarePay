@@ -50,7 +50,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_checkin_office_now_appointment, null);
 
         Button checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkOfficeButton);
-        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInAtOffice()));
+        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInAtOfficeButtonText()));
         checkInAtOfficeButton.setOnClickListener(this);
 
         Button checkInNowButton = (Button) childActionView.findViewById(R.id.checkOfficeNowButton);
