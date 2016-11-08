@@ -746,4 +746,8 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="HaveHealthInsurance" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
 </resources>
