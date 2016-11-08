@@ -8,6 +8,8 @@ import android.view.MenuItem;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.SigninFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -24,6 +26,10 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * Activity supporting Signin and Sign-up
  */
 public class SigninSignupActivity extends AppCompatActivity {
+
+
+    private SignInSignUpDTO signInSignUpDTO;
+    private SignInLablesDTO signInLablesDTO;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,5 +51,21 @@ public class SigninSignupActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    public SignInSignUpDTO getSignInSignUpDTO() {
+        return signInSignUpDTO;
+    }
+
+    public void setSignInSignUpDTO(SignInSignUpDTO signInSignUpDTO) {
+        this.signInSignUpDTO = signInSignUpDTO;
+    }
+
+    public SignInLablesDTO getSignInLablesDTO() {
+        return signInLablesDTO;
+    }
+
+    public void setSignInLablesDTO(SignInLablesDTO signInLablesDTO) {
+        this.signInLablesDTO = signInLablesDTO;
     }
 }

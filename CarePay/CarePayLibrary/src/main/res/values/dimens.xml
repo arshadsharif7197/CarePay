@@ -123,7 +123,7 @@
     <dimen name="apt_dl_header_ht">110dp</dimen>
     <dimen name="apt_dl_text_ht">37dp</dimen>
     <dimen name="apt_dl_text_big">20sp</dimen>
-    <dimen name="apt_dl_text_date">30sp</dimen>
+    <dimen name="apt_dl_text_date">26sp</dimen>
     <dimen name="apt_dl_margin">20dp</dimen>
     <dimen name="apt_dialog_appoint_dail_margin">3dp</dimen>
     <dimen name="apt_dl_btn_check_ht">48dp</dimen>
@@ -330,4 +330,6 @@
     <dimen name="cancel_radio_text_size">19sp</dimen>
     <dimen name="cancel_edittext_size">16sp</dimen>
     <dimen name="cancel_button_height">48dp</dimen>
+    <dimen name="demogr_onboard_allset_icon_margin_top">60dp</dimen>
+    <dimen name="demogr_onboard_button_margin_top">43dp</dimen>
 </resources>

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.selectlanguage.adapters.LanguageListAdapter;
 import com.carecloud.carepaylibray.selectlanguage.models.LanguageOptionModel;
@@ -35,7 +36,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     String languageName = null;
     List<LanguageOptionModel> languageOptionModelList;
     ImageButton languageConfirmButton;
-
+  //  LanguageListDTO languageListDTO;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,9 +75,9 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
      * Created data for language selection list
      */
     private void loadData() {
-
-        languageOptionModelList = new ArrayList<>();
         LanguageOptionModel languageOptionModel;
+        languageOptionModelList = new ArrayList<>();
+
         languageOptionModel = new LanguageOptionModel();
         languageOptionModel.setValue("English");
         languageOptionModel.setChecked(false);
@@ -86,6 +87,14 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel.setValue("Español");
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
+
+        /*int size = languageListDTO.getOptions().size();
+        for (int i = 0; i > size; i++) {
+            languageOptionModel = new LanguageOptionModel();
+            languageOptionModel.setValue(languageListDTO.getOptions().get(i).getLabel());
+            languageOptionModel.setChecked(false);
+            languageOptionModelList.add(languageOptionModel);
+        }*/
 
         LanguageListAdapter languageListAdapter = new LanguageListAdapter(languageOptionModelList, this, getActivity());
         languageListView.setAdapter(languageListAdapter);
