@@ -50,6 +50,8 @@ import java.util.Date;
 import java.util.List;
 
 
+
+
 public class ConsentForm2Fragment extends Fragment {
 
     Date date = new Date();
@@ -69,7 +71,8 @@ public class ConsentForm2Fragment extends Fragment {
     private boolean isDatePicked;
     private IFragmentCallback fragmentCallback;
     private ScrollView consentFormScrollView;
-    private EditText minorFirstNameEditText, minorLastNameEditText;
+    private EditText minorFirstNameEditText;
+    private EditText minorLastNameEditText;
     private List<String> gender = new ArrayList<String>();
     private TextView minorGender;
     private ConsentFormDTO consentFormDTO;
@@ -95,9 +98,9 @@ public class ConsentForm2Fragment extends Fragment {
     private String patientLastName;
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
-        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            String dob = new StringBuilder().append(i1 + 1).append("/").append(i2).append("/")
-                    .append(i).toString();
+        public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+            String dob = new StringBuilder().append(month + 1).append("/").append(dayOfMonth).append("/")
+                    .append(year).toString();
             dobTextView.setText(dob);
             isDatePicked = !(dob.equals(R.string.pick_date));
             dobTextView.setTag(dob);
@@ -105,8 +108,8 @@ public class ConsentForm2Fragment extends Fragment {
     };
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.signButton && fragmentCallback != null) {
+        public void onClick(View view) {
+            if (view.getId() == R.id.signButton && fragmentCallback != null) {
                 fragmentCallback.signButtonClicked();
             }
         }
@@ -159,7 +162,7 @@ public class ConsentForm2Fragment extends Fragment {
             try {
                 fragmentCallback = (IFragmentCallback) activity;
             } catch (Exception e) {
-                Log.e("Error"," Exception");
+                Log.e("Error", " Exception");
             }
         }
     }
@@ -348,7 +351,7 @@ public class ConsentForm2Fragment extends Fragment {
         setProximaNovaRegularTypeface(getActivity(), descriptionTextView);
         setProximaNovaRegularTypeface(getActivity(), contentTextView);
         setProximaNovaRegularTypeface(getActivity(), content2TextView);
-        setProximaNovaRegularTypeface(getActivity(),  dateTextView);
+        setProximaNovaRegularTypeface(getActivity(), dateTextView);
 
         setProximaNovaSemiboldTypeface(getActivity(), minorInformation);
         setProximaNovaRegularTypeface(getActivity(), minorFirstNameEditText);

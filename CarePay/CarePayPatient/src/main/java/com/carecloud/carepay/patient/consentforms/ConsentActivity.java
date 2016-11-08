@@ -27,14 +27,16 @@ import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsD
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
@@ -108,8 +110,9 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainContainer, fragment);
 
-        if (addToBackStack)
+        if (addToBackStack) {
             fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commit();
     }
 

@@ -29,6 +29,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import java.util.Date;
 
 
+
+
 public class ConsentForm1Fragment extends Fragment {
 
     Date date = new Date();
@@ -42,7 +44,7 @@ public class ConsentForm1Fragment extends Fragment {
         @Override
         public void onClick(View clickListener) {
             if (clickListener.getId() == R.id.signButton && fragmentCallback != null) {
-                    fragmentCallback.signButtonClicked();
+                fragmentCallback.signButtonClicked();
             }
         }
     };
