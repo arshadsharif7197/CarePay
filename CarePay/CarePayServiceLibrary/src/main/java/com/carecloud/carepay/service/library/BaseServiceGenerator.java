@@ -70,14 +70,13 @@ public class BaseServiceGenerator {
                         .header("Content-Type", "application/json")
                         .header("Accept", "application/json")
                         .header("Cache-Control", "no-cache, no-store")
-                        .header("username", "kkannan@carecloud.com")
                         .method(original.method(), original.body());
-            /*    if( !isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
+                if( !isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
                     requestBuilderWithToken.header("username", CognitoAppHelper.getCurrUser());
                 }
                 if(CognitoAppHelper.getCurrSession()!=null &&  !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())){
                     requestBuilderWithToken.header("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-                }*/
+                }
                 Request request = requestBuilderWithToken.build();
                 return chain.proceed(request);
 
