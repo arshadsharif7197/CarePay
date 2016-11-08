@@ -32,13 +32,29 @@ public class PaymentAmountReceiptDialog extends Dialog implements
 
     private Context context;
     private JSONObject paymentReceiptModel;
-    private ImageView dialogCloseHeader,paymentReceiptLocationImageView, paymentReceiptDialImageView;
-    private CarePayTextView receiptAmountValueLabel,receiptPaymenttypeLabel,receiptPaymentDateLabel,receiptUserNameLabel;
-    private CarePayTextView receiptUsertypeLabel,addressReceiptLevel,receiptPreviousTitlelabel,receiptPreviousValuelabel,receiptInsuranceTitleLabel,
-            receiptInsuranceValueLabel,totalPaymentReceiptTitleLabel,totalPaymentReceiptValueLabel;
+    private ImageView dialogCloseHeader;
+    private ImageView paymentReceiptLocationImageView;
+    private ImageView  paymentReceiptDialImageView;
+    private CarePayTextView receiptAmountValueLabel ;
+    private CarePayTextView receiptPaymenttypeLabel ;
+    private CarePayTextView receiptPaymentDateLabel ;
+    private CarePayTextView receiptUserNameLabel;
+    private CarePayTextView receiptUsertypeLabel ;
+    private CarePayTextView addressReceiptLevel;
+    private CarePayTextView  receiptPreviousTitlelabel;
+    private CarePayTextView  receiptPreviousValuelabel;
+    private CarePayTextView  receiptInsuranceTitleLabel;
+    private CarePayTextView   receiptInsuranceValueLabel;
+    private CarePayTextView totalPaymentReceiptTitleLabel ;
+    private CarePayTextView totalPaymentReceiptValueLabel;
     private CarePayTextView paymentReceiptHeaderTextView;
     private Button saveOrSharereceiptButton;
 
+    /**
+     * Constructor.
+     * @param context context
+     * @param paymentReceiptModel model
+     */
     public PaymentAmountReceiptDialog(Context context, JSONObject paymentReceiptModel) {
         super(context);
         this.context = context;
@@ -98,6 +114,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements
         saveOrSharereceiptButton = (Button)findViewById(R.id.saveOrSharereceiptButton);
 
     }
+
     private void onSettingStyle(){
         receiptAmountValueLabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
         receiptPaymenttypeLabel.setTextColor(ContextCompat.getColor(context,R.color.manatee));
@@ -114,12 +131,14 @@ public class PaymentAmountReceiptDialog extends Dialog implements
         totalPaymentReceiptValueLabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
         paymentReceiptHeaderTextView.setTextColor(ContextCompat.getColor(context,R.color.payne_gray));
     }
+
     private void onSetListener(){
         dialogCloseHeader.setOnClickListener(this);
         saveOrSharereceiptButton.setOnClickListener(this);
         paymentReceiptDialImageView.setOnClickListener(this);
         paymentReceiptLocationImageView.setOnClickListener(this);
     }
+
     /**
      * show device map view based on address.
      *
@@ -147,6 +166,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements
 
             }
     }
+
     private void onSaveShareButton(){
 
     }
