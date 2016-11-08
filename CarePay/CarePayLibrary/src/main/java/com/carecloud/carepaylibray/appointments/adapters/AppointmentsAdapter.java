@@ -142,7 +142,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         AppointmentDTO item = ((AppointmentDTO) object);
                         AppointmentsActivity.model = item;
 
-                        if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)) {
+                        if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
                             new CancelAppointmentDialog(context, item, appointmentLabels).show();
                         } else {
                             if (isPending) {
@@ -178,7 +178,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
             }
 
-            if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER)) {
+            if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
                 holder.missedAppointmentTextView.setVisibility(View.VISIBLE);
                 holder.missedAppointmentTextView.setText(StringUtil.getLabelForView(
                         appointmentLabels.getMissedAppointmentsHeading()));
