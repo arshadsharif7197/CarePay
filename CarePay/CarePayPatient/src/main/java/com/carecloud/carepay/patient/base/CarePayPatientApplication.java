@@ -30,7 +30,7 @@ public class CarePayPatientApplication extends Application {
         ApplicationPreferences.createPreferences(this);
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
         CognitoAppHelper.init(getApplicationContext());
-        WorkflowServiceHelper.getInstance().executeApplicationStartRequest(applicationStartCallback);
+     //   WorkflowServiceHelper.getInstance().executeApplicationStartRequest(applicationStartCallback);
     }
     WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {
         @Override
