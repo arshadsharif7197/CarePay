@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
@@ -31,9 +32,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private Context context;
     private JSONObject paymentModel;
     private EditText enterPartialAmountEditText;
-    private CustomProxyNovaSemiBoldLabel partialPaymentTotalAmountTitle;
-    private CustomGothamRoundedMediumLabel amountSymbolTextView;
-    private CustomGothamRoundedBookLabel partialPaymentPayingToday;
+    private CarePayTextView partialPaymentTotalAmountTitle;
+    private CarePayTextView amountSymbolTextView;
+    private CarePayTextView partialPaymentPayingToday;
     private Button payPartialButton;
     //changes are needed when model will come
     private double fullAmount = 108.00;
@@ -60,10 +61,10 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
         findViewById(R.id.dialogCloseImageView).setOnClickListener(this);
         enterPartialAmountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
-        partialPaymentTotalAmountTitle = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.partialPaymentTotalAmountTitle);
+        partialPaymentTotalAmountTitle = (CarePayTextView) findViewById(R.id.partialPaymentTotalAmountTitle);
         payPartialButton = (Button) findViewById(R.id.payPartialButton);
-        amountSymbolTextView = (CustomGothamRoundedMediumLabel) findViewById(R.id.amountSymbolTextView);
-        partialPaymentPayingToday = (CustomGothamRoundedBookLabel) findViewById(R.id.partialPaymentPayingToday);
+        amountSymbolTextView = (CarePayTextView) findViewById(R.id.amountSymbolTextView);
+        partialPaymentPayingToday = (CarePayTextView) findViewById(R.id.partialPaymentPayingToday);
         enterPartialAmountEditText.addTextChangedListener(this);
         partialPaymentTotalAmountTitle.setText(amountMsg + amountSymbol + fullAmount);
         partialPaymentTotalAmountTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);

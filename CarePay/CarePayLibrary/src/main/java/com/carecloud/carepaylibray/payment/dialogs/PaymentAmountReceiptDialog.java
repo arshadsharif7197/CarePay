@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
@@ -32,10 +33,10 @@ public class PaymentAmountReceiptDialog extends Dialog implements
     private Context context;
     private JSONObject paymentReceiptModel;
     private ImageView dialogCloseHeader,paymentReceiptLocationImageView, paymentReceiptDialImageView;
-    private CustomProxyNovaSemiBoldLabel receiptAmountValueLabel,receiptPaymenttypeLabel,receiptPaymentDateLabel,receiptUserNameLabel;
-    private CustomProxyNovaRegularLabel receiptUsertypeLabel,addressReceiptLevel,receiptPreviousTitlelabel,receiptPreviousValuelabel,receiptInsuranceTitleLabel,
+    private CarePayTextView receiptAmountValueLabel,receiptPaymenttypeLabel,receiptPaymentDateLabel,receiptUserNameLabel;
+    private CarePayTextView receiptUsertypeLabel,addressReceiptLevel,receiptPreviousTitlelabel,receiptPreviousValuelabel,receiptInsuranceTitleLabel,
             receiptInsuranceValueLabel,totalPaymentReceiptTitleLabel,totalPaymentReceiptValueLabel;
-    private CustomProxyNovaExtraBold paymentReceiptHeaderTextView;
+    private CarePayTextView paymentReceiptHeaderTextView;
     private Button saveOrSharereceiptButton;
 
     public PaymentAmountReceiptDialog(Context context, JSONObject paymentReceiptModel) {
@@ -80,20 +81,20 @@ public class PaymentAmountReceiptDialog extends Dialog implements
         dialogCloseHeader= (ImageView)findViewById(R.id.dialogCloseHeader);
         paymentReceiptLocationImageView= (ImageView)findViewById(R.id.paymentReceiptLocationImageView);
         paymentReceiptDialImageView = (ImageView)findViewById(R.id.paymentReceiptDialImageView);
-        receiptAmountValueLabel = (CustomProxyNovaSemiBoldLabel)findViewById(R.id.receiptAmountValueLabel);
-        receiptPaymenttypeLabel = (CustomProxyNovaSemiBoldLabel)findViewById(R.id.receiptPaymenttypeLabel);
-        receiptPaymentDateLabel = (CustomProxyNovaSemiBoldLabel)findViewById(R.id.receiptPaymentDateLabel);
-        receiptUserNameLabel = (CustomProxyNovaSemiBoldLabel)findViewById(R.id.receiptUserNameLabel);
+        receiptAmountValueLabel = (CarePayTextView)findViewById(R.id.receiptAmountValueLabel);
+        receiptPaymenttypeLabel = (CarePayTextView)findViewById(R.id.receiptPaymenttypeLabel);
+        receiptPaymentDateLabel = (CarePayTextView)findViewById(R.id.receiptPaymentDateLabel);
+        receiptUserNameLabel = (CarePayTextView)findViewById(R.id.receiptUserNameLabel);
 
-        receiptUsertypeLabel=(CustomProxyNovaRegularLabel)findViewById(R.id.receiptUsertypeLabel);
-        addressReceiptLevel=(CustomProxyNovaRegularLabel)findViewById(R.id.addressReceiptLevel);
-        receiptPreviousTitlelabel=(CustomProxyNovaRegularLabel)findViewById(R.id.receiptPreviousTitlelabel);
-        receiptPreviousValuelabel=(CustomProxyNovaRegularLabel)findViewById(R.id.receiptPreviousValuelabel);
-        receiptInsuranceTitleLabel=(CustomProxyNovaRegularLabel)findViewById(R.id.receiptInsuranceTitleLabel);
-        receiptInsuranceValueLabel=(CustomProxyNovaRegularLabel)findViewById(R.id.receiptInsuranceValueLabel);
-        totalPaymentReceiptTitleLabel=(CustomProxyNovaRegularLabel)findViewById(R.id.totalPaymentReceiptTitleLabel);
-        totalPaymentReceiptValueLabel=(CustomProxyNovaRegularLabel)findViewById(R.id.totalPaymentReceiptValueLabel);
-        paymentReceiptHeaderTextView = (CustomProxyNovaExtraBold)findViewById(R.id.paymentReceiptHeaderTextView);
+        receiptUsertypeLabel=(CarePayTextView)findViewById(R.id.receiptUsertypeLabel);
+        addressReceiptLevel=(CarePayTextView)findViewById(R.id.addressReceiptLevel);
+        receiptPreviousTitlelabel=(CarePayTextView)findViewById(R.id.receiptPreviousTitlelabel);
+        receiptPreviousValuelabel=(CarePayTextView)findViewById(R.id.receiptPreviousValuelabel);
+        receiptInsuranceTitleLabel=(CarePayTextView)findViewById(R.id.receiptInsuranceTitleLabel);
+        receiptInsuranceValueLabel=(CarePayTextView)findViewById(R.id.receiptInsuranceValueLabel);
+        totalPaymentReceiptTitleLabel=(CarePayTextView)findViewById(R.id.totalPaymentReceiptTitleLabel);
+        totalPaymentReceiptValueLabel=(CarePayTextView)findViewById(R.id.totalPaymentReceiptValueLabel);
+        paymentReceiptHeaderTextView = (CarePayTextView)findViewById(R.id.paymentReceiptHeaderTextView);
         saveOrSharereceiptButton = (Button)findViewById(R.id.saveOrSharereceiptButton);
 
     }

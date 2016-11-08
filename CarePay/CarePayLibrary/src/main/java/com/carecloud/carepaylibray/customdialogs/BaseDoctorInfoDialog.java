@@ -19,12 +19,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -70,28 +65,28 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         DateUtil.getInstance().setDateRaw(payload.getStartTime());
 
-        CustomProxyNovaLightLabel dateTextView = ((CustomProxyNovaLightLabel) findViewById(R.id.appointDateTextView));
+        CarePayTextView dateTextView = ((CarePayTextView) findViewById(R.id.appointDateTextView));
         dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
 
-        CustomGothamRoundedBoldLabel timeTextView = ((CustomGothamRoundedBoldLabel) findViewById(R.id.appointTimeTextView));
+        CarePayTextView timeTextView = ((CarePayTextView) findViewById(R.id.appointTimeTextView));
         timeTextView.setText(DateUtil.getInstance().getTime12Hour());
 
-        CustomGothamRoundedMediumLabel shortNameTextView = ((CustomGothamRoundedMediumLabel) findViewById(R.id.appointShortnameTextView));
+        CarePayTextView shortNameTextView = ((CarePayTextView) findViewById(R.id.appointShortnameTextView));
         shortNameTextView.setText(StringUtil.onShortDrName(payload.getProvider().getName()));
 
-        CustomProxyNovaSemiBoldLabel nameTextView = ((CustomProxyNovaSemiBoldLabel) findViewById(R.id.appointNameTextView));
+        CarePayTextView nameTextView = ((CarePayTextView) findViewById(R.id.appointNameTextView));
         nameTextView.setText(payload.getProvider().getName());
 
-        CustomProxyNovaRegularLabel typeTextView = ((CustomProxyNovaRegularLabel) findViewById(R.id.appointTypeTextView));
+        CarePayTextView typeTextView = ((CarePayTextView) findViewById(R.id.appointTypeTextView));
         typeTextView.setText(payload.getProvider().getSpecialty().getName());
 
         // Appointment Place name
-        final CustomProxyNovaExtraBold addressHeaderTextView = ((CustomProxyNovaExtraBold) findViewById(R.id.appointAddressHeaderTextView));
+        final CarePayTextView addressHeaderTextView = ((CarePayTextView) findViewById(R.id.appointAddressHeaderTextView));
         placeName = payload.getLocation().getName();
         addressHeaderTextView.setText(placeName);
 
         // Appointment Place address
-        final CustomProxyNovaRegularLabel addressTextView = ((CustomProxyNovaRegularLabel) findViewById(R.id.appointAddressTextView));
+        final CarePayTextView addressTextView = ((CarePayTextView) findViewById(R.id.appointAddressTextView));
         placeAddress = payload.getLocation().getAddress().getPlaceAddressString();
         addressTextView.setText(placeAddress);
 

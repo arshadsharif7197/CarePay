@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
 /**
  * Created by prem_mourya on 10/5/2016.
@@ -24,7 +24,7 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
     private Context context;
     private LargeAlertInterface largeAlertInterface;
     private Button actionCallButton;
-    private CustomProxyNovaSemiBoldLabel largeMssageLabel;
+    private CarePayTextView largeMssageLabel;
     private String actionText;
     private String message;
     private LinearLayout headerLayout;
@@ -86,7 +86,7 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
         actionCallButton = (Button) findViewById(R.id.actionButton);
         actionCallButton.setOnClickListener(this);
         actionCallButton.setText(actionText);
-        largeMssageLabel = (CustomProxyNovaSemiBoldLabel)findViewById(R.id.largeMssageLabel);
+        largeMssageLabel = (CarePayTextView)findViewById(R.id.largeMssageLabel);
         largeMssageLabel.setText(message);
         largeMssageLabel.setTextColor(context.getResources().getColor(R.color.white));
         largeMssageLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);

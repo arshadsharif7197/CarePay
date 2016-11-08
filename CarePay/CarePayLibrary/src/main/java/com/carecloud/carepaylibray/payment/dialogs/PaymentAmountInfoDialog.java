@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customdialogs.BaseAmountInfoDialog;
 
@@ -24,10 +25,10 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     private Context context;
     private View rootView;
     private LinearLayout addChildDynamicLayout;
-    private CustomProxyNovaRegularLabel previousTitleTextView;
-    private CustomProxyNovaRegularLabel previousBalanceAmountTextView;
-    private CustomProxyNovaRegularLabel insuranceCoPayTitleTextView;
-    private CustomProxyNovaRegularLabel insuranceCoPayAmountTextView;
+    private CarePayTextView previousTitleTextView;
+    private CarePayTextView previousBalanceAmountTextView;
+    private CarePayTextView insuranceCoPayTitleTextView;
+    private CarePayTextView insuranceCoPayAmountTextView;
     private Button payNowButton;
 
     public PaymentAmountInfoDialog(Context context, JSONObject jsonObject) {
@@ -48,10 +49,10 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_payment_info, null);
-        previousTitleTextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.previousTitleTextView);
-        previousBalanceAmountTextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.previousBalanceAmountTextView);
-        insuranceCoPayTitleTextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.insuranceCoPayTitleTextView);
-        insuranceCoPayAmountTextView = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.insuranceCoPayAmountTextView);
+        previousTitleTextView = (CarePayTextView) childActionView.findViewById(R.id.previousTitleTextView);
+        previousBalanceAmountTextView = (CarePayTextView) childActionView.findViewById(R.id.previousBalanceAmountTextView);
+        insuranceCoPayTitleTextView = (CarePayTextView) childActionView.findViewById(R.id.insuranceCoPayTitleTextView);
+        insuranceCoPayAmountTextView = (CarePayTextView) childActionView.findViewById(R.id.insuranceCoPayAmountTextView);
         payNowButton = (Button) childActionView.findViewById(R.id.payNowButton);
         onSettingStyle();
         onSetListener();

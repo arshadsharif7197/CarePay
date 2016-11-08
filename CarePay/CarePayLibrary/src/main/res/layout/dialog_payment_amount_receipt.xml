@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent_apt"
@@ -38,7 +39,8 @@
             android:gravity="center"
             android:minHeight="@dimen/payment_receipt_layout_margin">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_semi_bold"
                 android:id="@+id/receiptAmountValueLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +49,8 @@
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/payment_receipt_header_size" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_semi_bold"
                 android:id="@+id/receiptPaymenttypeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,7 +59,8 @@
                 android:textColor="@color/manatee"
                 android:textSize="@dimen/payment_receipt_header_size" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_semi_bold"
                 android:id="@+id/receiptPaymentDateLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,7 +76,8 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_semi_bold"
                 android:id="@+id/receiptUserNameLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +87,8 @@
                 android:textColor="@color/blue_cerulian"
                 android:textSize="@dimen/payment_receipt_provider_size" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_regular"
                 android:id="@+id/receiptUsertypeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,7 +119,8 @@
                     android:layout_weight="0.7"
                     android:orientation="vertical">
 
-                    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        app:customAssetFont="proxima_nova_extra_bold"
                         android:id="@+id/paymentReceiptHeaderTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -126,7 +133,8 @@
                         android:textColor="@color/payne_gray"
                         android:textSize="@dimen/textview_textsize" />
 
-                    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        app:customAssetFont="proxima_nova_regular"
                         android:id="@+id/addressReceiptLevel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -173,7 +181,8 @@
                 android:layout_marginTop="@dimen/payment_receipt_margin"
                 android:orientation="horizontal">
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    app:customAssetFont="proxima_nova_regular"
                     android:id="@+id/receiptPreviousTitlelabel"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/payment_option_section_margin"
@@ -185,7 +194,8 @@
                     android:textColor="@color/bermudagrey"
                     android:textSize="@dimen/payment_text_balance_size" />
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    app:customAssetFont="proxima_nova_regular"
                     android:id="@+id/receiptPreviousValuelabel"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/payment_option_section_margin"
@@ -209,7 +219,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    app:customAssetFont="proxima_nova_regular"
                     android:id="@+id/receiptInsuranceTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/payment_option_section_margin"
@@ -221,7 +232,8 @@
                     android:textColor="@color/bermudagrey"
                     android:textSize="@dimen/payment_text_balance_size" />
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    app:customAssetFont="proxima_nova_regular"
                     android:id="@+id/receiptInsuranceValueLabel"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/payment_option_section_margin"
@@ -246,7 +258,8 @@
                 android:layout_marginTop="@dimen/payment_receipt_margin_layout_top"
                 android:orientation="horizontal">
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    app:customAssetFont="proxima_nova_regular"
                     android:id="@+id/totalPaymentReceiptTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/payment_option_section_margin"
@@ -258,7 +271,8 @@
                     android:textColor="@color/bermudagrey"
                     android:textSize="@dimen/payment_text_balance_size" />
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    app:customAssetFont="proxima_nova_regular"
                     android:id="@+id/totalPaymentReceiptValueLabel"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/payment_option_section_margin"

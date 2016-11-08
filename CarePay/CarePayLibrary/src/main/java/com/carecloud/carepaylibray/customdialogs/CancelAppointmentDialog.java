@@ -10,9 +10,7 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
@@ -78,7 +76,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     }
 
     private void setActionButton() {
-        CustomGothamRoundedMediumLabel editAppointmentTextView = (CustomGothamRoundedMediumLabel)
+        CarePayTextView editAppointmentTextView = (CarePayTextView)
                 rootLayout.findViewById(R.id.dialogCancelAppointTextView);
         editAppointmentTextView.setVisibility(View.VISIBLE);
         editAppointmentTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCancelHeading()));
@@ -90,7 +88,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_canceled_appointment, null);
 
-        CustomGothamRoundedMediumLabel appointmentStatusLabel = (CustomGothamRoundedMediumLabel)
+        CarePayTextView appointmentStatusLabel = (CarePayTextView)
                 childActionView.findViewById(R.id.appointmentStatusLabel);
 
         if (isMissed) {
@@ -102,8 +100,8 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         }
 
         findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.Feldgrau);
-        ((CustomProxyNovaLightLabel) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
-        ((CustomGothamRoundedBoldLabel) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
+        ((CarePayTextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
+        ((CarePayTextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
         mainLayout.addView(childActionView);
     }
 
