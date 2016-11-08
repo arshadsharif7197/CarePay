@@ -23,8 +23,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.carecloud.carepaylibray.activities.LibraryMainActivity">
+        <activity
+            android:name="com.carecloud.carepay.patient.demographics.activities.DemographicsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity" />
+        <activity android:name="com.carecloud.carepay.patient.consentforms.SignatureActivity" />
+        <activity android:name="com.carecloud.carepay.patient.selectlanguage.SelectLangaugeActivity" />
+        <activity
+            android:name="com.carecloud.carepay.patient.consentforms.ConsentActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.carecloud.carepay.patient.payment.PaymentActivity"
+            android:parentActivityName="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" />
         </activity>
+        <activity android:name="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" />
+        <activity android:name="com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity" />
     </application>
 
 </manifest>
