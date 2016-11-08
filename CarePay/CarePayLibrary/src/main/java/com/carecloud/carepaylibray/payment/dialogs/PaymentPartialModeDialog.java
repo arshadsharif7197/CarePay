@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customdialogs.BaseAmountInfoDialog;
 
@@ -30,12 +31,12 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
     private View rootView;
     private CardView paymentPartialModeCardView;
     private LinearLayout addChildDyanmicLayout;
-    private CustomProxyNovaRegularLabel paymentModeTitlelabel;
-    private CustomProxyNovaRegularLabel paymentModeValuelabel;
-    private CustomProxyNovaRegularLabel nextPaymentTitleLabel;
-    private CustomProxyNovaRegularLabel nextPaymentValueLabel;
-    private CustomProxyNovaRegularLabel totalPaymentTitleLabel;
-    private CustomProxyNovaRegularLabel totalPaymentValueLabel;
+    private CarePayTextView paymentModeTitlelabel;
+    private CarePayTextView paymentModeValuelabel;
+    private CarePayTextView nextPaymentTitleLabel;
+    private CarePayTextView nextPaymentValueLabel;
+    private CarePayTextView totalPaymentTitleLabel;
+    private CarePayTextView totalPaymentValueLabel;
     private LinearLayout dialogHeaderlayout;
     private Button payNowButton;
 
@@ -59,12 +60,12 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_payment_partial_mode, null);
-        paymentModeTitlelabel = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.paymentModeTitlelabel);
-        paymentModeValuelabel = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.paymentModeValuelabel);
-        nextPaymentTitleLabel = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.nextPaymentTitleLabel);
-        nextPaymentValueLabel = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.nextPaymentValueLabel);
-        totalPaymentTitleLabel = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.totalPaymentTitleLabel);
-        totalPaymentValueLabel = (CustomProxyNovaRegularLabel) childActionView.findViewById(R.id.totalPaymentValueLabel);
+        paymentModeTitlelabel = (CarePayTextView) childActionView.findViewById(R.id.paymentModeTitlelabel);
+        paymentModeValuelabel = (CarePayTextView) childActionView.findViewById(R.id.paymentModeValuelabel);
+        nextPaymentTitleLabel = (CarePayTextView) childActionView.findViewById(R.id.nextPaymentTitleLabel);
+        nextPaymentValueLabel = (CarePayTextView) childActionView.findViewById(R.id.nextPaymentValueLabel);
+        totalPaymentTitleLabel = (CarePayTextView) childActionView.findViewById(R.id.totalPaymentTitleLabel);
+        totalPaymentValueLabel = (CarePayTextView) childActionView.findViewById(R.id.totalPaymentValueLabel);
         dialogHeaderlayout = (LinearLayout) this.rootView.findViewById(R.id.dialogHeaderlayout);
         payNowButton = (Button) childActionView.findViewById(R.id.payNowButton);
         onSettingStyle();

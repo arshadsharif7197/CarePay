@@ -15,7 +15,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
@@ -57,7 +57,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 
-        CustomProxyNovaSemiBoldLabel optionalTextView = (CustomProxyNovaSemiBoldLabel)
+        CarePayTextView optionalTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.optionalTextView);
         optionalTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsOptionalHeading()));
 

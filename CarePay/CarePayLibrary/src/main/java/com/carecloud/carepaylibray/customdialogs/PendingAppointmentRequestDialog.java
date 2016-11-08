@@ -11,8 +11,8 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -49,7 +49,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_pending_request_appointment, null);
 
-        CustomGothamRoundedMediumLabel pendingRequestTextView = (CustomGothamRoundedMediumLabel)
+        CarePayTextView pendingRequestTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestPendingTextView);
         pendingRequestTextView.setText(StringUtil.getLabelForView(
                 appointmentLabels.getAppointmentsRequestPendingHeading()));
