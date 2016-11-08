@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/splash"
-    tools:context="com.carecloud.carepay.patient.SplashActivity">
+    tools:context="com.carecloud.carepay.patient.patientsplash.SplashActivity">
 
 </RelativeLayout>

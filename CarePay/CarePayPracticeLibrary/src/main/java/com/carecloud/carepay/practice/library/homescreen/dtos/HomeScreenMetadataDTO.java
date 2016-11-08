@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class HomeScreenMetadataDTO {
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
     private HomeScreenLabelDTO label;
 

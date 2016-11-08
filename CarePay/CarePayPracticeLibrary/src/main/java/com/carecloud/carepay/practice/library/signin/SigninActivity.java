@@ -86,9 +86,7 @@ public class SigninActivity extends BasePracticeActivity {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CognitoAppHelper.init(this);
-        signinDTO = getConvertedDTO(SigninDTO.class);
-        SignInScreenMode signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
-        changeScreenMode(signinScreenMode);
+        signinDTO = getConvertedDTO(SigninDTO.class);       
         ApplicationPreferences.createPreferences(this); // init preferences
         setContentView(R.layout.activity_signin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -97,6 +95,8 @@ public class SigninActivity extends BasePracticeActivity {
         setEditTexts();
         setClicables();
         setTypeFace();
+         SignInScreenMode signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
+        changeScreenMode(signinScreenMode);
         isEmptyEmail = true;
         isEmptyPassword = true;
     }

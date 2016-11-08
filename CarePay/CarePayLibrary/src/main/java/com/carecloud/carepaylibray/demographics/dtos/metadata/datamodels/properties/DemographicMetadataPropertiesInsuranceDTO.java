@@ -21,4 +21,7 @@ public class DemographicMetadataPropertiesInsuranceDTO {
 
     @SerializedName("insurance_member_id") @Expose
     public MetadataEntityDTO insuranceMemberId;
+
+    @SerializedName("insurance_type") @Expose
+    public MetadataEntityDTO insuranceType;
 }
