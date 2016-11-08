@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.consentforms;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,20 +18,22 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+
 public class SignatureActivity extends AppCompatActivity {
 
+    public static boolean isBackButtonClicked = false;
     private TextView titleTextView;
     private TextView beforesignWarningTextView;
     private TextView signatureHelpTextView;
@@ -45,9 +46,6 @@ public class SignatureActivity extends AppCompatActivity {
     private TextInputLayout legalFirstName;
     private TextInputLayout legalLastName;
     private Map<Integer, List<String>> stringMap = new HashMap<>();
-    public static boolean isBackButtonClicked = false;
-
-
     private String patientSignature;
     private String legalSignature;
     private String legalFirstNameLabel;
@@ -267,7 +265,6 @@ public class SignatureActivity extends AppCompatActivity {
 
 
     }
-
 
 
     @Override

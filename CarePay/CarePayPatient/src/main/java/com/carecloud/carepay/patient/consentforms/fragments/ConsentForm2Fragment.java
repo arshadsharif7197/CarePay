@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,12 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.consentforms.FormData;
 import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDataModelDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorDateofBirthDTO;
@@ -39,35 +40,38 @@ import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsD
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
 
 public class ConsentForm2Fragment extends Fragment {
 
-    private TextView titleTextView, descriptionTextView, contentTextView, content2TextView, dateTextView,
-            dobTextView, chooseGenderTextView;
+    Date date = new Date();
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+    private TextView contentTextView;
+    private TextView content2TextView;
+    private TextView dateTextView;
+    private TextView dobTextView;
+    private TextView chooseGenderTextView;
     private TextView minorDOB;
     private TextView minorInformation;
-
     private TextInputLayout minorFirstNameTextView;
     private TextInputLayout minorLastNameTextView;
     private Button signButton;
-    private boolean isGenderSelected, isDatePicked;
+    private boolean isGenderSelected;
+    private boolean isDatePicked;
     private IFragmentCallback fragmentCallback;
     private ScrollView consentFormScrollView;
     private EditText minorFirstNameEditText, minorLastNameEditText;
-
     private List<String> gender = new ArrayList<String>();
-
     private TextView minorGender;
-
     private ConsentFormDTO consentFormDTO;
     private ConsentFormDataModelDTO consentFormDataModelDTO;
     private ConsentFormLabelsDTO consentFormLabelsDTO;
@@ -76,8 +80,6 @@ public class ConsentForm2Fragment extends Fragment {
     private ConsentFormMinorDateofBirthDTO consentFormMinorDateofBirthDTO;
     private ConsentFormMinorGenderDTO consentFormMinorGenderDTO;
     private AppointmentsPayloadDTO appointmentsPayloadDTO;
-    Date date = new Date();
-
     private String firstNameLabel;
     private String lastNameLabel;
     private String genderLabel;
@@ -91,7 +93,24 @@ public class ConsentForm2Fragment extends Fragment {
     private String providerName;
     private String patienFirstName;
     private String patientLastName;
-
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+            String dob = new StringBuilder().append(i1 + 1).append("/").append(i2).append("/")
+                    .append(i).toString();
+            dobTextView.setText(dob);
+            isDatePicked = !(dob.equals(R.string.pick_date));
+            dobTextView.setTag(dob);
+        }
+    };
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.signButton && fragmentCallback != null) {
+                fragmentCallback.signButtonClicked();
+            }
+        }
+    };
 
     @TargetApi(Build.VERSION_CODES.N)
     @Nullable
@@ -133,13 +152,14 @@ public class ConsentForm2Fragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Activity a = null;
+        Activity activity = null;
 
         if (context instanceof ConsentActivity) {
-            a = (Activity) context;
+            activity = (Activity) context;
             try {
-                fragmentCallback = (IFragmentCallback) a;
+                fragmentCallback = (IFragmentCallback) activity;
             } catch (Exception e) {
+                Log.e("Error"," Exception");
             }
         }
     }
@@ -169,7 +189,7 @@ public class ConsentForm2Fragment extends Fragment {
         dialog.setTitle(title);
         dialog.setNegativeButton("", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int listener) {
                 dialogInterface.dismiss();
             }
         });
@@ -207,13 +227,12 @@ public class ConsentForm2Fragment extends Fragment {
 
         chooseGenderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View clickListener) {
                 showAlertDialogWithListview(gender, "Gender Select");
             }
         });
 
     }
-
 
     private void initViewFromModels() {
 
@@ -227,7 +246,6 @@ public class ConsentForm2Fragment extends Fragment {
 
 
     }
-
 
     private void getLabels() {
 
@@ -267,7 +285,6 @@ public class ConsentForm2Fragment extends Fragment {
         minorDOB.setText(minordobLabel);
         minorInformation.setText(minorInformationLabel);
     }
-
 
     private void setEditTexts() {
 
@@ -326,41 +343,21 @@ public class ConsentForm2Fragment extends Fragment {
         });
     }
 
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            String dob = new StringBuilder().append(i1 + 1).append("/").append(i2).append("/")
-                    .append(i).toString();
-            dobTextView.setText(dob);
-            isDatePicked = !(dob.equals(R.string.pick_date));
-            dobTextView.setTag(dob);
-        }
-    };
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.signButton && fragmentCallback != null) {
-                fragmentCallback.signButtonClicked();
-            }
-        }
-    };
-
-
     private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.titleTv));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.descriptionTv));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.contentTv));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.content2Tv));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.dateTv));
+        setGothamRoundedMediumTypeface(getActivity(), titleTextView);
+        setProximaNovaRegularTypeface(getActivity(), descriptionTextView);
+        setProximaNovaRegularTypeface(getActivity(), contentTextView);
+        setProximaNovaRegularTypeface(getActivity(), content2TextView);
+        setProximaNovaRegularTypeface(getActivity(),  dateTextView);
 
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.minor_information));
+        setProximaNovaSemiboldTypeface(getActivity(), minorInformation);
         setProximaNovaRegularTypeface(getActivity(), minorFirstNameEditText);
         setProximaNovaRegularTypeface(getActivity(), minorLastNameEditText);
 
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.dobET));
-        setProximaNovaSemiboldTypeface(getActivity(), (TextView) view.findViewById(R.id.choose_genderTextView));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.minor_dateofbirth));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.minor_gender));
+        setProximaNovaSemiboldTypeface(getActivity(), dobTextView);
+        setProximaNovaSemiboldTypeface(getActivity(), chooseGenderTextView);
+        setProximaNovaRegularTypeface(getActivity(), minorDOB);
+        setProximaNovaRegularTypeface(getActivity(), minorGender);
     }
 
 }

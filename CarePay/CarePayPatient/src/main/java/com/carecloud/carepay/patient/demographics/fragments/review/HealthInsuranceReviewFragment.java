@@ -21,10 +21,11 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepay.patient.demographics.services.DemographicService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -34,23 +35,22 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoMetaDataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 
 public class HealthInsuranceReviewFragment extends InsuranceScannerFragment implements View.OnClickListener {
 
@@ -87,11 +87,11 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
     private FrameLayout insCardContainer3;
 
 
-    public static HealthInsuranceReviewFragment newInstance() {
-        return new HealthInsuranceReviewFragment();
+    public HealthInsuranceReviewFragment() {
     }
 
-    public HealthInsuranceReviewFragment() {
+    public static HealthInsuranceReviewFragment newInstance() {
+        return new HealthInsuranceReviewFragment();
     }
 
     @Override
@@ -202,7 +202,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e(LOG_TAG, "health insurance frag POST failed");
             }
         });

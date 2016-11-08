@@ -16,11 +16,15 @@ public class CustomAlertAdapter extends BaseAdapter {
 
     Context ctx = null;
     List<String> listarray = null;
-    private LayoutInflater mInflater = null;
+    private LayoutInflater inflater = null;
 
+    /**
+     * @param activty activity
+     * @param list list
+     */
     public CustomAlertAdapter(Activity activty, List<String> list) {
         this.ctx = activty;
-        mInflater = activty.getLayoutInflater();
+        inflater = activty.getLayoutInflater();
         this.listarray = list;
     }
 
@@ -45,7 +49,7 @@ public class CustomAlertAdapter extends BaseAdapter {
         final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.alert_list_row, null);
+            convertView = inflater.inflate(R.layout.alert_list_row, null);
             holder.titlename = (TextView) convertView.findViewById(R.id.textviewName);
             convertView.setTag(holder);
         } else {

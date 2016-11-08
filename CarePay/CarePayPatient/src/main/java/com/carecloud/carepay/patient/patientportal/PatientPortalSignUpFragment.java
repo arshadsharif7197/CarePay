@@ -48,7 +48,7 @@ public class PatientPortalSignUpFragment extends Fragment implements View.OnClic
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
 
     }
 

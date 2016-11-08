@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.fragments.scanner.DocumentScannerFragment;
+import com.carecloud.carepay.patient.demographics.fragments.scanner.IdDocScannerFragment;
+import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
@@ -25,8 +27,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.IdDocScannerFragment;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -37,37 +37,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
+
 /**
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private FragmentManager                        fm;
-    private View                                   view;
-    private ScrollView                             detailsScrollView;
-    private FrameLayout                            idCardContainer;
-    private FrameLayout                            insCardContainer1;
-    private FrameLayout                            insCardContainer2;
-    private FrameLayout                            insCardContainer3;
-    private boolean                                isSecondCardAdded;
-    private boolean                                isThirdCardAdded;
-    private TextView                               multipleInsClickable;
-    private Button                                 nextButton;
-    private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
-    private List<DemographicInsurancePayloadDTO>   insuranceModelList;
-    private DemographicInsurancePayloadDTO         insuranceModel1;
-    private DemographicInsurancePayloadDTO         insuranceModel2;
-    private DemographicInsurancePayloadDTO         insuranceModel3;
-    private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
+    private FragmentManager fm;
+    private View view;
+    private ScrollView detailsScrollView;
+    private FrameLayout idCardContainer;
+    private FrameLayout insCardContainer1;
+    private FrameLayout insCardContainer2;
+    private FrameLayout insCardContainer3;
+    private boolean isSecondCardAdded;
+    private boolean isThirdCardAdded;
+    private TextView multipleInsClickable;
+    private Button nextButton;
+    private DemographicIdDocPayloadDTO demPayloadIdDocDTO;
+    private List<DemographicInsurancePayloadDTO> insuranceModelList;
+    private DemographicInsurancePayloadDTO insuranceModel1;
+    private DemographicInsurancePayloadDTO insuranceModel2;
+    private DemographicInsurancePayloadDTO insuranceModel3;
+    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
-    private DemographicLabelsDTO                   globalLabelsMetaDTO;
-    private TextView                               header;
-    private TextView                               subheader;
-    private SwitchCompat                           switchCompat;
-    private TextView                               idTypeClickable;
-    private TextView                               idDocTypeLabel;
-    private String[]                               docTypes;
+    private DemographicLabelsDTO globalLabelsMetaDTO;
+    private TextView header;
+    private TextView subheader;
+    private SwitchCompat switchCompat;
+    private TextView idTypeClickable;
+    private TextView idDocTypeLabel;
+    private String[] docTypes;
 
 
     @Nullable
@@ -119,15 +121,15 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             @Override
             public void onClick(View view) {
                 SystemUtil.showChooseDialog(getActivity(),
-                                            docTypes, titleSelIdDoc, labelCancel,
-                                            idTypeClickable,
-                                            new SystemUtil.OnClickItemCallback() {
-                                                @Override
-                                                public void executeOnClick(TextView destination, String selectedOption) {
-                                                    demPayloadIdDocDTO.setIdType(selectedOption);
-                                                    showCard(idCardContainer, true);
-                                                }
-                                            });
+                        docTypes, titleSelIdDoc, labelCancel,
+                        idTypeClickable,
+                        new SystemUtil.OnClickItemCallback() {
+                            @Override
+                            public void executeOnClick(TextView destination, String selectedOption) {
+                                demPayloadIdDocDTO.setIdType(selectedOption);
+                                showCard(idCardContainer, true);
+                            }
+                        });
             }
         });
 

@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**

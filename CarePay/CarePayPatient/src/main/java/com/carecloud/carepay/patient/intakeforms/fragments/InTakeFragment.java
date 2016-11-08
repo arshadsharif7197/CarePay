@@ -16,7 +16,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by lsoco_user on 9/11/2016.
  * Generic fragment for an intake form
  */
-public class InTakeFragment extends Fragment implements View.OnClickListener{
+public class InTakeFragment extends Fragment implements View.OnClickListener {
     private IntakeFormModel form;
 
     @Nullable
@@ -31,8 +31,8 @@ public class InTakeFragment extends Fragment implements View.OnClickListener{
 
         TextView tvCaption = (TextView) view.findViewById(R.id.intakeFragCaption);
         tvCaption.setText(form.getIntakeModelCaption());
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(),tvTitle);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(),tvCaption);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), tvTitle);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), tvCaption);
         return view;
     }
 
@@ -41,7 +41,8 @@ public class InTakeFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
 
     }
 }
+

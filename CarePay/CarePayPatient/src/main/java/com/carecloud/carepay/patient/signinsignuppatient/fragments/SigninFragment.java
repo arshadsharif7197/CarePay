@@ -20,15 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepay.patient.demographics.services.DemographicService;
 import com.carecloud.carepay.patient.selectlanguage.SelectLangaugeActivity;
+import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepay.patient.demographics.services.DemographicService;
-import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInMetaDataDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
@@ -36,11 +36,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 /**
  * Created by harish_revuri on 9/7/2016.
@@ -157,8 +158,7 @@ public class SigninFragment extends Fragment {
         });
 
 
-
-     changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
+        changeLanguageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // relaunch select language
@@ -219,12 +219,12 @@ public class SigninFragment extends Fragment {
     private void setTextListeners() {
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
@@ -240,12 +240,12 @@ public class SigninFragment extends Fragment {
         });
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
@@ -265,20 +265,20 @@ public class SigninFragment extends Fragment {
     private void setChangeFocusListeners() {
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, bool);
             }
         });
         passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
     }
@@ -296,8 +296,8 @@ public class SigninFragment extends Fragment {
         });
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE) {
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     passwordEditText.clearFocus();
                     parentLayout.requestFocus();
                     SystemUtil.hideSoftKeyboard(getActivity());
@@ -381,9 +381,9 @@ public class SigninFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<DemographicDTO> call, Throwable t) {
+            public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
                 progressBar.setVisibility(View.GONE);
-                Log.e(LOG_TAG, "failed fetching demogr info", t);
+                Log.e(LOG_TAG, "failed fetching demogr info", throwable);
             }
         });
     }

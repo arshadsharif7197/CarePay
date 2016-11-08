@@ -22,10 +22,11 @@ public class IntakeMedicalHistoryFormTwoFragment extends InTakeFragment {
 
     private View madicalHistoryForm2Parent;
     private Context context;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context=context;
+        this.context = context;
     }
 
     @Nullable
@@ -36,35 +37,36 @@ public class IntakeMedicalHistoryFormTwoFragment extends InTakeFragment {
         onAddChildView();
         return madicalHistoryForm2Parent;
     }
-    private void onAddChildView(){
-        LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+    private void onAddChildView() {
+        LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.fragment_intake_medical_history_form_2, null);
-        TextView doYouSmokeRadioCaptionTextView = (TextView)childActionView.findViewById(R.id.doYouSmokeRadioCaptionTextView);
-        TextView doYouHaveDiabetesRadioCaptionTextView = (TextView)childActionView.findViewById(R.id.doYouHaveDiabetesRadioCaptionTextView);
-        TextView yesRadioOptionTextView = (TextView)childActionView.findViewById(R.id.yesRadioOptionTextView);
-        TextView noRadioOptionTextView = (TextView)childActionView.findViewById(R.id.noRadioOptionTextView);
+        TextView doYouSmokeRadioCaptionTextView = (TextView) childActionView.findViewById(R.id.doYouSmokeRadioCaptionTextView);
+        TextView doYouHaveDiabetesRadioCaptionTextView = (TextView) childActionView.findViewById(R.id.doYouHaveDiabetesRadioCaptionTextView);
+        TextView yesRadioOptionTextView = (TextView) childActionView.findViewById(R.id.yesRadioOptionTextView);
+        TextView noRadioOptionTextView = (TextView) childActionView.findViewById(R.id.noRadioOptionTextView);
 
-        RadioGroup doYouSmokeRadioGroup = (RadioGroup)childActionView.findViewById(R.id.doYouSmokeRadioGroup);
-        RadioGroup doYouHaveDiabetesRadioGroup = (RadioGroup)childActionView.findViewById(R.id.doYouHaveDiabetesRadioGroup);
+        RadioGroup doYouSmokeRadioGroup = (RadioGroup) childActionView.findViewById(R.id.doYouSmokeRadioGroup);
+        RadioGroup doYouHaveDiabetesRadioGroup = (RadioGroup) childActionView.findViewById(R.id.doYouHaveDiabetesRadioGroup);
 
-        SystemUtil.setProximaNovaRegularTypeface(this.context,doYouSmokeRadioCaptionTextView);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,doYouHaveDiabetesRadioCaptionTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,yesRadioOptionTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,noRadioOptionTextView);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, doYouSmokeRadioCaptionTextView);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, doYouHaveDiabetesRadioCaptionTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, yesRadioOptionTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, noRadioOptionTextView);
 
-        ((LinearLayout)madicalHistoryForm2Parent.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
+        ((LinearLayout) madicalHistoryForm2Parent.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
 
         doYouSmokeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
+                ((InTakeActivity) context).isQuestionAnswered = true;
             }
         });
 
         doYouHaveDiabetesRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
+                ((InTakeActivity) context).isQuestionAnswered = true;
             }
         });
     }

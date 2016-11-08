@@ -526,7 +526,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         dialog.setTitle(title);
         dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int listener) {
                 dialogInterface.dismiss();
             }
         });
@@ -541,7 +541,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long listener) {
                 switch (selectedDataArray) {
                     case 1:
                         String gender = dataArray[position];

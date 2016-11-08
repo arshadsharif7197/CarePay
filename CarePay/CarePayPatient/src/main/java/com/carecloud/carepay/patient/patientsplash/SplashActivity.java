@@ -7,10 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLangaugeActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
 /**
@@ -26,18 +26,6 @@ public class SplashActivity extends Activity {
 
     private static final int STOPSPLASH = 0;
     private static final long SPLASHTIME = 1000;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        //setTheme(R.style.AppThemeNoActionBar);
-        Message msg = new Message();
-        msg.what = STOPSPLASH;
-
-        splashHandler.sendMessageDelayed(msg, SPLASHTIME);
-    }
-
     public Handler splashHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -59,4 +47,15 @@ public class SplashActivity extends Activity {
             super.handleMessage(msg);
         }
     };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        //setTheme(R.style.AppThemeNoActionBar);
+        Message msg = new Message();
+        msg.what = STOPSPLASH;
+
+        splashHandler.sendMessageDelayed(msg, SPLASHTIME);
+    }
 }

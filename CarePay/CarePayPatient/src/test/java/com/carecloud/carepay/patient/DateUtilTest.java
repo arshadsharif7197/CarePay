@@ -2,15 +2,16 @@ package com.carecloud.carepay.patient;
 
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.util.Calendar;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+
 
 
 /**
@@ -19,12 +20,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class DateUtilTest {
 
-    final private String[] weekDays      = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    final private String[] weekDays = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     final private String[] weekDaysAbbrs = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-    final private String[] months        = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-    final private String[] monthsAbbr    = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    final private String[] amPm          = {"AM", "PM"};
-    final private String   rawDate       = "2016-10-03T16:30:00-04:00";
+    final private String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    final private String[] monthsAbbr = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    final private String[] amPm = {"AM", "PM"};
+    final private String rawDate = "2016-10-03T16:30:00-04:00";
 
     @BeforeClass
     public static void setFormatforTests() {

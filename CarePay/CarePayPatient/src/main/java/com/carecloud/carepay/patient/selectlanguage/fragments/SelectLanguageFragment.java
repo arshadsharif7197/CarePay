@@ -13,11 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-
-import com.carecloud.carepay.patient.selectlanguage.models.LanguageOptionModel;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.selectlanguage.adapters.LanguageListAdapter;
+import com.carecloud.carepay.patient.selectlanguage.models.languageOptionModel;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -34,9 +33,9 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     private static final String LOG_TAG = SelectLanguageFragment.class.getSimpleName();
     RecyclerView languageListView;
     String languageName = null;
-    List<LanguageOptionModel> languageOptionModelList;
+    List<languageOptionModel> languageOptionModelList;
     ImageButton languageConfirmButton;
-  //  LanguageListDTO languageListDTO;
+    //  LanguageListDTO languageListDTO;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +58,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageConfirmButton.setEnabled(false);
         languageConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View onClickListener) {
                 ApplicationPreferences.Instance.setUserLanguage(languageName);
                 Intent intent = new Intent(getActivity(), SigninSignupActivity.class);
                 getActivity().startActivity(intent);
@@ -75,22 +74,22 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
      * Created data for language selection list
      */
     private void loadData() {
-        LanguageOptionModel languageOptionModel;
+        languageOptionModel languageOptionModel;
         languageOptionModelList = new ArrayList<>();
 
-        languageOptionModel = new LanguageOptionModel();
+        languageOptionModel = new languageOptionModel();
         languageOptionModel.setValue("English");
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
 
-        languageOptionModel = new LanguageOptionModel();
+        languageOptionModel = new languageOptionModel();
         languageOptionModel.setValue("Español");
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
 
         /*int size = languageListDTO.getOptions().size();
         for (int i = 0; i > size; i++) {
-            languageOptionModel = new LanguageOptionModel();
+            languageOptionModel = new languageOptionModel();
             languageOptionModel.setValue(languageListDTO.getOptions().get(i).getLabel());
             languageOptionModel.setChecked(false);
             languageOptionModelList.add(languageOptionModel);

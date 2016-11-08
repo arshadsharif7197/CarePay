@@ -15,30 +15,37 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.consentforms.FormData;
 import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
-import java.util.Date;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
+import java.util.Date;
 
 
 public class ConsentForm1Fragment extends Fragment {
 
+    Date date = new Date();
     private TextView titleTextView, descriptionTextView, contentTextView, dateTextView;
-    private Button            signButton;
+    private Button signButton;
     private IFragmentCallback fragmentCallback;
-    private ScrollView        consentFormScrollView;
-
+    private ScrollView consentFormScrollView;
     private ConsentFormLabelsDTO consentFormLabelsDTO;
     private ConsentFormDTO consentFormDTO;
-    Date date = new Date();
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View clickListener) {
+            if (clickListener.getId() == R.id.signButton && fragmentCallback != null) {
+                    fragmentCallback.signButtonClicked();
+            }
+        }
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
@@ -63,20 +70,18 @@ public class ConsentForm1Fragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Activity a = null;
+        Activity activity = null;
 
         if (context instanceof ConsentActivity) {
-            a = (Activity) context;
+            activity = (Activity) context;
 
             try {
-                fragmentCallback = (IFragmentCallback) a;
+                fragmentCallback = (IFragmentCallback) activity;
             } catch (Exception e) {
             }
         }
 
     }
-
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -88,7 +93,7 @@ public class ConsentForm1Fragment extends Fragment {
 
         FormData formData = (FormData) getArguments().getSerializable(CarePayConstants.FORM_DATA);
 
-   //     titleTextView.setText(consentFormLabelsDTO.getConsentForMedicareTitle());
+        //     titleTextView.setText(consentFormLabelsDTO.getConsentForMedicareTitle());
         titleTextView.setText(formData.getTitle());
         descriptionTextView.setText(formData.getDescription());
         contentTextView.setText(formData.getContent());
@@ -98,16 +103,6 @@ public class ConsentForm1Fragment extends Fragment {
         // enable next button on scrolling all the way to the bottom
         setEnableNextButtonOnFullScroll();
     }
-
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.signButton) {
-                if (fragmentCallback != null)
-                    fragmentCallback.signButtonClicked();
-            }
-        }
-    };
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.titleTv));

@@ -20,13 +20,14 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class InTakeCardiacSymptomsFragment extends InTakeFragment {
 
+    CheckBox chestPainCheckBox, nauseaCheckBox, perspirationCheckBox, SOBCheckBox, swellingCheckBox, palpitationsCheckBox, syncopeCheckBox, nearSyncopeCheckBox;
     private View mainView;
     private Context context;
-    CheckBox chestPainCheckBox ,nauseaCheckBox,perspirationCheckBox,SOBCheckBox,swellingCheckBox,palpitationsCheckBox,syncopeCheckBox,nearSyncopeCheckBox;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context=context;
+        this.context = context;
     }
 
     @Nullable
@@ -37,11 +38,12 @@ public class InTakeCardiacSymptomsFragment extends InTakeFragment {
         onAddChildView();
         return mainView;
     }
-    private void onAddChildView(){
-        LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+    private void onAddChildView() {
+        LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.fragment_intake_cardiac_symptoms_form, null);
-        TextView haveyouTreatedHeaderTextView = (TextView)childActionView.findViewById(R.id.haveyouTreatedHeaderTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,haveyouTreatedHeaderTextView);
+        TextView haveyouTreatedHeaderTextView = (TextView) childActionView.findViewById(R.id.haveyouTreatedHeaderTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, haveyouTreatedHeaderTextView);
         chestPainCheckBox = (CheckBox) childActionView.findViewById(R.id.chestPainCheckBox);
         nauseaCheckBox = (CheckBox) childActionView.findViewById(R.id.nauseaCheckBox);
         perspirationCheckBox = (CheckBox) childActionView.findViewById(R.id.perspirationCheckBox);
@@ -52,32 +54,34 @@ public class InTakeCardiacSymptomsFragment extends InTakeFragment {
         nearSyncopeCheckBox = (CheckBox) childActionView.findViewById(R.id.nearSyncopeCheckBox);
         onSetCheckBoxListner();
         onSetCheckBoxTypeFace();
-        ((LinearLayout)mainView.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
+        ((LinearLayout) mainView.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
     }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
 
         int viewId = v.getId();
-        if(viewId == R.id.chestPainCheckBox){
+        if (viewId == R.id.chestPainCheckBox) {
             onCheckBoxtextColor(chestPainCheckBox);
-        }else if(viewId == R.id.nauseaCheckBox){
+        } else if (viewId == R.id.nauseaCheckBox) {
             onCheckBoxtextColor(nauseaCheckBox);
-        }else if(viewId == R.id.perspirationCheckBox){
+        } else if (viewId == R.id.perspirationCheckBox) {
             onCheckBoxtextColor(perspirationCheckBox);
-        }else if(viewId == R.id.SOBCheckBox){
+        } else if (viewId == R.id.SOBCheckBox) {
             onCheckBoxtextColor(SOBCheckBox);
-        }else if(viewId == R.id.swellingCheckBox){
+        } else if (viewId == R.id.swellingCheckBox) {
             onCheckBoxtextColor(swellingCheckBox);
-        }else if(viewId == R.id.palpitationsCheckBox){
+        } else if (viewId == R.id.palpitationsCheckBox) {
             onCheckBoxtextColor(palpitationsCheckBox);
-        }else if(viewId == R.id.syncopeCheckBox){
+        } else if (viewId == R.id.syncopeCheckBox) {
             onCheckBoxtextColor(syncopeCheckBox);
-        }else if(viewId == R.id.nearSyncopeCheckBox){
+        } else if (viewId == R.id.nearSyncopeCheckBox) {
             onCheckBoxtextColor(nearSyncopeCheckBox);
         }
     }
-    private void onSetCheckBoxListner(){
+
+    private void onSetCheckBoxListner() {
         chestPainCheckBox.setOnClickListener(this);
         nauseaCheckBox.setOnClickListener(this);
         perspirationCheckBox.setOnClickListener(this);
@@ -87,21 +91,23 @@ public class InTakeCardiacSymptomsFragment extends InTakeFragment {
         syncopeCheckBox.setOnClickListener(this);
         nearSyncopeCheckBox.setOnClickListener(this);
     }
-    private void onSetCheckBoxTypeFace(){
-        SystemUtil.setProximaNovaRegularTypeface(this.context,chestPainCheckBox);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,nauseaCheckBox);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,perspirationCheckBox);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,SOBCheckBox);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,swellingCheckBox);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,palpitationsCheckBox);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,syncopeCheckBox);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,nearSyncopeCheckBox);
+
+    private void onSetCheckBoxTypeFace() {
+        SystemUtil.setProximaNovaRegularTypeface(this.context, chestPainCheckBox);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, nauseaCheckBox);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, perspirationCheckBox);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, SOBCheckBox);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, swellingCheckBox);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, palpitationsCheckBox);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, syncopeCheckBox);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, nearSyncopeCheckBox);
     }
-    private void onCheckBoxtextColor(CheckBox checkBox){
-        if(checkBox.isChecked()){
-            checkBox.setTextColor(ContextCompat.getColor(context,R.color.blue_cerulian));
-        }else {
-            checkBox.setTextColor(ContextCompat.getColor(context,R.color.slateGray));
+
+    private void onCheckBoxtextColor(CheckBox checkBox) {
+        if (checkBox.isChecked()) {
+            checkBox.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
+        } else {
+            checkBox.setTextColor(ContextCompat.getColor(context, R.color.slateGray));
         }
     }
 }

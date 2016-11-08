@@ -11,8 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -23,10 +23,11 @@ public class InTakeReviewOfSymptomsFragment extends InTakeFragment {
 
     private View reviewOfSymptomsFormParent;
     private Context context;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context=context;
+        this.context = context;
     }
 
     @Nullable
@@ -37,60 +38,61 @@ public class InTakeReviewOfSymptomsFragment extends InTakeFragment {
         onAddChildView();
         return reviewOfSymptomsFormParent;
     }
-    private void onAddChildView(){
-        LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+    private void onAddChildView() {
+        LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.fragment_intake_review_of_symptoms, null);
 
-        RadioGroup claudationRadioGroup = (RadioGroup)childActionView.findViewById(R.id.claudationRadioGroup);
-        RadioGroup edemaRadioGroup = (RadioGroup)childActionView.findViewById(R.id.edemaRadioGroup);
-        RadioGroup snoringRadioGroup = (RadioGroup)childActionView.findViewById(R.id.snoringRadioGroup);
-        RadioGroup dyspneaRadioGroup = (RadioGroup)childActionView.findViewById(R.id.dyspneaRadioGroup);
+        RadioGroup claudationRadioGroup = (RadioGroup) childActionView.findViewById(R.id.claudationRadioGroup);
+        RadioGroup edemaRadioGroup = (RadioGroup) childActionView.findViewById(R.id.edemaRadioGroup);
+        RadioGroup snoringRadioGroup = (RadioGroup) childActionView.findViewById(R.id.snoringRadioGroup);
+        RadioGroup dyspneaRadioGroup = (RadioGroup) childActionView.findViewById(R.id.dyspneaRadioGroup);
 
-        SystemUtil.setProximaNovaRegularTypeface(this.context,(TextView)childActionView.findViewById(R.id.claudationRadioCaptionTextView));
-        SystemUtil.setProximaNovaRegularTypeface(this.context,(TextView)childActionView.findViewById(R.id.edemaRadioCaptionTextView));
-        SystemUtil.setProximaNovaRegularTypeface(this.context,(TextView)childActionView.findViewById(R.id.snoringRadioCaptionTextView));
-        SystemUtil.setProximaNovaRegularTypeface(this.context,(TextView)childActionView.findViewById(R.id.dyspneaRadioCaptionTextView));
+        SystemUtil.setProximaNovaRegularTypeface(this.context, (TextView) childActionView.findViewById(R.id.claudationRadioCaptionTextView));
+        SystemUtil.setProximaNovaRegularTypeface(this.context, (TextView) childActionView.findViewById(R.id.edemaRadioCaptionTextView));
+        SystemUtil.setProximaNovaRegularTypeface(this.context, (TextView) childActionView.findViewById(R.id.snoringRadioCaptionTextView));
+        SystemUtil.setProximaNovaRegularTypeface(this.context, (TextView) childActionView.findViewById(R.id.dyspneaRadioCaptionTextView));
 
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,(TextView)childActionView.findViewById(R.id.vascularRadioCaptionTextView));
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,(TextView)childActionView.findViewById(R.id.noRadioOptionTextView));
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,(TextView)childActionView.findViewById(R.id.yesRadioOptionTextView));
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,(TextView)childActionView.findViewById(R.id.notApplicableRadioOptionTextView));
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,(TextView)childActionView.findViewById(R.id.pulmonaryRadioCaptionTextView));
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,(TextView)childActionView.findViewById(R.id.pulmonaryNoRadioOptionTextView));
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,(TextView)childActionView.findViewById(R.id.pulmonaryYesRadioOptionTextView));
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,(TextView)childActionView.findViewById(R.id.pulmonaryNotApplicableRadioOptionTextView));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, (TextView) childActionView.findViewById(R.id.vascularRadioCaptionTextView));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, (TextView) childActionView.findViewById(R.id.noRadioOptionTextView));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, (TextView) childActionView.findViewById(R.id.yesRadioOptionTextView));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, (TextView) childActionView.findViewById(R.id.notApplicableRadioOptionTextView));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, (TextView) childActionView.findViewById(R.id.pulmonaryRadioCaptionTextView));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, (TextView) childActionView.findViewById(R.id.pulmonaryNoRadioOptionTextView));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, (TextView) childActionView.findViewById(R.id.pulmonaryYesRadioOptionTextView));
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, (TextView) childActionView.findViewById(R.id.pulmonaryNotApplicableRadioOptionTextView));
 
-        ((LinearLayout)reviewOfSymptomsFormParent.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
+        ((LinearLayout) reviewOfSymptomsFormParent.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
 
         claudationRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
-                ((InTakeActivity)context).setIntakeNextEnabled(true);
+                ((InTakeActivity) context).isQuestionAnswered = true;
+                ((InTakeActivity) context).setIntakeNextEnabled(true);
             }
         });
 
         edemaRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
-                ((InTakeActivity)context).setIntakeNextEnabled(true);
+                ((InTakeActivity) context).isQuestionAnswered = true;
+                ((InTakeActivity) context).setIntakeNextEnabled(true);
             }
         });
 
         snoringRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
-                ((InTakeActivity)context).setIntakeNextEnabled(true);
+                ((InTakeActivity) context).isQuestionAnswered = true;
+                ((InTakeActivity) context).setIntakeNextEnabled(true);
             }
         });
 
         dyspneaRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ((InTakeActivity)context).isQuestionAnswered = true;
-                ((InTakeActivity)context).setIntakeNextEnabled(true);
+                ((InTakeActivity) context).isQuestionAnswered = true;
+                ((InTakeActivity) context).setIntakeNextEnabled(true);
             }
         });
     }

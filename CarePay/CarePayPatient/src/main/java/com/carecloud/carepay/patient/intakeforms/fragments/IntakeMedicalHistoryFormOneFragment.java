@@ -15,8 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Arrays;
@@ -30,11 +30,12 @@ public class IntakeMedicalHistoryFormOneFragment extends InTakeFragment {
     private View mainView;
     private Context context;
     private TextView chooseAllergyTextView;
-    private String[] allergiesArray = {"Penicillin", "Sulfa","Latex","Tree Nuts"};
+    private String[] allergiesArray = {"Penicillin", "Sulfa", "Latex", "Tree Nuts"};
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context=context;
+        this.context = context;
     }
 
     @Nullable
@@ -45,11 +46,12 @@ public class IntakeMedicalHistoryFormOneFragment extends InTakeFragment {
         onAddChildView();
         return mainView;
     }
-    private void onAddChildView(){
-        LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+    private void onAddChildView() {
+        LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.fragment_intake_medical_history_form, null);
-        TextView allegiesHaveTextView = (TextView)childActionView.findViewById(R.id.allergiesHaveHeaderTextView);
-        EditText addUnlistedAllergiesEditText = (EditText)childActionView.findViewById(R.id.addUnlistedAllergiesEditText);
+        TextView allegiesHaveTextView = (TextView) childActionView.findViewById(R.id.allergiesHaveHeaderTextView);
+        EditText addUnlistedAllergiesEditText = (EditText) childActionView.findViewById(R.id.addUnlistedAllergiesEditText);
         addUnlistedAllergiesEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -58,25 +60,26 @@ public class IntakeMedicalHistoryFormOneFragment extends InTakeFragment {
                 return false;
             }
         });
-        chooseAllergyTextView = (TextView)childActionView.findViewById(R.id.choose_alleryTextView) ;
+        chooseAllergyTextView = (TextView) childActionView.findViewById(R.id.choose_alleryTextView);
         chooseAllergyTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAlertDialogWithListview(allergiesArray, "Allergy Select");
             }
         });
-        ((LinearLayout)mainView.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
+        ((LinearLayout) mainView.findViewById(R.id.intakeQuestionsContainer)).addView(childActionView);
 
-        SystemUtil.setProximaNovaSemiboldTypeface(this.context,allegiesHaveTextView);
-        SystemUtil.setProximaNovaRegularTypeface(this.context,addUnlistedAllergiesEditText);
+        SystemUtil.setProximaNovaSemiboldTypeface(this.context, allegiesHaveTextView);
+        SystemUtil.setProximaNovaRegularTypeface(this.context, addUnlistedAllergiesEditText);
     }
+
     private void showAlertDialogWithListview(final String[] allergiesArray, String title) {
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title);
         dialog.setNegativeButton("", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int listener) {
                 dialogInterface.dismiss();
             }
         });
@@ -91,8 +94,8 @@ public class IntakeMedicalHistoryFormOneFragment extends InTakeFragment {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    chooseAllergyTextView.setText(allergiesArray[position]);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                chooseAllergyTextView.setText(allergiesArray[position]);
                 alert.dismiss();
             }
         });

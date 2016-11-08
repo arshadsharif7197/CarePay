@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customdialogs.BaseAmountInfoDialog;
 
 import org.json.JSONObject;
@@ -75,12 +74,12 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
     }
 
     private void onSettingStyle() {
-        paymentModeTitlelabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        paymentModeValuelabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        nextPaymentTitleLabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        nextPaymentValueLabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        totalPaymentTitleLabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        totalPaymentValueLabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
+        paymentModeTitlelabel.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+        paymentModeValuelabel.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+        nextPaymentTitleLabel.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+        nextPaymentValueLabel.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+        totalPaymentTitleLabel.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+        totalPaymentValueLabel.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
         dialogHeaderlayout.setBackgroundResource(R.color.grey_400);
     }
 

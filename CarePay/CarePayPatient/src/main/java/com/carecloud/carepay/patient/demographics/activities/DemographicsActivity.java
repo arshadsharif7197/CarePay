@@ -19,7 +19,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
+import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragment;
+import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
@@ -36,9 +39,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
-import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragment;
-import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
 import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -71,7 +71,11 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO labelsDTO;
     private Toolbar toolbar;
-
+    private String[] fragLabels;
+    /**
+     * Updating with info model
+     * @return updated model
+     */
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
         DemographicPayloadDTO infoModel = null;
         if (modelGet != null && modelGet.getPayload() != null) {
@@ -82,8 +86,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         }
         return infoModel;
     }
-
-    private String[] fragLabels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,16 +207,20 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         return modelGet;
     }
 
+    public void setModel(DemographicDTO modelGet) {
+        this.modelGet = modelGet;
+    }
+
     public DemographicPersDetailsPayloadDTO getDetailsDTO() {
         return detailsModel;
     }
 
-    public void setAddressModel(DemographicAddressPayloadDTO addressModel) {
-        this.addressModel = addressModel;
-    }
-
     public DemographicAddressPayloadDTO getAddressModel() {
         return addressModel;
+    }
+
+    public void setAddressModel(DemographicAddressPayloadDTO addressModel) {
+        this.addressModel = addressModel;
     }
 
     public void setDetailsModel(DemographicPersDetailsPayloadDTO detailsModel) {
@@ -229,10 +235,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         this.idDocModel = idDocModel;
     }
 
-    public void setModel(DemographicDTO modelGet) {
-        this.modelGet = modelGet;
-    }
-
     public List<DemographicInsurancePayloadDTO> getInsuranceModelList() {
         return insuranceModelList;
     }
@@ -242,55 +244,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     }
 
     /**
-     * Adapter for the viewpager
+     * checking storage permission
+     * @return true if granted
      */
-    public class DemographicPagerAdapter extends FragmentPagerAdapter {
-
-        final int PAGE_COUNT = 4;
-
-        /**
-         * Constructor of the class
-         */
-        DemographicPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        /**
-         * This method will be invoked when a page is requested to create
-         */
-        @Override
-        public Fragment getItem(int position) {
-
-            switch (position) {
-                case 0:
-                    DemographicsAddressFragment addressFragment = new DemographicsAddressFragment();
-                    addressFragment.setAddressMetaDTO(addressEntityMetaDTO);
-                    addressFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
-                    return addressFragment;
-                case 1:
-                    DemographicsDetailsFragment demographicsDetailsFragment = new DemographicsDetailsFragment();
-                    demographicsDetailsFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
-                    return demographicsDetailsFragment;
-                case 2:
-                    DemographicsDocumentsFragment demographicsDocumentsFragment = new DemographicsDocumentsFragment();
-                    demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
-                    demographicsDocumentsFragment.setInsurancesMetaDTO(insurancesMetaDTO);
-                    return demographicsDocumentsFragment;
-                case 3:
-                    return new DemographicsMoreDetailsFragment();
-                default:
-                    return null;
-            }
-        }
-
-        /**
-         * Returns the number of pages
-         */
-        @Override
-        public int getCount() {
-            return PAGE_COUNT;
-        }
-    }
 
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -387,5 +343,56 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     @Override
     public int getKeyboardHolderId() {
         return R.id.demogr_keyboard_holder;
+    }
+
+    /**
+     * Adapter for the viewpager
+     */
+    public class DemographicPagerAdapter extends FragmentPagerAdapter {
+
+        final int PAGE_COUNT = 4;
+
+        /**
+         * Constructor of the class
+         */
+        DemographicPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        /**
+         * This method will be invoked when a page is requested to create
+         */
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position) {
+                case 0:
+                    DemographicsAddressFragment addressFragment = new DemographicsAddressFragment();
+                    addressFragment.setAddressMetaDTO(addressEntityMetaDTO);
+                    addressFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
+                    return addressFragment;
+                case 1:
+                    DemographicsDetailsFragment demographicsDetailsFragment = new DemographicsDetailsFragment();
+                    demographicsDetailsFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
+                    return demographicsDetailsFragment;
+                case 2:
+                    DemographicsDocumentsFragment demographicsDocumentsFragment = new DemographicsDocumentsFragment();
+                    demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
+                    demographicsDocumentsFragment.setInsurancesMetaDTO(insurancesMetaDTO);
+                    return demographicsDocumentsFragment;
+                case 3:
+                    return new DemographicsMoreDetailsFragment();
+                default:
+                    return null;
+            }
+        }
+
+        /**
+         * Returns the number of pages
+         */
+        @Override
+        public int getCount() {
+            return PAGE_COUNT;
+        }
     }
 }

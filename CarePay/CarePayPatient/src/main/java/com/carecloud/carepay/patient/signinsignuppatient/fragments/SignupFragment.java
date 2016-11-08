@@ -27,26 +27,26 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.patient.demographics.services.DemographicService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepay.patient.demographics.services.DemographicService;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import static android.app.Activity.RESULT_OK;
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.app.Activity.RESULT_OK;
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 
 /**
  * Created by harish_revuri on 9/7/2016.
@@ -55,24 +55,64 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 public class SignupFragment extends Fragment {
 
     private LinearLayout parentLayout;
-    private ProgressBar  progressBar;
+    private ProgressBar progressBar;
+    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            getDemographicInformation(); // disable fetch demographics; call to information will be performed
+            progressBar.setVisibility(View.INVISIBLE);
+        }
 
+        @Override
+        public void onBeforeLogin() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(getContext(),
+                    "Sign-in failed",
+                    exceptionMessage);
+
+        }
+    };
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
     private TextInputLayout passwordRepeatInputLayout;
-    private EditText        emailText;
-    private EditText        passwordText;
-    private EditText        repeatPasswordText;
-
+    private EditText emailText;
+    private EditText passwordText;
+    private EditText repeatPasswordText;
     private boolean isEmailEmpty;
     private boolean isPasswordEmpty;
     private boolean isRepeatPasswordEmpty;
-
-    private Button   submitButton;
+    private Button submitButton;
     private TextView accountExistTextView;
-
     private String userName;
+    SignUpHandler signUpHandler = new SignUpHandler() {
+        @Override
+        public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
+                              CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
+            // Check signUpConfirmationState to see if the user is already confirmed
+            if (signUpConfirmationState) {
+                // auto-confirmed; sign-in
+                CognitoAppHelper.signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
+            } else {
+                Log.v(LOG_TAG, "signUpConfirmationState == false");
+                // User is not confirmed
+                confirmSignUp(cognitoUserCodeDeliveryDetails); // not Confirmed; launch confirm activity
+            }
+        }
 
+        @Override
+        public void onFailure(Exception exception) {
+            progressBar.setVisibility(View.INVISIBLE);
+            String errorMsg = CognitoAppHelper.formatException(exception);
+
+            SystemUtil.showDialogMessage(getActivity(),
+                    "Sign up failed!",
+                    errorMsg);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -172,12 +212,12 @@ public class SignupFragment extends Fragment {
 
         emailText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
@@ -194,12 +234,12 @@ public class SignupFragment extends Fragment {
 
         passwordText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
@@ -216,11 +256,11 @@ public class SignupFragment extends Fragment {
 
         repeatPasswordText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
@@ -239,29 +279,29 @@ public class SignupFragment extends Fragment {
     private void setChangeFocusListeners() {
         emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
         repeatPasswordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, b);
+                SystemUtil.handleHintChange(view, hasFocus);
             }
         });
     }
@@ -269,8 +309,8 @@ public class SignupFragment extends Fragment {
     private void setActionListeners() {
         emailText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     passwordText.requestFocus();
                     return true;
                 }
@@ -279,8 +319,8 @@ public class SignupFragment extends Fragment {
         });
         passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     repeatPasswordText.requestFocus();
                     return true;
                 }
@@ -289,8 +329,8 @@ public class SignupFragment extends Fragment {
         });
         repeatPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE) {
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     repeatPasswordText.clearFocus();
                     parentLayout.requestFocus();
                     SystemUtil.hideSoftKeyboard(getActivity());
@@ -428,30 +468,9 @@ public class SignupFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == RESULT_OK) {
             // confirmed; (auto)sign-in
-            CognitoAppHelper.signIn(userName, passwordText.getText().toString(),cognitoActionCallback);
+            CognitoAppHelper.signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
         }
     }
-
-    CognitoActionCallback cognitoActionCallback= new CognitoActionCallback() {
-        @Override
-        public void onLoginSuccess() {
-            getDemographicInformation(); // disable fetch demographics; call to information will be performed
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onBeforeLogin() {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(getContext(),
-                    "Sign-in failed",
-                    exceptionMessage);
-
-        }
-    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -467,7 +486,7 @@ public class SignupFragment extends Fragment {
     private void launchDemographics(DemographicDTO demographicDTO) {
         // do to Demographics
         Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-        if(demographicDTO != null) {
+        if (demographicDTO != null) {
             // pass the object into the gson
             Gson gson = new Gson();
             intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
@@ -527,30 +546,4 @@ public class SignupFragment extends Fragment {
         intent.putExtra("attribute", cognitoUserCodeDeliveryDetails.getAttributeName());
         startActivityForResult(intent, 10);
     }
-
-    SignUpHandler signUpHandler = new SignUpHandler() {
-        @Override
-        public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
-                              CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
-            // Check signUpConfirmationState to see if the user is already confirmed
-            if (signUpConfirmationState) {
-                // auto-confirmed; sign-in
-                CognitoAppHelper.signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
-            } else {
-                Log.v(LOG_TAG, "signUpConfirmationState == false");
-                // User is not confirmed
-                confirmSignUp(cognitoUserCodeDeliveryDetails); // not Confirmed; launch confirm activity
-            }
-        }
-
-        @Override
-        public void onFailure(Exception exception) {
-            progressBar.setVisibility(View.INVISIBLE);
-            String errorMsg = CognitoAppHelper.formatException(exception);
-
-            SystemUtil.showDialogMessage(getActivity(),
-                    "Sign up failed!",
-                    errorMsg);
-        }
-    };
 }

@@ -12,32 +12,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm1Fragment;
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm2Fragment;
+import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
+import com.carecloud.carepay.patient.consentforms.services.ConsentFormService;
+import com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm1Fragment;
-import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm2Fragment;
-import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
-import com.carecloud.carepay.patient.consentforms.services.ConsentFormService;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.utils.DateUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 
 import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 
 public class ConsentActivity extends AppCompatActivity implements IFragmentCallback {
@@ -54,7 +51,9 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     private ConsentFormMetadataDTO consentFormMetadataDTO;
     private TextView title;
     private FormId showingForm = FormId.FORM1;
-    private View indicator0, indicator1, indicator2;
+    private View indicator0;
+    private View indicator1;
+    private View indicator2;
 
     private String authorizationTitle;
     private String medicareTitle;
@@ -76,9 +75,9 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
     private String signButtonLabel;
     private String patientSignLabel;
     private String legalsignLabel;
-    private String providerName=" ";
-    private String patienFirstName =" ";
-    private String patientLastName=" ";
+    private String providerName = " ";
+    private String patienFirstName = " ";
+    private String patientLastName = " ";
     private String medicareForm;
     private String authForm;
 
@@ -315,6 +314,7 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_blue);
                 break;
         }
+
     }
 
     private FormData getConsentFormData(String formName) {
@@ -370,6 +370,31 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
         return true;
     }
 
+    public ConsentFormLabelsDTO getConsentFormLabelsDTO() {
+        return consentFormLabelsDTO;
+    }
+
+    public void setConsentFormLabelsDTO(ConsentFormLabelsDTO consentFormLabelsDTO) {
+        this.consentFormLabelsDTO = consentFormLabelsDTO;
+
+    }
+
+    public ConsentFormDTO getConsentFormDTO() {
+        return consentFormDTO;
+    }
+
+    public void setConsentFormDTO(ConsentFormDTO consentFormDTO) {
+        this.consentFormDTO = consentFormDTO;
+    }
+
+    public AppointmentsPayloadDTO getAppointmentsPayloadDTO() {
+        return appointmentsPayloadDTO;
+    }
+
+    public void setAppointmentsPayloadDTO(AppointmentsPayloadDTO appointmentsPayloadDTO) {
+        this.appointmentsPayloadDTO = appointmentsPayloadDTO;
+    }
+
     /**
      * Enum to identify the forms
      */
@@ -399,31 +424,6 @@ public class ConsentActivity extends AppCompatActivity implements IFragmentCallb
             }
             return NONE;
         }
-    }
-
-    public ConsentFormLabelsDTO getConsentFormLabelsDTO() {
-        return consentFormLabelsDTO;
-    }
-
-    public void setConsentFormLabelsDTO(ConsentFormLabelsDTO consentFormLabelsDTO) {
-        this.consentFormLabelsDTO = consentFormLabelsDTO;
-
-    }
-
-    public ConsentFormDTO getConsentFormDTO() {
-        return consentFormDTO;
-    }
-
-    public void setConsentFormDTO(ConsentFormDTO consentFormDTO) {
-        this.consentFormDTO = consentFormDTO;
-    }
-
-    public AppointmentsPayloadDTO getAppointmentsPayloadDTO() {
-        return appointmentsPayloadDTO;
-    }
-
-    public void setAppointmentsPayloadDTO(AppointmentsPayloadDTO appointmentsPayloadDTO) {
-        this.appointmentsPayloadDTO = appointmentsPayloadDTO;
     }
 
 }

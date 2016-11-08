@@ -14,22 +14,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 
 /**
@@ -39,10 +38,10 @@ import java.net.URL;
 public class ProfilePictureFragment extends DocumentScannerFragment {
 
     private static String LOG_TAG = ProfilePictureFragment.class.getSimpleName();
-    private ImageCaptureHelper               imageCaptureHelper;
-    private Button                           buttonChangeCurrentPhoto;
+    private ImageCaptureHelper imageCaptureHelper;
+    private Button buttonChangeCurrentPhoto;
     private DemographicPersDetailsPayloadDTO model;
-    private String                           recaptureCaption;
+    private String recaptureCaption;
 
     @Nullable
     @Override
@@ -50,7 +49,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         // set label for capture button
         Activity activity = getActivity();
         DemographicLabelsDTO labelsMetaDTO = null;
-        if(activity instanceof DemographicsActivity) {
+        if (activity instanceof DemographicsActivity) {
             labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
         }
 
@@ -114,7 +113,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         // if no image to load, simply load the placeholder
         imageCaptureHelper.getImageViewTarget()
                 .setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                                            R.drawable.icn_placeholder_user_profile_png));
+                        R.drawable.icn_placeholder_user_profile_png));
     }
 
     @Override

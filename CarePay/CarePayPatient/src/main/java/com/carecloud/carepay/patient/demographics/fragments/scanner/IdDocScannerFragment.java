@@ -22,33 +22,29 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-
 import com.carecloud.carepaylibray.utils.StringUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
-
 import java.util.List;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 9/13/2016.
@@ -57,21 +53,19 @@ import java.util.List;
 public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
-    private View               view;
+    private static String[] states;
+    private View view;
     private ImageCaptureHelper scannerFront;
     private ImageCaptureHelper scannerBack;
-    private Button             scanFrontButton;
-    private Button             scanBackButton;
-    private EditText           idNumberEdit;
-    private TextInputLayout    idNumberInputText;
-    private TextView           idStateClickable;
-    private TextView           stateLabel;
-
-    private DemographicIdDocPayloadDTO            model;
+    private Button scanFrontButton;
+    private Button scanBackButton;
+    private EditText idNumberEdit;
+    private TextInputLayout idNumberInputText;
+    private TextView idStateClickable;
+    private TextView stateLabel;
+    private DemographicIdDocPayloadDTO model;
     private DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
-    private DemographicLabelsDTO                  globalLabelsDTO;
-
-    private static String[] states;
+    private DemographicLabelsDTO globalLabelsDTO;
 
     @Nullable
     @Override
@@ -284,7 +278,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + frontPic);
                     scannerFront.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                                                                                 R.drawable.icn_camera));
+                            R.drawable.icn_camera));
                 }
             }
             // add back image
@@ -299,7 +293,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
                     scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                                                                                R.drawable.icn_camera));
+                            R.drawable.icn_camera));
                 }
             }
         }
@@ -344,6 +338,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.RECTANGULAR_IMAGE;
     }
 
+    public DemographicIdDocPayloadDTO getModel() {
+        return model;
+    }
+
     /**
      * Sets the DTO for this fragment; it creates the required child DTO if they are null
      *
@@ -367,10 +365,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 photoDTOs.add(1, new DemographicIdDocPhotoDTO()); // create the second
             }
         }
-    }
-
-    public DemographicIdDocPayloadDTO getModel() {
-        return model;
     }
 
     public void setIdDocsMetaDTO(DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO) {

@@ -1,4 +1,3 @@
-
 package com.carecloud.carepay.patient.demographics.fragments.review;
 
 import android.content.Intent;
@@ -18,9 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
@@ -41,6 +40,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 
 public class ReviewFragment extends Fragment implements View.OnClickListener {
@@ -133,13 +134,12 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
 
-    public static ReviewFragment newInstance() {
-        return new ReviewFragment();
-    }
-
     public ReviewFragment() {
     }
 
+    public static ReviewFragment newInstance() {
+        return new ReviewFragment();
+    }
 
     @Override
     public void onResume() {
@@ -172,7 +172,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    /** Initialize the models from main Demographic Review Activity
+    /**
+     * Initialize the models from main Demographic Review Activity
      */
 
     public void initModels() {
@@ -226,23 +227,23 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             }
 
             String gender = demographicPersDetailsPayloadDTO.getGender();
-            if (SystemUtil.isNotEmptyString(gender) && ! globalLabelsMetaDTO.getDemographicsChooseLabel().equals(gender)) {
+            if (SystemUtil.isNotEmptyString(gender) && !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(gender)) {
                 genderTextView.setText(gender);
-            } else{
-                 genderTextView.setText(" ");
+            } else {
+                genderTextView.setText(" ");
             }
 
             String race = demographicPersDetailsPayloadDTO.getPrimaryRace();
-            if (SystemUtil.isNotEmptyString(race) && ! globalLabelsMetaDTO.getDemographicsChooseLabel().equals(race)) {
+            if (SystemUtil.isNotEmptyString(race) && !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(race)) {
                 raceTextView.setText(race);
-            } else{
+            } else {
                 raceTextView.setText(" ");
             }
 
             String ethnicity = demographicPersDetailsPayloadDTO.getEthnicity();
-            if (SystemUtil.isNotEmptyString(ethnicity )&& ! globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicity)) {
+            if (SystemUtil.isNotEmptyString(ethnicity) && !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicity)) {
                 ethnicityTextView.setText(ethnicity);
-            } else{
+            } else {
                 ethnicityTextView.setText(" ");
             }
 
