@@ -37,7 +37,7 @@ public class SplashActivity extends BasePatientActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // TODO: 11/8/16 remove
+
 //        Message msg = new Message();
 //        msg.what = STOPSPLASH;
 //        splashHandler.sendMessageDelayed(msg, SPLASHTIME);
@@ -47,7 +47,7 @@ public class SplashActivity extends BasePatientActivity {
 
     }
 
-    // TODO: 11/8/16 remove
+ 
     private Handler splashHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
