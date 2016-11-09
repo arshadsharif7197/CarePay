@@ -15,8 +15,8 @@ import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSet
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingLabelDTO;
 import com.carecloud.carepay.practice.library.practicesetting.services.PracticeSettingService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +31,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
     private Context context;
     private EditText pinEditText;
     private CustomGothamRoundedMediumButton headerLabel;
-    private CustomProxyNovaRegularLabel subHeaderLabel;
+    private CarePayTextView subHeaderLabel;
     private CustomGothamRoundedMediumButton dialogCancelTextView;
     private PracticeSettingDTO practiceSettingResponse;
 
@@ -69,7 +69,7 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
     private void onInitialization(){
         pinEditText = (EditText)findViewById(R.id.pinEditText);
         headerLabel = (CustomGothamRoundedMediumButton)findViewById(R.id.headerLabel);
-        subHeaderLabel = (CustomProxyNovaRegularLabel)findViewById(R.id.subHeaderLabel);
+        subHeaderLabel = (CarePayTextView)findViewById(R.id.subHeaderLabel);
         dialogCancelTextView = (CustomGothamRoundedMediumButton)findViewById(R.id.dialogCancelTextView);
     }
 
