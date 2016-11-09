@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.fragments.SigninFragment;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
@@ -15,7 +16,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by harish_revuri on 9/7/2016.
  * Activity supporting Signin and Sign-up
  */
-public class SigninSignupActivity extends AppCompatActivity {
+public class SigninSignupActivity extends BasePatientActivity {
 
 
     private SignInSignUpDTO signInSignUpDTO;
@@ -24,7 +25,7 @@ public class SigninSignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_signup);
-
+        signInSignUpDTO=getConvertedDTO(SignInSignUpDTO.class);
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
