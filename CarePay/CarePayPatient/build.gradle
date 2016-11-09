@@ -26,14 +26,14 @@ android {
         development {
             applicationId "com.carecloud.carepay.patient.development"
             buildConfigField 'String', 'API_BASE_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com"'
-            buildConfigField 'String', 'API_START_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/practice_mode/practice_mode_signin/start"'
+            buildConfigField 'String', 'API_START_URL', '"https://p51tlkwuqj.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/patient_checkin/language_selection/start"'
             buildConfigField 'String', 'X_API_KEY', '"VXlNfYaZYk4sxti0C4caw1v0J0dEDHXH9oQ3bPsA"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
         }
         development_test {
             applicationId "com.carecloud.carepay.patient.test"
             buildConfigField 'String', 'API_BASE_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com"'
-            buildConfigField 'String', 'API_START_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/practice_mode/practice_mode_signin/start"'
+            buildConfigField 'String', 'API_START_URL', '"https://p51tlkwuqj.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/patient_checkin/language_selection/start"'
             buildConfigField 'String', 'X_API_KEY', '"VXlNfYaZYk4sxti0C4caw1v0J0dEDHXH9oQ3bPsA"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
         }
@@ -41,7 +41,7 @@ android {
         production {
             applicationId "com.carecloud.carepay.patient"
             buildConfigField 'String', 'API_BASE_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com"'
-            buildConfigField 'String', 'API_START_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/practice_mode/practice_mode_signin/start"'
+            buildConfigField 'String', 'API_START_URL', '"https://p51tlkwuqj.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/patient_checkin/language_selection/start"'
             buildConfigField 'String', 'X_API_KEY', '"VXlNfYaZYk4sxti0C4caw1v0J0dEDHXH9oQ3bPsA"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
         }
@@ -56,4 +56,20 @@ configurations.all {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayLibrary')
+
+    // support library
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+
+    // for testing
+    testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support:support-annotations:24.2.1'
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+        exclude module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
 }
