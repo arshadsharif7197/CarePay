@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
@@ -53,17 +55,20 @@ public class ChangeModeDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.dialog_change_mode);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        CustomProxyNovaSemiBoldLabel patientMode = (CustomProxyNovaSemiBoldLabel)
+        LinearLayout patientMode = (LinearLayout)
                 findViewById(R.id.dialog_patient_mode_option);
-        patientMode.setText(StringUtil.getLabelForView(options.get(0)));
-        patientMode.setTextColor(ContextCompat.getColor(context,
+
+        TextView patientModeOptionText = (TextView) findViewById(R.id.homeChangeModePatientOptionText);
+        patientModeOptionText.setText(StringUtil.getLabelForView(options.get(0)));
+        patientModeOptionText.setTextColor(ContextCompat.getColor(context,
                 com.carecloud.carepaylibrary.R.color.textview_default_textcolor));
         patientMode.setOnClickListener(this);
 
-        CustomProxyNovaSemiBoldLabel logout = (CustomProxyNovaSemiBoldLabel)
+        LinearLayout logout = (LinearLayout)
                 findViewById(R.id.dialog_logout_option);
-        logout.setText(StringUtil.getLabelForView(options.get(1)));
-        logout.setTextColor(ContextCompat.getColor(context,
+        TextView logoutOptionText = (TextView) findViewById(R.id.homeChangeModeLogoutOptionText);
+        logoutOptionText.setText(StringUtil.getLabelForView(options.get(1)));
+        logoutOptionText.setTextColor(ContextCompat.getColor(context,
                 com.carecloud.carepaylibrary.R.color.textview_default_textcolor));
         logout.setOnClickListener(this);
     }
