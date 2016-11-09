@@ -1,32 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dialog_rounded_border"
-    android:orientation="horizontal"
-    android:paddingEnd="@dimen/change_mode_dialog_padding_end"
-    android:paddingStart="@dimen/change_mode_dialog_padding_start">
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
-    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+    <LinearLayout
         android:id="@+id/dialog_patient_mode_option"
-        style="@style/ChangeModeDialogOptions"
-        android:drawableTop="@drawable/icn_patient_mode"
-        android:gravity="center"
-        android:paddingTop="@dimen/patient_mode_padding_top" />
+        android:layout_width="@dimen/home_select_mode_button_width"
+        android:layout_height="@dimen/home_select_mode_button_height"
+        android:background="@drawable/home_change_mode_selector_left"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".52"/>
+        <ImageView
+            style="@style/HomeButtonIconStyle"
+            android:contentDescription="@string/home_icon_check_in"
+            android:src="@drawable/icn_patient_mode"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".18"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            android:id="@+id/homeChangeModePatientOptionText"
+            style="@style/ChangeModeDialogOptions"
+            android:hint="@string/home_icon_check_in"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".30"/>
+    </LinearLayout>
 
     <View
         android:id="@+id/view"
         android:layout_width="1.5dp"
         android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/change_mode_divider_margin_end"
-        android:layout_marginStart="@dimen/change_mode_divider_margin_start"
-        android:background="@color/change_mode_divider_color" />
+        android:background="@color/change_mode_divider_color"/>
 
-    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+    <LinearLayout
         android:id="@+id/dialog_logout_option"
-        style="@style/ChangeModeDialogOptions"
-        android:drawableTop="@drawable/icn_log_out"
-        android:gravity="center"
-        android:paddingTop="@dimen/logout_padding_top" />
+        android:layout_width="@dimen/home_select_mode_button_width"
+        android:layout_height="@dimen/home_select_mode_button_height"
+        android:background="@drawable/home_change_mode_selector_right"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".51"/>
+
+        <ImageView
+            style="@style/HomeButtonIconStyle"
+            android:contentDescription="@string/home_icon_check_in"
+            android:src="@drawable/icn_log_out"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".15"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            android:id="@+id/homeChangeModeLogoutOptionText"
+            style="@style/ChangeModeDialogOptions"
+            android:hint="@string/home_icon_check_in"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".34"/>
+    </LinearLayout>
 
 </LinearLayout>
