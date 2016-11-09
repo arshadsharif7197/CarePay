@@ -29,7 +29,7 @@
                 android:id="@+id/homeLockIcon"
                 android:layout_width="@dimen/home_settings_icon_width"
                 android:layout_height="@dimen/home_settings_icon_height"
-                android:src="@drawable/icn_lock"
+                android:src="@drawable/icn_lock_patient"
                 android:layout_gravity="start"
                 android:visibility="gone"/>
 
