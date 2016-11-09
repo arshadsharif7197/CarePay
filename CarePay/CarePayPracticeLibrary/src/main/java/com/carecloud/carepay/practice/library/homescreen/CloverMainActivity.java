@@ -12,7 +12,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
@@ -27,6 +26,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadD
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -38,6 +38,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.http.QueryMap;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
@@ -211,19 +213,45 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-
-        if (viewId == R.id.homeCheckinClickable) {
+        if (viewId == R.id.homeModeSwitchClickable) {
+            createChangeModeDialog().show();
+        } else if (viewId == R.id.homeCheckinClickable) {
             Map<String,String> queryMap=new HashMap<>();
             queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
             queryMap.put("end_date",DateUtil.toDateStringAsYYYYMMDD(new Date()));
             WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback,queryMap);
-        } else if (viewId == R.id.homeModeSwitchClickable) {
-            createChangeModeDialog().show();
+        } else if(viewId == R.id.homePaymentsClickable) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticePayments(), commonCallback);
         } else if (viewId == R.id.homeAppointmentsClickable) {
+            // transition needed
             Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
             appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(appointmentIntent);
+        } else if(viewId == R.id.homeCheckoutClickable) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckout(), commonCallback);
+        } else if(viewId == R.id.homeShopClickable) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getShop(), commonCallback);
+        } else if(viewId == R.id.homeNewsClickable) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getOfficeNews(), commonCallback);
         }
+    }
+
+    private ChangeModeDialog createChangeModeDialog() {
+        return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
+            @Override
+            public void onPatientModeSelected() {
+                TransitionDTO transition = homeScreenDTO.getMetadata().getTransitions().getPatientMode();
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("practice_mgmt", "unknown");
+                queryMap.put("practice_id", "111");
+                WorkflowServiceHelper.getInstance().execute(transition, commonCallback, queryMap);
+            }
+        }, new ChangeModeDialog.LogoutClickListener() {
+            @Override
+            public void onLogoutSelected() {
+
+            }
+        }, modeSwitchOptions);
     }
 
     WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
@@ -261,20 +289,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     };
 
-    private ChangeModeDialog createChangeModeDialog() {
-        return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
-            @Override
-            public void onPatientModeSelected() {
-                Intent appointmentIntent = new Intent(CloverMainActivity.this, PatientModeSplashActivity.class);
-                appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(appointmentIntent);
-                Toast.makeText(CloverMainActivity.this, "Patient Mode selected...", Toast.LENGTH_SHORT).show();
-            }
-        }, new ChangeModeDialog.LogoutClickListener() {
-            @Override
-            public void onLogoutSelected() {
-                Toast.makeText(CloverMainActivity.this, "Logout selected...", Toast.LENGTH_SHORT).show();
-            }
-        }, modeSwitchOptions);
-    }
+    WorkflowServiceCallback commonCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+        }
+    };
 }

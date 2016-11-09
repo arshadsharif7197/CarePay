@@ -12,6 +12,7 @@
     <dimen name="dimen_8dp">8dp</dimen>
     <dimen name="dimen_10dp">10dp</dimen>
     <dimen name="dimen_12dp">12dp</dimen>
+    <dimen name="dimen_14dp">14dp</dimen>
     <dimen name="dimen_15dp">15dp</dimen>
     <dimen name="dimen_17dp">17dp</dimen>
     <dimen name="dimen_18dp">18dp</dimen>
@@ -21,6 +22,15 @@
     <dimen name="dimen_25dp">25dp</dimen>
     <dimen name="dimen_35dp">35dp</dimen>
     <dimen name="dimen_450dp">450dp</dimen>
+
+    <dimen name="dimen_36dp">36dp</dimen>
+    <dimen name="dimen_46dp">46dp</dimen>
+    <dimen name="dimen_57dp">57dp</dimen>
+    <dimen name="dimen_500dp">500dp</dimen>
+
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="text_size_18sp">18sp</dimen>
+    <dimen name="text_size_20sp">20sp</dimen>
 
     <dimen name="text_size_22sp">22sp</dimen>
     <dimen name="text_size_28sp">28sp</dimen>
@@ -61,12 +71,9 @@
     <dimen name="button_delete_key_height">27dp</dimen>
 
     <!--Change mode dialog-->
-    <dimen name="change_mode_dialog_padding_end">45.5dp</dimen>
-    <dimen name="change_mode_dialog_padding_start">33.5dp</dimen>
-    <dimen name="change_mode_divider_margin_end">35.5dp</dimen>
-    <dimen name="change_mode_divider_margin_start">35dp</dimen>
-    <dimen name="patient_mode_padding_top">65dp</dimen>
     <dimen name="logout_padding_top">57dp</dimen>
+    <dimen name="home_select_mode_button_width">176dp</dimen>
+    <dimen name="home_select_mode_button_height">219dp</dimen>
 
     <!-- Custom Appointment details dialog -->
     <dimen name="appointment_detail_dialog_width">714dp</dimen>
@@ -103,7 +110,7 @@
     <dimen name="home_alert_checkin_number_wrapper_height">19dp</dimen>
     <dimen name="home_alert_checkin_number_wrapper_width">19dp</dimen>
 
-    <dimen name="home_main_margin_top">8dp</dimen>
+    <dimen name="home_main_margin_top">10dp</dimen>
     <dimen name="home_main_margin_start">13dp</dimen>
     <dimen name="home_main_margin_end">13dp</dimen>
 
@@ -121,18 +128,16 @@
     <dimen name="home_button_icon_width" format="float">22.0dp</dimen>
     <dimen name="home_button_icon_height" format="float">38.0dp</dimen>
 
-    <dimen name="home_button_icon_margin_top">24dp</dimen>
-    <dimen name="home_button_text_margin_bottom">21dp</dimen>
-
-    <dimen name="home_button_width">87dp</dimen>
-    <dimen name="home_button_height">91dp</dimen>
+    <dimen name="home_button_width">104dp</dimen>
+    <dimen name="home_button_height">131dp</dimen>
 
     <dimen name="home_shadow_width">262dp</dimen>
 
     <dimen name="home_shadow_margin_top">-36dp</dimen>
 
-    <dimen name="home_settings_icon_width">18dp</dimen>
-    <dimen name="home_settings_icon_height">18dp</dimen>
+    <dimen name="home_settings_icon_width">20dp</dimen>
+    <dimen name="home_settings_icon_height">20dp</dimen>
 
     <dimen name="home_spinner_width">39dp</dimen>
+
 </resources>

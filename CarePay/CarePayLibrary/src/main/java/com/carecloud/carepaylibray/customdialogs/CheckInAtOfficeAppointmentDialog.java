@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
@@ -20,6 +19,7 @@ public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
     private Context context;
     private LinearLayout mainLayout;
     private AppointmentLabelDTO appointmentLabels;
+    private Class nextActivityClass;
 
     /**
      * Constructor.
@@ -28,10 +28,12 @@ public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
      * @param appointmentLabels Screen labels
      */
     public CheckInAtOfficeAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                            AppointmentLabelDTO appointmentLabels) {
+                                            AppointmentLabelDTO appointmentLabels,
+                                            Class nextActivity) {
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentLabels = appointmentLabels;
+        this.nextActivityClass = nextActivity;
     }
 
     @Override
@@ -68,7 +70,7 @@ public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
      * call check-in at office api.
      */
     private void onCheckInAtOffice() {
-        Intent demographicReviewIntent = new Intent(context, DemographicReviewActivity.class);
+        Intent demographicReviewIntent = new Intent(context, nextActivityClass) ; //DemographicReviewActivity.class);
         context.startActivity(demographicReviewIntent);
     }
 

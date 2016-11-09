@@ -5,4 +5,4 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.carecloud.carepaylibray.signinsignup.SigninSignupActivity"/>
+             tools:context="com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity"/>

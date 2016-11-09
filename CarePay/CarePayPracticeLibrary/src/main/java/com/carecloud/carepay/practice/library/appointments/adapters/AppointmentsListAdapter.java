@@ -1,10 +1,13 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -15,7 +18,11 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,6 +74,22 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.appointmentDate.setText(strToday);
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckInTextview.setText(R.string.not_defined);
+        String photoUrl = item.getProvider().getPhoto();
+        if (TextUtils.isEmpty(photoUrl)) {
+            holder.shortNameTextview.setText(StringUtil.onShortDrName(item.getProvider().getName()));
+        } else {
+            Picasso.Builder builder = new Picasso.Builder(context);
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                    holder.shortNameTextview.setText(StringUtil.onShortDrName(item.getProvider().getName()));
+                }
+            });
+
+            builder.build().load(photoUrl).transform(new CircleImageTransform())
+                    .resize(58, 58).into(holder.profileImage);
+            holder.profileImage.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -83,6 +106,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         private CustomGothamRoundedBoldLabel appointmentLocation;
         private CustomProxyNovaExtraBold appointmentDate;
         private CustomGothamRoundedBoldLabel appointmentTime;
+        //private ImageView cellAvatar;
+        private ImageView profileImage;
 
         AppointmentsListViewHolder(View itemView) {
             super(itemView);
@@ -94,6 +119,9 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             appointmentLocation = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.appointmentLocationTextview);
             appointmentDate = (CustomProxyNovaExtraBold) itemView.findViewById(R.id.appointmentDateTextView);
             appointmentTime = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.appointmentTimeTextView);
+            //cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
+            profileImage = (ImageView) itemView.findViewById(R.id.appointUserPicImageView);
+
         }
     }
 
