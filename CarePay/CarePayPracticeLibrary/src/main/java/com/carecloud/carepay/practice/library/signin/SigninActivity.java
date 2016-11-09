@@ -133,7 +133,7 @@ public class SigninActivity extends BasePracticeActivity {
         langSpinner.setAdapter(spinnerArrayAdapter);
         if (defaultLangOption != null) { // this should be always true, as there's always a default option
             langSpinner.setSelection(indexDefault);
-            ApplicationPreferences.Instance.setUserLanguage(defaultLangOption.getCode());
+            ApplicationPreferences.Instance.setPracticeLanguage(defaultLangOption.getCode());
         }
 
 

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.carecloud.carepaylibray.intake.activities.InTakeActivity">
+    tools:context="com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity">
 
     <include layout="@layout/toolbar_intake"/>
 
