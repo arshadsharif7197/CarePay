@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.google.gson.Gson;
 
 
 /**
@@ -22,7 +25,6 @@ public class PatientNavigationHelper {
     }
 
     /**
-     *
      * @param context context
      */
     public static void initInstance(Context context) {
@@ -37,32 +39,47 @@ public class PatientNavigationHelper {
     }
 
     public void navigateToWorkflow(String state) {
-        navigateToWorkflow(state,null);
+        navigateToWorkflow(state, null);
     }
 
     /**
      *
-     * @param state state
+     * @param workflowDTO workflowdto
+     */
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        Bundle bundle = new Bundle();
+        bundle.putString(PatientNavigationHelper.class.getSimpleName(), workflowDTO.toString());
+        navigateToWorkflow(workflowDTO.getState(), bundle);
+    }
+
+    /**
+     * @param state  state
      * @param bundle bundle
      */
     public void navigateToWorkflow(String state, Bundle bundle) {
-        Intent intent=null;
+        Intent intent = null;
         switch (state) {
+            case PatientNavigationStateConstants.LANGUAGE_SELECTION:
+                intent = new Intent(context, SelectLanguageActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+
             case PatientNavigationStateConstants.APPOINTMENTS: {
                 intent = new Intent(context, DemographicReviewActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-             default: {
+
+            default: {
                 intent = new Intent(context, AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
 
             }
-
         }
-        if(bundle!=null){
-            intent.putExtra(state, bundle);
+
+        if (bundle != null) {
+            intent.putExtra(PatientNavigationHelper.class.getSimpleName(), bundle);
         }
         context.startActivity(intent);
     }

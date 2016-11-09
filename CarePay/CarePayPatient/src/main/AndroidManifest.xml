@@ -28,7 +28,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity" />
         <activity android:name="com.carecloud.carepay.patient.consentforms.SignatureActivity" />
-        <activity android:name="com.carecloud.carepay.patient.selectlanguage.SelectLangaugeActivity" />
+        <activity android:name="com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity" />
         <activity
             android:name="com.carecloud.carepay.patient.consentforms.ConsentActivity"
             android:windowSoftInputMode="adjustPan" />

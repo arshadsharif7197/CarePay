@@ -30,25 +30,9 @@ public class CarePayPatientApplication extends Application {
         ApplicationPreferences.createPreferences(this);
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
         CognitoAppHelper.init(getApplicationContext());
-     //   WorkflowServiceHelper.getInstance().executeApplicationStartRequest(applicationStartCallback);
+        PatientNavigationHelper.initInstance(this);
+        WorkflowServiceHelper.initialization(WorkflowServiceHelper.ApplicationType.PATIENT);
     }
-    WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO.getState());
-
-            // end-splash activity and transition
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-         //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     /**
      * Http constants initialization
