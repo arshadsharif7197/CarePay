@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -76,9 +77,9 @@ public class SplashActivity extends BasePatientActivity {
                 Intent intent = new Intent(SplashActivity.this, AppointmentsActivity.class);
                 startActivity(intent);
             } else {
-                if (!(ApplicationPreferences.Instance.getUserLanguage().equals("English"))) {
+                if (! SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
                     PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
-                } else if (ApplicationPreferences.Instance.getUserLanguage().equals("English")) {
+                } else if (SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
 //                Intent intent = new Intent(SplashActivity.this, SigninSignupActivity.class);
 //                startActivity(intent);
                     // Convert to SignInSignUpDTO
