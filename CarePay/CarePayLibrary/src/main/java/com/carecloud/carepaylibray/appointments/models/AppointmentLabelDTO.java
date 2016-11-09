@@ -83,6 +83,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointments_check_in_at_office")
     @Expose
     private String appointmentsCheckInAtOffice;
+    @SerializedName("appointments_check_in_at_office_button_text")
+    @Expose
+    private String appointmentsCheckInAtOfficeButtonText;
     @SerializedName("appointments_check_in_now")
     @Expose
     private String appointmentsCheckInNow;
@@ -602,5 +605,19 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAppointmentsMissedHeading(String appointmentsMissedHeading) {
         this.appointmentsMissedHeading = appointmentsMissedHeading;
+    }
+
+    /**
+     * @return The appointmentsCheckInAtOfficeButtonText
+     */
+    public String getAppointmentsCheckInAtOfficeButtonText() {
+        return appointmentsCheckInAtOfficeButtonText;
+    }
+
+    /**
+     * @param appointmentsCheckInAtOfficeButtonText The appointments_check_in_at_office_button_text
+     */
+    public void setAppointmentsCheckInAtOfficeButtonText(String appointmentsCheckInAtOfficeButtonText) {
+        this.appointmentsCheckInAtOfficeButtonText = appointmentsCheckInAtOfficeButtonText;
     }
 }

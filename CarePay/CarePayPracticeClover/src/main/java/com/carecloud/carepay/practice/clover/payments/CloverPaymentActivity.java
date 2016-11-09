@@ -12,7 +12,8 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
-import com.carecloud.carepaylibray.payment.services.PaymentsService;
+
+import com.carecloud.carepaylibray.payments.services.PaymentsService;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;

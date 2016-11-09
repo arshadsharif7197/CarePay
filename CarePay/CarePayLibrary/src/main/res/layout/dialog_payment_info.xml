@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,7 +10,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
             android:id="@+id/previousTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/payment_option_section_margin"
@@ -21,7 +23,8 @@
             android:textColor="@color/bermudagrey"
             android:textSize="@dimen/payment_text_balance_size" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
             android:id="@+id/previousBalanceAmountTextView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/payment_option_section_margin"
@@ -45,7 +48,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
             android:id="@+id/insuranceCoPayTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/payment_option_section_margin"
@@ -57,7 +61,8 @@
             android:textColor="@color/bermudagrey"
             android:textSize="@dimen/payment_text_balance_size" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
             android:id="@+id/insuranceCoPayAmountTextView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/payment_option_section_margin"

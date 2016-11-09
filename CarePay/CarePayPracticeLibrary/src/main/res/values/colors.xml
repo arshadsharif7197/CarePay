@@ -100,4 +100,6 @@
     <color name="home_news_background">#CAE5F2</color>
 
     <color name="home_background_checkin_counter">#35A5E1</color>
+
+    <color name="bleu_de_france">#35a5e1</color>
 </resources>
