@@ -18,6 +18,7 @@ import com.carecloud.carepaylibray.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -48,6 +49,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     private List<Object> appointmentItems;
     private AppointmentLabelDTO appointmentLabels;
     private AppointmentsListFragment appointmentsListFragment;
+    private AppointmentMetadataModel appointmentMetadataModel;
 
     /**
      * Constructor.
@@ -63,6 +65,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         this.appointmentItems = appointmentItems;
         this.appointmentsListFragment = appointmentsListFragment;
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
+        this.appointmentMetadataModel = appointmentInfo.getMetadata();
     }
 
     @Override
@@ -146,11 +149,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             new CancelAppointmentDialog(context, item, appointmentLabels).show();
                         } else {
                             if (isPending) {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel).show();
                             } else if (isCheckedIn) {
                                 new QueueAppointmentDialog(context, item, appointmentLabels).show();
                             } else {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel).show();
                             }
                         }
                     }
