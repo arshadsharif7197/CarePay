@@ -42,6 +42,7 @@ public class SelectLanguageActivity extends BasePatientActivity {
         }
         return false;
     }
+
     public SelectLanguageDTO getLanguageDTO() {
         return languageDTO;
     }

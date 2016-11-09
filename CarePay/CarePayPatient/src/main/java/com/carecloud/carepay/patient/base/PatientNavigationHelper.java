@@ -42,6 +42,10 @@ public class PatientNavigationHelper {
         navigateToWorkflow(state, null);
     }
 
+    /**
+     *
+     * @param workflowDTO workflowdto
+     */
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         Bundle bundle = new Bundle();
         bundle.putString(PatientNavigationHelper.class.getSimpleName(), workflowDTO.toString());

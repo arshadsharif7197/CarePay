@@ -28,10 +28,16 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     RadioButton selectedLanguage;
     private OnItemClickListener itemClickListener;
 
-    public LanguageListAdapter(List<LanguageOptionModel> languageListLanguageOptionModels, OnItemClickListener itemClickListener, Context mContext) {
+    /**
+     *
+     * @param languageListLanguageOptionModels  option model
+     * @param itemClickListener onclicklistner
+     * @param context context
+     */
+    public LanguageListAdapter(List<LanguageOptionModel> languageListLanguageOptionModels, OnItemClickListener itemClickListener, Context context) {
         this.languageListLanguageOptionModels = languageListLanguageOptionModels;
         this.itemClickListener = itemClickListener;
-        this.context = mContext;
+        this.context = context;
     }
 
     @Override
