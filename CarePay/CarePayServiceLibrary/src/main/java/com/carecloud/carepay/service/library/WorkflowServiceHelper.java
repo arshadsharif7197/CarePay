@@ -107,6 +107,10 @@ public class WorkflowServiceHelper {
         return customHeaders;
     }
 
+    /**
+     *
+     * @return app start headers
+     */
     public static Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
