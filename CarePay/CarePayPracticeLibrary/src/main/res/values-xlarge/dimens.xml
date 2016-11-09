@@ -3,7 +3,7 @@
     <dimen name="home_alert_checkin_number_wrapper_height">42dp</dimen>
     <dimen name="home_alert_checkin_number_wrapper_width">42dp</dimen>
 
-    <dimen name="home_main_margin_top">16dp</dimen>
+    <dimen name="home_main_margin_top">20dp</dimen>
     <dimen name="home_main_margin_start">28dp</dimen>
     <dimen name="home_main_margin_end">28dp</dimen>
 
@@ -31,8 +31,8 @@
 
     <dimen name="home_shadow_margin_top">-19dp</dimen>
 
-    <dimen name="home_settings_icon_width">28dp</dimen>
-    <dimen name="home_settings_icon_height">28dp</dimen>
+    <dimen name="home_settings_icon_width">34dp</dimen>
+    <dimen name="home_settings_icon_height">34dp</dimen>
 
     <dimen name="home_spinner_width">79dp</dimen>
 </resources>
