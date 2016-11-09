@@ -40,7 +40,6 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         initViews();
         initializeLebals();
         setClicables();
-
     }
 
     private void initViews() {
@@ -52,7 +51,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
     private void initializeLebals() {
         if (patientModeSplashDTO != null) {
-            PatientModeLabelsDTO patientModeLabelsDTO = patientModeSplashDTO.getMetadata().getLabel();
+            PatientModeLabelsDTO patientModeLabelsDTO = patientModeSplashDTO.getMetadata().getLabels();
             patientModePayloadDTO = patientModeSplashDTO.getPayload();
 
             if (patientModeLabelsDTO != null) {
@@ -92,8 +91,6 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                 Intent checkedInIntent = new Intent(PatientModeSplashActivity.this, HowToCheckInActivity.class);
                 checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(checkedInIntent);
-
-
             }
         });
 

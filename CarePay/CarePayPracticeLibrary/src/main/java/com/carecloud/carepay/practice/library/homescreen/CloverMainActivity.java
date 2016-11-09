@@ -23,7 +23,6 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
-import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -38,8 +37,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import retrofit2.http.QueryMap;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
@@ -111,7 +108,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void populateWithLabels() {
         HomeScreenMetadataDTO metadataDTO = homeScreenDTO.getMetadata();
 
-        HomeScreenLabelDTO labels = metadataDTO.getLabel();
+        HomeScreenLabelDTO labels = metadataDTO.getLabels();
 
         homeQueueLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getCheckinginNotifications()));
         homeAlertsLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAlerts()));
