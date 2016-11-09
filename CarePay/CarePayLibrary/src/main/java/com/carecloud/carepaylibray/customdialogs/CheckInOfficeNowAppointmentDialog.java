@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
@@ -21,6 +20,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private Context context;
     private AppointmentDTO appointmentDTO;
     private AppointmentLabelDTO appointmentLabels;
+    private Class nextActivityClass;
 
     /**
      * Constructor.
@@ -29,11 +29,13 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      * @param appointmentLabels screen labels
      */
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                             AppointmentLabelDTO appointmentLabels) {
+                                             AppointmentLabelDTO appointmentLabels,
+                                             Class nextActivity) {
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentLabels = appointmentLabels;
+        this.nextActivityClass = nextActivity;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_checkin_office_now_appointment, null);
 
         Button checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkOfficeButton);
-        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInAtOffice()));
+        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInAtOfficeButtonText()));
         checkInAtOfficeButton.setOnClickListener(this);
 
         Button checkInNowButton = (Button) childActionView.findViewById(R.id.checkOfficeNowButton);
@@ -85,7 +87,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      * call check-in at Now api.
      */
     private void onCheckInAtNow() {
-        Intent demographicReviewIntent = new Intent(context, DemographicReviewActivity.class);
+        Intent demographicReviewIntent = new Intent(context, nextActivityClass); //DemographicReviewActivity.class);
         context.startActivity(demographicReviewIntent);
     }
 }

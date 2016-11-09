@@ -51,7 +51,8 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_light"
                 android:id="@+id/appointDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +61,8 @@
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/apt_dl_text_date" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="gotham_rounded_bold"
                 android:id="@+id/appointTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,7 +95,8 @@
                 android:src="@drawable/icn_signup_step_2_user_on" />
         </android.support.v7.widget.CardView>
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="gotham_rounded_medium"
             android:id="@+id/appointShortnameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,7 +117,8 @@
             android:paddingLeft="@dimen/apt_dl_margin"
             android:paddingRight="@dimen/apt_dl_margin">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_semi_bold"
                 android:id="@+id/appointNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +126,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/apt_dl_text_big" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_regular"
                 android:id="@+id/appointTypeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,7 +155,8 @@
                     android:layout_weight="0.7"
                     android:orientation="vertical">
 
-                    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        app:customAssetFont="proxima_nova_extra_bold"
                         android:id="@+id/appointAddressHeaderTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -163,11 +169,12 @@
                         android:textSize="@dimen/textview_textsize"
                         android:textStyle="bold" />
 
-                    <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        app:customAssetFont="proxima_nova_regular"
                         android:id="@+id/appointAddressTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_gravity="start"
                         android:ellipsize="none"
                         android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
                         android:maxLines="2"

@@ -371,7 +371,7 @@ public class DateUtil {
         Date today = calendar.getTime();
         int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
         // check if crt date is after the date in the util and the days differ
-        return compareTo(today) == -1 && crtDay != day;
+        return compareTo(today) == -1;
     }
 
     /**
@@ -393,18 +393,19 @@ public class DateUtil {
      * @param dateString The date whose format is to be changed
      * @return The dat in the new format as a string
      */
-    public static boolean isValidateStringDateMMDDYYYY(String dateString) {
+    public static boolean isValidateStringDateOfBirth(String dateString) {
         String formatString = "MM/dd/yyyy";
         try {
             SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
             format.setLenient(false);
-            format.parse(dateString);
+            Date dob = format.parse(dateString);
+            getInstance().setDate(dob);
+            return getInstance().isYesterdayOrBefore() && getInstance().year > 1900;
         } catch (ParseException e) {
             return false;
         } catch (IllegalArgumentException e) {
             return false;
         }
-        return true;
     }
 
     /**

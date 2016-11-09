@@ -20,11 +20,10 @@
     </style>
 
     <style name="ChangeModeDialogOptions">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawablePadding">20dp</item>
-        <item name="android:paddingBottom">38dp</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">@dimen/home_alert_font_size</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!-- Home Screen -->
@@ -41,14 +40,12 @@
         <item name="android:layout_gravity">bottom|center_horizontal</item>
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/home_button_font_size</item>
-        <item name="android:layout_marginBottom">@dimen/home_button_text_margin_bottom</item>
     </style>
 
     <style name="HomeButtonIconStyle">
-        <item name="android:layout_width">@dimen/home_button_icon_width</item>
-        <item name="android:layout_height">@dimen/home_button_icon_height</item>
-        <item name="android:layout_gravity">top|center_horizontal</item>
-        <item name="android:layout_marginTop">@dimen/home_button_icon_margin_top</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
     </style>
 
     <style name="HomeSpinnerItemStyle">

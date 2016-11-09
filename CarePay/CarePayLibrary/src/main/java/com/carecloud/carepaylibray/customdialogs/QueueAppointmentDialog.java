@@ -11,8 +11,7 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
@@ -47,12 +46,12 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_queue_appointment, null);
 
-        CustomGothamRoundedBoldLabel queueLabel = (CustomGothamRoundedBoldLabel)
+        CarePayTextView queueLabel = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestQueueLabel);
         queueLabel.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsQueueHeading()));
         queueLabel.setTextColor(ContextCompat.getColor(context, R.color.slateGray));
 
-        CustomProxyNovaExtraBold queueValue = (CustomProxyNovaExtraBold)
+        CarePayTextView queueValue = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestQueueTextView);
         queueValue.setText(StringUtil.getLabelForView("You are 3rd")); // Remove once available in endpoint
         queueValue.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
