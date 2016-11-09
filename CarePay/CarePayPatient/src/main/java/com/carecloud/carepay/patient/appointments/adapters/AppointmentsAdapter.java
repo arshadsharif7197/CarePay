@@ -54,8 +54,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     /**
      * Constructor.
-     * @param context context
-     * @param appointmentItems list of appointments
+     *
+     * @param context                  context
+     * @param appointmentItems         list of appointments
      * @param appointmentsListFragment screen instance
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
@@ -108,7 +109,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
 
             if (getSectionHeaderTitle(upcomingStartTime).equals(CarePayConstants.DAY_UPCOMING)) {
-                if(isCheckedIn) {
+                if (isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                     holder.todayTimeTextView.setText(StringUtil.getLabelForView(
@@ -126,7 +127,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             } else {
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                if(isCheckedIn) {
+                if (isCheckedIn) {
                     holder.todayTimeTextView.setText(StringUtil.getLabelForView(
                             appointmentLabels.getAppointmentsCheckedInLabel()));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
@@ -316,9 +317,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
             return CarePayConstants.DAY_UPCOMING;
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            return  CarePayConstants.DAY_OVER;
+            return CarePayConstants.DAY_OVER;
         } else {
-            return  CarePayConstants.DAY_TODAY;
+            return CarePayConstants.DAY_TODAY;
         }
     }
 

@@ -1,9 +1,10 @@
 package com.carecloud.carepaylibray.appointments.models;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by arpit_jain1 on 11/7/2016.
@@ -25,72 +26,56 @@ public class QueryString {
     private List<ValidationDTO> validations = new ArrayList<ValidationDTO>();
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * 
-     * @return
-     *     The label
+     * @return The label
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     * 
-     * @param label
-     *     The label
+     * @param label The label
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     * 
-     * @return
-     *     The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     * 
-     * @param type
-     *     The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     * 
-     * @return
-     *     The validations
+     * @return The validations
      */
     public List<ValidationDTO> getValidations() {
         return validations;
     }
 
     /**
-     * 
-     * @param validations
-     *     The validations
+     * @param validations The validations
      */
     public void setValidations(List<ValidationDTO> validations) {
         this.validations = validations;

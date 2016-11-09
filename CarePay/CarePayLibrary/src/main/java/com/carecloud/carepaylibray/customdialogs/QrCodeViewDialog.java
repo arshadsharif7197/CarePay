@@ -90,13 +90,13 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
                     .getCheckinAtOffice(), qrCodeCallBack, createURL(queryStrings));
         }
     }
+
     /**
      *
      * @param queryStrings the query strings for the url
      * @return complete url
      */
     private Map<String, String> createURL(QueryStrings queryStrings) {
-
         Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
         queryMap.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
