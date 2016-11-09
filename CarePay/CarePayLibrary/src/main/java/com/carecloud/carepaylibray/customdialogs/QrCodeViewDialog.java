@@ -13,22 +13,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
+import com.carecloud.carepaylibray.appointments.models.QRCodePayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
-import com.carecloud.carepaylibray.appointments.models.ScanQRCodeDTO;
-import com.carecloud.carepaylibray.appointments.services.AppointmentService;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Map;
 
 public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
@@ -40,8 +42,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
     private CarePayTextView scanQRCodeTextView;
 
     /**
-     *
-     * @param context activity context
+     * @param context        activity context
      * @param appointmentDTO appointment model
      */
     public QrCodeViewDialog(Context context, AppointmentDTO appointmentDTO, AppointmentMetadataModel appointmentMetadataModel) {
@@ -77,78 +78,81 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
      * Method to generate QR code API
      */
     private void callGenerateQRCodeAPI() {
-        if(appointmentMetadataModel != null && appointmentMetadataModel.getTransitions() != null &&
-            appointmentMetadataModel.getTransitions().getCheckinAtOffice() != null &&
-            appointmentMetadataModel.getTransitions().getCheckinAtOffice().getQueryStrings()
-                != null) {
+        if (appointmentMetadataModel != null && appointmentMetadataModel.getTransitions() != null &&
+                appointmentMetadataModel.getTransitions().getCheckinAtOffice() != null) {
 
-            String url = appointmentMetadataModel.getTransitions().getCheckinAtOffice().getUrl();
-            QueryStrings queryStrings = appointmentMetadataModel.getTransitions()
-                    .getCheckinAtOffice().getQueryStrings();
+            JsonObject queryStringObject = appointmentMetadataModel.getTransitions()
+                    .getCheckinAtOffice().getQueryString();
+            Gson gson = new Gson();
+            QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
 
-            AppointmentService aptService
-                    = (new BaseServiceGenerator(context)).createService(AppointmentService.class);
-            Call<ScanQRCodeDTO> call = aptService.getQRCode(createURL(url, queryStrings));
-            call.enqueue(new Callback<ScanQRCodeDTO>() {
-
-                @Override
-                public void onResponse(Call<ScanQRCodeDTO> call, Response<ScanQRCodeDTO> response) {
-                    ScanQRCodeDTO scanQRCodeDTO = response.body();
-
-                    if(scanQRCodeDTO != null) {
-                        List<Integer> buffer = scanQRCodeDTO.getPayload().getQrcode().getData();
-                        byte[]  byteArray = new byte[buffer.size()];
-
-                        Iterator<Integer> iterator = buffer.iterator();
-                        int index = 0;
-
-                        while(iterator.hasNext()) {
-                            Integer integer = iterator.next();
-                            byteArray[index] = integer.byteValue();
-                            index++;
-                        }
-
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0,
-                                byteArray.length);
-                        qrCodeImageView.setImageBitmap(bitmap);
-                        scanQRCodeTextView.setText(StringUtil.getLabelForView(
-                                appointmentMetadataModel.getLabel().getScanQRCodeHeading()));
-                        qrCodeProgressBar.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ScanQRCodeDTO> call, Throwable throwable) {
-                    qrCodeProgressBar.setVisibility(View.GONE);
-                }
-            });
+            WorkflowServiceHelper.getInstance().execute(appointmentMetadataModel.getTransitions()
+                    .getCheckinAtOffice(), qrCodeCallBack, createURL(queryStrings));
         }
     }
-
     /**
      *
-     * @param url the url for check in at office
      * @param queryStrings the query strings for the url
      * @return complete url
      */
-    private String createURL(String url, QueryStrings queryStrings) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(url);
-        sb.append("?");
-        sb.append(queryStrings.getAppointmentId().getName());
-        sb.append("=");
-        sb.append(appointmentDTO.getMetadata().getAppointmentId());
-        sb.append("&");
-        sb.append(queryStrings.getPracticeMgmt().getName());
-        sb.append("=");
-        sb.append(appointmentDTO.getMetadata().getPracticeMgmt());
-        sb.append("&");
-        sb.append(queryStrings.getPracticeId().getName());
-        sb.append("=");
-        sb.append(appointmentDTO.getMetadata().getPracticeId());
+    private Map<String, String> createURL(QueryStrings queryStrings) {
 
-        return sb.toString();
+        Map<String, String> queryMap = new HashMap<String, String>();
+        queryMap.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+        queryMap.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+
+        return queryMap;
     }
+
+    WorkflowServiceCallback qrCodeCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            updateUI(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(context,
+                    getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    /**
+     *
+     * @param workflowDTO workflow model returned by server.
+     */
+    private void updateUI(WorkflowDTO workflowDTO) {
+        JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
+
+        Gson gson = new Gson();
+        QRCodePayloadDTO scanQRCodeDTO = gson.fromJson(jsonObject, QRCodePayloadDTO.class);
+
+        if (scanQRCodeDTO != null) {
+            List<Integer> buffer = scanQRCodeDTO.getQrcode().getData();
+            byte[] byteArray = new byte[buffer.size()];
+
+            Iterator<Integer> iterator = buffer.iterator();
+            int index = 0;
+
+            while (iterator.hasNext()) {
+                Integer integer = iterator.next();
+                byteArray[index] = integer.byteValue();
+                index++;
+            }
+
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            qrCodeImageView.setImageBitmap(bitmap);
+            scanQRCodeTextView.setText(StringUtil.getLabelForView(
+                    appointmentMetadataModel.getLabel().getScanQRCodeHeading()));
+            qrCodeProgressBar.setVisibility(View.GONE);
+        }
+    }
+
 
     @Override
     public void onClick(View view) {

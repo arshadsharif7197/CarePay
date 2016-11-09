@@ -37,13 +37,6 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentMetadataModel = appointmentMetadataModel;
-//=======
-//                                             AppointmentLabelDTO appointmentLabels,
-//                                             ) {
-//        super(context, appointmentDTO);
-//        this.context = context;
-//        this.appointmentDTO = appointmentDTO;
-//        this.appointmentLabels = appointmentLabels;
         this.nextActivityClass = nextActivity;
     }
 

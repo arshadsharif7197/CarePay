@@ -13,11 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
+import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
@@ -142,7 +141,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 public void onClick(View appointmentListItem) {
                     // Restricted the appointment list item click if it is appointment header type.
                     if (object.getClass() == AppointmentDTO.class) {
-
                         // appointment clicked item saved so that it can be used on Payment
                         AppointmentDTO item = ((AppointmentDTO) object);
                         AppointmentsActivity.model = item;
@@ -151,22 +149,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             new CancelAppointmentDialog(context, item, appointmentLabels).show();
                         } else {
                             if (isPending) {
-//<<<<<<< HEAD:CarePay/CarePayLibrary/src/main/java/com/carecloud/carepaylibray/appointments/adapters/AppointmentsAdapter.java
                                 new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel, DemographicReviewActivity.class).show();
                             } else if (isCheckedIn) {
                                 new QueueAppointmentDialog(context, item, appointmentLabels).show();
                             } else {
-//                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel).show();
-
                                 new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel, DemographicReviewActivity.class).show();
                             }
-//                            else if (isCheckedIn) {
-//                                new QueueAppointmentDialog(context, item, appointmentLabels).show();
-//                            }
-//                            else {
-//                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, DemographicReviewActivity.class).show();
-////>>>>>>> development:CarePay/CarePayPatient/src/main/java/com/carecloud/carepay/patient/appointments/adapters/AppointmentsAdapter.java
-//                            }
                         }
                     }
                 }
