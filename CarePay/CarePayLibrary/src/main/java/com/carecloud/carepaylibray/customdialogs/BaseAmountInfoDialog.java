@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
@@ -34,13 +35,13 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
     private static final String LOG_TAG = BaseAmountInfoDialog.class.getSimpleName();
 
     private Context context;
-    protected CustomGothamRoundedMediumLabel paymentAmountTextView;
-    private CustomProxyNovaSemiBoldLabel userShortnameTextView;
-    private CustomProxyNovaSemiBoldLabel userNameTextView;
-    private CustomProxyNovaRegularLabel userTypeTextView;
-    private CustomProxyNovaSemiBoldLabel paymentDatetextView;
-    private CustomProxyNovaExtraBold paymentAddressHeaderTextView;
-    private CustomProxyNovaRegularLabel addressAmountLevel;
+    protected CarePayTextView paymentAmountTextView;
+    private CarePayTextView userShortnameTextView;
+    private CarePayTextView userNameTextView;
+    private CarePayTextView userTypeTextView;
+    private CarePayTextView paymentDatetextView;
+    private CarePayTextView paymentAddressHeaderTextView;
+    private CarePayTextView addressAmountLevel;
 
     private ImageView dialogCloseHeader;
     private ImageView paymentLocationImageView;
@@ -80,14 +81,14 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
 
     private void onInitialization() {
         dialogCloseHeader = (ImageView) findViewById(R.id.dialogCloseHeader);
-        paymentAmountTextView = (CustomGothamRoundedMediumLabel) findViewById(R.id.paymentAmountTextView);
+        paymentAmountTextView = (CarePayTextView) findViewById(R.id.paymentAmountTextView);
         ImageView paymentUserPicImageView = (ImageView) findViewById(R.id.paymentUserPicImageView);
-        userShortnameTextView = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.userShortnameTextView);
-        userNameTextView = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.userNameTextView);
-        userTypeTextView = (CustomProxyNovaRegularLabel) findViewById(R.id.userTypeTextView);
-        paymentDatetextView = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.paymentDatetextView);
-        paymentAddressHeaderTextView = (CustomProxyNovaExtraBold) findViewById(R.id.paymentAddressHeaderTextView);
-        addressAmountLevel = (CustomProxyNovaRegularLabel) findViewById(R.id.addressAmountLevel);
+        userShortnameTextView = (CarePayTextView) findViewById(R.id.userShortnameTextView);
+        userNameTextView = (CarePayTextView) findViewById(R.id.userNameTextView);
+        userTypeTextView = (CarePayTextView) findViewById(R.id.userTypeTextView);
+        paymentDatetextView = (CarePayTextView) findViewById(R.id.paymentDatetextView);
+        paymentAddressHeaderTextView = (CarePayTextView) findViewById(R.id.paymentAddressHeaderTextView);
+        addressAmountLevel = (CarePayTextView) findViewById(R.id.addressAmountLevel);
         paymentLocationImageView = (ImageView) findViewById(R.id.paymentLocationImageView);
         paymentDialImageView = (ImageView) findViewById(R.id.paymentDailImageView);
 

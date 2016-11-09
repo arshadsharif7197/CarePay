@@ -12,7 +12,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
