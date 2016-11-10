@@ -1,4 +1,3 @@
-
 package com.carecloud.carepaylibray.appointments.models;
 
 import com.google.gson.annotations.Expose;
@@ -27,6 +26,15 @@ public class AppointmentsMetadataDTO {
     @SerializedName("updated_dt")
     @Expose
     private String updatedDt;
+    @SerializedName("request")
+    @Expose
+    private String request;
+    @SerializedName("practice_mgmt")
+    @Expose
+    private String practiceMgmt;
+    @SerializedName("practice_id")
+    @Expose
+    private String practiceId;
 
     /**
      * 
@@ -136,4 +144,57 @@ public class AppointmentsMetadataDTO {
         this.updatedDt = updatedDt;
     }
 
+    /**
+     *
+     * @return
+     *     The request
+     */
+    public String getRequest() {
+        return request;
+    }
+
+    /**
+     *
+     * @param request
+     *     The request
+     */
+    public void setRequest(String request) {
+        this.request = request;
+    }
+
+    /**
+     *
+     * @return
+     *     The practiceMgmt
+     */
+    public String getPracticeMgmt() {
+        return practiceMgmt;
+    }
+
+    /**
+     *
+     * @param practiceMgmt
+     *     The practiceMgmt
+     */
+    public void setPracticeMgmt(String practiceMgmt) {
+        this.practiceMgmt = practiceMgmt;
+    }
+
+    /**
+     *
+     * @return
+     *     The practiceId
+     */
+    public String getPracticeId() {
+        return practiceId;
+    }
+
+    /**
+     *
+     * @param practiceId
+     *     The practiceId
+     */
+    public void setPracticeId(String practiceId) {
+        this.practiceId = practiceId;
+    }
 }
