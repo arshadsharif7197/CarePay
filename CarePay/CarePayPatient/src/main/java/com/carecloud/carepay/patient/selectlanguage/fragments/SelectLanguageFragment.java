@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.selectlanguage.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,13 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.patientsplash.dtos.LanguageListDTO;
 import com.carecloud.carepay.patient.patientsplash.dtos.PayloadDTO;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.selectlanguage.adapters.LanguageListAdapter;
 import com.carecloud.carepay.patient.selectlanguage.models.LanguageOptionModel;
-import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -39,6 +41,24 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     String languageName = null;
     List<LanguageOptionModel> languageOptionModelList;
     ImageButton languageConfirmButton;
+    WorkflowServiceCallback signinscreencallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+
+            // end-splash activity and transition
+            // SplashActivity.this.finish();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
     private SelectLanguageDTO languageSelectionDTO;
     private PayloadDTO payloadDTO;
     private LanguageListDTO languageListDTO;
@@ -46,7 +66,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        languageSelectionDTO=((SelectLanguageActivity) getActivity()).getLanguageDTO();
+        languageSelectionDTO = ((SelectLanguageActivity) getActivity()).getLanguageDTO();
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -67,8 +87,8 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
             @Override
             public void onClick(View onClickListener) {
                 ApplicationPreferences.Instance.setUserLanguage(languageName);
-                Intent intent = new Intent(getActivity(), SigninSignupActivity.class);
-                getActivity().startActivity(intent);
+                //   WorkflowServiceHelper.getInstance().executeApplicationStartRequest(signinscreencallback);
+                WorkflowServiceHelper.getInstance().execute(languageSelectionDTO.getMetadata().getTransitions().getSignin(), signinscreencallback, null, null, WorkflowServiceHelper.getApplicationStartHeaders());
             }
         });
 
@@ -84,7 +104,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         LanguageOptionModel languageOptionModel;
         languageOptionModelList = new ArrayList<>();
 
-        languageOptionModel = new LanguageOptionModel();
+       /* languageOptionModel = new LanguageOptionModel();
         languageOptionModel.setValue("English");
         languageOptionModel.setChecked(false);
         languageOptionModelList.add(languageOptionModel);
@@ -92,13 +112,14 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageOptionModel = new LanguageOptionModel();
         languageOptionModel.setValue("Español");
         languageOptionModel.setChecked(false);
-        languageOptionModelList.add(languageOptionModel);
-       if(languageSelectionDTO != null){
-            payloadDTO=languageSelectionDTO.getPayload();
-            languageListDTO=payloadDTO.getLanguageSelection().getLanguage();
+        languageOptionModelList.add(languageOptionModel);*/
+
+        if (languageSelectionDTO != null) {
+            payloadDTO = languageSelectionDTO.getPayload();
+            languageListDTO = payloadDTO.getLanguageSelection().getLanguage();
 
             int size = languageListDTO.getOptions().size();
-            for (int i = 0; i <size; i++) {
+            for (int i = 0; i < size; i++) {
                 languageOptionModel = new LanguageOptionModel();
                 languageOptionModel.setValue(languageListDTO.getOptions().get(i).getLabel());
                 languageOptionModel.setChecked(false);

@@ -5,6 +5,7 @@ package com.carecloud.carepay.patient.patientsplash.dtos;
  */
 
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
         import com.google.gson.annotations.SerializedName;
 
@@ -12,14 +13,14 @@ public class TransitionsDTO {
 
     @SerializedName("signin")
     @Expose
-    private SignInLikDTO signin;
+    private TransitionDTO signin;
 
     /**
      *
      * @return
      * The signin
      */
-    public SignInLikDTO getSignin() {
+    public TransitionDTO getSignin() {
         return signin;
     }
 
@@ -28,7 +29,7 @@ public class TransitionsDTO {
      * @param signin
      * The signin
      */
-    public void setSignin(SignInLikDTO signin) {
+    public void setSignin(TransitionDTO signin) {
         this.signin = signin;
     }
 
