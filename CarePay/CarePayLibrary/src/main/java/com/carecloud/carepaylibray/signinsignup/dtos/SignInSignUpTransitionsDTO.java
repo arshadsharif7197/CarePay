@@ -5,6 +5,7 @@ package com.carecloud.carepaylibray.signinsignup.dtos;
  */
 
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,14 +14,14 @@ public class SignInSignUpTransitionsDTO {
 
     @SerializedName("authenticate")
     @Expose
-    private AuthenticateDTO authenticate;
+    private TransitionDTO authenticate;
 
     /**
      *
      * @return
      * The authenticate
      */
-    public AuthenticateDTO getAuthenticate() {
+    public TransitionDTO getAuthenticate() {
         return authenticate;
     }
 
@@ -29,7 +30,7 @@ public class SignInSignUpTransitionsDTO {
      * @param authenticate
      * The authenticate
      */
-    public void setAuthenticate(AuthenticateDTO authenticate) {
+    public void setAuthenticate(TransitionDTO authenticate) {
         this.authenticate = authenticate;
     }
 

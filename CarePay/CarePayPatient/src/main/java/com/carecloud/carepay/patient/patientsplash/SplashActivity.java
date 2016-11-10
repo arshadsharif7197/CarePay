@@ -9,13 +9,21 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -51,21 +59,7 @@ public class SplashActivity extends BasePatientActivity {
     private Handler splashHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            boolean signedIn = CognitoAppHelper.findCurrentUser(null);
-            if (msg.what == STOPSPLASH && !(ApplicationPreferences.Instance.getUserLanguage().equals("English"))) {
-                Intent intent = new Intent(SplashActivity.this, SelectLanguageActivity.class);
-                startActivity(intent);
-                SplashActivity.this.finish();
-            } else if (signedIn) {
-                Intent intent = new Intent(SplashActivity.this, AppointmentsActivity.class);
-                startActivity(intent);
-                SplashActivity.this.finish();
 
-            } else if (msg.what == STOPSPLASH && (ApplicationPreferences.Instance.getUserLanguage().equals("English"))) {
-                Intent intent = new Intent(SplashActivity.this, SigninSignupActivity.class);
-                startActivity(intent);
-                SplashActivity.this.finish();
-            }
             super.handleMessage(msg);
         }
     };
@@ -77,7 +71,26 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+            boolean signedIn = CognitoAppHelper.findCurrentUser(null);
+
+            if (signedIn) {
+                Intent intent = new Intent(SplashActivity.this, AppointmentsActivity.class);
+                startActivity(intent);
+            } else {
+                if (! SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
+                    PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+                } else if (SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
+//                Intent intent = new Intent(SplashActivity.this, SigninSignupActivity.class);
+//                startActivity(intent);
+                    // Convert to SignInSignUpDTO
+                    Gson gson = new Gson();
+                    SelectLanguageDTO signInSignUpDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
+
+                    //WorkflowServiceHelper.getInstance().executeApplicationStartRequest(signInCallback);
+
+                    WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(), signInCallback,null,null, WorkflowServiceHelper.getApplicationStartHeaders());
+                }
+            }
 
             // end-splash activity and transition
             SplashActivity.this.finish();
@@ -86,6 +99,23 @@ public class SplashActivity extends BasePatientActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            int dummy = 0;
+            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO.getState());
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
         }
     };
 }

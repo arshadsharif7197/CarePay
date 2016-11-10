@@ -7,5 +7,7 @@ package com.carecloud.carepay.patient.base;
 public class PatientNavigationStateConstants {
     public static final String APPOINTMENTS = "appointments";
     public static final String LANGUAGE_SELECTION = "language_selection";
+    public static final String SIGNIN_SIGNUP = "patient_app_signin";
+
 
 }
