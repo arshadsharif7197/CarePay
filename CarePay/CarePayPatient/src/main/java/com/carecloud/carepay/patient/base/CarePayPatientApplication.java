@@ -2,19 +2,14 @@ package com.carecloud.carepay.patient.base;
 
 import android.app.Application;
 import android.os.Build;
-import android.os.Message;
 import android.provider.Settings;
 
 import com.carecloud.carepay.patient.BuildConfig;
-import com.carecloud.carepay.patient.patientsplash.SplashActivity;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
 /**

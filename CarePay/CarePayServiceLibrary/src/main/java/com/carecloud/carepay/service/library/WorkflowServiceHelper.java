@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  * Service workflow helper a generic helper call wrapper that expose all possible API function calls.
@@ -106,7 +107,11 @@ public class WorkflowServiceHelper {
         return customHeaders;
     }
 
-    private Map<String, String> getApplicationStartHeaders() {
+    /**
+     *
+     * @return app start headers
+     */
+    public static Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
         return appStartHeaders;
