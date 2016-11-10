@@ -96,7 +96,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
                 Map<String, String> headers = new HashMap<>();
-                headers.put("transition", Boolean.valueOf(true).toString());
+                headers.put("transition", "true");
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, queryMap, headers);
             }
         });
