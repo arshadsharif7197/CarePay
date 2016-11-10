@@ -7,8 +7,8 @@ import android.os.Bundle;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
+import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.google.gson.Gson;
 
 
 /**
@@ -66,6 +66,11 @@ public class PatientNavigationHelper {
 
             case PatientNavigationStateConstants.APPOINTMENTS: {
                 intent = new Intent(context, DemographicReviewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            }
+            case PatientNavigationStateConstants.SIGNIN_SIGNUP: {
+                intent = new Intent(context, SigninSignupActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
