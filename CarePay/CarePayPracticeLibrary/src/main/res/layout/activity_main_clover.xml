@@ -27,8 +27,8 @@
 
             <ImageView
                 android:id="@+id/homeLockIcon"
-                android:layout_width="@dimen/home_settings_icon_width"
-                android:layout_height="@dimen/home_settings_icon_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/icn_lock_patient"
                 android:layout_gravity="start"
                 android:visibility="gone"/>
