@@ -86,15 +86,15 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
             QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
 
             WorkflowServiceHelper.getInstance().execute(appointmentMetadataModel.getTransitions()
-                    .getCheckinAtOffice(), qrCodeCallBack, createURL(queryStrings));
+                    .getCheckinAtOffice(), qrCodeCallBack, getQueryParam(queryStrings));
         }
     }
 
     /**
      * @param queryStrings the query strings for the url
-     * @return complete url
+     * @return queryMap
      */
-    private Map<String, String> createURL(QueryStrings queryStrings) {
+    private Map<String, String> getQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
         queryMap.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
