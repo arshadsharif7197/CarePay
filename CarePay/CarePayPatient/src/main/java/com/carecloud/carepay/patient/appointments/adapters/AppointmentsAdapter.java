@@ -104,8 +104,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 if(isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(
-                            appointmentLabels.getAppointmentsCheckedInLabel()));
+                    holder.todayTimeTextView.setText(appointmentLabels.getAppointmentsCheckedInLabel());
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
@@ -177,8 +176,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
                 holder.missedAppointmentTextView.setVisibility(View.VISIBLE);
-                holder.missedAppointmentTextView.setText(StringUtil.getLabelForView(
-                        appointmentLabels.getMissedAppointmentsHeading()));
+                holder.missedAppointmentTextView.setText(appointmentLabels.getMissedAppointmentsHeading());
                 holder.missedAppointmentTextView.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
 
@@ -277,9 +275,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     private String getSectionHeaderTitleByDay(String day) {
         if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
                 day.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-            return StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
+            return appointmentLabels.getTodayAppointmentsHeading();
         } else {
-            return StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
+            return appointmentLabels.getUpcomingAppointmentsHeading();
         }
     }
 

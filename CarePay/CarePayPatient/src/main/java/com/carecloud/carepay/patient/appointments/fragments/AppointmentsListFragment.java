@@ -16,22 +16,21 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepay.patient.appointments.services.AppointmentService;
+import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -116,11 +115,9 @@ public class AppointmentsListFragment extends Fragment {
                             AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
                             String doctorName = appointmentsItems.get(0).getPayload().getProvider().getName();
                             popup = new CustomPopupNotification(getActivity(), getView(),
-                                    StringUtil.getLabelForView(labels.getAppointmentsCheckInEarly()),
-                                    StringUtil.getLabelForView(labels.getDismissMessage()),
-                                    getNotificationMessage(StringUtil.getLabelForView(
-                                            labels.getAppointmentsCheckInEarlyPrompt()), doctorName,
-                                            appointmentInDuration),
+                                    labels.getAppointmentsCheckInEarly(), labels.getDismissMessage(),
+                                    getNotificationMessage(labels.getAppointmentsCheckInEarlyPrompt(),
+                                            doctorName, appointmentInDuration),
                                     positiveActionListener, negativeActionListener);
                             popup.showPopWindow();
                         }
@@ -203,11 +200,11 @@ public class AppointmentsListFragment extends Fragment {
         appointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.appointment_section_linear_layout);
         noAppointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.no_appointment_layout);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_placeholder_icon))
-                .setText(StringUtil.getLabelForView(noAptPlaceholder));
+                .setText(noAptPlaceholder);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_title))
-                .setText(StringUtil.getLabelForView(noAptMessageTitle));
+                .setText(noAptMessageTitle);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_desc))
-                .setText(StringUtil.getLabelForView(noAptMessageText));
+                .setText(noAptMessageText);
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -130,7 +131,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsHeading
      */
     public String getAppointmentsHeading() {
-        return appointmentsHeading;
+        return StringUtil.getLabelForView(appointmentsHeading);
     }
 
     /**
@@ -144,7 +145,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The cancelAppointmentsHeading
      */
     public String getCancelAppointmentsHeading() {
-        return cancelAppointmentsHeading;
+        return StringUtil.getLabelForView(cancelAppointmentsHeading);
     }
 
     /**
@@ -158,7 +159,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The chooseProviderHeading
      */
     public String getChooseProviderHeading() {
-        return chooseProviderHeading;
+        return StringUtil.getLabelForView(chooseProviderHeading);
     }
 
     /**
@@ -172,7 +173,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The visitTypeHeading
      */
     public String getVisitTypeHeading() {
-        return visitTypeHeading;
+        return StringUtil.getLabelForView(visitTypeHeading);
     }
 
     /**
@@ -186,7 +187,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The pickDateHeading
      */
     public String getPickDateHeading() {
-        return pickDateHeading;
+        return StringUtil.getLabelForView(pickDateHeading);
     }
 
     /**
@@ -200,7 +201,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The availableHoursHeading
      */
     public String getAvailableHoursHeading() {
-        return availableHoursHeading;
+        return StringUtil.getLabelForView(availableHoursHeading);
     }
 
     /**
@@ -214,7 +215,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsCheckInEarlyPrompt
      */
     public String getAppointmentsCheckInEarlyPrompt() {
-        return appointmentsCheckInEarlyPrompt;
+        return StringUtil.getLabelForView(appointmentsCheckInEarlyPrompt);
     }
 
     /**
@@ -228,7 +229,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The dismissMessage
      */
     public String getDismissMessage() {
-        return dismissMessage;
+        return StringUtil.getLabelForView(dismissMessage);
     }
 
     /**
@@ -242,7 +243,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsCheckInEarly
      */
     public String getAppointmentsCheckInEarly() {
-        return appointmentsCheckInEarly;
+        return StringUtil.getLabelForView(appointmentsCheckInEarly);
     }
 
     /**
@@ -256,7 +257,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The todayAppointmentsHeading;
      */
     public String getTodayAppointmentsHeading() {
-        return todayAppointmentsHeading;
+        return StringUtil.getLabelForView(todayAppointmentsHeading);
     }
 
     /**
@@ -270,7 +271,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The upcomingAppointmentsHeading
      */
     public String getUpcomingAppointmentsHeading() {
-        return upcomingAppointmentsHeading;
+        return StringUtil.getLabelForView(upcomingAppointmentsHeading);
     }
 
     /**
@@ -284,7 +285,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The missedAppointmentsHeading
      */
     public String getMissedAppointmentsHeading() {
-        return missedAppointmentsHeading;
+        return StringUtil.getLabelForView(missedAppointmentsHeading);
     }
 
     /**
@@ -298,7 +299,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The otherProviderHeading
      */
     public String getOtherProviderHeading() {
-        return otherProviderHeading;
+        return StringUtil.getLabelForView(otherProviderHeading);
     }
 
     /**
@@ -312,7 +313,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The otherAppointmentHeadingMenu
      */
     public String getOtherAppointmentHeadingMenu() {
-        return otherAppointmentHeadingMenu;
+        return StringUtil.getLabelForView(otherAppointmentHeadingMenu);
     }
 
     /**
@@ -326,7 +327,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsCheckedInLabel
      */
     public String getAppointmentsCheckedInLabel() {
-        return appointmentsCheckedInLabel;
+        return StringUtil.getLabelForView(appointmentsCheckedInLabel);
     }
 
     /**
@@ -340,7 +341,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsDescription
      */
     public String getAppointmentsDescription() {
-        return appointmentsDescription;
+        return StringUtil.getLabelForView(appointmentsDescription);
     }
 
     /**
@@ -354,7 +355,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The addAppointmentTitle
      */
     public String getAddAppointmentTitle() {
-        return addAppointmentTitle;
+        return StringUtil.getLabelForView(addAppointmentTitle);
     }
 
     /**
@@ -368,7 +369,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The cancelRequestTitle
      */
     public String getCancelRequestTitle() {
-        return cancelRequestTitle;
+        return StringUtil.getLabelForView(cancelRequestTitle);
     }
 
     /**
@@ -382,7 +383,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The emptyAppointmentCardTodayText
      */
     public String getEmptyAppointmentCardTodayText() {
-        return emptyAppointmentCardTodayText;
+        return StringUtil.getLabelForView(emptyAppointmentCardTodayText);
     }
 
     /**
@@ -396,7 +397,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The emptyAppointmentCardUpcomingText
      */
     public String getEmptyAppointmentCardUpcomingText() {
-        return emptyAppointmentCardUpcomingText;
+        return StringUtil.getLabelForView(emptyAppointmentCardUpcomingText);
     }
 
     /**
@@ -410,7 +411,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The emptyAppointmentCardHistoryText
      */
     public String getEmptyAppointmentCardHistoryText() {
-        return emptyAppointmentCardHistoryText;
+        return StringUtil.getLabelForView(emptyAppointmentCardHistoryText);
     }
 
     /**
@@ -424,7 +425,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The emptyAppointmentCardRandomText
      */
     public String getEmptyAppointmentCardRandomText() {
-        return emptyAppointmentCardRandomText;
+        return StringUtil.getLabelForView(emptyAppointmentCardRandomText);
     }
 
     /**
@@ -438,7 +439,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The addAppointmentWhenEmptyTitle
      */
     public String getAddAppointmentWhenEmptyTitle() {
-        return addAppointmentWhenEmptyTitle;
+        return StringUtil.getLabelForView(addAppointmentWhenEmptyTitle);
     }
 
     /**
@@ -452,7 +453,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The historyAppointmentsHeading
      */
     public String getHistoryAppointmentsHeading() {
-        return historyAppointmentsHeading;
+        return StringUtil.getLabelForView(historyAppointmentsHeading);
     }
 
     /**
@@ -466,7 +467,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsCheckInAtOffice
      */
     public String getAppointmentsCheckInAtOffice() {
-        return appointmentsCheckInAtOffice;
+        return StringUtil.getLabelForView(appointmentsCheckInAtOffice);
     }
 
     /**
@@ -480,7 +481,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsCheckInNow
      */
     public String getAppointmentsCheckInNow() {
-        return appointmentsCheckInNow;
+        return StringUtil.getLabelForView(appointmentsCheckInNow);
     }
 
     /**
@@ -494,7 +495,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsPlaceNameHeading
      */
     public String getAppointmentsPlaceNameHeading() {
-        return appointmentsPlaceNameHeading;
+        return StringUtil.getLabelForView(appointmentsPlaceNameHeading);
     }
 
     /**
@@ -508,7 +509,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsReasonForVisitHeading
      */
     public String getAppointmentsReasonForVisitHeading() {
-        return appointmentsReasonForVisitHeading;
+        return StringUtil.getLabelForView(appointmentsReasonForVisitHeading);
     }
 
     /**
@@ -522,7 +523,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsOptionalHeading
      */
     public String getAppointmentsOptionalHeading() {
-        return appointmentsOptionalHeading;
+        return StringUtil.getLabelForView(appointmentsOptionalHeading);
     }
 
     /**
@@ -536,7 +537,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsQueueHeading
      */
     public String getAppointmentsQueueHeading() {
-        return appointmentsQueueHeading;
+        return StringUtil.getLabelForView(appointmentsQueueHeading);
     }
 
     /**
@@ -550,7 +551,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsCancelHeading
      */
     public String getAppointmentsCancelHeading() {
-        return appointmentsCancelHeading;
+        return StringUtil.getLabelForView(appointmentsCancelHeading);
     }
 
     /**
@@ -564,7 +565,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsCanceledHeading
      */
     public String getAppointmentsCanceledHeading() {
-        return appointmentsCanceledHeading;
+        return StringUtil.getLabelForView(appointmentsCanceledHeading);
     }
 
     /**
@@ -578,7 +579,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsRequestHeading
      */
     public String getAppointmentsRequestHeading() {
-        return appointmentsRequestHeading;
+        return StringUtil.getLabelForView(appointmentsRequestHeading);
     }
 
     /**
@@ -592,7 +593,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsRequestPendingHeading
      */
     public String getAppointmentsRequestPendingHeading() {
-        return appointmentsRequestPendingHeading;
+        return StringUtil.getLabelForView(appointmentsRequestPendingHeading);
     }
 
     /**
@@ -606,7 +607,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsMissedHeading
      */
     public String getAppointmentsMissedHeading() {
-        return appointmentsMissedHeading;
+        return StringUtil.getLabelForView(appointmentsMissedHeading);
     }
 
     /**
@@ -620,7 +621,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The appointmentsCheckInAtOfficeButtonText
      */
     public String getAppointmentsCheckInAtOfficeButtonText() {
-        return appointmentsCheckInAtOfficeButtonText;
+        return StringUtil.getLabelForView(appointmentsCheckInAtOfficeButtonText);
     }
 
     /**
@@ -634,7 +635,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The noAppointmentsPlaceholderLabel
      */
     public String getNoAppointmentsPlaceholderLabel() {
-        return noAppointmentsPlaceholderLabel;
+        return StringUtil.getLabelForView(noAppointmentsPlaceholderLabel);
     }
 
     /**
@@ -648,7 +649,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The noAppointmentsMessageTitle
      */
     public String getNoAppointmentsMessageTitle() {
-        return noAppointmentsMessageTitle;
+        return StringUtil.getLabelForView(noAppointmentsMessageTitle);
     }
 
     /**
@@ -662,7 +663,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The noAppointmentsMessageText
      */
     public String getNoAppointmentsMessageText() {
-        return noAppointmentsMessageText;
+        return StringUtil.getLabelForView(noAppointmentsMessageText);
     }
 
     /**

@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
 
@@ -46,7 +45,7 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_checkin_early_appointment, null);
 
         Button checkIn = (Button) childActionView.findViewById(R.id.checkinEarlyButton);
-        checkIn.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInEarly()));
+        checkIn.setText(appointmentLabels.getAppointmentsCheckInEarly());
         checkIn.setOnClickListener(this);
 
         mainLayout.addView(childActionView);
