@@ -615,8 +615,7 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The scanQRCodeHeading
      */
     public String getScanQRCodeHeading() {
-        return StringUtil.isNullOrEmpty(scanQRCodeHeading) ? scanQRCodeHeading
-                : CarePayConstants.NOT_DEFINED;
+        return StringUtil.getLabelForView(scanQRCodeHeading);
     }
 
     /**
