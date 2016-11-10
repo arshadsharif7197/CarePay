@@ -18,12 +18,14 @@ import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
+import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
-import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
+import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
+import com.carecloud.carepay.practice.library.splash.SplashActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -38,8 +40,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import retrofit2.http.QueryMap;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
@@ -60,6 +60,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private TextView homeShopLabel;
 
     private List<String> modeSwitchOptions = new ArrayList<>();
+    private Context context;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -74,7 +75,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         HomeScreenMode homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
         setContentView(R.layout.activity_main_clover);
-
+        this.context = this;
         // init UI fields
         initUIFields();
 
@@ -83,7 +84,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         populateWithLabels();
 
         modeSwitchImageView.setOnClickListener(this);
-
+        homeLockImageView.setOnClickListener(homeLockIcnClickListener);
         findViewById(R.id.homeCheckinClickable).setOnClickListener(this);
         findViewById(R.id.homeAppointmentsClickable).setOnClickListener(this);
 
@@ -300,4 +301,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onFailure(String exceptionMessage) {
         }
     };
+
+    private View.OnClickListener homeLockIcnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context);
+            confirmationPinDialog.show();
+        }
+    };
+
+    @Override
+    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO) {
+        Intent intent = new Intent(CloverMainActivity.this,SplashActivity.class);
+        startActivity(intent);
+    }
 }
