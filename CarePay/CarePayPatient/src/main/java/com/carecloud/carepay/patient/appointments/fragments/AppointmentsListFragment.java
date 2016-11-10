@@ -182,7 +182,9 @@ public class AppointmentsListFragment extends Fragment {
         appointmentsListFragment = this;
 
         bundle = getArguments();
-        String noAptPlaceholder = "", noAptMessageTitle = "", noAptMessageText = "";
+        String noAptPlaceholder = "";
+        String noAptMessageTitle = "";
+        String noAptMessageText = "";
         appointmentInfo = (AppointmentsResultModel) bundle.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         if (appointmentInfo != null) {
             AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
