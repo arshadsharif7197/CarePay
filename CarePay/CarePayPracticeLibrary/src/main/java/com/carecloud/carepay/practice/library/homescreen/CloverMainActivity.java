@@ -210,54 +210,83 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
+
         if (viewId == R.id.homeModeSwitchClickable) {
-            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-                createChangeModeDialog().show();
-            } else if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-                // add transitions
-            }
+            navigateToPatientHome();
         } else if (viewId == R.id.homeCheckinClickable) {
-            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-                Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-                queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-                WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback, queryMap);
-            } else if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-                // add transitions
-            }
+            navigateToCheckIn();
         } else if (viewId == R.id.homePaymentsClickable) {
-            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-                WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticePayments(), commonCallback);
-            } else if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-                // add transitions
-            }
+            navigateToPayments();
         } else if (viewId == R.id.homeAppointmentsClickable) {
-            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-                // transition needed
-                Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
-                appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(appointmentIntent);
-            } else if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-                // add transition
-            }
+            navigateToAppointments();
         } else if (viewId == R.id.homeCheckoutClickable) {
-            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-                WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckout(), commonCallback);
-            } else if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-                // add transition
-            }
+            checkOut();
         } else if (viewId == R.id.homeShopClickable) {
-            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-                WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getShop(), commonCallback);
-            } else if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-                // add transition
-            }
+            navigateToShop();
         } else if (viewId == R.id.homeNewsClickable) {
-            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-                WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getOfficeNews(), commonCallback);
-            } else if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-                // add transition
-            }
+            getNews();
+        }
+    }
+
+    private void getNews() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getOfficeNews(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transition
+        }
+    }
+
+    private void navigateToShop() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getShop(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transition
+        }
+    }
+
+    private void checkOut() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckout(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transition
+        }
+    }
+
+    private void navigateToAppointments() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            // transition needed
+            Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
+            appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(appointmentIntent);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transition
+        }
+    }
+
+    private void navigateToPayments() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticePayments(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transitions
+        }
+    }
+
+    private void navigateToCheckIn() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback, queryMap);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transitions
+        }
+    }
+
+    private void navigateToPatientHome() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            createChangeModeDialog().show();
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transitions
         }
     }
 
