@@ -23,7 +23,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 public class PracticeNavigationHelper {
 
     private static PracticeNavigationHelper instance;
-    private static Context context;
+    private static Context                  context;
 
     private PracticeNavigationHelper() {
 
@@ -31,6 +31,7 @@ public class PracticeNavigationHelper {
 
     /**
      * PracticeNavigationHelper singleton initialization from Application class
+     *
      * @param context application context
      */
     public static void initInstance(Context context) {
@@ -46,10 +47,11 @@ public class PracticeNavigationHelper {
 
     /**
      * Navigation using activity context
-     * @param context activity context
+     *
+     * @param context     activity context
      * @param workflowDTO WorkflowDTO
      */
-    public void navigateToWorkflow(Context context, WorkflowDTO workflowDTO){
+    public void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
@@ -63,7 +65,11 @@ public class PracticeNavigationHelper {
             case PracticeNavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+                break;
+            }
+            case PracticeNavigationStateConstants.PATIENT_HOME: {
+                intent = new Intent(context, CloverMainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
             case PracticeNavigationStateConstants.PRACTICE_APPOINTMENTS: {
@@ -85,19 +91,19 @@ public class PracticeNavigationHelper {
 
             }
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         Bundle bundle = new Bundle();
         bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
         intent.putExtras(bundle);
         context.startActivity(intent);
-
     }
 
     /**
      * Navigation using application context
+     *
      * @param workflowDTO WorkflowDTO
      */
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-        navigateToWorkflow(PracticeNavigationHelper.context,workflowDTO);
+        navigateToWorkflow(PracticeNavigationHelper.context, workflowDTO);
     }
 }
