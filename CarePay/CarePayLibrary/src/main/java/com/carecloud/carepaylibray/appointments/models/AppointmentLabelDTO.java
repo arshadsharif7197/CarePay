@@ -116,6 +116,15 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointments_missed_heading")
     @Expose
     private String appointmentsMissedHeading;
+    @SerializedName("no_appointments_placeholder_label")
+    @Expose
+    private String noAppointmentsPlaceholderLabel;
+    @SerializedName("no_appointments_message_title")
+    @Expose
+    private String noAppointmentsMessageTitle;
+    @SerializedName("no_appointments_message_text")
+    @Expose
+    private String noAppointmentsMessageText;
 
     /**
      * @return The appointmentsHeading
@@ -619,5 +628,47 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAppointmentsCheckInAtOfficeButtonText(String appointmentsCheckInAtOfficeButtonText) {
         this.appointmentsCheckInAtOfficeButtonText = appointmentsCheckInAtOfficeButtonText;
+    }
+
+    /**
+     * @return The noAppointmentsPlaceholderLabel
+     */
+    public String getNoAppointmentsPlaceholderLabel() {
+        return noAppointmentsPlaceholderLabel;
+    }
+
+    /**
+     * @param noAppointmentsPlaceholderLabel The no_appointments_placeholder_label
+     */
+    public void setNoAppointmentsPlaceholderLabel(String noAppointmentsPlaceholderLabel) {
+        this.noAppointmentsPlaceholderLabel = noAppointmentsPlaceholderLabel;
+    }
+
+    /**
+     * @return The noAppointmentsMessageTitle
+     */
+    public String getNoAppointmentsMessageTitle() {
+        return noAppointmentsMessageTitle;
+    }
+
+    /**
+     * @param noAppointmentsMessageTitle The no_appointments_message_title
+     */
+    public void setNoAppointmentsMessageTitle(String noAppointmentsMessageTitle) {
+        this.noAppointmentsMessageTitle = noAppointmentsMessageTitle;
+    }
+
+    /**
+     * @return The noAppointmentsMessageText
+     */
+    public String getNoAppointmentsMessageText() {
+        return noAppointmentsMessageText;
+    }
+
+    /**
+     * @param noAppointmentsMessageText The no_appointments_message_text
+     */
+    public void setNoAppointmentsMessageText(String noAppointmentsMessageText) {
+        this.noAppointmentsMessageText = noAppointmentsMessageText;
     }
 }

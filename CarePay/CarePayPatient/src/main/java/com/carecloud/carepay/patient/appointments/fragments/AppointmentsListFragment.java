@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -51,6 +52,7 @@ public class AppointmentsListFragment extends Fragment {
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
     private SwipeRefreshLayout appointmentRefresh;
+    private LinearLayout appointmentView;
     private LinearLayout noAppointmentView;
 
     private AppointmentsAdapter appointmentsAdapter;
@@ -179,17 +181,31 @@ public class AppointmentsListFragment extends Fragment {
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
 
-        Bundle arguments = getArguments();
-        appointmentInfo = (AppointmentsResultModel) arguments.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
+        bundle = getArguments();
+        String noAptPlaceholder = "", noAptMessageTitle = "", noAptMessageText = "";
+        appointmentInfo = (AppointmentsResultModel) bundle.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
+        if (appointmentInfo != null) {
+            AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
+            noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
+            noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
+            noAptMessageText = labels.getNoAppointmentsMessageText();
+        }
+
         //Pull down to refresh
         appointmentRefresh = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
         onRefresh();
 
         appointmentProgressBar = (ProgressBar) appointmentsListView.findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
-        bundle = getArguments();
 
+        appointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.appointment_section_linear_layout);
         noAppointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.no_appointment_layout);
+        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_placeholder_icon))
+                .setText(StringUtil.getLabelForView(noAptPlaceholder));
+        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_title))
+                .setText(StringUtil.getLabelForView(noAptMessageTitle));
+        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_desc))
+                .setText(StringUtil.getLabelForView(noAptMessageText));
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -223,7 +239,7 @@ public class AppointmentsListFragment extends Fragment {
                         && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
 
                     noAppointmentView.setVisibility(View.GONE);
-                    appointmentRefresh.setVisibility(View.VISIBLE);
+                    appointmentView.setVisibility(View.VISIBLE);
 
                     appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
 
@@ -264,22 +280,30 @@ public class AppointmentsListFragment extends Fragment {
 
     private void showNoAppointmentScreen() {
         noAppointmentView.setVisibility(View.VISIBLE);
-        appointmentRefresh.setVisibility(View.GONE);
+        appointmentView.setVisibility(View.GONE);
     }
 
     private void onRefresh() {
         appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                appointmentsItems.clear();
+                if (appointmentsItems != null) {
+                    appointmentsItems.clear();
+                }
                 appointmentRefresh.setRefreshing(false);
 
                 if (appointmentsResultModel != (new AppointmentsResultModel())) {
                     AppointmentSectionHeaderModel appointmentSectionHeaderModel
                             = new AppointmentSectionHeaderModel();
-                    appointmentListWithHeader.remove(appointmentSectionHeaderModel);
-                    appointmentListWithHeader.clear();
-                    appointmentsAdapter.hideHeaderView();
+
+                    if (appointmentListWithHeader != null) {
+                        appointmentListWithHeader.remove(appointmentSectionHeaderModel);
+                        appointmentListWithHeader.clear();
+                    }
+
+                    if (appointmentsAdapter != null) {
+                        appointmentsAdapter.hideHeaderView();
+                    }
                 }
 
                 // API call to fetch latest appointments
