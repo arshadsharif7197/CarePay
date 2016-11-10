@@ -22,7 +22,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
 import com.carecloud.carepaylibray.appointments.models.QRCodePayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -92,7 +91,6 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
     }
 
     /**
-     *
      * @param queryStrings the query strings for the url
      * @return complete url
      */
@@ -123,7 +121,6 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
     };
 
     /**
-     *
      * @param workflowDTO workflow model returned by server.
      */
     private void updateUI(WorkflowDTO workflowDTO) {
@@ -147,8 +144,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
             Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             qrCodeImageView.setImageBitmap(bitmap);
-            scanQRCodeTextView.setText(StringUtil.getLabelForView(
-                    appointmentMetadataModel.getLabel().getScanQRCodeHeading()));
+            scanQRCodeTextView.setText(appointmentMetadataModel.getLabel().getScanQRCodeHeading());
             qrCodeProgressBar.setVisibility(View.GONE);
         }
     }

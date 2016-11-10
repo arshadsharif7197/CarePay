@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -613,7 +615,8 @@ public class AppointmentLabelDTO implements Serializable {
      * @return The scanQRCodeHeading
      */
     public String getScanQRCodeHeading() {
-        return scanQRCodeHeading;
+        return StringUtil.isNullOrEmpty(scanQRCodeHeading) ? scanQRCodeHeading
+                : CarePayConstants.NOT_DEFINED;
     }
 
     /**
