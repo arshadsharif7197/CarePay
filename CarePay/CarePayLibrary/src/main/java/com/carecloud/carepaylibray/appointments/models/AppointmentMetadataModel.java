@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class AppointmentMetadataModel implements Serializable {
 
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
     private AppointmentLabelDTO label;
     @SerializedName("links")
