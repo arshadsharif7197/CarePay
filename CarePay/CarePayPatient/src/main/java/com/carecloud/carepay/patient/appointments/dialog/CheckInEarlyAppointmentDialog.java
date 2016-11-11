@@ -59,7 +59,7 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_checkin_early_appointment, null);
 
         Button checkIn = (Button) childActionView.findViewById(R.id.checkinEarlyButton);
-        checkIn.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInEarly()));
+        checkIn.setText(appointmentLabels.getAppointmentsCheckInEarly());
         checkIn.setOnClickListener(this);
 
         mainLayout.addView(childActionView);

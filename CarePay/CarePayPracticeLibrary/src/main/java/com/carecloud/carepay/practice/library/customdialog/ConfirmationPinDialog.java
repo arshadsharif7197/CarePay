@@ -11,10 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingLabelDTO;
 import com.carecloud.carepay.practice.library.practicesetting.services.PracticeSettingService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 
@@ -118,8 +120,17 @@ public class ConfirmationPinDialog extends Dialog  implements View.OnClickListen
             String buttonValue = ((Button) view).getText().toString();
             onEnterPinNumber(buttonValue);
         }
+        validatePin();
     }
 
+    private void validatePin(){
+        String actualValue = pinEditText.getText().toString();
+        if(actualValue !=null && actualValue.length()==4 &&
+                actualValue.equalsIgnoreCase(CarePayConstants.PRACTICE_APP_MODE_DEFAULT_PIN)) {
+            ((BasePracticeActivity)context).onPinConfirmationCheck(true,practiceSettingResponse);
+            dismiss();
+        }
+    }
 
     private void onEnterPinNumber(String pinNumberStr){
         String actualValue = pinEditText.getText().toString();
