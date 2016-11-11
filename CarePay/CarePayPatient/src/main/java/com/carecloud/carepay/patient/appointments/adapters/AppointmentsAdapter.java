@@ -13,9 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
@@ -26,11 +23,10 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.TransitionsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.CancelAppointmentDialog;
-import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
+import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -48,11 +44,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private Context context;
     private List<Object> appointmentItems;
-    private AppointmentDTO appointmentDTO;
     private AppointmentLabelDTO appointmentLabels;
     private AppointmentsListFragment appointmentsListFragment;
     private AppointmentMetadataModel appointmentMetadataModel;
-    private TransitionDTO transitionDTO;
 
     /**
      * Constructor.
@@ -70,7 +64,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         this.appointmentsListFragment = appointmentsListFragment;
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
         this.appointmentMetadataModel = appointmentInfo.getMetadata();
-        this.transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckin();
     }
 
     @Override
@@ -152,11 +145,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             new CancelAppointmentDialog(context, item, appointmentLabels).show();
                         } else {
                             if (isPending) {
-                                new CheckInOfficeNowAppointmentDialog(context,item, appointmentLabels, transitionDTO, DemographicReviewActivity.class).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel, DemographicReviewActivity.class).show();
                             } else if (isCheckedIn) {
                                 new QueueAppointmentDialog(context, item, appointmentLabels).show();
                             } else {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, transitionDTO, DemographicReviewActivity.class).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel, DemographicReviewActivity.class).show();
                             }
                         }
                     }

@@ -16,23 +16,22 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepay.patient.appointments.services.AppointmentService;
-import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,31 +63,6 @@ public class AppointmentsListFragment extends Fragment {
     private Bundle bundle;
 
     private CustomPopupNotification popup;
-    private View.OnClickListener negativeActionListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            popup.dismiss();
-            popup = null;
-
-            ApplicationPreferences.Instance.writeStringToSharedPref(
-                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
-                    appointmentsItems.get(0).getPayload().getId());
-        }
-    };
-    private View.OnClickListener positiveActionListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            popup.dismiss();
-            popup = null;
-
-            ApplicationPreferences.Instance.writeStringToSharedPref(
-                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
-                    appointmentsItems.get(0).getPayload().getId());
-            PatientNavigationHelper.initInstance(getContext());
-            PatientNavigationHelper.instance().navigateToWorkflow(appointmentInfo.getState());
-
-        }
-    };
 
     @Override
     public void onStart() {
@@ -108,8 +82,8 @@ public class AppointmentsListFragment extends Fragment {
     private void checkUpcomingAppointmentForReminder() {
         if (appointmentsItems != null && !appointmentsItems.isEmpty()
                 && !appointmentsItems.get(0).getPayload().getId().equalsIgnoreCase(
-                ApplicationPreferences.Instance.readStringFromSharedPref(
-                        CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID))) {
+                        ApplicationPreferences.Instance.readStringFromSharedPref(
+                                CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID))) {
 
             try {
                 // Get appointment date/time in required format
@@ -166,6 +140,33 @@ public class AppointmentsListFragment extends Fragment {
         return baseString;
     }
 
+    private View.OnClickListener negativeActionListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            popup.dismiss();
+            popup = null;
+
+            ApplicationPreferences.Instance.writeStringToSharedPref(
+                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
+                    appointmentsItems.get(0).getPayload().getId());
+        }
+    };
+
+    private View.OnClickListener positiveActionListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            popup.dismiss();
+            popup = null;
+
+            ApplicationPreferences.Instance.writeStringToSharedPref(
+                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
+                    appointmentsItems.get(0).getPayload().getId());
+            PatientNavigationHelper.initInstance(getContext());
+            PatientNavigationHelper.instance().navigateToWorkflow(appointmentInfo.getState());
+
+        }
+    };
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,10 +192,7 @@ public class AppointmentsListFragment extends Fragment {
     //    }
         Gson gson = new Gson();
         Bundle arguments = getArguments();
-        String appointmentInfoString = arguments.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
-        appointmentInfo = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
-//        appointmentInfo = (AppointmentsResultModel) arguments.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
-
+        appointmentInfo = (AppointmentsResultModel) arguments.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         //Pull down to refresh
         appointmentRefresh = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
         onRefresh();
@@ -251,10 +249,8 @@ public class AppointmentsListFragment extends Fragment {
                     appointmentListWithHeader = getAppointmentListWithHeader();
                     if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
                         if (bundle != null) {
-                            Gson gson = new Gson();
-                            String appointmentDTOString = bundle.getString(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
-                            AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDTOString, AppointmentsResultModel.class);
-//                            AppointmentsResultModel appointmentDTO = (AppointmentsResultModel) bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+                            AppointmentDTO appointmentDTO = (AppointmentDTO)
+                                    bundle.getSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
 
                             if (appointmentDTO != null) {
                                 // adding checked-in appointment at the top of the list
@@ -373,15 +369,15 @@ public class AppointmentsListFragment extends Fragment {
                     headerTitle = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
 
 //                    if (!headerTitle.equals(CarePayConstants.DAY_OVER)) {
-                    // If appointment is checked-in, don't add header
-                    if (appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
-                        AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
-                        appointmentSectionHeaderModel.setAppointmentHeader(headerTitle);
-                        appointmentListWithHeader.add(appointmentSectionHeaderModel);
-                        appointmentListWithHeader.add(appointmentDTO);
-                    } else {
-                        appointmentListWithHeader.add(0, appointmentDTO);
-                    }
+                        // If appointment is checked-in, don't add header
+                        if (appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
+                            AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
+                            appointmentSectionHeaderModel.setAppointmentHeader(headerTitle);
+                            appointmentListWithHeader.add(appointmentSectionHeaderModel);
+                            appointmentListWithHeader.add(appointmentDTO);
+                        } else {
+                            appointmentListWithHeader.add(0, appointmentDTO);
+                        }
 //                    }
                 }
             }

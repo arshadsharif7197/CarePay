@@ -1,7 +1,5 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.transitions;
 
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.verifydemotransitions.UpdateDemographicDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,18 +10,14 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicTransitionsDTO {
     @SerializedName("confirm_demographics")
     @Expose
-    private TransitionDTO confirmDemographics;
-
-    @SerializedName("update_demographics")
-    @Expose
-    private TransitionDTO updateDemographics;
+    private DemographicTransitionDTO confirmDemographics;
 
     /**
      *
      * @return
      * The confirmDemographics
      */
-    public TransitionDTO getConfirmDemographics() {
+    public DemographicTransitionDTO getConfirmDemographics() {
         return confirmDemographics;
     }
 
@@ -32,22 +26,7 @@ public class DemographicTransitionsDTO {
      * @param confirmDemographics
      * The confirm_demographics
      */
-    public void setConfirmDemographics(TransitionDTO confirmDemographics) {
+    public void setConfirmDemographics(DemographicTransitionDTO confirmDemographics) {
         this.confirmDemographics = confirmDemographics;
-    }
-
-
-    /**
-     * @return The updateDemographics
-     */
-    public TransitionDTO getUpdateDemographics() {
-        return updateDemographics;
-    }
-
-    /**
-     * @param updateDemographics The update_demographics
-     */
-    public void setUpdateDemographics(TransitionDTO updateDemographics) {
-        this.updateDemographics = updateDemographics;
     }
 }

@@ -46,9 +46,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
     public BaseDoctorInfoDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context);
         this.context = context;
-        if(appointmentDTO != null) {
-            this.payload = appointmentDTO.getPayload();
-        }
+        this.payload = appointmentDTO.getPayload();
     }
 
     @Override

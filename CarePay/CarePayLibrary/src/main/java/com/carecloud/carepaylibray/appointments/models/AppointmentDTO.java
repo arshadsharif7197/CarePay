@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Model for appointment.
  */
-public class  AppointmentDTO implements Serializable {
+public class AppointmentDTO implements Serializable {
 
     @SerializedName("metadata")
     @Expose

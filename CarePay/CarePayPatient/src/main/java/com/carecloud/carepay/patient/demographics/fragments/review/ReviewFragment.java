@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
-import com.carecloud.carepay.patient.consentforms.services.ConsentFormService;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepay.patient.demographics.services.DemographicService;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
@@ -42,7 +32,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDeta
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
@@ -50,13 +39,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 
 public class ReviewFragment extends Fragment implements View.OnClickListener {
@@ -131,7 +116,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     private ProgressBar demographicProgressBar;
 
-    private DemographicDTO demographicDTO;
+
     private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
@@ -493,32 +478,13 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (view == correctInformationButton) {
-
-//            WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getConfirmDemographics(), consentformcallback);
-
-            // (please do not remove!)
-            ConsentFormService apptService = (new BaseServiceGenerator(getContext())).createService(ConsentFormService.class); //, String token, String searchString
-            Map<String, String> queries = new HashMap<>();
-            queries.put("practice_mgmt", "carecloud");
-            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
-            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");
-            Call<ConsentFormDTO> call = apptService.fetchConnsentFormInformation(queries);
-            call.enqueue(new Callback<ConsentFormDTO>() {
-                @Override
-                public void onResponse(Call<ConsentFormDTO> call, Response<ConsentFormDTO> response) {
-                    ConsentFormDTO consentFormDTO = response.body();
-                    launchDemographics(consentFormDTO);
-                }
-
-                @Override
-                public void onFailure(Call<ConsentFormDTO> call, Throwable throwable) {
-
-                }
-            });
-
+            Intent intent = new Intent(getActivity(), ConsentActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            getActivity().finish();
         } else if (view == updateInformationUpdate) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//            WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getUpdateDemographics(), consentformcallback);
+
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             DemographicReviewFragment demographicReviewFragment = new DemographicReviewFragment();
             transaction.replace(R.id.root_layout, demographicReviewFragment, ReviewFragment.class.getName());
@@ -528,19 +494,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             transaction.commit();
         }
     }
-    private void launchDemographics(ConsentFormDTO consentFormDTO) {
-        // do to Demographics
-        Intent intent = new Intent(getActivity(), ConsentActivity.class);
-        if (consentFormDTO != null) {
-            // pass the object into the gson
-            Gson gson = new Gson();
-            String dtostring = gson.toJson(consentFormDTO, ConsentFormDTO.class);
-            intent.putExtra("consentform_model", dtostring);
-            startActivity(intent);
-        }
-
-    }
-
 
     public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
         return idDocsMetaDTO;
@@ -573,26 +526,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {
         this.addressMetaDTO = addressMetaDTO;
     }
-
-
-    WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
-
-            // end-splash activity and transition
-            // SplashActivity.this.finish();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), reviewTitleTextView);
