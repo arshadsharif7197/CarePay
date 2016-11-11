@@ -8,7 +8,7 @@ public class PatientModeHomeDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PatientModeHomeMetadata metadata;
+    private PatientModeHomeMetadataDTO metadata;
     @SerializedName("state")
     @Expose
     private String state;
@@ -18,7 +18,7 @@ public class PatientModeHomeDTO {
      * @return
      *     The metadata
      */
-    public PatientModeHomeMetadata getMetadata() {
+    public PatientModeHomeMetadataDTO getMetadata() {
         return metadata;
     }
 
@@ -27,7 +27,7 @@ public class PatientModeHomeDTO {
      * @param metadata
      *     The metadata
      */
-    public void setMetadata(PatientModeHomeMetadata metadata) {
+    public void setMetadata(PatientModeHomeMetadataDTO metadata) {
         this.metadata = metadata;
     }
 

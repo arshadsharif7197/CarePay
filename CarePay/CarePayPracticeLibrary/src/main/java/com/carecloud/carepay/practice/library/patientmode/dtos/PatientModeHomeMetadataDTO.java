@@ -3,14 +3,14 @@ package com.carecloud.carepay.practice.library.patientmode.dtos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-public class PatientModeHomeMetadata {
+public class PatientModeHomeMetadataDTO {
 
     @SerializedName("labels")
     @Expose
-    private PatientModeHomeLabels labels;
+    private PatientModeHomeLabelsDTO labels;
     @SerializedName("links")
     @Expose
-    private PatientModeHomeLinks links;
+    private PatientModeHomeLinksDTO links;
     @SerializedName("transitions")
     @Expose
     private PatientModeHomeTransitionsDTO transitions;
@@ -20,7 +20,7 @@ public class PatientModeHomeMetadata {
      * @return
      *     The labels
      */
-    public PatientModeHomeLabels getLabels() {
+    public PatientModeHomeLabelsDTO getLabels() {
         return labels;
     }
 
@@ -29,7 +29,7 @@ public class PatientModeHomeMetadata {
      * @param labels
      *     The labels
      */
-    public void setLabels(PatientModeHomeLabels labels) {
+    public void setLabels(PatientModeHomeLabelsDTO labels) {
         this.labels = labels;
     }
 
@@ -38,7 +38,7 @@ public class PatientModeHomeMetadata {
      * @return
      *     The links
      */
-    public PatientModeHomeLinks getLinks() {
+    public PatientModeHomeLinksDTO getLinks() {
         return links;
     }
 
@@ -47,7 +47,7 @@ public class PatientModeHomeMetadata {
      * @param links
      *     The links
      */
-    public void setLinks(PatientModeHomeLinks links) {
+    public void setLinks(PatientModeHomeLinksDTO links) {
         this.links = links;
     }
 

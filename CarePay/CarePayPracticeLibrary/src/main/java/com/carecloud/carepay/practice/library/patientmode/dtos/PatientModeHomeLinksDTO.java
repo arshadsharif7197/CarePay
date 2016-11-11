@@ -5,7 +5,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PatientModeHomeLinks {
+public class PatientModeHomeLinksDTO {
 
     @SerializedName("self")
     @Expose
