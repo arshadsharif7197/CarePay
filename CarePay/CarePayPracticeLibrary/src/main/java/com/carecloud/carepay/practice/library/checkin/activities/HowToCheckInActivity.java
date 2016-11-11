@@ -9,56 +9,66 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
+import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 
-public class HowToCheckInActivity extends AppCompatActivity {
+public class HowToCheckInActivity extends BasePracticeActivity {
+
+    private SigninPatientModeDTO signinPatientModeDTO;
+    private CustomGothamRoundedMediumButton goBackButton;
+    private CustomGothamRoundedMediumLabel howToCheckInTextView;
+    private CustomGothamRoundedBookButton carePayLoginButton;
+    private  CustomGothamRoundedBookButton scanQRCodeButton;
+    private  CustomGothamRoundedMediumButton createCarePayAccountButton;
+    private CustomGothamRoundedBookButton manualSearchButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
+
         setContentView(R.layout.activity_how_to_check_in);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         /*Initialise views*/
         initViews();
+        populateWithLabels();
     }
 
     /**
      * Method to initialise view
      */
     void initViews(){
-        CustomGothamRoundedMediumButton goBackButton = (CustomGothamRoundedMediumButton)
+        goBackButton = (CustomGothamRoundedMediumButton)
                 findViewById(R.id.goBackButton);
-        goBackButton.setText(getResources().getString(R.string.not_defined));
         goBackButton.setOnClickListener(goBackButtonListener);
 
-        CustomGothamRoundedMediumLabel howToCheckInTextView = (CustomGothamRoundedMediumLabel)
+        howToCheckInTextView = (CustomGothamRoundedMediumLabel)
                 findViewById(R.id.howToCheckInTextView);
-        howToCheckInTextView.setText(getResources().getString(R.string.not_defined));
         howToCheckInTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.white));
 
-        CustomGothamRoundedBookButton carePayLoginButton = (CustomGothamRoundedBookButton)
+        carePayLoginButton = (CustomGothamRoundedBookButton)
                 findViewById(R.id.carePayLoginButton);
-        carePayLoginButton.setText(getResources().getString(R.string.not_defined));
         carePayLoginButton.setOnClickListener(carePayLoginButtonListener);
 
-        CustomGothamRoundedBookButton scanQRCodeButton = (CustomGothamRoundedBookButton)
+        scanQRCodeButton = (CustomGothamRoundedBookButton)
                 findViewById(R.id.scanQRCodeButton);
-        scanQRCodeButton.setText(getResources().getString(R.string.not_defined));
         scanQRCodeButton.setOnClickListener(scanQRCodeButtonListener);
 
-        CustomGothamRoundedBookButton manualSearchButton = (CustomGothamRoundedBookButton)
+        manualSearchButton = (CustomGothamRoundedBookButton)
                 findViewById(R.id.manualSearchButton);
-        manualSearchButton.setText(getResources().getString(R.string.not_defined));
         manualSearchButton.setOnClickListener(manualSearchButtonListener);
 
-        CustomGothamRoundedMediumButton createCarePayAccountButton =
+        createCarePayAccountButton =
                 (CustomGothamRoundedMediumButton) findViewById(R.id.createCarePayAccountButton);
-        createCarePayAccountButton.setText(getResources().getString(R.string.not_defined));
         createCarePayAccountButton.setOnClickListener(createCarePayAccountButtonListener);
 
         ImageView homeImageView = (ImageView) findViewById(R.id.homeImageView);
@@ -128,4 +138,14 @@ public class HowToCheckInActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    private void populateWithLabels() {
+        SigninPatientModeLabelsDTO signinPatientModeLabels = signinPatientModeDTO.getMetadata().getLabels();
+        goBackButton.setText(signinPatientModeLabels.getSiginHowCheckInGoBack());
+        howToCheckInTextView.setText(signinPatientModeLabels.getSigninHowWantCheckIn());
+        carePayLoginButton.setText(signinPatientModeLabels.getSigninHowCheckInCarepayLogin());
+        scanQRCodeButton.setText(signinPatientModeLabels.getSiginHowCheckInScanQrCode());
+        manualSearchButton.setText(signinPatientModeLabels.getSiginHowCheckInManualSearch());
+        createCarePayAccountButton.setText(signinPatientModeLabels.getSiginHowCheckInCreateCarepayAccount());
+    }
 }
