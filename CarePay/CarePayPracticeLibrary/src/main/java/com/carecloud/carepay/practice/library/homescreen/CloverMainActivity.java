@@ -88,10 +88,13 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         populateWithLabels();
 
         modeSwitchImageView.setOnClickListener(this);
-
-        findViewById(R.id.homeLockIcon);
+        findViewById(R.id.homeLockIcon).setOnClickListener(this);
         findViewById(R.id.homeCheckinClickable).setOnClickListener(this);
         findViewById(R.id.homeAppointmentsClickable).setOnClickListener(this);
+        findViewById(R.id.homePaymentsClickable).setOnClickListener(this);
+        findViewById(R.id.homeCheckoutClickable).setOnClickListener(this);
+        findViewById(R.id.homeShopClickable).setOnClickListener(this);
+        findViewById(R.id.homeNewsClickable).setOnClickListener(this);
 
         changeScreenMode(homeScreenMode);
 
