@@ -23,8 +23,6 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
-import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeHomeDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -59,7 +57,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private       TextView      homeShopLabel;
     private List<String> modeSwitchOptions = new ArrayList<>();
     private HomeScreenMode homeScreenMode;
-    private PatientModeHomeDTO patientModeHomeDTO;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -73,9 +70,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
 
         homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
-        if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            patientModeHomeDTO = getConvertedDTO(PatientModeHomeDTO.class);
-        }
         setContentView(R.layout.activity_main_clover);
 
         // init UI fields
@@ -284,10 +278,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
             WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback, queryMap);
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            WorkflowServiceHelper.getInstance().execute(patientModeHomeDTO.getMetadata().getTransitions().getPatientCheckin(), checkInCallback, queryMap);
+            // add transitions
         }
     }
 
