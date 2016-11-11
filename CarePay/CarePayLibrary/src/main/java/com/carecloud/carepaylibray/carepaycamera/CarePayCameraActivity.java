@@ -2,8 +2,9 @@ package com.carecloud.carepaylibray.carepaycamera;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
 import android.widget.FrameLayout;
 
 import com.carecloud.carepaylibrary.R;
@@ -31,17 +32,5 @@ public class CarePayCameraActivity extends AppCompatActivity implements CarePayC
         intent.putExtra("data",byteArray);
         setResult(RESULT_OK, intent);
         finish();
-    }
-
-    public Bitmap onCaptureImageResult(Intent data) {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (thumbnail != null) {
-            // compress
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-
-        return thumbnail;
-
     }
 }

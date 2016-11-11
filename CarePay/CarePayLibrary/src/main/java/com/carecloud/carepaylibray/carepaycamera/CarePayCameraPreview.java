@@ -77,6 +77,10 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         initialize(context);
     }
 
+    /**
+     * On draw
+     * @param canvas canvas
+     */
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -99,12 +103,23 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         canvas.drawRoundRect(rectF, borderCornerRadius, borderCornerRadius, borderPaint);
     }
 
+    /**
+     * On size change
+     * @param width  width
+     * @param height height
+     * @param oldWidth oldWidth
+     * @param oldHeight oldHeight
+     */
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
+        super.onSizeChanged(width, height, oldWidth, oldHeight);
 
     }
 
+    /**
+     * On serface created
+     * @param holder serface holder
+     */
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
@@ -120,7 +135,14 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         // empty. Take care of releasing the Camera preview in your activity.
     }
 
-    public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+    /**
+     * serfave change
+     * @param holder holder
+     * @param format format
+     * @param width width
+     * @param height height
+     */
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         // If your preview can change or rotate, take care of those events here.
         // Make sure to stop the preview before resizing or reformatting it.
 
@@ -156,11 +178,12 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             Log.d("CameraRND", "Error starting camera preview: " + e.getMessage());
         }
     }
-    private Rect calculateTapArea(float x, float y, float coefficient) {
+    
+    private Rect calculateTapArea(float xPoint, float yPoint, float coefficient) {
         int areaSize = Float.valueOf(300 * coefficient).intValue();
 
-        int left = clamp((int) x - areaSize / 2, 0, this.getWidth() - areaSize);
-        int top = clamp((int) y - areaSize / 2, 0, this.getHeight() - areaSize);
+        int left = clamp((int) xPoint - areaSize / 2, 0, this.getWidth() - areaSize);
+        int top = clamp((int) yPoint - areaSize / 2, 0, this.getHeight() - areaSize);
 
         RectF rectF = new RectF(left, top, left + areaSize, top + areaSize);
         // matrix.mapRect(rectF);
@@ -168,14 +191,14 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF.bottom));
     }
 
-    private int clamp(int x, int min, int max) {
-        if (x > max) {
-            return max;
+    private int clamp(int xPoint, int minimum, int maximum) {
+        if (xPoint > maximum) {
+            return maximum;
         }
-        if (x < min) {
-            return min;
+        if (xPoint < minimum) {
+            return minimum;
         }
-        return x;
+        return xPoint;
     }
 
 
@@ -232,6 +255,13 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
     }
 
+    /**
+     * Crop captured image in center
+     * @param source source
+     * @param newHeight newHeight
+     * @param newWidth newWidth
+     * @return bitmap
+     */
     public Bitmap scaleCenterCrop(Bitmap source, int newHeight, int newWidth) {
         int sourceWidth = source.getWidth();
         int sourceHeight = source.getHeight();
@@ -264,6 +294,11 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return getRoundedCornerBitmap(dest);
     }
 
+    /**
+     * Rounded bitmap
+     * @param bitmap
+     * @return
+     */
     public Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);

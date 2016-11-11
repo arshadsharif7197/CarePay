@@ -15,7 +15,7 @@ import com.carecloud.carepaylibrary.R;
 
 public class CarePayCameraView extends RelativeLayout {
     Context context;
-    Button button_capture;
+    Button buttonCapture;
     private CarePayCameraPreview carePayCameraPreview;
 
     /**
@@ -65,9 +65,9 @@ public class CarePayCameraView extends RelativeLayout {
      */
     private void init(AttributeSet attrs) {
         inflate(context, R.layout.view_carepay_camera, this);
-        button_capture = (Button) findViewById(R.id.button_capture);
+        buttonCapture = (Button) findViewById(R.id.button_capture);
         carePayCameraPreview = (CarePayCameraPreview) findViewById(R.id.camera_preview);
-        button_capture.setOnClickListener(onCaptureClick);
+        buttonCapture.setOnClickListener(onCaptureClick);
     }
 
     OnClickListener onCaptureClick = new OnClickListener() {
