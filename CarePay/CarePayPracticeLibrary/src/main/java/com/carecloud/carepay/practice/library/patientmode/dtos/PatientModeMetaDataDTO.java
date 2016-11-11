@@ -9,28 +9,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class PatientModeMetaDataDTO {
 
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
-    private PatientModeLabelsDTO label;
+    private PatientModeLabelsDTO      labels;
     @SerializedName("links")
     @Expose
-    private PatientModeLinksDTO links;
+    private PatientModeLinksDTO       links;
     @SerializedName("transitions")
     @Expose
     private PatientModeTransitionsDTO transitions;
 
     /**
-     * @return The label
+     * @return The labels
      */
-    public PatientModeLabelsDTO getLabel() {
-        return label;
+    public PatientModeLabelsDTO getLabels() {
+        return labels;
     }
 
     /**
-     * @param label The label
+     * @param labels The labels
      */
-    public void setLabel(PatientModeLabelsDTO label) {
-        this.label = label;
+    public void setLabels(PatientModeLabelsDTO labels) {
+        this.labels = labels;
     }
 
     /**

@@ -3,36 +3,52 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
+import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
+import com.carecloud.carepaylibray.appointments.models.QRCodePayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
     private AppointmentDTO appointmentDTO;
+    private AppointmentMetadataModel appointmentMetadataModel;
+    private ImageView qrCodeImageView;
+    private ProgressBar qrCodeProgressBar;
+    private CarePayTextView scanQRCodeTextView;
 
     /**
-     *
-     * @param context activity context
+     * @param context        activity context
      * @param appointmentDTO appointment model
      */
-    public QrCodeViewDialog(Context context, AppointmentDTO appointmentDTO) {
+    public QrCodeViewDialog(Context context, AppointmentDTO appointmentDTO, AppointmentMetadataModel appointmentMetadataModel) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
+        this.appointmentMetadataModel = appointmentMetadataModel;
     }
 
     @Override
@@ -50,49 +66,89 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         ImageView cancelImageView = (ImageView) findViewById(R.id.cancelImageView);
         cancelImageView.setOnClickListener(this);
 
-        ImageView qrCodeImageView = (ImageView) findViewById(R.id.qrCodeImageView);
-        try {
-            Bitmap bitmap = encodeAsBitmap(appointmentDTO.getPayload().getId());
-            qrCodeImageView.setImageBitmap(bitmap);
-        } catch (WriterException ex) {
-            ex.printStackTrace();
+        scanQRCodeTextView = (CarePayTextView) findViewById(R.id.scanQRCodeTextView);
+        qrCodeProgressBar = (ProgressBar) findViewById(R.id.qrCodeProgressBar);
+        qrCodeImageView = (ImageView) findViewById(R.id.qrCodeImageView);
+
+        callGenerateQRCodeAPI(); //API call for generating QR code
+    }
+
+    /**
+     * Method to generate QR code API
+     */
+    private void callGenerateQRCodeAPI() {
+        if (appointmentMetadataModel != null && appointmentMetadataModel.getTransitions() != null &&
+                appointmentMetadataModel.getTransitions().getCheckinAtOffice() != null) {
+
+            JsonObject queryStringObject = appointmentMetadataModel.getTransitions()
+                    .getCheckinAtOffice().getQueryString();
+            Gson gson = new Gson();
+            QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+
+            WorkflowServiceHelper.getInstance().execute(appointmentMetadataModel.getTransitions()
+                    .getCheckinAtOffice(), qrCodeCallBack, getQueryParam(queryStrings));
         }
     }
 
     /**
-     * @param convertToQRCode string which needs to be converted to QR code
-     * @return bitmap of QR code
-     * @throws WriterException throws WriterException that needs to be caught
+     * @param queryStrings the query strings for the url
+     * @return queryMap
      */
-    Bitmap encodeAsBitmap(String convertToQRCode) throws WriterException {
-        BitMatrix result;
-        int pixelWidth = 500;
-        try {
-            result = new MultiFormatWriter().encode(convertToQRCode, BarcodeFormat.QR_CODE,
-                    pixelWidth, pixelWidth, null);
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
-            return null;
+    private Map<String, String> getQueryParam(QueryStrings queryStrings) {
+        Map<String, String> queryMap = new HashMap<String, String>();
+        queryMap.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+        queryMap.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+
+        return queryMap;
+    }
+
+    WorkflowServiceCallback qrCodeCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
         }
 
-        int width = result.getWidth();
-        int height = result.getHeight();
-        int[] pixels = new int[width * height];
-        int heightCounter = 0;
-        while (heightCounter < height) {
-            int offset = heightCounter * width;
-            for (int widthCounter = 0; widthCounter < width; widthCounter++) {
-                pixels[offset + widthCounter] = result.get(widthCounter, heightCounter) ?
-                        ContextCompat.getColor(context, R.color.black)
-                        : ContextCompat.getColor(context, R.color.white);
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            updateUI(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(context,
+                    getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    /**
+     * @param workflowDTO workflow model returned by server.
+     */
+    private void updateUI(WorkflowDTO workflowDTO) {
+        JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
+
+        Gson gson = new Gson();
+        QRCodePayloadDTO scanQRCodeDTO = gson.fromJson(jsonObject, QRCodePayloadDTO.class);
+
+        if (scanQRCodeDTO != null) {
+            List<Integer> buffer = scanQRCodeDTO.getQrcode().getData();
+            byte[] byteArray = new byte[buffer.size()];
+
+            Iterator<Integer> iterator = buffer.iterator();
+            int index = 0;
+
+            while (iterator.hasNext()) {
+                Integer integer = iterator.next();
+                byteArray[index] = integer.byteValue();
+                index++;
             }
 
-            heightCounter++;
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            qrCodeImageView.setImageBitmap(bitmap);
+            scanQRCodeTextView.setText(appointmentMetadataModel.getLabel().getScanQRCodeHeading());
+            qrCodeProgressBar.setVisibility(View.GONE);
         }
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap.setPixels(pixels, 0, pixelWidth, 0, 0, width, height);
-        return bitmap;
     }
+
 
     @Override
     public void onClick(View view) {
