@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/appointmentsList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,86 +11,94 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/appointment_section_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ProgressBar
-                android:id="@+id/appointmentProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
+            <LinearLayout
+                android:id="@+id/appointment_section_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-8dp"
-                android:indeterminate="true" />
+                android:orientation="vertical"
+                android:visibility="visible">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
-                android:id="@+id/appointments_sticky_header_title"
+                <ProgressBar
+                    android:id="@+id/appointmentProgressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8dp"
+                    android:indeterminate="true" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointments_sticky_header_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/apt_skicky_header_height"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/light_gray"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="@dimen/list_apt_padding_right"
+                    android:textColor="@color/lightSlateGray"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    android:textSize="@dimen/textview_textsize"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/appointments_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <include
+                    android:id="@+id/apt_checked_in_view"
+                    layout="@layout/apt_checked_in_list_item"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/no_appointment_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/apt_skicky_header_height"
-                android:layout_gravity="center_vertical"
-                android:background="@color/light_gray"
-                android:gravity="center_vertical"
-                android:paddingEnd="0dp"
-                android:paddingStart="@dimen/list_apt_padding_right"
-                android:textColor="@color/lightSlateGray"
-                android:textSize="@dimen/textview_textsize"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/appointments_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/no_apt_placeholder_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="72dp"
+                    android:background="@drawable/circle_shape"
+                    android:gravity="center"
+                    android:textColor="@color/pastel_blue"
+                    android:textSize="13sp"
+                    app:customAssetFont="proxima_nova_regular" />
 
-            <include
-                android:id="@+id/apt_checked_in_view"
-                layout="@layout/apt_checked_in_list_item"
-                android:visibility="gone" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/no_apt_message_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+                    android:gravity="center"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="21sp"
+                    app:customAssetFont="gotham_rounded_medium" />
 
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/no_apt_message_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
+                    android:layout_marginStart="@dimen/no_apt_message_desc_margin"
+                    android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
+                    android:gravity="center"
+                    android:textColor="@color/optionl_gray"
+                    android:textSize="13sp"
+                    app:customAssetFont="proxima_nova_regular" />
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <LinearLayout
-        android:id="@+id/no_appointment_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
-            android:id="@+id/placeHolderIconTextViewId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="72dp"
-            android:background="@drawable/circle_shape"
-            android:gravity="center"
-            android:text="@string/PlaceHolderIcon"
-            android:textColor="@color/pastel_blue"
-            android:textSize="13sp" />
-
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
-            android:id="@+id/no_apt_message_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
-            android:gravity="center"
-            android:text="@string/no_apt_title"
-            android:textColor="@color/textview_default_textcolor"
-            android:textSize="21sp" />
-
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
-            android:id="@+id/no_apt_message_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
-            android:layout_marginStart="@dimen/no_apt_message_desc_margin"
-            android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
-            android:gravity="center"
-            android:text="@string/no_apt_desc"
-            android:textColor="@color/optionl_gray"
-            android:textSize="13sp" />
-    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fab"

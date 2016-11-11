@@ -8,15 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepay.patient.appointments.services.AppointmentService;
+import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.services.DemographicService;
@@ -26,26 +26,29 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AppointmentsActivity extends AppCompatActivity implements
+public class AppointmentsActivity extends BasePatientActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
     private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
 
     public static AppointmentDTO model;
     private TextView appointmentsDrawerUserIdTextView;
-    private AppointmentsResultModel appointmentsScreenLabels;
+    private AppointmentsResultModel appointmentsDTO;
+    private AppointmentDTO appointmentDTO;
+
 
     @SuppressWarnings("deprecation")
     @Override
@@ -56,26 +59,28 @@ public class AppointmentsActivity extends AppCompatActivity implements
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
+
         // Get appointment information data
-        AppointmentService aptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class);
-        Call<AppointmentsResultModel> call = aptService.getAppointmentsInformation();
-        call.enqueue(new Callback<AppointmentsResultModel>() {
-
-            @Override
-            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-                appointmentsScreenLabels = response.body();
-                AppointmentLabelDTO appointmentLabels = appointmentsScreenLabels.getMetadata().getLabel();
-
-                // Set Appointment screen title
-                toolbar.setTitle(StringUtil.getLabelForView(appointmentLabels.getAppointmentsHeading()));
-                gotoAppointmentFragment();
-            }
-
-            @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-
-            }
-        });
+//        AppointmentService aptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class);
+//        Call<AppointmentsResultModel> call = aptService.getAppointmentsInformation();
+//        call.enqueue(new Callback<AppointmentsResultModel>() {
+//
+//            @Override
+//            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
+//                appointmentsDTO = response.body();
+//                AppointmentLabelDTO appointmentLabels = appointmentsDTO.getMetadata().getLabel();
+//
+//                // Set Appointment screen title
+//                toolbar.setTitle(StringUtil.getLabelForView(appointmentLabels.getAppointmentsHeading()));
+//                gotoAppointmentFragment();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
+//
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -95,11 +100,13 @@ public class AppointmentsActivity extends AppCompatActivity implements
         } else {
             appointmentsDrawerUserIdTextView.setText("");
         }
+
+        gotoAppointmentFragment();
     }
 
     private void gotoAppointmentFragment() {
         Intent intent = getIntent();
-        AppointmentDTO appointmentDTO = (AppointmentDTO) intent.getSerializableExtra(
+        appointmentDTO = (AppointmentDTO) intent.getSerializableExtra(
                 CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -108,8 +115,14 @@ public class AppointmentsActivity extends AppCompatActivity implements
         if (appointmentsListFragment == null) {
             appointmentsListFragment = new AppointmentsListFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE, appointmentsScreenLabels);
-            bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentDTO);
+            Gson gson = new Gson();
+            String appointmentsDTOString = gson.toJson(appointmentsDTO);
+//            bundle.putSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE, appointmentsDTO);
+            bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, appointmentsDTOString);
+
+            String appointmentDTOString = gson.toJson(appointmentDTO);
+            bundle.putString(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentDTOString);
+//            bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentDTO);
             appointmentsListFragment.setArguments(bundle);
         }
 
@@ -118,13 +131,17 @@ public class AppointmentsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {// sign-out from Cognito
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
+
+        CognitoAppHelper.getPool().getUser().signOut();
+        CognitoAppHelper.setUser(null);
+
+        // finish the app
+        finishAffinity();
     }
 
     @Override
@@ -158,10 +175,15 @@ public class AppointmentsActivity extends AppCompatActivity implements
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_launch_demogr_review) {
+            Toast toast=Toast.makeText(getApplicationContext(),"Transition is in process",Toast.LENGTH_SHORT);
             // temporary launch Demographics Review for QA testing
             // (please do not remove!)
-            DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
-            Call<DemographicDTO> call = apptService.fetchDemographicsVerify();
+           /* DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
+            Map<String, String> queries = new HashMap<>();
+           *//* queries.put("practice_mgmt", "carecloud");
+            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
+            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");*//*
+            Call<DemographicDTO> call = apptService.fetchDemographicsVerify(queries);
             call.enqueue(new Callback<DemographicDTO>() {
                 @Override
                 public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
@@ -173,7 +195,7 @@ public class AppointmentsActivity extends AppCompatActivity implements
                 public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
                     Log.e(LOG_TAG, "failed fetching demogr info", throwable);
                 }
-            });
+            });*/
 
         }
 

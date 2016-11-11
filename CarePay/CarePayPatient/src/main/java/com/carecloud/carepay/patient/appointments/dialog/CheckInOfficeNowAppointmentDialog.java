@@ -1,18 +1,27 @@
-package com.carecloud.carepaylibray.customdialogs;
+package com.carecloud.carepay.patient.appointments.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+
 import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
+
+import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
+import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
+
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
@@ -22,22 +31,27 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private AppointmentDTO appointmentDTO;
     private AppointmentMetadataModel appointmentMetadataModel;
     private AppointmentLabelDTO appointmentLabels;
+    private TransitionDTO transitionDTO;
     private Class nextActivityClass;
 
     /**
-     * Constructor.
      *
-     * @param context                  activity context
-     * @param appointmentDTO           appointment model
-     * @param appointmentMetadataModel screen metadata
+     * @param context context
+     * @param appointmentDTO appointment dto
+     * @param appointmentLabels appointment labels
+     * @param transitionDTO transition dto
+     * @param nextActivity next Activity
      */
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                         AppointmentMetadataModel appointmentMetadataModel, Class nextActivity) {
+                                             AppointmentLabelDTO appointmentLabels,
+                                             TransitionDTO transitionDTO,
+                                             Class nextActivity) {
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
-        this.appointmentMetadataModel = appointmentMetadataModel;
+        this.appointmentLabels=appointmentLabels;
         this.nextActivityClass = nextActivity;
+        this.transitionDTO = transitionDTO;
     }
 
     @Override
@@ -54,13 +68,11 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_checkin_office_now_appointment, null);
 
         Button checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkOfficeButton);
-        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentMetadataModel
-                .getLabel().getAppointmentsCheckInAtOfficeButtonText()));
+        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInAtOfficeButtonText()));
         checkInAtOfficeButton.setOnClickListener(this);
 
         Button checkInNowButton = (Button) childActionView.findViewById(R.id.checkOfficeNowButton);
-        checkInNowButton.setText(StringUtil.getLabelForView(appointmentMetadataModel
-                .getLabel().getAppointmentsCheckInNow()));
+        checkInNowButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInNow()));
         checkInNowButton.setOnClickListener(this);
 
         mainLayout.addView(childActionView);
@@ -91,7 +103,25 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      * call check-in at Now api.
      */
     private void onCheckInAtNow() {
-        Intent demographicReviewIntent = new Intent(context, nextActivityClass); //DemographicReviewActivity.class);
-        context.startActivity(demographicReviewIntent);
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback);
     }
+
+    WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+
+            // end-splash activity and transition
+            // SplashActivity.this.finish();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

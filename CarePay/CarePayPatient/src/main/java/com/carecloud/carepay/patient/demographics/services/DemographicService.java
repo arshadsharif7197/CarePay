@@ -5,11 +5,15 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicsInsurancesListDTO;
 
+import java.util.Map;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by Jahirul Bhuiyan on 9/20/2016.
@@ -24,6 +28,9 @@ public interface DemographicService {
     @GET(value = "dev/workflow/carepay/patient_checkin/demographics_verify")
     Call<DemographicDTO> fetchDemographicsVerify( );
 
+    @GET(value = "dev/workflow/carepay/patient_checkin/demographics_verify")
+    Call<DemographicDTO> fetchDemographicsVerify(@QueryMap Map<String, String> queries);
+
 
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
     Call<ResponseBody> confirmDemographicInformation(
@@ -36,4 +43,5 @@ public interface DemographicService {
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/update_demographics")
     Call<ResponseBody> updateDemographicInsurances(
             @Body DemographicsInsurancesListDTO demInsuranceList);
+
 }
