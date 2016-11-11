@@ -49,9 +49,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
-
-
 public class ConsentForm2Fragment extends Fragment {
 
     Date date = new Date();
@@ -122,6 +119,7 @@ public class ConsentForm2Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.consent2_form_layout, container, false);
 
+        consentFormDTO=((ConsentActivity)getActivity()).getConsentFormDTO();
 
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
