@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragment;
@@ -51,7 +52,7 @@ import java.util.List;
  * Created by Jahirul Bhuiyan on 8/31/2016.
  * Main activity for Demographics sign-up sub-flow
  */
-public class DemographicsActivity extends KeyboardHolderActivity {
+public class DemographicsActivity extends BasePatientActivity {
 
     private int currentPageIndex;
     // views
@@ -90,16 +91,19 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_demographics);
+        modelGet=getConvertedDTO(DemographicDTO.class);
+        labelsDTO=modelGet.getMetadata().getLabels();
 
         // set the language
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
-            setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
+            setLangId(intent.getIntExtra(KesqueezyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
         } else if (intent.hasExtra("demographics_model")) {
             String demographicsModelString = intent.getStringExtra("demographics_model");
             Gson gson = new Gson();
             modelGet = gson.fromJson(demographicsModelString, DemographicDTO.class);
-        }
+        }*/
 
         // init DTOs
         initDTOsForFragments();
@@ -328,21 +332,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     public DemographicLabelsDTO getLabelsDTO() {
         return labelsDTO;
-    }
-
-    @Override
-    public int getLayoutRes() {
-        return R.layout.activity_demographics;
-    }
-
-    @Override
-    public int getContentsHolderId() {
-        return R.id.demogr_content_holder;
-    }
-
-    @Override
-    public int getKeyboardHolderId() {
-        return R.id.demogr_keyboard_holder;
     }
 
     /**
