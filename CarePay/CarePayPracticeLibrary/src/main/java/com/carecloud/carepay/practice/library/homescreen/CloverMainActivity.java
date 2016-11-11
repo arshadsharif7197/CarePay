@@ -61,6 +61,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private List<String> modeSwitchOptions = new ArrayList<>();
     private Context context;
     private HomeScreenMode homeScreenMode;
+
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
     }
