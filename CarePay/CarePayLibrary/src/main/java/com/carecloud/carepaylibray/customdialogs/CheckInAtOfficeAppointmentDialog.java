@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
 
@@ -50,7 +49,7 @@ public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_checkin_at_office_appointment, null);
 
         Button checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkAtOfficeButton);
-        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInAtOffice()));
+        checkInAtOfficeButton.setText(appointmentLabels.getAppointmentsCheckInAtOffice());
         checkInAtOfficeButton.setOnClickListener(this);
 
         mainLayout.addView(childActionView);

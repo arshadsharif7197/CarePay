@@ -30,7 +30,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -67,7 +66,7 @@ public class AppointmentsActivity extends AppCompatActivity implements
                 AppointmentLabelDTO appointmentLabels = appointmentsScreenLabels.getMetadata().getLabel();
 
                 // Set Appointment screen title
-                toolbar.setTitle(StringUtil.getLabelForView(appointmentLabels.getAppointmentsHeading()));
+                toolbar.setTitle(appointmentLabels.getAppointmentsHeading());
                 gotoAppointmentFragment();
             }
 

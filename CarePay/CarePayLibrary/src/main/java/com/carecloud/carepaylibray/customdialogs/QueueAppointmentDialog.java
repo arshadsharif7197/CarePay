@@ -48,7 +48,7 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
 
         CarePayTextView queueLabel = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestQueueLabel);
-        queueLabel.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsQueueHeading()));
+        queueLabel.setText(appointmentLabels.getAppointmentsQueueHeading());
         queueLabel.setTextColor(ContextCompat.getColor(context, R.color.slateGray));
 
         CarePayTextView queueValue = (CarePayTextView)
