@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class HomeScreenMetadataDTO {
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
-    private HomeScreenLabelDTO label;
+    private HomeScreenLabelDTO labels;
 
     @SerializedName("transitions")
     @Expose
@@ -19,19 +19,19 @@ public class HomeScreenMetadataDTO {
     /**
      *
      * @return
-     * The label
+     * The labels
      */
-    public HomeScreenLabelDTO getLabel() {
-        return label;
+    public HomeScreenLabelDTO getLabels() {
+        return labels;
     }
 
     /**
      *
-     * @param label
-     * The label
+     * @param labels
+     * The labels
      */
-    public void setLabel(HomeScreenLabelDTO label) {
-        this.label = label;
+    public void setLabels(HomeScreenLabelDTO labels) {
+        this.labels = labels;
     }
 
     /**

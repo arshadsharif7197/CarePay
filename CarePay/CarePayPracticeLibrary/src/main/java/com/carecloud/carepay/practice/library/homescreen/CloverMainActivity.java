@@ -23,7 +23,6 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
-import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -39,27 +38,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import retrofit2.http.QueryMap;
-
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
-    public static int count;
-    private TextView checkedInCounterTextview;
-    private TextView alertTextView;
-    private ImageView modeSwitchImageView;
-    private ImageView homeLockImageView;
-    private HomeScreenDTO homeScreenDTO;
-    private LinearLayout homeCheckinLl;
-    private LinearLayout homeAlertLinearLl;
-    private TextView homeQueueLabel;
-    private TextView homeAlertsLabel;
-    private TextView homeCheckinLabel;
-    private TextView homePaymentsLabel;
-    private TextView homeAppointmentsLabel;
-    private TextView homeCheckoutLabel;
-    private TextView homeShopLabel;
-
+    public static int           count;
+    private       TextView      checkedInCounterTextview;
+    private       TextView      alertTextView;
+    private       ImageView     modeSwitchImageView;
+    private       ImageView     homeLockImageView;
+    private       HomeScreenDTO homeScreenDTO;
+    private       LinearLayout  homeCheckinLl;
+    private       LinearLayout  homeAlertLinearLl;
+    private       TextView      homeQueueLabel;
+    private       TextView      homeAlertsLabel;
+    private       TextView      homeCheckinLabel;
+    private       TextView      homePaymentsLabel;
+    private       TextView      homeAppointmentsLabel;
+    private       TextView      homeCheckoutLabel;
+    private       TextView      homeShopLabel;
     private List<String> modeSwitchOptions = new ArrayList<>();
+    private HomeScreenMode homeScreenMode;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -72,7 +69,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
 
-        HomeScreenMode homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
+        homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
         setContentView(R.layout.activity_main_clover);
 
         // init UI fields
@@ -111,7 +108,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void populateWithLabels() {
         HomeScreenMetadataDTO metadataDTO = homeScreenDTO.getMetadata();
 
-        HomeScreenLabelDTO labels = metadataDTO.getLabel();
+        HomeScreenLabelDTO labels = metadataDTO.getLabels();
 
         homeQueueLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getCheckinginNotifications()));
         homeAlertsLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAlerts()));
@@ -138,8 +135,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             homeAlertLinearLl.setVisibility(View.VISIBLE);
             modeSwitchImageView.setVisibility(View.VISIBLE);
             homeLockImageView.setVisibility(View.GONE);
-            if ( homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
-                HomeScreenPayloadDTO homeScreenPayloadDTO=homeScreenDTO.getPayload();
+            if (homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
+                HomeScreenPayloadDTO homeScreenPayloadDTO = homeScreenDTO.getPayload();
                 setPracticeUser(homeScreenPayloadDTO);
                 setAppointmentCount(homeScreenPayloadDTO);
             }
@@ -154,9 +151,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void setPracticeUser(HomeScreenPayloadDTO homeScreenPayloadDTO) {
-        if (homeScreenPayloadDTO.getUserPractices() != null && homeScreenPayloadDTO.getUserPractices().size()>0) {
+        if (homeScreenPayloadDTO.getUserPractices() != null && homeScreenPayloadDTO.getUserPractices().size() > 0) {
             WorkflowServiceHelper.getInstance().setUserPracticeDTO(homeScreenPayloadDTO.getUserPractices().get(0));
-        }else{
+        } else {
             showUnAuthorizedDialog();
             //SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.unauthorized),getString(R.string.unauthorized_practice_user));
         }
@@ -180,7 +177,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close
                         // current activity
-                        WorkflowServiceHelper.getInstance().executeApplicationStartRequest( logOutCall);
+                        WorkflowServiceHelper.getInstance().executeApplicationStartRequest(logOutCall);
                         //CloverMainActivity.this.onBackPressed();
                         dialog.dismiss();
                     }
@@ -213,26 +210,83 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
+
         if (viewId == R.id.homeModeSwitchClickable) {
-            createChangeModeDialog().show();
+            navigateToPatientHome();
         } else if (viewId == R.id.homeCheckinClickable) {
-            Map<String,String> queryMap=new HashMap<>();
-            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            queryMap.put("end_date",DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback,queryMap);
-        } else if(viewId == R.id.homePaymentsClickable) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticePayments(), commonCallback);
+            navigateToCheckIn();
+        } else if (viewId == R.id.homePaymentsClickable) {
+            navigateToPayments();
         } else if (viewId == R.id.homeAppointmentsClickable) {
+            navigateToAppointments();
+        } else if (viewId == R.id.homeCheckoutClickable) {
+            checkOut();
+        } else if (viewId == R.id.homeShopClickable) {
+            navigateToShop();
+        } else if (viewId == R.id.homeNewsClickable) {
+            getNews();
+        }
+    }
+
+    private void getNews() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getOfficeNews(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transition
+        }
+    }
+
+    private void navigateToShop() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getShop(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transition
+        }
+    }
+
+    private void checkOut() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckout(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transition
+        }
+    }
+
+    private void navigateToAppointments() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             // transition needed
             Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
             appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(appointmentIntent);
-        } else if(viewId == R.id.homeCheckoutClickable) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckout(), commonCallback);
-        } else if(viewId == R.id.homeShopClickable) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getShop(), commonCallback);
-        } else if(viewId == R.id.homeNewsClickable) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getOfficeNews(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transition
+        }
+    }
+
+    private void navigateToPayments() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticePayments(), commonCallback);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transitions
+        }
+    }
+
+    private void navigateToCheckIn() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback, queryMap);
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transitions
+        }
+    }
+
+    private void navigateToPatientHome() {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            createChangeModeDialog().show();
+        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            // add transitions
         }
     }
 
@@ -264,7 +318,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showDialogMessage(CloverMainActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -282,7 +336,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showDialogMessage(CloverMainActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
