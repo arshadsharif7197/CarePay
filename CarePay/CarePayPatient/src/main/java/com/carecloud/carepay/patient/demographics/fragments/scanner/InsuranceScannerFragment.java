@@ -196,40 +196,52 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     private void getOptions() {
-        if (insuranceMetadataDTO == null) {
-            providerDataArray = new String[1];
-            providerDataArray[0] = CarePayConstants.NOT_DEFINED;
-
-            planDataArray = new String[1];
-            planDataArray[0] = CarePayConstants.NOT_DEFINED;
-
-            cardTypeDataArray = new String[1];
-            cardTypeDataArray[0] = CarePayConstants.NOT_DEFINED;
-
+        if (insuranceMetadataDTO == null || insuranceMetadataDTO.properties == null) {
             return;
         }
 
-        List<MetadataOptionDTO> optionDTOs = insuranceMetadataDTO.properties.insuranceProvider.options;
-        List<String> providers = new ArrayList<>();
-        for (MetadataOptionDTO o : optionDTOs) {
-            providers.add(o.getLabel());
+        List<MetadataOptionDTO> optionDTOs;
+        // init the providers
+        if(insuranceMetadataDTO.properties.insuranceProvider != null
+                && insuranceMetadataDTO.properties.insuranceProvider.options != null) {
+            optionDTOs = insuranceMetadataDTO.properties.insuranceProvider.options;
+            List<String> providers = new ArrayList<>();
+            for (MetadataOptionDTO o : optionDTOs) {
+                providers.add(o.getLabel());
+            }
+            providerDataArray = providers.toArray(new String[0]);
+        } else {
+            providerDataArray = new String[1];
+            providerDataArray[0] = CarePayConstants.NOT_DEFINED;
         }
-        providerDataArray = providers.toArray(new String[0]);
 
-        optionDTOs = insuranceMetadataDTO.properties.insurancePlan.options;
-        List<String> plans = new ArrayList<>();
-        for (MetadataOptionDTO o : optionDTOs) {
-            plans.add(o.getLabel());
+        // init the plans
+        if(insuranceMetadataDTO.properties.insurancePlan != null &&
+                insuranceMetadataDTO.properties.insurancePlan.options != null) {
+            optionDTOs = insuranceMetadataDTO.properties.insurancePlan.options;
+            List<String> plans = new ArrayList<>();
+            for (MetadataOptionDTO o : optionDTOs) {
+                plans.add(o.getLabel());
+            }
+            planDataArray = plans.toArray(new String[0]);
+        } else {
+            planDataArray = new String[1];
+            planDataArray[0] = CarePayConstants.NOT_DEFINED;
         }
-        planDataArray = plans.toArray(new String[0]);
 
-        // potions must be read from json
-        optionDTOs = insuranceMetadataDTO.properties.insuranceType.options;
-        List<String> cardTypes = new ArrayList<>();
-        for (MetadataOptionDTO o : optionDTOs) {
-            cardTypes.add(o.getLabel());
+        // init the type options
+        if(insuranceMetadataDTO.properties.insuranceType != null &&
+                insuranceMetadataDTO.properties.insuranceType.options != null) {
+            optionDTOs = insuranceMetadataDTO.properties.insuranceType.options;
+            List<String> cardTypes = new ArrayList<>();
+            for (MetadataOptionDTO o : optionDTOs) {
+                cardTypes.add(o.getLabel());
+            }
+            cardTypeDataArray = cardTypes.toArray(new String[0]);
+        } else {
+            cardTypeDataArray = new String[1];
+            cardTypeDataArray[0] = CarePayConstants.NOT_DEFINED;
         }
-        cardTypeDataArray = cardTypes.toArray(new String[0]);
     }
 
     @Override

@@ -56,6 +56,8 @@ public class ConsentForm1Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.consent_form_layout, container, false);
 
+        consentFormDTO=((ConsentActivity)getActivity()).getConsentFormDTO();
+
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
         contentTextView = (TextView) view.findViewById(R.id.contentTv);
