@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class CheckInMetadataDTO {
 
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
     private CheckInLabelDTO label;
     @SerializedName("transitions")
