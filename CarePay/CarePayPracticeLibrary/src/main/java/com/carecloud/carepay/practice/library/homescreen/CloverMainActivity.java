@@ -23,6 +23,8 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -33,6 +35,8 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -230,27 +234,45 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void getNews() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+        Gson gson = new Gson();
+        TransitionDTO transitionDTO;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getOfficeNews(), commonTransitionCallback);
-        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            // add transition
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getOfficeNews();
+        } else { // patient mode
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getOfficeNews();
         }
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void navigateToShop() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+        Gson gson = new Gson();
+        TransitionDTO transitionDTO;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getShop(), commonTransitionCallback);
-        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            // add transition
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getShop();
+        } else {
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getShop();
         }
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void checkOut() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+        Gson gson = new Gson();
+        TransitionDTO transitionDTO;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckout(), commonTransitionCallback);
-        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            // add transition
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getPracticeCheckout();
+        } else {
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getPatientCheckout();
         }
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void navigateToAppointments() {
@@ -260,26 +282,39 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(appointmentIntent);
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            // add transition
+            // transition needed
         }
     }
 
     private void navigateToPayments() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+        Gson gson = new Gson();
+        TransitionDTO transitionDTO;
+
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticePayments(), commonTransitionCallback);
-        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            // add transitions
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getPracticePayments();
+        } else {
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getPatientPayments();
         }
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void navigateToCheckIn() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+        Gson gson = new Gson();
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getPracticeCheckin();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
             queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            WorkflowServiceHelper.getInstance().execute(homeScreenDTO.getMetadata().getTransitions().getPracticeCheckin(), checkInCallback, queryMap);
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            // add transitions
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback);
         }
     }
 
@@ -292,22 +327,23 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private ChangeModeDialog createChangeModeDialog() {
+        Gson gson = new Gson();
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
         return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
             @Override
             public void onPatientModeSelected() {
-                TransitionDTO transition = homeScreenDTO.getMetadata().getTransitions().getPatientMode();
-                WorkflowServiceHelper.getInstance().execute(transition, commonTransitionCallback);
+                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), commonTransitionCallback);
             }
         }, new ChangeModeDialog.LogoutClickListener() {
             @Override
             public void onLogoutSelected() {
-                TransitionDTO transition = homeScreenDTO.getMetadata().getTransitions().getLogout();
                 Map<String, String> query = new HashMap<>();
                 Map<String, String> headers = new HashMap<>();
                 headers.put("x-api-key", HttpConstants.getApiStartKey());
                 headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
                 query.put("transition", "true");
-                WorkflowServiceHelper.getInstance().execute(transition, logOutCall, query, headers);
+                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getLogout(), logOutCall, query, headers);
             }
         }, modeSwitchOptions);
     }
@@ -320,7 +356,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
+            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+                PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
+            }
         }
 
         @Override
