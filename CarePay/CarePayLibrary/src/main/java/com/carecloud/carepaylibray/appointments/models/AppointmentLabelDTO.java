@@ -1,6 +1,7 @@
-
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -116,6 +117,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointments_missed_heading")
     @Expose
     private String appointmentsMissedHeading;
+    @SerializedName("scan_qr_code_heading")
+    @Expose
+    private String scanQRCodeHeading;
 
     /**
      * @return The appointmentsHeading
@@ -605,6 +609,20 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAppointmentsMissedHeading(String appointmentsMissedHeading) {
         this.appointmentsMissedHeading = appointmentsMissedHeading;
+    }
+
+    /**
+     * @return The scanQRCodeHeading
+     */
+    public String getScanQRCodeHeading() {
+        return StringUtil.getLabelForView(scanQRCodeHeading);
+    }
+
+    /**
+     * @param scanQRCodeHeading The scan_qr_code_heading
+     */
+    public void setScanQRCodeHeading(String scanQRCodeHeading) {
+        this.scanQRCodeHeading = scanQRCodeHeading;
     }
 
     /**
