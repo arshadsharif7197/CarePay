@@ -58,7 +58,7 @@ public abstract class DocumentScannerFragment extends Fragment {
                             imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
                             boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
                             if (result) {
-                                startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
+                                startActivityForResult(imageCaptureHelper.cameraIntent(getContext()), ImageCaptureHelper.REQUEST_CAMERA);
                             }
                         } else if (item == 1) {  // "Select from Gallery" chosen
                             imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
@@ -121,7 +121,7 @@ public abstract class DocumentScannerFragment extends Fragment {
             case PermissionsUtil.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString())) {
-                        startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
+                        startActivityForResult(imageCaptureHelper.cameraIntent(getContext()), ImageCaptureHelper.REQUEST_CAMERA);
                     }
                 } else {
                     //code for deny
