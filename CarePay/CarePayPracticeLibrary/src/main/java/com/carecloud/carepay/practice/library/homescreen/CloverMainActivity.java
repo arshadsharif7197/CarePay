@@ -23,10 +23,9 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
-import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeHomeDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeHomeDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -64,7 +63,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private       TextView      homeCheckoutLabel;
     private       TextView      homeShopLabel;
     private List<String> modeSwitchOptions = new ArrayList<>();
-    private HomeScreenMode homeScreenMode;
+    private HomeScreenMode     homeScreenMode;
     private PatientModeHomeDTO patientModeHomeDTO;
 
     public enum HomeScreenMode {
@@ -363,9 +362,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-                PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
-            }
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
         }
 
         @Override

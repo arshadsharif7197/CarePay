@@ -17,7 +17,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
 
