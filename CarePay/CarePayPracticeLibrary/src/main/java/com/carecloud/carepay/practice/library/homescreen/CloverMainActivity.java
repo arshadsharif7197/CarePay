@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
+import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
@@ -238,7 +239,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             navigateToShop();
         } else if (viewId == R.id.homeNewsClickable) {
             getNews();
+        } else if(viewId == R.id.homeLockIcon) {
+            unlockPracticeMode();
         }
+    }
+
+    private void unlockPracticeMode() {
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this);
+        confirmationPinDialog.show();
     }
 
     private void getNews() {
