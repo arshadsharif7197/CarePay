@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabelsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeOptionDTO;
@@ -20,10 +20,16 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloa
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepay.practice.library.splash.SplashActivity;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PatientModeSplashActivity extends BasePracticeActivity {
 
@@ -31,7 +37,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     private TextView  praticewelcomeText;
     private ImageView practicelogo;
     private ImageView lockIcnImageView;
-    private List<String> languages = new ArrayList<String>();
+    private List<String> languages = new ArrayList<>();
 
     PatientModeSplashDTO  patientModeSplashDTO;
     PatientModePayloadDTO patientModePayloadDTO;
@@ -45,9 +51,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         this.context = this;
         patientModeSplashDTO = getConvertedDTO(PatientModeSplashDTO.class);
         initViews();
-        initializeLebals();
-        setClicables();
-
+        initializeLabels();
+        setClickables();
     }
 
     private void initViews() {
@@ -58,15 +63,14 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         langSpinner = (Spinner) findViewById(R.id.splashPatientLangSpinner);
     }
 
-    private void initializeLebals() {
+    private void initializeLabels() {
         if (patientModeSplashDTO != null) {
-            PatientModeLabelsDTO patientModeLabelsDTO = patientModeSplashDTO.getMetadata().getLabel();
+            PatientModeLabelsDTO patientModeLabelsDTO = patientModeSplashDTO.getMetadata().getLabels();
             patientModePayloadDTO = patientModeSplashDTO.getPayload();
 
             if (patientModeLabelsDTO != null) {
                 getStartedButton.setText(patientModeLabelsDTO.getGetStartedHeading());
                 praticewelcomeText.setText(patientModeLabelsDTO.getWelcomeHeading());
-
             }
 
             if (patientModePayloadDTO != null) {
@@ -93,15 +97,16 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         }
     }
 
-    private void setClicables() {
+    private void setClickables() {
         getStartedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent checkedInIntent = new Intent(PatientModeSplashActivity.this, HowToCheckInActivity.class);
-                checkedInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(checkedInIntent);
-
-
+                TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getStart();
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+                Map<String, String> headers = new HashMap<>();
+                headers.put("transition", "true");
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, queryMap, headers);
             }
         });
 
@@ -133,4 +138,21 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         Intent intent = new Intent(PatientModeSplashActivity.this,SplashActivity.class);
         startActivity(intent);
     }
+
+    WorkflowServiceCallback patientHomeCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+
+        }
+    };
 }
