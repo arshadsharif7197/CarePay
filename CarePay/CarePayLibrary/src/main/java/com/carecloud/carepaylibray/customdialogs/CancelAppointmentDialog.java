@@ -11,7 +11,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
  * Created by prem_mourya on 10/12/2016.
@@ -79,7 +78,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         CarePayTextView editAppointmentTextView = (CarePayTextView)
                 rootLayout.findViewById(R.id.dialogCancelAppointTextView);
         editAppointmentTextView.setVisibility(View.VISIBLE);
-        editAppointmentTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCancelHeading()));
+        editAppointmentTextView.setText(appointmentLabels.getAppointmentsCancelHeading());
         editAppointmentTextView.setTextColor(context.getResources().getColor(R.color.glitter));
         editAppointmentTextView.setOnClickListener(this);
     }
@@ -92,10 +91,10 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
                 childActionView.findViewById(R.id.appointmentStatusLabel);
 
         if (isMissed) {
-            appointmentStatusLabel.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsMissedHeading()));
+            appointmentStatusLabel.setText(appointmentLabels.getAppointmentsMissedHeading());
             appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.lightningyellow));
         } else {
-            appointmentStatusLabel.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCanceledHeading()));
+            appointmentStatusLabel.setText(appointmentLabels.getAppointmentsCanceledHeading());
             appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
 

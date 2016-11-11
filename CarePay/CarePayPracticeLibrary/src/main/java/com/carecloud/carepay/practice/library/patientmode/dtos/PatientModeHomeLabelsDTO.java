@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class PatientModeHomeLabels {
+public class PatientModeHomeLabelsDTO {
 
     @SerializedName("checkin_button")
     @Expose

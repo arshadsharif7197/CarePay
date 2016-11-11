@@ -11,9 +11,7 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
@@ -21,7 +19,6 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private Context context;
     private AppointmentDTO appointmentDTO;
     private AppointmentMetadataModel appointmentMetadataModel;
-    private AppointmentLabelDTO appointmentLabels;
     private Class nextActivityClass;
 
     /**
@@ -30,9 +27,11 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      * @param context                  activity context
      * @param appointmentDTO           appointment model
      * @param appointmentMetadataModel screen metadata
+     * @param nextActivity             next screen
      */
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                          AppointmentMetadataModel appointmentMetadataModel, Class nextActivity) {
+
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
@@ -54,13 +53,11 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_checkin_office_now_appointment, null);
 
         Button checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkOfficeButton);
-        checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentMetadataModel
-                .getLabel().getAppointmentsCheckInAtOfficeButtonText()));
+        checkInAtOfficeButton.setText(appointmentMetadataModel.getLabel().getAppointmentsCheckInAtOfficeButtonText());
         checkInAtOfficeButton.setOnClickListener(this);
 
         Button checkInNowButton = (Button) childActionView.findViewById(R.id.checkOfficeNowButton);
-        checkInNowButton.setText(StringUtil.getLabelForView(appointmentMetadataModel
-                .getLabel().getAppointmentsCheckInNow()));
+        checkInNowButton.setText(appointmentMetadataModel.getLabel().getAppointmentsCheckInNow());
         checkInNowButton.setOnClickListener(this);
 
         mainLayout.addView(childActionView);
