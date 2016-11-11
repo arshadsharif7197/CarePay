@@ -20,6 +20,7 @@
     <dimen name="dimen_400dp">400dp</dimen>
     <dimen name="dimen_220dp">220dp</dimen>
     <dimen name="dimen_48dp">48dp</dimen>
+    <dimen name="dimen_minus_5dp">-5dp</dimen>
 
 
 

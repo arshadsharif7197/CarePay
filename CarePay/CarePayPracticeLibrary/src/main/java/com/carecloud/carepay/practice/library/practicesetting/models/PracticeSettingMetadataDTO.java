@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PracticeSettingMetadataDTO {
 
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
     private PracticeSettingLabelDTO label;
     @SerializedName("links")
