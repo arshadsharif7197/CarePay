@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.demographics.activities.DemographicReviewAc
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -45,11 +46,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     private List<Object> appointmentItems;
     private AppointmentLabelDTO appointmentLabels;
     private AppointmentsListFragment appointmentsListFragment;
+    private AppointmentMetadataModel appointmentMetadataModel;
 
     /**
      * Constructor.
-     * @param context context
-     * @param appointmentItems list of appointments
+     *
+     * @param context                  context
+     * @param appointmentItems         list of appointments
      * @param appointmentsListFragment screen instance
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
@@ -60,6 +63,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         this.appointmentItems = appointmentItems;
         this.appointmentsListFragment = appointmentsListFragment;
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
+        this.appointmentMetadataModel = appointmentInfo.getMetadata();
     }
 
     @Override
@@ -101,7 +105,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
 
             if (getSectionHeaderTitle(upcomingStartTime).equals(CarePayConstants.DAY_UPCOMING)) {
-                if(isCheckedIn) {
+                if (isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                     holder.todayTimeTextView.setText(appointmentLabels.getAppointmentsCheckedInLabel());
@@ -118,7 +122,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             } else {
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                if(isCheckedIn) {
+                if (isCheckedIn) {
                     holder.todayTimeTextView.setText(StringUtil.getLabelForView(
                             appointmentLabels.getAppointmentsCheckedInLabel()));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
@@ -133,7 +137,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 public void onClick(View appointmentListItem) {
                     // Restricted the appointment list item click if it is appointment header type.
                     if (object.getClass() == AppointmentDTO.class) {
-
                         // appointment clicked item saved so that it can be used on Payment
                         AppointmentDTO item = ((AppointmentDTO) object);
                         AppointmentsActivity.model = item;
@@ -142,11 +145,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             new CancelAppointmentDialog(context, item, appointmentLabels).show();
                         } else {
                             if (isPending) {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, DemographicReviewActivity.class).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel, DemographicReviewActivity.class).show();
                             } else if (isCheckedIn) {
                                 new QueueAppointmentDialog(context, item, appointmentLabels).show();
                             } else {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, DemographicReviewActivity.class).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel, DemographicReviewActivity.class).show();
                             }
                         }
                     }
@@ -308,9 +311,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
             return CarePayConstants.DAY_UPCOMING;
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            return  CarePayConstants.DAY_OVER;
+            return CarePayConstants.DAY_OVER;
         } else {
-            return  CarePayConstants.DAY_TODAY;
+            return CarePayConstants.DAY_TODAY;
         }
     }
 

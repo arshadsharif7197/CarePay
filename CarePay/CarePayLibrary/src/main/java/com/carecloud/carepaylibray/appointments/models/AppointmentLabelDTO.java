@@ -1,4 +1,3 @@
-
 package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -126,6 +125,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("no_appointments_message_text")
     @Expose
     private String noAppointmentsMessageText;
+    @SerializedName("scan_qr_code_heading")
+    @Expose
+    private String scanQRCodeHeading;
 
     /**
      * @return The appointmentsHeading
@@ -615,6 +617,20 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAppointmentsMissedHeading(String appointmentsMissedHeading) {
         this.appointmentsMissedHeading = appointmentsMissedHeading;
+    }
+
+    /**
+     * @return The scanQRCodeHeading
+     */
+    public String getScanQRCodeHeading() {
+        return StringUtil.getLabelForView(scanQRCodeHeading);
+    }
+
+    /**
+     * @param scanQRCodeHeading The scan_qr_code_heading
+     */
+    public void setScanQRCodeHeading(String scanQRCodeHeading) {
+        this.scanQRCodeHeading = scanQRCodeHeading;
     }
 
     /**

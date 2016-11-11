@@ -1,4 +1,3 @@
-
 package com.carecloud.carepaylibray.appointments.models;
 
 import com.google.gson.annotations.Expose;
@@ -14,6 +13,12 @@ public class AppointmentMetadataModel implements Serializable {
     @SerializedName("labels")
     @Expose
     private AppointmentLabelDTO label;
+    @SerializedName("links")
+    @Expose
+    private LinksDTO links;
+    @SerializedName("transitions")
+    @Expose
+    private TransitionsDTO transitions;
 
     /**
      * @return The label
@@ -27,5 +32,33 @@ public class AppointmentMetadataModel implements Serializable {
      */
     public void setLabel(AppointmentLabelDTO label) {
         this.label = label;
+    }
+
+    /**
+     * @return The links
+     */
+    public LinksDTO getLinks() {
+        return links;
+    }
+
+    /**
+     * @param links The links
+     */
+    public void setLinks(LinksDTO links) {
+        this.links = links;
+    }
+
+    /**
+     * @return The transitions
+     */
+    public TransitionsDTO getTransitions() {
+        return transitions;
+    }
+
+    /**
+     * @param transitions The transitions
+     */
+    public void setTransitions(TransitionsDTO transitions) {
+        this.transitions = transitions;
     }
 }
