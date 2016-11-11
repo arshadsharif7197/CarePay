@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,18 +8,20 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
+import com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.LocationDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.ProviderDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
@@ -36,6 +39,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     private RecyclerView checkinginRecyclerView;
     private RecyclerView waitingRoomRecyclerView;
+    private Context context;
 
     CheckInDTO checkInDTO;
 
@@ -66,6 +70,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
 
+        this.context = this;
         initializationView();
         populateList();
     }
@@ -182,10 +187,66 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
         checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments);
         checkinginRecyclerView.setAdapter(checkedInAdapter);
+        checkinginRecyclerView.addOnItemTouchListener(onCheckedInItemTouchListener);
 
         waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments);
         waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
+        waitingRoomRecyclerView.addOnItemTouchListener(onWaitingRoomItemTouchListener);
     }
+
+    private RecyclerView.OnItemTouchListener onCheckedInItemTouchListener = new RecyclerView.OnItemTouchListener() {
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+            View childView = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+            int position;
+            if (childView != null && motionEvent.getAction()==MotionEvent.ACTION_UP) {
+                position = recyclerView.getChildAdapterPosition(childView);
+                AppointmentPayloadDTO appointmentPayloadDTO = checkingInAppointments.get(position);
+                AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
+                        checkInDTO,getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
+                        appointmentPayloadDTO);
+                dialog.show();
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+    };
+
+    private RecyclerView.OnItemTouchListener onWaitingRoomItemTouchListener = new RecyclerView.OnItemTouchListener() {
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+            View childView = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+            int position;
+            if (childView != null && motionEvent.getAction()==MotionEvent.ACTION_UP) {
+                position = recyclerView.getChildAdapterPosition(childView);
+                AppointmentPayloadDTO appointmentPayloadDTO = waitingRoomAppointments.get(position);
+                AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
+                        checkInDTO,getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
+                        appointmentPayloadDTO);
+                dialog.show();
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+    };
 
     private void setFilterableData(ArrayList<FilterDataDTO> doctorsList, ArrayList<FilterDataDTO> locationsList) {
         applyFilterSortByName(doctorsList);
@@ -375,5 +436,15 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             filterTextView.setVisibility(View.GONE);
         }
         setAdapter();
+    }
+
+    private PatientBalanceDTO getPatientBalanceDTO(String patientId){
+        List<PatientBalanceDTO> patientBalanceDTOList = checkInDTO.getPayload().getPatientBalances();
+        for (int i=0 ; i<patientBalanceDTOList.size();i++){
+            if (patientBalanceDTOList.get(i).getMetadata().getPatientId().equalsIgnoreCase(patientId)){
+                return patientBalanceDTOList.get(i);
+            }
+        }
+        return null;
     }
 }
