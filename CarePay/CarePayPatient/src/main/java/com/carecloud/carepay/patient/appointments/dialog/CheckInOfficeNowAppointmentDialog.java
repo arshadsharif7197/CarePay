@@ -40,7 +40,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      * @param appointmentDTO appointment dto
      * @param appointmentLabels appointment labels
      * @param transitionDTO transition dto
-     * @param nextActivity
+     * @param nextActivity next Activity
      */
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                              AppointmentLabelDTO appointmentLabels,

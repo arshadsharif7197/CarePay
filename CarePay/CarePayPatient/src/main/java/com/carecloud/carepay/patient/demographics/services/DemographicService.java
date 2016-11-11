@@ -28,6 +28,9 @@ public interface DemographicService {
     @GET(value = "dev/workflow/carepay/patient_checkin/demographics_verify")
     Call<DemographicDTO> fetchDemographicsVerify( );
 
+    @GET(value = "dev/workflow/carepay/patient_checkin/demographics_verify")
+    Call<DemographicDTO> fetchDemographicsVerify(@QueryMap Map<String, String> queries);
+
 
     @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
     Call<ResponseBody> confirmDemographicInformation(
@@ -41,6 +44,4 @@ public interface DemographicService {
     Call<ResponseBody> updateDemographicInsurances(
             @Body DemographicsInsurancesListDTO demInsuranceList);
 
-    @GET(value = "dev/workflow/carepay/patient_checkin/demographics_verify")
-    Call<DemographicDTO> fetchDemographicsVerify(@QueryMap Map<String, String> queries);
 }

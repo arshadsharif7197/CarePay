@@ -20,32 +20,22 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.services.DemographicService;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
-
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInMetaDataDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -55,6 +45,24 @@ import retrofit2.Response;
 public class SigninFragment extends Fragment {
 
     SignInSignUpDTO signInSignUpDTO;
+    WorkflowServiceCallback logincallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+
+            // end-splash activity and transition
+            // SplashActivity.this.finish();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
     private TextInputLayout emailTextInput;
     private TextInputLayout passwordTexInput;
     private EditText emailEditText;
@@ -64,7 +72,28 @@ public class SigninFragment extends Fragment {
     private Button signinButton;
     private Button signupButton;
     private ProgressBar progressBar;
+    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), logincallback);
 
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onBeforeLogin() {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(getContext(),
+                    "Sign-in failed",
+                    "Invalid user id or password");
+
+        }
+    };
     private LinearLayout parentLayout;
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
@@ -92,52 +121,8 @@ public class SigninFragment extends Fragment {
         isEmptyEmail = true;
         isEmptyPassword = true;
 
-        // TODO: 11/10/16 remove
-        emailEditText.setText("srios@carecloud.com");
-        passwordEditText.setText("Nirvana1!");
-
         return view;
     }
-    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
-        @Override
-        public void onLoginSuccess() {
-            WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), logincallback);
-
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onBeforeLogin() {
-            SystemUtil.hideSoftKeyboard(getActivity());
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(getContext(),
-                    "Sign-in failed",
-                    "Invalid user id or password");
-
-        }
-    };
-    WorkflowServiceCallback logincallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
-
-            // end-splash activity and transition
-            // SplashActivity.this.finish();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     private void initview(View view) {
         signinButton = (Button) view.findViewById(R.id.signin_button);
