@@ -177,23 +177,23 @@ public class AppointmentsListFragment extends Fragment {
         final View appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
-
-     //   bundle = getArguments();
-      //  String noAptPlaceholder = "";
-     //   String noAptMessageTitle = "";
-     //   String noAptMessageText = "";
-    //    appointmentInfo = (AppointmentsResultModel) bundle.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
-     //   if (appointmentInfo != null) {
-    //        AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-    //        noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
-    //        noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
-   //         noAptMessageText = labels.getNoAppointmentsMessageText();
-    //    }
-
         Gson gson = new Gson();
         Bundle arguments = getArguments();
         String appointmentInfoString = arguments.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         appointmentInfo = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
+        bundle = getArguments();
+        String noAptPlaceholder = "";
+        String noAptMessageTitle = "";
+        String noAptMessageText = "";
+    //    appointmentInfo = (AppointmentsResultModel) bundle.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
+        if (appointmentInfo != null) {
+            AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
+            noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
+            noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
+           noAptMessageText = labels.getNoAppointmentsMessageText();
+        }
+
+
 //        appointmentInfo = (AppointmentsResultModel) arguments.getSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
 
         //Pull down to refresh

@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
@@ -498,15 +499,16 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (view == correctInformationButton) {
-
+            Toast toast=Toast.makeText(getContext(),"Transition is in process",Toast.LENGTH_SHORT);
+/*
 //            WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getConfirmDemographics(), consentformcallback);
 
             // (please do not remove!)
             ConsentFormService apptService = (new BaseServiceGenerator(getContext())).createService(ConsentFormService.class); //, String token, String searchString
             Map<String, String> queries = new HashMap<>();
-            queries.put("practice_mgmt", "carecloud");
-            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
-            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");
+//            queries.put("practice_mgmt", "carecloud");
+//            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
+//            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");
             Call<ConsentFormDTO> call = apptService.fetchConnsentFormInformation(queries);
             call.enqueue(new Callback<ConsentFormDTO>() {
                 @Override
@@ -519,7 +521,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 public void onFailure(Call<ConsentFormDTO> call, Throwable throwable) {
 
                 }
-            });
+            });*/
 
         } else if (view == updateInformationUpdate) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

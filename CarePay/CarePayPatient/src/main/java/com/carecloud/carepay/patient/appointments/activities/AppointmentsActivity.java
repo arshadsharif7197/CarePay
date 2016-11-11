@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -174,13 +175,14 @@ public class AppointmentsActivity extends BasePatientActivity implements
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_launch_demogr_review) {
+            Toast toast=Toast.makeText(getApplicationContext(),"Transition is in process",Toast.LENGTH_SHORT);
             // temporary launch Demographics Review for QA testing
             // (please do not remove!)
-            DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
+           /* DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
             Map<String, String> queries = new HashMap<>();
-            queries.put("practice_mgmt", "carecloud");
+           *//* queries.put("practice_mgmt", "carecloud");
             queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
-            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");
+            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");*//*
             Call<DemographicDTO> call = apptService.fetchDemographicsVerify(queries);
             call.enqueue(new Callback<DemographicDTO>() {
                 @Override
@@ -193,7 +195,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
                 public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
                     Log.e(LOG_TAG, "failed fetching demogr info", throwable);
                 }
-            });
+            });*/
 
         }
 
