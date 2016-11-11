@@ -22,10 +22,9 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointm
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
-import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
-import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeHomeDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -64,7 +63,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private       TextView      homeShopLabel;
     private List<String> modeSwitchOptions = new ArrayList<>();
     private HomeScreenMode     homeScreenMode;
-    private PatientModeHomeDTO patientModeHomeDTO;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -78,9 +76,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
 
         homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
-        if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            patientModeHomeDTO = getConvertedDTO(PatientModeHomeDTO.class);
-        }
+        homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
+
         setContentView(R.layout.activity_main_clover);
 
         // init UI fields
@@ -92,6 +89,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         modeSwitchImageView.setOnClickListener(this);
 
+        findViewById(R.id.homeLockIcon);
         findViewById(R.id.homeCheckinClickable).setOnClickListener(this);
         findViewById(R.id.homeAppointmentsClickable).setOnClickListener(this);
 
@@ -147,23 +145,25 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             modeSwitchImageView.setVisibility(View.VISIBLE);
             homeLockImageView.setVisibility(View.GONE);
             if (homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
-                HomeScreenPayloadDTO homeScreenPayloadDTO = homeScreenDTO.getPayload();
-                setPracticeUser(homeScreenPayloadDTO);
-                setAppointmentCount(homeScreenPayloadDTO);
+                JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
+                Gson gson = new Gson();
+                PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
+                setPracticeUser(practiceHomeScreenPayloadDTO);
+                setAppointmentCount(practiceHomeScreenPayloadDTO);
             }
         }
     }
 
-    private void setAppointmentCount(HomeScreenPayloadDTO homeScreenPayloadDTO) {
-        HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = homeScreenPayloadDTO.getAppointmentCounts();
+    private void setAppointmentCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
+        HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = practiceHomeScreenPayloadDTO.getAppointmentCounts();
         if (homeScreenAppointmentCountsDTO != null) {
             checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPendingCount() + homeScreenAppointmentCountsDTO.getPendingCount()));
         }
     }
 
-    private void setPracticeUser(HomeScreenPayloadDTO homeScreenPayloadDTO) {
-        if (homeScreenPayloadDTO.getUserPractices() != null && homeScreenPayloadDTO.getUserPractices().size() > 0) {
-            WorkflowServiceHelper.getInstance().setUserPracticeDTO(homeScreenPayloadDTO.getUserPractices().get(0));
+    private void setPracticeUser(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
+        if (practiceHomeScreenPayloadDTO.getUserPractices() != null && practiceHomeScreenPayloadDTO.getUserPractices().size() > 0) {
+            WorkflowServiceHelper.getInstance().setUserPracticeDTO(practiceHomeScreenPayloadDTO.getUserPractices().get(0));
         } else {
             showUnAuthorizedDialog();
             //SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.unauthorized),getString(R.string.unauthorized_practice_user));
@@ -317,10 +317,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
             queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            WorkflowServiceHelper.getInstance().execute(patientModeHomeDTO.getMetadata().getTransitions().getPatientCheckin(), checkInCallback, queryMap);
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.homescreen.dtos;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,10 +14,10 @@ public class HomeScreenDTO {
     private HomeScreenMetadataDTO metadata;
     @SerializedName("payload")
     @Expose
-    private HomeScreenPayloadDTO payload;
+    private JsonObject            payload;
     @SerializedName("state")
     @Expose
-    private String state;
+    private String                state;
 
     /**
      *
@@ -41,7 +42,7 @@ public class HomeScreenDTO {
      * @return
      * The payload
      */
-    public HomeScreenPayloadDTO getPayload() {
+    public JsonObject getPayload() {
         return payload;
     }
 
@@ -50,7 +51,7 @@ public class HomeScreenDTO {
      * @param payload
      * The payload
      */
-    public void setPayload(HomeScreenPayloadDTO payload) {
+    public void setPayload(JsonObject payload) {
         this.payload = payload;
     }
 
