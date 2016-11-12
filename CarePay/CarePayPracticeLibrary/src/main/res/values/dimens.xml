@@ -134,6 +134,8 @@
     <dimen name="home_settings_icon_width">30dp</dimen>
     <dimen name="home_settings_icon_height">30dp</dimen>
 
-    <dimen name="home_spinner_width">39dp</dimen>
+    <dimen name="home_spinner_width">112dp</dimen>
+    <dimen name="patient_splash_button_width">150dp</dimen>
+    <dimen name="patient_splash_button_height">51dp</dimen>
 
 </resources>
