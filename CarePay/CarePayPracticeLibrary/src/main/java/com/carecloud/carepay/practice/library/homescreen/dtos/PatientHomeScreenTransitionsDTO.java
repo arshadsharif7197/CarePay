@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 public class PatientHomeScreenTransitionsDTO {
 
     @SerializedName("practice_mode") @Expose
-    private TransitionDTO patientMode;
+    private TransitionDTO practiceMode;
 
     @SerializedName("patient_checkin")  @Expose
     private TransitionDTO patientCheckin;
@@ -28,12 +28,12 @@ public class PatientHomeScreenTransitionsDTO {
     @SerializedName("office_news") @Expose
     private TransitionDTO officeNews;
 
-    public TransitionDTO getPatientMode() {
-        return patientMode;
+    public TransitionDTO getPracticeMode() {
+        return practiceMode;
     }
 
-    public void setPatientMode(TransitionDTO patientMode) {
-        this.patientMode = patientMode;
+    public void setPracticeMode(TransitionDTO practiceMode) {
+        this.practiceMode = practiceMode;
     }
 
     public TransitionDTO getPatientCheckin() {

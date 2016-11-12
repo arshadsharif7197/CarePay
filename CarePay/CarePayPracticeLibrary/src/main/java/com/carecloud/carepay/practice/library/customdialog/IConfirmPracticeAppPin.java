@@ -8,5 +8,5 @@ import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSet
 
 public interface IConfirmPracticeAppPin {
 
-    void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO);
+    void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin);
 }

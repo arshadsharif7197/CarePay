@@ -26,6 +26,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadata
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
+import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -63,7 +64,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private       TextView      homeCheckoutLabel;
     private       TextView      homeShopLabel;
     private List<String> modeSwitchOptions = new ArrayList<>();
-    private HomeScreenMode     homeScreenMode;
+    private HomeScreenMode homeScreenMode;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -239,7 +240,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             navigateToShop();
         } else if (viewId == R.id.homeNewsClickable) {
             getNews();
-        } else if(viewId == R.id.homeLockIcon) {
+        } else if (viewId == R.id.homeLockIcon) {
             unlockPracticeMode();
         }
     }
@@ -414,6 +415,36 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
+        }
+    };
+
+    @Override
+    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin) {
+        // call for transition
+        Gson gson = new Gson();
+        PatientHomeScreenTransitionsDTO transitions = gson.fromJson(homeScreenDTO.getMetadata().getTransitions(),
+                                                                    PatientHomeScreenTransitionsDTO.class);
+        TransitionDTO transitionDTO = transitions.getPracticeMode();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("transition", "true");
+        // pass the pin when supported
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, practiceModeCallback, queryMap);
+    }
+
+    WorkflowServiceCallback practiceModeCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+
         }
     };
 }

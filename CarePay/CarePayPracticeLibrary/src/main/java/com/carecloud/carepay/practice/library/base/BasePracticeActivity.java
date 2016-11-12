@@ -59,7 +59,7 @@ public abstract class BasePracticeActivity extends AppCompatActivity implements 
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin) {
 
     }
 }
