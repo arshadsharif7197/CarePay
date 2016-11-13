@@ -49,8 +49,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
-
-
 public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {

@@ -205,7 +205,7 @@ public class ConsentForm2Fragment extends Fragment {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long ll) {
                 chooseGenderTextView.setText(consentFormMinorGenderDTO.getOptions().get(position).getName().toUpperCase());
 
                 alert.dismiss();

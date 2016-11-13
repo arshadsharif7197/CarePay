@@ -33,6 +33,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 
 
 
+
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {
 
 
