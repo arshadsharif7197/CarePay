@@ -24,15 +24,16 @@ import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
-import static   com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import          com.carecloud.carepaylibray.utils.DateUtil;
-import static   com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
+import com.carecloud.carepaylibray.utils.DateUtil;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 import com.google.gson.Gson;
 
 
 import java.util.Locale;
-
 
 
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {
@@ -41,13 +42,13 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private ConsentFormLabelsDTO consentFormLabelsDTO;
 
 
-    private AppointmentsPayloadDTO appointmentsPayloadDTO;
+    private AppointmentsPayloadDTO  appointmentsPayloadDTO;
     private AppointmentsResultModel appointmentsResultModel;
 
 
-    private ConsentFormDTO consentFormDTO;
+    private ConsentFormDTO         consentFormDTO;
     private ConsentFormMetadataDTO consentFormMetadataDTO;
-    private TextView title;
+    private TextView               title;
     private FormId showingForm = FormId.FORM1;
     private View indicator0;
     private View indicator1;
@@ -73,7 +74,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private String signButtonLabel;
     private String patientSignLabel;
     private String legalsignLabel;
-    private String providerName = " ";
+    private String providerName    = " ";
     private String patienFirstName = " ";
     private String patientLastName = " ";
     private String medicareForm;
