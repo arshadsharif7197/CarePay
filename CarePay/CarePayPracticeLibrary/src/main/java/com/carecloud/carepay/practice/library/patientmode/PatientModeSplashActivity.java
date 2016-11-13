@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmode;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,7 +18,6 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeOption
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
-import com.carecloud.carepay.practice.library.splash.SplashActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -134,9 +132,10 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO) {
-        Intent intent = new Intent(PatientModeSplashActivity.this,SplashActivity.class);
-        startActivity(intent);
+    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin) {
+        TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getPracticeMode();
+        Map<String, String> query = new HashMap<>();
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, query);
     }
 
     WorkflowServiceCallback patientHomeCallback = new WorkflowServiceCallback() {

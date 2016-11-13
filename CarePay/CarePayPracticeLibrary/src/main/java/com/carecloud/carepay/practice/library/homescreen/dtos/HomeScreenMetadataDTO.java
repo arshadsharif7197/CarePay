@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.homescreen.dtos;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,7 +15,7 @@ public class HomeScreenMetadataDTO {
 
     @SerializedName("transitions")
     @Expose
-    private HomeScreenTransitionsDTO transitions;
+    private JsonObject transitions;
 
     /**
      *
@@ -39,7 +40,7 @@ public class HomeScreenMetadataDTO {
      * @return
      * The transitions
      */
-    public HomeScreenTransitionsDTO getTransitions() {
+    public JsonObject getTransitions() {
         return transitions;
     }
 
@@ -48,7 +49,7 @@ public class HomeScreenMetadataDTO {
      * @param transitions
      * The transitions
      */
-    public void setTransitions(HomeScreenTransitionsDTO transitions) {
+    public void setTransitions(JsonObject transitions) {
         this.transitions = transitions;
     }
 }

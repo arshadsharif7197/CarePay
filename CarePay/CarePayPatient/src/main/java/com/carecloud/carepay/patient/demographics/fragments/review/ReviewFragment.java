@@ -20,9 +20,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
-import com.carecloud.carepay.patient.consentforms.services.ConsentFormService;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -49,14 +47,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 
 
 

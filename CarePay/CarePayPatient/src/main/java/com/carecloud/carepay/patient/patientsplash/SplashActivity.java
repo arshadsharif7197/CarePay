@@ -1,8 +1,6 @@
 package com.carecloud.carepay.patient.patientsplash;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;

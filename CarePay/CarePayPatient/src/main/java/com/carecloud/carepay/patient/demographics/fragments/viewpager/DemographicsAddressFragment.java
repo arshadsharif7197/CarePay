@@ -40,8 +40,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import com.carecloud.carepaylibray.utils.ValidationHelper;
-import com.smartystreets.api.us_zipcode.City;
 
+import com.smartystreets.api.us_zipcode.City;
 
 /**
  * Created by lsoco_user on 9/2/2016.

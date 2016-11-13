@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.transitions;
 
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.verifydemotransitions.UpdateDemographicDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

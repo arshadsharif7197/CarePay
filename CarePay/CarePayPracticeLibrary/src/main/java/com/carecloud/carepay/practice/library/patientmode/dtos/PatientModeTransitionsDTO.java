@@ -14,6 +14,9 @@ public class PatientModeTransitionsDTO {
     @Expose
     private TransitionDTO start;
 
+    @SerializedName("practice_mode") @Expose
+    private TransitionDTO practiceMode;
+
     /**
      * @return The start
      */
@@ -26,5 +29,13 @@ public class PatientModeTransitionsDTO {
      */
     public void setStart(TransitionDTO start) {
         this.start = start;
+    }
+
+    public TransitionDTO getPracticeMode() {
+        return practiceMode;
+    }
+
+    public void setPracticeMode(TransitionDTO practiceMode) {
+        this.practiceMode = practiceMode;
     }
 }
