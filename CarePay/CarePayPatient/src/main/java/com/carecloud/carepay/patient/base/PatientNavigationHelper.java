@@ -20,7 +20,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
  */
 public class PatientNavigationHelper {
 
-    private static PatientNavigationHelper instance;
     private Context context;
 
     private PatientNavigationHelper() {
@@ -28,9 +27,7 @@ public class PatientNavigationHelper {
     }
 
     public static PatientNavigationHelper getInstance(Context context) {
-        if (instance == null) {
-            instance = new PatientNavigationHelper();
-        }
+        PatientNavigationHelper instance = new PatientNavigationHelper();
         instance.context = context;
         return instance;
     }
@@ -40,7 +37,6 @@ public class PatientNavigationHelper {
     }
 
     /**
-     *
      * @param workflowDTO workflowdto
      */
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
@@ -99,8 +95,8 @@ public class PatientNavigationHelper {
             intent.putExtra(PatientNavigationHelper.class.getSimpleName(), bundle);
         }
         context.startActivity(intent);
-        if(context instanceof AppCompatActivity) {
-            ((AppCompatActivity)context).finish();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).finish();
         }
     }
 }
