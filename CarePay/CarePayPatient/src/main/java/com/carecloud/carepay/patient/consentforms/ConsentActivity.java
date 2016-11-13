@@ -269,6 +269,8 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_blue);
                 break;
+            default:
+                break;
         }
 
     }

@@ -49,6 +49,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+
 public class ConsentForm2Fragment extends Fragment {
 
     Date date = new Date();
