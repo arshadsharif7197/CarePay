@@ -29,6 +29,9 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -37,7 +40,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 /**
@@ -173,12 +175,12 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // relaunch select language
-                TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getLanguage();
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("x-api-key", HttpConstants.getApiStartKey());
                 Map<String, String> header = new HashMap<>();
                 header.put("transition", "true");
                 queryMap.put("transition", "true");
+                TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getLanguage();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, loginCallback, header, queryMap);
             }
         });
@@ -301,8 +303,8 @@ public class SigninFragment extends Fragment {
     private void setActionListeners() {
         emailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     passwordEditText.requestFocus();
                     return true;
                 }

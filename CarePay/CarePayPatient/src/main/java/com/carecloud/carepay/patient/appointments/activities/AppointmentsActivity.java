@@ -242,12 +242,12 @@ public class AppointmentsActivity extends BasePatientActivity implements
             String userName = CognitoAppHelper.getCurrUser();
             if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
-                TransitionDTO transitionDTO = appointmentsDTO.getMetadata().getTransitions().getLogout();
-                Map<String, String> queryMap = new HashMap<>();
                 Map<String, String> headersMap = new HashMap<>();
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
                 headersMap.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
                 headersMap.put("transition", "true");
+                Map<String, String> queryMap = new HashMap<>();
+                TransitionDTO transitionDTO = appointmentsDTO.getMetadata().getTransitions().getLogout();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, appointmentsWorkflowCallback, queryMap, headersMap);
             }
         } else if (id == R.id.nav_purchase) {
