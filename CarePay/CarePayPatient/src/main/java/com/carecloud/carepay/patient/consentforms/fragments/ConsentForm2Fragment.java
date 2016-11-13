@@ -40,14 +40,16 @@ import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsD
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
 public class ConsentForm2Fragment extends Fragment {

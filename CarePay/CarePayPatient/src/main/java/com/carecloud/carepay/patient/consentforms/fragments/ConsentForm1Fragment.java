@@ -24,10 +24,10 @@ import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
-import java.util.Date;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
+import java.util.Date;
 
 
 public class ConsentForm1Fragment extends Fragment {
