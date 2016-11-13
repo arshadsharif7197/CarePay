@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +24,19 @@ import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
-import java.util.Date;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
-
+import java.util.Date;
 
 
 public class ConsentForm1Fragment extends Fragment {
 
     Date date = new Date();
-    private TextView titleTextView, descriptionTextView, contentTextView, dateTextView;
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+    private TextView contentTextView;
+    private TextView dateTextView;
     private Button signButton;
     private IFragmentCallback fragmentCallback;
     private ScrollView consentFormScrollView;
@@ -82,6 +84,7 @@ public class ConsentForm1Fragment extends Fragment {
             try {
                 fragmentCallback = (IFragmentCallback) activity;
             } catch (Exception e) {
+                Log.d(ConsentForm1Fragment.class.getSimpleName(), e.getMessage(), e);
             }
         }
 
