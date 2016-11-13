@@ -32,8 +32,6 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 
-
-
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {
 
 
