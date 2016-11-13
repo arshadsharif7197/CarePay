@@ -30,7 +30,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInMetaDataDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -76,7 +75,6 @@ public class SigninFragment extends Fragment {
         @Override
         public void onLoginSuccess() {
             WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback);
-
             progressBar.setVisibility(View.INVISIBLE);
         }
 
@@ -98,7 +96,6 @@ public class SigninFragment extends Fragment {
     private boolean           isEmptyEmail;
     private boolean           isEmptyPassword;
     private SignInLablesDTO   signInLablesDTO;
-    private SignInMetaDataDTO signInMetaDataDTO;
 
     @Nullable
     @Override
