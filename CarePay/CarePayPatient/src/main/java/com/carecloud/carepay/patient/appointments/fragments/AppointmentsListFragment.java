@@ -83,8 +83,7 @@ public class AppointmentsListFragment extends Fragment {
             ApplicationPreferences.Instance.writeStringToSharedPref(
                     CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
-            PatientNavigationHelper.initInstance(getContext());
-            PatientNavigationHelper.instance().navigateToWorkflow(appointmentInfo.getState());
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(appointmentInfo.getState());
 
         }
     };

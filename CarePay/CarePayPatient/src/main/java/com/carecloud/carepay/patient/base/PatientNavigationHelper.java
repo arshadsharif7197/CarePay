@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.base;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
@@ -20,23 +21,17 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 public class PatientNavigationHelper {
 
     private static PatientNavigationHelper instance;
-    private static Context context;
+    private Context context;
 
     private PatientNavigationHelper() {
 
     }
 
-    /**
-     * @param context context
-     */
-    public static void initInstance(Context context) {
-        PatientNavigationHelper.context = context;
+    public static PatientNavigationHelper getInstance(Context context) {
         if (instance == null) {
             instance = new PatientNavigationHelper();
         }
-    }
-
-    public static PatientNavigationHelper instance() {
+        instance.context = context;
         return instance;
     }
 
@@ -58,8 +53,8 @@ public class PatientNavigationHelper {
      * @param state  state
      * @param bundle bundle
      */
-    public void navigateToWorkflow(String state, Bundle bundle) {
-        Intent intent = null;
+    private void navigateToWorkflow(String state, Bundle bundle) {
+        Intent intent;
         switch (state) {
             case PatientNavigationStateConstants.LANGUAGE_SELECTION:
                 intent = new Intent(context, SelectLanguageActivity.class);
@@ -104,6 +99,8 @@ public class PatientNavigationHelper {
             intent.putExtra(PatientNavigationHelper.class.getSimpleName(), bundle);
         }
         context.startActivity(intent);
+        if(context instanceof AppCompatActivity) {
+            ((AppCompatActivity)context).finish();
+        }
     }
-
 }

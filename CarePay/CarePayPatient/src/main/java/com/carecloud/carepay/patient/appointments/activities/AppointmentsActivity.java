@@ -31,14 +31,14 @@ import com.google.gson.Gson;
 
 
 public class AppointmentsActivity extends BasePatientActivity implements
-        NavigationView.OnNavigationItemSelectedListener {
+                                                              NavigationView.OnNavigationItemSelectedListener {
 
     private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
 
-    public static AppointmentDTO model;
-    private TextView appointmentsDrawerUserIdTextView;
-    private AppointmentsResultModel appointmentsDTO;
-    private AppointmentDTO appointmentDTO;
+    public static AppointmentDTO          model;
+    private       TextView                appointmentsDrawerUserIdTextView;
+    private       AppointmentsResultModel appointmentsDTO;
+    private       AppointmentDTO          appointmentDTO;
 
 
     @SuppressWarnings("deprecation")
@@ -118,7 +118,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
         }
 
         fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
-                AppointmentsListFragment.class.getSimpleName()).commit();
+                                      AppointmentsListFragment.class.getSimpleName()).commit();
     }
 
     @Override
@@ -166,7 +166,8 @@ public class AppointmentsActivity extends BasePatientActivity implements
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_launch_demogr_review) {
-            Toast toast=Toast.makeText(getApplicationContext(),"Transition is in process",Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(), "Transition is in process", Toast.LENGTH_SHORT);
+            toast.show();
             // temporary launch Demographics Review for QA testing
             // (please do not remove!)
            /* DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
@@ -209,7 +210,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
             AppointmentsActivity.model = null; // appointment clicked item is cleared.
         } else if (id == R.id.nav_settings) {
             Intent demographicActivityIntent = new Intent(AppointmentsActivity.this,
-                    DemographicsActivity.class);
+                                                          DemographicsActivity.class);
             startActivity(demographicActivityIntent);
 
         } else if (id == R.id.nav_logout) {

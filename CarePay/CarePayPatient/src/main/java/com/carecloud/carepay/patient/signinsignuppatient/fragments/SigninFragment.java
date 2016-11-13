@@ -52,7 +52,7 @@ public class SigninFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
 
             // end-splash activity and transition
             // SplashActivity.this.finish();
