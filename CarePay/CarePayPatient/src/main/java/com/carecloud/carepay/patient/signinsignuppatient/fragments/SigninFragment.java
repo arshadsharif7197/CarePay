@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -21,12 +20,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
@@ -34,6 +34,9 @@ import com.carecloud.carepaylibray.signinsignup.dtos.SignInMetaDataDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -45,7 +48,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 public class SigninFragment extends Fragment {
 
     SignInSignUpDTO signInSignUpDTO;
-    WorkflowServiceCallback logincallback = new WorkflowServiceCallback() {
+    WorkflowServiceCallback loginCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
         }
@@ -53,9 +56,6 @@ public class SigninFragment extends Fragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-
-            // end-splash activity and transition
-            // SplashActivity.this.finish();
         }
 
         @Override
@@ -65,17 +65,17 @@ public class SigninFragment extends Fragment {
     };
     private TextInputLayout emailTextInput;
     private TextInputLayout passwordTexInput;
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private TextView changeLanguageTextView;
-    private TextView forgotPasswordTextView;
-    private Button signinButton;
-    private Button signupButton;
-    private ProgressBar progressBar;
+    private EditText        emailEditText;
+    private EditText        passwordEditText;
+    private TextView        changeLanguageTextView;
+    private TextView        forgotPasswordTextView;
+    private Button          signinButton;
+    private Button          signupButton;
+    private ProgressBar     progressBar;
     CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
-            WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), logincallback);
+            WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback);
 
             progressBar.setVisibility(View.INVISIBLE);
         }
@@ -89,15 +89,15 @@ public class SigninFragment extends Fragment {
         @Override
         public void onLoginFailure(String exceptionMessage) {
             SystemUtil.showDialogMessage(getContext(),
-                    "Sign-in failed",
-                    "Invalid user id or password");
+                                         "Sign-in failed",
+                                         "Invalid user id or password");
 
         }
     };
-    private LinearLayout parentLayout;
-    private boolean isEmptyEmail;
-    private boolean isEmptyPassword;
-    private SignInLablesDTO signInLablesDTO;
+    private LinearLayout      parentLayout;
+    private boolean           isEmptyEmail;
+    private boolean           isEmptyPassword;
+    private SignInLablesDTO   signInLablesDTO;
     private SignInMetaDataDTO signInMetaDataDTO;
 
     @Nullable
@@ -176,10 +176,13 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // relaunch select language
-
-                Intent intent = new Intent(getActivity(), SelectLanguageActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getLanguage();
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("x-api-key", HttpConstants.getApiStartKey());
+                Map<String, String> header = new HashMap<>();
+                header.put("transition", "true");
+                queryMap.put("transition", "true");
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, loginCallback, header, queryMap);
             }
         });
     }
