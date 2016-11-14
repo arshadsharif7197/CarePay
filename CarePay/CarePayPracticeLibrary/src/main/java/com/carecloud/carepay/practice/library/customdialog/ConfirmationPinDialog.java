@@ -169,7 +169,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         }
     }
 
-    private void OnSetPinLabelsForStarted(){
+    private void onSetPinLabelsForStarted(){
         PatientModeLabelsDTO patientpinLabels = this.patientModeSplashDTO.getMetadata().getLabels();
         headerLabel.setText(patientpinLabels.getPracticeModeSwitchPinHeader());
         subHeaderLabel.setText(patientpinLabels.getPracticeModeSwitchPinEnterUnlock());
@@ -187,7 +187,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         findViewById(R.id.mainViewLayout).setVisibility(View.VISIBLE);
     }
 
-    private void OnSetPinLabelsForPatientHome(){
+    private void onSetPinLabelsForPatientHome(){
         HomeScreenLabelDTO homeScreenLabelDTO = this.homeScreenDTO.getMetadata().getLabels();
         headerLabel.setText(homeScreenLabelDTO.getPracticeModeSwitchPinHeader());
         subHeaderLabel.setText(homeScreenLabelDTO.getPracticeModeSwitchPinEnterUnlock());
@@ -211,9 +211,9 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
     private void onCheckForConstuctorObject(){
         if(homeScreenDTO != null ){
-            OnSetPinLabelsForPatientHome();
+            onSetPinLabelsForPatientHome();
         }else if(patientModeSplashDTO != null ){
-            OnSetPinLabelsForStarted();
+            onSetPinLabelsForStarted();
         }
     }
 }
