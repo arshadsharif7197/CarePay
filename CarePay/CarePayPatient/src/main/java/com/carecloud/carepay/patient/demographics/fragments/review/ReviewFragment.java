@@ -22,6 +22,8 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
@@ -38,17 +40,18 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDeta
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class ReviewFragment extends Fragment implements View.OnClickListener {
@@ -169,7 +172,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         persDetailsMetaDTO = ((DemographicReviewActivity) getActivity()).getPersDetailsMetaDTO();
         idDocsMetaDTO = ((DemographicReviewActivity) getActivity()).getIdDocsMetaDTO();
         insurancesMetaDTO = ((DemographicReviewActivity) getActivity()).getInsurancesMetaDTO();
-
+        demographicDTO= ((DemographicReviewActivity) getActivity()).getModel();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.review_toolbar_title);
@@ -190,6 +193,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
      */
 
     public void initModels() {
+
+
         demographicAddressPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicAddressPayloadDTO();
         if (demographicAddressPayloadDTO == null) {
             demographicAddressPayloadDTO = new DemographicAddressPayloadDTO();
@@ -489,12 +494,21 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
      */
     @Override
     public void onClick(View view) {
-        if (view == correctInformationButton) {
-            Toast toast=Toast.makeText(getContext(),"Transition is in process",Toast.LENGTH_SHORT);
-/*
-//            WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getConfirmDemographics(), consentformcallback);
+        if (view == correctInformationButton){
+            Map<String, String> queries = new HashMap<>();
+            queries.put("practice_mgmt",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt() );
+            queries.put("practice_id",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+            queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
-            // (please do not remove!)
+            Map<String, String> header = new HashMap<>();
+            header.put("transition","true");
+
+            Gson gson= new Gson();
+            String demographicinfo=gson.toJson(demographicDTO.getPayload());
+            TransitionDTO transitionDTO=demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback,demographicinfo,queries,header);
+
+/*            // (please do not remove!)
             ConsentFormService apptService = (new BaseServiceGenerator(getContext())).createService(ConsentFormService.class); //, String token, String searchString
             Map<String, String> queries = new HashMap<>();
 //            queries.put("practice_mgmt", "carecloud");

@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
+
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -28,16 +30,25 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+
 import com.carecloud.carepaylibrary.R;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
+
+
+
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+
+
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 /**
@@ -64,13 +75,13 @@ public class SigninFragment extends Fragment {
     };
     private TextInputLayout emailTextInput;
     private TextInputLayout passwordTexInput;
-    private EditText        emailEditText;
-    private EditText        passwordEditText;
-    private TextView        changeLanguageTextView;
-    private TextView        forgotPasswordTextView;
-    private Button          signinButton;
-    private Button          signupButton;
-    private ProgressBar     progressBar;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private TextView changeLanguageTextView;
+    private TextView forgotPasswordTextView;
+    private Button signinButton;
+    private Button signupButton;
+    private ProgressBar progressBar;
     CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
@@ -87,15 +98,15 @@ public class SigninFragment extends Fragment {
         @Override
         public void onLoginFailure(String exceptionMessage) {
             SystemUtil.showDialogMessage(getContext(),
-                                         "Sign-in failed",
-                                         "Invalid user id or password");
+                    "Sign-in failed",
+                    "Invalid user id or password");
 
         }
     };
-    private LinearLayout      parentLayout;
-    private boolean           isEmptyEmail;
-    private boolean           isEmptyPassword;
-    private SignInLablesDTO   signInLablesDTO;
+    private LinearLayout parentLayout;
+    private boolean isEmptyEmail;
+    private boolean isEmptyPassword;
+    private SignInLablesDTO signInLablesDTO;
 
     @Nullable
     @Override
@@ -117,7 +128,6 @@ public class SigninFragment extends Fragment {
 
         isEmptyEmail = true;
         isEmptyPassword = true;
-
         return view;
     }
 
@@ -173,12 +183,12 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // relaunch select language
-                TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getLanguage();
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("x-api-key", HttpConstants.getApiStartKey());
                 Map<String, String> header = new HashMap<>();
                 header.put("transition", "true");
                 queryMap.put("transition", "true");
+                TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getLanguage();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, loginCallback, header, queryMap);
             }
         });
@@ -301,8 +311,8 @@ public class SigninFragment extends Fragment {
     private void setActionListeners() {
         emailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     passwordEditText.requestFocus();
                     return true;
                 }

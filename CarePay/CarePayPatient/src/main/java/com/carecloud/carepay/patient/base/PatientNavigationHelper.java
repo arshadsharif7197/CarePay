@@ -26,6 +26,11 @@ public class PatientNavigationHelper {
 
     }
 
+    /**
+     * Get the customized instance of the helper
+     * @param context The context from which the helper has been invoked
+     * @return The instance holding the fresh context
+     */
     public static PatientNavigationHelper getInstance(Context context) {
         PatientNavigationHelper instance = new PatientNavigationHelper();
         instance.context = context;
