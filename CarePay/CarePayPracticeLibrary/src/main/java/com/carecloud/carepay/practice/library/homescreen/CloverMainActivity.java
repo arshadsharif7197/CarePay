@@ -246,7 +246,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void unlockPracticeMode() {
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this);
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,homeScreenDTO);
         confirmationPinDialog.show();
     }
 
@@ -419,7 +419,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     };
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
         // call for transition
         Gson gson = new Gson();
         PatientHomeScreenTransitionsDTO transitions = gson.fromJson(homeScreenDTO.getMetadata().getTransitions(),

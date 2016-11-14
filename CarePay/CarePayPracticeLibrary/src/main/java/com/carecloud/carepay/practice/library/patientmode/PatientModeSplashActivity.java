@@ -125,14 +125,14 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         lockIcnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context);
+                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context,patientModeSplashDTO);
                 confirmationPinDialog.show();
             }
         });
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin,  String pin) {
         TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
         WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, query);

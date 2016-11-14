@@ -9,13 +9,19 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabelsDTO;
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingLabelDTO;
 import com.carecloud.carepay.practice.library.practicesetting.services.PracticeSettingService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
@@ -35,16 +41,29 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     private CustomGothamRoundedMediumButton headerLabel;
     private CarePayTextView                 subHeaderLabel;
     private CustomGothamRoundedMediumButton dialogCancelTextView;
-    private PracticeSettingDTO              practiceSettingResponse;
+    private PatientModeSplashDTO patientModeSplashDTO;
+    private HomeScreenDTO homeScreenDTO;
 
     /**
-     * Constructor.
+     * Constructor calling from Started Patient screen.
      *
      * @param context context
      */
-    public ConfirmationPinDialog(Context context) {
+    public ConfirmationPinDialog(Context context, PatientModeSplashDTO patientModeSplashDTO) {
         super(context);
         this.context = context;
+        this.patientModeSplashDTO = patientModeSplashDTO;
+    }
+
+    /**
+     * Constructor calling from Patient Home.
+     *
+     * @param context context
+     */
+    public ConfirmationPinDialog(Context context, HomeScreenDTO homeScreenDTO) {
+        super(context);
+        this.context = context;
+        this.homeScreenDTO = homeScreenDTO;
     }
 
     /**
@@ -59,11 +78,11 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_confirmation_pin);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        getPracticeSetting();
         setCancelable(false);
         onInitialization();
         onSettingStyle();
         onSetListener();
+        onCheckForConstuctorObject();
 
     }
 
@@ -129,7 +148,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     private void validatePin() {
         String pin = pinEditText.getText().toString();
         if (pin.length() == 4 && pin.equalsIgnoreCase(CarePayConstants.PRACTICE_APP_MODE_DEFAULT_PIN)) {
-            ((BasePracticeActivity) context).onPinConfirmationCheck(true, practiceSettingResponse, pin);
+            ((BasePracticeActivity) context).onPinConfirmationCheck(true, pin);
             dismiss();
         }
     }
@@ -150,29 +169,51 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         }
     }
 
-    private void getPracticeSetting() {
-        PracticeSettingService aptService = (new BaseServiceGenerator(context)).createService(PracticeSettingService.class);
-        Call<PracticeSettingDTO> call = aptService.getPracticeSettingInformation();
-        call.enqueue(new Callback<PracticeSettingDTO>() {
-
-            @Override
-            public void onResponse(Call<PracticeSettingDTO> call, Response<PracticeSettingDTO> response) {
-                practiceSettingResponse = response.body();
-                PracticeSettingLabelDTO practiceSettingLabels = response.body().getMetadata().getLabel();
-                onSetViewLabels(practiceSettingLabels);
-            }
-
-            @Override
-            public void onFailure(Call<PracticeSettingDTO> call, Throwable throwable) {
-                cancel();
-            }
-        });
+    private void OnSetPinLabelsForStarted(){
+        PatientModeLabelsDTO patientpinLabels = this.patientModeSplashDTO.getMetadata().getLabels();
+        headerLabel.setText(patientpinLabels.getPracticeModeSwitchPinHeader());
+        subHeaderLabel.setText(patientpinLabels.getPracticeModeSwitchPinEnterUnlock());
+        dialogCancelTextView.setText(patientpinLabels.getPracticeModeSwitchPinCancel());
+        onSetpinNumberLabel(R.id.pin_key_one,patientpinLabels.getPracticeModeSwitchPinOne());
+        onSetpinNumberLabel(R.id.pin_key_two,patientpinLabels.getPracticeModeSwitchPinTwo());
+        onSetpinNumberLabel(R.id.pin_key_three,patientpinLabels.getPracticeModeSwitchPinThree());
+        onSetpinNumberLabel(R.id.pin_key_four,patientpinLabels.getPracticeModeSwitchPinFour());
+        onSetpinNumberLabel(R.id.pin_key_five,patientpinLabels.getPracticeModeSwitchPinFive());
+        onSetpinNumberLabel(R.id.pin_key_six,patientpinLabels.getPracticeModeSwitchPinSix());
+        onSetpinNumberLabel(R.id.pin_key_seven,patientpinLabels.getPracticeModeSwitchPinSeven());
+        onSetpinNumberLabel(R.id.pin_key_eighth,patientpinLabels.getPracticeModeSwitchPinEight());
+        onSetpinNumberLabel(R.id.pin_key_nine,patientpinLabels.getPracticeModeSwitchPinNine());
+        onSetpinNumberLabel(R.id.pin_key_zero,patientpinLabels.getPracticeModeSwitchPinZero());
+        findViewById(R.id.mainViewLayout).setVisibility(View.VISIBLE);
     }
 
-    private void onSetViewLabels(PracticeSettingLabelDTO practiceSettingLabels) {
-        headerLabel.setText(practiceSettingLabels.getPracticeSettingPinPracticeMode());
-        subHeaderLabel.setText(practiceSettingLabels.getPracticeSettingPinEnterUnlockPracticeMode());
-        dialogCancelTextView.setText(practiceSettingLabels.getPracticeSettingPinCancel());
+    private void OnSetPinLabelsForPatientHome(){
+        HomeScreenLabelDTO homeScreenLabelDTO = this.homeScreenDTO.getMetadata().getLabels();
+        headerLabel.setText(homeScreenLabelDTO.getPracticeModeSwitchPinHeader());
+        subHeaderLabel.setText(homeScreenLabelDTO.getPracticeModeSwitchPinEnterUnlock());
+        dialogCancelTextView.setText(homeScreenLabelDTO.getPracticeModeSwitchPinCancel());
+        onSetpinNumberLabel(R.id.pin_key_one,homeScreenLabelDTO.getPracticeModeSwitchPinOne());
+        onSetpinNumberLabel(R.id.pin_key_two,homeScreenLabelDTO.getPracticeModeSwitchPinTwo());
+        onSetpinNumberLabel(R.id.pin_key_three,homeScreenLabelDTO.getPracticeModeSwitchPinThree());
+        onSetpinNumberLabel(R.id.pin_key_four,homeScreenLabelDTO.getPracticeModeSwitchPinFour());
+        onSetpinNumberLabel(R.id.pin_key_five,homeScreenLabelDTO.getPracticeModeSwitchPinFive());
+        onSetpinNumberLabel(R.id.pin_key_six,homeScreenLabelDTO.getPracticeModeSwitchPinSix());
+        onSetpinNumberLabel(R.id.pin_key_seven,homeScreenLabelDTO.getPracticeModeSwitchPinSeven());
+        onSetpinNumberLabel(R.id.pin_key_eighth,homeScreenLabelDTO.getPracticeModeSwitchPinEight());
+        onSetpinNumberLabel(R.id.pin_key_nine,homeScreenLabelDTO.getPracticeModeSwitchPinNine());
+        onSetpinNumberLabel(R.id.pin_key_zero,homeScreenLabelDTO.getPracticeModeSwitchPinZero());
         findViewById(R.id.mainViewLayout).setVisibility(View.VISIBLE);
+    }
+
+    private void onSetpinNumberLabel(int pinViewId,String pinNumber){
+        ((CustomGothamRoundedMediumButton)findViewById(pinViewId)).setText(pinNumber);
+    }
+
+    private void onCheckForConstuctorObject(){
+        if(homeScreenDTO != null ){
+            OnSetPinLabelsForPatientHome();
+        }else if(patientModeSplashDTO != null ){
+            OnSetPinLabelsForStarted();
+        }
     }
 }
