@@ -21,11 +21,15 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
-import com.carecloud.carepay.patient.demographics.services.DemographicService;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -37,19 +41,16 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 
 
 public class HealthInsuranceReviewFragment extends InsuranceScannerFragment implements View.OnClickListener {
@@ -61,6 +62,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
     private SwitchCompat doYouHaveInsuranceSwitch;
     private List<DemographicInsurancePayloadDTO> insuranceModelList;
     private DemographicPayloadInfoMetaDataDTO payload;
+    private DemographicDTO demographicDTO;
 
     private InsuranceScannerFragment insuranceFragment;
     private Button addInsuranceaInfoButton;
@@ -99,6 +101,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         view = inflater.inflate(R.layout.fragment_review_health_insurance, container, false);
         globalLabelsMetaDTO = ((DemographicReviewActivity) getActivity()).getLabelsDTO();
         insurancesMetaDTO = ((DemographicReviewActivity) getActivity()).getInsurancesMetaDTO();
+        demographicDTO= ((DemographicReviewActivity) getActivity()).getModel();
         fm = getChildFragmentManager();
         DemographicReviewActivity.isFromReview = false;
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.healthinsurance_review_toolbar);
@@ -189,23 +192,33 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
         postPayloadModel.setInsurances(insuranceModelList);
 
-        DemographicService backendService = (new BaseServiceGenerator(getActivity()))
-                .createService(DemographicService.class);
-        Call<ResponseBody> postInsurances = backendService.updateDemographicInformation(postPayloadModel);
-        postInsurances.enqueue(new Callback<ResponseBody>() {
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
+        queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+
+        Map<String, String> header = new HashMap<>();
+        header.put("transition", "false");
+
+        Gson gson = new Gson();
+        String demographicinfo = gson.toJson(postPayloadModel);
+        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
 
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.v(LOG_TAG, "health insurance frag POST success\n" + response.code() + "\n"
-                        + response.body());
+            public void onPostExecute(WorkflowDTO workflowDTO) {
                 openNewFragment();
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e(LOG_TAG, "health insurance frag POST failed");
+            public void onFailure(String exceptionMessage) {
+
             }
-        });
+        }, demographicinfo, queries, header);
 
     }
 

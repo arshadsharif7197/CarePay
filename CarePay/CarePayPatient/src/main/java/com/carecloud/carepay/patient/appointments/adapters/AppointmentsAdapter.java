@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -149,11 +148,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             new CancelAppointmentDialog(context, item, appointmentLabels).show();
                         } else {
                             if (isPending) {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, transitionDTO, DemographicReviewActivity.class).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, transitionDTO).show();
                             } else if (isCheckedIn) {
                                 new QueueAppointmentDialog(context, item, appointmentLabels).show();
                             } else {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, transitionDTO, DemographicReviewActivity.class).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, transitionDTO).show();
                             }
                         }
                     }

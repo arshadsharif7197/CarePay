@@ -1,11 +1,15 @@
 package com.carecloud.carepay.patient.consentforms;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,24 +20,25 @@ import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm1Fragment
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
+import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoPayloadDTO;
+import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.utils.DateUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 import com.google.gson.Gson;
 
 
 import java.util.Locale;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {
@@ -44,11 +49,14 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
     private AppointmentsPayloadDTO  appointmentsPayloadDTO;
     private AppointmentsResultModel appointmentsResultModel;
+    private ConsentFormAppointmentsPayloadDTO consentFormAppointmentsPayloadDTO;
+    private ConsentFormAppoPayloadDTO consentFormAppoPayloadDTO;
 
 
     private ConsentFormDTO         consentFormDTO;
     private ConsentFormMetadataDTO consentFormMetadataDTO;
-    private TextView               title;
+    private ConsentFormPayloadDTO consentFormPayloadDTO;
+    private TextView title;
     private FormId showingForm = FormId.FORM1;
     private View indicator0;
     private View indicator1;
@@ -157,6 +165,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
                 if (fragment != null) {
                     replaceFragment(fragment, true);
                 } else {
+                   // TransitionDTO transitionDTO=consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
                     startActivity(new Intent(ConsentActivity.this, InTakeActivity.class));
                     finish();
                 }
@@ -168,6 +177,12 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
         if (consentFormDTO != null) {
             consentFormMetadataDTO = consentFormDTO.getMetadata();
+            consentFormPayloadDTO = consentFormDTO.getConsentFormPayloadDTO();
+            consentFormAppointmentsPayloadDTO=consentFormPayloadDTO.getConsentFormAppointmentPayload().get(0);
+            consentFormAppoPayloadDTO=consentFormAppointmentsPayloadDTO.getAppointmentPayload();
+            patienFirstName = consentFormAppoPayloadDTO.getAppointmentPatient().getFirstName();
+            patientLastName=consentFormAppoPayloadDTO.getAppointmentPatient().getLastName();
+            providerName=consentFormAppoPayloadDTO.getAppoPayloadProvider().getName();
 
             if (consentFormMetadataDTO != null) {
                 consentFormLabelsDTO = consentFormMetadataDTO.getLabel();
@@ -207,10 +222,17 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
     private void formbuilder() {
         // insert the patient's first and last names
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        SpannableString firstSpannable= new SpannableString(patienFirstName);
+        SpannableString lastSpannable= new SpannableString(patienFirstName);
+
+
+
         int indexFirstComma = medicareDescription.indexOf(',');
         String upToFirstCommaSubstring = medicareDescription.substring(0, indexFirstComma + 1);
         String fromSecCommaOnSubstring = medicareDescription.substring(medicareDescription.indexOf(',', indexFirstComma + 1), medicareDescription.length());
-        medicareForm = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstCommaSubstring, patienFirstName, patientLastName, fromSecCommaOnSubstring);
+       firstSpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(ConsentActivity.this, R.color.blue_cerulian)), 0, patienFirstName.length(), 0);
+        medicareForm = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstCommaSubstring, firstSpannable, patientLastName, fromSecCommaOnSubstring);
 
         int indexFirstPercent = authorizationDescription2.indexOf('%');
         String upToFirspercentSubstring = authorizationDescription2.substring(0, indexFirstPercent);

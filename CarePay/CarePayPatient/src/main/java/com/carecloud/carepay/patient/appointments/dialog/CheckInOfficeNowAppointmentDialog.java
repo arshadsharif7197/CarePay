@@ -21,6 +21,9 @@ import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
     private LinearLayout mainLayout;
@@ -37,17 +40,15 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      * @param appointmentDTO appointment dto
      * @param appointmentLabels appointment labels
      * @param transitionDTO transition dto
-     * @param nextActivity next Activity
+     *
      */
     public CheckInOfficeNowAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                              AppointmentLabelDTO appointmentLabels,
-                                             TransitionDTO transitionDTO,
-                                             Class nextActivity) {
+                                             TransitionDTO transitionDTO) {
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentLabels=appointmentLabels;
-        this.nextActivityClass = nextActivity;
         this.transitionDTO = transitionDTO;
     }
 
@@ -100,10 +101,16 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      * call check-in at Now api.
      */
     private void onCheckInAtNow() {
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback);
+        Map<String, String> queries = new HashMap<>();
+         queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+        Map<String, String> header = new HashMap<>();
+        header.put("transition","true");
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback,queries,header);
     }
 
-    WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
+   private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
         }
@@ -111,9 +118,6 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
-
-            // end-splash activity and transition
-            // SplashActivity.this.finish();
         }
 
         @Override
