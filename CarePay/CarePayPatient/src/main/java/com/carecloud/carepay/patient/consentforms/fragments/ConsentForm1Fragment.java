@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,13 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import java.util.Date;
 
 
-
-
 public class ConsentForm1Fragment extends Fragment {
 
     Date date = new Date();
-    private TextView titleTextView, descriptionTextView, contentTextView, dateTextView;
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+    private TextView contentTextView;
+    private TextView dateTextView;
     private Button signButton;
     private IFragmentCallback fragmentCallback;
     private ScrollView consentFormScrollView;
@@ -55,6 +57,8 @@ public class ConsentForm1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.consent_form_layout, container, false);
+
+        consentFormDTO=((ConsentActivity)getActivity()).getConsentFormDTO();
 
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
@@ -80,6 +84,7 @@ public class ConsentForm1Fragment extends Fragment {
             try {
                 fragmentCallback = (IFragmentCallback) activity;
             } catch (Exception e) {
+                Log.d(ConsentForm1Fragment.class.getSimpleName(), e.getMessage(), e);
             }
         }
 

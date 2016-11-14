@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -20,27 +19,36 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.demographics.services.DemographicService;
-import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
+
+
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInMetaDataDTO;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
+
+
+
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+
+
+
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 
 /**
@@ -50,6 +58,21 @@ import retrofit2.Response;
 public class SigninFragment extends Fragment {
 
     SignInSignUpDTO signInSignUpDTO;
+    WorkflowServiceCallback loginCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
     private TextInputLayout emailTextInput;
     private TextInputLayout passwordTexInput;
     private EditText emailEditText;
@@ -62,7 +85,7 @@ public class SigninFragment extends Fragment {
     CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
-            getDemographicInformation();
+            WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback);
             progressBar.setVisibility(View.INVISIBLE);
         }
 
@@ -84,7 +107,6 @@ public class SigninFragment extends Fragment {
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
     private SignInLablesDTO signInLablesDTO;
-    private SignInMetaDataDTO signInMetaDataDTO;
 
     @Nullable
     @Override
@@ -106,7 +128,6 @@ public class SigninFragment extends Fragment {
 
         isEmptyEmail = true;
         isEmptyPassword = true;
-
         return view;
     }
 
@@ -162,9 +183,13 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // relaunch select language
-                Intent intent = new Intent(getActivity(), SelectLanguageActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("x-api-key", HttpConstants.getApiStartKey());
+                Map<String, String> header = new HashMap<>();
+                header.put("transition", "true");
+                queryMap.put("transition", "true");
+                TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getLanguage();
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, loginCallback, header, queryMap);
             }
         });
     }
@@ -286,8 +311,8 @@ public class SigninFragment extends Fragment {
     private void setActionListeners() {
         emailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_NEXT) {
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     passwordEditText.requestFocus();
                     return true;
                 }
@@ -367,7 +392,7 @@ public class SigninFragment extends Fragment {
 
     }
 
-    private void getDemographicInformation() {
+    /*private void getDemographicInformation() {
         progressBar.setVisibility(View.VISIBLE);
         DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
         Call<DemographicDTO> call = apptService.fetchDemographics();
@@ -397,5 +422,5 @@ public class SigninFragment extends Fragment {
 
         startActivity(intent);
         getActivity().finish();
-    }
+    }*/
 }

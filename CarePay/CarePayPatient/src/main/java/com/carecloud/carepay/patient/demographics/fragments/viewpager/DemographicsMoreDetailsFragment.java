@@ -1,22 +1,23 @@
 package com.carecloud.carepay.patient.demographics.fragments.viewpager;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepay.patient.demographics.services.DemographicService;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -24,17 +25,13 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -46,14 +43,32 @@ public class DemographicsMoreDetailsFragment extends Fragment {
     private View                 view;
     private Button               gotoCarePay;
     private DemographicLabelsDTO globalLabelsDTO;
+    private DemographicDTO       demographicDTO;
     private TextView             header;
     private TextView             subheader;
+    private WorkflowServiceCallback confirmDemWorkflowCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+
+        }
+    };
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // fetch the global labels
-        globalLabelsDTO = ((DemographicsActivity)getActivity()).getLabelsDTO();
+        globalLabelsDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        demographicDTO = ((DemographicsActivity) getActivity()).getModel();
 
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
@@ -121,20 +136,11 @@ public class DemographicsMoreDetailsFragment extends Fragment {
             demographicPayloadDTO.setInsurances(insuranceModelList);
         }
 
-        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<ResponseBody> call = apptService.confirmDemographicInformation(demographicPayloadDTO);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Intent appointmentIntent = new Intent(getActivity(), AppointmentsActivity.class);
-                startActivity(appointmentIntent);
-                getActivity().finish();
-            }
+        // dynamic transition
+        Gson gson = new Gson();
+        String body = gson.toJson(demographicPayloadDTO);
+        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, confirmDemWorkflowCallback, body);
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e(LOG_TAG, "Confirm demographics POST failed.", throwable);
-            }
-        });
     }
 }
