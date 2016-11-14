@@ -14,7 +14,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
@@ -51,8 +50,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
         CarePayTextView pendingRequestTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestPendingTextView);
-        pendingRequestTextView.setText(StringUtil.getLabelForView(
-                appointmentLabels.getAppointmentsRequestPendingHeading()));
+        pendingRequestTextView.setText(appointmentLabels.getAppointmentsRequestPendingHeading());
         pendingRequestTextView.setTextColor(ContextCompat.getColor(context, R.color.lightningyellow));
         pendingRequestTextView.setOnClickListener(this);
 
