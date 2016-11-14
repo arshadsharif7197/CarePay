@@ -91,11 +91,12 @@ public class ImageCaptureHelper {
      * @return The bitmap
      */
     public Bitmap onCaptureImageResult(Intent data, int shape) {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+       byte[] bytes =  data.getByteArrayExtra("data");
+        Bitmap thumbnail = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         if (thumbnail != null) {
             // compress
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
         }
 
         return setCapturedImageToTargetView(thumbnail, shape);
