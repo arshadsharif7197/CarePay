@@ -9,13 +9,22 @@ import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
+import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HowToCheckInActivity extends BasePracticeActivity {
 
@@ -89,8 +98,14 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     View.OnClickListener carePayLoginButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
-            startActivity(intent);
+            TransitionDTO transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            Map<String, String> headers = new HashMap<>();
+            headers.put("transition", "true");
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);
+            /*Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
+            startActivity(intent);*/
         }
     };
 
@@ -146,4 +161,21 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         manualSearchButton.setText(signinPatientModeLabels.getSiginHowCheckInManualSearch());
         createCarePayAccountButton.setText(signinPatientModeLabels.getSiginHowCheckInCreateCarepayAccount());
     }
+
+    WorkflowServiceCallback patientModeSignInCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+
+        }
+    };
 }
