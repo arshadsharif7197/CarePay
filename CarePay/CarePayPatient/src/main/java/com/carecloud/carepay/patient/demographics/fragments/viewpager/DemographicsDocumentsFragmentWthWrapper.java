@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,9 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.properties.items.DemographicMetadataItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -56,7 +59,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment implements
     private TextView                               multipleInsClickable;
     private Button                                 nextButton;
     private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
-    private List<DemographicInsurancePayloadDTO>   insuranceModelList;
+    private List<DemographicInsurancePayloadDTO>   insuranceDTOsList;
     private DemographicInsurancePayloadDTO         insuranceModel1;
     private DemographicInsurancePayloadDTO         insuranceModel2;
     private DemographicInsurancePayloadDTO         insuranceModel3;
@@ -159,14 +162,14 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment implements
 
     private void getPayloadDTOs() {
         demPayloadIdDocDTO = ((DemographicsActivity) getActivity()).getIdDocModel();
-        insuranceModelList = ((DemographicsActivity) getActivity()).getInsuranceModelList();
+        insuranceDTOsList = ((DemographicsActivity) getActivity()).getInsuranceModelList();
 
         if (demPayloadIdDocDTO == null) {
             demPayloadIdDocDTO = new DemographicIdDocPayloadDTO();
         }
 
-        if (insuranceModelList == null) {
-            insuranceModelList = new ArrayList<>();
+        if (insuranceDTOsList == null) {
+            insuranceDTOsList = new ArrayList<>();
         }
     }
 
@@ -182,19 +185,19 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment implements
             public void onClick(View view) {
                 ((DemographicsActivity) getActivity()).setIdDocModel(demPayloadIdDocDTO);
                 // clear the list
-                insuranceModelList.clear();
+                insuranceDTOsList.clear();
                 // add non trivial insurance models
                 if (isInsuaranceNonTrivial(insuranceModel1)) {
-                    insuranceModelList.add(insuranceModel1);
+                    insuranceDTOsList.add(insuranceModel1);
                 }
                 if (isInsuaranceNonTrivial(insuranceModel2)) {
-                    insuranceModelList.add(insuranceModel2);
+                    insuranceDTOsList.add(insuranceModel2);
                 }
                 if (isInsuaranceNonTrivial(insuranceModel3)) {
-                    insuranceModelList.add(insuranceModel3);
+                    insuranceDTOsList.add(insuranceModel3);
                 }
                 // set the list in activity
-                ((DemographicsActivity) getActivity()).setInsuranceModelList(insuranceModelList);
+                ((DemographicsActivity) getActivity()).setInsuranceModelList(insuranceDTOsList);
                 // move to next tab
                 ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
             }
@@ -249,63 +252,49 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment implements
         }
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, "license").commit();
 
+        createInsuranceFragments();
+    }
+
+    private void createInsuranceFragments() {
+
         // add insurance fragments
         insuranceModel1 = getInsuranceModelAtIndex(0);
-        if (insuranceModel1 == null) {
-            insuranceModel1 = new DemographicInsurancePayloadDTO();
-        }
-        InsuranceScannerFragment insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
-        if (insuranceFragment == null) {
-            insuranceFragment = new InsuranceScannerFragment();
-            insuranceFragment.setButtonsStatusCallback(this);
-            insuranceFragment.setInsuranceDTO(insuranceModel1); // set the model (if avail)
-            insuranceFragment.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
-        }
-        fm.beginTransaction()
-                .replace(R.id.demographicsDocsInsurance1, insuranceFragment, "insurance1")
-                .commit();
-
+        DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO = (insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
+        InsuranceWrapper insuranceWrapper1 = new InsuranceWrapper((AppCompatActivity) getActivity(),
+                                                                  R.id.demographicsDocsInsurance1,
+                                                                  globalLabelsMetaDTO,
+                                                                  metadataInsuranceDTO,
+                                                                  insuranceModel1);
         insuranceModel2 = getInsuranceModelAtIndex(1);
         if (insuranceModel2 == null) {
             insuranceModel2 = new DemographicInsurancePayloadDTO();
         } else {
             isSecondCardAdded = true;
         }
-        InsuranceScannerFragment extraInsuranceFrag1 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
-        if (extraInsuranceFrag1 == null) {
-            extraInsuranceFrag1 = new InsuranceScannerFragment();
-            extraInsuranceFrag1.setButtonsStatusCallback(this);
-            extraInsuranceFrag1.setInsuranceDTO(insuranceModel2); // set the model (if avail)
-            extraInsuranceFrag1.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
-        }
-        fm.beginTransaction()
-                .replace(R.id.demographicsDocsInsurance2, extraInsuranceFrag1, "insurance2")
-                .commit();
-
+        InsuranceWrapper insuranceWrapper2 = new InsuranceWrapper((AppCompatActivity) getActivity(),
+                                                                  R.id.demographicsDocsInsurance2,
+                                                                  globalLabelsMetaDTO,
+                                                                  metadataInsuranceDTO,
+                                                                  insuranceModel2);
         insuranceModel3 = getInsuranceModelAtIndex(2);
         if (insuranceModel3 == null) {
             insuranceModel3 = new DemographicInsurancePayloadDTO();
         } else {
             isThirdCardAdded = true;
         }
-        InsuranceScannerFragment extraInsuranceFrag2 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
-        if (extraInsuranceFrag2 == null) {
-            extraInsuranceFrag2 = new InsuranceScannerFragment();
-            extraInsuranceFrag2.setButtonsStatusCallback(this);
-            extraInsuranceFrag2.setInsuranceDTO(insuranceModel3); // set the model (if avail)
-            extraInsuranceFrag2.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
-        }
-        fm.beginTransaction()
-                .replace(R.id.demographicsDocsInsurance3, extraInsuranceFrag2, "insurance3")
-                .commit();
+        InsuranceWrapper insuranceWrapper3 = new InsuranceWrapper((AppCompatActivity) getActivity(),
+                                                                  R.id.demographicsDocsInsurance3,
+                                                                  globalLabelsMetaDTO,
+                                                                  metadataInsuranceDTO,
+                                                                  insuranceModel3);
     }
 
     private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int index) {
         DemographicInsurancePayloadDTO model = null;
-        if (insuranceModelList != null) {
-            int numOfInsurances = insuranceModelList.size();
+        if (insuranceDTOsList != null) {
+            int numOfInsurances = insuranceDTOsList.size();
             if (numOfInsurances > index) { // check if the list has an item at index i
-                model = insuranceModelList.get(index);
+                model = insuranceDTOsList.get(index);
             }
         }
         return model;
@@ -387,17 +376,53 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment implements
         detailsScrollView.scrollTo(0, bottomView.getBottom());
     }
 
-    private void swapInsuranceFragments(@IdRes int holder1, InsuranceScannerFragment insFrag1, DemographicInsurancePayloadDTO payload1,
-                                        @IdRes int holder2, InsuranceScannerFragment insFrag2, DemographicInsurancePayloadDTO payload2) {
-        fm.beginTransaction().replace(holder1, insFrag2, "frag1").commitNow();
-        fm.beginTransaction().replace(holder2, insFrag1, "frag2").commitNow();
+    /**
+     * Wrapper to a fragment scanner entity that facilitates operations on list of displayed
+     * scanner fragments (add, remove, sort)
+     */
+    static class InsuranceWrapper {
 
-        InsuranceScannerFragment temp = insFrag1;
-        insFrag1 = insFrag2;
-        insFrag2 = temp;
+        private AppCompatActivity                         wraperContext;
+        private int                                       wrapperHolderId;
+        private FragmentManager                           wrapperFm;
+        private FrameLayout                               wrapperHolder;
+        private InsuranceScannerFragment                  wrapperScannerFragment;
+        private DemographicInsurancePayloadDTO            wrapperPayloadDTO;
+        private DemographicMetadataEntityItemInsuranceDTO wrapperMetadataDTO;
+        private DemographicLabelsDTO                      wrapperLabelsDTO;
+        private String                                    wrapperTag;
 
-        DemographicInsurancePayloadDTO tempPayload = payload1;
-        payload1 = payload2;
-        payload2 = tempPayload;
+        public InsuranceWrapper(AppCompatActivity context,
+                                @IdRes int holderId,
+                                DemographicLabelsDTO labels,
+                                DemographicMetadataEntityItemInsuranceDTO metadata,
+                                DemographicInsurancePayloadDTO payload) {
+            this.wraperContext = context;
+            this.wrapperHolderId = holderId;
+            this.wrapperPayloadDTO = payload;
+            this.wrapperMetadataDTO = metadata;
+            this.wrapperLabelsDTO = labels;
+            this.wrapperFm = context.getSupportFragmentManager();
+
+            // create the fragment and add it to the holder
+            if (wrapperPayloadDTO == null) {
+                wrapperPayloadDTO = new DemographicInsurancePayloadDTO();
+            }
+
+            wrapperTag = "frag" + holderId;
+            wrapperScannerFragment = (InsuranceScannerFragment) wrapperFm.findFragmentByTag(wrapperTag);
+            if (wrapperScannerFragment == null) {
+                wrapperScannerFragment = new InsuranceScannerFragment();
+                wrapperScannerFragment.setInsuranceDTO(wrapperPayloadDTO); // set the data model (if avail)
+                wrapperScannerFragment.setInsuranceMetadataDTO(wrapperMetadataDTO);
+            }
+            wrapperFm.beginTransaction()
+                    .replace(holderId, wrapperScannerFragment, wrapperTag)
+                    .commit();
+        }
+
+        public DemographicInsurancePayloadDTO getWrapperPayloadDTO() {
+            return wrapperPayloadDTO;
+        }
     }
 }
