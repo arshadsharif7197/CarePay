@@ -110,7 +110,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
 
             // end-splash activity and transition
             // SplashActivity.this.finish();

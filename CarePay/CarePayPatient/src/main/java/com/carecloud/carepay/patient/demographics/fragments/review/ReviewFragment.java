@@ -60,7 +60,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
 
             // end-splash activity and transition
             // SplashActivity.this.finish();

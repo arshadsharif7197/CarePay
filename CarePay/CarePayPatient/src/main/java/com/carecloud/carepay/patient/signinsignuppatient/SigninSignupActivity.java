@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.signinsignuppatient;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -25,7 +24,7 @@ public class SigninSignupActivity extends BasePatientActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_signup);
-        signInSignUpDTO=getConvertedDTO(SignInSignUpDTO.class);
+        signInSignUpDTO = getConvertedDTO(SignInSignUpDTO.class);
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()

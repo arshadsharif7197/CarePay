@@ -34,7 +34,7 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.getInstance(SplashActivity.this).navigateToWorkflow(workflowDTO);
             // end-splash activity and transition
             SplashActivity.this.finish();
         }
@@ -52,7 +52,7 @@ public class SplashActivity extends BasePatientActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
 
             if (!SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
-                PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+                PatientNavigationHelper.getInstance(SplashActivity.this).navigateToWorkflow(workflowDTO);
             } else if (SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
 
                 // Convert to SignInSignUpDTO

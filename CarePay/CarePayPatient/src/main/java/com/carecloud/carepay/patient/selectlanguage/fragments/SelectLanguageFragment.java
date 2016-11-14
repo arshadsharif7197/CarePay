@@ -48,7 +48,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.instance().navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
 
             // end-splash activity and transition
             // SplashActivity.this.finish();

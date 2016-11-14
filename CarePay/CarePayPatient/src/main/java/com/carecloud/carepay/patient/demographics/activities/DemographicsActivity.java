@@ -50,27 +50,29 @@ import java.util.List;
  */
 public class DemographicsActivity extends BasePatientActivity {
 
-    private int currentPageIndex;
+    private int       currentPageIndex;
     // views
-    private TextView titleTextView;
+    private TextView  titleTextView;
     private ViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
-    private DemographicAddressPayloadDTO addressModel;
+    private DemographicAddressPayloadDTO     addressModel;
     private DemographicPersDetailsPayloadDTO detailsModel;
-    private DemographicIdDocPayloadDTO idDocModel;
+    private DemographicIdDocPayloadDTO       idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
     // jsons (metadata)
-    private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
+    private DemographicMetadataEntityAddressDTO     addressEntityMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
-    private DemographicLabelsDTO labelsDTO;
-    private Toolbar toolbar;
-    private String[] fragLabels;
+    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
+    private DemographicLabelsDTO                    labelsDTO;
+    private Toolbar                                 toolbar;
+    private String[]                                fragLabels;
+
     /**
      * Updating with info model
+     *
      * @return updated model
      */
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
@@ -88,18 +90,8 @@ public class DemographicsActivity extends BasePatientActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographics);
-        modelGet=getConvertedDTO(DemographicDTO.class);
-        labelsDTO=modelGet.getMetadata().getLabels();
-
-        // set the language
-        /*Intent intent = getIntent();
-        if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
-            setLangId(intent.getIntExtra(KesqueezyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
-        } else if (intent.hasExtra("demographics_model")) {
-            String demographicsModelString = intent.getStringExtra("demographics_model");
-            Gson gson = new Gson();
-            modelGet = gson.fromJson(demographicsModelString, DemographicDTO.class);
-        }*/
+        modelGet = getConvertedDTO(DemographicDTO.class);
+        labelsDTO = modelGet.getMetadata().getLabels();
 
         // init DTOs
         initDTOsForFragments();
@@ -116,7 +108,6 @@ public class DemographicsActivity extends BasePatientActivity {
         SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
         toolbar.setTitle("");
         titleTextView.setText(fragLabels[0]);
-//        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
         (DemographicsActivity.this).setSupportActionBar(toolbar);
 
         // set the progress bar
@@ -245,6 +236,7 @@ public class DemographicsActivity extends BasePatientActivity {
 
     /**
      * checking storage permission
+     *
      * @return true if granted
      */
 
@@ -257,8 +249,8 @@ public class DemographicsActivity extends BasePatientActivity {
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation

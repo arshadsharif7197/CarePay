@@ -17,11 +17,16 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
-import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -29,16 +34,35 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class AppointmentsActivity extends BasePatientActivity implements
-        NavigationView.OnNavigationItemSelectedListener {
+                                                              NavigationView.OnNavigationItemSelectedListener {
 
     private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
 
-    public static AppointmentDTO model;
-    private TextView appointmentsDrawerUserIdTextView;
-    private AppointmentsResultModel appointmentsDTO;
-    private AppointmentDTO appointmentDTO;
+    public static AppointmentDTO          model;
+    private       TextView                appointmentsDrawerUserIdTextView;
+    private       AppointmentsResultModel appointmentsDTO;
+    private       AppointmentDTO          appointmentDTO;
+    private WorkflowServiceCallback appointmentsWorkflowCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+
+        }
+    };
 
 
     @SuppressWarnings("deprecation")
@@ -118,7 +142,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
         }
 
         fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
-                AppointmentsListFragment.class.getSimpleName()).commit();
+                                      AppointmentsListFragment.class.getSimpleName()).commit();
     }
 
     @Override
@@ -166,28 +190,29 @@ public class AppointmentsActivity extends BasePatientActivity implements
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_launch_demogr_review) {
-            Toast toast=Toast.makeText(getApplicationContext(),"Transition is in process",Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(), "Transition is in process", Toast.LENGTH_SHORT);
+            toast.show();
+
             // temporary launch Demographics Review for QA testing
             // (please do not remove!)
-           /* DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
-            Map<String, String> queries = new HashMap<>();
-           *//* queries.put("practice_mgmt", "carecloud");
-            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
-            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");*//*
-            Call<DemographicDTO> call = apptService.fetchDemographicsVerify(queries);
-            call.enqueue(new Callback<DemographicDTO>() {
-                @Override
-                public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
-                    DemographicDTO demographicDTO = response.body();
-                    launchDemographics(demographicDTO);
-                }
-
-                @Override
-                public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
-                    Log.e(LOG_TAG, "failed fetching demogr info", throwable);
-                }
-            });*/
-
+//            DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
+//            Map<String, String> queries = new HashMap<>();
+//            queries.put("practice_mgmt", "carecloud");
+//            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
+//            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");
+//            Call<DemographicDTO> call = apptService.fetchDemographicsVerify(queries);
+//            call.enqueue(new Callback<DemographicDTO>() {
+//                @Override
+//                public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
+//                    DemographicDTO demographicDTO = response.body();
+//                    launchDemographics(demographicDTO);
+//                }
+//
+//                @Override
+//                public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
+//                    Log.e(LOG_TAG, "failed fetching demogr info", throwable);
+//                }
+//            });
         }
 
         return super.onOptionsItemSelected(item);
@@ -209,7 +234,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
             AppointmentsActivity.model = null; // appointment clicked item is cleared.
         } else if (id == R.id.nav_settings) {
             Intent demographicActivityIntent = new Intent(AppointmentsActivity.this,
-                    DemographicsActivity.class);
+                                                          DemographicsActivity.class);
             startActivity(demographicActivityIntent);
 
         } else if (id == R.id.nav_logout) {
@@ -217,15 +242,13 @@ public class AppointmentsActivity extends BasePatientActivity implements
             String userName = CognitoAppHelper.getCurrUser();
             if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
-                CognitoAppHelper.getPool().getUser().signOut();
-                CognitoAppHelper.setUser(null);
-                // update the drawer user id fields
-                appointmentsDrawerUserIdTextView.setText("");
-
-                // go to Sign in screen
-                Intent intent = new Intent(this, SigninSignupActivity.class);
-                startActivity(intent);
-                finish();
+                Map<String, String> headersMap = new HashMap<>();
+                headersMap.put("x-api-key", HttpConstants.getApiStartKey());
+                headersMap.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+                headersMap.put("transition", "true");
+                Map<String, String> queryMap = new HashMap<>();
+                TransitionDTO transitionDTO = appointmentsDTO.getMetadata().getTransitions().getLogout();
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, appointmentsWorkflowCallback, queryMap, headersMap);
             }
         } else if (id == R.id.nav_purchase) {
             Log.v(LOG_TAG, "Purchase");
