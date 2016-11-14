@@ -45,13 +45,12 @@ public class CloverQRScannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        BarcodeScanner mBarcodeScanner = new BarcodeScanner(this);
-
         Bundle extras = new Bundle();
         extras.putBoolean(Intents.EXTRA_LED_ON, false);
         extras.putBoolean(Intents.EXTRA_SCAN_QR_CODE, true);
         extras.putBoolean(Intents.EXTRA_SCAN_1D_CODE, true);
-        mBarcodeScanner.executeStartScan(extras);
+        BarcodeScanner barcodeScanner = new BarcodeScanner(this);
+        barcodeScanner.executeStartScan(extras);
 
     }
 

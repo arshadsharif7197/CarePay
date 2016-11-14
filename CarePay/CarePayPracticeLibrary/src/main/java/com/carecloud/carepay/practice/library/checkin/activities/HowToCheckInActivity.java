@@ -223,24 +223,29 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         downloadDialog.setTitle(title);
         downloadDialog.setMessage(message);
         downloadDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int listener) {
                 Uri uri = Uri.parse("market://search?q=pname:" + "com.google.zxing.client.android");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 try {
                     act.startActivity(intent);
                 } catch (ActivityNotFoundException anfe) {
-
+                    anfe.printStackTrace();
                 }
             }
         });
         downloadDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int listener) {
             }
         });
         return downloadDialog.show();
     }
 
-    //on ActivityResult method
+    /**
+     * on ActivityResult method
+     * @param requestCode requestCode
+     * @param resultCode resultCode
+     * @param intent result intent
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
