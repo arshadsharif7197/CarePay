@@ -32,6 +32,8 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
@@ -40,6 +42,7 @@ import com.carecloud.carepaylibrary.R;
 
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
@@ -69,11 +72,14 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -101,6 +107,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private List<DemographicInsurancePayloadDTO> insurances;
     private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
+    private DemographicDTO demographicDTO;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -168,6 +175,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         addressMetaDTO = ((DemographicReviewActivity) getActivity()).getAddressEntityMetaDTO();
         persDetailsMetaDTO = ((DemographicReviewActivity) getActivity()).getPersDetailsMetaDTO();
         idDocsMetaDTO = ((DemographicReviewActivity) getActivity()).getIdDocsMetaDTO();
+        demographicDTO= ((DemographicReviewActivity) getActivity()).getModel();
 
         initModels();
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
@@ -829,7 +837,35 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         idDocDTOs.add(demographicIdDocPayloadDTO);
         postPayloadModel.setIdDocuments(idDocDTOs);
 
-        DemographicService apptService = (new BaseServiceGenerator(getActivity()))
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt() );
+        queries.put("practice_id",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+
+        Map<String, String> header = new HashMap<>();
+        header.put("transition","false");
+      //  WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getUpdateDemographics(), consentformcallback,queries,header);
+
+        Gson gson= new Gson();
+        String demographicinfo=gson.toJson(postPayloadModel);
+        TransitionDTO transitionDTO= demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                openNewFragment();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+
+            }
+        }, demographicinfo, queries, header);
+       /* DemographicService apptService = (new BaseServiceGenerator(getActivity()))
                 .createService(DemographicService.class); // String token, String searchString
         Call<ResponseBody> call = apptService.updateDemographicInformation(postPayloadModel);
         call.enqueue(new Callback<ResponseBody>() {
@@ -851,7 +887,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                 demographicProgressBar.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), "demo post failed", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void initViewFromModels() {

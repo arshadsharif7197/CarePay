@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout android:id="@+id/activity_patient_mode_splash"
               xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,8 +12,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/home_main_margin_end"
         android:layout_marginStart="@dimen/home_main_margin_start"
         android:layout_marginTop="@dimen/home_main_margin_top">
@@ -62,10 +62,14 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".35"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.5"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -76,10 +80,14 @@
             android:src="@drawable/checkin_patient_pic_rounded_border"/>
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight=".07"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -89,31 +97,37 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_15dp"
             android:gravity="center"
-            android:text="fdhdsfhsfdhs"
+            android:hint="Welcome"
             android:textColor="@color/white"
             android:textSize="@dimen/signin_title_textsize"
             app:customAssetFont="gotham_rounded_medium"/>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".06"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-
         <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
             android:id="@+id/getstartedTextview"
-            android:layout_width="150dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="62dp"
+            android:layout_width="@dimen/patient_splash_button_width"
+            android:layout_height="@dimen/patient_splash_button_height"
             android:background="@drawable/bg_blue_overlay"
             android:gravity="center"
             android:includeFontPadding="false"
             android:textColor="@color/white"
-            android:textSize="22sp"/>
+            android:textSize="@dimen/home_alert_font_size"/>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".52"/>
 
 </LinearLayout>

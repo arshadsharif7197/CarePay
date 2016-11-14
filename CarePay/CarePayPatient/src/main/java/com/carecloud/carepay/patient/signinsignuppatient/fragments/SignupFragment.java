@@ -27,26 +27,22 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepay.patient.demographics.services.DemographicService;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 import static android.app.Activity.RESULT_OK;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-
 
 /**
  * Created by harish_revuri on 9/7/2016.
@@ -54,41 +50,22 @@ import retrofit2.Response;
  */
 public class SignupFragment extends Fragment {
 
-    private LinearLayout parentLayout;
-    private ProgressBar progressBar;
-    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
-        @Override
-        public void onLoginSuccess() {
-            getDemographicInformation(); // disable fetch demographics; call to information will be performed
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onBeforeLogin() {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(getContext(),
-                    "Sign-in failed",
-                    exceptionMessage);
-
-        }
-    };
+    private SignInSignUpDTO signInSignUpDTO;
+    private LinearLayout    parentLayout;
+    private ProgressBar     progressBar;
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
     private TextInputLayout passwordRepeatInputLayout;
-    private EditText emailText;
-    private EditText passwordText;
-    private EditText repeatPasswordText;
-    private boolean isEmailEmpty;
-    private boolean isPasswordEmpty;
-    private boolean isRepeatPasswordEmpty;
-    private Button submitButton;
-    private TextView accountExistTextView;
-    private String userName;
-    SignUpHandler signUpHandler = new SignUpHandler() {
+    private EditText        emailText;
+    private EditText        passwordText;
+    private EditText        repeatPasswordText;
+    private boolean         isEmailEmpty;
+    private boolean         isPasswordEmpty;
+    private boolean         isRepeatPasswordEmpty;
+    private Button          submitButton;
+    private TextView        accountExistTextView;
+    private String          userName;
+    private SignUpHandler           signUpHandler          = new SignUpHandler() {
         @Override
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
                               CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
@@ -109,14 +86,51 @@ public class SignupFragment extends Fragment {
             String errorMsg = CognitoAppHelper.formatException(exception);
 
             SystemUtil.showDialogMessage(getActivity(),
-                    "Sign up failed!",
-                    errorMsg);
+                                         "Sign up failed!",
+                                         errorMsg);
+        }
+    };
+    private WorkflowServiceCallback signUpWorkflowCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+        }
+    };
+    private CognitoActionCallback   cognitoActionCallback  = new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            progressBar.setVisibility(View.INVISIBLE);
+            TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getAuthenticate();
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, signUpWorkflowCallback);
+        }
+
+        @Override
+        public void onBeforeLogin() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(getContext(),
+                                         "Sign-in failed",
+                                         exceptionMessage);
+
         }
     };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
+
+        signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
 
         parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
 
@@ -483,39 +497,6 @@ public class SignupFragment extends Fragment {
         return false;
     }
 
-    private void launchDemographics(DemographicDTO demographicDTO) {
-        // do to Demographics
-        Intent intent = new Intent(getActivity(), DemographicsActivity.class);
-        if (demographicDTO != null) {
-            // pass the object into the gson
-            Gson gson = new Gson();
-            intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
-        }
-        startActivity(intent);
-        getActivity().finish();
-    }
-
-    private void getDemographicInformation() {
-        progressBar.setVisibility(View.VISIBLE);
-        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicDTO> call = apptService.fetchDemographicInformation();
-        call.enqueue(new Callback<DemographicDTO>() {
-            @Override
-            public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
-                DemographicDTO demographicDTO = response.body();
-
-                progressBar.setVisibility(View.GONE);
-                launchDemographics(demographicDTO);
-            }
-
-            @Override
-            public void onFailure(Call<DemographicDTO> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Log.e(LOG_TAG, "failed fetching demogr info", t);
-            }
-        });
-    }
-
     // cognito
     private void registerUser() {
         // Read user data and register
@@ -531,10 +512,10 @@ public class SignupFragment extends Fragment {
         String password = passwordText.getText().toString();
 
         CognitoAppHelper.getPool().signUpInBackground(userName,
-                password,
-                userAttributes,
-                null,
-                signUpHandler);
+                                                      password,
+                                                      userAttributes,
+                                                      null,
+                                                      signUpHandler);
     }
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {

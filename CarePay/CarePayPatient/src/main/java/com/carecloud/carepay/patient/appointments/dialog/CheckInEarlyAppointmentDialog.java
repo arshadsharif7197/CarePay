@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.customdialogs;
+package com.carecloud.carepay.patient.appointments.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,28 +8,40 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 
 public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
 
+
     private Context context;
     private LinearLayout mainLayout;
+    private AppointmentDTO appointmentDTO;
     private AppointmentLabelDTO appointmentLabels;
+    private TransitionDTO transitionDTO;
 
     /**
      * Constructor.
-     * @param context context
-     * @param appointmentDTO appointment Item
+     *
+     * @param context           context
+     * @param appointmentDTO    appointment Item
      * @param appointmentLabels screen labels
      */
     public CheckInEarlyAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                         AppointmentLabelDTO appointmentLabels) {
+                                         AppointmentLabelDTO appointmentLabels,
+                                         TransitionDTO transitionDTO) {
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentLabels = appointmentLabels;
+        this.appointmentDTO = appointmentDTO;
+        this.transitionDTO = transitionDTO;
     }
 
     @Override
@@ -46,7 +58,7 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_checkin_early_appointment, null);
 
         Button checkIn = (Button) childActionView.findViewById(R.id.checkinEarlyButton);
-        checkIn.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInEarly()));
+        checkIn.setText(appointmentLabels.getAppointmentsCheckInEarly());
         checkIn.setOnClickListener(this);
 
         mainLayout.addView(childActionView);
@@ -66,5 +78,25 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
      * call check-in Now api.
      */
     private void onCheckInEarly() {
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, logincallback);
     }
+
+    WorkflowServiceCallback logincallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
+
+            // end-splash activity and transition
+            // SplashActivity.this.finish();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

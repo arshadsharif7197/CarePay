@@ -46,7 +46,9 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
     public BaseDoctorInfoDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context);
         this.context = context;
-        this.payload = appointmentDTO.getPayload();
+        if(appointmentDTO != null) {
+            this.payload = appointmentDTO.getPayload();
+        }
     }
 
     @Override
@@ -87,8 +89,10 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
 
         // Appointment Place address
         final CarePayTextView addressTextView = ((CarePayTextView) findViewById(R.id.appointAddressTextView));
-        placeAddress = payload.getLocation().getAddress().getPlaceAddressString();
-        addressTextView.setText(placeAddress);
+        if( payload.getLocation().getAddress() !=null) {
+            placeAddress = payload.getLocation().getAddress().getPlaceAddressString();
+            addressTextView.setText(placeAddress);
+        }
 
         findViewById(R.id.dialogAppointHeaderTextView).setOnClickListener(this);
         findViewById(R.id.appointLocationImageView).setOnClickListener(this);

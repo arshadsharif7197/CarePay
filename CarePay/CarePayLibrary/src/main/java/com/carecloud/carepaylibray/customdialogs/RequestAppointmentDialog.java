@@ -16,7 +16,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
@@ -53,13 +52,13 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_request_appointment, null);
 
         Button appointmentRequestButton = (Button) childActionView.findViewById(R.id.requestAppointmentButton);
-        appointmentRequestButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsRequestHeading()));
+        appointmentRequestButton.setText(appointmentLabels.getAppointmentsRequestHeading());
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 
         CarePayTextView optionalTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.optionalTextView);
-        optionalTextView.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsOptionalHeading()));
+        optionalTextView.setText(appointmentLabels.getAppointmentsOptionalHeading());
 
         EditText reasonEditText = (EditText) childActionView.findViewById(R.id.reasonEditText);
         reasonEditText.setOnTouchListener(new View.OnTouchListener() {

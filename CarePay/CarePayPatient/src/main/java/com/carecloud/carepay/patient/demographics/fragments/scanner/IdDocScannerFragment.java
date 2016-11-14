@@ -27,6 +27,7 @@ import com.carecloud.carepay.patient.demographics.activities.DemographicsActivit
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
@@ -53,19 +54,19 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
-    private static String[] states;
-    private View view;
-    private ImageCaptureHelper scannerFront;
-    private ImageCaptureHelper scannerBack;
-    private Button scanFrontButton;
-    private Button scanBackButton;
-    private EditText idNumberEdit;
-    private TextInputLayout idNumberInputText;
-    private TextView idStateClickable;
-    private TextView stateLabel;
-    private DemographicIdDocPayloadDTO model;
-    private DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
-    private DemographicLabelsDTO globalLabelsDTO;
+    private static String[]                              states;
+    private        View                                  view;
+    private        ImageCaptureHelper                    scannerFront;
+    private        ImageCaptureHelper                    scannerBack;
+    private        Button                                scanFrontButton;
+    private        Button                                scanBackButton;
+    private        EditText                              idNumberEdit;
+    private        TextInputLayout                       idNumberInputText;
+    private        TextView                              idStateClickable;
+    private        TextView                              stateLabel;
+    private        DemographicIdDocPayloadDTO            model;
+    private        DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
+    private        DemographicLabelsDTO                  globalLabelsDTO;
 
     @Nullable
     @Override
@@ -88,25 +89,20 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     private void getOptions() {
-        if (idDocsMetaDTO == null) {
-            // init arrays with 'not-defined's
+        // init states
+        if (idDocsMetaDTO != null
+                && idDocsMetaDTO.properties != null
+                && idDocsMetaDTO.properties.identityDocumentState != null) {
+            List<MetadataOptionDTO> optionDTOs = idDocsMetaDTO.properties.identityDocumentState.options;
+            List<String> statesStrings = new ArrayList<>();
+            for (MetadataOptionDTO optionDTO : optionDTOs) {
+                statesStrings.add(optionDTO.getLabel());
+            }
+            states = statesStrings.toArray(new String[0]);
+        } else {
             states = new String[1];
             states[0] = CarePayConstants.NOT_DEFINED;
-            return;
         }
-
-        // init states
-        states = new String[]{
-                "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
-                "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
-                "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
-
-//        List<MetadataOptionDTO> optionDTOs = idDocsMetaDTO.properties.identityDocumentState.options;
-//        List<String> statesStrings = new ArrayList<>();
-//        for(MetadataOptionDTO optionDTO : optionDTOs) {
-//            statesStrings.add(optionDTO.getLabel());
-//        }
-//        states = statesStrings.toArray(new String[0]);
     }
 
     private void initializeUIFields() {
@@ -278,7 +274,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + frontPic);
                     scannerFront.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                            R.drawable.icn_camera));
+                                                                                                 R.drawable.icn_camera));
                 }
             }
             // add back image
@@ -293,7 +289,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
                     scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                            R.drawable.icn_camera));
+                                                                                                R.drawable.icn_camera));
                 }
             }
         }

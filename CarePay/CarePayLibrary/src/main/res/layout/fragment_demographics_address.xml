@@ -52,7 +52,7 @@
                         android:nextFocusForward="@+id/middleNameEditText"
                         android:inputType="text"
                         android:maxLength="100"
-                        android:digits="@string/restrict_digits_letters_space"/>
+                        android:digits="@string/restrict_letters_space"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
@@ -75,7 +75,7 @@
                         android:imeOptions="actionNext"
                         android:nextFocusForward="@+id/addressEditTextId"
                         android:maxLength="100"
-                        android:digits="@string/restrict_digits_letters_space"/>
+                        android:digits="@string/restrict_letters_space"/>
 
                 </android.support.design.widget.TextInputLayout>
 

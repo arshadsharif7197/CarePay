@@ -24,7 +24,7 @@
     <!-- Splash screen theme -->
 
 
-    <style name="Theme.AppCompat.Translucent">
+    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.NoActionBar.FullScreen">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>

@@ -25,7 +25,6 @@ public class CarePayPatientApplication extends Application {
         ApplicationPreferences.createPreferences(this);
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
         CognitoAppHelper.init(getApplicationContext());
-        PatientNavigationHelper.initInstance(this);
         WorkflowServiceHelper.initialization(WorkflowServiceHelper.ApplicationType.PATIENT);
     }
 
