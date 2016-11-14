@@ -21,7 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -41,6 +40,11 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -48,9 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 
 
 public class HealthInsuranceReviewFragment extends InsuranceScannerFragment implements View.OnClickListener {
@@ -101,7 +103,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         view = inflater.inflate(R.layout.fragment_review_health_insurance, container, false);
         globalLabelsMetaDTO = ((DemographicReviewActivity) getActivity()).getLabelsDTO();
         insurancesMetaDTO = ((DemographicReviewActivity) getActivity()).getInsurancesMetaDTO();
-        demographicDTO= ((DemographicReviewActivity) getActivity()).getModel();
+        demographicDTO = ((DemographicReviewActivity) getActivity()).getModel();
         fm = getChildFragmentManager();
         DemographicReviewActivity.isFromReview = false;
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.healthinsurance_review_toolbar);

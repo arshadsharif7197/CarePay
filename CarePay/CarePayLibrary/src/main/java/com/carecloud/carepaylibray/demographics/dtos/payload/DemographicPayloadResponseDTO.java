@@ -16,10 +16,9 @@ public class DemographicPayloadResponseDTO {
     private DemographicPayloadInfoDTO demographics;
 
 
-
     @SerializedName("appointments")
     @Expose
-    private List<AppointmentPayloadDTO> appointmentpayloaddto= new ArrayList<>();
+    private List<AppointmentPayloadDTO> appointmentpayloaddto = new ArrayList<>();
 
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
@@ -28,7 +27,8 @@ public class DemographicPayloadResponseDTO {
     public void setDemographics(DemographicPayloadInfoDTO demographics) {
         this.demographics = demographics;
     }
-    public List<AppointmentPayloadDTO>getAppointmentpayloaddto() {
+
+    public List<AppointmentPayloadDTO> getAppointmentpayloaddto() {
         return appointmentpayloaddto;
     }
 

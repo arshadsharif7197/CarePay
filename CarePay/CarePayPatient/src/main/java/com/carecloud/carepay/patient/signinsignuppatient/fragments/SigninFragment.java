@@ -29,9 +29,6 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -40,6 +37,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 /**
@@ -66,13 +64,13 @@ public class SigninFragment extends Fragment {
     };
     private TextInputLayout emailTextInput;
     private TextInputLayout passwordTexInput;
-    private EditText        emailEditText;
-    private EditText        passwordEditText;
-    private TextView        changeLanguageTextView;
-    private TextView        forgotPasswordTextView;
-    private Button          signinButton;
-    private Button          signupButton;
-    private ProgressBar     progressBar;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private TextView changeLanguageTextView;
+    private TextView forgotPasswordTextView;
+    private Button signinButton;
+    private Button signupButton;
+    private ProgressBar progressBar;
     CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
@@ -89,15 +87,15 @@ public class SigninFragment extends Fragment {
         @Override
         public void onLoginFailure(String exceptionMessage) {
             SystemUtil.showDialogMessage(getContext(),
-                                         "Sign-in failed",
-                                         "Invalid user id or password");
+                    "Sign-in failed",
+                    "Invalid user id or password");
 
         }
     };
-    private LinearLayout      parentLayout;
-    private boolean           isEmptyEmail;
-    private boolean           isEmptyPassword;
-    private SignInLablesDTO   signInLablesDTO;
+    private LinearLayout parentLayout;
+    private boolean isEmptyEmail;
+    private boolean isEmptyPassword;
+    private SignInLablesDTO signInLablesDTO;
 
     @Nullable
     @Override
@@ -119,9 +117,6 @@ public class SigninFragment extends Fragment {
 
         isEmptyEmail = true;
         isEmptyPassword = true;
-//TODO remove
-        emailEditText.setText("srios@carecloud.com");
-        passwordEditText.setText("Nirvanax1!");
         return view;
     }
 

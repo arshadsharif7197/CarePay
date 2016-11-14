@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -21,8 +20,6 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
-import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -41,14 +38,14 @@ import java.util.Map;
 
 
 public class AppointmentsActivity extends BasePatientActivity implements
-                                                              NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener {
 
     private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
 
-    public static AppointmentDTO          model;
-    private       TextView                appointmentsDrawerUserIdTextView;
-    private       AppointmentsResultModel appointmentsDTO;
-    private       AppointmentDTO          appointmentDTO;
+    public static AppointmentDTO model;
+    private TextView appointmentsDrawerUserIdTextView;
+    private AppointmentsResultModel appointmentsDTO;
+    private AppointmentDTO appointmentDTO;
     private WorkflowServiceCallback appointmentsWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -65,7 +62,21 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
         }
     };
+    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
 
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 
     @SuppressWarnings("deprecation")
     @Override
@@ -77,7 +88,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
         setSupportActionBar(toolbar);
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
-        appointmentDTO=appointmentsDTO.getPayload().getAppointments().get(0);
+        appointmentDTO = appointmentsDTO.getPayload().getAppointments().get(0);
 
         // Get appointment information data
 //        AppointmentService aptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class);
@@ -145,7 +156,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
         }
 
         fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
-                                      AppointmentsListFragment.class.getSimpleName()).commit();
+                AppointmentsListFragment.class.getSimpleName()).commit();
     }
 
     @Override
@@ -195,52 +206,17 @@ public class AppointmentsActivity extends BasePatientActivity implements
         } else if (id == R.id.action_launch_demogr_review) {
             Map<String, String> queries = new HashMap<>();
             queries.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-            queries.put("practice_id",appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
+            queries.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getAppointmentId());
 
             Map<String, String> header = new HashMap<>();
-            header.put("transition","true");
-            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckin(), transitionToDemographicsVerifyCallback,queries,header);
-            // temporary launch Demographics Review for QA testing
-            // (please do not remove!)
-//            DemographicService apptService = (new BaseServiceGenerator(getApplicationContext())).createService(DemographicService.class); //, String token, String searchString
-//            Map<String, String> queries = new HashMap<>();
-//            queries.put("practice_mgmt", "carecloud");
-//            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
-//            queries.put("appointment_id", "0096ed13-b991-40d5-b034-a249e725bbbe");
-//            Call<DemographicDTO> call = apptService.fetchDemographicsVerify(queries);
-//            call.enqueue(new Callback<DemographicDTO>() {
-//                @Override
-//                public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
-//                    DemographicDTO demographicDTO = response.body();
-//                    launchDemographics(demographicDTO);
-//                }
-//
-//                @Override
-//                public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
-//                    Log.e(LOG_TAG, "failed fetching demogr info", throwable);
-//                }
-//            });
+            header.put("transition", "true");
+            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckin(), transitionToDemographicsVerifyCallback, queries, header);
+
         }
 
         return super.onOptionsItemSelected(item);
     }
-    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -257,7 +233,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
             AppointmentsActivity.model = null; // appointment clicked item is cleared.
         } else if (id == R.id.nav_settings) {
             Intent demographicActivityIntent = new Intent(AppointmentsActivity.this,
-                                                          DemographicsActivity.class);
+                    DemographicsActivity.class);
             startActivity(demographicActivityIntent);
 
         } else if (id == R.id.nav_logout) {
