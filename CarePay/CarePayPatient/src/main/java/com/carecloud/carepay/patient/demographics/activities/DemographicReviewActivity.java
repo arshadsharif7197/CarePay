@@ -1,9 +1,8 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -35,7 +34,7 @@ public class DemographicReviewActivity extends BasePatientActivity {
     private DemographicIdDocPayloadDTO demPayloadIdDocPojo;
 
 
-    private DemographicDTO modelGet = null;
+    private DemographicDTO modelGet;
     private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
@@ -67,12 +66,12 @@ public class DemographicReviewActivity extends BasePatientActivity {
         setContentView(R.layout.activity_demographic_review);
 
         modelGet=getConvertedDTO(DemographicDTO.class);
-        Intent intent = getIntent();
+       /* Intent intent = getIntent();
         if (intent.hasExtra("demographics_model")) {
             String demographicsModelString = intent.getStringExtra("demographics_model");
             Gson gson = new Gson();
             modelGet = gson.fromJson(demographicsModelString, DemographicDTO.class);
-        }
+        }*/
         initDTOsForFragments();
         ReviewFragment reviewFragment = new ReviewFragment();
         FragmentManager fm = getSupportFragmentManager();

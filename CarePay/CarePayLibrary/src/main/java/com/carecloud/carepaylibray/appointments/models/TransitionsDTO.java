@@ -10,18 +10,20 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TransitionsDTO {
 
-    @SerializedName("cancel")
-    @Expose
+    @SerializedName("cancel") @Expose
     private TransitionDTO cancel;
-    @SerializedName("checkin")
-    @Expose
+
+    @SerializedName("checkin") @Expose
     private TransitionDTO checkin;
-    @SerializedName("checkin_at_office")
-    @Expose
+
+    @SerializedName("checkin_at_office") @Expose
     private TransitionDTO checkinAtOffice;
-    @SerializedName("add")
-    @Expose
+
+    @SerializedName("add") @Expose
     private TransitionDTO add;
+
+    @SerializedName("logout") @Expose
+    private TransitionDTO logout;
 
     /**
      *
@@ -78,5 +80,13 @@ public class TransitionsDTO {
      */
     public void setAdd(TransitionDTO add) {
         this.add = add;
+    }
+
+    public TransitionDTO getLogout() {
+        return logout;
+    }
+
+    public void setLogout(TransitionDTO logout) {
+        this.logout = logout;
     }
 }

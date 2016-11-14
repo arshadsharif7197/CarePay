@@ -18,12 +18,11 @@
             android:name="com.carecloud.carepay.patient.demographics.activities.DemographicsActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity" />
-
         <activity android:name="com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity" />
         <activity
             android:name="com.carecloud.carepaylibray.cognito.SignUpConfirmActivity"
             android:windowSoftInputMode="adjustResize" />
-
+        <activity android:name="com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity"></activity>
     </application>
 
 </manifest>

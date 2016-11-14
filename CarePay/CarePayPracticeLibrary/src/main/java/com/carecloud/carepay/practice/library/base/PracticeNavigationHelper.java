@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
@@ -62,6 +63,7 @@ public class PracticeNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
+
             case PracticeNavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -82,6 +84,10 @@ public class PracticeNavigationHelper {
             }
             case PracticeNavigationStateConstants.PRACTICE_CHECKIN: {
                 intent = new Intent(context, CheckInActivity.class);
+                break;
+            }
+            case PracticeNavigationStateConstants.PATIENT_MODE_SIGNIN: {
+                intent = new Intent(context, HowToCheckInActivity.class);
                 break;
             }
             default: {
