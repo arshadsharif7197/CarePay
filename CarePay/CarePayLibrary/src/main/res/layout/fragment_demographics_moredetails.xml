@@ -33,7 +33,8 @@
         <TextView
             android:id="@+id/moreDetailsSubHeading"
             style="@style/DemographicsDocsHeaderSubtitleStyle"
-            android:text="@string/moreDetailsSubHeadingTextView"/>
+            android:text="@string/moreDetailsSubHeadingTextView"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/demographicsGoToCarePayButton"
