@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.demographics.fragments.viewpager;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,39 +38,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
 /**
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
 public class DemographicsDocumentsFragment extends Fragment implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private FragmentManager fm;
-    private View view;
-    private ScrollView detailsScrollView;
-    private FrameLayout idCardContainer;
-    private FrameLayout insCardContainer1;
-    private FrameLayout insCardContainer2;
-    private FrameLayout insCardContainer3;
-    private boolean isSecondCardAdded;
-    private boolean isThirdCardAdded;
-    private TextView multipleInsClickable;
-    private Button nextButton;
-    private DemographicIdDocPayloadDTO demPayloadIdDocDTO;
-    private List<DemographicInsurancePayloadDTO> insuranceModelList;
-    private DemographicInsurancePayloadDTO insuranceModel1;
-    private DemographicInsurancePayloadDTO insuranceModel2;
-    private DemographicInsurancePayloadDTO insuranceModel3;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    private FragmentManager                        fm;
+    private View                                   view;
+    private ScrollView                             detailsScrollView;
+    private FrameLayout                            idCardContainer;
+    private FrameLayout                            insCardContainer1;
+    private FrameLayout                            insCardContainer2;
+    private FrameLayout                            insCardContainer3;
+    private boolean                                isSecondCardAdded;
+    private boolean                                isThirdCardAdded;
+    private TextView                               multipleInsClickable;
+    private Button                                 nextButton;
+    private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
+    private List<DemographicInsurancePayloadDTO>   insuranceModelList;
+    private DemographicInsurancePayloadDTO         insuranceModel1;
+    private DemographicInsurancePayloadDTO         insuranceModel2;
+    private DemographicInsurancePayloadDTO         insuranceModel3;
+    private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
-    private DemographicLabelsDTO globalLabelsMetaDTO;
-    private TextView header;
-    private TextView subheader;
-    private SwitchCompat switchCompat;
-    private TextView idTypeClickable;
-    private TextView idDocTypeLabel;
-    private String[] docTypes;
+    private DemographicLabelsDTO                   globalLabelsMetaDTO;
+    private TextView                               header;
+    private TextView                               subheader;
+    private SwitchCompat                           switchCompat;
+    private TextView                               idTypeClickable;
+    private TextView                               idDocTypeLabel;
+    private String[]                               docTypes;
 
 
     @Nullable
@@ -121,15 +120,15 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
             @Override
             public void onClick(View view) {
                 SystemUtil.showChooseDialog(getActivity(),
-                        docTypes, titleSelIdDoc, labelCancel,
-                        idTypeClickable,
-                        new SystemUtil.OnClickItemCallback() {
-                            @Override
-                            public void executeOnClick(TextView destination, String selectedOption) {
-                                demPayloadIdDocDTO.setIdType(selectedOption);
-                                showCard(idCardContainer, true);
-                            }
-                        });
+                                            docTypes, titleSelIdDoc, labelCancel,
+                                            idTypeClickable,
+                                            new SystemUtil.OnClickItemCallback() {
+                                                @Override
+                                                public void executeOnClick(TextView destination, String selectedOption) {
+                                                    demPayloadIdDocDTO.setIdType(selectedOption);
+                                                    showCard(idCardContainer, true);
+                                                }
+                                            });
             }
         });
 
@@ -386,5 +385,19 @@ public class DemographicsDocumentsFragment extends Fragment implements DocumentS
     public void scrollToBottom() {
         View bottomView = view.findViewById(R.id.demographicsDocsBottomView);
         detailsScrollView.scrollTo(0, bottomView.getBottom());
+    }
+
+    private void swapInsuranceFragments(@IdRes int holder1, InsuranceScannerFragment insFrag1, DemographicInsurancePayloadDTO payload1,
+                                        @IdRes int holder2, InsuranceScannerFragment insFrag2, DemographicInsurancePayloadDTO payload2) {
+        fm.beginTransaction().replace(holder1, insFrag2, "frag1").commitNow();
+        fm.beginTransaction().replace(holder2, insFrag1, "frag2").commitNow();
+
+        InsuranceScannerFragment temp = insFrag1;
+        insFrag1 = insFrag2;
+        insFrag2 = temp;
+
+        DemographicInsurancePayloadDTO tempPayload = payload1;
+        payload1 = payload2;
+        payload2 = tempPayload;
     }
 }
