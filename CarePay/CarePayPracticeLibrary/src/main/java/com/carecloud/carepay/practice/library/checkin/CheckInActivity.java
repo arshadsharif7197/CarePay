@@ -391,6 +391,11 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return null;
     }
 
+    /**
+     * On check in item click.
+     *
+     * @param appointmentPayloadDTO the appointment payload dto
+     */
     public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO) {
             AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
                     checkInDTO,getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
