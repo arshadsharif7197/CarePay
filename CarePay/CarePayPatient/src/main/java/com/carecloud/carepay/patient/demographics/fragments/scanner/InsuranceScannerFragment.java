@@ -189,7 +189,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             }
         });
 
-
         setEditTexts(view);
         setTypefaces(view);
         populateViewsFromModel();
@@ -523,6 +522,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                 photoDTOs.add(1, new DemographicInsurancePhotoDTO()); // create the second
             }
         }
+    }
+
+    public DemographicInsurancePayloadDTO getInsuranceDTO() {
+        return insuranceDTO;
     }
 
     public void setInsuranceMetadataDTO(DemographicMetadataEntityItemInsuranceDTO insuranceMetadataDTO) {
