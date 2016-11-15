@@ -38,7 +38,7 @@ import java.util.List;
  * Created by lsoco_user on 9/2/2016.
  * Screen for demographics onboarding confirmation
  */
-public class DemographicsMoreDetailsFragment extends Fragment {
+public class DemographicsAllSetFragment extends Fragment {
 
     private View                 view;
     private Button               gotoCarePay;

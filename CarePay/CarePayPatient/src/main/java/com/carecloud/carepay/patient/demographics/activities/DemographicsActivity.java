@@ -21,8 +21,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
-import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragment;
-import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsMoreDetailsFragment;
+import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
+import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
@@ -353,12 +353,12 @@ public class DemographicsActivity extends BasePatientActivity {
                     demographicsDetailsFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
                     return demographicsDetailsFragment;
                 case 2:
-                    DemographicsDocumentsFragment demographicsDocumentsFragment = new DemographicsDocumentsFragment();
+                    DemographicsDocumentsFragmentWthWrapper demographicsDocumentsFragment = new DemographicsDocumentsFragmentWthWrapper();
                     demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
                     demographicsDocumentsFragment.setInsurancesMetaDTO(insurancesMetaDTO);
                     return demographicsDocumentsFragment;
                 case 3:
-                    return new DemographicsMoreDetailsFragment();
+                    return new DemographicsAllSetFragment();
                 default:
                     return null;
             }
