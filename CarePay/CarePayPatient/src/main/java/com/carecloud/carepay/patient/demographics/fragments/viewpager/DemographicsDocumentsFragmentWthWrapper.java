@@ -83,6 +83,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
     private TextView                               idDocTypeLabel;
     private String[]                               docTypes;
     private InsuranceWrapperCollection             wrapperCollection;
+    private LinearLayout insContainersWrapper;
 
 
     @Nullable
@@ -249,8 +250,8 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         insCardContainer2 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance2);
         insCardContainer3 = (FrameLayout) view.findViewById(R.id.demographicsDocsInsurance3);
 
-        isSecondCardAdded = false;
-        isThirdCardAdded = false;
+//        isSecondCardAdded = false;
+//        isThirdCardAdded = false;
 
         fm = getChildFragmentManager();
         // add license fragment
@@ -263,7 +264,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         }
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, "license").commit();
 
-        LinearLayout insContainersWrapper = (LinearLayout) view.findViewById(R.id.demographicsDocsInsHoldersContainer);
+        insContainersWrapper = (LinearLayout) view.findViewById(R.id.demographicsDocsInsHoldersContainer);
         createInsuranceFragments(insContainersWrapper);
     }
 
@@ -307,18 +308,19 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-                showCard(insCardContainer1, on);
-                if (isSecondCardAdded) {
-                    showCard(insCardContainer2, on);
-                } else {
-                    showCard(insCardContainer2, false);
-                }
-                if (isThirdCardAdded) {
-                    showCard(insCardContainer3, on);
-                } else {
-                    showCard(insCardContainer3, false);
-                }
-                showAddCardButton(on && !isThirdCardAdded);
+                insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
+//                showCard(insCardContainer1, on);
+//                if (isSecondCardAdded) {
+//                    showCard(insCardContainer2, on);
+//                } else {
+//                    showCard(insCardContainer2, false);
+//                }
+//                if (isThirdCardAdded) {
+//                    showCard(insCardContainer3, on);
+//                } else {
+//                    showCard(insCardContainer3, false);
+//                }
+//                showAddCardButton(on && !isThirdCardAdded);
             }
         });
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
@@ -468,7 +470,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
 
             DemographicInsurancePayloadDTO insuranceModel2 = getInsuranceModelAtIndex(insuranceDTOsList, 1);
             if (insuranceModel2 != null) {
-                isSecondCardAdded = true;
+//                isSecondCardAdded = true;
                 LinearLayout holderWrapper2 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[1]);
                 wrappers[count++] = new InsuranceWrapper(wrapperContext,
                                                          holderWrapper2,
@@ -480,7 +482,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
 
             DemographicInsurancePayloadDTO insuranceModel3 = getInsuranceModelAtIndex(insuranceDTOsList, 2);
             if (insuranceModel3 != null) {
-                isThirdCardAdded = true;
+//                isThirdCardAdded = true;
                 LinearLayout holderWrapper3 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[2]);
                 wrappers[count++] = new InsuranceWrapper(wrapperContext,
                                                          holderWrapper3,
@@ -536,6 +538,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
 
             count--;
             wrappers[count].removeFragment();
+            wrappers[count].toggleContainerVisible(false);
             wrappers[count] = null;
         }
 
