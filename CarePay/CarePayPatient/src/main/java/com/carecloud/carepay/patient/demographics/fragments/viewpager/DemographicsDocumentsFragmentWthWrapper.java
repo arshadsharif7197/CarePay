@@ -326,16 +326,19 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             fragHolder.setId(fragHolderId);
             holderWrapperView.addView(fragHolder, 0);
 
+            // create 'Remove' clickable
             TextView removeClickable = new TextView(context);
             removeClickable.setLayoutParams(new ActionBarOverlayLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                                     ViewGroup.LayoutParams.WRAP_CONTENT));
             removeClickable.setGravity(Gravity.CENTER);
             removeClickable.setClickable(true);
-            removeClickable.setText("Remove");
+            removeClickable.setPadding(0, 5, 0, 5);
+            removeClickable.setText(globalLabelsMetaDTO.getDocumentsRemove());
             removeClickable.setTextSize(14);
             removeClickable.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
             clickListener.setInsuranceWrapper(this);
             removeClickable.setOnClickListener(clickListener);
+            SystemUtil.setProximaNovaSemiboldTypeface(context, removeClickable);
             holderWrapperView.addView(removeClickable, 1);
 
             // add the fragment

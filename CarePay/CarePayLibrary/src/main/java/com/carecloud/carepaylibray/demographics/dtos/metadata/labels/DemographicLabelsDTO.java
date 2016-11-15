@@ -238,13 +238,12 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsAllSetHeader;
 
-    @SerializedName("demographics_allset_subheader")
-    @Expose
-    private String demographicsAllSetSubheader;
-
     @SerializedName("demographics_allset_go_button")
     @Expose
     private String demographicsAllSetGoButton;
+
+    @SerializedName("demographics_documents_remove") @Expose
+    private String documentsRemove;
 
     /**
      * @return The demographicsUpdateButton
@@ -693,15 +692,6 @@ public class DemographicLabelsDTO {
         this.demographicsAllSetHeader = demographicsAllSetHeader;
     }
 
-    public String getDemographicsAllSetSubheader() {
-        return StringUtil.isNullOrEmpty(demographicsAllSetSubheader) ?
-                CarePayConstants.NOT_DEFINED : demographicsAllSetSubheader;
-    }
-
-    public void setDemographicsAllSetSubheader(String demographicsAllSetSubheader) {
-        this.demographicsAllSetSubheader = demographicsAllSetSubheader;
-    }
-
     public String getDemographicsAllSetGoButton() {
         return StringUtil.isNullOrEmpty(demographicsAllSetGoButton) ?
                 CarePayConstants.NOT_DEFINED : demographicsAllSetGoButton;
@@ -930,4 +920,13 @@ public class DemographicLabelsDTO {
         this.demographicSectionTitle = demographicSectionTitle;
     }
 
+    public String getDocumentsRemove() {
+        return StringUtil.isNullOrEmpty(documentsRemove) ?
+                CarePayConstants.NOT_DEFINED : documentsRemove;
+
+    }
+
+    public void setDocumentsRemove(String documentsRemove) {
+        this.documentsRemove = documentsRemove;
+    }
 }
