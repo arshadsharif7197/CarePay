@@ -34,7 +34,7 @@ class OnClickRemoveListener implements View.OnClickListener {
 
     /**
      * Set the wrapper from whom view 'Remove' is clicked
-     * @param insuranceWrapper
+     * @param insuranceWrapper The wrapper
      */
     void setInsuranceWrapper(InsuranceWrapper insuranceWrapper) {
         this.insuranceWrapper = insuranceWrapper;

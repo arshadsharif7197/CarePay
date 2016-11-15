@@ -24,6 +24,14 @@ import java.util.List;
     private DemographicLabelsDTO                                     labels;
     private OnClickRemoveOrAddCallback callback;
 
+    /**
+     * Ctor
+     * @param context The context
+     * @param parent The parent view (holding the view of the cards)
+     * @param metadata The metadata (common to all insurance screens)
+     * @param labels The global labels
+     * @param callback A call back to be executed when performing add/remove insurance card
+     */
     public InsuranceWrapperCollection(AppCompatActivity context,
                                       LinearLayout parent,
                                       DemographicMetadataEntityItemInsuranceDTO metadata,
