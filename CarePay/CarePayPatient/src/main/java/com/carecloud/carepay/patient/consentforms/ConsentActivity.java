@@ -31,27 +31,22 @@ import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloa
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 import com.google.gson.Gson;
-
 import java.util.Locale;
-
 
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {
 
 
     private ConsentFormLabelsDTO consentFormLabelsDTO;
 
-
     private AppointmentsPayloadDTO appointmentsPayloadDTO;
     private AppointmentsResultModel appointmentsResultModel;
     private ConsentFormAppointmentsPayloadDTO consentFormAppointmentsPayloadDTO;
     private ConsentFormAppoPayloadDTO consentFormAppoPayloadDTO;
-
 
     private ConsentFormDTO consentFormDTO;
     private ConsentFormMetadataDTO consentFormMetadataDTO;
@@ -62,32 +57,16 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private View indicator1;
     private View indicator2;
 
-    private String authorizationTitle;
-    private String medicareTitle;
-    private String hippaTitle;
-    private String medicareDescription;
-    private String authorizationDescription1;
-    private String authorizationDescription2;
-    private String hippaDescription;
     private String readCarefullySign;
     private String consentMainTitle;
-    private String signAuthLabel;
-    private String signMedicareLabel;
-    private String signHippaLabel;
-    private String legalFirstNameLabel;
-    private String legalLastNameLabel;
-    private String clearSignLabel;
-    private String beforeSignWarning;
-    private String unabletoSignLabel;
-    private String signButtonLabel;
-    private String patientSignLabel;
-    private String legalsignLabel;
-    private String providerName = " ";
-    private String patienFirstName = " ";
-    private String patientLastName = " ";
+    private String medicareDescription;
     private String medicareForm;
+    private String providerName = " ";
+    private String patientFirstName = " ";
+    private String patientLastName = " ";
+    private String authorizationDescription1;
+    private String authorizationDescription2;
     private String authForm;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +91,6 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         setSupportActionBar(toolbar);
 
         getConsentFormInformation();
-
-
     }
 
     private void replaceFragment(Fragment fragment, boolean addToBackStack) {
@@ -129,25 +106,15 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     @Override
     public void signButtonClicked() {
         Intent intent = new Intent(this, SignatureActivity.class);
-        intent.putExtra("legalFirstName", legalFirstNameLabel);
-        intent.putExtra("legalLastName", legalLastNameLabel);
-        intent.putExtra("signclearbutton", clearSignLabel);
-        intent.putExtra("unabletosign", unabletoSignLabel);
-        intent.putExtra("confirmsign", signButtonLabel);
-        intent.putExtra("beforesignwarnig", beforeSignWarning);
-        intent.putExtra("patientsign", patientSignLabel);
-        intent.putExtra("legalsign", legalsignLabel);
-
-//       intent.putExtra("consentform", (Serializable) consentFormDTO);
-
+        intent.putExtra("consentFormLabelsDTO", consentFormLabelsDTO);
         intent.putExtra("consentform", showingForm);
         if (showingForm == FormId.FORM1) {
-            intent.putExtra("Header_Title", signMedicareLabel);
+            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignConsentForMedicareTitle());
 
         } else if (showingForm == FormId.FORM2) {
-            intent.putExtra("Header_Title", signAuthLabel);
+            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignAuthorizationFormTitle());
         } else {
-            intent.putExtra("Header_Title", signHippaLabel);
+            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
         }
         startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
 
@@ -165,7 +132,6 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
                 if (fragment != null) {
                     replaceFragment(fragment, true);
                 } else {
-                    // TransitionDTO transitionDTO=consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
                     startActivity(new Intent(ConsentActivity.this, InTakeActivity.class));
                     finish();
                 }
@@ -180,7 +146,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
             consentFormPayloadDTO = consentFormDTO.getConsentFormPayloadDTO();
             consentFormAppointmentsPayloadDTO = consentFormPayloadDTO.getConsentFormAppointmentPayload().get(0);
             consentFormAppoPayloadDTO = consentFormAppointmentsPayloadDTO.getAppointmentPayload();
-            patienFirstName = consentFormAppoPayloadDTO.getAppointmentPatient().getFirstName();
+            patientFirstName = consentFormAppoPayloadDTO.getAppointmentPatient().getFirstName();
             patientLastName = consentFormAppoPayloadDTO.getAppointmentPatient().getLastName();
             providerName = consentFormAppoPayloadDTO.getAppoPayloadProvider().getName();
 
@@ -188,26 +154,11 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
                 consentFormLabelsDTO = consentFormMetadataDTO.getLabel();
 
                 if (consentFormLabelsDTO != null) {
-                    authorizationTitle = consentFormLabelsDTO.getAuthorizationFormTitle();
-                    medicareTitle = consentFormLabelsDTO.getConsentForMedicareTitle();
-                    hippaTitle = consentFormLabelsDTO.getHipaaAgreementTitle();
                     medicareDescription = consentFormLabelsDTO.getConsentForMedicareText();
                     readCarefullySign = consentFormLabelsDTO.getConsentReadCarefullyWarning();
                     authorizationDescription1 = consentFormLabelsDTO.getAuthorizationGrantText();
                     authorizationDescription2 = consentFormLabelsDTO.getAuthorizationLegalText();
-                    hippaDescription = consentFormLabelsDTO.getHipaaConfidentialityAgreementText();
                     consentMainTitle = consentFormLabelsDTO.getConsentMainTitle();
-                    signAuthLabel = consentFormLabelsDTO.getSignAuthorizationFormTitle();
-                    signMedicareLabel = consentFormLabelsDTO.getSignConsentForMedicareTitle();
-                    signHippaLabel = consentFormLabelsDTO.getSignHipaaAgreementTitle();
-                    legalFirstNameLabel = consentFormLabelsDTO.getLegalFirstNameLabel();
-                    legalLastNameLabel = consentFormLabelsDTO.getLegalLastNameLabel();
-                    clearSignLabel = consentFormLabelsDTO.getSignClearButton();
-                    signButtonLabel = consentFormLabelsDTO.getConfirmSignatureButton();
-                    unabletoSignLabel = consentFormLabelsDTO.getUnableToSignText();
-                    beforeSignWarning = consentFormLabelsDTO.getBeforeSignatureWarningText();
-                    legalsignLabel = consentFormLabelsDTO.getLegalSignatureLabel();
-                    patientSignLabel = consentFormLabelsDTO.getPatientSignatureHeading();
                     formbuilder();
 
                     replaceFragment(getConsentForm(), false);
@@ -223,14 +174,14 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private void formbuilder() {
         // insert the patient's first and last names
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        SpannableString firstSpannable = new SpannableString(patienFirstName);
-        SpannableString lastSpannable = new SpannableString(patienFirstName);
+        SpannableString firstSpannable = new SpannableString(patientFirstName);
+        SpannableString lastSpannable = new SpannableString(patientFirstName);
 
 
         int indexFirstComma = medicareDescription.indexOf(',');
         String upToFirstCommaSubstring = medicareDescription.substring(0, indexFirstComma + 1);
         String fromSecCommaOnSubstring = medicareDescription.substring(medicareDescription.indexOf(',', indexFirstComma + 1), medicareDescription.length());
-        firstSpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(ConsentActivity.this, R.color.blue_cerulian)), 0, patienFirstName.length(), 0);
+        firstSpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(ConsentActivity.this, R.color.blue_cerulian)), 0, patientFirstName.length(), 0);
         medicareForm = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstCommaSubstring, firstSpannable, patientLastName, fromSecCommaOnSubstring);
 
         int indexFirstPercent = authorizationDescription2.indexOf('%');
@@ -302,23 +253,23 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         FormData formData = new FormData();
         DateUtil.getInstance().setToCurrent(); // set the date to current
         if (formName.equals("form1")) {
-            formData.setTitle(medicareTitle);
+            formData.setTitle(consentFormLabelsDTO.getConsentForMedicareTitle());
             formData.setDescription(readCarefullySign);
             formData.setContent(medicareForm);
-            formData.setButtonLabel(signMedicareLabel.toUpperCase());
+            formData.setButtonLabel(consentFormLabelsDTO.getSignConsentForMedicareTitle().toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else if (formName.equals("form2")) {
-            formData.setTitle(authorizationTitle);
+            formData.setTitle(consentFormLabelsDTO.getAuthorizationFormTitle());
             formData.setDescription(readCarefullySign);
             formData.setContent(authorizationDescription1);
             formData.setContent2(authForm);
-            formData.setButtonLabel(signAuthLabel.toUpperCase());
+            formData.setButtonLabel(consentFormLabelsDTO.getSignAuthorizationFormTitle().toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else { //form3
-            formData.setTitle(hippaTitle);
+            formData.setTitle(consentFormLabelsDTO.getHipaaAgreementTitle());
             formData.setDescription(readCarefullySign);
-            formData.setContent(hippaDescription);
-            formData.setButtonLabel(signHippaLabel.toUpperCase());
+            formData.setContent(consentFormLabelsDTO.getHipaaConfidentialityAgreementText());
+            formData.setButtonLabel(consentFormLabelsDTO.getSignHipaaAgreementTitle().toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         }
 

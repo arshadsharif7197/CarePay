@@ -46,6 +46,8 @@
             android:inputType="numberPassword"
             android:textColor="@color/white"
             android:textCursorDrawable="@null"
+            android:focusable="false"
+            android:clickable="false"
             android:textSize="@dimen/button_pin_text_size"
             android:maxLength="4"/>
 
