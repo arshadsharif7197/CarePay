@@ -49,7 +49,14 @@
         <activity android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"/>
-
+        <activity
+            android:name="com.carecloud.carepay.practice.clover.cloverqrcodescanner.CloverQRScannerActivity"
+            android:label="@string/qr_code_scanner">
+            <intent-filter>
+                <action android:name="com.carecloud.carepay.practice.clover.qrscanner.CloverQRScannerActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

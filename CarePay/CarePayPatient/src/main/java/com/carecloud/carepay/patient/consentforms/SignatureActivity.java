@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -50,7 +51,7 @@ public class SignatureActivity extends AppCompatActivity {
     private String legalSignature;
     private String legalFirstNameLabel;
     private String legalLastNameLabel;
-
+    private TransitionDTO transitionDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,16 +89,16 @@ public class SignatureActivity extends AppCompatActivity {
      */
     private void initViews() {
         //initViews data
-        List<String> dataList = new ArrayList<>();
+       /* List<String> dataList = new ArrayList<>();
         dataList.add("Sign HIPAA Confidentiality Agreement");
         dataList.add("PATIENT SIGNATURE");
 
         List<String> dataList2 = new ArrayList<>();
         dataList2.add("Sign Consent for Medical Care");
-        dataList2.add("Legal Representative Signature");
+        dataList2.add("Legal Representative Signature");*/
 
-        stringMap.put(0, dataList);
-        stringMap.put(1, dataList2);
+     /*   stringMap.put(0, dataList);
+        stringMap.put(1, dataList2);*/
 
         titleTextView = (TextView) findViewById(R.id.titleTv);
         signatureHelpTextView = (TextView) findViewById(R.id.helperTv);

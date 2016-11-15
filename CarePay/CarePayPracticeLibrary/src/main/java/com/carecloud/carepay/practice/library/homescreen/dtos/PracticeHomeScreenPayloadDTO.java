@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */
 
-public class HomeScreenPayloadDTO {
+public class PracticeHomeScreenPayloadDTO {
     @SerializedName("appointment_counts")
     @Expose
     private HomeScreenAppointmentCountsDTO appointmentCounts;

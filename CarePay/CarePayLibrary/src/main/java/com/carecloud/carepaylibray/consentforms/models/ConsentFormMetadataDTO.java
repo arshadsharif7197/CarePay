@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class ConsentFormMetadataDTO {
 
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
     private ConsentFormLabelsDTO label;
     @SerializedName("links")
