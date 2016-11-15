@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -46,10 +47,15 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         implements DocumentScannerFragment.NextAddRemoveStatusModifier {
 
-    private int[] holderIds = {
+    private int[] holderIds         = {
             R.id.demographicsDocsInsurance1,
             R.id.demographicsDocsInsurance2,
             R.id.demographicsDocsInsurance3
+    };
+    private int[] holderWrappersIds = {
+            R.id.demographicsDocsCard1ContainerWrapper,
+            R.id.demographicsDocsCard2ContainerWrapper,
+            R.id.demographicsDocsCard3ContainerWrapper,
     };
     private FragmentManager                        fm;
     private View                                   view;
@@ -257,14 +263,17 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         }
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, "license").commit();
 
-        createInsuranceFragments();
+        LinearLayout insContainersWrapper = (LinearLayout) view.findViewById(R.id.demographicsDocsInsHoldersContainer);
+        createInsuranceFragments(insContainersWrapper);
     }
 
-    private void createInsuranceFragments() {
+    private void createInsuranceFragments(LinearLayout insContainersWrapper) {
         DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO
                 = (insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
         wrapperCollection = new InsuranceWrapperCollection((AppCompatActivity) getActivity(),
+                                                           insContainersWrapper,
                                                            holderIds,
+                                                           holderWrappersIds,
                                                            globalLabelsMetaDTO,
                                                            metadataInsuranceDTO);
         wrapperCollection.initWrappersList(insuranceDTOsList);
@@ -361,8 +370,10 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         private DemographicMetadataEntityItemInsuranceDTO wrapperMetadataDTO;
         private DemographicLabelsDTO                      wrapperLabelsDTO;
         private String                                    wrapperTag;
+        private LinearLayout                              holderWrapper;
 
         public InsuranceWrapper(AppCompatActivity context,
+                                LinearLayout holderWrapper,
                                 @IdRes int holderId,
                                 DemographicLabelsDTO labels,
                                 DemographicMetadataEntityItemInsuranceDTO metadata,
@@ -373,6 +384,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             this.wrapperMetadataDTO = metadata;
             this.wrapperLabelsDTO = labels;
             this.wrapperFm = wrapperContext.getSupportFragmentManager();
+            this.holderWrapper = holderWrapper;
 
             // create the fragment and add it to the holder
             if (wrapperPayloadDTO == null) {
@@ -397,6 +409,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         }
 
         public void toggleContainerVisible(boolean visible) {
+            holderWrapper.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
 
         public void setCardTypeFromIndex(int typeIndex) {
@@ -419,19 +432,25 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
     class InsuranceWrapperCollection {
 
         private AppCompatActivity wrapperContext;
-        private int                MAX_ELEMS = 3;
-        private int[]              holderIds = new int[MAX_ELEMS];
-        private InsuranceWrapper[] wrappers  = new InsuranceWrapper[MAX_ELEMS];
-        private int                count     = 0;
+        private int                MAX_ELEMS         = 3;
+        private int[]              holderIds         = new int[MAX_ELEMS];
+        private int[]              holdersWrapperIds = new int[MAX_ELEMS];
+        private InsuranceWrapper[] wrappers          = new InsuranceWrapper[MAX_ELEMS];
+        private int                count             = 0;
         private DemographicLabelsDTO                      globalLabelsMetaDTO;
         private DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO;
+        private LinearLayout                              holdersContainer;
 
         public InsuranceWrapperCollection(AppCompatActivity wrapperContext,
+                                          LinearLayout insContainersWrapper,
                                           int[] holderIds,
+                                          int[] holderWrappersId,
                                           DemographicLabelsDTO globalLabelsMetaDTO,
                                           DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO) {
             this.wrapperContext = wrapperContext;
+            this.holdersContainer = insContainersWrapper;
             this.holderIds = holderIds;
+            this.holdersWrapperIds = holderWrappersId;
             this.globalLabelsMetaDTO = globalLabelsMetaDTO;
             this.metadataInsuranceDTO = metadataInsuranceDTO;
         }
@@ -439,7 +458,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         public void initWrappersList(List<DemographicInsurancePayloadDTO> insuranceDTOsList) {
             // add insurance fragments
             DemographicInsurancePayloadDTO insuranceModel = getInsuranceModelAtIndex(insuranceDTOsList, 0);
+            LinearLayout holderWrapper1 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[0]);
             wrappers[count++] = new InsuranceWrapper(wrapperContext,
+                                                     holderWrapper1,
                                                      R.id.demographicsDocsInsurance1,
                                                      globalLabelsMetaDTO,
                                                      metadataInsuranceDTO,
@@ -448,7 +469,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             DemographicInsurancePayloadDTO insuranceModel2 = getInsuranceModelAtIndex(insuranceDTOsList, 1);
             if (insuranceModel2 != null) {
                 isSecondCardAdded = true;
+                LinearLayout holderWrapper2 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[1]);
                 wrappers[count++] = new InsuranceWrapper(wrapperContext,
+                                                         holderWrapper2,
                                                          R.id.demographicsDocsInsurance2,
                                                          globalLabelsMetaDTO,
                                                          metadataInsuranceDTO,
@@ -458,7 +481,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             DemographicInsurancePayloadDTO insuranceModel3 = getInsuranceModelAtIndex(insuranceDTOsList, 2);
             if (insuranceModel3 != null) {
                 isThirdCardAdded = true;
+                LinearLayout holderWrapper3 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[2]);
                 wrappers[count++] = new InsuranceWrapper(wrapperContext,
+                                                         holderWrapper3,
                                                          R.id.demographicsDocsInsurance3,
                                                          globalLabelsMetaDTO,
                                                          metadataInsuranceDTO,
@@ -479,7 +504,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
 
         public void add(DemographicInsurancePayloadDTO insurancePayloadDTO) {
             if (count < MAX_ELEMS) {
+                LinearLayout holderWrapper = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[count]);
                 InsuranceWrapper insuranceWrapper = new InsuranceWrapper(wrapperContext,
+                                                                         holderWrapper,
                                                                          holderIds[count],
                                                                          globalLabelsMetaDTO,
                                                                          metadataInsuranceDTO,
@@ -492,16 +519,17 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
 
         /**
          * Removes an element
+         *
          * @param index The index to remove
          */
         public void removeFor3At(int index) {
-            if(index >= count) {
+            if (index >= count) {
                 return;
             }
 
-            if(index == 1) {
+            if (index == 1) {
                 shiftLeft(2);
-            } else if(index == 0) {
+            } else if (index == 0) {
                 shiftLeft(1);
                 shiftLeft(2);
             }
@@ -512,7 +540,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         }
 
         private void shiftLeft(int indexToShift) {
-            if(indexToShift > 0) {
+            if (indexToShift > 0) {
                 InsuranceWrapper previousInsWrapper = wrappers[indexToShift - 1];
                 InsuranceWrapper currentInsWrapper = wrappers[indexToShift];
                 currentInsWrapper.moveFragmentToContainerOf(previousInsWrapper);
@@ -522,7 +550,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
 
         public List<DemographicInsurancePayloadDTO> exportPayloadDTOAsList() {
             List<DemographicInsurancePayloadDTO> payloadDTOs = new ArrayList<>();
-            for(int index = 0; index < count; index++) {
+            for (int index = 0; index < count; index++) {
                 payloadDTOs.add(wrappers[index].getWrapperPayloadDTO());
             }
             return payloadDTOs;
