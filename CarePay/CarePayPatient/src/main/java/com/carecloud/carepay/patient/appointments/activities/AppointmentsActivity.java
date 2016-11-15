@@ -88,7 +88,11 @@ public class AppointmentsActivity extends BasePatientActivity implements
         setSupportActionBar(toolbar);
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
-        appointmentDTO = appointmentsDTO.getPayload().getAppointments().get(0);
+        if(appointmentsDTO.getPayload() != null
+                && appointmentsDTO.getPayload().getAppointments() != null
+                && appointmentsDTO.getPayload().getAppointments().size() > 0) {
+            appointmentDTO = appointmentsDTO.getPayload().getAppointments().get(0);
+        }
 
         // Get appointment information data
 //        AppointmentService aptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class);
