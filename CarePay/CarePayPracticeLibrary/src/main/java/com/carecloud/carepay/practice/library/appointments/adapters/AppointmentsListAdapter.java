@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -76,7 +77,9 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 .substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
         String strToday = startDay.replace(startDay, "Today")+ endDay ;
         holder.appointmentDate.setText(strToday);
+        holder.appointmentDate.setTextColor(Color.WHITE);
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
+        holder.appointmentTime.setTextColor(Color.WHITE);
         holder.startCheckInTextview.setText(StringUtil.getLabelForView(
                 appointmentLabels.getAppointmentsPracticeCheckin()));
         String photoUrl = item.getProvider().getPhoto();
