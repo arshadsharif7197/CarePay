@@ -21,22 +21,14 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
-                android:id="@+id/appointmentLocationTextview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/munsell"
-                android:gravity="center_horizontal"
-                android:paddingBottom="@dimen/dimen_5dp"
-                android:paddingTop="@dimen/dimen_5dp"
-                android:textColor="@color/charcoal"
-                android:textSize="@dimen/payment_receipt_layout_margin" />
+
 
             <LinearLayout
                 android:id="@+id/headerlayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_header_ht"
                 android:layout_gravity="center"
+                android:background="@color/appointment_card_partial_bg"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -46,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/charcoal"
+                    android:textColor="@color/appointment_card_partial_bg"
                     android:textSize="@dimen/apt_dl_text_date" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
@@ -55,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_20dp"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/slateGray"
+                    android:textColor="@color/appointment_card_partial_bg"
                     android:textSize="@dimen/dimen_18dp" />
 
             </LinearLayout>
