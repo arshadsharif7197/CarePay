@@ -911,21 +911,34 @@ public class DemographicLabelsDTO {
         this.demographicsUpdateDemographicTitle = demographicsUpdateDemographicTitle;
     }
 
+    /**
+     * @return The section title
+     */
     public String getDemographicSectionTitle() {
         return StringUtil.isNullOrEmpty(demographicSectionTitle) ?
                 CarePayConstants.NOT_DEFINED : demographicSectionTitle;
     }
 
+    /**
+     * @param demographicSectionTitle The section title
+     */
     public void setDemographicSectionTitle(String demographicSectionTitle) {
         this.demographicSectionTitle = demographicSectionTitle;
     }
 
+    /**
+     * @return The label
+     */
     public String getDocumentsRemove() {
         return StringUtil.isNullOrEmpty(documentsRemove) ?
                 CarePayConstants.NOT_DEFINED : documentsRemove;
 
     }
 
+    /**
+     *
+     * @param documentsRemove The label
+     */
     public void setDocumentsRemove(String documentsRemove) {
         this.documentsRemove = documentsRemove;
     }

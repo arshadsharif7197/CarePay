@@ -5,5 +5,6 @@ package com.carecloud.carepay.patient.demographics.misc;
  */
 public interface OnClickRemoveOrAddCallback {
     void onAfterRemove();
+
     void onAfterAdd();
 }

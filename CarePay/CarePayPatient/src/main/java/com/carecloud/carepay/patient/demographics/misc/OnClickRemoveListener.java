@@ -24,7 +24,7 @@ class OnClickRemoveListener implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         Log.v(DemographicsDocumentsFragmentWthWrapper.class.getSimpleName(), "remove clicked");
         wrapperCollection.remove(insuranceWrapper);
         if (callback != null) {
@@ -32,6 +32,10 @@ class OnClickRemoveListener implements View.OnClickListener {
         }
     }
 
+    /**
+     * Set the wrapper from whom view 'Remove' is clicked
+     * @param insuranceWrapper
+     */
     void setInsuranceWrapper(InsuranceWrapper insuranceWrapper) {
         this.insuranceWrapper = insuranceWrapper;
     }

@@ -17,10 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.fragments.scanner.DocumentScannerFragment;
 import com.carecloud.carepay.patient.demographics.fragments.scanner.IdDocScannerFragment;
+import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepay.patient.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
@@ -33,12 +33,14 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by lsoco_user on 9/2/2016.

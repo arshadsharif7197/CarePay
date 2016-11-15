@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
+import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
-import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CarePayConstants;

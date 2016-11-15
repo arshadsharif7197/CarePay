@@ -561,6 +561,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                 });
     }
 
+    /**
+     * Set the type of the insurance card using an index (eg 0 for Primary, 1 Secondary etc)
+     * @param typeIndex The index
+     */
     public void setCardTypeFromIndex(int typeIndex) {
         if(cardTypeDataArray != null && cardTypeDataArray.length > typeIndex) {
             cardTypeTextView.setText(cardTypeDataArray[typeIndex]);
