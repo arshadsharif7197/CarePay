@@ -12,9 +12,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class SignInSignUpTransitionsDTO {
 
-    @SerializedName("authenticate")
-    @Expose
+    @SerializedName("authenticate") @Expose
     private TransitionDTO authenticate;
+
+    @SerializedName("language") @Expose
+    private TransitionDTO language;
 
     /**
      *
@@ -34,4 +36,11 @@ public class SignInSignUpTransitionsDTO {
         this.authenticate = authenticate;
     }
 
+    public TransitionDTO getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(TransitionDTO language) {
+        this.language = language;
+    }
 }

@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragment;
@@ -39,10 +39,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.keyboard.Constants;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,29 +48,31 @@ import java.util.List;
  * Created by Jahirul Bhuiyan on 8/31/2016.
  * Main activity for Demographics sign-up sub-flow
  */
-public class DemographicsActivity extends KeyboardHolderActivity {
+public class DemographicsActivity extends BasePatientActivity {
 
-    private int currentPageIndex;
+    private int       currentPageIndex;
     // views
-    private TextView titleTextView;
+    private TextView  titleTextView;
     private ViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
-    private DemographicAddressPayloadDTO addressModel;
+    private DemographicAddressPayloadDTO     addressModel;
     private DemographicPersDetailsPayloadDTO detailsModel;
-    private DemographicIdDocPayloadDTO idDocModel;
+    private DemographicIdDocPayloadDTO       idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
     // jsons (metadata)
-    private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
+    private DemographicMetadataEntityAddressDTO     addressEntityMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
-    private DemographicLabelsDTO labelsDTO;
-    private Toolbar toolbar;
-    private String[] fragLabels;
+    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
+    private DemographicLabelsDTO                    labelsDTO;
+    private Toolbar                                 toolbar;
+    private String[]                                fragLabels;
+
     /**
      * Updating with info model
+     *
      * @return updated model
      */
     public DemographicPayloadDTO getDemographicInfoPayloadModel() {
@@ -90,16 +89,9 @@ public class DemographicsActivity extends KeyboardHolderActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // set the language
-        Intent intent = getIntent();
-        if (intent.hasExtra(KeyboardHolderActivity.KEY_LANG_ID)) {
-            setLangId(intent.getIntExtra(KeyboardHolderActivity.KEY_LANG_ID, Constants.LANG_EN));
-        } else if (intent.hasExtra("demographics_model")) {
-            String demographicsModelString = intent.getStringExtra("demographics_model");
-            Gson gson = new Gson();
-            modelGet = gson.fromJson(demographicsModelString, DemographicDTO.class);
-        }
+        setContentView(R.layout.activity_demographics);
+        modelGet = getConvertedDTO(DemographicDTO.class);
+        labelsDTO = modelGet.getMetadata().getLabels();
 
         // init DTOs
         initDTOsForFragments();
@@ -116,7 +108,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
         SystemUtil.setGothamRoundedMediumTypeface(this, titleTextView);
         toolbar.setTitle("");
         titleTextView.setText(fragLabels[0]);
-//        toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
         (DemographicsActivity.this).setSupportActionBar(toolbar);
 
         // set the progress bar
@@ -245,6 +236,7 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     /**
      * checking storage permission
+     *
      * @return true if granted
      */
 
@@ -257,8 +249,8 @@ public class DemographicsActivity extends KeyboardHolderActivity {
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -328,21 +320,6 @@ public class DemographicsActivity extends KeyboardHolderActivity {
 
     public DemographicLabelsDTO getLabelsDTO() {
         return labelsDTO;
-    }
-
-    @Override
-    public int getLayoutRes() {
-        return R.layout.activity_demographics;
-    }
-
-    @Override
-    public int getContentsHolderId() {
-        return R.id.demogr_content_holder;
-    }
-
-    @Override
-    public int getKeyboardHolderId() {
-        return R.id.demogr_keyboard_holder;
     }
 
     /**

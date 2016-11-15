@@ -14,8 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
@@ -24,13 +25,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.CancelAppointmentDialog;
-import com.carecloud.carepaylibray.customdialogs.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -48,9 +44,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private Context context;
     private List<Object> appointmentItems;
+    private AppointmentDTO appointmentDTO;
     private AppointmentLabelDTO appointmentLabels;
     private AppointmentsListFragment appointmentsListFragment;
     private AppointmentMetadataModel appointmentMetadataModel;
+    private TransitionDTO transitionDTO;
 
     /**
      * Constructor.
@@ -68,6 +66,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         this.appointmentsListFragment = appointmentsListFragment;
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
         this.appointmentMetadataModel = appointmentInfo.getMetadata();
+        this.transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckin();
     }
 
     @Override
@@ -112,8 +111,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 if (isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(
-                            appointmentLabels.getAppointmentsCheckedInLabel()));
+                    holder.todayTimeTextView.setText(appointmentLabels.getAppointmentsCheckedInLabel());
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
@@ -150,11 +148,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             new CancelAppointmentDialog(context, item, appointmentLabels).show();
                         } else {
                             if (isPending) {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel, DemographicReviewActivity.class).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, transitionDTO).show();
                             } else if (isCheckedIn) {
                                 new QueueAppointmentDialog(context, item, appointmentLabels).show();
                             } else {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentMetadataModel, DemographicReviewActivity.class).show();
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentLabels, transitionDTO).show();
                             }
                         }
                     }
@@ -184,8 +182,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
                 holder.missedAppointmentTextView.setVisibility(View.VISIBLE);
-                holder.missedAppointmentTextView.setText(StringUtil.getLabelForView(
-                        appointmentLabels.getMissedAppointmentsHeading()));
+                holder.missedAppointmentTextView.setText(appointmentLabels.getMissedAppointmentsHeading());
                 holder.missedAppointmentTextView.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
 
@@ -226,8 +223,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.appointmentSectionLinearLayout.setVisibility(View.GONE);
                 holder.appointmentItemLinearLayout.setVisibility(View.GONE);
 
-                CustomProxyNovaSemiBoldLabel appointmentStickyHeaderTitle =
-                        (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.appointments_sticky_header_title);
+                CarePayTextView appointmentStickyHeaderTitle =
+                        (CarePayTextView) view.findViewById(R.id.appointments_sticky_header_title);
                 appointmentStickyHeaderTitle.setText(title);
                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
                 appointmentStickyHeaderTitle.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
@@ -260,8 +257,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         View view = appointmentsListFragment.getView();
 
                         if (view != null) {
-                            CustomProxyNovaSemiBoldLabel appointmentStickyHeaderTitle =
-                                    (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.appointments_sticky_header_title);
+                            CarePayTextView appointmentStickyHeaderTitle =
+                                    (CarePayTextView) view.findViewById(R.id.appointments_sticky_header_title);
 
                             boolean isCheckedIn = item.getPayload().getAppointmentStatusModel().getId() == 2;
                             if (isCheckedIn) {
@@ -284,9 +281,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     private String getSectionHeaderTitleByDay(String day) {
         if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
                 day.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-            return StringUtil.getLabelForView(appointmentLabels.getTodayAppointmentsHeading());
+            return appointmentLabels.getTodayAppointmentsHeading();
         } else {
-            return StringUtil.getLabelForView(appointmentLabels.getUpcomingAppointmentsHeading());
+            return appointmentLabels.getUpcomingAppointmentsHeading();
         }
     }
 
@@ -295,9 +292,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
      */
     public void hideHeaderView() {
         View view = appointmentsListFragment.getView();
-        CustomProxyNovaSemiBoldLabel headerTitle;
+        CarePayTextView headerTitle;
         if (view != null) {
-            headerTitle = (CustomProxyNovaSemiBoldLabel)
+            headerTitle = (CarePayTextView)
                     view.findViewById(R.id.appointments_sticky_header_title);
             headerTitle.setVisibility(View.GONE);
         }
@@ -329,15 +326,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
-        private CustomProxyNovaLightLabel upcomingDateTextView;
-        private CustomGothamRoundedMediumLabel appointmentSectionHeaderTitle;
-        private CustomGothamRoundedMediumLabel shortName;
-        private CustomGothamRoundedBoldLabel todayTimeTextView;
-        private CustomProxyNovaSemiBoldLabel doctorName;
-        private CustomProxyNovaSemiBoldLabel missedAppointmentTextView;
-        private CustomProxyNovaRegularLabel upcomingMonthTextView;
-        private CustomProxyNovaRegularLabel upcomingTimeTextView;
-        private CustomProxyNovaRegularLabel doctorType;
+        private CarePayTextView upcomingDateTextView;
+        private CarePayTextView appointmentSectionHeaderTitle;
+        private CarePayTextView shortName;
+        private CarePayTextView todayTimeTextView;
+        private CarePayTextView doctorName;
+        private CarePayTextView missedAppointmentTextView;
+        private CarePayTextView upcomingMonthTextView;
+        private CarePayTextView upcomingTimeTextView;
+        private CarePayTextView doctorType;
         private ImageView cellAvatar;
         private ImageView profileImage;
         private LinearLayout appointmentSectionLinearLayout;
@@ -348,13 +345,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         AppointmentViewHolder(View itemView) {
             super(itemView);
-            doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
+            doctorName = (CarePayTextView) itemView.findViewById(R.id.doctor_name);
             doctorName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.bright_cerulean));
 
-            doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
+            doctorType = (CarePayTextView) itemView.findViewById(R.id.doctor_type);
             doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
 
-            shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
+            shortName = (CarePayTextView) itemView.findViewById(R.id.avatarTextView);
             shortName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
 
             cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
@@ -362,21 +359,21 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             appointmentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_section_linear_layout);
             appointmentItemLinearLayout = (LinearLayout) itemView.findViewById(R.id.appointment_item_linear_layout);
-            appointmentSectionHeaderTitle = (CustomGothamRoundedMediumLabel)
+            appointmentSectionHeaderTitle = (CarePayTextView)
                     itemView.findViewById(R.id.appointments_section_header_title);
 
             // Today
             todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
-            todayTimeTextView = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.todayTimeTextView);
+            todayTimeTextView = (CarePayTextView) itemView.findViewById(R.id.todayTimeTextView);
 
             // Upcoming
             upcomingDateLinearLayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLinearlayout);
-            upcomingDateTextView = (CustomProxyNovaLightLabel) itemView.findViewById(R.id.upcomingDateTextView);
-            upcomingMonthTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingMonthTextView);
-            upcomingTimeTextView = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.upcomingTimeTextView);
+            upcomingDateTextView = (CarePayTextView) itemView.findViewById(R.id.upcomingDateTextView);
+            upcomingMonthTextView = (CarePayTextView) itemView.findViewById(R.id.upcomingMonthTextView);
+            upcomingTimeTextView = (CarePayTextView) itemView.findViewById(R.id.upcomingTimeTextView);
 
             // Missed
-            missedAppointmentTextView = (CustomProxyNovaSemiBoldLabel)
+            missedAppointmentTextView = (CarePayTextView)
                     itemView.findViewById(R.id.missed_appointment_text_view);
 
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);

@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -11,10 +13,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -90,11 +92,12 @@ public class ImageCaptureHelper {
      * @return The bitmap
      */
     public Bitmap onCaptureImageResult(Intent data, int shape) {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+       byte[] bytes =  data.getByteArrayExtra("data");
+        Bitmap thumbnail = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         if (thumbnail != null) {
             // compress
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
         }
 
         return setCapturedImageToTargetView(thumbnail, shape);
@@ -141,6 +144,10 @@ public class ImageCaptureHelper {
     public Intent cameraIntent() {
         return new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     }
+
+    public Intent cameraIntent(Context context) {
+        return  new Intent(context, CarePayCameraActivity.class);
+}
 
     /**
      * Builds a scaled square bitmap from another bitmap

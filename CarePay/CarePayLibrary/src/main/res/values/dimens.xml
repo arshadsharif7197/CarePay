@@ -23,7 +23,6 @@
     <dimen name="dimen_minus_5dp">-5dp</dimen>
 
 
-
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
@@ -82,9 +81,10 @@
     <dimen name="demographics_docs_section_margin_top">36dp</dimen>
     <dimen name="demographics_docs_image_button_container_height">60dp</dimen>
     <dimen name="demographics_docs_image_button_container_margin_top">30dp</dimen>
-    <dimen name="demographics_docs_header_title_text_size" type="dimen" format="float">21.0sp</dimen>
-    <dimen name="demographics_docs_number_text_size" type="dimen" format="float">17.0sp</dimen>
-    <dimen name="demographics_docs_clickable_text_size" type="dimen" format="float">14.0sp</dimen>
+    <dimen name="demographics_docs_header_title_text_size" format="float" type="dimen">21.0sp
+    </dimen>
+    <dimen name="demographics_docs_number_text_size" format="float" type="dimen">17.0sp</dimen>
+    <dimen name="demographics_docs_clickable_text_size" format="float" type="dimen">14.0sp</dimen>
     <dimen name="demographics_docs_section_container_margin_top">30dp</dimen>
     <dimen name="demographics_docs_thumbnail_width">100dp</dimen>
     <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
@@ -201,7 +201,7 @@
     <dimen name="intakeNextButtonContainerHeight">74dp</dimen>
     <dimen name="intakeTitleTopMargin">42dp</dimen>
     <dimen name="intakeQuestionStartEndMargin">15dp</dimen>
-    <dimen name="intakeTitleTextSize" type="dimen" format="float">21.0sp</dimen>
+    <dimen name="intakeTitleTextSize" format="float" type="dimen">21.0sp</dimen>
     <dimen name="intakeCaptionTextSize">13sp</dimen>
     <dimen name="intakeCaptionLeftRightMargin">40dp</dimen>
 
