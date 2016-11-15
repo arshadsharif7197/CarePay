@@ -128,6 +128,18 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("scan_qr_code_heading")
     @Expose
     private String scanQRCodeHeading;
+    @SerializedName("practice_app_logout_text")
+    @Expose
+    private String appointmentsBtnLogout;
+    @SerializedName("practice_app_appointment_heading")
+    @Expose
+    private String appointmentsMainHeading;
+    @SerializedName("practice_app_appointment_subheading")
+    @Expose
+    private String appointmentsSubHeading;
+    @SerializedName("practice_app_check_in_text")
+    @Expose
+    private String appointmentsPracticeCheckin;
 
     /**
      * @return The appointmentsHeading
@@ -687,5 +699,61 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setNoAppointmentsMessageText(String noAppointmentsMessageText) {
         this.noAppointmentsMessageText = noAppointmentsMessageText;
+    }
+
+    /**
+     * @return The appointmentsBtnLogout
+     */
+    public String getAppointmentsBtnLogout() {
+        return StringUtil.getLabelForView(appointmentsBtnLogout);
+    }
+
+    /**
+     * @param appointmentsBtnLogout The appointmentsBtnLogout
+     */
+    public void setAppointmentsBtnLogout(String appointmentsBtnLogout) {
+        this.appointmentsBtnLogout = appointmentsBtnLogout;
+    }
+
+    /**
+     * @return The appointmentsMainHeading
+     */
+    public String getAppointmentsMainHeading() {
+        return StringUtil.getLabelForView(appointmentsMainHeading);
+    }
+
+    /**
+     * @param appointmentsMainHeading The appointmentsMainHeading
+     */
+    public void setAppointmentsMainHeading(String appointmentsMainHeading) {
+        this.appointmentsMainHeading = appointmentsMainHeading;
+    }
+
+    /**
+     * @return The appointmentsSubHeading
+     */
+    public String getAppointmentsSubHeading() {
+        return StringUtil.getLabelForView(appointmentsSubHeading);
+    }
+
+    /**
+     * @param appointmentsSubHeading The appointmentsSubHeading
+     */
+    public void setAppointmentsSubHeading(String appointmentsSubHeading) {
+        this.appointmentsSubHeading = appointmentsSubHeading;
+    }
+
+    /**
+     * @return The appointmentsPracticeCheckin
+     */
+    public String getAppointmentsPracticeCheckin() {
+        return StringUtil.getLabelForView(appointmentsPracticeCheckin);
+    }
+
+    /**
+     * @param appointmentsPracticeCheckin The appointmentsPracticeCheckin
+     */
+    public void setAppointmentsPracticeCheckin(String appointmentsPracticeCheckin) {
+        this.appointmentsPracticeCheckin = appointmentsPracticeCheckin;
     }
 }
