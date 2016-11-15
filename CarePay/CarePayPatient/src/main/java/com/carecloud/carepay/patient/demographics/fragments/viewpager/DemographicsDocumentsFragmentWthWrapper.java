@@ -58,9 +58,6 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
     private Button                                 nextButton;
     private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
     private List<DemographicInsurancePayloadDTO>   insuranceDTOsList;
-    private DemographicInsurancePayloadDTO         insuranceModel1;
-    private DemographicInsurancePayloadDTO         insuranceModel2;
-    private DemographicInsurancePayloadDTO         insuranceModel3;
     private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO                   globalLabelsMetaDTO;
@@ -70,7 +67,6 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
     private TextView                               idTypeClickable;
     private TextView                               idDocTypeLabel;
     private String[]                               docTypes;
-    //    private InsuranceWrapperCollection             wrapperCollection;
     private LinearLayout                           insContainersWrapper;
     private InsuranceWrapperCollection1            wrapperCollection1;
 
@@ -182,22 +178,20 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         nextButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
         label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsNext();
         nextButton.setText(label);
+
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ((DemographicsActivity) getActivity()).setIdDocModel(demPayloadIdDocDTO);
                 // clear the list
                 insuranceDTOsList.clear();
-                // add non trivial insurance models
-                if (isInsuaranceNonTrivial(insuranceModel1)) {
-                    insuranceDTOsList.add(insuranceModel1);
+
+                for(DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
+                    if (isInsuaranceNonTrivial(payloadDTO)) {
+                        insuranceDTOsList.add(payloadDTO);
+                    }
                 }
-                if (isInsuaranceNonTrivial(insuranceModel2)) {
-                    insuranceDTOsList.add(insuranceModel2);
-                }
-                if (isInsuaranceNonTrivial(insuranceModel3)) {
-                    insuranceDTOsList.add(insuranceModel3);
-                }
+
                 // set the list in activity
                 ((DemographicsActivity) getActivity()).setInsuranceModelList(insuranceDTOsList);
                 // move to next tab
@@ -400,6 +394,14 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         public void remove(InsuranceWrapper1 insuranceWrapper) {
             parent.removeView(insuranceWrapper.holderWrapperView);
             wrappers.remove(insuranceWrapper);
+        }
+
+        public List<DemographicInsurancePayloadDTO> exportPayloadsAsList() {
+            List<DemographicInsurancePayloadDTO> payloads = new ArrayList<>();
+            for(InsuranceWrapper1 insuranceWrapper : wrappers) {
+                payloads.add(insuranceWrapper.getWrapperPayloadDTO());
+            }
+            return payloads;
         }
     }
 
