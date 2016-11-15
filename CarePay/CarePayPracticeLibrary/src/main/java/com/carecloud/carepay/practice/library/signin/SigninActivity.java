@@ -38,7 +38,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -139,7 +141,7 @@ public class SigninActivity extends BasePracticeActivity {
 
         initializeLebals();
         // disable sign-in button
-        setEnabledSigninButton(true);
+        setEnabledSigninButton(false);
     }
 
     private void initializeLebals() {
@@ -354,7 +356,9 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onLoginSuccess() {
             //launchHomescreen();
-            WorkflowServiceHelper.getInstance().execute(signinDTO.getMetadata().getTransitions().getAuthenticate(), signinCallback);
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            WorkflowServiceHelper.getInstance().execute(signinDTO.getMetadata().getTransitions().getAuthenticate(), signinCallback,queryMap);
         }
         //launchHomescreen
 
