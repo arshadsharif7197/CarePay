@@ -12,8 +12,27 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalancePayloadDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sudhir_pingale on 10/26/2016.
@@ -22,18 +41,21 @@ import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
 public class AppointmentDetailDialog extends Dialog {
 
     private Context context;
-    private CustomProxyNovaSemiBoldLabel checkingInLabel;
-    private CustomProxyNovaSemiBoldLabel patientNameLabel;
-    private CustomProxyNovaSemiBoldLabel doctorNameLabel;
-    private CustomProxyNovaSemiBoldLabel balanceTextLabel;
-    private CustomProxyNovaSemiBoldLabel balanceValueLabel;
+    private CheckInDTO checkInDTO;
+    private PatientBalanceDTO patientBalanceDTO;
+    private AppointmentPayloadDTO appointmentPayloadDTO;
+    private CarePayTextView checkingInLabel;
+    private CarePayTextView patientNameLabel;
+    private CarePayTextView doctorNameLabel;
+    private CarePayTextView balanceTextLabel;
+    private CarePayTextView balanceValueLabel;
     private CheckBox demographicsCheckbox;
     private CheckBox consentFormsCheckbox;
     private CheckBox intakeCheckbox;
     private CheckBox responsibilityCheckbox;
-    private CustomGothamRoundedMediumButton paymentButton;
-    private CustomGothamRoundedMediumButton assistButton;
-    private CustomGothamRoundedMediumButton pageButton;
+    private CarePayButton paymentButton;
+    private CarePayButton assistButton;
+    private CarePayButton pageButton;
     private ImageView patientImageView;
 
     /**
@@ -41,9 +63,13 @@ public class AppointmentDetailDialog extends Dialog {
      *
      * @param context context
      */
-    public AppointmentDetailDialog(Context context) {
+    public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PatientBalanceDTO patientBalanceDTO,
+                                   AppointmentPayloadDTO payloadDTO) {
         super(context);
         this.context = context;
+        this.checkInDTO = checkInDTO;
+        this.patientBalanceDTO = patientBalanceDTO;
+        this.appointmentPayloadDTO = payloadDTO;
     }
 
     /**
@@ -59,6 +85,7 @@ public class AppointmentDetailDialog extends Dialog {
         setContentView(R.layout.dialog_checkin_detail);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(true);
+        callGetCheckinStatusAPI(); //API call for getting checkin status
         onInitialization();
         onSettingStyle();
         onSetValuesFromDTO();
@@ -68,18 +95,18 @@ public class AppointmentDetailDialog extends Dialog {
      * for initialization UI components  .
      */
     private void onInitialization() {
-        checkingInLabel = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.checkingInLabel);
-        patientNameLabel = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.patientNameLabel);
-        doctorNameLabel = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.doctorNameLabel);
-        balanceTextLabel = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.balanceTextLabel);
-        balanceValueLabel = (CustomProxyNovaSemiBoldLabel) findViewById(R.id.balanceValueLabel);
+        checkingInLabel = (CarePayTextView) findViewById(R.id.checkingInLabel);
+        patientNameLabel = (CarePayTextView) findViewById(R.id.patientNameLabel);
+        doctorNameLabel = (CarePayTextView) findViewById(R.id.doctorNameLabel);
+        balanceTextLabel = (CarePayTextView) findViewById(R.id.balanceTextLabel);
+        balanceValueLabel = (CarePayTextView) findViewById(R.id.balanceValueLabel);
         demographicsCheckbox = (CheckBox) findViewById(R.id.demographicsCheckbox);
         consentFormsCheckbox = (CheckBox) findViewById(R.id.consentFormsCheckbox);
         intakeCheckbox = (CheckBox) findViewById(R.id.intakeCheckbox);
         responsibilityCheckbox = (CheckBox) findViewById(R.id.responsibilityCheckbox);
-        paymentButton = (CustomGothamRoundedMediumButton) findViewById(R.id.paymentButton);
-        assistButton = (CustomGothamRoundedMediumButton) findViewById(R.id.assistButton);
-        pageButton = (CustomGothamRoundedMediumButton) findViewById(R.id.pageButton);
+        paymentButton = (CarePayButton) findViewById(R.id.paymentButton);
+        assistButton = (CarePayButton) findViewById(R.id.assistButton);
+        pageButton = (CarePayButton) findViewById(R.id.pageButton);
         patientImageView = (ImageView) findViewById(R.id.patientImageView);
 
         paymentButton.setOnClickListener(paymentActionListener);
@@ -110,18 +137,21 @@ public class AppointmentDetailDialog extends Dialog {
     /**
      * for setting values to UI Component from DTO .
      */
-    private void onSetValuesFromDTO(){
-        // No DTO available hence setting hardcoded values
-        checkingInLabel.setText(R.string.not_defined);
-        balanceTextLabel.setText(R.string.not_defined);
-        demographicsCheckbox.setText(R.string.not_defined);
-        consentFormsCheckbox.setText(R.string.not_defined);
-        intakeCheckbox.setText(R.string.not_defined);
-        responsibilityCheckbox.setText(R.string.not_defined);
-        paymentButton.setText(R.string.not_defined);
-        assistButton.setText(R.string.not_defined);
-        pageButton.setText(R.string.not_defined);
+    private void onSetValuesFromDTO() {
+        CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
+        checkingInLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()));
+        balanceTextLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogBalance()));
+        demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogDemographics()));
+        consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogConsentForms()));
+        intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
+        responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
+        paymentButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPayment()));
+        assistButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogAssist()));
+        pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
 
+        balanceValueLabel.setText(StringUtil.getFormatedLabal(context, getPatientBalance()));
+        patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));
+        doctorNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getProvider().getName()));
     }
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
@@ -144,4 +174,77 @@ public class AppointmentDetailDialog extends Dialog {
 
         }
     };
+
+    /**
+     * Method to get checkin status API
+     */
+    private void callGetCheckinStatusAPI() {
+        if (checkInDTO != null && checkInDTO.getMetadata().getLinks() != null &&
+                checkInDTO.getMetadata().getLinks().getCheckinStatus() != null) {
+
+            JsonObject queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
+            Gson gson = new Gson();
+            QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+
+            WorkflowServiceHelper.getInstance().execute(checkInDTO.getMetadata().getLinks()
+                    .getCheckinStatus(), getStatusCallBack, getQueryParam(queryStrings));
+        }
+    }
+
+    /**
+     * @param queryStrings the query strings for the url
+     * @return queryMap
+     */
+    private Map<String, String> getQueryParam(QueryStrings queryStrings) {
+        Map<String, String> queryMap = new HashMap<String, String>();
+        queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
+        queryMap.put(queryStrings.getPracticeMgmt().getName(), patientBalanceDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeId().getName(), patientBalanceDTO.getMetadata().getPracticeId());
+
+        return queryMap;
+    }
+
+    WorkflowServiceCallback getStatusCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            updateUI(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(context,
+                    getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    /**
+     * @param workflowDTO workflow model returned by server.
+     */
+    private void updateUI(WorkflowDTO workflowDTO) {
+        JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
+
+        Gson gson = new Gson();
+        CheckInStatusPayloadDTO checkInStatusPayloadDTO = gson.fromJson(jsonObject, CheckInStatusPayloadDTO.class);
+
+        if (checkInStatusPayloadDTO != null) {
+            CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
+                    .getCheckInStatusData().getPayload();
+            demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete());
+            consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete());
+            intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete());
+            responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility());
+        }
+    }
+
+    private String getPatientBalance(){
+        double totalBalance=0;
+        for(PatientBalancePayloadDTO balancePayloadDTO : patientBalanceDTO.getPayload()){
+            totalBalance+=balancePayloadDTO.getTotal();
+        }
+        return CarePayConstants.DOLLAR+totalBalance;
+    }
 }
