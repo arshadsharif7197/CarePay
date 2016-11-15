@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -83,7 +85,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
     private TextView                               idDocTypeLabel;
     private String[]                               docTypes;
     private InsuranceWrapperCollection             wrapperCollection;
-    private LinearLayout insContainersWrapper;
+    private LinearLayout                           insContainersWrapper;
 
 
     @Nullable
@@ -188,6 +190,29 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
     private void setButtons() {
         String label;
 
+        TextView remove1TextView = (TextView) view.findViewById(R.id.demographicsDocsRemoveCard1Button);
+        TextView remove2TextView = (TextView) view.findViewById(R.id.demographicsDocsRemoveCard2Button);
+        TextView remove3TextView = (TextView) view.findViewById(R.id.demographicsDocsRemoveCard3Button);
+
+        remove1TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View clickable) {
+                wrapperCollection.remove(clickable);
+            }
+        });
+        remove2TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View clickable) {
+                wrapperCollection.remove(clickable);
+            }
+        });
+        remove3TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View clickable) {
+                wrapperCollection.remove(clickable);
+            }
+        });
+
         // next button
         nextButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
         label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsNext();
@@ -275,9 +300,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
                                                            insContainersWrapper,
                                                            holderIds,
                                                            holderWrappersIds,
-                                                           globalLabelsMetaDTO,
-                                                           metadataInsuranceDTO);
-        wrapperCollection.initWrappersList(insuranceDTOsList);
+                                                           metadataInsuranceDTO,
+                                                           insuranceDTOsList);
+        wrapperCollection.initWrappersList();
     }
 
     private void showCard(FrameLayout cardContainer, boolean isVisible) {
@@ -309,22 +334,11 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
-//                showCard(insCardContainer1, on);
-//                if (isSecondCardAdded) {
-//                    showCard(insCardContainer2, on);
-//                } else {
-//                    showCard(insCardContainer2, false);
-//                }
-//                if (isThirdCardAdded) {
-//                    showCard(insCardContainer3, on);
-//                } else {
-//                    showCard(insCardContainer3, false);
-//                }
-//                showAddCardButton(on && !isThirdCardAdded);
             }
         });
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
         switchCompat.setText(label);
+        SystemUtil.hideSoftKeyboard(getActivity());
     }
 
     public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
@@ -366,25 +380,21 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         private AppCompatActivity                         wrapperContext;
         private int                                       wrapperHolderId;
         private FragmentManager                           wrapperFm;
-        private FrameLayout                               wrapperHolder;
         private InsuranceScannerFragment                  wrapperScannerFragment;
         private DemographicInsurancePayloadDTO            wrapperPayloadDTO;
         private DemographicMetadataEntityItemInsuranceDTO wrapperMetadataDTO;
-        private DemographicLabelsDTO                      wrapperLabelsDTO;
         private String                                    wrapperTag;
         private LinearLayout                              holderWrapper;
 
         public InsuranceWrapper(AppCompatActivity context,
                                 LinearLayout holderWrapper,
                                 @IdRes int holderId,
-                                DemographicLabelsDTO labels,
                                 DemographicMetadataEntityItemInsuranceDTO metadata,
                                 DemographicInsurancePayloadDTO payload) {
             this.wrapperContext = context;
             this.wrapperHolderId = holderId;
             this.wrapperPayloadDTO = payload;
             this.wrapperMetadataDTO = metadata;
-            this.wrapperLabelsDTO = labels;
             this.wrapperFm = wrapperContext.getSupportFragmentManager();
             this.holderWrapper = holderWrapper;
 
@@ -419,12 +429,23 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         }
 
         public void removeFragment() {
+            wrapperFm.beginTransaction().remove(wrapperScannerFragment).commit();
             wrapperScannerFragment = null;
         }
 
-        public void moveFragmentToContainerOf(InsuranceWrapper destinationWrapper) {
-            int destHolderId = destinationWrapper.wrapperHolderId;
-            wrapperFm.beginTransaction().replace(destHolderId, wrapperScannerFragment, wrapperTag).commitNow();
+        public void copy(InsuranceWrapper sourceWrapper) {
+            wrapperHolderId = sourceWrapper.wrapperHolderId;
+            wrapperPayloadDTO = sourceWrapper.wrapperPayloadDTO;
+            wrapperMetadataDTO = sourceWrapper.wrapperMetadataDTO;
+            wrapperTag = sourceWrapper.wrapperTag;
+            holderWrapper = sourceWrapper.holderWrapper;
+
+            InsuranceScannerFragment scannerFragment = new InsuranceScannerFragment();
+            scannerFragment.setInsuranceMetadataDTO(wrapperMetadataDTO);
+            scannerFragment.setInsuranceDTO(wrapperPayloadDTO);
+            wrapperFm.beginTransaction()
+                    .replace(wrapperHolderId, scannerFragment, wrapperTag)
+                    .commitNow();
         }
     }
 
@@ -434,62 +455,65 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
     class InsuranceWrapperCollection {
 
         private AppCompatActivity wrapperContext;
-        private int                MAX_ELEMS         = 3;
-        private int[]              holderIds         = new int[MAX_ELEMS];
-        private int[]              holdersWrapperIds = new int[MAX_ELEMS];
-        private InsuranceWrapper[] wrappers          = new InsuranceWrapper[MAX_ELEMS];
-        private int                count             = 0;
-        private DemographicLabelsDTO                      globalLabelsMetaDTO;
+        private int                    MAX_ELEMS         = 3;
+        private int[]                  holderIds         = new int[MAX_ELEMS];
+        private int[]                  holdersWrapperIds = new int[MAX_ELEMS];
+        private List<InsuranceWrapper> wrappers          = new ArrayList<>();
         private DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO;
         private LinearLayout                              holdersContainer;
+        List<DemographicInsurancePayloadDTO> insuranceDTOsList;
 
         public InsuranceWrapperCollection(AppCompatActivity wrapperContext,
                                           LinearLayout insContainersWrapper,
                                           int[] holderIds,
                                           int[] holderWrappersId,
-                                          DemographicLabelsDTO globalLabelsMetaDTO,
-                                          DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO) {
+                                          DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO,
+                                          List<DemographicInsurancePayloadDTO> insuranceDTOsList) {
             this.wrapperContext = wrapperContext;
             this.holdersContainer = insContainersWrapper;
             this.holderIds = holderIds;
             this.holdersWrapperIds = holderWrappersId;
-            this.globalLabelsMetaDTO = globalLabelsMetaDTO;
             this.metadataInsuranceDTO = metadataInsuranceDTO;
+            this.insuranceDTOsList = insuranceDTOsList;
         }
 
-        public void initWrappersList(List<DemographicInsurancePayloadDTO> insuranceDTOsList) {
+        public void initWrappersList() {
             // add insurance fragments
             DemographicInsurancePayloadDTO insuranceModel = getInsuranceModelAtIndex(insuranceDTOsList, 0);
-            LinearLayout holderWrapper1 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[0]);
-            wrappers[count++] = new InsuranceWrapper(wrapperContext,
-                                                     holderWrapper1,
-                                                     R.id.demographicsDocsInsurance1,
-                                                     globalLabelsMetaDTO,
-                                                     metadataInsuranceDTO,
-                                                     insuranceModel);
+
+            if(insuranceModel != null) {
+                LinearLayout holderWrapper1 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[0]);
+                InsuranceWrapper wrapper1 = new InsuranceWrapper(wrapperContext,
+                                                                 holderWrapper1,
+                                                                 R.id.demographicsDocsInsurance1,
+                                                                 metadataInsuranceDTO,
+                                                                 insuranceModel);
+                wrappers.add(wrapper1);
+                wrapper1.toggleContainerVisible(true);
+            }
 
             DemographicInsurancePayloadDTO insuranceModel2 = getInsuranceModelAtIndex(insuranceDTOsList, 1);
             if (insuranceModel2 != null) {
-//                isSecondCardAdded = true;
                 LinearLayout holderWrapper2 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[1]);
-                wrappers[count++] = new InsuranceWrapper(wrapperContext,
-                                                         holderWrapper2,
-                                                         R.id.demographicsDocsInsurance2,
-                                                         globalLabelsMetaDTO,
-                                                         metadataInsuranceDTO,
-                                                         insuranceModel2);
+                InsuranceWrapper wrapper2 = new InsuranceWrapper(wrapperContext,
+                                                       holderWrapper2,
+                                                       R.id.demographicsDocsInsurance2,
+                                                       metadataInsuranceDTO,
+                                                       insuranceModel2);
+                wrappers.add(wrapper2);
+                wrapper2.toggleContainerVisible(true);
             }
 
             DemographicInsurancePayloadDTO insuranceModel3 = getInsuranceModelAtIndex(insuranceDTOsList, 2);
             if (insuranceModel3 != null) {
-//                isThirdCardAdded = true;
                 LinearLayout holderWrapper3 = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[2]);
-                wrappers[count++] = new InsuranceWrapper(wrapperContext,
-                                                         holderWrapper3,
-                                                         R.id.demographicsDocsInsurance3,
-                                                         globalLabelsMetaDTO,
-                                                         metadataInsuranceDTO,
-                                                         insuranceModel3);
+                InsuranceWrapper wrapper3 = new InsuranceWrapper(wrapperContext,
+                                                       holderWrapper3,
+                                                       R.id.demographicsDocsInsurance3,
+                                                       metadataInsuranceDTO,
+                                                       insuranceModel3);
+                wrappers.add(wrapper3);
+                wrapper3.toggleContainerVisible(true);
             }
         }
 
@@ -505,58 +529,50 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         }
 
         public void add(DemographicInsurancePayloadDTO insurancePayloadDTO) {
+            int count = insuranceDTOsList.size();
             if (count < MAX_ELEMS) {
                 LinearLayout holderWrapper = (LinearLayout) holdersContainer.findViewById(holdersWrapperIds[count]);
                 InsuranceWrapper insuranceWrapper = new InsuranceWrapper(wrapperContext,
                                                                          holderWrapper,
                                                                          holderIds[count],
-                                                                         globalLabelsMetaDTO,
                                                                          metadataInsuranceDTO,
                                                                          insurancePayloadDTO);
                 insuranceWrapper.setCardTypeFromIndex(count - 1);
-                wrappers[count] = insuranceWrapper;
-                count++;
+                wrappers.add(insuranceWrapper);
             }
         }
 
         /**
          * Removes an element
-         *
-         * @param index The index to remove
          */
-        public void removeFor3At(int index) {
-            if (index >= count) {
-                return;
+        public void remove(View removeClickable) {
+//            ViewParent holderWrapper = removeClickable.getParent();
+            int count = wrappers.size();
+            int index = 0;
+            while (index < count) {
+                InsuranceWrapper wrapper = wrappers.get(index);
+                View holderContainer = wrapper.holderWrapper;
+                ArrayList<View> outViews = new ArrayList<>();
+                holderContainer.findViewsWithText(outViews, "Remove", View.FIND_VIEWS_WITH_TEXT);
+                if (outViews.size() > 0) {
+                    if (outViews.get(0) == removeClickable) {
+                        break;
+                    }
+                }
+                index++;
             }
+            Log.v(DemographicsDocumentsFragmentWthWrapper.class.getSimpleName(), "index: "  + index);
 
-            if (index == 1) {
-                shiftLeft(2);
-            } else if (index == 0) {
-                shiftLeft(1);
-                shiftLeft(2);
-            }
-
-            count--;
-            wrappers[count].removeFragment();
-            wrappers[count].toggleContainerVisible(false);
-            wrappers[count] = null;
-        }
-
-        private void shiftLeft(int indexToShift) {
-            if (indexToShift > 0) {
-                InsuranceWrapper previousInsWrapper = wrappers[indexToShift - 1];
-                InsuranceWrapper currentInsWrapper = wrappers[indexToShift];
-                currentInsWrapper.moveFragmentToContainerOf(previousInsWrapper);
-                wrappers[indexToShift - 1] = wrappers[indexToShift];
+            if (index < count) {
+                insuranceDTOsList.remove(index);
+                View view = wrappers.get(index).holderWrapper;
+                holdersContainer.removeView(view);
+                wrappers.remove(index);
             }
         }
 
         public List<DemographicInsurancePayloadDTO> exportPayloadDTOAsList() {
-            List<DemographicInsurancePayloadDTO> payloadDTOs = new ArrayList<>();
-            for (int index = 0; index < count; index++) {
-                payloadDTOs.add(wrappers[index].getWrapperPayloadDTO());
-            }
-            return payloadDTOs;
+            return insuranceDTOsList;
         }
     }
 }
