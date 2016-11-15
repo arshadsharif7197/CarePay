@@ -1,12 +1,14 @@
 package com.carecloud.carepay.practice.library.homescreen.dtos;
 
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */
 
-public class HomeScreenLabelDTO {
+public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
 
     @SerializedName("checkin_button") @Expose
     private String checkinButton;
@@ -37,6 +39,7 @@ public class HomeScreenLabelDTO {
 
     @SerializedName("logout_button") @Expose
     private String logoutLabel;
+
 
     /**
      * @return The checkinButton
@@ -165,4 +168,7 @@ public class HomeScreenLabelDTO {
     public void setLogoutLabel(String logoutLabel) {
         this.logoutLabel = logoutLabel;
     }
+
+
+
 }
