@@ -14,13 +14,20 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
 import com.carecloud.carepay.practice.library.appointments.services.AppointmentService;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentsActivity extends AppCompatActivity {
+public class AppointmentsActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView appointmentsRecyclerView;
     private RecyclerView.LayoutManager appointmentsLayoutManager;
     private AppointmentsListAdapter appointmentsListAdapter;
@@ -56,16 +63,14 @@ public class AppointmentsActivity extends AppCompatActivity {
         appointmentsItems = new ArrayList<AppointmentDTO>();
         appointmentForTextview = (CarePayTextView ) findViewById(R.id.titleSelectappointmentsubheader);
         appointmentForTextview.setTextColor(Color.WHITE);
-        appointmentForTextview.setText(R.string.not_defined);
         logOutTextview = (TextView) findViewById(R.id.logoutTextview);
-        logOutTextview.setText(R.string.not_defined);
         selectAppointmentTextview = (CarePayTextView ) findViewById(R.id.titleSelectappointmentcheckin);
-        selectAppointmentTextview.setText(R.string.not_defined);
         appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
         noAppointmentView = (LinearLayout) findViewById(R.id.no_appointment_layout);
         noAppointmentsLabel = (CarePayTextView ) findViewById(R.id.no_apt_message_title);
-
+        findViewById(R.id.logoutTextview).setOnClickListener(this);
+        findViewById(R.id.btnHome).setOnClickListener(this);
         getAppointmentInformation();
 
     }
@@ -88,7 +93,7 @@ public class AppointmentsActivity extends AppCompatActivity {
                                  appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
 
                                  appointmentListWithToday = new ArrayList<>();
-
+                                 populateWithLabels();
                                  for (AppointmentDTO appointmentDTO : appointmentsItems) {
                                      String title = getToday(appointmentDTO.getPayload().getStartTime());
                                      if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
@@ -97,7 +102,7 @@ public class AppointmentsActivity extends AppCompatActivity {
 
                                  }
                                  if (appointmentListWithToday != null) {
-                                     appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday);
+                                     appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday, appointmentsResultModel);
                                      appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
                                  }
 
@@ -138,5 +143,59 @@ public class AppointmentsActivity extends AppCompatActivity {
         }
 
         return strDay;
+    }
+
+    @Override
+    public void onClick(View view) {
+        int viewId = view.getId();
+
+        if (viewId == R.id.logoutTextview) {
+            WorkflowServiceHelper.getInstance().executeApplicationStartRequest( logOutCall);
+        } else if (viewId == R.id.btnHome) {
+            //WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getAuthenticate(), homeCall);
+        }
+    }
+
+    WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            AppointmentsActivity.this.finish();
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(AppointmentsActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    WorkflowServiceCallback homeCall = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            AppointmentsActivity.this.finish();
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(AppointmentsActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private void populateWithLabels() {
+        AppointmentLabelDTO labels = appointmentsResultModel.getMetadata().getLabel();
+        logOutTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsBtnLogout()));
+        appointmentForTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsMainHeading()));
+        selectAppointmentTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsSubHeading()));
     }
 }
