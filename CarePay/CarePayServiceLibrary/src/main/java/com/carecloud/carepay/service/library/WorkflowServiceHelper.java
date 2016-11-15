@@ -210,4 +210,8 @@ public class WorkflowServiceHelper {
     private boolean isNullOrEmpty(String string) {
         return (string == null || string.trim().equals(""));
     }
+
+    public static ApplicationType getApplicationType() {
+        return applicationType;
+    }
 }

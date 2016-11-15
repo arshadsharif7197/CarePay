@@ -50,8 +50,10 @@
 
                 <Spinner
                     android:id="@+id/signinLangSpinner"
-                    android:layout_width="79dp"
-                    android:layout_height="51dp"
+                    android:layout_width="@dimen/home_spinner_width"
+                    android:layout_height="@dimen/home_spinner_height"
+                    android:paddingEnd="@dimen/home_spinner_padding_righ_left"
+                    android:paddingStart="@dimen/home_spinner_padding_righ_left"
                     android:background="@drawable/bg_blue_overlay"
                     android:visibility="gone" />
             </LinearLayout>
