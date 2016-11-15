@@ -10,7 +10,8 @@
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
     android:orientation="vertical"
-    android:background="@color/demographics_scan_insurance_bg">
+    android:background="@color/demographics_scan_insurance_bg"
+    android:padding="2dp">
 
     <LinearLayout
         style="@style/DemographicsDocsImageButtonContainerStyle">
@@ -145,12 +146,5 @@
         style="@style/Consent_Form_View_Style"
         android:layout_width="match_parent"/>
 
-    <TextView
-        style="@style/DemographicsDocsClickableTextStyle"
-        android:textColor="@color/harvard_crimson"
-        android:layout_gravity="center"
-        android:id="@+id/demogr_insurance_remove_clickable"
-        android:layout_marginTop="6dp"
-        android:text="Remove"/>
 
 </LinearLayout>

@@ -69,8 +69,8 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                 android:checked="false"
-                android:theme="@style/HaveHealthInsurance"
-                android:text="@string/demogr_insurance_switch_text"/>
+                android:text="@string/demogr_insurance_switch_text"
+                android:theme="@style/HaveHealthInsurance"/>
 
             <View
                 android:layout_width="match_parent"
@@ -79,24 +79,86 @@
                 android:layout_marginTop="@dimen/divider_margin_top"
                 android:background="@color/light_gray"/>
 
-            <FrameLayout
-                android:id="@+id/demographicsDocsInsurance1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
-            <FrameLayout
-                android:id="@+id/demographicsDocsInsurance2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
-            <FrameLayout
-                android:id="@+id/demographicsDocsInsurance3"
+            <LinearLayout
+                android:id="@+id/demographicsDocsInsHoldersContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:visibility="gone"/>
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/demographicsDocsCard1ContainerWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/demographicsDocsInsurance1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        style="@style/DemographicsDocsClickableTextStyle"
+                        android:id="@+id/demographicsDocsRemoveCard1Button"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="0dp"
+                        android:text="Remove"
+                        android:textColor="@color/harvard_crimson"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/demographicsDocsCard2ContainerWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/demographicsDocsInsurance2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        style="@style/DemographicsDocsClickableTextStyle"
+                        android:id="@+id/demographicsDocsRemoveCard2Button"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:text="Remove"
+                        android:layout_marginEnd="0dp"
+                        android:textColor="@color/harvard_crimson"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/demographicsDocsCard3ContainerWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/demographicsDocsInsurance3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/demographicsDocsRemoveCard3Button"
+                        style="@style/DemographicsDocsClickableTextStyle"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="0dp"
+                        android:text="Remove"
+                        android:textColor="@color/harvard_crimson"
+                        android:visibility="gone"/>
+                </LinearLayout>
+            </LinearLayout>
 
             <View
                 android:id="@+id/demographicsDocsBottomView"
@@ -114,8 +176,8 @@
         android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
         android:layout_marginEnd="7dp"
         android:layout_marginTop="7dp"
-        android:text="@string/demogr_docs_add_card"
-        android:background="?attr/selectableItemBackgroundBorderless"/>
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:text="@string/demogr_docs_add_card"/>
 
     <Button
         android:id="@+id/demographicsDocsNextButton"
