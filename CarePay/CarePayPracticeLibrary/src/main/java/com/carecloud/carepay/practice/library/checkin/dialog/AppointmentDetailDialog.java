@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
@@ -237,7 +236,7 @@ public class AppointmentDetailDialog extends Dialog {
             demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete());
             consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete());
             intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete());
-            responsibilityCheckbox.setChecked(false);
+            responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility());
         }
     }
 

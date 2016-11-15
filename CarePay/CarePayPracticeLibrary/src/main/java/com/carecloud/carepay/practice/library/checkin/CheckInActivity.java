@@ -8,7 +8,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -187,66 +186,10 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
         checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments);
         checkinginRecyclerView.setAdapter(checkedInAdapter);
-        checkinginRecyclerView.addOnItemTouchListener(onCheckedInItemTouchListener);
 
         waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments);
         waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
-        waitingRoomRecyclerView.addOnItemTouchListener(onWaitingRoomItemTouchListener);
     }
-
-    private RecyclerView.OnItemTouchListener onCheckedInItemTouchListener = new RecyclerView.OnItemTouchListener() {
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-            View childView = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-            int position;
-            if (childView != null && motionEvent.getAction()==MotionEvent.ACTION_UP) {
-                position = recyclerView.getChildAdapterPosition(childView);
-                AppointmentPayloadDTO appointmentPayloadDTO = checkingInAppointments.get(position);
-                AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
-                        checkInDTO,getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
-                        appointmentPayloadDTO);
-                dialog.show();
-            }
-            return false;
-        }
-
-        @Override
-        public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-
-        }
-
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
-    };
-
-    private RecyclerView.OnItemTouchListener onWaitingRoomItemTouchListener = new RecyclerView.OnItemTouchListener() {
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-            View childView = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-            int position;
-            if (childView != null && motionEvent.getAction()==MotionEvent.ACTION_UP) {
-                position = recyclerView.getChildAdapterPosition(childView);
-                AppointmentPayloadDTO appointmentPayloadDTO = waitingRoomAppointments.get(position);
-                AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
-                        checkInDTO,getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
-                        appointmentPayloadDTO);
-                dialog.show();
-            }
-            return false;
-        }
-
-        @Override
-        public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-
-        }
-
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
-    };
 
     private void setFilterableData(ArrayList<FilterDataDTO> doctorsList, ArrayList<FilterDataDTO> locationsList) {
         applyFilterSortByName(doctorsList);
@@ -446,5 +389,12 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             }
         }
         return null;
+    }
+
+    public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO) {
+            AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
+                    checkInDTO,getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
+                    appointmentPayloadDTO);
+            dialog.show();
     }
 }

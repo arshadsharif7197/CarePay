@@ -12,12 +12,18 @@ public class CheckInStatusDataPayloadValueDTO {
     @SerializedName("intake_forms_complete")
     @Expose
     private boolean intakeFormsComplete;
+
     @SerializedName("demographics_verify_complete")
     @Expose
     private boolean demographicsVerifyComplete;
+
     @SerializedName("consent_forms_complete")
     @Expose
     private boolean consentFormsComplete;
+
+    @SerializedName("respsonsibility")
+    @Expose
+    private boolean respsonsibility;
 
     /**
      * @return The intakeFormsComplete
@@ -59,5 +65,19 @@ public class CheckInStatusDataPayloadValueDTO {
      */
     public void setConsentFormsComplete(boolean consentFormsComplete) {
         this.consentFormsComplete = consentFormsComplete;
+    }
+
+    /**
+     * @return The respsonsibility
+     */
+    public boolean getRespsonsibility() {
+        return respsonsibility;
+    }
+
+    /**
+     * @param respsonsibility The respsonsibility
+     */
+    public void setRespsonsibility(boolean respsonsibility) {
+        this.respsonsibility = respsonsibility;
     }
 }
