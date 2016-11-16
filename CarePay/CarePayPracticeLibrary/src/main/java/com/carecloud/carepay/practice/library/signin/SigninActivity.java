@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -87,8 +88,11 @@ public class SigninActivity extends BasePracticeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        CognitoAppHelper.init(this);
-        signinDTO = getConvertedDTO(SigninDTO.class);       
+        signinDTO = getConvertedDTO(SigninDTO.class);
+        if(signinDTO!=null && signinDTO.getPayload()!=null && signinDTO.getPayload().getPracticeModeSignin()!=null && signinDTO.getPayload().getPracticeModeSignin().getCognito()!=null){
+            ApplicationMode.getInstance().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
+            CognitoAppHelper.init(getApplicationContext());
+        }
         ApplicationPreferences.createPreferences(this); // init preferences
         setContentView(R.layout.activity_signin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);

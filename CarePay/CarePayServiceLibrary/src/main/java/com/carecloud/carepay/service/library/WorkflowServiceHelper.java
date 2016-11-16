@@ -3,6 +3,7 @@ package com.carecloud.carepay.service.library;
 import android.support.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -27,43 +28,21 @@ import retrofit2.Response;
 
 public class WorkflowServiceHelper {
 
-    public enum ApplicationType {
-        PATIENT, PRACTICE
-    }
+
 
     private static WorkflowServiceHelper instance;
 
-    private static ApplicationType applicationType;
 
-    /**
-     * Application type inizialization Patient or Practice
-     *
-     * @param applicationType Patient or Practice
-     */
 
-    public static void initialization(ApplicationType applicationType) {
-        if (instance == null) {
-            instance = new WorkflowServiceHelper();
-        }
-        WorkflowServiceHelper.applicationType = applicationType;
-    }
 
     private WorkflowServiceHelper() {
     }
 
     public static WorkflowServiceHelper getInstance() {
+        if (instance == null) {
+            instance = new WorkflowServiceHelper();
+        }
         return instance;
-    }
-
-    // use for seting practice maganement information
-    private UserPracticeDTO userPracticeDTO;
-
-    public UserPracticeDTO getUserPracticeDTO() {
-        return userPracticeDTO;
-    }
-
-    public void setUserPracticeDTO(UserPracticeDTO userPracticeDTO) {
-        this.userPracticeDTO = userPracticeDTO;
     }
 
     /**
@@ -74,18 +53,18 @@ public class WorkflowServiceHelper {
     private Map<String, String> getUserAuthenticationHeaders() {
         Map<String, String> userAuthHeaders = new HashMap<>();
 
-        if (WorkflowServiceHelper.applicationType == ApplicationType.PRACTICE) {
-            if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
-                userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
+        if ((ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
+                || ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
+                && ApplicationMode.getInstance().getUserPracticeDTO() != null) {
+            userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeUser());
+            userAuthHeaders.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+            userAuthHeaders.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
             }
-            if (userPracticeDTO != null) {
-                userAuthHeaders.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
-                userAuthHeaders.put("practice_id", userPracticeDTO.getPracticeId());
-            }
+
         } else {
-            if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
-                userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
-            }
+            userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
             if (CognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
                 userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
             }
@@ -211,7 +190,5 @@ public class WorkflowServiceHelper {
         return (string == null || string.trim().equals(""));
     }
 
-    public static ApplicationType getApplicationType() {
-        return applicationType;
-    }
+
 }
