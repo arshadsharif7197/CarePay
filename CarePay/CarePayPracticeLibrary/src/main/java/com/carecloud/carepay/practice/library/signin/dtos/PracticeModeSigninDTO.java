@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.signin.dtos;
 
+import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +14,7 @@ public class PracticeModeSigninDTO {
     private SigninLanguageDTO language;
     @SerializedName("cognito")
     @Expose
-    private SigninCognitoDTO cognito;
+    private CognitoDTO cognito;
 
     /**
      *
@@ -38,7 +39,7 @@ public class PracticeModeSigninDTO {
      * @return
      * The cognito
      */
-    public SigninCognitoDTO getCognito() {
+    public CognitoDTO getCognito() {
         return cognito;
     }
 
@@ -47,7 +48,7 @@ public class PracticeModeSigninDTO {
      * @param cognito
      * The cognito
      */
-    public void setCognito(SigninCognitoDTO cognito) {
+    public void setCognito(CognitoDTO cognito) {
         this.cognito = cognito;
     }
 

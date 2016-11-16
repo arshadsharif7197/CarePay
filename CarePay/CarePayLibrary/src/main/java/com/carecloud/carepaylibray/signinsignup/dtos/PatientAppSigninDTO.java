@@ -5,7 +5,7 @@ package com.carecloud.carepaylibray.signinsignup.dtos;
  */
 
 
-import com.carecloud.carepaylibray.signinsignup.dtos.signin.CognitoDTO;
+import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
