@@ -38,7 +38,7 @@ public class ApplicationMode {
 
     /**
      * Return singleton object
-     * @return
+     * @return singleton object
      */
     public static ApplicationMode getInstance() {
         if (instance == null) {

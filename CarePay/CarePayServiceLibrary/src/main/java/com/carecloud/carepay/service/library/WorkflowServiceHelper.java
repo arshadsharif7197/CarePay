@@ -40,7 +40,7 @@ public class WorkflowServiceHelper {
 
     /**
      * Return singleton object
-     * @return
+     * @return singleton object
      */
     public static WorkflowServiceHelper getInstance() {
         if (instance == null) {
