@@ -129,19 +129,19 @@ public class AppointmentsListFragment extends Fragment {
                         String aptTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getTime12Hour();
                         String popupNotificationMsg;
                         if (differenceInMinutes == CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES) {
-                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt()
-                                    , aptTime, doctorName, "2" + " " + labels.getAppointmentPopupNotificationHours());
+                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
+                                    aptTime, doctorName, "2" + " " + labels.getAppointmentPopupNotificationHours());
                         } else if (differenceInMinutes == 60) {
-                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt()
-                                    , aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour());
+                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
+                                    aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour());
                         } else if (differenceInMinutes > 60) {
-                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt()
-                                    , aptTime, doctorName, "1"+" "+labels.getAppointmentPopupNotificationHour()
+                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
+                                    aptTime, doctorName, "1"+" "+labels.getAppointmentPopupNotificationHour()
                                     +" "+labels.getAppointmentPopupNotificationAnd()+" "+(differenceInMinutes - 60)
                                     +" "+labels.getAppointmentPopupNotificationMinutes());
                         } else {
-                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt()
-                                    , aptTime, doctorName, differenceInMinutes + " "
+                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
+                                    aptTime, doctorName, differenceInMinutes + " "
                                     + labels.getAppointmentPopupNotificationMinutes());
                         }
 
