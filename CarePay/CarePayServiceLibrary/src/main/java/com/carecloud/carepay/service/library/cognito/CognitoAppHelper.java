@@ -131,6 +131,10 @@ public class CognitoAppHelper {
         newDevice = null;
     }
 
+    /**
+     * Returns the pool
+     * @return The pool
+     */
     public static CognitoUserPool getPool() {
         if(((ModeChangeable)context).getMode() ==  Mode.MODE_PATIENT){
             userPool = patientUserPool;

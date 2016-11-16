@@ -6,5 +6,6 @@ package com.carecloud.carepay.service.library.mode;
 
 public interface ModeChangeable {
     Mode getMode();
+
     void setMode(Mode mode);
 }
