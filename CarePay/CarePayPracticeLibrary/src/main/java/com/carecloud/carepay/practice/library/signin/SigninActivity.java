@@ -87,10 +87,8 @@ public class SigninActivity extends BasePracticeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        CognitoAppHelper.init(getApplicationContext());
-
-        signinDTO = getConvertedDTO(SigninDTO.class);
+        CognitoAppHelper.init(this);
+        signinDTO = getConvertedDTO(SigninDTO.class);       
         ApplicationPreferences.createPreferences(this); // init preferences
         setContentView(R.layout.activity_signin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
