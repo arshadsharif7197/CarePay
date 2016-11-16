@@ -59,8 +59,8 @@ public abstract class DocumentScannerFragment extends Fragment {
                             boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
                             if (result) {
                                 // uncomment when camera activity
-//                                startActivityForResult(imageCaptureHelper.cameraIntent(getContext()), ImageCaptureHelper.REQUEST_CAMERA);
-                                startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
+                                startActivityForResult(imageCaptureHelper.cameraIntent(getContext()), ImageCaptureHelper.REQUEST_CAMERA);
+//                                startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
                             }
                         } else if (item == 1) {  // "Select from Gallery" chosen
                             imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
