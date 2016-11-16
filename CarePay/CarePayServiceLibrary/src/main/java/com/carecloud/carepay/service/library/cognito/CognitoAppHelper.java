@@ -350,6 +350,4 @@ public class CognitoAppHelper {
         continuation.setAuthenticationDetails(authenticationDetails);
         continuation.continueTask();
     }
-
-
 }

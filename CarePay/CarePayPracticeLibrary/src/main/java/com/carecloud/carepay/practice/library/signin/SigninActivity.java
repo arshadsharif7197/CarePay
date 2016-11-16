@@ -27,6 +27,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -105,6 +106,9 @@ public class SigninActivity extends BasePracticeActivity {
         changeScreenMode(signinScreenMode);
         isEmptyEmail = true;
         isEmptyPassword = true;
+
+        emailEditText.setText("practice@cc.com");
+        passwordEditText.setText("Carepay123!");
     }
 
     /**
@@ -362,7 +366,8 @@ public class SigninActivity extends BasePracticeActivity {
             //launchHomescreen();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
-            WorkflowServiceHelper.getInstance().execute(signinDTO.getMetadata().getTransitions().getAuthenticate(), signinCallback,queryMap);
+            TransitionDTO transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, signinCallback,queryMap);
         }
         //launchHomescreen
 
