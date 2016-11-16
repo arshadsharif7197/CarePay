@@ -89,9 +89,11 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             //shape.setShape(GradientDrawable.OVAL);
             shape.setCornerRadius(50.0f);
             shape.setColor(Color.LTGRAY);
-            if(Build.VERSION.SDK_INT>=16)
+            if(Build.VERSION.SDK_INT>=16) {
                 holder.startCheckInTextview.setBackground(shape);
-            else holder.startCheckInTextview.setBackgroundDrawable(shape);
+            }else{
+                holder.startCheckInTextview.setBackgroundDrawable(shape);
+            }
             holder.startCheckInTextview.setBackground(shape);
             holder.startCheckInTextview.setClickable(false);
         }
