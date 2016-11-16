@@ -21,7 +21,9 @@
     <dimen name="dimen_220dp">220dp</dimen>
     <dimen name="dimen_48dp">48dp</dimen>
     <dimen name="dimen_minus_5dp">-5dp</dimen>
-
+    <dimen name="dimen_60dp">60dp</dimen>
+    <dimen name="dimen_370dp">370dp</dimen>
+    <dimen name="dimen_390dp">390dp</dimen>
 
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
