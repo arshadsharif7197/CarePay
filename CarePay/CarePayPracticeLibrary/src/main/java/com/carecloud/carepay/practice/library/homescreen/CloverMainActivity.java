@@ -26,6 +26,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadata
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -246,7 +247,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void unlockPracticeMode() {
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this);
+        Gson gson = new Gson();
+        PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,pinPadObject.getPinpad(),homeScreenDTO.getMetadata().getLabels(),false);
         confirmationPinDialog.show();
     }
 
@@ -419,7 +422,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     };
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
         // call for transition
         Gson gson = new Gson();
         PatientHomeScreenTransitionsDTO transitions = gson.fromJson(homeScreenDTO.getMetadata().getTransitions(),

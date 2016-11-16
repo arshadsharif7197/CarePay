@@ -12,6 +12,9 @@ public class CheckInMetadataDTO {
     @SerializedName("labels")
     @Expose
     private CheckInLabelDTO label;
+    @SerializedName("links")
+    @Expose
+    private LinksDTO links;
     @SerializedName("transitions")
     @Expose
     private CheckInTransitionsDTO transitions;
@@ -37,6 +40,24 @@ public class CheckInMetadataDTO {
     /**
      *
      * @return
+     * The links
+     */
+    public LinksDTO getLinks() {
+        return links;
+    }
+
+    /**
+     *
+     * @param links
+     * The links
+     */
+    public void setLinks(LinksDTO links) {
+        this.links = links;
+    }
+
+    /**
+     *
+     * @return
      * The transitions
      */
     public CheckInTransitionsDTO getTransitions() {
@@ -52,4 +73,3 @@ public class CheckInMetadataDTO {
         this.transitions = transitions;
     }
 }
-

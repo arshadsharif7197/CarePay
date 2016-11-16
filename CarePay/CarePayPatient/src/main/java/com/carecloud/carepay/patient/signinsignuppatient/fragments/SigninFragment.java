@@ -339,9 +339,9 @@ public class SigninFragment extends Fragment {
         boolean isEmailValid = StringUtil.isValidmail(email);
         emailTextInput.setErrorEnabled(isEmptyEmail || !isEmailValid); // enable for error if either empty or invalid email
         if (isEmptyEmail) {
-            emailTextInput.setError(getString(R.string.signin_signup_error_empty_email));
+            emailTextInput.setError(signInLablesDTO.getPleaseEnterEmail());
         } else if (!isEmailValid) {
-            emailTextInput.setError(getString(R.string.signin_signup_error_invalid_email));
+            emailTextInput.setError(signInLablesDTO.getInvalidEmail());
         } else {
             emailTextInput.setError(null);
         }
@@ -350,7 +350,7 @@ public class SigninFragment extends Fragment {
 
     private boolean checkPassword() {
         isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
-        String error = (isEmptyPassword ? getString(R.string.signin_signup_error_empty_password) : null);
+        String error = (isEmptyPassword ? signInLablesDTO.getPleaseEnterPassword() : null);
         passwordTexInput.setErrorEnabled(isEmptyPassword);
         passwordTexInput.setError(error);
         return !isEmptyPassword;

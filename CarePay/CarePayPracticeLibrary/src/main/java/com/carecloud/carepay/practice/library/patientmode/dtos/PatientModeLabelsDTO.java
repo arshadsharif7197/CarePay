@@ -10,7 +10,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PatientModeLabelsDTO {
+public class PatientModeLabelsDTO  extends PatientModeSwitchPinDTO{
 
     @SerializedName("welcome_heading")
     @Expose
@@ -18,6 +18,7 @@ public class PatientModeLabelsDTO {
     @SerializedName("get_started_heading")
     @Expose
     private String getStartedHeading;
+
 
     /**
      * @return The welcomeHeading
@@ -48,5 +49,6 @@ public class PatientModeLabelsDTO {
     public void setGetStartedHeading(String getStartedHeading) {
         this.getStartedHeading = getStartedHeading;
     }
+
 
 }
