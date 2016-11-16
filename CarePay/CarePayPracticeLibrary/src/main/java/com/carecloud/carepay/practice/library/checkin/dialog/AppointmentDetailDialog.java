@@ -245,6 +245,6 @@ public class AppointmentDetailDialog extends Dialog {
         for(PatientBalancePayloadDTO balancePayloadDTO : patientBalanceDTO.getPayload()){
             totalBalance+=balancePayloadDTO.getTotal();
         }
-        return CarePayConstants.DOLLAR+totalBalance;
+        return " "+CarePayConstants.DOLLAR+totalBalance;
     }
 }
