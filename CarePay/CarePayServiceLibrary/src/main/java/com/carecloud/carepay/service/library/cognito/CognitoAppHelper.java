@@ -32,6 +32,8 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
 import com.carecloud.carepay.service.library.constants.CognitoConstants;
+import com.carecloud.carepay.service.library.mode.Mode;
+import com.carecloud.carepay.service.library.mode.ModeChangeable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,15 +52,21 @@ public class CognitoAppHelper {
 
     private static CognitoAppHelper cognitoAppHelper;
     private static CognitoUserPool  userPool;
+
+    private static CognitoUserPool practiceUserPool;
+    private static CognitoUserPool patientUserPool;
+
     private static String           user;
     private static CognitoDevice    newDevice;
     private static int              itemCount;
 
     private static Context context;
 
-    private static final String userPoolId = CognitoConstants.USER_POOL_ID;
-    private static final String clientId   = CognitoConstants.CLIENT_ID;
+    private static final String patientAppuserPoolId = CognitoConstants.PATIENT_APP_USER_POOL_ID;
+    private static final String patientAppclientId   = CognitoConstants.PATIENT_APP_CLIENT_ID;
 
+    private static final String practiceAppuserPoolId = CognitoConstants.PRACTICE_APP_USER_POOL_ID;
+    private static final String practiceAppclientId   = CognitoConstants.PRACTICE_APP_CLIENT_ID;
 
     private CognitoAppHelper() {
     }
@@ -105,11 +113,13 @@ public class CognitoAppHelper {
             cognitoAppHelper = new CognitoAppHelper();
         }
 
-        if (userPool == null) {
-
+        if (patientUserPool == null) {
             // Create a user pool with default ClientConfiguration
-            userPool = new CognitoUserPool(context, userPoolId, clientId, clientSecret, cognitoRegion);
+            patientUserPool = new CognitoUserPool(context, patientAppuserPoolId, patientAppclientId, clientSecret, cognitoRegion);
+        }
 
+        if (practiceUserPool == null) {
+            practiceUserPool = new CognitoUserPool(context, practiceAppuserPoolId, practiceAppclientId, clientSecret, cognitoRegion);
         }
 
         phoneVerified = false;
@@ -122,6 +132,11 @@ public class CognitoAppHelper {
     }
 
     public static CognitoUserPool getPool() {
+        if(((ModeChangeable)context).getMode() ==  Mode.MODE_PATIENT){
+            userPool = patientUserPool;
+        } else {
+            userPool = practiceUserPool;
+        }
         return userPool;
     }
 
