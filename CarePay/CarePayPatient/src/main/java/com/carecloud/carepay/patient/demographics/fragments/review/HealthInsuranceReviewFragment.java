@@ -17,12 +17,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
+import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
+import com.carecloud.carepay.patient.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -30,6 +33,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -89,6 +93,8 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
     private FrameLayout insCardContainer1;
     private FrameLayout insCardContainer2;
     private FrameLayout insCardContainer3;
+    private LinearLayout insContainersWrapper;
+    private InsuranceWrapperCollection wrapperCollection1;
 
 
     public HealthInsuranceReviewFragment() {
@@ -154,14 +160,15 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         haveMultipleHealthInsuranceTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View listener) {
-                if (!isSecondCardAdded) {
+                wrapperCollection1.add(new DemographicInsurancePayloadDTO());
+               /* if (!isSecondCardAdded) {
                     isSecondCardAdded = true;
                     showInsuranceCard(insCardContainer2, true);
                 } else if (!isThirdCardAdded) {
                     showInsuranceCard(insCardContainer3, true);
                     showAddCardButton(false);
                 }
-                scrollToBottom();
+                scrollToBottom();*/
             }
         });
 
@@ -176,20 +183,19 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         List<DemographicIdDocPayloadDTO> idDocDTOs = new ArrayList<>();
         idDocDTOs.add(demographicPayloadDriversLicenseModel);
         postPayloadModel.setIdDocuments(idDocDTOs);
+
+        insuranceModelList.clear();
+        for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
+            if (isInsuaranceNonTrivial(payloadDTO)) {
+                insuranceModelList.add(payloadDTO);
+            }
+        }
+
+
         // clear the list
         //   insuranceModelList.clear();
         // insuranceFragment.getBitmapsFromImageViews();
         // add non trivial insurance models
-        if (isInsuaranceNonTrivial(insuranceModel1)) {
-            insuranceModelList.add(insuranceModel1);
-        }
-        if (isInsuaranceNonTrivial(insuranceModel2)) {
-            insuranceModelList.add(insuranceModel2);
-        }
-
-        if (isInsuaranceNonTrivial(insuranceModel3)) {
-            insuranceModelList.add(insuranceModel3);
-        }
 
 
         postPayloadModel.setInsurances(insuranceModelList);
@@ -294,16 +300,13 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
     private void setCardContainers() {
 
         // fetch nested fragments containers
-        insCardContainer1 = (FrameLayout) view.findViewById(R.id.insuranceDocument1);
-        insCardContainer2 = (FrameLayout) view.findViewById(R.id.insuranceDocument2);
-        insCardContainer3 = (FrameLayout) view.findViewById(R.id.insuranceDocument3);
 
         isSecondCardAdded = false;
         isThirdCardAdded = false;
 
         fm = getChildFragmentManager();
 
-        // add insurance fragments
+ /*       // add insurance fragments
         insuranceModel1 = getInsuranceModelAtIndex(0);
         if (insuranceModel1 == null) {
             insuranceModel1 = new DemographicInsurancePayloadDTO();
@@ -352,8 +355,38 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         fm.beginTransaction()
                 .replace(R.id.insuranceDocument3, extraInsuranceFrag2, "insurance3")
                 .commit();
+*/
+        insContainersWrapper = (LinearLayout) view.findViewById(R.id.insuranceHoldersContainer);
+        createInsuranceFragments(insContainersWrapper);
     }
 
+    private void createInsuranceFragments(LinearLayout insContainersWrapper) {
+        DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO
+                = (insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
+        wrapperCollection1 = new InsuranceWrapperCollection((AppCompatActivity) getActivity(),
+                insContainersWrapper,
+                metadataInsuranceDTO,
+                globalLabelsMetaDTO,
+                new OnClickRemoveOrAddCallback() {
+                    @Override
+                    public void onAfterRemove() {
+                        showAddCardButton(true);
+                    }
+
+                    @Override
+                    public void onAfterAdd() {
+                        showAddCardButton(false);
+                    }
+                });
+        wrapperCollection1.addAll(insuranceModelList);
+    }
+    private void showCard(FrameLayout cardContainer, boolean isVisible) {
+        if (isVisible) {
+            cardContainer.setVisibility(View.VISIBLE);
+        } else {
+            cardContainer.setVisibility(View.GONE);
+        }
+    }
     private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int i) {
         DemographicInsurancePayloadDTO model = null;
         if (insuranceModelList != null) {
@@ -388,19 +421,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         doYouHaveInsuranceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-                showInsuranceCard(insCardContainer1, on);
-                if (isSecondCardAdded) {
-                    showInsuranceCard(insCardContainer2, on);
-                } else {
-                    showInsuranceCard(insCardContainer2, false);
-                }
-                if (isThirdCardAdded) {
-                    showInsuranceCard(insCardContainer3, on);
-                } else {
-                    showInsuranceCard(insCardContainer3, false);
-                }
-                showAddCardButton(on && !isThirdCardAdded);
-
+                insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
             }
         });
 

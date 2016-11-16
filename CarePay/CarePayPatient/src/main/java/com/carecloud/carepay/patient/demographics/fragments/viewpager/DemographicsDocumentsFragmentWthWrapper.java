@@ -185,7 +185,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
                 // clear the list
                 insuranceDTOsList.clear();
 
-                for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
+                             for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
                     if (isInsuaranceNonTrivial(payloadDTO)) {
                         insuranceDTOsList.add(payloadDTO);
                     }
