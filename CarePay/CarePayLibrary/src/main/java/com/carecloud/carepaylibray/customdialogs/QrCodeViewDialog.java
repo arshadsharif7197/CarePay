@@ -2,8 +2,6 @@ package com.carecloud.carepaylibray.customdialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -25,10 +23,9 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
@@ -87,6 +84,10 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
             WorkflowServiceHelper.getInstance().execute(appointmentMetadataModel.getTransitions()
                     .getCheckinAtOffice(), qrCodeCallBack, getQueryParam(queryStrings));
+        } else {
+            /*Error in generating QR code*/
+            scanQRCodeTextView.setText(appointmentMetadataModel.getLabel().getQrCodeErrorMessage());
+            qrCodeProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -130,25 +131,15 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         QRCodePayloadDTO scanQRCodeDTO = gson.fromJson(jsonObject, QRCodePayloadDTO.class);
 
         if (scanQRCodeDTO != null) {
-            List<Integer> buffer = scanQRCodeDTO.getQrcode().getData();
-            byte[] byteArray = new byte[buffer.size()];
-
-            Iterator<Integer> iterator = buffer.iterator();
-            int index = 0;
-
-            while (iterator.hasNext()) {
-                Integer integer = iterator.next();
-                byteArray[index] = integer.byteValue();
-                index++;
-            }
-
-            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            qrCodeImageView.setImageBitmap(bitmap);
+            Picasso.with(context).load(scanQRCodeDTO.getQrCode()).into(qrCodeImageView);
             scanQRCodeTextView.setText(appointmentMetadataModel.getLabel().getScanQRCodeHeading());
+            qrCodeProgressBar.setVisibility(View.GONE);
+        } else {
+            /*Error in generating QR code*/
+            scanQRCodeTextView.setText(appointmentMetadataModel.getLabel().getQrCodeErrorMessage());
             qrCodeProgressBar.setVisibility(View.GONE);
         }
     }
-
 
     @Override
     public void onClick(View view) {
