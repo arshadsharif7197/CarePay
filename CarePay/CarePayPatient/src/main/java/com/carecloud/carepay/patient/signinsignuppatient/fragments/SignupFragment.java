@@ -37,6 +37,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -51,6 +52,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 public class SignupFragment extends Fragment {
 
     private SignInSignUpDTO signInSignUpDTO;
+    private SignInLablesDTO signInLablesDTO;
     private LinearLayout    parentLayout;
     private ProgressBar     progressBar;
     private TextInputLayout emailInputLayout;
@@ -131,7 +133,7 @@ public class SignupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
         signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
-
+        signInLablesDTO = signInSignUpDTO.getMetadata().getLabels();
         parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
 
         // hide progress
@@ -193,23 +195,18 @@ public class SignupFragment extends Fragment {
 
     private void setEditTexts(View view) {
 
-        String hint;
-
-        hint = getString(R.string.signin_signup_email_hint);
         emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
-        emailInputLayout.setTag(hint);
+        emailInputLayout.setTag(signInLablesDTO.getEmail());
         emailText = (EditText) view.findViewById(R.id.emailEditText);
         emailText.setTag(emailInputLayout);
 
-        hint = getString(R.string.create_password_text);
         passwordInputLayout = (TextInputLayout) view.findViewById(R.id.createPasswordTextInputLayout);
-        passwordInputLayout.setTag(hint);
+        passwordInputLayout.setTag(signInLablesDTO.getCreatePassword());
         passwordText = (EditText) view.findViewById(R.id.createPasswordEditText);
         passwordText.setTag(passwordInputLayout);
 
-        hint = getString(R.string.repeat_password_text);
         passwordRepeatInputLayout = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
-        passwordRepeatInputLayout.setTag(hint);
+        passwordRepeatInputLayout.setTag(signInLablesDTO.getRepeatPassword());
         repeatPasswordText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
         repeatPasswordText.setTag(passwordRepeatInputLayout);
 
@@ -375,9 +372,9 @@ public class SignupFragment extends Fragment {
         boolean isEmailValid = StringUtil.isValidmail(email);
         emailInputLayout.setErrorEnabled(isEmailEmpty || !isEmailValid); // enable for error if either empty or invalid email
         if (isEmailEmpty) {
-            emailInputLayout.setError(getString(R.string.signin_signup_error_empty_email));
+            emailInputLayout.setError(signInLablesDTO.getPleaseEnterEmail());
         } else if (!isEmailValid) {
-            emailInputLayout.setError(getString(R.string.signin_signup_error_invalid_email));
+            emailInputLayout.setError(signInLablesDTO.getInvalidEmail());
         } else {
             emailInputLayout.setError(null);
         }
@@ -392,9 +389,9 @@ public class SignupFragment extends Fragment {
         passwordInputLayout.setErrorEnabled(isPasswordEmpty || !isPasswordValid);
         String error;
         if (isPasswordEmpty) {
-            error = getString(R.string.signin_signup_error_empty_password);
+            error = signInLablesDTO.getPleaseEnterPassword();
         } else if (!isPasswordValid) {
-            error = getString(R.string.signup_error_passwords_invalid);
+            error = signInLablesDTO.getInvalidPassword();
         } else {
             error = null;
         }
@@ -414,9 +411,9 @@ public class SignupFragment extends Fragment {
         passwordRepeatInputLayout.setErrorEnabled(isPasswordEmpty || isRepeatPasswordEmpty || isNotMachedPassw);
 
         if (isRepeatPasswordEmpty) {
-            passwordRepeatInputLayout.setError(getString(R.string.signin_signup_error_empty_repeat_password));
+            passwordRepeatInputLayout.setError(signInLablesDTO.getRepeatPasswordIsEmpty());
         } else if (isNotMachedPassw) {
-            passwordRepeatInputLayout.setError(getString(R.string.signup_error_passwords_unmatched));
+            passwordRepeatInputLayout.setError(signInLablesDTO.getPasswordsDoNotMatch());
         } else {
             passwordRepeatInputLayout.setError(null);
         }
@@ -520,7 +517,8 @@ public class SignupFragment extends Fragment {
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
         Intent intent = new Intent(getActivity(), SignUpConfirmActivity.class);
-        intent.putExtra("source", "signup");
+        intent.putExtra("source", signInLablesDTO.getSignUp());
+        intent.putExtra("signInLablesDTO",signInLablesDTO);
         intent.putExtra("name", userName);
         intent.putExtra("destination", cognitoUserCodeDeliveryDetails.getDestination());
         intent.putExtra("deliveryMed", cognitoUserCodeDeliveryDetails.getDeliveryMedium());

@@ -26,6 +26,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadata
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -33,6 +34,8 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.mode.Mode;
+import com.carecloud.carepay.service.library.mode.ModeChangeable;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -246,7 +249,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void unlockPracticeMode() {
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this);
+        Gson gson = new Gson();
+        PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,pinPadObject.getPinpad(),homeScreenDTO.getMetadata().getLabels(),false);
         confirmationPinDialog.show();
     }
 
@@ -353,7 +358,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
             @Override
             public void onPatientModeSelected() {
-                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), commonTransitionCallback);
+                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), patientModeCallback);
             }
         }, new ChangeModeDialog.LogoutClickListener() {
             @Override
@@ -419,7 +424,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     };
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
         // call for transition
         Gson gson = new Gson();
         PatientHomeScreenTransitionsDTO transitions = gson.fromJson(homeScreenDTO.getMetadata().getTransitions(),
@@ -439,6 +444,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            // change mode to 'PRACTICE'
+            ((ModeChangeable)CloverMainActivity.this.getApplicationContext()).setMode(Mode.MODE_PRACTICE);
+            // navigate to the next screen
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
@@ -447,4 +455,24 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         }
     };
+
+    private WorkflowServiceCallback patientModeCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            // change app mode to 'PATIENT'
+            ((ModeChangeable)CloverMainActivity.this.getApplicationContext()).setMode(Mode.MODE_PATIENT);
+            // navigate to next screen
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+        }
+    };
+
 }

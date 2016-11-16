@@ -38,14 +38,13 @@ import java.util.List;
  * Created by lsoco_user on 9/2/2016.
  * Screen for demographics onboarding confirmation
  */
-public class DemographicsMoreDetailsFragment extends Fragment {
+public class DemographicsAllSetFragment extends Fragment {
 
     private View                 view;
     private Button               gotoCarePay;
     private DemographicLabelsDTO globalLabelsDTO;
     private DemographicDTO       demographicDTO;
     private TextView             header;
-    private TextView             subheader;
     private WorkflowServiceCallback confirmDemWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -83,10 +82,6 @@ public class DemographicsMoreDetailsFragment extends Fragment {
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsAllSetHeader();
         header.setText(label);
 
-        subheader = (TextView) view.findViewById(R.id.moreDetailsSubHeading);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsAllSetSubheader();
-        subheader.setText(label);
-
         gotoCarePay = (Button) view.findViewById(R.id.demographicsGoToCarePayButton);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsAllSetGoButton();
         gotoCarePay.setText(label);
@@ -102,7 +97,6 @@ public class DemographicsMoreDetailsFragment extends Fragment {
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), header);
-        setProximaNovaRegularTypeface(getActivity(), subheader);
         setGothamRoundedMediumTypeface(getActivity(), gotoCarePay);
     }
 

@@ -238,13 +238,12 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsAllSetHeader;
 
-    @SerializedName("demographics_allset_subheader")
-    @Expose
-    private String demographicsAllSetSubheader;
-
     @SerializedName("demographics_allset_go_button")
     @Expose
     private String demographicsAllSetGoButton;
+
+    @SerializedName("demographics_documents_remove") @Expose
+    private String documentsRemove;
 
     /**
      * @return The demographicsUpdateButton
@@ -693,15 +692,6 @@ public class DemographicLabelsDTO {
         this.demographicsAllSetHeader = demographicsAllSetHeader;
     }
 
-    public String getDemographicsAllSetSubheader() {
-        return StringUtil.isNullOrEmpty(demographicsAllSetSubheader) ?
-                CarePayConstants.NOT_DEFINED : demographicsAllSetSubheader;
-    }
-
-    public void setDemographicsAllSetSubheader(String demographicsAllSetSubheader) {
-        this.demographicsAllSetSubheader = demographicsAllSetSubheader;
-    }
-
     public String getDemographicsAllSetGoButton() {
         return StringUtil.isNullOrEmpty(demographicsAllSetGoButton) ?
                 CarePayConstants.NOT_DEFINED : demographicsAllSetGoButton;
@@ -921,13 +911,35 @@ public class DemographicLabelsDTO {
         this.demographicsUpdateDemographicTitle = demographicsUpdateDemographicTitle;
     }
 
+    /**
+     * @return The section title
+     */
     public String getDemographicSectionTitle() {
         return StringUtil.isNullOrEmpty(demographicSectionTitle) ?
                 CarePayConstants.NOT_DEFINED : demographicSectionTitle;
     }
 
+    /**
+     * @param demographicSectionTitle The section title
+     */
     public void setDemographicSectionTitle(String demographicSectionTitle) {
         this.demographicSectionTitle = demographicSectionTitle;
     }
 
+    /**
+     * @return The label
+     */
+    public String getDocumentsRemove() {
+        return StringUtil.isNullOrEmpty(documentsRemove) ?
+                CarePayConstants.NOT_DEFINED : documentsRemove;
+
+    }
+
+    /**
+     *
+     * @param documentsRemove The label
+     */
+    public void setDocumentsRemove(String documentsRemove) {
+        this.documentsRemove = documentsRemove;
+    }
 }
