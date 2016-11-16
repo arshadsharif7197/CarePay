@@ -6,7 +6,8 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 
 /**
  * Created by Jahirul Bhuiyan on 11/16/2016.
- * user for store application variable like user type, congito user pool 
+ * user for store application variable like user type, congito user pool
+ * Singleton class
  */
 
 public class ApplicationMode {
@@ -35,6 +36,10 @@ public class ApplicationMode {
     private ApplicationMode() {
     }
 
+    /**
+     * Return singleton object
+     * @return
+     */
     public static ApplicationMode getInstance() {
         if (instance == null) {
             instance = new ApplicationMode();

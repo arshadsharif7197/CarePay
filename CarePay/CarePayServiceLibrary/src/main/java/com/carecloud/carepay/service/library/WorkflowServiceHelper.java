@@ -38,6 +38,10 @@ public class WorkflowServiceHelper {
     private WorkflowServiceHelper() {
     }
 
+    /**
+     * Return singleton object
+     * @return
+     */
     public static WorkflowServiceHelper getInstance() {
         if (instance == null) {
             instance = new WorkflowServiceHelper();
