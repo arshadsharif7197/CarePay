@@ -108,7 +108,7 @@ public class SigninActivity extends BasePracticeActivity {
         isEmptyPassword = true;
 
         emailEditText.setText("practice@cc.com");
-        passwordEditText.setText("Carepay123!");
+        passwordEditText.setText("Practice123!");
     }
 
     /**

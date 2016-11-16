@@ -365,7 +365,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
             @Override
             public void onPatientModeSelected() {
-                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), commonTransitionCallback);
+                Map<String, String> query = new HashMap<>();
+                query.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+                query.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
             }
         }, new ChangeModeDialog.LogoutClickListener() {
             @Override

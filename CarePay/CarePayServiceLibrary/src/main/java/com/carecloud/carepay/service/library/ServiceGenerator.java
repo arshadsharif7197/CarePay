@@ -67,8 +67,6 @@ class ServiceGenerator {
                         .header("Cache-Control", "no-cache, no-store")
                         .removeHeader("x-api-key")
                         .removeHeader("username")
-                        .removeHeader("practice_mgmt")
-                        .removeHeader("practice_id")
                         .method(original.method(), original.body());
                 DeviceIdentifierDTO deviceIdentifierDTO=HttpConstants.getDeviceInformation();
                 if(deviceIdentifierDTO!=null){
