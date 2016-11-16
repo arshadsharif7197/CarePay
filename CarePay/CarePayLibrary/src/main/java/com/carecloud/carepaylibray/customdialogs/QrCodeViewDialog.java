@@ -35,16 +35,18 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
     private AppointmentDTO appointmentDTO;
-    private AppointmentMetadataModel appointmentMetadataModel;
+
     private ImageView qrCodeImageView;
     private ProgressBar qrCodeProgressBar;
     private CarePayTextView scanQRCodeTextView;
+    private AppointmentMetadataModel appointmentMetadataModel;
 
     /**
      * @param context        activity context
      * @param appointmentDTO appointment model
      */
-    public QrCodeViewDialog(Context context, AppointmentDTO appointmentDTO, AppointmentMetadataModel appointmentMetadataModel) {
+    public QrCodeViewDialog(Context context, AppointmentDTO appointmentDTO,
+                            AppointmentMetadataModel appointmentMetadataModel) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
@@ -57,8 +59,10 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_qrcode_view);
         setCancelable(false);
+
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         WindowManager.LayoutParams params = getWindow().getAttributes();
+
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
@@ -95,7 +99,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
      * @return queryMap
      */
     private Map<String, String> getQueryParam(QueryStrings queryStrings) {
-        Map<String, String> queryMap = new HashMap<String, String>();
+        Map<String, String> queryMap = new HashMap<>();
         queryMap.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
         queryMap.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
         queryMap.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
@@ -124,7 +128,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
      * @param workflowDTO workflow model returned by server.
      */
     private void updateUI(WorkflowDTO workflowDTO) {
-        JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
+        JsonObject jsonObject = workflowDTO.getPayload();
 
         Gson gson = new Gson();
         QRCodePayloadDTO scanQRCodeDTO = gson.fromJson(jsonObject, QRCodePayloadDTO.class);
