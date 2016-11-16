@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:elevation="@dimen/apt_lst_img_elevation"
-                    android:src="@drawable/cell_avatar_badge_pending" />
+                    android:src="@drawable/icn_cell_avatar_badge_pending" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"

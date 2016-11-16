@@ -11,11 +11,13 @@ import java.util.List;
  * Model for payload of response
  */
 public class DemographicPayloadResponseDTO {
+
+    @SerializedName("qrcode")
+    @Expose
+    private String qrCode;
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadInfoDTO demographics;
-
-
     @SerializedName("appointments")
     @Expose
     private List<AppointmentPayloadDTO> appointmentpayloaddto = new ArrayList<>();
@@ -36,5 +38,17 @@ public class DemographicPayloadResponseDTO {
         this.appointmentpayloaddto = appointmentpayloaddto;
     }
 
+    /**
+     * @return The qrCode
+     */
+    public String getQrcode() {
+        return qrCode;
+    }
 
+    /**
+     * @param qrCode The qrCode
+     */
+    public void setQrcode(String qrCode) {
+        this.qrCode = qrCode;
+    }
 }

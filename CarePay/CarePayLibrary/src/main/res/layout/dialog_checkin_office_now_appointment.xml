@@ -8,7 +8,7 @@
     android:orientation="horizontal">
 
     <Button
-        android:id="@+id/checkOfficeButton"
+        android:id="@+id/checkInAtOfficeButton"
         android:layout_width="0dp"
         android:layout_marginTop="@dimen/apt_dl_margin"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
         android:textSize="@dimen/apt_dl_textview_size" />
 
     <Button
-        android:id="@+id/checkOfficeNowButton"
+        android:id="@+id/checkInNowButton"
         android:layout_width="0dp"
         android:layout_marginTop="@dimen/apt_dl_margin"
         android:layout_height="match_parent"

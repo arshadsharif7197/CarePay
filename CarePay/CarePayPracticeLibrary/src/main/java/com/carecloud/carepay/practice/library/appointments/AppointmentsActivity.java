@@ -14,13 +14,17 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
 import com.carecloud.carepay.practice.library.appointments.services.AppointmentService;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -31,7 +35,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -150,7 +156,11 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
         int viewId = view.getId();
 
         if (viewId == R.id.logoutTextview) {
-            WorkflowServiceHelper.getInstance().executeApplicationStartRequest( logOutCall);
+            Map<String, String> query = new HashMap<>();
+            Map<String, String> headers = new HashMap<>();
+            headers.put("x-api-key", HttpConstants.getApiStartKey());
+            headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+            WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getLogout(), logOutCall, headers);
         } else if (viewId == R.id.btnHome) {
             //WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getAuthenticate(), homeCall);
         }
@@ -198,4 +208,6 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
         appointmentForTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsSubHeading()));
         selectAppointmentTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsMainHeading()));
     }
+
+
 }

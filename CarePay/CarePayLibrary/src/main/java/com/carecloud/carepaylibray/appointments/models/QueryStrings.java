@@ -24,6 +24,9 @@ public class QueryStrings {
     @SerializedName("appointment_id")
     @Expose
     private QueryString appointmentId;
+    @SerializedName("patient_id")
+    @Expose
+    private QueryString patientId;
 
     /**
      * 
@@ -115,5 +118,19 @@ public class QueryStrings {
         this.appointmentId = appointmentId;
     }
 
+    /**
+     *
+     * @return The patient_id
+     */
+    public QueryString getPatientId() {
+        return patientId;
+    }
 
+    /**
+     *
+     * @param patientId The patientId
+     */
+    public void setPatientId(QueryString patientId) {
+        this.patientId = patientId;
+    }
 }

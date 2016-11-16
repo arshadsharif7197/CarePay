@@ -34,8 +34,6 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.mode.Mode;
-import com.carecloud.carepay.service.library.mode.ModeChangeable;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -298,13 +296,21 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void navigateToAppointments() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+        Gson gson = new Gson();
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             // transition needed
             Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
             appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(appointmentIntent);
+
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            // transition needed
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         }
     }
 
@@ -358,7 +364,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
             @Override
             public void onPatientModeSelected() {
-                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), patientModeCallback);
+                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), commonTransitionCallback);
             }
         }, new ChangeModeDialog.LogoutClickListener() {
             @Override
@@ -444,9 +450,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            // change mode to 'PRACTICE'
-            ((ModeChangeable)CloverMainActivity.this.getApplicationContext()).setMode(Mode.MODE_PRACTICE);
-            // navigate to the next screen
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
@@ -455,24 +458,4 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         }
     };
-
-    private WorkflowServiceCallback patientModeCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            // change app mode to 'PATIENT'
-            ((ModeChangeable)CloverMainActivity.this.getApplicationContext()).setMode(Mode.MODE_PATIENT);
-            // navigate to next screen
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-        }
-    };
-
 }

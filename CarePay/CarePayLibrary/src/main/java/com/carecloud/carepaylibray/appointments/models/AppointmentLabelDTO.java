@@ -32,6 +32,18 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointments_check_in_early_prompt")
     @Expose
     private String appointmentsCheckInEarlyPrompt;
+    @SerializedName("appointment_popup_notification_hours")
+    @Expose
+    private String appointmentPopupNotificationHours;
+    @SerializedName("appointment_popup_notification_hour")
+    @Expose
+    private String appointmentPopupNotificationHour;
+    @SerializedName("appointment_popup_notification_minutes")
+    @Expose
+    private String appointmentPopupNotificationMinutes;
+    @SerializedName("appointment_popup_notification_and")
+    @Expose
+    private String appointmentPopupNotificationAnd;
     @SerializedName("dismiss_message")
     @Expose
     private String dismissMessage;
@@ -140,6 +152,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("practice_app_check_in_text")
     @Expose
     private String appointmentsPracticeCheckin;
+    @SerializedName("qr_code_error_message")
+    @Expose
+    private String qrCodeErrorMessage;
 
     /**
      * @return The appointmentsHeading
@@ -237,6 +252,62 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAppointmentsCheckInEarlyPrompt(String appointmentsCheckInEarlyPrompt) {
         this.appointmentsCheckInEarlyPrompt = appointmentsCheckInEarlyPrompt;
+    }
+
+    /**
+     * @return The appointmentPopupNotificationHours
+     */
+    public String getAppointmentPopupNotificationHours() {
+        return StringUtil.getLabelForView(appointmentPopupNotificationHours);
+    }
+
+    /**
+     * @param appointmentPopupNotificationHours The appointment_popup_notification_hours
+     */
+    public void setAppointmentPopupNotificationHours(String appointmentPopupNotificationHours) {
+        this.appointmentPopupNotificationHours = appointmentPopupNotificationHours;
+    }
+
+    /**
+     * @return The appointmentPopupNotificationHour
+     */
+    public String getAppointmentPopupNotificationHour() {
+        return StringUtil.getLabelForView(appointmentPopupNotificationHour);
+    }
+
+    /**
+     * @param appointmentPopupNotificationHour The appointment_popup_notification_hour
+     */
+    public void setAppointmentPopupNotificationHour(String appointmentPopupNotificationHour) {
+        this.appointmentPopupNotificationHour = appointmentPopupNotificationHour;
+    }
+
+    /**
+     * @return The appointmentPopupNotificationMinutes
+     */
+    public String getAppointmentPopupNotificationMinutes() {
+        return StringUtil.getLabelForView(appointmentPopupNotificationMinutes);
+    }
+
+    /**
+     * @param appointmentPopupNotificationMinutes The appointment_popup_notification_minutes
+     */
+    public void setAppointmentPopupNotificationMinutes(String appointmentPopupNotificationMinutes) {
+        this.appointmentPopupNotificationMinutes = appointmentPopupNotificationMinutes;
+    }
+
+    /**
+     * @return The appointmentPopupNotificationAnd
+     */
+    public String getAppointmentPopupNotificationAnd() {
+        return StringUtil.getLabelForView(appointmentPopupNotificationAnd);
+    }
+
+    /**
+     * @param appointmentPopupNotificationAnd The appointment_popup_notification_and
+     */
+    public void setAppointmentPopupNotificationAnd(String appointmentPopupNotificationAnd) {
+        this.appointmentPopupNotificationAnd = appointmentPopupNotificationAnd;
     }
 
     /**
@@ -755,5 +826,19 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAppointmentsPracticeCheckin(String appointmentsPracticeCheckin) {
         this.appointmentsPracticeCheckin = appointmentsPracticeCheckin;
+    }
+
+    /**
+     * @return The qrCodeErrorMessage
+     */
+    public String getQrCodeErrorMessage() {
+        return StringUtil.getLabelForView(qrCodeErrorMessage);
+    }
+
+    /**
+     * @param qrCodeErrorMessage The qrCodeErrorMessage
+     */
+    public void setQrCodeErrorMessage(String qrCodeErrorMessage) {
+        this.qrCodeErrorMessage = qrCodeErrorMessage;
     }
 }
