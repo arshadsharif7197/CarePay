@@ -102,4 +102,5 @@
     <color name="home_background_checkin_counter">#35A5E1</color>
 
     <color name="bleu_de_france">#35a5e1</color>
+    <color name="appointment_card_partial_bg">#35a5e1</color> <!-- background appointment card -->
 </resources>

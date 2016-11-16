@@ -30,11 +30,6 @@
             style="@style/DemographicsDocsHeaderTitleStyle"
             android:text="@string/moreDetailsHeadingTextView"/>
 
-        <TextView
-            android:id="@+id/moreDetailsSubHeading"
-            style="@style/DemographicsDocsHeaderSubtitleStyle"
-            android:text="@string/moreDetailsSubHeadingTextView"/>
-
         <Button
             android:id="@+id/demographicsGoToCarePayButton"
             style="@style/DemographicsNextButtonStyle"
