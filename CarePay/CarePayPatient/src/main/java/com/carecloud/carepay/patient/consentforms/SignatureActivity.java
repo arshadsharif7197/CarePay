@@ -14,36 +14,35 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormAuthorizationPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforhipaa.ConsentFormHippaPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedicare.ConsentFormMedicarePayloadDTO;
+import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.github.gcacace.signaturepad.views.SignaturePad;
+import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
-import com.github.gcacace.signaturepad.views.SignaturePad;
-import com.google.gson.Gson;
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+
 
 
 public class SignatureActivity extends AppCompatActivity {
@@ -101,8 +100,6 @@ public class SignatureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
-
-
 
 
         Intent intent = getIntent();
@@ -206,7 +203,7 @@ public class SignatureActivity extends AppCompatActivity {
                 if (numOfLaunches == 2) {
                     addToPayload();
                     navigateToNext();
-                    numOfLaunches=0;
+                    numOfLaunches = 0;
                 } else {
                     Intent intent = getIntent();
                     if (intent.hasExtra("consentform")) {
@@ -299,11 +296,11 @@ public class SignatureActivity extends AppCompatActivity {
             legalLastNameET.setVisibility(View.GONE);
 
         } else {
-            String leagalrepresentative=consentFormLabelsDTO.getLegalSignatureLabel();
+            String leagalrepresentative = consentFormLabelsDTO.getLegalSignatureLabel();
             int indexFirstPercent = leagalrepresentative.indexOf(' ');
             String upToFirstspaceSubstring = leagalrepresentative.substring(0, indexFirstPercent);
-            String fromSecSpaceOnSubstring = leagalrepresentative.substring(indexFirstPercent+1,indexFirstPercent+15);
-            String uptothirdSpace=leagalrepresentative.substring(leagalrepresentative.indexOf(' ', indexFirstPercent + 2), leagalrepresentative.length());
+            String fromSecSpaceOnSubstring = leagalrepresentative.substring(indexFirstPercent + 1, indexFirstPercent + 15);
+            String uptothirdSpace = leagalrepresentative.substring(leagalrepresentative.indexOf(' ', indexFirstPercent + 2), leagalrepresentative.length());
             String signature = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstspaceSubstring, fromSecSpaceOnSubstring, "\n", uptothirdSpace);
             signatureHelpTextView.setText(signature);
             legalFirstName.setVisibility(View.VISIBLE);

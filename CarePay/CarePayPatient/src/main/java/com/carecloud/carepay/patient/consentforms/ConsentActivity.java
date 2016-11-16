@@ -31,10 +31,12 @@ import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
 
-import java.util.Locale;
-
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
+import java.util.Locale;
+
+
 
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {
 
@@ -135,34 +137,33 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
             intent.putExtra("patientsign", patientSignLabel);
             intent.putExtra("legalsign", legalsignLabel);
             intent.putExtra("Header_Title", signMedicareLabel);
-            } else if (showingForm == FormId.FORM2) {
-                intent.putExtra("Header_Title", consentFormLabelsDTO.getSignAuthorizationFormTitle());
+        } else if (showingForm == FormId.FORM2) {
+            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignAuthorizationFormTitle());
+        } else {
+            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
+        }
+
+        startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CarePayConstants.SIGNATURE_REQ_CODE) {
+            if (SignatureActivity.isBackButtonClicked) {
+                SignatureActivity.isBackButtonClicked = false;
             } else {
-                intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
-            }
-
-            startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
-
-        }
-
-
-
-        @Override
-        protected void onActivityResult ( int requestCode, int resultCode, Intent data){
-            super.onActivityResult(requestCode, resultCode, data);
-
-            if (requestCode == CarePayConstants.SIGNATURE_REQ_CODE) {
-                if (SignatureActivity.isBackButtonClicked) {
-                    SignatureActivity.isBackButtonClicked = false;
-                } else {
-                    Fragment fragment = getNextConsentForm();
-                    if (fragment != null) {
-                        replaceFragment(fragment, true);
-                    }
+                Fragment fragment = getNextConsentForm();
+                if (fragment != null) {
+                    replaceFragment(fragment, true);
                 }
-
             }
+
         }
+    }
 
     private void getConsentFormInformation() {
 
