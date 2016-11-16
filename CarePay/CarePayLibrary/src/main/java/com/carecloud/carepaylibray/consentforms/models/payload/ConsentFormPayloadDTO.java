@@ -12,6 +12,10 @@ import java.util.List;
 
 public class ConsentFormPayloadDTO {
 
+
+    @SerializedName("consent_forms")
+    @Expose
+    private ConseFormsPayloadDTO consentforms;
     @SerializedName("demographics")
     @Expose
     private ConseFormDemoagraphicsPayloadDTO demographics;
@@ -34,6 +38,14 @@ public class ConsentFormPayloadDTO {
 
     public void setConsentFormAppointmentPayload(List<ConsentFormAppointmentsPayloadDTO> consentFormAppointmentPayload) {
         this.consentFormAppointmentPayload = consentFormAppointmentPayload;
+    }
+
+    public ConseFormsPayloadDTO getConsentforms() {
+        return consentforms;
+    }
+
+    public void setConsentforms(ConseFormsPayloadDTO consentforms) {
+        this.consentforms = consentforms;
     }
 
 }

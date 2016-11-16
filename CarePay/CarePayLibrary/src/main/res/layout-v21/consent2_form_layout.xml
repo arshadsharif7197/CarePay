@@ -155,6 +155,7 @@
                     <TextView
                         android:id="@+id/choose_genderTextView"
                         style="@style/ConsentForm_GenderStyle"
+                        android:layout_marginLeft="@dimen/consent_gender_left_margin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingEnd="14dp"
