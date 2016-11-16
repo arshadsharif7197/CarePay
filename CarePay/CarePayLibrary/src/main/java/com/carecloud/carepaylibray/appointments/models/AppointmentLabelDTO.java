@@ -152,6 +152,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("practice_app_check_in_text")
     @Expose
     private String appointmentsPracticeCheckin;
+    @SerializedName("qr_code_error_message")
+    @Expose
+    private String qrCodeErrorMessage;
 
     /**
      * @return The appointmentsHeading
@@ -823,5 +826,19 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAppointmentsPracticeCheckin(String appointmentsPracticeCheckin) {
         this.appointmentsPracticeCheckin = appointmentsPracticeCheckin;
+    }
+
+    /**
+     * @return The qrCodeErrorMessage
+     */
+    public String getQrCodeErrorMessage() {
+        return StringUtil.getLabelForView(qrCodeErrorMessage);
+    }
+
+    /**
+     * @param qrCodeErrorMessage The qrCodeErrorMessage
+     */
+    public void setQrCodeErrorMessage(String qrCodeErrorMessage) {
+        this.qrCodeErrorMessage = qrCodeErrorMessage;
     }
 }
