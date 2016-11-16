@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
@@ -70,7 +71,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         holder.appointmentStatusCartView.setProviderName(appointmentItem.getProvider().getName());
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getStartTime()).getDate().getTime());
-
+        holder.appointmentStatusCartView.setTag(appointmentItem);
         /*Picasso.with(context).load(patientModel.getPhoto()).transform(
                 new CircleImageTransform()).resize(160, 160).into(holder.patientPicImageView);
         holder.paymentTextview.setTag(patientModel);
@@ -94,7 +95,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         notifyDataSetChanged();
     }
 
-    class CartViewHolder extends RecyclerView.ViewHolder {
+    class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         //View container;
         /*TextView patientNameTextView;
         TextView patientBalanceTextView;
@@ -110,6 +111,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         CartViewHolder(View view) {
             super(view);
             appointmentStatusCartView= (AppointmentStatusCardView) view;
+            appointmentStatusCartView.setOnClickListener(this);
             /*container = view;
 
             view.setOnClickListener(this);
@@ -119,6 +121,11 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
             assistTextview = (TextView) view.findViewById(R.id.assistTextview);
             patientPicImageView = (ImageView) view.findViewById(R.id.patientPicImageView);
             paymentTextview.setOnClickListener(this);*/
+        }
+
+        @Override
+        public void onClick(View view) {
+            ((CheckInActivity)context).onCheckInItemClick((AppointmentPayloadDTO)view.getTag());
         }
 
         /*@Override
