@@ -135,6 +135,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
         queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
         queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+        queries.put(queryStrings.getPatientId().getName(), appointmentDTO.getMetadata().getPatientId());
         queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
 
         Map<String, String> header = new HashMap<>();
