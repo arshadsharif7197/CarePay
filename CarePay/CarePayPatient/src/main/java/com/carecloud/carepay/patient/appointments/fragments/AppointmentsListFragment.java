@@ -123,29 +123,33 @@ public class AppointmentsListFragment extends Fragment {
                     long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
 
                     if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES
-                            && differenceInMinutes > 0) {
-
-                        String appointmentInDuration;
+                            && differenceInMinutes > 0 && appointmentInfo != null) {
+                        AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
+                        String doctorName = appointmentsItems.get(0).getPayload().getProvider().getName();
+                        String aptTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getTime12Hour();
+                        String popupNotificationMsg;
                         if (differenceInMinutes == CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES) {
-                            appointmentInDuration = "2 hours";
+                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt()
+                                    , aptTime, doctorName, "2" + " " + labels.getAppointmentPopupNotificationHours());
                         } else if (differenceInMinutes == 60) {
-                            appointmentInDuration = "1 hour";
+                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt()
+                                    , aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour());
                         } else if (differenceInMinutes > 60) {
-                            appointmentInDuration = "an hour and " + (differenceInMinutes - 60) + " minutes";
+                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt()
+                                    , aptTime, doctorName, "1"+" "+labels.getAppointmentPopupNotificationHour()
+                                    +" "+labels.getAppointmentPopupNotificationAnd()+" "+(differenceInMinutes - 60)
+                                    +" "+labels.getAppointmentPopupNotificationMinutes());
                         } else {
-                            appointmentInDuration = differenceInMinutes + " minutes";
+                            popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt()
+                                    , aptTime, doctorName, differenceInMinutes + " "
+                                    + labels.getAppointmentPopupNotificationMinutes());
                         }
 
-                        if (appointmentInfo != null) {
-                            AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-                            String doctorName = appointmentsItems.get(0).getPayload().getProvider().getName();
-                            popup = new CustomPopupNotification(getActivity(), getView(),
-                                    labels.getAppointmentsCheckInEarly(), labels.getDismissMessage(),
-                                    getNotificationMessage(labels.getAppointmentsCheckInEarlyPrompt(),
-                                            doctorName, appointmentInDuration),
-                                    positiveActionListener, negativeActionListener);
-                            popup.showPopWindow();
-                        }
+                        popup = new CustomPopupNotification(getActivity(), getView(),
+                                labels.getAppointmentsCheckInEarly(), labels.getDismissMessage(),
+                                popupNotificationMsg,
+                                positiveActionListener, negativeActionListener);
+                        popup.showPopWindow();
                     }
                 }
             } catch (Exception e) {
@@ -153,15 +157,6 @@ public class AppointmentsListFragment extends Fragment {
                 Log.e(LOG_TAG, e.getMessage());
             }
         }
-    }
-
-    private String getNotificationMessage(String baseString, String doctorName, String duration) {
-        String[] splitStr = baseString.split("%");
-        if (splitStr.length > 0) {
-            return splitStr[0] + doctorName + splitStr[2] + duration + splitStr[4];
-        }
-
-        return baseString;
     }
 
     @Override
