@@ -102,6 +102,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final String sectionHeaderTitle = getSectionHeaderTitle(upcomingStartTime);
             final boolean isPending = item.getAppointmentStatusModel().getId() == 1;
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
+            final boolean isCanceled = item.getAppointmentStatusModel().getId() == 4;
 
             if (getSectionHeaderTitle(upcomingStartTime).equals(CarePayConstants.DAY_UPCOMING)) {
                 if (isCheckedIn) {
@@ -144,11 +145,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             new CancelAppointmentDialog(context, item).show();
                         } else if (isCheckedIn) {
                             new QueueAppointmentDialog(context, item, appointmentLabels).show();
+                        } else if (isPending) {
+                            new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo).show();
+                        } else if (isCanceled) {
+                            new CancelAppointmentDialog(context, item, true, appointmentInfo).show();
                         } else {
                             if (isAppointmentCancellable(item)) {
                                 new CancelAppointmentDialog(context, item, false, appointmentInfo).show();
-                            } else if (isPending) {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo).show();
                             } else {
                                 new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo).show();
                             }
@@ -189,6 +192,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.todayTimeTextView.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.lightningyellow));
 
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                holder.cellAvatar.setImageDrawable(context.getResources()
+                        .getDrawable(R.drawable.icn_cell_avatar_badge_missed));
+            } else if (isCanceled) {
                 holder.cellAvatar.setVisibility(View.VISIBLE);
                 holder.cellAvatar.setImageDrawable(context.getResources()
                         .getDrawable(R.drawable.icn_cell_avatar_badge_canceled));

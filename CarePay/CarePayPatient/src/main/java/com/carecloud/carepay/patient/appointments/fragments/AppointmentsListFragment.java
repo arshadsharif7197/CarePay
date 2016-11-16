@@ -22,6 +22,7 @@ import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -38,7 +39,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class AppointmentsListFragment extends Fragment {
@@ -46,7 +49,6 @@ public class AppointmentsListFragment extends Fragment {
     private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
 
     private AppointmentsResultModel appointmentInfo;
-//    private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
     private SwipeRefreshLayout appointmentRefresh;
     private LinearLayout appointmentView;
@@ -80,8 +82,39 @@ public class AppointmentsListFragment extends Fragment {
             ApplicationPreferences.Instance.writeStringToSharedPref(
                     CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
                     appointmentsItems.get(0).getPayload().getId());
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(appointmentInfo.getState());
 
+            onCheckInNow(appointmentsItems.get(0));
+        }
+    };
+
+    /**
+     * call check-in Now api.
+     */
+    private void onCheckInNow(AppointmentDTO appointmentDTO) {
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        Map<String, String> header = new HashMap<>();
+        header.put("transition", "true");
+
+        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckin();
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
+    }
+
+    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
         }
     };
 

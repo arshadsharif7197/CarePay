@@ -16,11 +16,13 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,48 +78,35 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.checkInAtOfficeButton) {
-            onCheckInAtOffice();
+            new QrCodeViewDialog(context, appointmentDTO, appointmentInfo.getMetadata()).show();
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
-            onCheckInNow();
+            TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckin();
+            doTransition(transitionDTO, demographicsVerifyCallback);
             cancel();
         }
     }
 
     /**
-     * call check-in at office api.
+     * call to do transition.
      */
-    private void onCheckInAtOffice() {
-        /*To show QR code in dialog*/
+    private void doTransition(TransitionDTO transitionDTO, WorkflowServiceCallback callback) {
+        Gson gson = new Gson();
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+        JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
+        QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+
+        queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+        queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
 
-        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToQRCodeCallback, queries, header);
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, callback, queries, header);
     }
 
-    /**
-     * call check-in Now api.
-     */
-    private void onCheckInNow() {
-        Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-
-        Map<String, String> header = new HashMap<>();
-        header.put("transition", "true");
-
-        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckin();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
-    }
-
-    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback demographicsVerifyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
         }
@@ -125,22 +114,6 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-        }
-    };
-
-    private WorkflowServiceCallback transitionToQRCodeCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            AppointmentMetadataModel appointmentMetadataModel = appointmentInfo.getMetadata();
-            new QrCodeViewDialog(context, appointmentDTO, appointmentMetadataModel).show();
         }
 
         @Override

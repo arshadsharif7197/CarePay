@@ -15,7 +15,10 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -125,10 +128,14 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
      * call cancel appointment api.
      */
     private void onCancelAppointment() {
+        Gson gson = new Gson();
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+        JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
+        QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+
+        queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+        queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");

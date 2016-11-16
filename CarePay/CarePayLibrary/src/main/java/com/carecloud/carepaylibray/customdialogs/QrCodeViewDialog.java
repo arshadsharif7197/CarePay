@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
 import com.carecloud.carepaylibray.appointments.models.QRCodePayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -152,7 +153,6 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
             qrCodeProgressBar.setVisibility(View.GONE);
         }
     }
-
 
     @Override
     public void onClick(View view) {
