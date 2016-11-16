@@ -29,13 +29,13 @@ import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoin
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
-import java.util.Locale;
+import com.google.gson.Gson;
 
+import java.util.Locale;
 
 
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {
