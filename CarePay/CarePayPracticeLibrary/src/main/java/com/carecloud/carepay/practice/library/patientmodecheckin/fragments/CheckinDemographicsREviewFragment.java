@@ -28,7 +28,7 @@ public class CheckinDemographicsReviewFragment extends Fragment {
         needUpdateButton = (Button) view.findViewById(R.id.checkinDemographicsReviewUpdateClickable);
         needUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 // transition
                 CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
@@ -38,7 +38,7 @@ public class CheckinDemographicsReviewFragment extends Fragment {
         areCorrectButton = (Button) view.findViewById(R.id.checkinDemographicsReviewCorrectClickable);
         areCorrectButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 // transition
                 CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
