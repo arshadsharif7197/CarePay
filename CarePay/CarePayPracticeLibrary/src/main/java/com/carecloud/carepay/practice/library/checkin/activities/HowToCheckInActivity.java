@@ -14,8 +14,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
+import com.carecloud.carepay.practice.library.checkin.dtos.ScanQRCodeResultDTO;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
@@ -28,6 +31,10 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButto
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -254,7 +261,65 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
                 Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format, Toast.LENGTH_LONG);
                 toast.show();
+
+                try {
+                    processScannedQRCOde(contents);
+                } catch (JsonSyntaxException ex) {
+                    Toast.makeText(this, "Can not process this QR code. May be this QR code is invalid!", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
+
+    /**
+     *
+     * @param qrCodeData
+     *  the QR code data
+     */
+    private void processScannedQRCOde(String qrCodeData) {
+        Gson gson = new Gson();
+        ScanQRCodeResultDTO scanQRCodeResultDTO = gson.fromJson(qrCodeData, ScanQRCodeResultDTO.class);
+
+        JsonObject queryStringObject = signinPatientModeDTO.getMetadata().getTransitions()
+                .getAction().getQueryString();
+
+        QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("transition", "true");
+
+        WorkflowServiceHelper.getInstance().execute(signinPatientModeDTO.getMetadata()
+                .getTransitions().getAction(), appointmentCallBack,
+                getQueryParam(queryStrings, scanQRCodeResultDTO));
+    }
+
+    /**
+     * @param queryStrings the query strings for the url
+     * @return queryMap
+     */
+    private Map<String, String> getQueryParam(QueryStrings queryStrings, ScanQRCodeResultDTO scanQRCodeResultDTO) {
+        Map<String, String> queryMap = new HashMap<String, String>();
+        queryMap.put(queryStrings.getAppointmentId().getName(), scanQRCodeResultDTO.getAppointmentId());
+        queryMap.put(queryStrings.getPracticeMgmt().getName(), scanQRCodeResultDTO.getPracticeManagement());
+        queryMap.put(queryStrings.getPracticeId().getName(), scanQRCodeResultDTO.getPracticeId());
+
+        return queryMap;
+    }
+
+    WorkflowServiceCallback appointmentCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(HowToCheckInActivity.this, workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(HowToCheckInActivity.this,
+                    getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }
