@@ -108,13 +108,17 @@ public class SigninActivity extends BasePracticeActivity {
         changeScreenMode(signinScreenMode);
         isEmptyEmail = true;
         isEmptyPassword = true;
+
+        // TODO: 11/17/2016
+        emailEditText.setText("practice@cc.com");
+        passwordEditText.setText("Practice123!");
     }
 
     /**
      * Initailizing the view
      */
     public void initViews() {
-    //    signinButton = (TextView) findViewById(R.id.signinTextview);
+//        signinButton = (TextView) findViewById(R.id.signinTextview);
         signIn = (Button) findViewById(R.id.signinButton);
         homeButton = (ImageView) findViewById(R.id.signInHome);
         gobackButton = (TextView) findViewById(R.id.goBackButtonTextview);
