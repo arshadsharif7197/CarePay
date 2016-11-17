@@ -12,17 +12,21 @@ import android.widget.EditText;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
-import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingLabelDTO;
-import com.carecloud.carepay.practice.library.practicesetting.services.PracticeSettingService;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinDTO;
+import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinResponseDTO;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Created by prem_mourya on 10/20/2016.
@@ -35,16 +39,21 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     private CustomGothamRoundedMediumButton headerLabel;
     private CarePayTextView                 subHeaderLabel;
     private CustomGothamRoundedMediumButton dialogCancelTextView;
-    private PracticeSettingDTO              practiceSettingResponse;
+    private PatientModeSwitchPinDTO patientModeSwitchPinDTO;
+    private boolean isDynamicLabels ;
+    private TransitionDTO transitionDTOPinLink;
 
     /**
-     * Constructor.
+     * Constructor calling from  Patient screen for Switching to Practice Mode.
      *
      * @param context context
      */
-    public ConfirmationPinDialog(Context context) {
+    public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink, PatientModeSwitchPinDTO patientModeSwitchPinDTO, boolean isDynamicLabels) {
         super(context);
         this.context = context;
+        this.transitionDTOPinLink = transitionDTOPinLink;
+        this.patientModeSwitchPinDTO = patientModeSwitchPinDTO;
+        this.isDynamicLabels = isDynamicLabels;
     }
 
     /**
@@ -59,11 +68,11 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_confirmation_pin);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        getPracticeSetting();
         setCancelable(false);
         onInitialization();
         onSettingStyle();
         onSetListener();
+        onSetPinLabels();
 
     }
 
@@ -128,9 +137,12 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
     private void validatePin() {
         String pin = pinEditText.getText().toString();
-        if (pin.length() == 4 && pin.equalsIgnoreCase(CarePayConstants.PRACTICE_APP_MODE_DEFAULT_PIN)) {
-            ((BasePracticeActivity) context).onPinConfirmationCheck(true, practiceSettingResponse, pin);
-            dismiss();
+        if (pin.length() == 4) {
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("pin", pin);
+            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+            WorkflowServiceHelper.getInstance().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
         }
     }
 
@@ -150,29 +162,48 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         }
     }
 
-    private void getPracticeSetting() {
-        PracticeSettingService aptService = (new BaseServiceGenerator(context)).createService(PracticeSettingService.class);
-        Call<PracticeSettingDTO> call = aptService.getPracticeSettingInformation();
-        call.enqueue(new Callback<PracticeSettingDTO>() {
-
-            @Override
-            public void onResponse(Call<PracticeSettingDTO> call, Response<PracticeSettingDTO> response) {
-                practiceSettingResponse = response.body();
-                PracticeSettingLabelDTO practiceSettingLabels = response.body().getMetadata().getLabel();
-                onSetViewLabels(practiceSettingLabels);
-            }
-
-            @Override
-            public void onFailure(Call<PracticeSettingDTO> call, Throwable throwable) {
-                cancel();
-            }
-        });
-    }
-
-    private void onSetViewLabels(PracticeSettingLabelDTO practiceSettingLabels) {
-        headerLabel.setText(practiceSettingLabels.getPracticeSettingPinPracticeMode());
-        subHeaderLabel.setText(practiceSettingLabels.getPracticeSettingPinEnterUnlockPracticeMode());
-        dialogCancelTextView.setText(practiceSettingLabels.getPracticeSettingPinCancel());
+    private void onSetPinLabels(){
+        headerLabel.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinHeader());
+        subHeaderLabel.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinEnterUnlock());
+        dialogCancelTextView.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinCancel());
+        if(this.isDynamicLabels) {
+            onSetpinNumberLabel(R.id.pin_key_one, patientModeSwitchPinDTO.getPracticeModeSwitchPinOne());
+            onSetpinNumberLabel(R.id.pin_key_two, patientModeSwitchPinDTO.getPracticeModeSwitchPinTwo());
+            onSetpinNumberLabel(R.id.pin_key_three, patientModeSwitchPinDTO.getPracticeModeSwitchPinThree());
+            onSetpinNumberLabel(R.id.pin_key_four, patientModeSwitchPinDTO.getPracticeModeSwitchPinFour());
+            onSetpinNumberLabel(R.id.pin_key_five, patientModeSwitchPinDTO.getPracticeModeSwitchPinFive());
+            onSetpinNumberLabel(R.id.pin_key_six, patientModeSwitchPinDTO.getPracticeModeSwitchPinSix());
+            onSetpinNumberLabel(R.id.pin_key_seven, patientModeSwitchPinDTO.getPracticeModeSwitchPinSeven());
+            onSetpinNumberLabel(R.id.pin_key_eighth, patientModeSwitchPinDTO.getPracticeModeSwitchPinEight());
+            onSetpinNumberLabel(R.id.pin_key_nine, patientModeSwitchPinDTO.getPracticeModeSwitchPinNine());
+            onSetpinNumberLabel(R.id.pin_key_zero, patientModeSwitchPinDTO.getPracticeModeSwitchPinZero());
+        }
         findViewById(R.id.mainViewLayout).setVisibility(View.VISIBLE);
     }
+
+    private void onSetpinNumberLabel(int pinViewId,String pinNumber){
+        ((CustomGothamRoundedMediumButton)findViewById(pinViewId)).setText(pinNumber);
+    }
+
+    WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Gson gson = new Gson();
+            PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO =   gson.fromJson(workflowDTO.toString(),PatientModeSwitchPinResponseDTO.class);
+            if(patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
+                ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
+                dismiss();
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(context, context.getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
 }

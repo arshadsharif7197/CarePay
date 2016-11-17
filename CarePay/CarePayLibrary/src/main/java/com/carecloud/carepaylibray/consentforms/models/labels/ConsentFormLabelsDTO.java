@@ -9,7 +9,9 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ConsentFormLabelsDTO {
+import java.io.Serializable;
+
+public class ConsentFormLabelsDTO implements Serializable {
 
     @SerializedName("Consent_for_medicare_title")
     @Expose
@@ -92,6 +94,9 @@ public class ConsentFormLabelsDTO {
     @SerializedName("Consent_for_medicare_text")
     @Expose
     private String consentForMedicareText;
+    @SerializedName("signature_activity_title")
+    @Expose
+    private String signatureActivityTitle;
 
     /**
      * @return The consentForMedicareTitle
@@ -474,4 +479,17 @@ public class ConsentFormLabelsDTO {
         this.consentForMedicareText = consentForMedicareText;
     }
 
+    /**
+     * @return The signatureActivityTitle
+     */
+    public String getSignatureActivityTitleText() {
+        return StringUtil.getLabelForView(signatureActivityTitle);
+    }
+
+    /**
+     * @param signatureActivityTitle The Signature_Activity_Title
+     */
+    public void setSignatureActivityTitleText(String signatureActivityTitle) {
+        this.signatureActivityTitle = signatureActivityTitle;
+    }
 }

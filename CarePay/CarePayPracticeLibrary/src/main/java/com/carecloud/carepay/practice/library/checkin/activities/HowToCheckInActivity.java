@@ -24,6 +24,7 @@ import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -47,13 +48,13 @@ import java.util.Map;
 
 public class HowToCheckInActivity extends BasePracticeActivity {
 
-    private SigninPatientModeDTO signinPatientModeDTO;
+    private SigninPatientModeDTO            signinPatientModeDTO;
     private CustomGothamRoundedMediumButton goBackButton;
-    private CustomGothamRoundedMediumLabel howToCheckInTextView;
-    private CustomGothamRoundedBookButton carePayLoginButton;
-    private  CustomGothamRoundedBookButton scanQRCodeButton;
-    private  CustomGothamRoundedMediumButton createCarePayAccountButton;
-    private CustomGothamRoundedBookButton manualSearchButton;
+    private CustomGothamRoundedMediumLabel  howToCheckInTextView;
+    private CustomGothamRoundedBookButton   carePayLoginButton;
+    private CustomGothamRoundedBookButton   scanQRCodeButton;
+    private CustomGothamRoundedMediumButton createCarePayAccountButton;
+    private CustomGothamRoundedBookButton   manualSearchButton;
 
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
@@ -73,7 +74,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     /**
      * Method to initialise view
      */
-    void initViews(){
+    void initViews() {
         goBackButton = (CustomGothamRoundedMediumButton)
                 findViewById(R.id.goBackButton);
         goBackButton.setOnClickListener(goBackButtonListener);
@@ -118,11 +119,14 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     View.OnClickListener carePayLoginButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            TransitionDTO transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "true");
+            TransitionDTO transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
             WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);
             /*Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
             startActivity(intent);*/
@@ -207,11 +211,11 @@ public class HowToCheckInActivity extends BasePracticeActivity {
      * for any other devices implement com.google.zxing.client.android.SCAN
      */
     public void scanQR() {
-        if(HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
+        if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
             Intent intent = new Intent();
             intent.setAction("com.carecloud.carepay.practice.clover.qrscanner.CloverQRScannerActivity");
             startActivity(intent);
-        }else {
+        } else {
             try {
                 //start the scanning activity from the com.google.zxing.client.android.SCAN intent
                 Intent intent = new Intent(ACTION_SCAN);
@@ -249,13 +253,13 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
     /**
      * on ActivityResult method
+     *
      * @param requestCode requestCode
-     * @param resultCode resultCode
-     * @param intent result intent
+     * @param resultCode  resultCode
+     * @param intent      result intent
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == 0 && resultCode == RESULT_OK) {
                 //get the extras that are returned from the intent
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
@@ -267,7 +271,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 } catch (JsonSyntaxException ex) {
                     Toast.makeText(this, "Can not process this QR code. May be this QR code is invalid!", Toast.LENGTH_LONG).show();
                 }
-            }
         }
     }
 
@@ -300,7 +303,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     private Map<String, String> getQueryParam(QueryStrings queryStrings, ScanQRCodeResultDTO scanQRCodeResultDTO) {
         Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.put(queryStrings.getAppointmentId().getName(), scanQRCodeResultDTO.getAppointmentId());
-        queryMap.put(queryStrings.getPracticeMgmt().getName(), scanQRCodeResultDTO.getPracticeManagement());
+        queryMap.put(queryStrings.getPracticeManagement().getName(), scanQRCodeResultDTO.getPracticeManagement());
         queryMap.put(queryStrings.getPracticeId().getName(), scanQRCodeResultDTO.getPracticeId());
 
         return queryMap;

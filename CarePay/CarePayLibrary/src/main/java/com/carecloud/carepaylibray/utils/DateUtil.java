@@ -447,4 +447,14 @@ public class DateUtil {
                 "MM/yyyy", Locale.getDefault());
         return format.format(calendar.getTime());
     }
+
+    /**
+     * Format the date as "EEEE, MMMM d" (eg Monday, Oct 10th)
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsDayShortMonthDayOrdinal() {
+        return String.format(Locale.getDefault(), "%s, %s %d%s",
+                dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+    }
 }

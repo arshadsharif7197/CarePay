@@ -13,6 +13,10 @@ public class HomeScreenMetadataDTO {
     @Expose
     private HomeScreenLabelDTO labels;
 
+    @SerializedName("links")
+    @Expose
+    private JsonObject links;
+
     @SerializedName("transitions")
     @Expose
     private JsonObject transitions;
@@ -51,5 +55,13 @@ public class HomeScreenMetadataDTO {
      */
     public void setTransitions(JsonObject transitions) {
         this.transitions = transitions;
+    }
+
+    public JsonObject getLinks() {
+        return links;
+    }
+
+    public void setLinks(JsonObject links) {
+        this.links = links;
     }
 }

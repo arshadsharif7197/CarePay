@@ -6,6 +6,8 @@ import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.fragments.SigninFragment;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
@@ -25,6 +27,10 @@ public class SigninSignupActivity extends BasePatientActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_signup);
         signInSignUpDTO = getConvertedDTO(SignInSignUpDTO.class);
+        if(signInSignUpDTO!=null && signInSignUpDTO.getPayload()!=null && signInSignUpDTO.getPayload().getPatientAppSignin()!=null && signInSignUpDTO.getPayload().getPatientAppSignin().getCognito()!=null){
+            ApplicationMode.getInstance().setCognitoDTO(signInSignUpDTO.getPayload().getPatientAppSignin().getCognito());
+            CognitoAppHelper.init(getApplicationContext());
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()

@@ -17,9 +17,9 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabels
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeOptionDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
-import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
@@ -98,12 +98,14 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     private void setClickables() {
         getStartedButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getStart();
+            public void onClick(View view) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
                 Map<String, String> headers = new HashMap<>();
                 headers.put("transition", "true");
+                TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getStart();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, queryMap, headers);
             }
         });
@@ -125,16 +127,18 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         lockIcnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context);
+                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context,patientModeSplashDTO.getMetadata().getLinks().getPinpad(),patientModeSplashDTO.getMetadata().getLabels(), false);
                 confirmationPinDialog.show();
             }
         });
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, PracticeSettingDTO practiceSettingDTO, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin,  String pin) {
         TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+        query.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
         WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, query);
     }
 

@@ -22,6 +22,8 @@ public class UserPracticeDTO {
     @Expose
     private String practiceId;
 
+    private String practiceUser;
+
     /**
      *
      * @return
@@ -94,4 +96,11 @@ public class UserPracticeDTO {
         this.practiceId = practiceId;
     }
 
+    public String getPracticeUser() {
+        return practiceUser;
+    }
+
+    public void setPracticeUser(String practiceUser) {
+        this.practiceUser = practiceUser;
+    }
 }
