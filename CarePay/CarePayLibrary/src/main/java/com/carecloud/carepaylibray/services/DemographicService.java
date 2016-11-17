@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.services;
+package com.carecloud.carepaylibray.services;
 
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;

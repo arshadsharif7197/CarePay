@@ -19,7 +19,7 @@ import android.widget.RadioGroup;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -30,7 +30,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
     private Context context;
     private AppointmentDTO appointmentDTO;
-    private AppointmentLabelDTO appointmentLabels;
+    private AppointmentsResultModel appointmentInfo;
 
     private RadioGroup cancelReasonRadioGroup;
     private Button cancelAppointmentButton;
@@ -40,14 +40,14 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
      * Contractor for dialog.
      * @param context context
      * @param appointmentDTO appointment Item
-     * @param appointmentLabels screen labels
+     * @param appointmentInfo Appointment Info data
      */
     public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                         AppointmentLabelDTO appointmentLabels) {
+                                         AppointmentsResultModel appointmentInfo) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
-        this.appointmentLabels = appointmentLabels;
+        this.appointmentInfo = appointmentInfo;
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         if (viewId == R.id.dialogCloseHeaderImageView) {
             cancel();
         } else if (viewId == R.id.cancelAppointmentButton) {
-            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentLabels).show();
+            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentInfo).show();
             cancel();
         }
     }

@@ -5,6 +5,7 @@ package com.carecloud.carepaylibray.consentforms.models.transitions;
  */
 
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,19 +13,19 @@ public class ConsentFormTransitionsDTO {
 
     @SerializedName("update_consent")
     @Expose
-    private ConsentFormUpdateConsentDTO updateConsent;
+    private TransitionDTO updateConsent;
 
     /**
      * @return The updateConsent
      */
-    public ConsentFormUpdateConsentDTO getUpdateConsent() {
+    public TransitionDTO getUpdateConsent() {
         return updateConsent;
     }
 
     /**
      * @param updateConsent The update_consent
      */
-    public void setUpdateConsent(ConsentFormUpdateConsentDTO updateConsent) {
+    public void setUpdateConsent(TransitionDTO updateConsent) {
         this.updateConsent = updateConsent;
     }
 
