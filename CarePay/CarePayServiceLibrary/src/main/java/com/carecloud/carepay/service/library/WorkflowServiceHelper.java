@@ -65,7 +65,7 @@ public class WorkflowServiceHelper {
                 userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
             }
 
-        } else {
+        } else if(! isNullOrEmpty(CognitoAppHelper.getCurrUser())){
             userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
             if (CognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
                 userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
