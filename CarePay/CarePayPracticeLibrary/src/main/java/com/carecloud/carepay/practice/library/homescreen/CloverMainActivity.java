@@ -264,7 +264,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void getNews() {
-        // uncomment after testing ready
+        // TODO: 11/17/2016  uncomment after testing ready
 //        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
 //        Gson gson = new Gson();
 //        TransitionDTO transitionDTO;
@@ -277,7 +277,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 //        }
 //        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
 
-        // for build/test; remove after testing ready
+        // TODO: 11/17/2016  (for build/test); remove after testing ready
         if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             getDemographicInformation();
         }
@@ -483,6 +483,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
      * For build/test
      */
     private void getDemographicInformation() {
+        // TODO: 11/17/2016 remove method
         DemographicService apptService = (new BaseServiceGenerator(this).createService(DemographicService.class)); //, String token, String searchString
         Call<DemographicDTO> call = apptService.fetchDemographicInformation();
         call.enqueue(new Callback<DemographicDTO>() {
@@ -505,6 +506,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
      * @param demographicDTO The DTO
      */
     private void launchPatientModeCheckinActivity(DemographicDTO demographicDTO) {
+        // TODO: 11/17/2016 remove method
         // do to Demographics
         Intent intent = new Intent(this, PatientModeCheckinActivity.class);
         // pass the object into the gson
