@@ -5,10 +5,10 @@
     >
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
-        android:layout_width="@dimen/dimen_400dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
+        android:layout_width="@dimen/dimen_370dp"
+        android:layout_height="@dimen/dimen_390dp"
+        android:layout_marginLeft="@dimen/dimen_15dp"
+        android:layout_marginRight="@dimen/dimen_15dp"
         android:gravity="center"
         card_view:cardCornerRadius="@dimen/dimen_10dp"
         card_view:cardElevation="0dp">
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/munsell"
                 android:gravity="center_horizontal"
-                android:paddingBottom="@dimen/dimen_5dp"
+                android:paddingBottom="7dp"
                 android:paddingTop="@dimen/dimen_5dp"
                 android:textColor="@color/charcoal"
                 android:textSize="@dimen/payment_receipt_layout_margin" />
@@ -124,9 +124,9 @@
                 <TextView
                     android:id="@+id/checkInTextview"
                     android:layout_width="@dimen/dimen_220dp"
-                    android:layout_height="@dimen/action_bar_height"
+                    android:layout_height="@dimen/dimen_60dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+                    android:layout_marginTop="@dimen/dimen_33dp"
                     android:background="@drawable/bg_yellow_overlay"
                     android:gravity="center"
                     android:includeFontPadding="false"

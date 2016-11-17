@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/checkInDetailDialogLayout"
     android:layout_width="@dimen/appointment_detail_dialog_width"
     android:layout_height="@dimen/appointment_detail_dialog_height"
@@ -13,7 +14,7 @@
         android:background="@drawable/background_rounded_border"
         android:orientation="vertical">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/checkingInLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,25 +23,28 @@
             android:background="@drawable/right_rounded_background"
             android:padding="@dimen/custom_appointment_dialog_view_padding"
             android:textColor="@color/charcoal_78"
-            android:textSize="@dimen/custom_appointment_dialog_view_textsize_small" />
+            android:textSize="@dimen/custom_appointment_dialog_view_textsize_small"
+            app:customAssetFont="proxima_nova_semi_bold" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/patientNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/custom_appointment_dialog_label_margin"
             android:textColor="@color/charcoal"
-            android:textSize="@dimen/custom_appointment_dialog_view_textsize_large" />
+            android:textSize="@dimen/custom_appointment_dialog_view_textsize_large"
+            app:customAssetFont="proxima_nova_semi_bold" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/doctorNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="2dp"
             android:textColor="@color/taupe_gray_78"
-            android:textSize="@dimen/custom_appointment_dialog_view_textsize_medium" />
+            android:textSize="@dimen/custom_appointment_dialog_view_textsize_medium"
+            app:customAssetFont="proxima_nova_semi_bold" />
 
         <View
             android:layout_width="@dimen/appointment_detail_dialog_divider_width"
@@ -56,19 +60,21 @@
             android:layout_marginTop="@dimen/appointment_detail_dialog_divider_margin"
             android:orientation="horizontal">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/balanceTextLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/charcoal"
-                android:textSize="@dimen/custom_appointment_dialog_view_textsize_medium" />
+                android:textSize="@dimen/custom_appointment_dialog_view_textsize_medium"
+                app:customAssetFont="proxima_nova_semi_bold" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/balanceValueLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/charcoal"
-                android:textSize="@dimen/custom_appointment_dialog_view_textsize_medium" />
+                android:textSize="@dimen/custom_appointment_dialog_view_textsize_medium"
+                app:customAssetFont="proxima_nova_semi_bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -89,7 +95,7 @@
                 android:layout_margin="@dimen/custom_appointment_dialog_checkbox_margin"
                 android:layout_weight="1"
                 android:button="@null"
-                android:checked="true"
+                android:checked="false"
                 android:clickable="false"
                 android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
                 android:drawableTop="@drawable/custom_checkbox_selector"
@@ -113,7 +119,7 @@
                 android:layout_margin="@dimen/custom_appointment_dialog_checkbox_margin"
                 android:layout_weight="1"
                 android:button="@null"
-                android:checked="true"
+                android:checked="false"
                 android:clickable="false"
                 android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
                 android:drawableTop="@drawable/custom_checkbox_selector"
@@ -178,7 +184,7 @@
             android:paddingTop="@dimen/custom_appointment_dialog_layout_padding"
             android:weightSum="4">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/paymentButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -188,9 +194,10 @@
                 android:padding="@dimen/custom_appointment_dialog_view_padding"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/custom_appointment_dialog_button_textsize" />
+                android:textSize="@dimen/custom_appointment_dialog_button_textsize"
+                app:customAssetFont="gotham_rounded_medium" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/assistButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -200,9 +207,10 @@
                 android:padding="@dimen/custom_appointment_dialog_view_padding"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/custom_appointment_dialog_button_textsize" />
+                android:textSize="@dimen/custom_appointment_dialog_button_textsize"
+                app:customAssetFont="gotham_rounded_medium" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/pageButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -212,7 +220,8 @@
                 android:padding="@dimen/custom_appointment_dialog_view_padding"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/custom_appointment_dialog_button_textsize" />
+                android:textSize="@dimen/custom_appointment_dialog_button_textsize"
+                app:customAssetFont="gotham_rounded_medium" />
 
         </LinearLayout>
 
@@ -223,6 +232,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/container_avatar"/>
+        android:src="@drawable/container_avatar" />
 
 </RelativeLayout>

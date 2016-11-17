@@ -11,24 +11,23 @@ public class QRCodePayloadDTO {
 
     @SerializedName("qrcode")
     @Expose
-    private QRCodeDTO qrcode;
+    private String qrCode;
 
     /**
-     * 
+     *
      * @return
-     *     The qrcode
+     *     The qrCode
      */
-    public QRCodeDTO getQrcode() {
-        return qrcode;
+    public String getQrCode() {
+        return qrCode;
     }
 
     /**
-     * 
-     * @param qrcode
-     *     The qrcode
+     *
+     * @param qrCode
+     *     The qrCode
      */
-    public void setQrcode(QRCodeDTO qrcode) {
-        this.qrcode = qrcode;
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
-
 }

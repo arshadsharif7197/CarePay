@@ -21,7 +21,9 @@
     <dimen name="dimen_220dp">220dp</dimen>
     <dimen name="dimen_48dp">48dp</dimen>
     <dimen name="dimen_minus_5dp">-5dp</dimen>
-
+    <dimen name="dimen_60dp">60dp</dimen>
+    <dimen name="dimen_370dp">370dp</dimen>
+    <dimen name="dimen_390dp">390dp</dimen>
 
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
@@ -184,6 +186,7 @@
     <!-- consent_forms -->
     <dimen name="consent_layout_left_right_margin">15dp</dimen>
     <dimen name="consent_spinner_left_margin">70dp</dimen>
+    <dimen name="consent_gender_left_margin">50dp</dimen>
     <dimen name="consent_minor_textsize">17sp</dimen>
     <dimen name="consent_minor_info_textsize">14sp</dimen>
     <dimen name="consent_view_margin_top_bottom">10dp</dimen>
