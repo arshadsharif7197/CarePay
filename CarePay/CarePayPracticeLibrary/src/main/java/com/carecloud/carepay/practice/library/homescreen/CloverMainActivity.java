@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -27,7 +28,9 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
+import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
+import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -36,6 +39,8 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -48,8 +53,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
+    public static String LOG_TAG = CloverMainActivity.class.getSimpleName();
     public static int           count;
     private       TextView      checkedInCounterTextview;
     private       TextView      alertTextView;
@@ -250,22 +260,28 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,pinPadObject.getPinpad(),homeScreenDTO.getMetadata().getLabels(),false);
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this, pinPadObject.getPinpad(), homeScreenDTO.getMetadata().getLabels(), false);
         confirmationPinDialog.show();
     }
 
     private void getNews() {
-        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
-        Gson gson = new Gson();
-        TransitionDTO transitionDTO;
-        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-            transitionDTO = transitionsDTO.getOfficeNews();
-        } else { // patient mode
-            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
-            transitionDTO = transitionsDTO.getOfficeNews();
+        // uncomment after testing ready
+//        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+//        Gson gson = new Gson();
+//        TransitionDTO transitionDTO;
+//        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+//            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+//            transitionDTO = transitionsDTO.getOfficeNews();
+//        } else { // patient mode
+//            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+//            transitionDTO = transitionsDTO.getOfficeNews();
+//        }
+//        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
+
+        // remove after testing ready
+        if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            getDemographicInformation();
         }
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void navigateToShop() {
@@ -365,7 +381,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
             @Override
             public void onPatientModeSelected() {
-                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), commonTransitionCallback);
+                Map<String, String> query = new HashMap<>();
+                query.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+                query.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
             }
         }, new ChangeModeDialog.LogoutClickListener() {
             @Override
@@ -459,4 +478,32 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         }
     };
+
+    private void getDemographicInformation() {
+        DemographicService apptService = (new BaseServiceGenerator(this).createService(DemographicService.class)); //, String token, String searchString
+        Call<DemographicDTO> call = apptService.fetchDemographics();
+        call.enqueue(new Callback<DemographicDTO>() {
+            @Override
+            public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
+                Log.v(LOG_TAG, "demographics fetched");
+                DemographicDTO demographicDTO = response.body();
+                launchPatientModeCheckinActivity(demographicDTO);
+            }
+
+            @Override
+            public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
+                Log.e(LOG_TAG, "failed fetching demogr info", throwable);
+            }
+        });
+    }
+
+    private void launchPatientModeCheckinActivity(DemographicDTO demographicDTO) {
+        // do to Demographics
+        Intent intent = new Intent(this, PatientModeCheckinActivity.class);
+        // pass the object into the gson
+        Gson gson = new Gson();
+        intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
+
+        startActivity(intent);
+    }
 }

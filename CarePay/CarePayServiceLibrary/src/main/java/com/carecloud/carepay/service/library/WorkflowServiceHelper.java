@@ -61,13 +61,11 @@ public class WorkflowServiceHelper {
                 || ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
                 && ApplicationMode.getInstance().getUserPracticeDTO() != null) {
             userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeUser());
-            userAuthHeaders.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-            userAuthHeaders.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
             if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                 userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
             }
 
-        } else {
+        } else if(! isNullOrEmpty(CognitoAppHelper.getCurrUser())){
             userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
             if (CognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
                 userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
