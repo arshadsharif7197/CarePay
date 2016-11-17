@@ -98,14 +98,14 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     private void setClickables() {
         getStartedButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getStart();
+            public void onClick(View view) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
                 queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
                 Map<String, String> headers = new HashMap<>();
                 headers.put("transition", "true");
+                TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getStart();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, queryMap, headers);
             }
         });
