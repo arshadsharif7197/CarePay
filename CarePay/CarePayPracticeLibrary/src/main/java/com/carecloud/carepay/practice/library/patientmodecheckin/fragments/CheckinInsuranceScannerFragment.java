@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carecloud.carepay.practice.library.R;
+
 /**
  * Created by lsoco_user on 11/17/2016.
  */
@@ -16,6 +18,8 @@ public class CheckinInsuranceScannerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_checkin_insurance_scanner, container, false);
+        return view;
+
     }
 }
