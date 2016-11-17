@@ -13,12 +13,12 @@ import com.carecloud.carepay.practice.library.R;
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinInsuranceFragment extends Fragment {
+public class CheckinInsurancesSummaryFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_checkin_insurance, container, false);
+        View view = inflater.inflate(R.layout.fragment_checkin_insurances_summary, container, false);
         return view;
     }
 }
