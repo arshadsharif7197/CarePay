@@ -106,6 +106,10 @@ public class SigninActivity extends BasePracticeActivity {
         changeScreenMode(signinScreenMode);
         isEmptyEmail = true;
         isEmptyPassword = true;
+
+        // TODO: 11/17/2016
+        emailEditText.setText("practice@cc.com");
+        passwordEditText.setText("Practice123!");
     }
 
     /**

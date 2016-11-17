@@ -28,8 +28,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
-import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -278,8 +277,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 //        }
 //        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
 
-        // remove after testing ready
-        if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+        // for build/test; remove after testing ready
+        if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             getDemographicInformation();
         }
     }
@@ -479,9 +478,13 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     };
 
+
+    /**
+     * For build/test
+     */
     private void getDemographicInformation() {
         DemographicService apptService = (new BaseServiceGenerator(this).createService(DemographicService.class)); //, String token, String searchString
-        Call<DemographicDTO> call = apptService.fetchDemographics();
+        Call<DemographicDTO> call = apptService.fetchDemographicInformation();
         call.enqueue(new Callback<DemographicDTO>() {
             @Override
             public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
@@ -497,12 +500,16 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         });
     }
 
+    /**
+     * For build/test
+     * @param demographicDTO The DTO
+     */
     private void launchPatientModeCheckinActivity(DemographicDTO demographicDTO) {
         // do to Demographics
         Intent intent = new Intent(this, PatientModeCheckinActivity.class);
         // pass the object into the gson
         Gson gson = new Gson();
-        intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
+        intent.putExtra(getApplicationContext().getClass().getSimpleName(), gson.toJson(demographicDTO, DemographicDTO.class));
 
         startActivity(intent);
     }
