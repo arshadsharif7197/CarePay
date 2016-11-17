@@ -118,7 +118,7 @@ public class SigninActivity extends BasePracticeActivity {
      * Initailizing the view
      */
     public void initViews() {
-    //    signinButton = (TextView) findViewById(R.id.signinTextview);
+//        signinButton = (TextView) findViewById(R.id.signinTextview);
         signIn = (Button) findViewById(R.id.signinButton);
         homeButton = (ImageView) findViewById(R.id.signInHome);
         gobackButton = (TextView) findViewById(R.id.goBackButtonTextview);

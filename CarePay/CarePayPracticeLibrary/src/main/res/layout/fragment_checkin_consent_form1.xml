@@ -38,7 +38,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/checkinConsentForm1Clickable"
+            android:id="@+id/checkinConsentForm1SignClickable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign Consent For Medical Care"

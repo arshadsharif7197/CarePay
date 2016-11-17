@@ -38,7 +38,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/checkinIntakeForm1Clickable"
+            android:id="@+id/checkinIntakeForm1ContinueClickable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Continue"
