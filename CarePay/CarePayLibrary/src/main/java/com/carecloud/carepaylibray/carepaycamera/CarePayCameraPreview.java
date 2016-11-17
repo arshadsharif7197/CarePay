@@ -242,7 +242,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            capturedBitmap = scaleCenterCrop(capturedBitmap, capturedBitmap.getWidth()-150, capturedBitmap.getHeight()-150);
+            capturedBitmap = scaleCenterCrop(capturedBitmap, getWidth()-borderWidth, getHeight()-borderWidth);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
             releaseCamera();
@@ -268,7 +268,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            capturedBitmap = scaleCenterCrop(capturedBitmap, capturedBitmap.getWidth()-150, capturedBitmap.getHeight()-150);
+            capturedBitmap = scaleCenterCrop(capturedBitmap,  getWidth()-borderWidth, getHeight()-borderWidth);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
             ((CarePayCameraCallback)context).onCapturedSuccess(capturedBitmap);
