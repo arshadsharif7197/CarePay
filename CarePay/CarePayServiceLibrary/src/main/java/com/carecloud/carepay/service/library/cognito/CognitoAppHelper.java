@@ -31,6 +31,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Chal
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.CognitoConstants;
 
 import java.util.ArrayList;
@@ -56,8 +57,8 @@ public class CognitoAppHelper {
 
     private static Context context;
 
-    private static final String userPoolId = CognitoConstants.USER_POOL_ID;
-    private static final String clientId   = CognitoConstants.CLIENT_ID;
+   /* private static final String userPoolId = CognitoConstants.USER_POOL_ID;
+    private static final String clientId   = CognitoConstants.CLIENT_ID;*/
 
 
     private CognitoAppHelper() {
@@ -106,10 +107,12 @@ public class CognitoAppHelper {
         }
 
         if (userPool == null) {
-
             // Create a user pool with default ClientConfiguration
-            userPool = new CognitoUserPool(context, userPoolId, clientId, clientSecret, cognitoRegion);
-
+            userPool = new CognitoUserPool(context,
+                    ApplicationMode.getInstance().getCognitoDTO().getUserPoolId(),
+                    ApplicationMode.getInstance().getCognitoDTO().getClientId(),
+                    clientSecret,
+                    cognitoRegion);
         }
 
         phoneVerified = false;
@@ -347,6 +350,4 @@ public class CognitoAppHelper {
         continuation.setAuthenticationDetails(authenticationDetails);
         continuation.continueTask();
     }
-
-
 }

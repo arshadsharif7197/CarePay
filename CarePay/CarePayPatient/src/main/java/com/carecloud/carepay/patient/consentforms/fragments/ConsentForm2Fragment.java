@@ -143,8 +143,8 @@ public class ConsentForm2Fragment extends Fragment {
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
         initViewFromModels();
         getLabels();
-        setTypefaces(view);
         setEditTexts();
+        setTypefaces(view);
         onClickListners();
         setEnableNextButtonOnFullScroll();
 
@@ -310,9 +310,9 @@ public class ConsentForm2Fragment extends Fragment {
                 if (bool) {
                     // change hint to all caps
                     SystemUtil.showSoftKeyboard(getActivity());
-                } else {
-                    SystemUtil.handleHintChange(view, bool);
                 }
+                    SystemUtil.handleHintChange(view, bool);
+
             }
         });
 
@@ -323,9 +323,9 @@ public class ConsentForm2Fragment extends Fragment {
                 if (bool) {
                     // change hint to all caps
                     SystemUtil.showSoftKeyboard(getActivity());
-                } else {
-                    SystemUtil.handleHintChange(view, bool);
                 }
+                SystemUtil.handleHintChange(view, bool);
+
             }
 
         });
