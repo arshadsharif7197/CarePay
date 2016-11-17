@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name="com.carecloud.carepay.practice.tablet.CarePayApplication"
@@ -50,6 +52,9 @@
         <activity android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"/>
         <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeCheckinActivity"/>
+        <activity android:name="com.carecloud.carepay.practice.library.customdialog.ScanDocDialogActivity"
+            android:theme="@android:style/Theme.Dialog"
+            />
     </application>
 
 </manifest>

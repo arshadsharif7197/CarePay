@@ -103,4 +103,6 @@
 
     <color name="bleu_de_france">#35a5e1</color>
     <color name="appointment_card_partial_bg">#35a5e1</color> <!-- background appointment card -->
+    <color name="scan_camera_backgroung_bg">#ff424242</color>
+    <color name="scan_camera_bg">#50acacac</color>
 </resources>
