@@ -44,12 +44,11 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -380,6 +379,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
                 });
         wrapperCollection1.addAll(insuranceModelList);
     }
+
     private void showCard(FrameLayout cardContainer, boolean isVisible) {
         if (isVisible) {
             cardContainer.setVisibility(View.VISIBLE);
@@ -387,6 +387,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
             cardContainer.setVisibility(View.GONE);
         }
     }
+
     private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int i) {
         DemographicInsurancePayloadDTO model = null;
         if (insuranceModelList != null) {
