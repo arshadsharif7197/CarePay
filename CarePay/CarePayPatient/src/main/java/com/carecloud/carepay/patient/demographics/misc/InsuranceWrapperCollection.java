@@ -72,6 +72,11 @@ import java.util.List;
      * @param payloadDTOs The list of payloads
      */
     public void addAll(List<DemographicInsurancePayloadDTO> payloadDTOs) {
+        if(payloadDTOs == null || payloadDTOs.size() == 0) {
+            add(new DemographicInsurancePayloadDTO());
+            return;
+        }
+
         for (DemographicInsurancePayloadDTO payloadDTO : payloadDTOs) {
             add(payloadDTO);
         }
