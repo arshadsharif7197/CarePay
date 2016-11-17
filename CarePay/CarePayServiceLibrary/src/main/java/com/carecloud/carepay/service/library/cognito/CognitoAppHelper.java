@@ -31,9 +31,8 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Chal
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.CognitoConstants;
-import com.carecloud.carepay.service.library.mode.Mode;
-import com.carecloud.carepay.service.library.mode.ModeChangeable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,21 +51,15 @@ public class CognitoAppHelper {
 
     private static CognitoAppHelper cognitoAppHelper;
     private static CognitoUserPool  userPool;
-
-    private static CognitoUserPool practiceUserPool;
-    private static CognitoUserPool patientUserPool;
-
     private static String           user;
     private static CognitoDevice    newDevice;
     private static int              itemCount;
 
     private static Context context;
 
-    private static final String patientAppuserPoolId = CognitoConstants.PATIENT_APP_USER_POOL_ID;
-    private static final String patientAppclientId   = CognitoConstants.PATIENT_APP_CLIENT_ID;
+   /* private static final String userPoolId = CognitoConstants.USER_POOL_ID;
+    private static final String clientId   = CognitoConstants.CLIENT_ID;*/
 
-    private static final String practiceAppuserPoolId = CognitoConstants.PRACTICE_APP_USER_POOL_ID;
-    private static final String practiceAppclientId   = CognitoConstants.PRACTICE_APP_CLIENT_ID;
 
     private CognitoAppHelper() {
     }
@@ -113,13 +106,13 @@ public class CognitoAppHelper {
             cognitoAppHelper = new CognitoAppHelper();
         }
 
-        if (patientUserPool == null) {
+        if (userPool == null) {
             // Create a user pool with default ClientConfiguration
-            patientUserPool = new CognitoUserPool(context, patientAppuserPoolId, patientAppclientId, clientSecret, cognitoRegion);
-        }
-
-        if (practiceUserPool == null) {
-            practiceUserPool = new CognitoUserPool(context, practiceAppuserPoolId, practiceAppclientId, clientSecret, cognitoRegion);
+            userPool = new CognitoUserPool(context,
+                    ApplicationMode.getInstance().getCognitoDTO().getUserPoolId(),
+                    ApplicationMode.getInstance().getCognitoDTO().getClientId(),
+                    clientSecret,
+                    cognitoRegion);
         }
 
         phoneVerified = false;
@@ -131,16 +124,7 @@ public class CognitoAppHelper {
         newDevice = null;
     }
 
-    /**
-     * Returns the pool
-     * @return The pool
-     */
     public static CognitoUserPool getPool() {
-        if(((ModeChangeable)context).getMode() ==  Mode.MODE_PATIENT){
-            userPool = patientUserPool;
-        } else {
-            userPool = practiceUserPool;
-        }
         return userPool;
     }
 
@@ -366,6 +350,4 @@ public class CognitoAppHelper {
         continuation.setAuthenticationDetails(authenticationDetails);
         continuation.continueTask();
     }
-
-
 }

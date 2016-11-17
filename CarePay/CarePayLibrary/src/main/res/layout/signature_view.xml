@@ -16,22 +16,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
         android:id="@+id/helperTv"
         android:layout_marginTop="@dimen/consent_top"
         android:textSize="@dimen/sig_txt"
         android:textColor="@color/gray"/>
 
     <Button
-        android:layout_width="@dimen/btn_hght"
-        android:layout_height="@dimen/btn_width"
+        android:layout_width="69dp"
+        android:layout_height="24dp"
         android:id="@+id/clearBtn"
         android:background="@drawable/button_blue_border"
-        android:layout_below="@+id/signature_view"
         android:textColor="@color/rich_electric_blue"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="@dimen/consent_top"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/consent_top"/>
 
 
-</RelativeLayout>
+</RelativeLayout>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
