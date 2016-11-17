@@ -4,4 +4,45 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkinConsentForm1Header"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Header"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/checkinConsentForm1Content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Consent Form 1"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkinConsentForm1Footer"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/checkinConsentForm1Clickable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Consent For Medical Care"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
 </LinearLayout>

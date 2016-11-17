@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkinInsuranceHeader"
+        android:id="@+id/checkinInsuranceSummaryHeader"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -22,35 +22,27 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/checkinInsuranceContent"
+        android:id="@+id/checkinInsuranceSummaryContent"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Insurance"
+            android:text="Insurances Summary"
             android:gravity="center"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkinInsuranceFooter"
-        android:orientation="horizontal">
+        android:id="@+id/checkinINsuranceSummaryFooter"
+        android:orientation="vertical">
 
         <Button
-            android:id="@+id/checkinInsuranceDontHaveOneClickable"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/checkinInsuranceSummaryAddInfoClickable"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I don't have one"
-            android:layout_gravity="center"/>
-        <Button
-            android:id="@+id/checkinInsuranceAddNewClickable"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Add New Insurance"
+            android:text="Add Demographic Information"
             android:layout_gravity="center"/>
     </LinearLayout>
 
