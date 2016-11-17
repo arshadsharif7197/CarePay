@@ -26,7 +26,7 @@ public class CheckinPaymentFragment extends Fragment {
         payTotalButton = (Button) view.findViewById(R.id.checkinPaymentTotalClickable);
         payTotalButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 goBackToHome();
             }
         });

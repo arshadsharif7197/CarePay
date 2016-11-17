@@ -26,7 +26,7 @@ public class CheckinConsentForm2Fragment extends Fragment {
         signConsentFormButton = (Button) view.findViewById(R.id.checkinConsentForm2SignClickable);
         signConsentFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 // transition
                 CheckinIntakeForm1Fragment fragment = new CheckinIntakeForm1Fragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);

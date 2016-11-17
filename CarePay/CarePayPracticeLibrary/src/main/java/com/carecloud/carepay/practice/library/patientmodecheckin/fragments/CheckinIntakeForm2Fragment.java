@@ -27,7 +27,7 @@ public class CheckinIntakeForm2Fragment extends Fragment {
         finishIntakeButton = (Button) view.findViewById(R.id.checkinIntakeForm2FinishClickable);
         finishIntakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 // transition
                 CheckinPaymentFragment fragment = new CheckinPaymentFragment();
                 ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);

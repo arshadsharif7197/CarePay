@@ -34,7 +34,7 @@ public class CheckinDemographicsFragment extends Fragment {
         addDemogrButton = (Button) view.findViewById(R.id.checkinDemographicsAddClickable);
         addDemogrButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 // transition
                 CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);

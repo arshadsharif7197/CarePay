@@ -19,7 +19,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 public class PatientModeCheckinActivity extends BasePracticeActivity{
 
     private DemographicDTO demographicDTO;
-    private TransitionDTO transitionLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +31,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity{
         navigateToFragment(fragment, false);
     }
 
+    /**
+     * Helper method to replace fragments
+     * @param fragment The fragment
+     * @param addToBackStack Whether to add the transaction to back-stack
+     */
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
@@ -44,13 +48,5 @@ public class PatientModeCheckinActivity extends BasePracticeActivity{
 
     public DemographicDTO getDemographicDTO() {
         return demographicDTO;
-    }
-
-    public TransitionDTO getTransitionLogout() {
-        return transitionLogout;
-    }
-
-    private void setTransition() {
-
     }
 }
