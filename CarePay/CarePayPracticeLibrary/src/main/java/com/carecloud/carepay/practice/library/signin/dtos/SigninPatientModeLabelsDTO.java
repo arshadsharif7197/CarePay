@@ -64,9 +64,18 @@ public class SigninPatientModeLabelsDTO {
     @SerializedName("sigin_how_check_in_create_carepay_account")
     @Expose
     private String siginHowCheckInCreateCarepayAccount;
-    @SerializedName("sigin_how_check_in_go_back")
+    @SerializedName("go_back_label")
     @Expose
     private String siginHowCheckInGoBack;
+    @SerializedName("invalid_qr_code_message")
+    @Expose
+    private String invalidQRCodeMessage;
+    @SerializedName("loading_message")
+    @Expose
+    private String loadingMessage;
+    @SerializedName("invalid_qr_code_title")
+    @Expose
+    private String invalidQRCodeTitle;
 
     /**
      * 
@@ -428,4 +437,57 @@ public class SigninPatientModeLabelsDTO {
         this.siginHowCheckInGoBack = siginHowCheckInGoBack;
     }
 
+    /**
+     *
+     * @return
+     *     The invalidQRCodeMessage
+     */
+    public String getInvalidQRCodeMessage() {
+        return StringUtil.getLabelForView(invalidQRCodeMessage);
+    }
+
+    /**
+     *
+     * @param invalidQRCodeMessage
+     *     The invalidQRCodeMessage
+     */
+    public void setInvalidQRCodeMessage(String invalidQRCodeMessage) {
+        this.invalidQRCodeMessage = invalidQRCodeMessage;
+    }
+
+    /**
+     *
+     * @return
+     *     The loadingMessage
+     */
+    public String getLoadingMessage() {
+        return StringUtil.getLabelForView(loadingMessage);
+    }
+
+    /**
+     *
+     * @param loadingMessage
+     *     The loadingMessage
+     */
+    public void setLoadingMessage(String loadingMessage) {
+        this.loadingMessage = loadingMessage;
+    }
+
+    /**
+     *
+     * @return
+     *     The invalidQRCodeTitle
+     */
+    public String getInvalidQRCodeTitle() {
+        return StringUtil.getLabelForView(invalidQRCodeTitle);
+    }
+
+    /**
+     *
+     * @param invalidQRCodeTitle
+     *     The invalidQRCodeTitle
+     */
+    public void setInvalidQRCodeTitle(String invalidQRCodeTitle) {
+        this.invalidQRCodeTitle = invalidQRCodeTitle;
+    }
 }
