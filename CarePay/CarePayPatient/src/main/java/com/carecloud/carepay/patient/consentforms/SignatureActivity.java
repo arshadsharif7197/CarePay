@@ -152,6 +152,8 @@ public class SignatureActivity extends AppCompatActivity {
         legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
         beforesignWarningTextView = (TextView) findViewById(R.id.beforesignwarnigTextView);
         String headerTitle = getIntent().getExtras().getString("Header_Title");
+        String subtitle=getIntent().getExtras().getString("Subtitle");
+        beforesignWarningTextView.setText(subtitle);
         titleTextView.setText(headerTitle);
         initviewfromModel();
 
@@ -165,7 +167,7 @@ public class SignatureActivity extends AppCompatActivity {
 
         legalFirstNameET.setHint(consentFormLabelsDTO.getLegalFirstNameLabel());
         legalLastNameET.setHint(consentFormLabelsDTO.getLegalLastNameLabel());
-        beforesignWarningTextView.setText(consentFormLabelsDTO.getBeforeSignatureWarningText());
+
         clearButton.setText(consentFormLabelsDTO.getSignClearButton());
         agreeButton.setText(consentFormLabelsDTO.getConfirmSignatureButton());
         signatureHelpTextView.setText(consentFormLabelsDTO.getPatientSignatureHeading());

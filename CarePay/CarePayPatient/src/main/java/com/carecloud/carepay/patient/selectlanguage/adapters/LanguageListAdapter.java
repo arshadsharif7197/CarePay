@@ -26,6 +26,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     List<LanguageOptionModel> languageListLanguageOptionModels;
     Context context;
     RadioButton selectedLanguage;
+    private  String languageID="";
     private OnItemClickListener itemClickListener;
 
     /**
@@ -50,6 +51,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         LanguageOptionModel languageSelected = languageListLanguageOptionModels.get(position);
         String languageName = languageSelected.getValue();
+       languageID=languageSelected.getLanguageId();
         holder.languageNameRadioButton.setText(languageName);
         if (ApplicationPreferences.Instance.getUserLanguage().equals(languageName)) {
             selectedLanguage = holder.languageNameRadioButton;
@@ -66,7 +68,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     }
 
     public interface OnItemClickListener {
-        void onLanguageChange(String selectedLanguage);
+        void onLanguageChange(String selectedLanguage,String languagecode);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -94,7 +96,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
                     selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                     SystemUtil.setProximaNovaSemiboldTypeface(context, selectedLanguage);
                     if (itemClickListener != null) {
-                        itemClickListener.onLanguageChange(selectedLanguage.getText().toString());
+                        itemClickListener.onLanguageChange(selectedLanguage.getText().toString(),languageID);
 
                     }
                 }
