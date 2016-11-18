@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,7 +18,7 @@ public class LinksDTO {
     private LinkDTO demographics;
     @SerializedName("appointments")
     @Expose
-    private LinkDTO appointments;
+    private TransitionDTO appointments;
     @SerializedName("patient_balances")
     @Expose
     private LinkDTO patientBalances;
@@ -66,7 +67,7 @@ public class LinksDTO {
      * @return
      *     The appointments
      */
-    public LinkDTO getAppointments() {
+    public TransitionDTO getAppointments() {
         return appointments;
     }
 
@@ -75,7 +76,7 @@ public class LinksDTO {
      * @param appointments
      *     The appointments
      */
-    public void setAppointments(LinkDTO appointments) {
+    public void setAppointments(TransitionDTO appointments) {
         this.appointments = appointments;
     }
 
