@@ -315,10 +315,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            // transition needed
-            Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
-            appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(appointmentIntent);
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getPracticeCheckin();
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
