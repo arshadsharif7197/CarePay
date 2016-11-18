@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
@@ -47,12 +49,14 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
     private AppointmentsListAdapter appointmentsListAdapter;
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
+    private static final String TAG = "AppointmentsActivity";
 
     private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentsItems;
     private TextView logOutTextview;
     private CarePayTextView appointmentForTextview;
     private CarePayTextView  selectAppointmentTextview;
     private CarePayTextView  noAppointmentsLabel;
+    private CarePayTextView  noAppointmentsDescription;
     private Bundle bundle;
     private LinearLayout noAppointmentView;
     private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentListWithToday;
@@ -73,12 +77,13 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         appointmentProgressBar.setVisibility(View.GONE);
         noAppointmentView = (LinearLayout) findViewById(R.id.no_appointment_layout);
         noAppointmentsLabel = (CarePayTextView ) findViewById(R.id.no_apt_message_title);
+        noAppointmentsDescription = (CarePayTextView ) findViewById(R.id.no_apt_message_desc);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
 
         try {
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-            inflateAppointmentList();
+            getAppointmentList();
         } catch (JsonSyntaxException ex) {
             SystemUtil.showDialogMessage(this, getString(R.string.alert_title_server_error),
                     getString(R.string.alert_title_server_error));
@@ -86,51 +91,6 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         }
     }
 
-    private void getAppointmentInformation() {
-        appointmentProgressBar.setVisibility(View.VISIBLE);
-        AppointmentService aptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class);
-        Call<com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel> call = aptService.fetchAppointmentInformation();
-        call.enqueue(new Callback<AppointmentsResultModel>() {
-
-                         @Override
-                         public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-                             appointmentProgressBar.setVisibility(View.GONE);
-                             appointmentsResultModel = response.body();
-                             if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
-                                     && appointmentsResultModel.getPayload().getAppointments() != null
-                                     && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
-
-                                 noAppointmentView.setVisibility(View.GONE);
-                                 appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
-
-                                 appointmentListWithToday = new ArrayList<>();
-                                 populateWithLabels();
-                                 for (AppointmentDTO appointmentDTO : appointmentsItems) {
-                                     String title = getToday(appointmentDTO.getPayload().getStartTime());
-                                     if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-                                         appointmentListWithToday.add(appointmentDTO);
-                                     }
-
-                                 }
-                                 if (appointmentListWithToday != null) {
-                                     appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday, appointmentsResultModel);
-                                     appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
-                                 }
-
-                                 //Layout manager for the Recycler View
-                                 appointmentsLayoutManager = new LinearLayoutManager(AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
-                                 appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
-                             }
-                         }
-
-                         @Override
-                         public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-                             appointmentProgressBar.setVisibility(View.GONE);
-                         }
-                     }
-
-        );
-    }
 
     private String getToday(String appointmentRawDate) {
         // Current date
@@ -212,9 +172,14 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         logOutTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsBtnLogout()));
         appointmentForTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsSubHeading()));
         selectAppointmentTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsMainHeading()));
+        noAppointmentsLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getNoAppointmentsMessageTitle()));
+        noAppointmentsDescription.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getNoAppointmentsMessageText()));
     }
 
-    private void inflateAppointmentList() {
+    /**
+     * Method to update appointment list to UI
+     */
+    private void getAppointmentList(){
         if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
                 && appointmentsResultModel.getPayload().getAppointments() != null
                 && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
@@ -229,7 +194,11 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                 if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
                     appointmentListWithToday.add(appointmentDTO);
                 }
-
+                else{
+                    appointmentForTextview.setVisibility(View.INVISIBLE);
+                    selectAppointmentTextview.setVisibility(View.INVISIBLE);
+                    noAppointmentView.setVisibility(View.VISIBLE);
+                }
             }
             if (appointmentListWithToday != null) {
                 appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday, appointmentsResultModel);
@@ -241,6 +210,4 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
         }
     }
-
-
 }
