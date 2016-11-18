@@ -194,11 +194,11 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                 if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
                     appointmentListWithToday.add(appointmentDTO);
                 }
-                else{
+             /*   else{
                     appointmentForTextview.setVisibility(View.INVISIBLE);
                     selectAppointmentTextview.setVisibility(View.INVISIBLE);
                     noAppointmentView.setVisibility(View.VISIBLE);
-                }
+                }*/
             }
             if (appointmentListWithToday != null) {
                 appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday, appointmentsResultModel);
