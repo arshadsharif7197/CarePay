@@ -81,6 +81,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private String authorizationDescription1;
     private String authorizationDescription2;
     private String authForm;
+    static int numberofforms=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         indicator0 = findViewById(R.id.indicator0);
         indicator1 = findViewById(R.id.indicator1);
         indicator2 = findViewById(R.id.indicator2);
-
+        numberofforms=SignatureActivity.numOfLaunches;
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
         setGothamRoundedMediumTypeface(this, title);
@@ -127,18 +128,12 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         }
         if (showingForm == FormId.FORM1) {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignConsentForMedicareTitle());
-
-            intent.putExtra("legalFirstName", legalFirstNameLabel);
-            intent.putExtra("legalLastName", legalLastNameLabel);
-            intent.putExtra("signclearbutton", clearSignLabel);
-            intent.putExtra("unabletosign", unabletoSignLabel);
-            intent.putExtra("confirmsign", signButtonLabel);
-            intent.putExtra("beforesignwarnig", beforeSignWarning);
-            intent.putExtra("patientsign", patientSignLabel);
-            intent.putExtra("legalsign", legalsignLabel);
             intent.putExtra("Header_Title", signMedicareLabel);
+            intent.putExtra("Subtitle",consentFormLabelsDTO.getConsentReadCarefullyWarning());
         } else if (showingForm == FormId.FORM2) {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignAuthorizationFormTitle());
+            intent.putExtra("Subtitle",consentFormLabelsDTO.getBeforeSignatureWarningText());
+
         } else {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
         }
@@ -265,21 +260,21 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private void updateTitle(FormId currentForm) {
         switch (currentForm) {
             case FORM1:
-                title.setText(consentMainTitle + "1 of 3");
+                title.setText(consentMainTitle +"1 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_gray);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_gray);
                 break;
 
             case FORM2:
-                title.setText(consentMainTitle + " 2 of 3");
+                title.setText(consentMainTitle +"2 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_gray);
                 break;
 
             case FORM3:
-                title.setText(consentMainTitle + " 3 of 3");
+                title.setText(consentMainTitle + "3 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_blue);
