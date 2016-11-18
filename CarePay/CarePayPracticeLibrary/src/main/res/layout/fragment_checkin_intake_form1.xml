@@ -27,7 +27,7 @@
         android:orientation="vertical">
 
         <com.marcok.stepprogressbar.StepProgressBar
-            android:id="@+id/stepProgressBar2"
+            android:id="@+id/stepProgressBarIntake"
             app:cumulativeDots="false"
             app:activeDotIndex="0"
             app:activeDotColor="@color/pastelblue"

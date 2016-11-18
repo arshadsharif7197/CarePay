@@ -57,6 +57,9 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
+        getIntakeFormData();
+
+        /*
         continueButton = (Button) view.findViewById(R.id.checkinIntakeForm1ContinueClickable);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +69,8 @@ public class CheckinIntakeForm1Fragment extends Fragment {
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
             }
         });
+        */
+
 
         return view;
     }
@@ -76,10 +81,10 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     public void getIntakeFormData(){
 
         Map<String, String> header = new HashMap<>();
-        header.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());//cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2
-        header.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());//77b81aa8-1155-4da7-9fd9-2f6967b09a93
-        header.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());//050bd799-de01-4692-a950-10d12d20dd2e
-        header.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());//carecloud
+        header.put("patient_id", "cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2");//inTakeForm.getPayload().getFindings().getMetadata().getPatientId());//cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2
+        header.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");//inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());//77b81aa8-1155-4da7-9fd9-2f6967b09a93
+        header.put("appointment_id", "050bd799-de01-4692-a950-10d12d20dd2e");// inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());//050bd799-de01-4692-a950-10d12d20dd2e
+        header.put("practice_mgmt", "carecloud");// inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());//carecloud
         WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
 
     }
@@ -107,11 +112,12 @@ public class CheckinIntakeForm1Fragment extends Fragment {
 
     public void initForm() {
         labelsModel = inTakeForm.getMetadata().getLabel();
+
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.intakeBtnNext);
         nextButton.setEnabled(true);
         nextButton.setText(labelsModel.getNextQuestionButtonText());
 
-        mStepProgressBar = (StepProgressBar) view.findViewById(com.carecloud.carepaylibrary.R.id.stepProgressBar2);
+        //mStepProgressBar = (StepProgressBar) view.findViewById(com.carecloud.carepaylibrary.R.id.stepProgressBarIntake2);
         mStepProgressBar.setCumulativeDots(true);
         mStepProgressBar.setNumDots(inTakeForm.getPayload().getIntakeForms().size());
 
