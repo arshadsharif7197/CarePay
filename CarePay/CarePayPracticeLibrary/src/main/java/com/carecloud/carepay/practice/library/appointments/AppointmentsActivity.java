@@ -121,10 +121,10 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         int viewId = view.getId();
 
         if (viewId == R.id.logoutTextview) {
-            Map<String, String> query = new HashMap<>();
             Map<String, String> headers = new HashMap<>();
-            headers.put("x-api-key", HttpConstants.getApiStartKey());
-            headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+            headers.put("x-api-key", "*");
+            headers.put("transition", "true");
+            //headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
             WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getLogout(), logOutCall, headers);
         } else if (viewId == R.id.btnHome) {
             //WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getAuthenticate(), homeCall);
