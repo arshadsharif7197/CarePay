@@ -50,7 +50,7 @@ dependencies {
 
     compile 'com.squareup:android-times-square:1.6.4@aar'
     compile 'com.google.zxing:core:3.2.1'
-
+    compile 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
     //compile 'cn.pedant.sweetalert:library:1.3'
 
 }
