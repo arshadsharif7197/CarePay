@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -22,6 +24,8 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
@@ -29,20 +33,21 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.carecloud.carepay.practice.library.R.id.rightarrow;
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -70,14 +75,15 @@ public class SigninActivity extends BasePracticeActivity {
     private boolean isEmptyPassword;
     private ImageView homeButton;
 
-    private ImageView rightarrow;
+    private Button signIn;
 
     private String emailLabel;
     private String passwordLabel;
 
-    private List<String> languages = new ArrayList<String>();
+    private List<String> languages = new ArrayList<>();
 
-    SigninDTO signinDTO;
+    private SigninDTO signinDTO;
+    private SigninPatientModeDTO signinPatientModeDTO;
     private Spinner langSpinner;
     private List<String> modeSwitchOptions = new ArrayList<>();
 
@@ -89,31 +95,47 @@ public class SigninActivity extends BasePracticeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        signinDTO = getConvertedDTO(SigninDTO.class);
-        if(signinDTO!=null && signinDTO.getPayload()!=null && signinDTO.getPayload().getPracticeModeSignin()!=null && signinDTO.getPayload().getPracticeModeSignin().getCognito()!=null){
-            ApplicationMode.getInstance().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
-            CognitoAppHelper.init(getApplicationContext());
+        SignInScreenMode signinScreenMode = SignInScreenMode.PRACTICE_MODE_SIGNIN;
+        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+            signinDTO = getConvertedDTO(SigninDTO.class);
+            if (signinDTO != null && signinDTO.getPayload() != null && signinDTO.getPayload().getPracticeModeSignin() != null && signinDTO.getPayload().getPracticeModeSignin().getCognito() != null) {
+                ApplicationMode.getInstance().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
+                CognitoAppHelper.init(getApplicationContext());
+                signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
+            }
+        } else if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
+            if (signinPatientModeDTO != null && signinPatientModeDTO.getPayload() != null
+                    && signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito() != null) {
+                ApplicationMode.getInstance().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
+                CognitoAppHelper.init(getApplicationContext());
+                signinScreenMode = SignInScreenMode.valueOf(signinPatientModeDTO.getState().toUpperCase());
+            }
         }
         ApplicationPreferences.createPreferences(this); // init preferences
         setContentView(R.layout.activity_signin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setSystemUiVisibility();
-        initViews();
+        initViews(signinScreenMode);
         setEditTexts();
         setClicables();
         setTypeFace();
-         SignInScreenMode signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
+
         changeScreenMode(signinScreenMode);
         isEmptyEmail = true;
         isEmptyPassword = true;
+
+        // TODO: 11/17/2016
+        emailEditText.setText("practice@cc.com");
+        passwordEditText.setText("Practice123!");
     }
 
     /**
      * Initailizing the view
      */
     public void initViews() {
-        signinButton = (TextView) findViewById(R.id.signinTextview);
-        rightarrow = (ImageView) findViewById(R.id.rightarrow);
+//        signinButton = (TextView) findViewById(R.id.signinTextview);
+        signIn = (Button) findViewById(R.id.signinButton);
         homeButton = (ImageView) findViewById(R.id.signInHome);
         gobackButton = (TextView) findViewById(R.id.goBackButtonTextview);
         forgotPasswordButton = (TextView) findViewById(R.id.forgot_passwordTextview);
@@ -123,37 +145,38 @@ public class SigninActivity extends BasePracticeActivity {
         signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
         signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
-        int langaugelistsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
-        LanguageOptionDTO defaultLangOption = null;
-        int indexDefault = 0;
-        for (int i = 0; i < langaugelistsize; i++) {
-            LanguageOptionDTO languageOption = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i);
-            languages.add(i, languageOption.getCode().toUpperCase());
-            if (languageOption.getDefault()) {
-                defaultLangOption = languageOption;
-                indexDefault = i;
+
+        if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN) {
+            int langaugelistsize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
+            LanguageOptionDTO defaultLangOption = null;
+            int indexDefault = 0;
+            for (int i = 0; i < langaugelistsize; i++) {
+                LanguageOptionDTO languageOption = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i);
+                languages.add(i, languageOption.getCode().toUpperCase());
+                if (languageOption.getDefault()) {
+                    defaultLangOption = languageOption;
+                    indexDefault = i;
+                }
+            }
+            ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+            spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
+            langSpinner.setAdapter(spinnerArrayAdapter);
+            if (defaultLangOption != null) { // this should be always true, as there's always a default option
+                langSpinner.setSelection(indexDefault);
+                ApplicationPreferences.Instance.setPracticeLanguage(defaultLangOption.getCode());
             }
         }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
-        langSpinner.setAdapter(spinnerArrayAdapter);
-        if (defaultLangOption != null) { // this should be always true, as there's always a default option
-            langSpinner.setSelection(indexDefault);
-            ApplicationPreferences.Instance.setPracticeLanguage(defaultLangOption.getCode());
-        }
-
-
-        initializeLebals();
+        initializeLebals(signInScreenMode);
         // disable sign-in button
         setEnabledSigninButton(false);
     }
 
-    private void initializeLebals() {
-        if (signinDTO != null) {
+    private void initializeLebals(SignInScreenMode signInScreenMode) {
+        if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN && signinDTO != null) {
             SigninLabelsDTO signinLabelsDTO = signinDTO.getMetadata().getLabels();
             if (signinLabelsDTO != null) {
-                signinButton.setText(signinLabelsDTO.getSigninButton());
+                signIn.setText(signinLabelsDTO.getSigninButton());
                 signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
                 forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
                 gobackButton.setText(signinLabelsDTO.getGobackButton());
@@ -162,23 +185,34 @@ public class SigninActivity extends BasePracticeActivity {
                 passwordEditText.setHint(passwordLabel);
                 emailEditText.setHint(emailLabel);
             }
+        } else if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN && signinPatientModeDTO != null) {
+            SigninPatientModeLabelsDTO labelsDTO = signinPatientModeDTO.getMetadata().getLabels();
+            if (labelsDTO != null) {
+                signinButton.setText(labelsDTO.getSigninButton());
+                signinTitle.setText(labelsDTO.getCarepaySigninTitle());
+                forgotPasswordButton.setText(labelsDTO.getForgotPassword());
+                gobackButton.setText(labelsDTO.getSiginHowCheckInGoBack());
+                emailLabel = signinPatientModeDTO.getMetadata().getLoginDataModels().getLogin().getProperties().getEmail().getLabel();
+                passwordLabel = signinPatientModeDTO.getMetadata().getLoginDataModels().getLogin().getProperties().getPassword().getLabel();
+                passwordEditText.setHint(passwordLabel);
+                emailEditText.setHint(emailLabel);
+            }
         }
     }
 
     private void setEnabledSigninButton(boolean enabled) {
         if (!enabled) {
-            signinButton.setTextColor(signinButton.getTextColors().withAlpha(50));
-            rightarrow.setAlpha(50);
+           signIn.setBackground(getResources().getDrawable(R.drawable.bg_silver_overlay));
         } else {
-            signinButton.setTextColor(signinButton.getTextColors().withAlpha(255));
-            rightarrow.setAlpha(255);
+
+            signIn.setBackground(getResources().getDrawable(R.drawable.bg_green_overlay));
         }
-        signinButton.setEnabled(enabled);
+        signIn.setEnabled(enabled);
     }
 
     private void setClicables() {
 
-        signinButton.setOnClickListener(new View.OnClickListener() {
+        signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (areAllValid()) {
@@ -362,9 +396,17 @@ public class SigninActivity extends BasePracticeActivity {
         public void onLoginSuccess() {
             //launchHomescreen();
             Map<String, String> queryMap = new HashMap<>();
+            TransitionDTO transitionDTO;
             queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
-            TransitionDTO transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, signinCallback,queryMap);
+            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, signinCallback, queryMap);
+            } else if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
+                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, signinPatientModeCallback, queryMap);
+            }
         }
         //launchHomescreen
 
@@ -404,4 +446,50 @@ public class SigninActivity extends BasePracticeActivity {
         setProximaNovaRegularTypeface(this, emailEditText);
         setProximaNovaRegularTypeface(this, passwordEditText);
     }
+
+    WorkflowServiceCallback signinPatientModeCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Map<String, String> queryMap = new HashMap<>();
+            TransitionDTO transitionDTO;
+            Gson gson = new Gson();
+            SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
+            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+            queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
+            Map<String, String> headers = new HashMap<>();
+            headers.put("transition", "false");
+
+            transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap, headers);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(SigninActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    WorkflowServiceCallback signinPatientModeAppointmentsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showDialogMessage(SigninActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

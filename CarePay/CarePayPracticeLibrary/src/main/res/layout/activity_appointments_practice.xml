@@ -109,9 +109,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
             android:gravity="center"
+            android:text="@string/no_apt_title"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="21sp"
             app:customAssetFont="gotham_rounded_medium"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/no_apt_message_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
+            android:layout_marginStart="@dimen/no_apt_message_desc_margin"
+            android:layout_marginTop="@dimen/consent_top"
+            android:gravity="center"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="18sp"
+            app:customAssetFont="proxima_nova_regular" />
 
     </LinearLayout>
 

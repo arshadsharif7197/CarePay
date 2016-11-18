@@ -33,6 +33,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     float borderCornerRadius=15;
     Context context;
     private Bitmap capturedBitmap;
+    private boolean isPracticeCamera;
 
     public CarePayCameraPreview(Context context) {
         super(context);
@@ -128,6 +129,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             camera.startPreview();
         } catch (IOException e) {
             Log.d("CameraRND", "Error setting camera preview: " + e.getMessage());
+        }catch (Exception e) {
+            Log.d("CameraRND", "Error setting camera : " + e.getMessage());
         }
     }
 
@@ -153,7 +156,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         // stop preview before making changes
         try {
-            camera.stopPreview();
+            if(!isPracticeCamera)
+           camera.stopPreview();
         } catch (Exception e) {
             // ignore: tried to stop a non-existent preview
         }
@@ -178,7 +182,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             Log.d("CameraRND", "Error starting camera preview: " + e.getMessage());
         }
     }
-    
+
     private Rect calculateTapArea(float xPoint, float yPoint, float coefficient) {
         int areaSize = Float.valueOf(300 * coefficient).intValue();
 
@@ -240,7 +244,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            capturedBitmap = scaleCenterCrop(capturedBitmap, capturedBitmap.getWidth()-150, capturedBitmap.getHeight()-150);
+            capturedBitmap = scaleCenterCrop(capturedBitmap, getWidth()-borderWidth, getHeight()-borderWidth);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
             releaseCamera();
@@ -255,6 +259,24 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
     }
 
+    // for practice app
+    public void takePicturePractice(){
+        isPracticeCamera= true;
+        camera.takePicture(null, null, picturePracticeCallback);
+    }
+
+    //for practice app removed releaseCamera method call, camera will be  restart
+    private Camera.PictureCallback picturePracticeCallback = new Camera.PictureCallback() {
+
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+            capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            capturedBitmap = scaleCenterCrop(capturedBitmap,  getWidth()-borderWidth, getHeight()-borderWidth);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+            ((CarePayCameraCallback)context).onCapturedSuccess(capturedBitmap);
+        }
+    };
     /**
      * Crop captured image in center
      * @param source source
@@ -323,5 +345,10 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     public Bitmap getCapturedBitmap() {
         return capturedBitmap;
+    }
+
+    // for restart camera needed camera object
+    public Camera getCameraObject(){
+        return  camera;
     }
 }

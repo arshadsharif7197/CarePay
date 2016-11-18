@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/demographicsDocsRootContainer"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:descendantFocusability="beforeDescendants"
-              android:focusable="true"
-              android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/demographicsDocsRootContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
@@ -16,12 +16,12 @@
         <TextView
             android:id="@+id/demographicsDocsHeaderTitle"
             style="@style/DemographicsDocsHeaderTitleStyle"
-            android:text="@string/demogr_docs_logo_title"/>
+            android:text="@string/demogr_docs_logo_title" />
 
         <TextView
             android:id="@+id/demographicsDocsHeaderSubtitle"
             style="@style/DemographicsDocsHeaderSubtitleStyle"
-            android:text="@string/demogr_docs_logo_message"/>
+            android:text="@string/demogr_docs_logo_message" />
 
     </LinearLayout>
 
@@ -48,19 +48,19 @@
                     style="@style/DemographicsDocsDocumentLabelStyle"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text="@string/demogr_docs_document_type"/>
+                    android:text="@string/demogr_docs_document_type" />
 
                 <TextView
                     android:id="@+id/demogrDocTypeClickable"
                     style="@style/DemographicsDocsClickableTextStyle"
-                    android:text="@string/demographicsChooseLabel"/>
+                    android:text="@string/demographicsChooseLabel" />
             </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/demographicsDocsLicense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/demographicsDocumentsInsuranceSwitch"
@@ -70,14 +70,14 @@
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                 android:checked="false"
                 android:text="@string/demogr_insurance_switch_text"
-                android:theme="@style/HaveHealthInsurance"/>
+                android:theme="@style/HaveHealthInsurance" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/demo_view_height"
                 android:layout_marginBottom="@dimen/divider_margin_bottom"
                 android:layout_marginTop="@dimen/divider_margin_top"
-                android:background="@color/light_gray"/>
+                android:background="@color/light_gray" />
 
             <LinearLayout
                 android:id="@+id/demographicsDocsInsHoldersContainer"
@@ -85,82 +85,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:orientation="vertical"
-                android:visibility="gone">
-
-                <!--<LinearLayout-->
-                    <!--android:id="@+id/demographicsDocsCard1ContainerWrapper"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="vertical">-->
-
-                    <!--<FrameLayout-->
-                        <!--android:id="@+id/demographicsDocsInsurance1"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"/>-->
-
-                    <!--<TextView-->
-                        <!--style="@style/DemographicsDocsClickableTextStyle"-->
-                        <!--android:id="@+id/demographicsDocsRemoveCard1Button"-->
-                        <!--android:layout_gravity="center"-->
-                        <!--android:layout_marginBottom="3dp"-->
-                        <!--android:layout_marginTop="3dp"-->
-                        <!--android:layout_marginEnd="0dp"-->
-                        <!--android:text="Remove"-->
-                        <!--android:textColor="@color/harvard_crimson"/>-->
-                <!--</LinearLayout>-->
-
-                <!--<LinearLayout-->
-                    <!--android:id="@+id/demographicsDocsCard2ContainerWrapper"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:visibility="gone">-->
-
-                    <!--<FrameLayout-->
-                        <!--android:id="@+id/demographicsDocsInsurance2"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"/>-->
-
-                    <!--<TextView-->
-                        <!--style="@style/DemographicsDocsClickableTextStyle"-->
-                        <!--android:id="@+id/demographicsDocsRemoveCard2Button"-->
-                        <!--android:layout_gravity="center"-->
-                        <!--android:layout_marginBottom="3dp"-->
-                        <!--android:layout_marginTop="3dp"-->
-                        <!--android:text="Remove"-->
-                        <!--android:layout_marginEnd="0dp"-->
-                        <!--android:textColor="@color/harvard_crimson"/>-->
-                <!--</LinearLayout>-->
-
-                <!--<LinearLayout-->
-                    <!--android:id="@+id/demographicsDocsCard3ContainerWrapper"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:visibility="gone">-->
-
-                    <!--<FrameLayout-->
-                        <!--android:id="@+id/demographicsDocsInsurance3"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"/>-->
-
-                    <!--<TextView-->
-                        <!--android:id="@+id/demographicsDocsRemoveCard3Button"-->
-                        <!--style="@style/DemographicsDocsClickableTextStyle"-->
-                        <!--android:layout_gravity="center"-->
-                        <!--android:layout_marginBottom="3dp"-->
-                        <!--android:layout_marginTop="3dp"-->
-                        <!--android:layout_marginEnd="0dp"-->
-                        <!--android:text="Remove"-->
-                        <!--android:textColor="@color/harvard_crimson"/>-->
-                <!--</LinearLayout>-->
-            </LinearLayout>
+                android:visibility="gone" />
 
             <View
                 android:id="@+id/demographicsDocsBottomView"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
         </LinearLayout>
 
     </ScrollView>
@@ -173,11 +104,11 @@
         android:layout_marginEnd="7dp"
         android:layout_marginTop="7dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:text="@string/demogr_docs_add_card"/>
+        android:text="@string/demogr_docs_add_card" />
 
     <Button
         android:id="@+id/demographicsDocsNextButton"
         style="@style/DemographicsNextButtonStyle"
-        android:text="@string/demogr_next"/>
+        android:text="@string/demogr_next" />
 
 </LinearLayout>
