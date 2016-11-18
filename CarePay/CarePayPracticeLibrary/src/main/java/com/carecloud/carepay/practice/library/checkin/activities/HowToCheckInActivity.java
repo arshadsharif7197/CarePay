@@ -17,6 +17,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
+import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -112,7 +113,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     View.OnClickListener carePayLoginButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Map<String, String> queryMap = new HashMap<>();
+            /*Map<String, String> queryMap = new HashMap<>();
             queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
             queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
@@ -120,9 +121,12 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "true");
             TransitionDTO transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);
-            /*Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
-            startActivity(intent);*/
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);*/
+            Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getApplicationContext().getClass().getSimpleName(), signinPatientModeDTO.toString());
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     };
 
@@ -145,6 +149,9 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         public void onClick(View view) {
             /*To implement click event for Manual Search */
             Intent intent = new Intent(HowToCheckInActivity.this, PersonalInformationActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getApplicationContext().getClass().getSimpleName(), signinPatientModeDTO.toString());
+            intent.putExtras(bundle);
             startActivity(intent);
         }
     };

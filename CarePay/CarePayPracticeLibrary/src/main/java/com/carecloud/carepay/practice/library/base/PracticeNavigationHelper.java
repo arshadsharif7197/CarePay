@@ -76,6 +76,7 @@ public class PracticeNavigationHelper {
             }
             case PracticeNavigationStateConstants.PRACTICE_APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
             case PracticeNavigationStateConstants.PATIENT_MODE_SPLASH: {
