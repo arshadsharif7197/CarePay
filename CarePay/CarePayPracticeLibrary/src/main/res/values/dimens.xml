@@ -152,4 +152,18 @@
     <dimen name="patient_splash_button_width">150dp</dimen>
     <dimen name="patient_splash_button_height">51dp</dimen>
 
+    <!--Signature view dialog-->
+    <dimen name="sign_dialog_width">510dp</dimen>
+    <dimen name="sign_dialog_title_padding">19dp</dimen>
+    <dimen name="sign_dialog_msg_padding">55dp</dimen>
+    <dimen name="sign_dialog_switch_padding">24.5dp</dimen>
+    <dimen name="sign_dialog_clear_width">78dp</dimen>
+    <dimen name="sign_dialog_clear_height">32dp</dimen>
+    <dimen name="sign_dialog_clear_margin">24.3dp</dimen>
+    <dimen name="sign_dialog_close_font">12sp</dimen>
+    <dimen name="sign_dialog_title_font">23sp</dimen>
+    <dimen name="sign_dialog_msg_font">16sp</dimen>
+    <dimen name="sign_dialog_helper_font">14sp</dimen>
+    <dimen name="sign_dialog_switch_font">17sp</dimen>
+
 </resources>
