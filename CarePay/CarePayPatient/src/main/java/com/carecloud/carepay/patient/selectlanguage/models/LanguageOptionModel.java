@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class LanguageOptionModel {
 
-    @SerializedName("languageId")
+    @SerializedName("code")
     @Expose
-    private Integer languageId;
+    private String languageId;
     @SerializedName("label")
     @Expose
     private String label;
@@ -49,7 +49,7 @@ public class LanguageOptionModel {
      * @return
      *     The languageId
      */
-    public Integer getLanguageId() {
+    public String getLanguageId() {
         return languageId;
     }
 
@@ -58,7 +58,7 @@ public class LanguageOptionModel {
      * @param languageId
      *     The languageId
      */
-    public void setLanguageId(Integer languageId) {
+    public void setLanguageId(String languageId) {
         this.languageId = languageId;
     }
 

@@ -35,8 +35,7 @@
 
             <TextView
                 android:id="@+id/demographicsDocsHeaderSubtitle"
-                style="@style/DemographicsDocsHeaderSubtitleStyle"
-                android:text="@string/demogr_docs_logo_message"/>
+                style="@style/DemographicsDocsHeaderSubtitleStyle"/>
 
 
 
@@ -57,15 +56,24 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                 android:layout_marginStart="14dp"
-                app:thumbTint="@color/blue_cerulian"
                 android:checked="false"
-                android:layout_marginEnd="15dp" />
+                android:layout_marginEnd="15dp"
+                android:theme="@style/HaveHealthInsurance"
+                />
 
             <View
                 style="@style/Review_Screen_View_Style"
                 android:layout_width="match_parent" />
+            <LinearLayout
+                android:id="@+id/insuranceHoldersContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:orientation="vertical"
+                android:visibility="gone" />
 
-            <FrameLayout
+
+           <!-- <FrameLayout
                 android:id="@+id/insuranceDocument1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:visibility="gone"/>
+                android:visibility="gone"/>-->
 
 
             <View
