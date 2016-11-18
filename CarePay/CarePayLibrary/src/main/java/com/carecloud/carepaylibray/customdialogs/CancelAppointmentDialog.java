@@ -44,12 +44,14 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
      * @param context the String to evaluate
      * @param appointmentDTO the DTO to evaluate
      */
-    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                   AppointmentsResultModel appointmentInfo) {
 
         super(context, appointmentDTO);
         this.isMissed = true;
         this.context = context;
         this.appointmentDTO = appointmentDTO;
+        this.appointmentInfo = appointmentInfo;
     }
 
     /**
