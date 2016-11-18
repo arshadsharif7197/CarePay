@@ -17,7 +17,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
-import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -33,11 +32,10 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import org.joda.time.LocalDate;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import org.joda.time.LocalDate;
 
 public class PersonalInformationActivity extends BasePracticeActivity {
     private CarePayButton selectDateButton;
@@ -324,7 +322,6 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
     private void callGetFindMyAppointments(){
         Map<String, String> queryMap = new HashMap<>();
-        TransitionDTO transitionDTO;
         queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
         queryMap.put("first_name", firstNameEditText.getText().toString());
         queryMap.put("last_name", lastNameEditText.getText().toString());
@@ -332,6 +329,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         queryMap.put("phone", phoneNumberEditText.getText().toString());
         queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        TransitionDTO transitionDTO;
         transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getPersonalInfo();
         WorkflowServiceHelper.getInstance().execute(transitionDTO, findMyAppointmentsCallback, queryMap);
     }

@@ -40,10 +40,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import java.util.Map;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -452,7 +451,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Map<String, String> queryMap = new HashMap<>();
-            TransitionDTO transitionDTO;
+
             Gson gson = new Gson();
             SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
             queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
@@ -461,7 +460,7 @@ public class SigninActivity extends BasePracticeActivity {
             queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "false");
-
+            TransitionDTO transitionDTO;
             transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
             WorkflowServiceHelper.getInstance().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap, headers);
         }

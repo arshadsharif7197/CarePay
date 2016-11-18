@@ -428,6 +428,7 @@ public class SigninPatientModeLabelsDTO {
     public String getCarepaySigninTitle() {
         return StringUtil.getLabelForView(carepaySigninTitle);
     }
+
     /**
      *     The invalidQRCodeMessage
      */
@@ -443,6 +444,7 @@ public class SigninPatientModeLabelsDTO {
     public void setCarepaySigninTitle(String carepaySigninTitle) {
         this.carepaySigninTitle = carepaySigninTitle;
     }
+
     /**
      * @param invalidQRCodeMessage
      *     The invalidQRCodeMessage
