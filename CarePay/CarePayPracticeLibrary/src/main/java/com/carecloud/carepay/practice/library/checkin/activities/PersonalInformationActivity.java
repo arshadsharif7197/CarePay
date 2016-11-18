@@ -350,14 +350,15 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
                 queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-                queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
+                queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
                 Map<String, String> headers = new HashMap<>();
                 headers.put("transition", "false");
+                headers.put("username", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
-                SystemUtil.showDialogMessage(PersonalInformationActivity.this, getString(R.string.signin_failed),
-                        getString(R.string.find_my_appointments_unsuccessful));
+               // SystemUtil.showDialogMessage(PersonalInformationActivity.this, getString(R.string.signin_failed),
+               //         getString(R.string.find_my_appointments_unsuccessful));
             }
         }
 

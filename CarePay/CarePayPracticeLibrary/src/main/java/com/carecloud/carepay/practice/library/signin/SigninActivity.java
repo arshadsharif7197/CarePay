@@ -183,7 +183,7 @@ public class SigninActivity extends BasePracticeActivity {
         } else if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN && signinPatientModeDTO != null) {
             SigninPatientModeLabelsDTO labelsDTO = signinPatientModeDTO.getMetadata().getLabels();
             if (labelsDTO != null) {
-                signinButton.setText(labelsDTO.getSigninButton());
+                signIn.setText(labelsDTO.getSigninButton());
                 signinTitle.setText(labelsDTO.getCarepaySigninTitle());
                 forgotPasswordButton.setText(labelsDTO.getForgotPassword());
                 gobackButton.setText(labelsDTO.getSiginHowCheckInGoBack());
