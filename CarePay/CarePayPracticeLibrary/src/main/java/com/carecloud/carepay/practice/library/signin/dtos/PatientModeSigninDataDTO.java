@@ -1,14 +1,14 @@
 package com.carecloud.carepay.practice.library.signin.dtos;
 
+/**
+ * Created by sudhir_pingale on 11/18/2016.
+ */
+
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by prem_mourya on 11/11/2016.
- */
-
-public class SigninPayloadPatientModeDTO {
+public class PatientModeSigninDataDTO {
 
     @SerializedName("cognito")
     @Expose
@@ -31,4 +31,5 @@ public class SigninPayloadPatientModeDTO {
     public void setCognito(CognitoDTO cognito) {
         this.cognito = cognito;
     }
+
 }

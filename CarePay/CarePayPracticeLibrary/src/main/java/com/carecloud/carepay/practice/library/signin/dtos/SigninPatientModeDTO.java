@@ -1,6 +1,7 @@
 
 package com.carecloud.carepay.practice.library.signin.dtos;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,7 +15,7 @@ public class SigninPatientModeDTO {
     private String state;
     @SerializedName("payload")
     @Expose
-    private SigninPatientModePayloadDTO payload;
+    private PatientModeSigninPayloadDTO payload;
 
     /**
      * 
@@ -52,11 +53,17 @@ public class SigninPatientModeDTO {
         this.state = state;
     }
 
-    public SigninPatientModePayloadDTO getPayload() {
+    public PatientModeSigninPayloadDTO getPayload() {
         return payload;
     }
 
-    public void setPayload(SigninPatientModePayloadDTO payload) {
+    public void setPayload(PatientModeSigninPayloadDTO payload) {
         this.payload = payload;
+    }
+
+    @Override
+    public String toString() {
+        Gson gson = new Gson();
+        return  gson.toJson(this);
     }
 }

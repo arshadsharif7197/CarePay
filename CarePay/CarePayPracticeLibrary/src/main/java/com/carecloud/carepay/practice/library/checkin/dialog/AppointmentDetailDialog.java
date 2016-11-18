@@ -198,7 +198,7 @@ public class AppointmentDetailDialog extends Dialog {
     private Map<String, String> getQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-        queryMap.put(queryStrings.getPracticeMgmt().getName(), patientBalanceDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeManagement().getName(), patientBalanceDTO.getMetadata().getPracticeMgmt());
         queryMap.put(queryStrings.getPracticeId().getName(), patientBalanceDTO.getMetadata().getPracticeId());
 
         return queryMap;

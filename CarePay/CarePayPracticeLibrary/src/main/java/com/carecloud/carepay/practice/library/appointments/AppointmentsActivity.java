@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.appointments;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,11 +25,9 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -83,11 +80,14 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         noAppointmentsDescription = (CarePayTextView ) findViewById(R.id.no_apt_message_desc);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
-        try{
+
+        try {
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-            getAppointments();
-        }catch(JsonSyntaxException jsonSyntaxException){
-            Log.e(TAG, "jsonSyntaxException: " + jsonSyntaxException.getMessage());
+            getAppointmentList();
+        } catch (JsonSyntaxException ex) {
+            SystemUtil.showDialogMessage(this, getString(R.string.alert_title_server_error),
+                    getString(R.string.alert_title_server_error));
+            ex.printStackTrace();
         }
     }
 
@@ -176,7 +176,10 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         noAppointmentsDescription.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getNoAppointmentsMessageText()));
     }
 
-    private void getAppointments(){
+    /**
+     * Method to update appointment list to UI
+     */
+    private void getAppointmentList(){
         if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
                 && appointmentsResultModel.getPayload().getAppointments() != null
                 && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
@@ -196,7 +199,6 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                     selectAppointmentTextview.setVisibility(View.INVISIBLE);
                     noAppointmentView.setVisibility(View.VISIBLE);
                 }
-
             }
             if (appointmentListWithToday != null) {
                 appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday, appointmentsResultModel);
@@ -208,5 +210,4 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
         }
     }
-
 }
