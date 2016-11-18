@@ -97,6 +97,9 @@ public class ConsentFormLabelsDTO implements Serializable {
     @SerializedName("signature_activity_title")
     @Expose
     private String signatureActivityTitle;
+    @SerializedName("sign_consent_close_label")
+    @Expose
+    private String signConsentCloseLabel;
 
     /**
      * @return The consentForMedicareTitle
@@ -491,5 +494,19 @@ public class ConsentFormLabelsDTO implements Serializable {
      */
     public void setSignatureActivityTitleText(String signatureActivityTitle) {
         this.signatureActivityTitle = signatureActivityTitle;
+    }
+
+    /**
+     * @return The signConsentCloseLabel
+     */
+    public String getSignConsentCloseLabel() {
+        return StringUtil.getLabelForView(signConsentCloseLabel);
+    }
+
+    /**
+     * @param signConsentCloseLabel The sign_consent_close_label
+     */
+    public void setSignConsentCloseLabel(String signConsentCloseLabel) {
+        this.signConsentCloseLabel = signConsentCloseLabel;
     }
 }
