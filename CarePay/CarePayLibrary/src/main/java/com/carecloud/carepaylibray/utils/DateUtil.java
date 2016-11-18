@@ -183,7 +183,7 @@ public class DateUtil {
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         cal.set(Calendar.MILLISECOND, 0);
-        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+        String rawFmt = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
         SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
         return outDateFormat.format(new Date(cal.getTimeInMillis()));
     }
@@ -194,7 +194,7 @@ public class DateUtil {
      * @return APPOINTMENT_DATE_TIME_FORMAT formated date string
      */
     public static String toDateStringAsYYYYMMDD(Date date) {
-        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT;
+        String rawFmt = CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT;
         SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
         return outDateFormat.format(date);
     }
@@ -446,5 +446,15 @@ public class DateUtil {
         SimpleDateFormat format = new SimpleDateFormat(
                 "MM/yyyy", Locale.getDefault());
         return format.format(calendar.getTime());
+    }
+
+    /**
+     * Format the date as "EEEE, MMMM d" (eg Monday, Oct 10th)
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsDayShortMonthDayOrdinal() {
+        return String.format(Locale.getDefault(), "%s, %s %d%s",
+                dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
     }
 }

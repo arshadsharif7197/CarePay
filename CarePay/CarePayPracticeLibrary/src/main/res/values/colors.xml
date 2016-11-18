@@ -51,6 +51,7 @@
     <color name="button_pressed">#2A5C91</color>
     <color name="text_border_default">#303232</color>
     <color name="text_border_selected">#4EA9DC</color>
+    <color name="curious_blue">#0092d1</color>
     <color name="warning">#E94700</color>
     <color name="grey_100">#F5F7F7</color>
     <color name="grey_300">#8D9496</color>
@@ -103,4 +104,6 @@
 
     <color name="bleu_de_france">#35a5e1</color>
     <color name="appointment_card_partial_bg">#35a5e1</color> <!-- background appointment card -->
+    <color name="scan_camera_backgroung_bg">#ff424242</color>
+    <color name="scan_camera_bg">#50acacac</color>
 </resources>

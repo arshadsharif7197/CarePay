@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/home_main_margin_end"
-        android:layout_marginStart="@dimen/home_main_margin_start"
-        android:layout_marginTop="@dimen/home_main_margin_top">
+        android:layout_marginStart="@dimen/home_main_margin_start">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="51dp"
                 android:layout_marginTop="21.4dp"
-                android:background="@drawable/bg_blue_overlay"
+                android:background="@drawable/bg_light_blue_overlay"
                 android:drawableStart="@drawable/icn_arrow_left"
                 android:gravity="center"
                 android:includeFontPadding="false"
@@ -72,7 +71,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="3" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -94,7 +93,7 @@
     <LinearLayout
         android:id="@+id/mainLayout"
         android:layout_width="500.0dp"
-        android:layout_height="220dp"
+        android:layout_height="280dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="21dp"
         android:background="@drawable/layout_shadow"
@@ -129,39 +128,30 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/signinTextview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textColor="@color/bright_cerulean"
+            <Button
+                android:id="@+id/signinButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:textSize="17sp"
-                app:customAssetFont="gotham_rounded_medium" />
-
-            <ImageView
-                android:id="@+id/rightarrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/icn_right_arrow" />
+                android:textColor="@color/white"
+                android:layout_marginTop="31dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"/>
 
         </LinearLayout>
-    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="350dp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="-50dp"
+        android:layout_marginTop="-48dp"
         android:src="@drawable/home_shadow" />
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,6 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:text="dfgdfgdf"
             android:textColor="@color/white"
             android:textSize="@dimen/forgotpassword_textsize"
             app:customAssetFont="proxima_nova_regular" />
@@ -182,7 +173,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4" />
+        android:layout_weight="2" />
     <ImageView
         android:id="@+id/signInHome"
         android:layout_width="wrap_content"
@@ -190,6 +181,6 @@
         android:paddingBottom="@dimen/dimen_20dp"
         android:paddingLeft="@dimen/dimen_24dp"
         android:src="@drawable/icn_home"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </LinearLayout>

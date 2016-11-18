@@ -9,6 +9,7 @@ import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivit
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -84,6 +85,11 @@ public class PatientNavigationHelper {
             }
             case PatientNavigationStateConstants.CONSENT_FORMS: {
                 intent = new Intent(context, ConsentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            }
+            case PatientNavigationStateConstants.INTAKE_FORMS: {
+                intent = new Intent(context, InTakeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }

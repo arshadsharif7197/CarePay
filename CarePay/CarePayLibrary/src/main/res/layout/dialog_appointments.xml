@@ -22,7 +22,7 @@
             android:src="@drawable/icn_patient_mode_nav_close"
             android:textColor="@color/white" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/dialogCancelAppointTextView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/apt_imgview_ht"
@@ -31,7 +31,8 @@
             android:gravity="end"
             android:textColor="@color/white"
             android:textSize="@dimen/textview_textsize"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium" />
     </LinearLayout>
 
     <LinearLayout
@@ -52,24 +53,24 @@
             android:orientation="vertical">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                app:customAssetFont="proxima_nova_light"
                 android:id="@+id/appointDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
                 android:gravity="center_horizontal"
                 android:textColor="@color/textview_default_textcolor"
-                android:textSize="@dimen/apt_dl_text_date" />
+                android:textSize="@dimen/apt_dl_text_date"
+                app:customAssetFont="proxima_nova_light" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                app:customAssetFont="gotham_rounded_bold"
                 android:id="@+id/appointTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/apt_dl_appt_time_margin"
                 android:gravity="center_horizontal"
                 android:textColor="@color/slateGray"
-                android:textSize="@dimen/apt_dl_textview_size" />
+                android:textSize="@dimen/apt_dl_textview_size"
+                app:customAssetFont="gotham_rounded_bold" />
 
         </LinearLayout>
 
@@ -96,7 +97,6 @@
         </android.support.v7.widget.CardView>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            app:customAssetFont="gotham_rounded_medium"
             android:id="@+id/appointShortnameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,7 +105,8 @@
             android:gravity="center_vertical|center_horizontal"
             android:textColor="@color/white"
             android:textSize="@dimen/apt_dl_text_big"
-            android:visibility="visible" />
+            android:visibility="visible"
+            app:customAssetFont="gotham_rounded_medium" />
 
         <LinearLayout
             android:id="@+id/actionAddLayout"
@@ -118,23 +119,23 @@
             android:paddingRight="@dimen/apt_dl_margin">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                app:customAssetFont="proxima_nova_semi_bold"
                 android:id="@+id/appointNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/apt_dl_text_big" />
+                android:textSize="@dimen/apt_dl_text_big"
+                app:customAssetFont="proxima_nova_semi_bold" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                app:customAssetFont="proxima_nova_regular"
                 android:id="@+id/appointTypeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
                 android:gravity="center_horizontal"
                 android:textColor="@color/bermudagrey"
-                android:textSize="@dimen/textview_textsize" />
+                android:textSize="@dimen/textview_textsize"
+                app:customAssetFont="proxima_nova_regular" />
 
             <View
                 android:layout_width="match_parent"
@@ -156,7 +157,6 @@
                     android:orientation="vertical">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        app:customAssetFont="proxima_nova_extra_bold"
                         android:id="@+id/appointAddressHeaderTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -167,10 +167,10 @@
                         android:singleLine="true"
                         android:textColor="@color/payne_gray"
                         android:textSize="@dimen/textview_textsize"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:customAssetFont="proxima_nova_extra_bold" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        app:customAssetFont="proxima_nova_regular"
                         android:id="@+id/appointAddressTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -179,7 +179,8 @@
                         android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
                         android:maxLines="2"
                         android:textColor="@color/bermudagrey"
-                        android:textSize="@dimen/textview_textsize" />
+                        android:textSize="@dimen/textview_textsize"
+                        app:customAssetFont="proxima_nova_regular" />
                 </LinearLayout>
 
                 <ImageView
