@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -51,6 +52,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
     private AppointmentsListAdapter appointmentsListAdapter;
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
+    private static final String TAG = "AppointmentsActivity";
 
     private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentsItems;
     private TextView logOutTextview;
@@ -85,7 +87,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
             getAppointments();
         }catch(JsonSyntaxException jsonSyntaxException){
-
+            Log.e(TAG, "jsonSyntaxException: " + jsonSyntaxException.getMessage());
         }
     }
 
