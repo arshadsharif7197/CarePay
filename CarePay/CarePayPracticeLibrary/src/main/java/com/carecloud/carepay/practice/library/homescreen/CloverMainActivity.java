@@ -28,8 +28,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
-import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -265,7 +264,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void getNews() {
-        // uncomment after testing ready
+        // TODO: 11/17/2016  uncomment after testing ready
 //        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
 //        Gson gson = new Gson();
 //        TransitionDTO transitionDTO;
@@ -278,8 +277,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 //        }
 //        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
 
-        // remove after testing ready
-        if(homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+        // TODO: 11/17/2016  (for build/test); remove after testing ready
+        if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             getDemographicInformation();
         }
     }
@@ -316,10 +315,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            // transition needed
-            Intent appointmentIntent = new Intent(CloverMainActivity.this, AppointmentsActivity.class);
-            appointmentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(appointmentIntent);
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getPracticeCheckin();
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
@@ -479,9 +480,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     };
 
+
+    /**
+     * For build/test
+     */
     private void getDemographicInformation() {
+        // TODO: 11/17/2016 remove method
         DemographicService apptService = (new BaseServiceGenerator(this).createService(DemographicService.class)); //, String token, String searchString
-        Call<DemographicDTO> call = apptService.fetchDemographics();
+        Call<DemographicDTO> call = apptService.fetchDemographicInformation();
         call.enqueue(new Callback<DemographicDTO>() {
             @Override
             public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
@@ -497,12 +503,17 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         });
     }
 
+    /**
+     * For build/test
+     * @param demographicDTO The DTO
+     */
     private void launchPatientModeCheckinActivity(DemographicDTO demographicDTO) {
+        // TODO: 11/17/2016 remove method
         // do to Demographics
         Intent intent = new Intent(this, PatientModeCheckinActivity.class);
         // pass the object into the gson
         Gson gson = new Gson();
-        intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
+        intent.putExtra(getApplicationContext().getClass().getSimpleName(), gson.toJson(demographicDTO, DemographicDTO.class));
 
         startActivity(intent);
     }

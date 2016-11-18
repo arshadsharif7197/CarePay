@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -43,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepay.practice.library.R.id.rightarrow;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
@@ -72,7 +75,7 @@ public class SigninActivity extends BasePracticeActivity {
     private boolean isEmptyPassword;
     private ImageView homeButton;
 
-    private ImageView rightarrow;
+    private Button signIn;
 
     private String emailLabel;
     private String passwordLabel;
@@ -121,14 +124,18 @@ public class SigninActivity extends BasePracticeActivity {
         changeScreenMode(signinScreenMode);
         isEmptyEmail = true;
         isEmptyPassword = true;
+
+        // TODO: 11/17/2016
+        emailEditText.setText("practice@cc.com");
+        passwordEditText.setText("Practice123!");
     }
 
     /**
      * Initailizing the view
      */
-    public void initViews(SignInScreenMode signInScreenMode) {
-        signinButton = (TextView) findViewById(R.id.signinTextview);
-        rightarrow = (ImageView) findViewById(R.id.rightarrow);
+    public void initViews() {
+//        signinButton = (TextView) findViewById(R.id.signinTextview);
+        signIn = (Button) findViewById(R.id.signinButton);
         homeButton = (ImageView) findViewById(R.id.signInHome);
         gobackButton = (TextView) findViewById(R.id.goBackButtonTextview);
         forgotPasswordButton = (TextView) findViewById(R.id.forgot_passwordTextview);
@@ -169,7 +176,7 @@ public class SigninActivity extends BasePracticeActivity {
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN && signinDTO != null) {
             SigninLabelsDTO signinLabelsDTO = signinDTO.getMetadata().getLabels();
             if (signinLabelsDTO != null) {
-                signinButton.setText(signinLabelsDTO.getSigninButton());
+                signIn.setText(signinLabelsDTO.getSigninButton());
                 signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
                 forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
                 gobackButton.setText(signinLabelsDTO.getGobackButton());
@@ -195,18 +202,17 @@ public class SigninActivity extends BasePracticeActivity {
 
     private void setEnabledSigninButton(boolean enabled) {
         if (!enabled) {
-            signinButton.setTextColor(signinButton.getTextColors().withAlpha(50));
-            rightarrow.setAlpha(50);
+           signIn.setBackground(getResources().getDrawable(R.drawable.bg_silver_overlay));
         } else {
-            signinButton.setTextColor(signinButton.getTextColors().withAlpha(255));
-            rightarrow.setAlpha(255);
+
+            signIn.setBackground(getResources().getDrawable(R.drawable.bg_green_overlay));
         }
-        signinButton.setEnabled(enabled);
+        signIn.setEnabled(enabled);
     }
 
     private void setClicables() {
 
-        signinButton.setOnClickListener(new View.OnClickListener() {
+        signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (areAllValid()) {
