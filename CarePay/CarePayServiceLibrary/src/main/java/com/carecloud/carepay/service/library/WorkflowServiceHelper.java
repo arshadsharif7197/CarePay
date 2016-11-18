@@ -29,10 +29,7 @@ import retrofit2.Response;
 public class WorkflowServiceHelper {
 
 
-
     private static WorkflowServiceHelper instance;
-
-
 
 
     private WorkflowServiceHelper() {
@@ -40,6 +37,7 @@ public class WorkflowServiceHelper {
 
     /**
      * Return singleton object
+     *
      * @return singleton object
      */
     public static WorkflowServiceHelper getInstance() {
@@ -65,7 +63,7 @@ public class WorkflowServiceHelper {
                 userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
             }
 
-        } else if(! isNullOrEmpty(CognitoAppHelper.getCurrUser())){
+        } else if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
             userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
             if (CognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
                 userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
@@ -89,7 +87,6 @@ public class WorkflowServiceHelper {
     }
 
     /**
-     *
      * @return app start headers
      */
     public static Map<String, String> getApplicationStartHeaders() {
@@ -135,8 +132,19 @@ public class WorkflowServiceHelper {
         executeRequest(transitionDTO, callback, jsonBody, queryMap, addCustomHeaders(customHeaders));
     }
 
+    private void updateQueryMapWithDefault(Map<String, String> queryMap) {
+        if (queryMap == null) {
+            queryMap = new HashMap<>();
+        }
+        if (ApplicationMode.getInstance().getUserPracticeDTO() != null && !queryMap.containsKey("practice_mgmt")) {
+            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        }
+    }
+
     private void executeRequest(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap, Map<String, String> headers) {
         callback.onPreExecute();
+        updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
         Call<WorkflowDTO> call = null;
 
