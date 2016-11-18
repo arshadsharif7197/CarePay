@@ -213,14 +213,10 @@ public class InTakeActivityWebView extends BasePatientActivity {
 
         header.put("transition", "true");
 
-        //inTakeForm.getPayload().getFindings().getPayload().setFindings(jsonAnswers);
-        // String body = gson.toJson(inTakeForm);
-        // UpdateIntakeModel transitionUpdateIntake =  inTakeForm.getMetadata().getTransitions().getUpdateIntake();
-
-        queryString.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());//050bd799-de01-4692-a950-10d12d20dd2e
+        queryString.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());
         queryString.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
         queryString.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
-        queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());//cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2
+        queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
         queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
 
