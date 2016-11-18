@@ -17,8 +17,10 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.patient.intakeforms.activities.InTakeActivityWebView;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -31,6 +33,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -206,6 +209,35 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+
+            //First call to show intake_forms
+            //after response call in activity web view self call
+            Map<String, String> queryString = new HashMap<>();
+            Map<String, String> header = new HashMap<>();
+
+            header.put("transition", "true");
+            queryString.put("appointment_id","4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");//model.getMetadata().getAppointmentId()
+            queryString.put("practice_id","77b81aa8-1155-4da7-9fd9-2f6967b09a93");
+            queryString.put("practice_mgmt","carecloud");
+
+            TransitionDTO transitionDTO = new TransitionDTO();
+            transitionDTO.setMethod("POST");
+            transitionDTO.setUrl("dev/workflow/carepay/patient_checkin/consent_forms/update_consent");
+
+            Gson gson = new Gson();
+            String body = "{\"appointments\":[{\"metadata\":{\"appointment_id\":\"394d8ad4-4063-470b-be04-2f2d12f6520e\",\"created_dt\":\"2016-11-15T19:26:40.168Z\",\"hash_appointments_id\":\"bcb07848d433be95\",\"patient_id\":\"cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2\",\"practice_id\":\"77b81aa8-1155-4da7-9fd9-2f6967b09a93\",\"practice_mgmt\":\"carecloud\",\"request\":\"patient\",\"updated_dt\":\"2016-11-15T19:26:40.168Z\",\"user_id\":\"e3f05df59527ba6e\",\"username\":\"srios@carecloud.com\"},\"payload\":{\"provider\":{\"id\":12452,\"name\":\"Dr. Frank Stone\",\"phone_number\":\"5555555555\"},\"patient\":{\"chart_number\":\"1234424\",\"date_of_birth\":\"2016-11-01T12:00:00-04:00\",\"email\":\"srios@carecloud.com\",\"first_name\":\"SAUL\",\"gender_id\":1,\"id\":\"cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2\",\"last_name\":\"RIOS\",\"primary_phone_number\":\"3051111234\"}}}],\"demographics\":{}}";  //gson.toJson(consentFormDTO.getConsentFormPayloadDTO());
+
+
+
+
+
+            //TransitionDTO transitionDTO2 = consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
+
+            //consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
+            //consentFormDTO convert into json string
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, intakeFormCallback, body, queryString, header);
+
             return true;
         } else if (id == R.id.action_launch_demogr_review) {
             Map<String, String> queries = new HashMap<>();
@@ -221,6 +253,38 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
         return super.onOptionsItemSelected(item);
     }
+
+    WorkflowServiceCallback intakeFormCallback=new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+
+
+            Intent intent = new Intent(getApplicationContext(), InTakeActivityWebView.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Bundle bundle = new Bundle();
+            bundle.putString("appointment_id","4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");//model.getMetadata().getAppointmentId()
+            bundle.putString("findings_id","e4de697f-50b8-498c-957f-3c9bca6188ea");
+            bundle.putString("patient_id","34338ada-8cf1-4ef4-834c-9c450971ae73");//
+            bundle.putString("practice_id","77b81aa8-1155-4da7-9fd9-2f6967b09a93");
+            bundle.putString("practice_mgmt","carecloud");
+            intent.putExtras(bundle);
+            startActivity(intent);
+
+
+
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //// TODO: 11/14/16 change  AppointmentsActivity.this for ConsentActivity.class
+            SystemUtil.showDialogMessage(AppointmentsActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
