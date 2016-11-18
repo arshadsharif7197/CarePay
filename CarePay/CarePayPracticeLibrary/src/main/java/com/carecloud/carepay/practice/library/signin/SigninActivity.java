@@ -70,7 +70,7 @@ public class SigninActivity extends BasePracticeActivity {
     private boolean isEmptyPassword;
     private ImageView homeButton;
 
-    private Button signIn;
+    private Button signInButton;
 
     private String emailLabel;
     private String passwordLabel;
@@ -130,7 +130,7 @@ public class SigninActivity extends BasePracticeActivity {
      */
     public void initViews(SignInScreenMode signInScreenMode) {
 //        signinButton = (TextView) findViewById(R.id.signinTextview);
-        signIn = (Button) findViewById(R.id.signinButton);
+        signInButton = (Button) findViewById(R.id.signinButton);
         homeButton = (ImageView) findViewById(R.id.signInHome);
         gobackButton = (TextView) findViewById(R.id.goBackButtonTextview);
         forgotPasswordButton = (TextView) findViewById(R.id.forgot_passwordTextview);
@@ -171,7 +171,7 @@ public class SigninActivity extends BasePracticeActivity {
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN && signinDTO != null) {
             SigninLabelsDTO signinLabelsDTO = signinDTO.getMetadata().getLabels();
             if (signinLabelsDTO != null) {
-                signIn.setText(signinLabelsDTO.getSigninButton());
+                signInButton.setText(signinLabelsDTO.getSigninButton());
                 signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
                 forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
                 gobackButton.setText(signinLabelsDTO.getGobackButton());
@@ -183,7 +183,7 @@ public class SigninActivity extends BasePracticeActivity {
         } else if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN && signinPatientModeDTO != null) {
             SigninPatientModeLabelsDTO labelsDTO = signinPatientModeDTO.getMetadata().getLabels();
             if (labelsDTO != null) {
-                signinButton.setText(labelsDTO.getSigninButton());
+                signInButton.setText(labelsDTO.getSigninButton());
                 signinTitle.setText(labelsDTO.getCarepaySigninTitle());
                 forgotPasswordButton.setText(labelsDTO.getForgotPassword());
                 gobackButton.setText(labelsDTO.getSiginHowCheckInGoBack());
@@ -197,17 +197,17 @@ public class SigninActivity extends BasePracticeActivity {
 
     private void setEnabledSigninButton(boolean enabled) {
         if (!enabled) {
-           signIn.setBackground(getResources().getDrawable(R.drawable.bg_silver_overlay));
+           signInButton.setBackground(getResources().getDrawable(R.drawable.bg_silver_overlay));
         } else {
 
-            signIn.setBackground(getResources().getDrawable(R.drawable.bg_green_overlay));
+            signInButton.setBackground(getResources().getDrawable(R.drawable.bg_green_overlay));
         }
-        signIn.setEnabled(enabled);
+        signInButton.setEnabled(enabled);
     }
 
     private void setClicables() {
 
-        signIn.setOnClickListener(new View.OnClickListener() {
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (areAllValid()) {
