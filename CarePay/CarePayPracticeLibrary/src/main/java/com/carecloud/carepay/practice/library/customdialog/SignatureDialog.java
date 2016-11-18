@@ -23,6 +23,11 @@ public class SignatureDialog extends Dialog {
     private SignaturePad signaturePad;
     private ConsentFormDTO consentFormDTO;
 
+    /**
+     * Constructor.
+     * @param context context
+     * @param consentFormDTO Consent form DTO
+     */
     public SignatureDialog(Context context, ConsentFormDTO consentFormDTO) {
         super(context);
         this.context = context;
@@ -49,7 +54,7 @@ public class SignatureDialog extends Dialog {
         final Button confirmSign = (Button) findViewById(R.id.signature_confirmation_button);
         confirmSign.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
             }
         });
@@ -58,7 +63,7 @@ public class SignatureDialog extends Dialog {
         final Button clearButton = (Button) findViewById(R.id.patient_mode_clear_button);
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 signaturePad.clear();
                 confirmSign.setEnabled(false);
                 clearButton.setVisibility(View.GONE);
@@ -86,7 +91,7 @@ public class SignatureDialog extends Dialog {
 
         findViewById(R.id.signature_view_cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 dismiss();
             }
         });
