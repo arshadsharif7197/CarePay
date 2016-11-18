@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.eligibility.activities.EligibilityActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -235,9 +236,10 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            //PatientNavigationHelper.getInstance(InTakeWebViewActivity.this).navigateToWorkflow(workflowDTO);
-            Intent intent = new Intent(InTakeWebViewActivity.this, EligibilityActivity.class);
-            startActivity(intent);
+            PatientNavigationHelper.getInstance(InTakeWebViewActivity.this).navigateToWorkflow(workflowDTO);
+
+            //Intent intent = new Intent(InTakeWebViewActivity.this, EligibilityActivity.class);
+            //startActivity(intent);
         }
 
         @Override
