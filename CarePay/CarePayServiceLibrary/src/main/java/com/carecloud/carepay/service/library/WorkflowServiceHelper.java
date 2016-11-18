@@ -177,9 +177,10 @@ public class WorkflowServiceHelper {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
             } else if (jsonBody != null) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
-            }else {
+            } else if (jsonBody != null) {
+                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+            } else {
                 call = workflowService.executePost(transitionDTO.getUrl());
-
             }
         }
         executeCallback(callback, call);
