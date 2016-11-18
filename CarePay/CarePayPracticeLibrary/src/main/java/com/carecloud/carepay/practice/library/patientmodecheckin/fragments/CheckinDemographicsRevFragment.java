@@ -15,7 +15,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.activities.Pati
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinDemographicsReviewFragment extends Fragment {
+public class CheckinDemographicsRevFragment extends Fragment {
 
     private Button areCorrectButton;
     private Button needUpdateButton;

@@ -30,7 +30,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // transition
-                CheckinDemographicsReviewFragment fragment = new CheckinDemographicsReviewFragment();
+                CheckinDemographicsRevFragment fragment = new CheckinDemographicsRevFragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
             }
         });
