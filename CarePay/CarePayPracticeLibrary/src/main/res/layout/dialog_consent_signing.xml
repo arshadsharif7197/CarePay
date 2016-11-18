@@ -130,7 +130,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/sign_dialog_clear_margin"
                     android:layout_marginTop="@dimen/dimen_14dp"
-                    android:background="@drawable/button_blue_border"
+                    android:background="@drawable/button_clear_border"
                     android:textColor="@color/rich_electric_blue"
                     android:visibility="gone" />
             </RelativeLayout>
