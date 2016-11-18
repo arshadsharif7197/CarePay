@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,6 +56,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     private CustomGothamRoundedBookButton   scanQRCodeButton;
     private CustomGothamRoundedMediumButton createCarePayAccountButton;
     private CustomGothamRoundedBookButton   manualSearchButton;
+    private ProgressDialog                  dialog;
 
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
@@ -258,19 +260,21 @@ public class HowToCheckInActivity extends BasePracticeActivity {
      * @param resultCode  resultCode
      * @param intent      result intent
      */
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0 && resultCode == RESULT_OK) {
-                //get the extras that are returned from the intent
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format, Toast.LENGTH_LONG);
-                toast.show();
+            //get the extras that are returned from the intent
+            String contents = intent.getStringExtra("SCAN_RESULT");
+            String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
 
-                try {
-                    processScannedQRCOde(contents);
-                } catch (JsonSyntaxException ex) {
-                    Toast.makeText(this, "Can not process this QR code. May be this QR code is invalid!", Toast.LENGTH_LONG).show();
-                }
+            try {
+                /*Process scanned QR code*/
+                processScannedQRCOde(contents);
+            } catch (JsonSyntaxException ex) {
+                SystemUtil.showDialogMessage(this,
+                        signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle(),
+                        signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage());
+                dismissDialog();
+            }
         }
     }
 
@@ -280,16 +284,15 @@ public class HowToCheckInActivity extends BasePracticeActivity {
      *  the QR code data
      */
     private void processScannedQRCOde(String qrCodeData) {
+        instantiateProgressDialog();
         Gson gson = new Gson();
-        ScanQRCodeResultDTO scanQRCodeResultDTO = gson.fromJson(qrCodeData, ScanQRCodeResultDTO.class);
+        ScanQRCodeResultDTO scanQRCodeResultDTO = gson.fromJson(qrCodeData,
+                ScanQRCodeResultDTO.class);
 
         JsonObject queryStringObject = signinPatientModeDTO.getMetadata().getTransitions()
                 .getAction().getQueryString();
 
         QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("transition", "true");
 
         WorkflowServiceHelper.getInstance().execute(signinPatientModeDTO.getMetadata()
                 .getTransitions().getAction(), appointmentCallBack,
@@ -309,6 +312,9 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         return queryMap;
     }
 
+    /**
+     * Call back for appointment API.
+     */
     WorkflowServiceCallback appointmentCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -316,13 +322,37 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(HowToCheckInActivity.this, workflowDTO);
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(HowToCheckInActivity.this,
+                    workflowDTO);
+            dismissDialog();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             SystemUtil.showDialogMessage(HowToCheckInActivity.this,
                     getString(R.string.alert_title_server_error), exceptionMessage);
+            dismissDialog();
         }
     };
+
+    /**
+     * Method to show progress dialog.
+     */
+    private void instantiateProgressDialog() {
+        dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage(signinPatientModeDTO.getMetadata().getLabels().getLoadingMessage());
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    /**
+     * Method to dismiss progress dialog.
+     */
+    private void dismissDialog() {
+        if(dialog != null){
+            dialog.dismiss();
+        }
+    }
 }

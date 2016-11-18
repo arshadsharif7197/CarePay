@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.appointments;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,14 +23,13 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentsActivity extends AppCompatActivity implements View.OnClickListener {
+public class AppointmentsActivity extends BasePracticeActivity implements View.OnClickListener {
     private RecyclerView appointmentsRecyclerView;
     private RecyclerView.LayoutManager appointmentsLayoutManager;
     private AppointmentsListAdapter appointmentsListAdapter;
@@ -77,8 +75,15 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
         noAppointmentsLabel = (CarePayTextView ) findViewById(R.id.no_apt_message_title);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
-        getAppointmentInformation();
 
+        try {
+            appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+            inflateAppointmentList();
+        } catch (JsonSyntaxException ex) {
+            SystemUtil.showDialogMessage(this, getString(R.string.alert_title_server_error),
+                    getString(R.string.alert_title_server_error));
+            ex.printStackTrace();
+        }
     }
 
     private void getAppointmentInformation() {
@@ -207,6 +212,34 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
         logOutTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsBtnLogout()));
         appointmentForTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsSubHeading()));
         selectAppointmentTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsMainHeading()));
+    }
+
+    private void inflateAppointmentList() {
+        if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
+                && appointmentsResultModel.getPayload().getAppointments() != null
+                && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
+
+            noAppointmentView.setVisibility(View.GONE);
+            appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
+
+            appointmentListWithToday = new ArrayList<>();
+            populateWithLabels();
+            for (AppointmentDTO appointmentDTO : appointmentsItems) {
+                String title = getToday(appointmentDTO.getPayload().getStartTime());
+                if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+                    appointmentListWithToday.add(appointmentDTO);
+                }
+
+            }
+            if (appointmentListWithToday != null) {
+                appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday, appointmentsResultModel);
+                appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
+            }
+
+            //Layout manager for the Recycler View
+            appointmentsLayoutManager = new LinearLayoutManager(AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
+            appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
+        }
     }
 
 
