@@ -22,9 +22,6 @@ public class SigninPatientModeLabelsDTO {
     @SerializedName("already_have_account_link")
     @Expose
     private String alreadyHaveAccountLink;
-    @SerializedName("personal_info_go_back")
-    @Expose
-    private String personalInfoGoBack;
     @SerializedName("personal_info_personal_information")
     @Expose
     private String personalInfoPersonalInformation;
@@ -76,6 +73,10 @@ public class SigninPatientModeLabelsDTO {
     @SerializedName("invalid_qr_code_title")
     @Expose
     private String invalidQRCodeTitle;
+
+    @SerializedName("carepay_signin_title")
+    @Expose
+    private String carepaySigninTitle;
 
     /**
      * 
@@ -165,24 +166,6 @@ public class SigninPatientModeLabelsDTO {
      */
     public void setAlreadyHaveAccountLink(String alreadyHaveAccountLink) {
         this.alreadyHaveAccountLink = alreadyHaveAccountLink;
-    }
-
-    /**
-     * 
-     * @return
-     *     The personalInfoGoBack
-     */
-    public String getPersonalInfoGoBack() {
-        return StringUtil.getLabelForView(personalInfoGoBack) ;
-    }
-
-    /**
-     * 
-     * @param personalInfoGoBack
-     *     The personal_info_go_back
-     */
-    public void setPersonalInfoGoBack(String personalInfoGoBack) {
-        this.personalInfoGoBack = personalInfoGoBack;
     }
 
     /**
@@ -440,6 +423,13 @@ public class SigninPatientModeLabelsDTO {
     /**
      *
      * @return
+     *     The carepaySigninTitle
+     */
+    public String getCarepaySigninTitle() {
+        return StringUtil.getLabelForView(carepaySigninTitle);
+    }
+
+    /**
      *     The invalidQRCodeMessage
      */
     public String getInvalidQRCodeMessage() {
@@ -448,6 +438,14 @@ public class SigninPatientModeLabelsDTO {
 
     /**
      *
+     * @param carepaySigninTitle
+     *     The carepay_signin_title
+     */
+    public void setCarepaySigninTitle(String carepaySigninTitle) {
+        this.carepaySigninTitle = carepaySigninTitle;
+    }
+
+    /**
      * @param invalidQRCodeMessage
      *     The invalidQRCodeMessage
      */

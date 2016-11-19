@@ -91,7 +91,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         // set the toolbar
         formsToolbar = (Toolbar) findViewById(R.id.intakeToolbar);
         formsToolbarTitleTv = (TextView) formsToolbar.findViewById(R.id.intakeToolbarTitle);
-        SystemUtil.setGothamRoundedMediumTypeface(this, formsToolbarTitleTv);
+        SystemUtil.setGothamRoundedMediumTypeface(this, formsToolbarTitleTv);//534 618 story 844 bug for this
         formsToolbar.setTitle("");
         formsToolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(formsToolbar);

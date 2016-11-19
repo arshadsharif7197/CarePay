@@ -568,9 +568,11 @@
     <!-- InTake -->
 
     <style name="InTakeNextButtonStyle" parent="DemographicsNextButtonStyle">
-        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:background">@drawable/language_button_selector</item>
     </style>
 
     <style name="InTakeDotStyle">
@@ -620,6 +622,17 @@
         <item name="android:orientation">vertical</item>
         <item name="android:layout_marginStart">@dimen/intakeQuestionStartEndMargin</item>
         <item name="android:layout_marginEnd">@dimen/intakeQuestionStartEndMargin</item>
+    </style>
+
+    <style name="InTakeDottedProgressBarStyle">
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/white</item>
     </style>
 
     <style name="CustomToolbarTextStyle" parent="android:Widget.TextView">
