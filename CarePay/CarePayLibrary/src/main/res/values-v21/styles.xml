@@ -46,9 +46,4 @@
         <item name="android:foregroundTint">@color/rich_electric_blue</item>
     </style>
 
-    <style name="CheckinContainerStyle">
-        <item name="android:background">@color/white</item>
-        <item name="android:elevation">@dimen/dimen_33dp</item>
-    </style>
-
 </resources>
