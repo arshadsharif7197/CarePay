@@ -29,7 +29,7 @@
             android:orientation="horizontal">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/goBackTextview"
+                android:id="@+id/checkinBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/icn_arrow_left"
@@ -48,7 +48,7 @@
                 android:background="@drawable/checkin_ic_btn_bg_clear"/>
 
             <ImageView
-                android:id="@+id/titleHeaderTextview"
+                android:id="@+id/checkinLogo"
                 android:layout_width="@dimen/home_logo_width"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/home_logo"
@@ -76,7 +76,7 @@
         <View
             android:layout_width="@dimen/checkin_separator_width"
             android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/white"/>
+            android:background="@color/white_opacity_50"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -93,36 +93,39 @@
                 android:layout_height="wrap_content"
                 android:text="Demographics  &amp; Insurance"
                 android:textColor="@color/white_opacity_60"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/text_size_16sp"
                 app:customAssetFont="gotham_rounded_light"
-                android:layout_marginBottom="@dimen/dimen_10dp"/>
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:id="@+id/checkinSectionDemogrInsTitle"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Consent Forms"
                 android:textColor="@color/white_opacity_60"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/text_size_16sp"
                 app:customAssetFont="gotham_rounded_light"
-                android:layout_marginBottom="@dimen/dimen_10dp"/>
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:id="@+id/checkinSectionConsentFormsTitle"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/startIntakeId"
+                android:id="@+id/checkinSectionIntakeFormsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Patient Intake"
                 android:textColor="@color/white_opacity_60"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/text_size_16sp"
                 app:customAssetFont="gotham_rounded_light"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:clickable="true"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/checkinSectionPaymentsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Payment"
                 android:textColor="@color/white_opacity_60"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/text_size_16sp"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 app:customAssetFont="gotham_rounded_light"/>
 

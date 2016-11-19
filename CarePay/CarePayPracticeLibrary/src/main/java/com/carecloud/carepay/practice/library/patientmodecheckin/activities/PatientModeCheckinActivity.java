@@ -4,14 +4,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 
@@ -20,10 +24,22 @@ import com.google.gson.Gson;
  * Main activity for patient check in flow
  */
 
-public class PatientModeCheckinActivity extends BasePracticeActivity{
+public class PatientModeCheckinActivity extends BasePracticeActivity {
 
-    private DemographicDTO demographicDTO;
-    private TextView startIntakeTextView;
+    private static final int NUM_OF_SUBFLOWS = 4;
+    private DemographicDTO  demographicDTO;
+    private TextView        demogrInsTitleTextView;
+    private TextView        consentTitleTextView;
+    private TextView        intakeTitleTextView;
+    private TextView        paymentsTitleTextView;
+    private CarePayTextView backButton;
+    private ImageView       logoImageView;
+
+    public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
+    public final static int SUBFLOW_CONSENT          = 1;
+    public final static int SUBFLOW_INTAKE           = 2;
+    public final static int SUBFLOW_PAYMENTS         = 3;
+    private View[] sectionTitleTextViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,27 +52,48 @@ public class PatientModeCheckinActivity extends BasePracticeActivity{
         Gson gson = new Gson();
         demographicDTO = gson.fromJson(json, DemographicDTO.class);
 
-        startIntakeTextView = (TextView) findViewById(R.id.startIntakeId);
-        startIntakeTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToFragment(new CheckinIntakeForm1Fragment(),false);
-            }
-        });
+        instantiateViewsRefs();
+        initializeViews();
+
+        // place the initial fragment
         CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
         navigateToFragment(fragment, false);
+        toggleHighlight(SUBFLOW_DEMOGRAPHICS_INS, true);
+    }
+
+    private void instantiateViewsRefs() {
+        backButton = (CarePayTextView) findViewById(R.id.checkinBack);
+        logoImageView = (ImageView) findViewById(R.id.checkinLogo);
+
+        sectionTitleTextViews = new View[NUM_OF_SUBFLOWS];
+        sectionTitleTextViews[SUBFLOW_DEMOGRAPHICS_INS] = demogrInsTitleTextView = (TextView) findViewById(R.id.checkinSectionDemogrInsTitle);
+        sectionTitleTextViews[SUBFLOW_CONSENT] = consentTitleTextView = (TextView) findViewById(R.id.checkinSectionConsentFormsTitle);
+        sectionTitleTextViews[SUBFLOW_INTAKE] = intakeTitleTextView = (TextView) findViewById(R.id.checkinSectionIntakeFormsTitle);
+        sectionTitleTextViews[SUBFLOW_PAYMENTS] = paymentsTitleTextView = (TextView) findViewById(R.id.checkinSectionPaymentsTitle);
+    }
+
+    private void initializeViews() {
+        toggleVisibleBackButton(false);
+        // TODO: 11/19/2016 remove when tests complete
+        intakeTitleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToFragment(new CheckinIntakeForm1Fragment(), false);
+            }
+        });
     }
 
     /**
      * Helper method to replace fragments
-     * @param fragment The fragment
+     *
+     * @param fragment       The fragment
      * @param addToBackStack Whether to add the transaction to back-stack
      */
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.checkInContentHolderId, fragment, fragment.getClass().getSimpleName());
-        if(addToBackStack) {
+        if (addToBackStack) {
             transaction.addToBackStack(fragment.getClass().getName());
         }
         transaction.commit();
@@ -66,6 +103,66 @@ public class PatientModeCheckinActivity extends BasePracticeActivity{
         return demographicDTO;
     }
 
+    /**
+     * Toogle visible the back button (and hides/shows accordingly the logo)
+     *
+     * @param isVisible Whether to toggle visible
+     */
+    public void toggleVisibleBackButton(boolean isVisible) {
+        if (isVisible) {
+            backButton.setVisibility(View.VISIBLE);
+            logoImageView.setVisibility(View.GONE);
+        } else {
+            backButton.setVisibility(View.GONE);
+            logoImageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Highlights the title of the current subflow
+     *
+     * @param subflow     The subflow id:
+     * (0 - demographics & insurance, 1 - consent, 2 - intake, 3 - payments)
+     * @param highlight Whether is hightlight
+     */
+    public void toggleHighlight(int subflow, boolean highlight) {
+        // limit case
+        if(subflow == SUBFLOW_DEMOGRAPHICS_INS && !highlight) {
+            return;
+        }
+        if(subflow == SUBFLOW_PAYMENTS && !highlight) {
+            return;
+        }
+        // if highlight true, highlight current and reset previous if there is one
+        TextView currentSection = (TextView) sectionTitleTextViews[subflow];
+        TextView prevSection = subflow > SUBFLOW_DEMOGRAPHICS_INS ? (TextView) sectionTitleTextViews[subflow - 1] : null;
+        if(highlight) {
+            SystemUtil.setGothamRoundedBoldTypeface(this, currentSection);
+            currentSection.setTextColor(ContextCompat.getColor(this, R.color.white));
+            if(prevSection != null) {
+                SystemUtil.setGothamRoundedLightTypeface(this, prevSection);
+                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
+            }
+        } else { // if highlight false, reset current and hightlight previous if there is one
+            if(prevSection != null) {
+                SystemUtil.setGothamRoundedLightTypeface(this, currentSection);
+                currentSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
+                SystemUtil.setGothamRoundedBoldTypeface(this, prevSection);
+                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white));
+            }
+        }
+    }
+
+    /**
+     * Increments/decrements the counter of the current form in a specific sub-flow
+     * (0 - demographics & insurance, 1 - consent, 2 - intake, 3 - payments)
+     * @param formSubflow The sub-flow id
+     * @param increment True for incrementation and false for decrementation
+     */
+    public void changeCounterOfForm(int formSubflow, boolean increment) {
+        // if increment true, increment
+        // if increment false, decrement
+    }
 
     // TODO: 11/19/2016 remove
     private String json = "{\n" +

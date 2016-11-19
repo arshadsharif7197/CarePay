@@ -109,5 +109,7 @@
 
     <!-- Checkin -->
     <color name="white_opacity_60">#99ffffff</color>
+    <color name="white_opacity_50">#80ffffff</color>
+
 
 </resources>
