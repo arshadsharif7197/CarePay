@@ -138,7 +138,7 @@ public abstract class DocumentScannerFragment extends Fragment {
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
                 bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
+                bitmap = imageCaptureHelper.onCaptureImageResult(getImageShape());
             }
             updateModelAndViewsAfterScan(imageCaptureHelper);
         }
