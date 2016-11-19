@@ -1,30 +1,45 @@
 package com.carecloud.carepaylibray.customdialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRadioButton;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.appointment.DataDTO;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
+import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-/**
- * Created by prem_mourya on 10/12/2016.
- */
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CancelReasonAppointmentDialog extends Dialog implements View.OnClickListener {
 
@@ -35,6 +50,9 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     private RadioGroup cancelReasonRadioGroup;
     private Button cancelAppointmentButton;
     private EditText reasonEditText;
+
+    private int selectedReasonId = -1;
+    private List<CancellationReasonDTO> cancellationReasons;
 
     /**
      * Contractor for dialog.
@@ -50,9 +68,11 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         this.appointmentInfo = appointmentInfo;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_cancel_reason_appointment);
         setCancelable(false);
@@ -61,48 +81,70 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
+
         onInitialization();
         onSetListener();
     }
 
+    @SuppressLint("InflateParams")
     private void onInitialization() {
+        AppointmentLabelDTO label = appointmentInfo.getMetadata().getLabel();
+        ((CarePayTextView) findViewById(R.id.heading_text)).setText(label.getCancelAppointmentReasonsTitle());
 
         reasonEditText = (EditText) findViewById(R.id.reasonEditText);
-        cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
+        reasonEditText.setHint(label.getCancelAppointmentOtherReasonHint());
+        reasonEditText.setHintTextColor(context.getResources().getColor(R.color.Munsell));
 
+        cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
         cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
+        cancelAppointmentButton.setText(label.getCancelAppointmentsHeading());
         SystemUtil.setProximaNovaRegularTypeface(context, cancelAppointmentButton);
 
-        TextInputLayout reasonTextInputLayout = (TextInputLayout) findViewById(R.id.reasonTextInputLayout);
-        AppCompatRadioButton rescheduleAppointmentRadioButton = (AppCompatRadioButton)
-                findViewById(R.id.rescheduleAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, rescheduleAppointmentRadioButton);
+        cancellationReasons = appointmentInfo.getPayload().getCancellationReasons();
+        if (cancellationReasons != null) {
+            for (int count = 0; count < cancellationReasons.size(); count++) {
+                AppointmentCancellationReasonDTO cancellationReason
+                        = cancellationReasons.get(count).getAppointmentCancellationReason();
+                addCancelReason(cancellationReason.getName(), cancellationReason.getId());
+            }
+        }
 
-        AppCompatRadioButton officeRescheduleAppointmentRadioButton = (AppCompatRadioButton)
-                findViewById(R.id.officeRescheduleAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, officeRescheduleAppointmentRadioButton);
+        // Add Other radio button
+        addCancelReason(label.getCancelAppointmentOtherReasonLabel(), 100);
+    }
 
-        AppCompatRadioButton forgotAppointmentRadioButton = (AppCompatRadioButton)
-                findViewById(R.id.forgotAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, forgotAppointmentRadioButton);
+    @SuppressLint("InflateParams")
+    private void addCancelReason(String cancelReason, int id) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        AppCompatRadioButton cancelReasonView = (AppCompatRadioButton) inflater.inflate(R.layout.cancel_appointment_reason_item, null);
+        RadioGroup.LayoutParams param = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                context.getResources().getDimensionPixelSize(R.dimen.cancel_radio_button_height));
+        param.setMargins(context.getResources().getDimensionPixelSize(R.dimen.apt_popup_parent_padding), 0,
+                context.getResources().getDimensionPixelSize(R.dimen.apt_popup_parent_padding), 0);
+        cancelReasonView.setLayoutParams(param);
+        cancelReasonView.setText(cancelReason);
+        cancelReasonView.setId(id);
+        SystemUtil.setProximaNovaRegularTypeface(context, cancelReasonView);
+        cancelReasonRadioGroup.addView(cancelReasonView);
 
-        AppCompatRadioButton noLongerAppointmentRadioButton = (AppCompatRadioButton)
-                findViewById(R.id.noLongerAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, noLongerAppointmentRadioButton);
-
-        AppCompatRadioButton otherAppointmentRadioButton = (AppCompatRadioButton)
-                findViewById(R.id.otherAppointmentRadioButtom);
-        SystemUtil.setProximaNovaRegularTypeface(context, otherAppointmentRadioButton);
+        // Add divider
+        ImageView divider = new ImageView(context);
+        LinearLayout.LayoutParams lParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                context.getResources().getDimensionPixelSize(R.dimen.apt_lst_img_elevation));
+        divider.setLayoutParams(lParam);
+        divider.setBackgroundColor(context.getResources().getColor(R.color.cadet_gray));
+        cancelReasonRadioGroup.addView(divider);
     }
 
     private void onSetListener() {
         findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(this);
+
         cancelReasonRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 AppCompatRadioButton checkedRadioButton = (AppCompatRadioButton) group.findViewById(checkedId);
-                int checkedRadioButtonId = group.getCheckedRadioButtonId();
+                selectedReasonId = group.getCheckedRadioButtonId();
                 onSetColorStateForRadioButton(checkedRadioButton);
-                onSelectionRadioCancel(checkedRadioButton.isChecked(), checkedRadioButtonId);
+                onSelectionRadioCancel(checkedRadioButton.isChecked());
             }
         });
 
@@ -124,19 +166,21 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         if (viewId == R.id.dialogCloseHeaderImageView) {
             cancel();
         } else if (viewId == R.id.cancelAppointmentButton) {
-            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentInfo).show();
+            onCancelAppointment();
             cancel();
         }
     }
 
-    private void onSelectionRadioCancel(boolean isSelected, int id) {
+    private void onSelectionRadioCancel(boolean isSelected) {
         if (isSelected) {
             cancelAppointmentButton.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button_red_border));
             cancelAppointmentButton.setEnabled(true);
             cancelAppointmentButton.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
 
-        if (id == R.id.otherAppointmentRadioButtom) {
+        // Check for other cancellation reason
+        int selectedIndex = getSelectedCancellationIndex();
+        if (selectedIndex == -1) {
             reasonEditText.setEnabled(true);
             reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
         } else {
@@ -159,4 +203,65 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         appCompatRadioButton.setSupportButtonTintList(colorStateList);
         appCompatRadioButton.setTextColor(colorStateList);
     }
+
+    private int getSelectedCancellationIndex() {
+        for (int index = 0; index < cancellationReasons.size(); index++) {
+            AppointmentCancellationReasonDTO cancellationReason
+                    = cancellationReasons.get(index).getAppointmentCancellationReason();
+            if (cancellationReason.getId() == selectedReasonId)
+                return index;
+        }
+        return -1;
+    }
+
+    /**
+     * call cancel appointment api.
+     */
+    private void onCancelAppointment() {
+        Gson gson = new Gson();
+        Map<String, String> queries = new HashMap<>();
+        JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCancel().getQueryString();
+        QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+
+        queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+        queries.put(queryStrings.getPatientId().getName(), appointmentDTO.getMetadata().getPatientId());
+        queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+
+//        Map<String, String> header = new HashMap<>();
+//        header.put("transition", "true");
+
+        int selectedIndex = getSelectedCancellationIndex();
+        DataDTO data = appointmentInfo.getMetadata().getTransitions().getCancel().getData();
+        if (selectedIndex == -1) {
+            data.getCancellationComments().setLabel(reasonEditText.getText().toString());
+            data.getCancellationReasonId().setLabel(null);
+        } else {
+            AppointmentCancellationReasonDTO selectedReason
+                    = cancellationReasons.get(selectedIndex).getAppointmentCancellationReason();
+            data.getCancellationComments().setLabel(selectedReason.getName());
+            data.getCancellationReasonId().setLabel("" + selectedReason.getId());
+        }
+
+        Gson gsonBody = new Gson();
+        String body = gsonBody.toJson(data);
+
+        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToCancelCallback, body, queries);
+    }
+
+    private WorkflowServiceCallback transitionToCancelCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentInfo).show();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+        }
+    };
 }
