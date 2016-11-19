@@ -36,4 +36,6 @@ public class CheckinConsentForm1Fragment extends Fragment {
 
         return view;
     }
+
+
 }

@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsFragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinInsurancesSummaryFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinPaymentFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -127,10 +130,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity {
      */
     public void toggleHighlight(int subflow, boolean highlight) {
         // limit case
-        if(subflow == SUBFLOW_DEMOGRAPHICS_INS && !highlight) {
-            return;
-        }
-        if(subflow == SUBFLOW_PAYMENTS && !highlight) {
+        if(subflow == SUBFLOW_DEMOGRAPHICS_INS && !highlight) { // can't go before 'demographics'
             return;
         }
         // if highlight true, highlight current and reset previous if there is one
@@ -162,6 +162,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity {
     public void changeCounterOfForm(int formSubflow, boolean increment) {
         // if increment true, increment
         // if increment false, decrement
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
+        if(currentFragment instanceof CheckinPaymentFragment) {
+            toggleHighlight(SUBFLOW_PAYMENTS, false);
+        } else if(currentFragment instanceof CheckinIntakeForm1Fragment) {
+            toggleHighlight(SUBFLOW_INTAKE, false); // un-highlight in take flow
+        } else if(currentFragment instanceof CheckinConsentForm1Fragment) {
+            toggleHighlight(SUBFLOW_CONSENT, false);
+        } else if(currentFragment instanceof CheckinInsurancesSummaryFragment) {
+            toggleVisibleBackButton(false);
+        }
+        super.onBackPressed();
     }
 
     // TODO: 11/19/2016 remove
