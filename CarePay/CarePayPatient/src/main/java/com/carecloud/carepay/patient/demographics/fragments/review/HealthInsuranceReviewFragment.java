@@ -255,7 +255,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
                 reviewImageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                reviewImageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+                reviewImageCaptureHelper.onCaptureImageResult( ImageCaptureHelper.RECTANGULAR_IMAGE);
             }
         }
     }

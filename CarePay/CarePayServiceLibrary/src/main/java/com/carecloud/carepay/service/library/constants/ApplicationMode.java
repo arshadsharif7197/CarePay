@@ -29,7 +29,7 @@ public class ApplicationMode {
 
     public void setUserPracticeDTO(UserPracticeDTO userPracticeDTO) {
         this.userPracticeDTO = userPracticeDTO;
-        this.userPracticeDTO.setPracticeUser(CognitoAppHelper.getCurrUser());
+        this.userPracticeDTO.setUserName(CognitoAppHelper.getCurrUser());
     }
 
 

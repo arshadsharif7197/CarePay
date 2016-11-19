@@ -6,7 +6,6 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 import java.io.IOException;
@@ -58,10 +57,10 @@ public class WorkflowServiceHelper {
         if ((ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
                 || ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
                 && ApplicationMode.getInstance().getUserPracticeDTO() != null) {
-            userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeUser());
-            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getUserName());
+            /*if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                 userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
-            }
+            }*/
 
         } else if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
             userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
