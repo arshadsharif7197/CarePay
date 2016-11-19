@@ -170,5 +170,7 @@
     <dimen name="checkin_separator_width">116dp</dimen>
     <dimen name="checkin_back_width">171dp</dimen>
     <dimen name="checkin_back_height">45dp</dimen>
+    <dimen name="checkin_logo_width">150dp</dimen>
+    <dimen name="checkin_logo_height">46dp</dimen>
 
 </resources>

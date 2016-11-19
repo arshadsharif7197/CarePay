@@ -84,6 +84,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity {
                 navigateToFragment(new CheckinIntakeForm1Fragment(), false);
             }
         });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     /**
