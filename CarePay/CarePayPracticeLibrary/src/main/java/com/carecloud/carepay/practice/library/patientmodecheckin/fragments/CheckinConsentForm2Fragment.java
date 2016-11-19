@@ -30,6 +30,7 @@ public class CheckinConsentForm2Fragment extends Fragment {
                 // transition
                 CheckinIntakeForm1Fragment fragment = new CheckinIntakeForm1Fragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
+                ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_INTAKE, true);
             }
         });
 

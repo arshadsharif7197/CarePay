@@ -38,6 +38,7 @@ public class CheckinDemographicsFragment extends Fragment {
                 // transition
                 CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
+                ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(true);
             }
         });
 
