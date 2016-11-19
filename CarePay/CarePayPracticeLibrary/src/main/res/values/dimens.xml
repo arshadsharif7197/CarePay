@@ -3,7 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="signin_button_textsize">18sp</dimen>
-    <dimen name="go_back_textsize">22sp</dimen>
     <dimen name="signin_title_textsize">36sp</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
@@ -165,5 +164,11 @@
     <dimen name="sign_dialog_msg_font">16sp</dimen>
     <dimen name="sign_dialog_helper_font">14sp</dimen>
     <dimen name="sign_dialog_switch_font">17sp</dimen>
+
+    <!-- Check-in -->
+    <dimen name="checkin_main_panel_start_padding">30dp</dimen>
+    <dimen name="checkin_separator_width">116dp</dimen>
+    <dimen name="checkin_back_width">171dp</dimen>
+    <dimen name="checkin_back_height">45dp</dimen>
 
 </resources>

@@ -763,4 +763,7 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
+    <style name="CheckinContainerStyle">
+        <item name="android:background">@color/white</item>
+    </style>
 </resources>

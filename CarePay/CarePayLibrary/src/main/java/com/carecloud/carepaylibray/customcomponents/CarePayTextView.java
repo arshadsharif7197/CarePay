@@ -10,6 +10,7 @@ import com.carecloud.carepaylibrary.R;
 
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOOK;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_LIGHT;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_MEDIUM;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_EXTRA_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_LIGHT;
@@ -17,6 +18,7 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PR
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_SEMI_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_BOOK;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_MEDIUM;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_EXTRA_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_LIGHT;
@@ -125,6 +127,10 @@ public class CarePayTextView extends TextView {
                 assetFontName = FONT_GOTHAM_ROUNDED_MEDIUM;
                 break;
             }
+            case GOTHAM_ROUNDED_LIGHT: {
+                assetFontName = FONT_GOTHAM_ROUNDED_LIGHT;
+                break;
+            }
             case PROXIMA_NOVA_EXTRA_BOLD: {
                 assetFontName = FONT_PROXIMA_NOVA_EXTRA_BOLD;
                 break;
@@ -143,7 +149,5 @@ public class CarePayTextView extends TextView {
 
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), assetFontName);
         this.setTypeface(tf);
-
-
     }
 }
