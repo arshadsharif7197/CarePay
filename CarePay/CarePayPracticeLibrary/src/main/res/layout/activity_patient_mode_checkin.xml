@@ -65,6 +65,16 @@
             android:textSize="18sp"
             app:customAssetFont="gotham_rounded_bold"/>
 
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/startIntakeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Intake Forms"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:customAssetFont="gotham_rounded_bold"/>
+
     </LinearLayout>
 
     <FrameLayout

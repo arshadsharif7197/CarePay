@@ -197,6 +197,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
             if(patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
                 ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
                 dismiss();
+                ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
             }
         }
 
