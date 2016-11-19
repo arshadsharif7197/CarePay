@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.intake.models;
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +18,30 @@ public class TransitionsModel {
     @SerializedName("update_payment")
     @Expose
     private UpdatePaymentModel updatePayment;
+    @SerializedName("update_intake")
+    @Expose
+    private TransitionDTO updateIntake;
+
+    /**
+     *
+     * @return
+     *     The updateIntake
+     */
+    public TransitionDTO getUpdateIntake() {
+        return updateIntake;
+    }
+
+    /**
+     *
+     * @param updateIntake
+     *     The update_intake
+     */
+    public void setUpdateIntake(TransitionDTO updateIntake) {
+        this.updateIntake = updateIntake;
+    }
+
+
+
 
     /**
      * 
