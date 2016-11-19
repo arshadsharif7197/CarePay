@@ -129,9 +129,9 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         // Add divider
         ImageView divider = new ImageView(context);
-        LinearLayout.LayoutParams lParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 context.getResources().getDimensionPixelSize(R.dimen.apt_lst_img_elevation));
-        divider.setLayoutParams(lParam);
+        divider.setLayoutParams(layoutParams);
         divider.setBackgroundColor(context.getResources().getColor(R.color.cadet_gray));
         cancelReasonRadioGroup.addView(divider);
     }
@@ -208,8 +208,9 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         for (int index = 0; index < cancellationReasons.size(); index++) {
             AppointmentCancellationReasonDTO cancellationReason
                     = cancellationReasons.get(index).getAppointmentCancellationReason();
-            if (cancellationReason.getId() == selectedReasonId)
+            if (cancellationReason.getId() == selectedReasonId) {
                 return index;
+            }
         }
         return -1;
     }
