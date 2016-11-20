@@ -21,6 +21,7 @@ import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -352,8 +353,9 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
                 queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
                 Map<String, String> headers = new HashMap<>();
-                headers.put("transition", "false");
-                headers.put("username", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+                CognitoAppHelper.setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+             //   headers.put("transition", "false");
+             //   headers.put("username_patient", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {

@@ -58,9 +58,9 @@ public class WorkflowServiceHelper {
                 || ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
                 && ApplicationMode.getInstance().getUserPracticeDTO() != null) {
             userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getUserName());
-            /*if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
-            }*/
+           if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+               userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
+            }
 
         } else if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
             userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
