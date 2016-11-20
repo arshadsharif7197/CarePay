@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
@@ -29,7 +33,10 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -45,6 +52,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
     private Context context;
     private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentsArrayList;
     private AppointmentLabelDTO appointmentLabels;
+    private AppointmentsResultModel appointmentsResultModel;
 
     /**
      * This will create a list of appointments
@@ -55,7 +63,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
         this.context = context;
         this.appointmentsArrayList = appointmentsArrayList;
-        this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
+        this.appointmentsResultModel = appointmentInfo;
     }
 
     @Override
@@ -69,6 +77,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
     public void onBindViewHolder(final AppointmentsListViewHolder holder, int position) {
         final Object object = appointmentsArrayList.get(position);
         final AppointmentsPayloadDTO item = ((AppointmentDTO) object).getPayload();
+        appointmentLabels = appointmentsResultModel.getMetadata().getLabel();
         holder.doctorName.setText(item.getProvider().getName());
         holder.doctorType.setText(item.getProvider().getSpecialty().getName());
         holder.appointmentLocation.setText(item.getLocation().getName());
@@ -113,7 +122,41 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                     .resize(58, 58).into(holder.profileImage);
             holder.profileImage.setVisibility(View.VISIBLE);
         }
+        holder.startCheckInTextview.setTag(position);
+        holder.startCheckInTextview.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                TextView startCheckInTextview=((TextView)v);
+                int pos = (Integer) startCheckInTextview.getTag();
+                Map<String, String> queries = new HashMap<>();
+                queries.put("practice_mgmt", ((AppointmentDTO) object).getMetadata().getPracticeMgmt());
+                queries.put("practice_id", ((AppointmentDTO) object).getMetadata().getPracticeId());
+                queries.put("appointment_id", ((AppointmentDTO) object).getMetadata().getAppointmentId());
+
+                Map<String, String> header = new HashMap<>();
+                header.put("transition", "true");
+
+                TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCheckin();
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
+            }
+        });
     }
+
+    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+        }
+    };
 
     @Override
     public int getItemCount() {

@@ -7,21 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by prem_mourya on 10/12/2016.
@@ -44,12 +34,14 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
      * @param context the String to evaluate
      * @param appointmentDTO the DTO to evaluate
      */
-    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
+    public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                   AppointmentsResultModel appointmentInfo) {
 
         super(context, appointmentDTO);
         this.isMissed = true;
         this.context = context;
         this.appointmentDTO = appointmentDTO;
+        this.appointmentInfo = appointmentInfo;
     }
 
     /**
@@ -119,45 +111,8 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.dialogCancelAppointTextView) {
-            onCancelAppointment();
+            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo).show();
             cancel();
         }
     }
-
-    /**
-     * call cancel appointment api.
-     */
-    private void onCancelAppointment() {
-        Gson gson = new Gson();
-        Map<String, String> queries = new HashMap<>();
-        JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
-        QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-
-        queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
-        queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
-        queries.put(queryStrings.getPatientId().getName(), appointmentDTO.getMetadata().getPatientId());
-        queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
-
-        Map<String, String> header = new HashMap<>();
-        header.put("transition", "true");
-
-        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToCancelCallback, queries, header);
-    }
-
-    private WorkflowServiceCallback transitionToCancelCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo).show();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-        }
-    };
-
 }

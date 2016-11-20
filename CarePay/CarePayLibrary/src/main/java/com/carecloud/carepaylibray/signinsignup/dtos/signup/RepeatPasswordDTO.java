@@ -4,7 +4,7 @@ package com.carecloud.carepaylibray.signinsignup.dtos.signup;
  * Created by Rahul on 11/7/16.
  */
 
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

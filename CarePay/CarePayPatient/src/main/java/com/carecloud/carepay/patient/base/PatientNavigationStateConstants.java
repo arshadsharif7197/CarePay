@@ -12,5 +12,6 @@ public class PatientNavigationStateConstants {
     public static final String CONSENT_FORMS="consent_forms";
     public static final String DEMOGRAPHICS="demographics";
     public static final String INTAKE_FORMS="intake_forms";
+    public static final String PAYMENTS="payments";
 
 }

@@ -60,6 +60,11 @@
             </intent-filter>
         </activity>
         <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.customdialog.ScanDocDialogActivity"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+        <activity android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"/>
     </application>
 
 </manifest>

@@ -26,7 +26,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.ProvidersScheduleDTO;
 import com.carecloud.carepay.patient.appointments.services.AppointmentService;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 
 import java.util.ArrayList;
 import java.util.List;

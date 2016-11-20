@@ -9,9 +9,11 @@ import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+
+import java.util.Map;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -54,12 +56,16 @@ public class SplashActivity extends BasePatientActivity {
             if (!SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
                 PatientNavigationHelper.getInstance(SplashActivity.this).navigateToWorkflow(workflowDTO);
             } else if (SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
+              String languageid=  ApplicationPreferences.Instance.getUserLanguage();
 
                 // Convert to SignInSignUpDTO
                 Gson gson = new Gson();
                 SelectLanguageDTO signInSignUpDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
 
-                WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(), signInCallback, null, null, WorkflowServiceHelper.getApplicationStartHeaders());
+                Map<String, String> header = WorkflowServiceHelper.getApplicationStartHeaders();
+                header.put("Accept-Language", languageid);
+
+                WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(), signInCallback, null, null, header);
             }
 
         }

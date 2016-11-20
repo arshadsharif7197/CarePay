@@ -33,6 +33,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     float borderCornerRadius=15;
     Context context;
     private Bitmap capturedBitmap;
+    private boolean isPracticeCamera;
 
     public CarePayCameraPreview(Context context) {
         super(context);
@@ -155,7 +156,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         // stop preview before making changes
         try {
-            camera.stopPreview();
+            if(!isPracticeCamera)
+           camera.stopPreview();
         } catch (Exception e) {
             // ignore: tried to stop a non-existent preview
         }
@@ -180,7 +182,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             Log.d("CameraRND", "Error starting camera preview: " + e.getMessage());
         }
     }
-    
+
     private Rect calculateTapArea(float xPoint, float yPoint, float coefficient) {
         int areaSize = Float.valueOf(300 * coefficient).intValue();
 
@@ -259,6 +261,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     // for practice app
     public void takePicturePractice(){
+        isPracticeCamera= true;
         camera.takePicture(null, null, picturePracticeCallback);
     }
 

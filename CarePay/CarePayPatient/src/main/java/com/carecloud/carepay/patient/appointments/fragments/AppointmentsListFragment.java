@@ -29,9 +29,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
 
@@ -53,6 +53,7 @@ public class AppointmentsListFragment extends Fragment {
     private SwipeRefreshLayout appointmentRefresh;
     private LinearLayout appointmentView;
     private LinearLayout noAppointmentView;
+    private View appointmentsListView;
 
     private AppointmentsAdapter appointmentsAdapter;
     private List<AppointmentDTO> appointmentsItems;
@@ -197,7 +198,7 @@ public class AppointmentsListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
+        appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
 
@@ -206,6 +207,13 @@ public class AppointmentsListFragment extends Fragment {
         String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         appointmentInfo = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
 
+        //Fetch appointment data
+        loadAppointmentList();
+
+        return appointmentsListView;
+    }
+
+    private void init() {
         String noAptPlaceholder = "";
         String noAptMessageTitle = "";
         String noAptMessageText = "";
@@ -214,7 +222,7 @@ public class AppointmentsListFragment extends Fragment {
             AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
             noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
             noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
-           noAptMessageText = labels.getNoAppointmentsMessageText();
+            noAptMessageText = labels.getNoAppointmentsMessageText();
         }
 
         //Pull down to refresh
@@ -238,36 +246,13 @@ public class AppointmentsListFragment extends Fragment {
                 startActivity(appointmentIntent);
             }
         });
-
-        //Fetch appointment data
-        prepareAppointmentList();
-
-        return appointmentsListView;
     }
 
-//    private void getAppointmentsList() {
-//        appointmentProgressBar.setVisibility(View.VISIBLE);
-//
-//        AppointmentService aptService = (new BaseServiceGenerator(getActivity())).createService(AppointmentService.class);
-//        Call<AppointmentsResultModel> call = aptService.getAppointmentsList();
-//        call.enqueue(new Callback<AppointmentsResultModel>() {
-//
-//            @Override
-//            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-//                appointmentsResultModel = response.body();
-//                appointmentProgressBar.setVisibility(View.GONE);
-//
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-//                appointmentProgressBar.setVisibility(View.GONE);
-//            }
-//        });
-//    }
+    private void loadAppointmentList() {
 
-    private void prepareAppointmentList() {
+        // Initialize views
+        init();
+
         appointmentProgressBar.setVisibility(View.GONE);
 
         if (appointmentInfo != null && appointmentInfo.getPayload() != null
@@ -286,7 +271,8 @@ public class AppointmentsListFragment extends Fragment {
                 if (bundle != null) {
                     Gson gson = new Gson();
                     String appointmentDTOString = bundle.getString(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
-                    AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDTOString, AppointmentsResultModel.class);
+                    AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDTOString,
+                            AppointmentsResultModel.class);
 
                     if (appointmentDTO != null) {
                         // adding checked-in appointment at the top of the list
@@ -338,7 +324,8 @@ public class AppointmentsListFragment extends Fragment {
                 }
 
                 // API call to fetch latest appointments
-//                WorkflowServiceHelper.getInstance().execute(appointmentInfo.getMetadata().getTransitions().getAdd(), pageRefreshCallback);
+                TransitionDTO transitionDTO = appointmentInfo.getMetadata().getLinks().getAppointments();
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, pageRefreshCallback);
             }
         });
     }
@@ -352,6 +339,11 @@ public class AppointmentsListFragment extends Fragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             appointmentProgressBar.setVisibility(View.GONE);
+            if (appointmentInfo != null) {
+                Gson gson = new Gson();
+                appointmentInfo = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
+                loadAppointmentList();
+            }
         }
 
         @Override

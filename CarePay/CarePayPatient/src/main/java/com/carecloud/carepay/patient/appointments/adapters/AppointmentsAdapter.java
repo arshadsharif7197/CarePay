@@ -22,7 +22,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.CancelAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
@@ -142,16 +142,16 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         AppointmentsActivity.model = item;
 
                         if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
-                            new CancelAppointmentDialog(context, item).show();
+                            new CancelAppointmentDialog(context, item, appointmentInfo).show();
                         } else if (isCheckedIn) {
                             new QueueAppointmentDialog(context, item, appointmentLabels).show();
-                        } else if (isPending) {
-                            new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo).show();
                         } else if (isCanceled) {
                             new CancelAppointmentDialog(context, item, true, appointmentInfo).show();
                         } else {
                             if (isAppointmentCancellable(item)) {
                                 new CancelAppointmentDialog(context, item, false, appointmentInfo).show();
+                            } else if (isPending) {
+                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo).show();
                             } else {
                                 new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo).show();
                             }
@@ -197,6 +197,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         .getDrawable(R.drawable.icn_cell_avatar_badge_missed));
             } else if (isCanceled) {
                 holder.cellAvatar.setVisibility(View.VISIBLE);
+                holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
                 holder.cellAvatar.setImageDrawable(context.getResources()
                         .getDrawable(R.drawable.icn_cell_avatar_badge_canceled));
             } else {

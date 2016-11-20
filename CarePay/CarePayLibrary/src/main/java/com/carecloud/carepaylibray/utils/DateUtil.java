@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.utils;
 
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 
 import java.text.DateFormatSymbols;
 import java.text.ParseException;

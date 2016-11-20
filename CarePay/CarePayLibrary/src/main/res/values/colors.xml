@@ -73,4 +73,8 @@
     <color name="manatee">#9ba4a9</color>
 
     <color name="demographics_scan_insurance_bg">#f4f6f7</color> <!-- background insurance -->
+
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="viewfinder_laser">#00cc0000</color>
+    <color name="viewfinder_border">#ffafed44</color>
 </resources>
