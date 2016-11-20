@@ -128,7 +128,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerFront);
+                selectImage(scannerFront, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -138,7 +138,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerBack);
+                selectImage(scannerBack, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
