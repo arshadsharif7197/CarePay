@@ -44,6 +44,9 @@ public class CheckinDemographicsRevFragment extends Fragment {
                 CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
                 ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
+                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
+                                                                                PatientModeCheckinActivity.NUM_CONSENT_FORMS);
+                ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             }
         });
 

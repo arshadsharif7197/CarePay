@@ -32,6 +32,7 @@ public class CheckinIntakeForm2Fragment extends Fragment {
                 CheckinPaymentFragment fragment = new CheckinPaymentFragment();
                 ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
                 ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_PAYMENTS, true);
+                ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
             }
         });
 
