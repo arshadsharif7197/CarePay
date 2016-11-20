@@ -172,9 +172,11 @@
             android:layout_weight="54"/>
 
         <ImageView
+            android:id="@+id/checkinHomeClickable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/checkin_ic_icn_home"/>
+            android:src="@drawable/checkin_ic_icn_home"
+            android:clickable="true"/>
 
         <FrameLayout
             android:layout_width="match_parent"
