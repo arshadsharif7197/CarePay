@@ -27,6 +27,7 @@
 
     <color name="Munsell">#eceff1</color>
     <color name="paint_color_thumbnail">#BAB399</color>
+    <color name="silver">#cfd8dc</color>
 
     <color name="grayRound">#546e7a</color>
     <color name="light_gray_dialog">#eceff1</color>
