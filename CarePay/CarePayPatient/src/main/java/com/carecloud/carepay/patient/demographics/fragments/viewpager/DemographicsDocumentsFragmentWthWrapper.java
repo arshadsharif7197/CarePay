@@ -18,8 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.DocumentScannerFragment;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.IdDocScannerFragment;
+
 import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepay.patient.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibrary.R;
@@ -31,6 +30,8 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
+import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 

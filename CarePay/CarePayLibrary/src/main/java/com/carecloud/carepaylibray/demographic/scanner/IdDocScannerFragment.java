@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.scanner;
+package com.carecloud.carepaylibray.demographic.scanner;
 
 import android.app.Activity;
 import android.content.Context;

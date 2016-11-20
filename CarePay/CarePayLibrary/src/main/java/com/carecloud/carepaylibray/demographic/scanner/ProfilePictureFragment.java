@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.scanner;
+package com.carecloud.carepaylibray.demographic.scanner;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -55,7 +55,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
         recaptureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileReCaptureCaption();
 
-        View view = inflater.inflate(R.layout.fragment_demographics_picture, container, false);
+        View view = inflater.inflate(getLayoutRes(), container, false);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage);
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
@@ -72,6 +72,10 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         populateViewsFromModel();
 
         return view;
+    }
+
+    private int getLayoutRes() {
+        return R.layout.fragment_demographics_picture;
     }
 
     @Override
