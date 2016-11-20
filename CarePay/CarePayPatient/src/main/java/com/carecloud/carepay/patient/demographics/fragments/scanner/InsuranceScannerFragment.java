@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -299,7 +299,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                     try {
                         URL url = new URL(photoFrontURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
-                        Picasso.with(getContext()).load(photoFrontURL)
+                        Picasso.with(getActivity()).load(photoFrontURL)
                                 .resize(insuranceFrontScanHelper.getImgWidth(), insuranceFrontScanHelper.getImgHeight())
                                 .into(frontInsuranceImageView);
                         String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
@@ -317,7 +317,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                     try {
                         URL url = new URL(photoBackURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
-                        Picasso.with(getContext()).load(photoBackURL)
+                        Picasso.with(getActivity()).load(photoBackURL)
                                 .resize(insuranceBackScanHelper.getImgWidth(), insuranceBackScanHelper.getImgHeight())
                                 .into(backInsuranceImageView);
                         String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();

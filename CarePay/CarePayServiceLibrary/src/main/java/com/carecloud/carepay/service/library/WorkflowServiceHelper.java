@@ -91,7 +91,14 @@ public class WorkflowServiceHelper {
     public static Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
+        appStartHeaders.put("Accept-Language",ApplicationPreferences.Instance.getUserLanguage());
         return appStartHeaders;
+    }
+
+    public static  Map<String, String> getPreferredLanguageHeader(){
+        Map<String, String> prefredLanguage = new HashMap<>();
+        prefredLanguage.put("Accept-Language",ApplicationPreferences.Instance.getUserLanguage());
+        return prefredLanguage;
     }
 
     /**
@@ -164,7 +171,9 @@ public class WorkflowServiceHelper {
                 call = workflowService.executePost(transitionDTO.getUrl(), queryMap);
             } else if (jsonBody != null && queryMap.size() > 0) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else {
+            } else if (jsonBody != null) {
+                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+            }else {
                 call = workflowService.executePost(transitionDTO.getUrl());
 
             }

@@ -27,7 +27,7 @@ import com.carecloud.carepay.patient.intakeforms.utils.JsonFormParseSimulator;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;

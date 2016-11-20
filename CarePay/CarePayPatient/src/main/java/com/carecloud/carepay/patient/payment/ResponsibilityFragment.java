@@ -19,7 +19,7 @@ import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivit
 import com.carecloud.carepay.patient.appointments.services.AppointmentService;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;

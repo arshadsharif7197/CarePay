@@ -16,7 +16,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
@@ -500,7 +499,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             queries.put("practice_id",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
-            Map<String, String> header = new HashMap<>();
+            Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
             header.put("transition","true");
 
             Gson gson= new Gson();
