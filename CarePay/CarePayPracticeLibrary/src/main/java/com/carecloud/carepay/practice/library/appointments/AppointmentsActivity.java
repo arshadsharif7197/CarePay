@@ -195,11 +195,19 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             if (appointmentListWithToday != null) {
                 appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentsItems, appointmentsResultModel);
                 appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
+            }else{
+                appointmentForTextview.setVisibility(View.INVISIBLE);
+                selectAppointmentTextview.setVisibility(View.INVISIBLE);
+                noAppointmentView.setVisibility(View.VISIBLE);
             }
 
             //Layout manager for the Recycler View
             appointmentsLayoutManager = new LinearLayoutManager(AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
             appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
+        }else{
+            appointmentForTextview.setVisibility(View.INVISIBLE);
+            selectAppointmentTextview.setVisibility(View.INVISIBLE);
+            noAppointmentView.setVisibility(View.VISIBLE);
         }
     }
 }

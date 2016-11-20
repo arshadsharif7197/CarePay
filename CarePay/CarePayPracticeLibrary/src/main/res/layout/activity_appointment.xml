@@ -39,7 +39,6 @@
         android:layout_centerHorizontal="true"
         android:includeFontPadding="false"
         android:paddingBottom="@dimen/dimen_8dp"
-        android:text="Select an appointment to check-in to"
         android:textSize="@dimen/demographics_docs_section_margin_top" />
 
     <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
@@ -50,7 +49,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/dimen_22dp"
         android:includeFontPadding="false"
-        android:text="Select the appointment you are looking for."
         android:textSize="@dimen/dimen_20dp" />
     <ProgressBar
         android:id="@+id/appointmentProgressBar"
