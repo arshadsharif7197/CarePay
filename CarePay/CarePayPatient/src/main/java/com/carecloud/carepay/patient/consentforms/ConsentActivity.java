@@ -27,7 +27,7 @@ import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsD
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -94,8 +94,11 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         indicator1 = findViewById(R.id.indicator1);
         indicator2 = findViewById(R.id.indicator2);
         numberofforms=SignatureActivity.numOfLaunches;
-        Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
-        title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.consentform_toolbar);
+
+        toolbar.setTitle("");
+        title = (TextView) toolbar.findViewById(R.id.consentform_toolbar_title);
+
         setGothamRoundedMediumTypeface(this, title);
 
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
@@ -260,21 +263,21 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private void updateTitle(FormId currentForm) {
         switch (currentForm) {
             case FORM1:
-                title.setText(consentMainTitle +"1 of 3");
+                title.setText(consentMainTitle  + " 1 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_gray);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_gray);
                 break;
 
             case FORM2:
-                title.setText(consentMainTitle +"2 of 3");
+                title.setText(consentMainTitle + " 2 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_gray);
                 break;
 
             case FORM3:
-                title.setText(consentMainTitle + "3 of 3");
+                title.setText(consentMainTitle + " 3 of 3");
                 indicator0.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator1.setBackgroundResource(R.drawable.circle_indicator_blue);
                 indicator2.setBackgroundResource(R.drawable.circle_indicator_blue);

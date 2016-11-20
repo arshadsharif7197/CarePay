@@ -23,7 +23,7 @@ import com.carecloud.carepay.patient.demographics.fragments.scanner.IdDocScanner
 import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepay.patient.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;

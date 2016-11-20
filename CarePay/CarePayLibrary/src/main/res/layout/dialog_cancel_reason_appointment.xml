@@ -2,187 +2,91 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/cancel_reasons_dialog_height"
     android:background="@color/transparent_apt"
     android:orientation="vertical">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/dialogCloseHeaderImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/apt_imgview_ht"
+        android:layout_gravity="start"
+        android:layout_marginBottom="@dimen/dimen_8dp"
+        android:gravity="end"
+        android:src="@drawable/icn_patient_mode_nav_close" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/dialogCloseHeaderImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/apt_imgview_ht"
-            android:layout_gravity="left"
-            android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
-            android:gravity="left"
-            android:src="@drawable/icn_patient_mode_nav_close"
-            android:text="@string/close"
-            android:textColor="@color/white" />
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/heading_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/white"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:layout_marginTop="@dimen/cancel_margin_top"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:paddingLeft="@dimen/apt_imgview_ht"
+            android:paddingRight="@dimen/apt_imgview_ht"
+            android:textColor="@color/payne_gray"
+            android:textSize="@dimen/cancel_text_size"
+            app:customAssetFont="proxima_nova_regular" />
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/cancel_margin_top"
-                android:gravity="center_horizontal"
-                android:paddingLeft="@dimen/apt_imgview_ht"
-                android:paddingRight="@dimen/apt_imgview_ht"
-                android:text="What’s the reason for canceling the appointment?"
-                android:textColor="@color/payne_gray"
-                android:textSize="@dimen/cancel_text_size" />
-
-            <RadioGroup
-                android:id="@+id/cancelReasonRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/apt_dl_margin"
-                android:divider="?android:attr/dividerHorizontal"
-                android:orientation="vertical">
-
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/rescheduleAppointmentRadioButtom"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/cancel_radio_button_height"
-                    android:layout_gravity="start"
-                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
-                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
-                    android:layoutDirection="rtl"
-                    android:text="Decided to Reschedule"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/lightSlateGray"
-                    android:buttonTint="@color/lightSlateGray"
-                    android:textSize="@dimen/cancel_radio_text_size" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/apt_lst_img_elevation"
-                    android:background="@color/cadet_gray" />
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/officeRescheduleAppointmentRadioButtom"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/cancel_radio_button_height"
-                    android:layout_gravity="start"
-                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
-                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
-                    android:layoutDirection="rtl"
-                    android:text="Office Rescheduled"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/lightSlateGray"
-                    android:buttonTint="@color/lightSlateGray"
-                    android:textSize="@dimen/cancel_radio_text_size" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/apt_lst_img_elevation"
-                    android:background="@color/cadet_gray" />
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/forgotAppointmentRadioButtom"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/cancel_radio_button_height"
-                    android:layout_gravity="start"
-                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
-                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
-                    android:layoutDirection="rtl"
-                    android:text="I forgot I had an Appointment"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/lightSlateGray"
-                    android:buttonTint="@color/lightSlateGray"
-                    android:textSize="@dimen/cancel_radio_text_size"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/apt_lst_img_elevation"
-                    android:background="@color/cadet_gray" />
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/noLongerAppointmentRadioButtom"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/cancel_radio_button_height"
-                    android:layout_gravity="start"
-                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
-                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
-                    android:layoutDirection="rtl"
-                    android:text="No Longer Needed"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/lightSlateGray"
-                    android:buttonTint="@color/lightSlateGray"
-                    android:textSize="@dimen/cancel_radio_text_size"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/apt_lst_img_elevation"
-                    android:background="@color/cadet_gray" />
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/otherAppointmentRadioButtom"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/cancel_radio_button_height"
-                    android:layout_gravity="start"
-                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
-                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
-                    android:layoutDirection="rtl"
-                    android:text="Other"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/lightSlateGray"
-                    android:buttonTint="@color/lightSlateGray"
-                    android:textSize="@dimen/cancel_radio_text_size" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/apt_lst_img_elevation"
-                    android:background="@color/cadet_gray" />
-            </RadioGroup>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/reasonTextInputLayout"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/Munsell"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/reasonEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/cancel_radio_button_height"
-                    android:layout_marginLeft="@dimen/apt_popup_parent_padding"
-                    android:layout_marginRight="@dimen/apt_popup_parent_padding"
-                    android:focusable="false"
-                    android:textSize="@dimen/cancel_edittext_size"
-                    android:enabled="false"
-                    android:hint="Describe briefly the reason "
-                    android:imeOptions="flagNoExtractUi"
-                    android:textColor="@color/blue_cerulian" />
-
-            </android.support.design.widget.TextInputLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/cancelAppointmentButton"
+            android:layout_below="@id/heading_text">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/apt_dl_margin"
                 android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/cancelAppointmentButton"
+                <RadioGroup
+                    android:id="@+id/cancelReasonRadioGroup"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/cancel_button_height"
-                    android:layout_marginLeft="@dimen/apt_dl_margin"
-                    android:layout_marginRight="@dimen/apt_dl_margin"
-                    android:layout_marginBottom="@dimen/apt_dl_margin"
-                    android:background="@drawable/button_munsell_border"
-                    android:text="CANCEL APPOINTMENT"
-                    android:textColor="@color/munsell"
-                    android:enabled="false"
-                    android:textSize="@dimen/apt_dl_textview_size" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/apt_dl_margin"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:orientation="vertical" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/reasonTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/Munsell">
+
+                    <EditText
+                        android:id="@+id/reasonEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/cancel_radio_button_height"
+                        android:layout_marginLeft="@dimen/apt_popup_parent_padding"
+                        android:layout_marginRight="@dimen/apt_popup_parent_padding"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:imeOptions="flagNoExtractUi"
+                        android:textColor="@color/blue_cerulian"
+                        android:textSize="@dimen/cancel_edittext_size" />
+
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/cancelAppointmentButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/apt_dl_margin"
+            android:background="@drawable/button_munsell_border"
+            android:enabled="false"
+            android:paddingBottom="@dimen/cancel_appointment_button_padding"
+            android:paddingTop="@dimen/cancel_appointment_button_padding"
+            android:textColor="@color/munsell"
+            android:textSize="@dimen/apt_dl_textview_size" />
+    </RelativeLayout>
 </LinearLayout>

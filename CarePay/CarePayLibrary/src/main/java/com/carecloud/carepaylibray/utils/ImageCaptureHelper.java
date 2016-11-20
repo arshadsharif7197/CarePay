@@ -84,6 +84,16 @@ public class ImageCaptureHelper {
         this.userChoosenTask = userChoosenTask;
     }
 
+   private static Bitmap imageBitmap;
+
+    public static Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public static void setImageBitmap(Bitmap imageBitmap) {
+        ImageCaptureHelper.imageBitmap = imageBitmap;
+    }
+
     /**
      * Callback method to be used upon returning from Camera activity
      *
@@ -101,7 +111,27 @@ public class ImageCaptureHelper {
         }
 
         return setCapturedImageToTargetView(thumbnail, shape);
+    }
 
+    /**
+     * Callback method to be used upon returning from Camera activity
+     *
+     *
+     * @param shape The intended shape of the captured image
+     * @return The bitmap
+     */
+    public Bitmap onCaptureImageResult( int shape) {
+        if(imageBitmap==null) {
+            return null;
+        }
+        Bitmap thumbnail = imageBitmap;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        if (thumbnail != null) {
+            // compress
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
+        }
+
+        return setCapturedImageToTargetView(thumbnail, shape);
     }
 
     /**

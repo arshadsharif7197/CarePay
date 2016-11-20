@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
@@ -204,7 +205,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
         queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
-        Map<String, String> header = new HashMap<>();
+        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
         header.put("transition", "false");
 
         Gson gson = new Gson();
@@ -218,7 +219,9 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                openNewFragment();
+//                openNewFragment();
+                PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+                getActivity().finish();
             }
 
             @Override
@@ -255,7 +258,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
                 reviewImageCaptureHelper.onSelectFromGalleryResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                reviewImageCaptureHelper.onCaptureImageResult(data, ImageCaptureHelper.RECTANGULAR_IMAGE);
+                reviewImageCaptureHelper.onCaptureImageResult( ImageCaptureHelper.RECTANGULAR_IMAGE);
             }
         }
     }
