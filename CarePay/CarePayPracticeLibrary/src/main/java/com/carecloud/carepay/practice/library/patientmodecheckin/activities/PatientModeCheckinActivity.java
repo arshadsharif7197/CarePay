@@ -12,9 +12,11 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinInsurancesSummaryFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm2Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinPaymentFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -216,10 +218,18 @@ public class PatientModeCheckinActivity extends BasePracticeActivity {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
         if (currentFragment instanceof CheckinPaymentFragment) {
             toggleHighlight(SUBFLOW_PAYMENTS, false);
+            toggleVisibleFormCounter(SUBFLOW_INTAKE, true);
         } else if (currentFragment instanceof CheckinIntakeForm1Fragment) {
             toggleHighlight(SUBFLOW_INTAKE, false); // un-highlight in take flow
+            toggleVisibleFormCounter(SUBFLOW_INTAKE, false);
+            toggleVisibleFormCounter(SUBFLOW_CONSENT, true);
+        } else if (currentFragment instanceof CheckinIntakeForm2Fragment) {
+            changeCounterOfForm(SUBFLOW_INTAKE, 1, NUM_INTAKE_FORMS);
         } else if (currentFragment instanceof CheckinConsentForm1Fragment) {
             toggleHighlight(SUBFLOW_CONSENT, false);
+            toggleVisibleFormCounter(SUBFLOW_CONSENT, false);
+        } else if (currentFragment instanceof CheckinConsentForm2Fragment) {
+            changeCounterOfForm(SUBFLOW_CONSENT, 1, NUM_CONSENT_FORMS);
         } else if (currentFragment instanceof CheckinInsurancesSummaryFragment) {
             toggleVisibleBackButton(false);
         }
