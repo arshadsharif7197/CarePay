@@ -74,6 +74,9 @@ import java.util.List;
     public void addAll(List<DemographicInsurancePayloadDTO> payloadDTOs) {
         if(payloadDTOs == null || payloadDTOs.size() == 0) {
             add(new DemographicInsurancePayloadDTO());
+            if(callback != null) {
+                callback.onAfterRemove();
+            }
             return;
         }
 

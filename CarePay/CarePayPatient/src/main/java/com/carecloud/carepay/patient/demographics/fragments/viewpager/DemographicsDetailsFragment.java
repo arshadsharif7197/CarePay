@@ -406,7 +406,7 @@ public class DemographicsDetailsFragment extends Fragment
                 .commit();
 
         // set the fonts
-        setTypefaces(view);
+        setTypefaces();
     }
 
     /**
@@ -539,7 +539,7 @@ public class DemographicsDetailsFragment extends Fragment
                                     });
     }
 
-    private void setTypefaces(View view) {
+    private void setTypefaces() {
         Context context = getActivity();
 
         setGothamRoundedMediumTypeface(context, header);
