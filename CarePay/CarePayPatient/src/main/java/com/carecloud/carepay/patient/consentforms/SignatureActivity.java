@@ -27,8 +27,8 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedi
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
@@ -350,9 +350,8 @@ public class SignatureActivity extends AppCompatActivity {
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
 
 
-        Map<String, String> header = new HashMap<>();
+        Map<String, String> header = WorkflowServiceHelper.setPerferedLanguageHeader();
         header.put("transition", "true");
-        header.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
 
         Gson gson = new Gson();
         String body = gson.toJson(consentFormPayloadDTO);

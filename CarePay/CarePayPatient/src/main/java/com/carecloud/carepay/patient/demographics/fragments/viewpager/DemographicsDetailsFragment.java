@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.fragments.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.adapters.DemographicsDetailsAllergiesAdapter;
 import com.carecloud.carepay.patient.demographics.adapters.DemographicsDetailsMedicationsAdapter;

@@ -16,7 +16,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
@@ -37,7 +36,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -501,9 +500,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             queries.put("practice_id",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
-            Map<String, String> header = new HashMap<>();
+            Map<String, String> header = WorkflowServiceHelper.setPerferedLanguageHeader();
             header.put("transition","true");
-            header.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
 
             Gson gson= new Gson();
             String demographicinfo=gson.toJson(demographicDTO.getPayload());

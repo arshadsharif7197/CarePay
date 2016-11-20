@@ -29,9 +29,9 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -214,9 +214,8 @@ public class AppointmentsActivity extends BasePatientActivity implements
             queries.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getAppointmentId());
 
-            Map<String, String> header = new HashMap<>();
+            Map<String, String> header = WorkflowServiceHelper.setPerferedLanguageHeader();
             header.put("transition", "true");
-            header.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
             WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckin(), transitionToDemographicsVerifyCallback, queries, header);
 
         }

@@ -37,7 +37,7 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauth
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorGenderDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorLastNameDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
