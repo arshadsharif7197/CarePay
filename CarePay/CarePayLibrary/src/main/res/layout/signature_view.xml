@@ -30,6 +30,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="@dimen/consent_top"
         android:layout_alignParentEnd="true"
+        android:visibility="gone"
         android:layout_margin="@dimen/consent_top"/>
 
 
