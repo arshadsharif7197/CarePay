@@ -21,12 +21,12 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.google.gson.Gson;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemographicReviewActivity extends BasePatientActivity {
+public class DemographicReviewActivity extends BasePatientActivity implements DemographicsReviewLabelsHolder {
 
     private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
@@ -188,6 +188,7 @@ public class DemographicReviewActivity extends BasePatientActivity {
         this.insurancesMetaDTO = insurancesMetaDTO;
     }
 
+    @Override
     public DemographicLabelsDTO getLabelsDTO() {
         return labelsDTO;
     }
