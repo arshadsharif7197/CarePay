@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -502,6 +503,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
             Map<String, String> header = new HashMap<>();
             header.put("transition","true");
+            header.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
 
             Gson gson= new Gson();
             String demographicinfo=gson.toJson(demographicDTO.getPayload());

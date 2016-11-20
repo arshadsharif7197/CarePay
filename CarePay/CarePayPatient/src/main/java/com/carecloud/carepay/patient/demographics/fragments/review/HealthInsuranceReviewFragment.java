@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
@@ -42,6 +43,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoMetaDataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -206,6 +208,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "false");
+        header.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
 
         Gson gson = new Gson();
         String demographicinfo = gson.toJson(postPayloadModel);
@@ -218,7 +221,9 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                openNewFragment();
+//                openNewFragment();
+                PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+                getActivity().finish();
             }
 
             @Override

@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -215,6 +216,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
             Map<String, String> header = new HashMap<>();
             header.put("transition", "true");
+            header.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
             WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckin(), transitionToDemographicsVerifyCallback, queries, header);
 
         }

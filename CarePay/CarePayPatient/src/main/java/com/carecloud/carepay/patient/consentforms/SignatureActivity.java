@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsD
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepaylibray.utils.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
@@ -229,13 +230,14 @@ public class SignatureActivity extends AppCompatActivity {
 
             @Override
             public void onSigned() {
-
+                clearButton.setVisibility(View.VISIBLE);
                 signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
                 agreeButton.setEnabled(true);
             }
 
             @Override
             public void onClear() {
+                clearButton.setVisibility(View.GONE);
             }
         });
 
@@ -350,6 +352,7 @@ public class SignatureActivity extends AppCompatActivity {
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
+        header.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
 
         Gson gson = new Gson();
         String body = gson.toJson(consentFormPayloadDTO);

@@ -87,12 +87,14 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View onClickListener) {
-                ApplicationPreferences.Instance.setUserLanguage(languageName);
+                ApplicationPreferences.Instance.setUserLanguage(languageId);
 
-                Map<String, String> header = new HashMap<>();
-                header.put("language", languageId);
+                Map<String, String> header = WorkflowServiceHelper.getApplicationStartHeaders();
+                header.put("Accept-Language", languageId);
+
+                Map<String, String> query = new HashMap<>();
                 //   WorkflowServiceHelper.getInstance().executeApplicationStartRequest(signinscreencallback);
-                WorkflowServiceHelper.getInstance().execute(languageSelectionDTO.getMetadata().getTransitions().getSignin(), signinscreencallback, null, header, WorkflowServiceHelper.getApplicationStartHeaders());
+                WorkflowServiceHelper.getInstance().execute(languageSelectionDTO.getMetadata().getTransitions().getSignin(), signinscreencallback, query, header);
             }
         });
 
