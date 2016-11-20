@@ -31,7 +31,11 @@ public class CloverQRScannerActivity extends AppCompatActivity {
 
             if (barcodeResult.isBarcodeAction()) {
                 String barcode = barcodeResult.getBarcode();
-                Toast.makeText(CloverQRScannerActivity.this,"QR code result: "+barcode,Toast.LENGTH_LONG).show();
+                intent = new Intent();
+                intent.putExtra("SCAN_RESULT",barcode);
+                CloverQRScannerActivity.this.setResult(RESULT_OK, intent);
+                //Toast.makeText(CloverQRScannerActivity.this,"QR code result: "+barcode,Toast.LENGTH_LONG).show();
+                finish();
             }
         }
     };

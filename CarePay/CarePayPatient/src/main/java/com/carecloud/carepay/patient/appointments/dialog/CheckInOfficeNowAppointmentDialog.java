@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -100,7 +101,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
         queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
 
-        Map<String, String> header = new HashMap<>();
+        Map<String, String> header = WorkflowServiceHelper.setPerfferedLanguageHeader();
         header.put("transition", "true");
 
         WorkflowServiceHelper.getInstance().execute(transitionDTO, callback, queries, header);

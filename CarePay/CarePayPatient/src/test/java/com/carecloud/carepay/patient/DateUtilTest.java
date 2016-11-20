@@ -1,6 +1,6 @@
 package com.carecloud.carepay.patient;
 
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import java.util.Calendar;
 import java.util.Date;

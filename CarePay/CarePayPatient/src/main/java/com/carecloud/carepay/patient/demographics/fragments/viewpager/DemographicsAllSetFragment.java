@@ -16,7 +16,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -26,12 +26,13 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -130,11 +131,14 @@ public class DemographicsAllSetFragment extends Fragment {
             demographicPayloadDTO.setInsurances(insuranceModelList);
         }
 
+        Map<String, String> queries = new HashMap<>();
+
         // dynamic transition
         Gson gson = new Gson();
         String body = gson.toJson(demographicPayloadDTO);
         TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, confirmDemWorkflowCallback, body);
+
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, confirmDemWorkflowCallback, body,queries,WorkflowServiceHelper.getPreferredLanguageHeader());
 
     }
 }

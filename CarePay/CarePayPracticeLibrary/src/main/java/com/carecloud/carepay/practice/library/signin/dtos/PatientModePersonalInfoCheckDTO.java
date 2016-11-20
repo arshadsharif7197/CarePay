@@ -12,6 +12,28 @@ public class PatientModePersonalInfoCheckDTO {
     @Expose
     private boolean isPersonalInfoCheckSuccessful;
 
+    @SerializedName("metadata")
+    @Expose
+    private PatientModePersonalInfoCheckMetadataDTO metadata;
+
+    /**
+     *
+     * @return
+     * The metadata
+     */
+    public PatientModePersonalInfoCheckMetadataDTO getMetadata() {
+        return metadata;
+    }
+
+    /**
+     *
+     * @param metadata
+     * The metadata
+     */
+    public void setMetadata(PatientModePersonalInfoCheckMetadataDTO metadata) {
+        this.metadata = metadata;
+    }
+
     /**
      *
      * @return

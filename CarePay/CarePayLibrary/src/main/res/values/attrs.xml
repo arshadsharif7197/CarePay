@@ -11,4 +11,7 @@
             <enum name="proxima_nova_semi_bold" value="6"/>
         </attr>
     </declare-styleable>
+    <declare-styleable name="BarcodeScannerView">
+        <attr name="shouldScaleToFill" format="boolean" />
+    </declare-styleable>
 </resources>

@@ -21,8 +21,9 @@ public class UserPracticeDTO {
     @SerializedName("practice_id")
     @Expose
     private String practiceId;
-
-    private String practiceUser;
+    @SerializedName("username")
+    @Expose
+    private String userName;
 
     /**
      *
@@ -96,11 +97,11 @@ public class UserPracticeDTO {
         this.practiceId = practiceId;
     }
 
-    public String getPracticeUser() {
-        return practiceUser;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setPracticeUser(String practiceUser) {
-        this.practiceUser = practiceUser;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

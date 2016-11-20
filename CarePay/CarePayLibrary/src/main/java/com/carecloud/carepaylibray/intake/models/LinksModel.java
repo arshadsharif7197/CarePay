@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.intake.models;
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,10 @@ public class LinksModel {
     @SerializedName("payments")
     @Expose
     private PaymentModel payments;
+    @SerializedName("intake")
+    @Expose
+    private TransitionDTO intake;
+
 
     /**
      * 
@@ -48,4 +53,11 @@ public class LinksModel {
         this.payments = payments;
     }
 
+    public TransitionDTO getIntake() {
+        return intake;
+    }
+
+    public void setIntake(TransitionDTO intake) {
+        this.intake = intake;
+    }
 }

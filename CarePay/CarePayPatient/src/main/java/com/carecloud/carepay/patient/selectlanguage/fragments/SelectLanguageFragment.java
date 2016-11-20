@@ -23,7 +23,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
@@ -87,12 +87,10 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View onClickListener) {
-                ApplicationPreferences.Instance.setUserLanguage(languageName);
-
-                Map<String, String> header = new HashMap<>();
-                header.put("language", languageId);
+                ApplicationPreferences.Instance.setUserLanguage(languageId);
+                Map<String, String> query = new HashMap<>();
                 //   WorkflowServiceHelper.getInstance().executeApplicationStartRequest(signinscreencallback);
-                WorkflowServiceHelper.getInstance().execute(languageSelectionDTO.getMetadata().getTransitions().getSignin(), signinscreencallback, null, header, WorkflowServiceHelper.getApplicationStartHeaders());
+                WorkflowServiceHelper.getInstance().execute(languageSelectionDTO.getMetadata().getTransitions().getSignin(), signinscreencallback, query, WorkflowServiceHelper.getApplicationStartHeaders());
             }
         });
 

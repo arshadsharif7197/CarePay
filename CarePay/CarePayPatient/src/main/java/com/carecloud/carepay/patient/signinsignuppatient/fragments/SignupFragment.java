@@ -66,6 +66,7 @@ public class SignupFragment extends Fragment {
     private boolean         isRepeatPasswordEmpty;
     private Button          submitButton;
     private TextView        accountExistTextView;
+    private TextView passwordFormatHint;
     private String          userName;
     private SignUpHandler           signUpHandler          = new SignUpHandler() {
         @Override
@@ -164,6 +165,7 @@ public class SignupFragment extends Fragment {
 
     private void setClickables(View view) {
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
+        submitButton.setText(signInLablesDTO.getSignUp());
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,7 +178,7 @@ public class SignupFragment extends Fragment {
         submitButton.setEnabled(false);
 
         accountExistTextView = (TextView) view.findViewById(R.id.signupAlreadyHaveAccountTextView);
-        accountExistTextView = (TextView) view.findViewById(R.id.signupAlreadyHaveAccountTextView);
+        accountExistTextView.setText(signInLablesDTO.getAlreadyHaveAccountLink());
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,18 +200,24 @@ public class SignupFragment extends Fragment {
         emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
         emailInputLayout.setTag(signInLablesDTO.getEmail());
         emailText = (EditText) view.findViewById(R.id.emailEditText);
+        emailText.setHint(signInLablesDTO.getEmail());
         emailText.setTag(emailInputLayout);
 
         passwordInputLayout = (TextInputLayout) view.findViewById(R.id.createPasswordTextInputLayout);
         passwordInputLayout.setTag(signInLablesDTO.getCreatePassword());
         passwordText = (EditText) view.findViewById(R.id.createPasswordEditText);
+        passwordText.setHint(signInLablesDTO.getCreatePassword());
         passwordText.setTag(passwordInputLayout);
 
         passwordRepeatInputLayout = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
         passwordRepeatInputLayout.setTag(signInLablesDTO.getRepeatPassword());
         repeatPasswordText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
+        repeatPasswordText.setHint(signInLablesDTO.getRepeatPassword());
         repeatPasswordText.setTag(passwordRepeatInputLayout);
 
+
+        passwordFormatHint= (TextView) view.findViewById(R.id.singupPasswordFormatHint);
+        passwordFormatHint.setText(signInLablesDTO.getPasswordHintText());
         setTypefaces();
 
         setChangeFocusListeners();

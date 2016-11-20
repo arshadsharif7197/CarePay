@@ -21,12 +21,13 @@ import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -350,14 +351,16 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
                 queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-                //queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
+                queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
                 Map<String, String> headers = new HashMap<>();
-                headers.put("transition", "false");
+                CognitoAppHelper.setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+             //   headers.put("transition", "false");
+             //   headers.put("username_patient", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
-                SystemUtil.showDialogMessage(PersonalInformationActivity.this, getString(R.string.signin_failed),
-                        getString(R.string.find_my_appointments_unsuccessful));
+               // SystemUtil.showDialogMessage(PersonalInformationActivity.this, getString(R.string.signin_failed),
+               //         getString(R.string.find_my_appointments_unsuccessful));
             }
         }
 

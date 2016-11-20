@@ -5,28 +5,22 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
-import com.carecloud.carepay.practice.library.appointments.services.AppointmentService;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -38,10 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AppointmentsActivity extends BasePracticeActivity implements View.OnClickListener {
     private RecyclerView appointmentsRecyclerView;
@@ -190,6 +180,8 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             appointmentListWithToday = new ArrayList<>();
             populateWithLabels();
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
+                appointmentListWithToday.add(appointmentDTO);
+                /*
                 String title = getToday(appointmentDTO.getPayload().getStartTime());
                 if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
                     appointmentListWithToday.add(appointmentDTO);
@@ -201,7 +193,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                 }*/
             }
             if (appointmentListWithToday != null) {
-                appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday, appointmentsResultModel);
+                appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentsItems, appointmentsResultModel);
                 appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
             }
 
