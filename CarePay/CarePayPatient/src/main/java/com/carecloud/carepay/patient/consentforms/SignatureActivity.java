@@ -28,7 +28,6 @@ import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsD
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
@@ -350,7 +349,7 @@ public class SignatureActivity extends AppCompatActivity {
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
 
 
-        Map<String, String> header = WorkflowServiceHelper.setPerferedLanguageHeader();
+        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
         header.put("transition", "true");
 
         Gson gson = new Gson();

@@ -27,7 +27,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDeta
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -139,7 +138,7 @@ public class DemographicsAllSetFragment extends Fragment {
         String body = gson.toJson(demographicPayloadDTO);
         TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, confirmDemWorkflowCallback, body,queries,WorkflowServiceHelper.setPerferedLanguageHeader());
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, confirmDemWorkflowCallback, body,queries,WorkflowServiceHelper.getPreferredLanguageHeader());
 
     }
 }

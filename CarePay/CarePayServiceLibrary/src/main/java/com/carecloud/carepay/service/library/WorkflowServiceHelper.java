@@ -95,7 +95,7 @@ public class WorkflowServiceHelper {
         return appStartHeaders;
     }
 
-    public static  Map<String, String> setPerferedLanguageHeader(){
+    public static  Map<String, String> getPreferredLanguageHeader(){
         Map<String, String> prefredLanguage = new HashMap<>();
         prefredLanguage.put("Accept-Language",ApplicationPreferences.Instance.getUserLanguage());
         return prefredLanguage;

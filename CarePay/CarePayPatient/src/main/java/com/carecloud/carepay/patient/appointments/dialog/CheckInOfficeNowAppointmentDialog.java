@@ -101,8 +101,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
         queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
 
-        Map<String, String> header = WorkflowServiceHelper.setPerferedLanguageHeader();
-        header.put("transition", "true");
+       // Map<String, String> header = WorkflowServiceHelper.setPerfferedLanguageHeader();
+        //header.put("transition", "true");
 
         WorkflowServiceHelper.getInstance().execute(transitionDTO, callback, queries, header);
     }
