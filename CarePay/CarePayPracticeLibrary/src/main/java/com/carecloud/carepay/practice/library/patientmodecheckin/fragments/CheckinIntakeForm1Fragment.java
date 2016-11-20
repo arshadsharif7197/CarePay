@@ -57,9 +57,8 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
-        getIntakeFormData();
+//        getIntakeFormData();
 
-        /*
         continueButton = (Button) view.findViewById(R.id.checkinIntakeForm1ContinueClickable);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,9 +66,10 @@ public class CheckinIntakeForm1Fragment extends Fragment {
                 // transition
                 CheckinIntakeForm2Fragment fragment = new CheckinIntakeForm2Fragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
+                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, 2,
+                                                                                PatientModeCheckinActivity.NUM_INTAKE_FORMS);
             }
         });
-        */
 
 
         return view;
