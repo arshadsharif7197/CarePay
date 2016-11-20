@@ -61,10 +61,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity {
         setContentView(R.layout.activity_patient_mode_checkin);
 
         // TODO: 11/19/2016 uncomment
-//        demographicDTO = getConvertedDTO(DemographicDTO.class);
+        demographicDTO = getConvertedDTO(DemographicDTO.class);
 
-        Gson gson = new Gson();
-        demographicDTO = gson.fromJson(json, DemographicDTO.class);
+//        Gson gson = new Gson();
+//        demographicDTO = gson.fromJson(json, DemographicDTO.class);
 
         instantiateViewsRefs();
         initializeViews();
