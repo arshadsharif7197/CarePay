@@ -22,9 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -55,19 +54,19 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
-    private static String[]                              states;
-    private        View                                  view;
-    private        ImageCaptureHelper                    scannerFront;
-    private        ImageCaptureHelper                    scannerBack;
-    private        Button                                scanFrontButton;
-    private        Button                                scanBackButton;
-    private        EditText                              idNumberEdit;
-    private        TextInputLayout                       idNumberInputText;
-    private        TextView                              idStateClickable;
-    private        TextView                              stateLabel;
-    private        DemographicIdDocPayloadDTO            model;
-    private        DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
-    private        DemographicLabelsDTO                  globalLabelsDTO;
+    private static String[] states;
+    private View view;
+    private ImageCaptureHelper scannerFront;
+    private ImageCaptureHelper scannerBack;
+    private Button scanFrontButton;
+    private Button scanBackButton;
+    private EditText idNumberEdit;
+    private TextInputLayout idNumberInputText;
+    private TextView idStateClickable;
+    private TextView stateLabel;
+    private DemographicIdDocPayloadDTO model;
+    private DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
+    private DemographicLabelsDTO globalLabelsDTO;
 
     @Nullable
     @Override
@@ -82,11 +81,15 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         }
 
         // create the view
-        view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
+        view = inflater.inflate(getLayoutRes(), container, false);
 
         initializeUIFields();
 
         return view;
+    }
+
+    protected int getLayoutRes() {
+        return R.layout.fragment_demographics_scan_license;
     }
 
     private void getOptions() {
@@ -275,7 +278,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + frontPic);
                     scannerFront.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                                                                                 R.drawable.icn_camera));
+                            R.drawable.icn_camera));
                 }
             }
             // add back image
@@ -290,7 +293,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
                     scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                                                                                R.drawable.icn_camera));
+                            R.drawable.icn_camera));
                 }
             }
         }
