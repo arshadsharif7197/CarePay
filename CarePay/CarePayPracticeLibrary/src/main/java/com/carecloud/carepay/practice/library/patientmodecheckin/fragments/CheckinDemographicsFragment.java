@@ -530,31 +530,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         }
         return true;
     }
-
-
-    private boolean isDateOfBirthValid() {
-        final String errorMessage = personalDto == null ? CarePayConstants.NOT_DEFINED : personalDto.properties.dateOfBirth.validations.get(0).getErrorMessage();
-        String dob = dobEditText.getText().toString();
-        if (!StringUtil.isNullOrEmpty(dob)) {
-            boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
-            doblabel.setErrorEnabled(!isValid);
-            doblabel.setError(isValid ? null : errorMessage);
-            return isValid;
-        }
-        return true;
-    }
-
-    private boolean checkReadyForNext() {
-
-        boolean isPhoneValid = hasPhoneNumber();
-        // for non-required field, check validity only if non-empty
-        if (!isPhoneValid) {
-            phoneNumberEditText.requestFocus();
-        }
-
-        return isPhoneValid;
-    }
-
+    
 
     private void setChangeFocusListeners() {
         firstNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
