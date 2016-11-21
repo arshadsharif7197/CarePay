@@ -16,8 +16,10 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,31 +29,35 @@ import java.io.IOException;
  */
 public class ImageCaptureHelper {
 
-    public static final  int            REQUEST_CAMERA        = 0;
-    public static final  int            SELECT_FILE           = 1;
-    public static final  int            ROUND_IMAGE           = 11;
-    public static final  int            RECTANGULAR_IMAGE     = 22;
-    public static final  String         CHOOSER_NAME          = "Select File";
-    public static final  CharSequence[] chooseActionDlOptions = {
-            "Take Photo",
-            "Choose from Library",
-            "Cancel"
-    };
-    public static final  String         chooseActionDlgTitle  = "Add Photo!";
-    private static final String         LOG_TAG               = ImageCaptureHelper.class.getSimpleName();
-    private String    userChoosenTask;
-    private ImageView imageViewTarget;
-    private int       imgWidth;
-    private int       imgHeight;
-    private Activity  context;
+    public static final int            REQUEST_CAMERA        = 0;
+    public static final int            SELECT_FILE           = 1;
+    public static final int            ROUND_IMAGE           = 11;
+    public static final int            RECTANGULAR_IMAGE     = 22;
+    public static final String         CHOOSER_NAME          = "Select File";
+    public static final CharSequence[] chooseActionDlOptions = new CharSequence[3];
+    public static String chooseActionDlgTitle;
+
+    private static final String LOG_TAG = ImageCaptureHelper.class.getSimpleName();
+    private String               userChoosenTask;
+    private ImageView            imageViewTarget;
+    private int                  imgWidth;
+    private int                  imgHeight;
+    private Activity             context;
 
     public enum CameraType {
         DEFAULT_CAMERA, CUSTOM_CAMERA;
     }
 
-    public ImageCaptureHelper(Activity activity, ImageView targetImageView) {
-        context = activity;
-        imageViewTarget = targetImageView;
+    public ImageCaptureHelper(Activity activity, ImageView targetImageView, DemographicLabelsDTO demographicLabelsDTO) {
+        this.context = activity;
+        this.imageViewTarget = targetImageView;
+
+        chooseActionDlOptions[0] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsTakePhotoOption() : CarePayConstants.NOT_DEFINED);
+        chooseActionDlOptions[1] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsChooseFromLibraryOption() : CarePayConstants.NOT_DEFINED);
+        chooseActionDlOptions[2] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCancelLabel() : CarePayConstants.NOT_DEFINED);
+
+        chooseActionDlgTitle = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCaptureOptionsTitle() : CarePayConstants.NOT_DEFINED);
+
         imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
         imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
         resetTargetView();
@@ -185,11 +191,12 @@ public class ImageCaptureHelper {
 
     /**
      * Genrate an intent to launch a camera
+     *
      * @param cameraType CAMERA_DEFAULT or CAMERA_CUSTOM
      * @return The intent
      */
     public Intent getCameraIntent(CameraType cameraType) {
-        if(cameraType == CameraType.CUSTOM_CAMERA) {
+        if (cameraType == CameraType.CUSTOM_CAMERA) {
             return cameraIntent(context);
         }
         return cameraIntent(); // launch default
