@@ -142,18 +142,9 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkin_demographics, container, false);
+
+        initializeDemographicsDTO();
         initialiseUIFields(view);
-        // get the DTO
-        demographicsDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
-        demographicLabelsDto = demographicsDTO.getMetadata().getLabels();
-        addressDto = demographicsDTO.getMetadata().getDataModels().demographic.address;
-        personalDto = demographicsDTO.getMetadata().getDataModels().demographic.personalDetails;
-        driverLicenseDto = demographicsDTO.getMetadata().getDataModels().demographic.identityDocuments;
-        if (demographicsDTO.getPayload().getDemographics() != null) {
-            demographicPersDetailsPayloadDTO = demographicsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
-            demographicAddressPayloadDTO = demographicsDTO.getPayload().getDemographics().getPayload().getAddress();
-            demographicIdDocPayloadDTO = demographicsDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0);
-        }
 
         addDemogrButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +163,21 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         formatEditText();
 
         return view;
+    }
+
+    private void initializeDemographicsDTO(){
+        demographicsDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
+        demographicLabelsDto = demographicsDTO.getMetadata().getLabels();
+        addressDto = demographicsDTO.getMetadata().getDataModels().demographic.address;
+        personalDto = demographicsDTO.getMetadata().getDataModels().demographic.personalDetails;
+        driverLicenseDto = demographicsDTO.getMetadata().getDataModels().demographic.identityDocuments;
+
+        if (demographicsDTO.getPayload().getDemographics() != null) {
+            demographicPersDetailsPayloadDTO = demographicsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+            demographicAddressPayloadDTO = demographicsDTO.getPayload().getDemographics().getPayload().getAddress();
+            demographicIdDocPayloadDTO = demographicsDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0);
+        }
+
     }
 
     private void initialiseUIFields(View view) {
@@ -266,7 +272,13 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
         addDemogrButton = (Button) view.findViewById(R.id.checkinDemographicsAddClickable);
 
+        initializeChildFragments();
+        initializeOptionArraysFromModel();
 
+    }
+
+
+    private void initializeChildFragments(){
         FragmentManager fm = getChildFragmentManager();
         String tag = PracticeProfilePictureFragment.class.getSimpleName();
         PracticeProfilePictureFragment fragment = (PracticeProfilePictureFragment) fm.findFragmentByTag(tag);
@@ -293,6 +305,10 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
                 .replace(R.id.drivingLicneseFragment, drivinglicensefragment, drivingLicensetag)
                 .commit();
 
+    }
+
+
+    private void initializeOptionArraysFromModel(){
 
         List<MetadataOptionDTO> options = personalDto.properties.primaryRace.options;
         List<String> races = new ArrayList<>();
@@ -314,7 +330,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             genders.add(o.getLabel());
         }
         genderArray = genders.toArray(new String[0]);
-
     }
 
     private void setEditTexts() {
@@ -497,7 +512,9 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
     }
 
-    private boolean checkPhoneNumber() {
+
+
+    private boolean hasPhoneNumber() {
         final String phoneError = addressDto == null ? CarePayConstants.NOT_DEFINED : addressDto.properties.phone.validations.get(0).getErrorMessage();
         final String phoneValidation = addressDto == null ? CarePayConstants.NOT_DEFINED : ((String) addressDto.properties.phone.validations.get(0).value);
         if (!isPhoneEmpty) { // check validity only if non-empty
@@ -529,7 +546,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
     private boolean checkReadyForNext() {
 
-        boolean isPhoneValid = checkPhoneNumber();
+        boolean isPhoneValid = hasPhoneNumber();
         // for non-required field, check validity only if non-empty
         if (!isPhoneValid) {
             phoneNumberEditText.requestFocus();
