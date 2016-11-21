@@ -35,18 +35,21 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.carecloud.carepaylibray.utils.ValidationHelper;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import com.google.gson.Gson;
 
