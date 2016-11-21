@@ -82,13 +82,15 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         }
 
         // create the view
-        view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
+        view = inflater.inflate(getLayoutRes(), container, false);
 
         initializeUIFields();
 
         return view;
     }
-
+    protected int getLayoutRes() {
+        return R.layout.fragment_demographics_scan_license;
+    }
     private void getOptions() {
         // init states
         if (idDocsMetaDTO != null
