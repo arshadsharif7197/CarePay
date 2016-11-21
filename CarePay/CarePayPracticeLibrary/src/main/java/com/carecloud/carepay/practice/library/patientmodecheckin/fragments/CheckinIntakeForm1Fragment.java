@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 /**
  * Created by lsoco_user on 11/17/2016.
  */
@@ -58,26 +57,23 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
+        view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
 
-     getIntakeFormData();
+        getIntakeFormData();
 
         return view;
     }
 
 
-
-
     /**
-     *
      * TODO REMOVE LOGIC FOR WorkflowServiceHelper from consent dto
-     * */
-    public void getIntakeFormData(){
+     */
+    public void getIntakeFormData() {
 
         Map<String, String> queryString = new HashMap<>();
 
-        queryString.put("appointment_id","4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");//model.getMetadata().getAppointmentId()
+        queryString.put("appointment_id", "4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");//model.getMetadata().getAppointmentId()
 
         CognitoAppHelper.setUser("srios@carecloud.com");
         TransitionDTO transitionDTO = new TransitionDTO();
@@ -122,7 +118,7 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         mStepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarIntakePractice);
         mStepProgressBar.setCumulativeDots(true);
         mStepProgressBar.setNumDots(inTakeForm.getPayload().getIntakeForms().size());
-        ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE,  mStepProgressBar.getCurrentProgressDot() + 1,
+        ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, mStepProgressBar.getCurrentProgressDot() + 1,
                 mStepProgressBar.getNumDots());
 
         //call javascript to show next intake form.
@@ -131,13 +127,13 @@ public class CheckinIntakeForm1Fragment extends Fragment {
             public void onClick(View v) {
                 if (mStepProgressBar.getCurrentProgressDot() < mStepProgressBar.getNumDots() - 1) {
                     mStepProgressBar.next();
-                    ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE,  mStepProgressBar.getCurrentProgressDot() + 1,
+                    ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, mStepProgressBar.getCurrentProgressDot() + 1,
                             mStepProgressBar.getNumDots());
                 }
 
                 if (mStepProgressBar.getCurrentProgressDot() == mStepProgressBar.getNumDots() - 1) {
                     nextButton.setText(labelsModel.getFinishQuestionsButtonText());
-                }else{
+                } else {
                     nextButton.setText(labelsModel.getNextQuestionButtonText());
                 }
                 nextIntakeFormDisplayed();
@@ -218,11 +214,9 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     }
 
 
-
     /**
      * TODO update workservice helper when available
-     *
-     * */
+     */
     public void updateIntakeForm(String jsonAnswers) {
 
         Map<String, String> queryString = new HashMap<>();
@@ -243,10 +237,10 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         //TODO remove this logic
         CheckinPaymentFragment fragment = new CheckinPaymentFragment();
         ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-        ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
-        ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_PAYMENTS, true);
-        ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
-        ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
+        ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
+        ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_PAYMENTS, true);
+        ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
+        ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
 
 
         // WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
@@ -274,10 +268,6 @@ public class CheckinIntakeForm1Fragment extends Fragment {
             SystemUtil.showDialogMessage(getActivity(), getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-
-
-
 
 
 }
