@@ -1,11 +1,9 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +20,9 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
@@ -33,6 +34,8 @@ import com.marcok.stepprogressbar.StepProgressBar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 /**
  * Created by lsoco_user on 11/17/2016.
@@ -57,9 +60,12 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
-//        getIntakeFormData();
 
-        continueButton = (Button) view.findViewById(R.id.checkinIntakeForm1ContinueClickable);
+     getIntakeFormData();
+
+
+        //continueButton = (Button) view.findViewById(R.id.checkinIntakeForm1ContinueClickable);
+/*
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,6 +76,7 @@ public class CheckinIntakeForm1Fragment extends Fragment {
                                                                                 PatientModeCheckinActivity.NUM_INTAKE_FORMS);
             }
         });
+*/
 
 
         return view;
@@ -78,14 +85,35 @@ public class CheckinIntakeForm1Fragment extends Fragment {
 
 
 
+    /**
+     *
+     * TODO REMOVE LOGIC FOR WorkflowServiceHelper from consent dto
+     * */
     public void getIntakeFormData(){
 
         Map<String, String> header = new HashMap<>();
-        header.put("patient_id", "cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2");//inTakeForm.getPayload().getFindings().getMetadata().getPatientId());//cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2
-        header.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");//inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());//77b81aa8-1155-4da7-9fd9-2f6967b09a93
-        header.put("appointment_id", "050bd799-de01-4692-a950-10d12d20dd2e");// inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());//050bd799-de01-4692-a950-10d12d20dd2e
-        header.put("practice_mgmt", "carecloud");// inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());//carecloud
-        WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
+        Map<String, String> queryString = new HashMap<>();
+
+        //header.put("transition", "false");
+        //header.put("transition", "false");
+        //header.put("username", "srios@carecloud.com");
+        queryString.put("appointment_id","4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");//model.getMetadata().getAppointmentId()
+       // queryString.put("practice_id","77b81aa8-1155-4da7-9fd9-2f6967b09a93");
+        //queryString.put("appointment_id","4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");
+        //queryString.put("findings_id","e4de697f-50b8-498c-957f-3c9bca6188ea");
+       // queryString.put("practice_mgmt","carecloud");
+
+        CognitoAppHelper.setUser("srios@carecloud.com");
+        TransitionDTO transitionDTO = new TransitionDTO();
+        transitionDTO.setMethod("GET");
+
+        //dev/workflow/carepay/patient_checkin/intake_forms
+        transitionDTO.setUrl("dev/workflow/carepay/patient_mode/intake_forms");
+        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+
+        //WorkflowServiceHelper.getInstance().execute(transitionDTO, intakeFormCallback ,queryString, header);
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, intakeFormCallback, queryString);
+
 
     }
 
@@ -117,21 +145,11 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         nextButton.setEnabled(true);
         nextButton.setText(labelsModel.getNextQuestionButtonText());
 
-        //mStepProgressBar = (StepProgressBar) view.findViewById(com.carecloud.carepaylibrary.R.id.stepProgressBarIntake2);
+        mStepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarIntakePractice);
         mStepProgressBar.setCumulativeDots(true);
         mStepProgressBar.setNumDots(inTakeForm.getPayload().getIntakeForms().size());
-
-        //toolbar for intake form
-        intakeFormsToolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.intakeToolbar);
-        intakeFormsToolbar.setTitle("");
-        intakeFormsToolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
-
-        //setSupportActionBar(intakeFormsToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        headerTitleTextView = (TextView) intakeFormsToolbar.findViewById(com.carecloud.carepaylibrary.R.id.intakeToolbarTitle);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), headerTitleTextView);
-        headerTitleTextView.setText(String.format(labelsModel.getIntakeFormHeading(), mStepProgressBar.getCurrentProgressDot() + 1, mStepProgressBar.getNumDots()));
-
+        ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE,  mStepProgressBar.getCurrentProgressDot() + 1,
+                mStepProgressBar.getNumDots());
 
         //call javascript to show next intake form.
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +157,8 @@ public class CheckinIntakeForm1Fragment extends Fragment {
             public void onClick(View v) {
                 if (mStepProgressBar.getCurrentProgressDot() < mStepProgressBar.getNumDots() - 1) {
                     mStepProgressBar.next();
-                    headerTitleTextView.setText(String.format(labelsModel.getIntakeFormHeading(), mStepProgressBar.getCurrentProgressDot() + 1, mStepProgressBar.getNumDots()));
+                    ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE,  mStepProgressBar.getCurrentProgressDot() + 1,
+                            mStepProgressBar.getNumDots());
                 }
 
                 if (mStepProgressBar.getCurrentProgressDot() == mStepProgressBar.getNumDots() - 1) {
@@ -226,6 +245,10 @@ public class CheckinIntakeForm1Fragment extends Fragment {
 
 
 
+    /**
+     * TODO update workservice helper when available
+     *
+     * */
     public void updateIntakeForm(String jsonAnswers) {
 
         Map<String, String> queryString = new HashMap<>();
@@ -243,8 +266,16 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());//cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2
         queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
+        //TODO remove this logic
+        CheckinPaymentFragment fragment = new CheckinPaymentFragment();
+        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+        ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
+        ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_PAYMENTS, true);
+        ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
+        ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
 
-        WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
+
+        // WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
 
     }
 
