@@ -48,6 +48,12 @@ public class ImageCaptureHelper {
         DEFAULT_CAMERA, CUSTOM_CAMERA;
     }
 
+    /**
+     * C-Tor
+     * @param activity The activity using the helper
+     * @param targetImageView The target view where the captured image will be placed
+     * @param demographicLabelsDTO The label from remote
+     */
     public ImageCaptureHelper(Activity activity, ImageView targetImageView, DemographicLabelsDTO demographicLabelsDTO) {
         this.context = activity;
         this.imageViewTarget = targetImageView;
