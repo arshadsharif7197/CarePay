@@ -489,6 +489,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         }
         return true;
     }
+    
     private boolean checkZip() {
         String zipCode = zipCodeEditText.getText().toString();
         if (StringUtil.isNullOrEmpty(zipCode)) {
@@ -896,29 +897,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             }
         }, demographicinfo, queries, header);
-       /* DemographicService apptService = (new BaseServiceGenerator(getActivity()))
-                .createService(DemographicService.class); // String token, String searchString
-        Call<ResponseBody> call = apptService.updateDemographicInformation(postPayloadModel);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.v(LOG_TAG, "" + response.code());
-                if (response.code() == 200) {
-                    demographicProgressBar.setVisibility(View.GONE);
 
-                    Log.d(LOG_TAG, "demogr post succeeded");
-
-                    openNewFragment();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.d(LOG_TAG, "demogr post failed", throwable);
-                demographicProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "demo post failed", Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     private void initViewFromModels() {
