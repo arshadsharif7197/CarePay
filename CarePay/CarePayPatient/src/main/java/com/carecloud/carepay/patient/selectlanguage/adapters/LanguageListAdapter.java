@@ -57,6 +57,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
             selectedLanguage = holder.languageNameRadioButton;
             selectedLanguage.setChecked(true);
             selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            itemClickListener.onLanguageChange(languageSelected.getValue(), languageSelected.getLanguageId());
         }
     }
 

@@ -10,7 +10,6 @@
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
     android:orientation="vertical"
-    android:background="@color/demographics_scan_insurance_bg"
     android:padding="2dp">
 
     <LinearLayout

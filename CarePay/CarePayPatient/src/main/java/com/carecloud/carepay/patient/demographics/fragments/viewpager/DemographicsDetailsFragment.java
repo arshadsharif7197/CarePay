@@ -398,6 +398,7 @@ public class DemographicsDetailsFragment extends Fragment
         ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
             fragment = new ProfilePictureFragment();
+            fragment.setGlobalLabelsDTO(globalLabelDTO);
             fragment.setButtonsStatusCallback(this);
             fragment.setPayloadDTO(persDetailsDTO);
         }
@@ -406,7 +407,7 @@ public class DemographicsDetailsFragment extends Fragment
                 .commit();
 
         // set the fonts
-        setTypefaces(view);
+        setTypefaces();
     }
 
     /**
@@ -539,7 +540,7 @@ public class DemographicsDetailsFragment extends Fragment
                                     });
     }
 
-    private void setTypefaces(View view) {
+    private void setTypefaces() {
         Context context = getActivity();
 
         setGothamRoundedMediumTypeface(context, header);

@@ -42,6 +42,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     private Button buttonChangeCurrentPhoto;
     private DemographicPersDetailsPayloadDTO model;
     private String recaptureCaption;
+    private DemographicLabelsDTO globalLabelsDTO;
 
     @Nullable
     @Override
@@ -57,12 +58,12 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
         View view = inflater.inflate(getLayoutRes(), container, false);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage);
+        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(imageCaptureHelper);
+                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
         });
         String captureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileCaptureCaption();
@@ -142,5 +143,9 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
     public void setPayloadDTO(DemographicPersDetailsPayloadDTO model) {
         this.model = model;
+    }
+
+    public void setGlobalLabelsDTO(DemographicLabelsDTO globalLabelsDTO) {
+        this.globalLabelsDTO = globalLabelsDTO;
     }
 }

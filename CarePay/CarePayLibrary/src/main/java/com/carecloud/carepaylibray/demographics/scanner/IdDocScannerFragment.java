@@ -116,10 +116,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         setEditText();
 
         ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
-        scannerFront = new ImageCaptureHelper(getActivity(), imageFront);
+        scannerFront = new ImageCaptureHelper(getActivity(), imageFront, globalLabelsDTO);
 
         ImageView imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
-        scannerBack = new ImageCaptureHelper(getActivity(), imageBack);
+        scannerBack = new ImageCaptureHelper(getActivity(), imageBack, globalLabelsDTO);
 
         // init views (labels and logic)
         String label;
@@ -131,7 +131,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerFront);
+                selectImage(scannerFront, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -141,7 +141,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerBack);
+                selectImage(scannerBack, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -171,7 +171,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
 
-        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentNumber.getLabel();
+        label = StringUtil.captialize(idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentNumber.getLabel());
         idNumberInputText.setTag(label);
         idNumberEdit.setTag(idNumberInputText);
         idNumberEdit.setHint(label);

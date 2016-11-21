@@ -126,7 +126,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.setHint(label);
 
         frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
-        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
+        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView, globalLabelsDTO);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
@@ -134,12 +134,12 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(insuranceFrontScanHelper);
+                selectImage(insuranceFrontScanHelper, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
         backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
-        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView);
+        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView, globalLabelsDTO);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
         btnScanBackInsurance.setText(label);
@@ -147,7 +147,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                selectImage(insuranceBackScanHelper);
+                selectImage(insuranceBackScanHelper, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
 
             }
         });

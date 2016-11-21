@@ -140,7 +140,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         setTypefaces();
 
         // hide add card button
-        showAddCardButton(false);
+        showAddCardButton(switchCompat.isChecked());
     }
 
     private void getOptions() {
@@ -186,7 +186,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
                 // clear the list
                 insuranceDTOsList.clear();
 
-                             for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
+                for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
                     if (isInsuaranceNonTrivial(payloadDTO)) {
                         insuranceDTOsList.add(payloadDTO);
                     }
@@ -288,6 +288,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
+                multipleInsClickable.setVisibility(on ? View.VISIBLE : View.GONE);
             }
         });
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
