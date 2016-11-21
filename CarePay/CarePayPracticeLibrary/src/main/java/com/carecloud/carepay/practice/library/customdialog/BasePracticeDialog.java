@@ -50,6 +50,7 @@ public class BasePracticeDialog extends Dialog implements View.OnClickListener {
     protected void setDialogTitle(String title){
         ((CarePayTextView) findViewById(R.id.content_view_header_title)).setText(title);
     }
+
     private void setDialogCancelText(String title){
         ((CarePayTextView) findViewById(R.id.closeTextView)).setText(title);
     }

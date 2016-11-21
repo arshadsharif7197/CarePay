@@ -261,6 +261,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     }
 
     // for practice app
+    /**
+     * @param carePayCameraCallback listener
+     */
     public void takePicturePractice(CarePayCameraCallback carePayCameraCallback){
         this.carePayCameraCallback =carePayCameraCallback;
         isPracticeCamera= true;

@@ -5,10 +5,8 @@ package com.carecloud.carepay.practice.library.customdialog;
  */
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -23,9 +21,9 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
+
+
 
 public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraCallback {
 
@@ -42,10 +40,16 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
     private CarePayTextView contentViewTitleLabel;
     private  View childActionView;
 
+
     public interface  SaveScanDocListener {
         public void onSaveScanDoc(byte[] bytes);
     }
 
+    /**
+     * Constructor.
+     * @param context context
+     * @param saveScanDocListener listener
+     */
     public ScanDocDialog(Context context, SaveScanDocListener saveScanDocListener){
         super(context);
         this.context = context;
