@@ -66,8 +66,7 @@
             android:id="@+id/demogrDocsLicenseNumEdit"
             style="@style/SigninSignupEditStyle"
             android:imeOptions="actionNone"
-            android:nextFocusDown="@+id/scanIdRootLayout"
-            android:maxLength="10"/>
+            android:nextFocusDown="@+id/scanIdRootLayout"/>
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
