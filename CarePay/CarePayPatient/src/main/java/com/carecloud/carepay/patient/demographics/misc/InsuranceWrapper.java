@@ -21,7 +21,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 /**
  * Wrapper of an entity holding a insurance scanner fragment
  */
-class InsuranceWrapper {
+public class InsuranceWrapper {
 
     private InsuranceScannerFragment wrapperScannerFragment;
     private LinearLayout             holderWrapperView;

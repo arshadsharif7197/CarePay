@@ -328,9 +328,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
             scanBackButton.setText(label);
         }
-
-        // invoke parent fragment to enable Next Button
-        buttonsStatusCallback.enableNextButton(true);
     }
 
     @Override

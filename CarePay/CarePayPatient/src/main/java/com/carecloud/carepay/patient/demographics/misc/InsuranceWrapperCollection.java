@@ -104,4 +104,15 @@ import java.util.List;
     public boolean isEmpty() {
         return wrappers.isEmpty();
     }
+
+    /**
+     * @return The last wrapper
+     */
+    public InsuranceWrapper getLast() {
+        int count = wrappers.size();
+        if(count > 0) {
+            return wrappers.get(wrappers.size() - 1);
+        }
+        return null;
+    }
 }
