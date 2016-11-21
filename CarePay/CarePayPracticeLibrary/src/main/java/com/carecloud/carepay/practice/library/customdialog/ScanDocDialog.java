@@ -4,16 +4,16 @@ package com.carecloud.carepay.practice.library.customdialog;
  * Created by prem_mourya on 11/16/2016.
  */
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,10 +21,13 @@ import android.widget.LinearLayout;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 
-public class ScanDocDialogActivity extends Activity implements OnClickListener, CarePayCameraCallback {
+public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraCallback {
 
 
     private Button scanImageButton;
@@ -34,31 +37,57 @@ public class ScanDocDialogActivity extends Activity implements OnClickListener, 
     private CarePayCameraPreview carePayCameraPreview;
     private byte[] cameraImageBitmap;
     private boolean isCapturing = true;
+    private Context context;
+    private  SaveScanDocListener saveScanDocListener;
+    private CarePayTextView contentViewTitleLabel;
+    private  View childActionView;
+
+    public interface  SaveScanDocListener {
+        public void onSaveScanDoc(byte[] bytes);
+    }
+
+    public ScanDocDialog(Context context, SaveScanDocListener saveScanDocListener){
+        super(context);
+        this.context = context;
+        this.saveScanDocListener = saveScanDocListener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_scan_camera_doc);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        onAddChildLayout();
         onInitialization();
+        onSetViewLabel();
+    }
+
+    private void onAddChildLayout(){
+        LayoutInflater inflater = (LayoutInflater) this.context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        childActionView = inflater.inflate(R.layout.dialog_scan_camera_doc, null);
+        ((LinearLayout)findViewById(R.id.base_dialog_content_layout)).addView(childActionView);
     }
 
     private void onInitialization() {
+        carePayCameraPreview = (CarePayCameraPreview) childActionView.findViewById(R.id.camera_preview);
 
-        carePayCameraPreview = (CarePayCameraPreview) findViewById(R.id.camera_preview);
-
-        scanImageButton = (Button) findViewById(R.id.scan_button);
+        scanImageButton = (Button) childActionView.findViewById(R.id.scan_button);
         scanImageButton.setOnClickListener(this);
 
-        scanClearImageButton = (Button) findViewById(R.id.clear_capture_image_button);
+        scanClearImageButton = (Button) childActionView.findViewById(R.id.clear_capture_image_button);
         scanClearImageButton.setOnClickListener(this);
 
-        closeViewLayout = (LinearLayout) findViewById(R.id.closeViewLayout);
-        closeViewLayout.setOnClickListener(this);
-
-        cameraCaptureImage = (ImageView) findViewById(R.id.cameraImageView);
+        cameraCaptureImage = (ImageView) childActionView.findViewById(R.id.cameraImageView);
         cameraCaptureImage.setVisibility(View.INVISIBLE);
+
+        contentViewTitleLabel = (CarePayTextView)childActionView.findViewById(R.id.content_view_title_view);
+    }
+
+    private void onSetViewLabel(){
+        //labels will be get from DTO and Set
+        setDialogTitle("Scan Insurance Card");
+        contentViewTitleLabel.setText("Place your your health insurance card in front of the camera and press “Scan” to take a picture.");
+        scanImageButton.setText("Scan");
+        scanClearImageButton.setText("Clear");
     }
 
     @Override
@@ -69,7 +98,7 @@ public class ScanDocDialogActivity extends Activity implements OnClickListener, 
 
             if (isCapturing) {
                 if (carePayCameraPreview != null) {
-                    carePayCameraPreview.takePicturePractice();
+                    carePayCameraPreview.takePicturePractice(this);
                 }
             } else {
                 onSaveImage();
@@ -79,7 +108,7 @@ public class ScanDocDialogActivity extends Activity implements OnClickListener, 
         } else if (viewId == R.id.clear_capture_image_button) {
             setupImageCameraCapture();
         } else if (viewId == R.id.closeViewLayout) {
-            finish();
+            dismiss();
         }
 
     }
@@ -106,6 +135,7 @@ public class ScanDocDialogActivity extends Activity implements OnClickListener, 
         cameraImageBitmap = null;
         isCapturing = true;
         scanClearImageButton.setEnabled(false);
+        onClearButtonTextColor();
     }
 
     private void setupImageDisplay() {
@@ -122,18 +152,25 @@ public class ScanDocDialogActivity extends Activity implements OnClickListener, 
         scanImageButton.setText("Save");
         isCapturing = false;
         scanClearImageButton.setEnabled(true);
+        onClearButtonTextColor();
     }
 
     private void onSaveImage() {
-        Intent intent = new Intent();
-        intent.putExtra("data", cameraImageBitmap);
-        setResult(RESULT_OK, intent);
-        finish();
+        dismiss();
+        this.saveScanDocListener.onSaveScanDoc(cameraImageBitmap);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
         carePayCameraPreview.getCameraObject().release();
+    }
+
+    private void onClearButtonTextColor(){
+        if(scanClearImageButton.isEnabled()){
+            scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
+        }else{
+            scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
     }
 }
