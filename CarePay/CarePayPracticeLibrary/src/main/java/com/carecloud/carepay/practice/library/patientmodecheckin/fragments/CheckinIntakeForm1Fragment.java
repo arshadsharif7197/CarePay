@@ -63,22 +63,6 @@ public class CheckinIntakeForm1Fragment extends Fragment {
 
      getIntakeFormData();
 
-
-        //continueButton = (Button) view.findViewById(R.id.checkinIntakeForm1ContinueClickable);
-/*
-        continueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // transition
-                CheckinIntakeForm2Fragment fragment = new CheckinIntakeForm2Fragment();
-                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, 2,
-                                                                                PatientModeCheckinActivity.NUM_INTAKE_FORMS);
-            }
-        });
-*/
-
-
         return view;
     }
 
@@ -91,27 +75,17 @@ public class CheckinIntakeForm1Fragment extends Fragment {
      * */
     public void getIntakeFormData(){
 
-        Map<String, String> header = new HashMap<>();
         Map<String, String> queryString = new HashMap<>();
 
-        //header.put("transition", "false");
-        //header.put("transition", "false");
-        //header.put("username", "srios@carecloud.com");
         queryString.put("appointment_id","4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");//model.getMetadata().getAppointmentId()
-       // queryString.put("practice_id","77b81aa8-1155-4da7-9fd9-2f6967b09a93");
-        //queryString.put("appointment_id","4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");
-        //queryString.put("findings_id","e4de697f-50b8-498c-957f-3c9bca6188ea");
-       // queryString.put("practice_mgmt","carecloud");
 
         CognitoAppHelper.setUser("srios@carecloud.com");
         TransitionDTO transitionDTO = new TransitionDTO();
         transitionDTO.setMethod("GET");
 
-        //dev/workflow/carepay/patient_checkin/intake_forms
         transitionDTO.setUrl("dev/workflow/carepay/patient_mode/intake_forms");
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
 
-        //WorkflowServiceHelper.getInstance().execute(transitionDTO, intakeFormCallback ,queryString, header);
         WorkflowServiceHelper.getInstance().execute(transitionDTO, intakeFormCallback, queryString);
 
 
