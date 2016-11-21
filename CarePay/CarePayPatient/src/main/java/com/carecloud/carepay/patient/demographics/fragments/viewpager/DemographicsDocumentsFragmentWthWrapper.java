@@ -168,6 +168,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
 
         if (insuranceDTOsList == null) {
             insuranceDTOsList = new ArrayList<>();
+            insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
+        } else if(insuranceDTOsList.size() == 0) {
+            insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
         }
     }
 
@@ -249,6 +252,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
                                                                 @Override
                                                                 public void onAfterRemove() {
                                                                     showAddCardButton(true);
+                                                                    if(wrapperCollection1.isEmpty()) {
+                                                                        switchCompat.setChecked(false);
+                                                                    }
                                                                 }
 
                                                                 @Override
@@ -289,6 +295,11 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
                 multipleInsClickable.setVisibility(on ? View.VISIBLE : View.GONE);
+                if(on && wrapperCollection1.isEmpty()) {
+                    insuranceDTOsList.clear();
+                    insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
+                    wrapperCollection1.addAll(insuranceDTOsList);
+                }
             }
         });
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
