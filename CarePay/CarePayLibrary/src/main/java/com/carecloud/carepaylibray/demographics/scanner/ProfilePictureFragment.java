@@ -74,7 +74,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         return view;
     }
 
-    protected int getLayoutRes() {
+    private int getLayoutRes() {
         return R.layout.fragment_demographics_picture;
     }
 
