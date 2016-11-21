@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,20 +35,12 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
-import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
-import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
-import com.smartystreets.api.us_zipcode.City;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
@@ -58,11 +49,20 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+import com.smartystreets.api.us_zipcode.City;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+
 /**
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener ,DocumentScannerFragment.NextAddRemoveStatusModifier  {
+public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener, DocumentScannerFragment.NextAddRemoveStatusModifier {
 
     private String[] genderArray;
     private String[] raceArray;
@@ -108,8 +108,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     private TextView updateDemoGraphicTitleTextView;
     private TextView dateformatLabelTextView;
     private TextView optinalLabelTextView;
-    private TextView driverLicenseTextView;
-    private TextView driverLicenseStateListTextView;
 
     private boolean isFirstNameEmpty;
     private boolean isLastNameEmpty;
@@ -140,7 +138,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkin_demographics, container, false);
-
+        initialiseUIFields(view);
         // get the DTO
         demographicsDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
         demographicLabelsDto = demographicsDTO.getMetadata().getLabels();
@@ -153,15 +151,12 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             demographicIdDocPayloadDTO = demographicsDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0);
         }
 
-
-
-        initialiseUIFields(view);
         addDemogrButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view1) {
                 CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
-                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-                ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(true);
+                ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+                ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
 
             }
         });
@@ -265,7 +260,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         demographicSectionTextView = (TextView) view.findViewById(R.id.adddemodemographicsSectionLabel);
         demographicSectionTextView.setText(demographicsDTO.getMetadata().getLabels().getDemographicSectionTitle().toUpperCase());
 
-        addDemogrButton= (Button) view.findViewById(R.id.checkinDemographicsAddClickable);
+        addDemogrButton = (Button) view.findViewById(R.id.checkinDemographicsAddClickable);
 
 
         FragmentManager fm = getChildFragmentManager();
@@ -280,11 +275,11 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
                 .replace(R.id.demographicsProfilePicCapturer, fragment, tag)
                 .commit();
 
-       FragmentManager drivingLicnesefm = getChildFragmentManager();
+        FragmentManager drivingLicnesefm = getChildFragmentManager();
         String drivingLicensetag = PracticeIdDocScannerFragment.class.getSimpleName();
         PracticeIdDocScannerFragment drivinglicensefragment = (PracticeIdDocScannerFragment) drivingLicnesefm.findFragmentByTag(drivingLicensetag);
 
-        demographicIdDocPayloadDTO= new DemographicIdDocPayloadDTO();
+        demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         if (drivinglicensefragment == null) {
             drivinglicensefragment = new PracticeIdDocScannerFragment();
             drivinglicensefragment.setButtonsStatusCallback(this);
@@ -360,6 +355,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         switch (selectedDataArray) {
             case 1:
                 demographicPersDetailsPayloadDTO.setPrimaryRace(selectedOption);
+                break;
             case 2:
                 demographicPersDetailsPayloadDTO.setEthnicity(selectedOption);
                 break;
@@ -927,8 +923,8 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 //        transaction.commit();
 
         CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
-        ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-        ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(true);
+        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+        ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
 
     }
 
@@ -1033,8 +1029,8 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         } else if (view == addDemogrButton) {
 
             CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
-            ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-            ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(true);
+            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+            ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
 //            if (checkReadyForNext() && isDateOfBirthValid() && !isFirstNameEmpty && !isLastNameEmpty) {
 //
 //
