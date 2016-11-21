@@ -18,8 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.DocumentScannerFragment;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.IdDocScannerFragment;
+
 import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepay.patient.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibrary.R;
@@ -31,6 +30,8 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
+import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
@@ -139,7 +140,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         setTypefaces();
 
         // hide add card button
-        showAddCardButton(false);
+        showAddCardButton(switchCompat.isChecked());
     }
 
     private void getOptions() {
@@ -185,7 +186,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
                 // clear the list
                 insuranceDTOsList.clear();
 
-                             for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
+                for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
                     if (isInsuaranceNonTrivial(payloadDTO)) {
                         insuranceDTOsList.add(payloadDTO);
                     }
@@ -287,6 +288,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
+                multipleInsClickable.setVisibility(on ? View.VISIBLE : View.GONE);
             }
         });
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();

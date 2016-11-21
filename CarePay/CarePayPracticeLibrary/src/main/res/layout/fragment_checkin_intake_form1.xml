@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
@@ -17,17 +17,8 @@
             android:text="Header"
             android:layout_gravity="center"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/checkinIntakeForm1Content"
-        android:orientation="vertical">
-
         <com.marcok.stepprogressbar.StepProgressBar
-            android:id="@+id/stepProgressBarIntake"
+            android:id="@+id/stepProgressBarIntakePractice"
             app:cumulativeDots="false"
             app:activeDotIndex="0"
             app:activeDotColor="@color/pastelblue"
@@ -39,6 +30,17 @@
             app:spacing="10dp"
             style="@style/InTakeDottedProgressBarStyle"
             />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/checkinIntakeForm1Content"
+        android:orientation="vertical">
+
 
 
 
@@ -56,12 +58,13 @@
         android:id="@+id/checkinIntakeForm1Footer"
         android:orientation="vertical">
 
+
         <Button
-            android:id="@+id/checkinIntakeForm1ContinueClickable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Continue"
-            android:layout_gravity="center"/>
+            android:id="@+id/intakeBtnNext"
+            android:enabled="true"
+            android:text="Next Question"
+            style="@style/InTakeNextButtonStyle"/>
+
     </LinearLayout>
 
 </LinearLayout>

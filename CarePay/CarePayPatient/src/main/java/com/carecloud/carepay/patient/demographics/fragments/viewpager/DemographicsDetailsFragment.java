@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.fragments.scanner.ProfilePictureFragment;
+
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
@@ -33,10 +33,12 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.DocumentScannerFragment;
+
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
+import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -396,6 +398,7 @@ public class DemographicsDetailsFragment extends Fragment
         ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
             fragment = new ProfilePictureFragment();
+            fragment.setGlobalLabelsDTO(globalLabelDTO);
             fragment.setButtonsStatusCallback(this);
             fragment.setPayloadDTO(persDetailsDTO);
         }
@@ -404,7 +407,7 @@ public class DemographicsDetailsFragment extends Fragment
                 .commit();
 
         // set the fonts
-        setTypefaces(view);
+        setTypefaces();
     }
 
     /**
@@ -537,7 +540,7 @@ public class DemographicsDetailsFragment extends Fragment
                                     });
     }
 
-    private void setTypefaces(View view) {
+    private void setTypefaces() {
         Context context = getActivity();
 
         setGothamRoundedMediumTypeface(context, header);

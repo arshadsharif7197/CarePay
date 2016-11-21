@@ -11,11 +11,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.fragments.scanner.InsuranceScannerFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**

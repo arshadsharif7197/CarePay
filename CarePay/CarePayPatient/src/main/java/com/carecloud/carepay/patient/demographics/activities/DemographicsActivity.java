@@ -39,6 +39,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ import java.util.List;
  * Created by Jahirul Bhuiyan on 8/31/2016.
  * Main activity for Demographics sign-up sub-flow
  */
-public class DemographicsActivity extends BasePatientActivity {
+public class DemographicsActivity extends BasePatientActivity implements DemographicsLabelsHolder {
 
     private int       currentPageIndex;
     // views
@@ -318,6 +319,7 @@ public class DemographicsActivity extends BasePatientActivity {
         insurancesMetaDTO = metadataDTO.getDataModels().demographic.insurances;
     }
 
+    @Override
     public DemographicLabelsDTO getLabelsDTO() {
         return labelsDTO;
     }
