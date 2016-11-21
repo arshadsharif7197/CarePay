@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general;
 
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

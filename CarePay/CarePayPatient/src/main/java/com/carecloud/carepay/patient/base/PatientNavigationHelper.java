@@ -81,12 +81,11 @@ public class PatientNavigationHelper {
             }
             case PatientNavigationStateConstants.DEMOGRAPHIC_VERIFY: {
                 intent = new Intent(context, DemographicReviewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
             case PatientNavigationStateConstants.CONSENT_FORMS: {
                 intent = new Intent(context, ConsentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
                 break;
             }
             case PatientNavigationStateConstants.INTAKE_FORMS: {

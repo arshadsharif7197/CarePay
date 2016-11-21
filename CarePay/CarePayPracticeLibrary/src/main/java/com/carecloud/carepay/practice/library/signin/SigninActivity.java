@@ -32,7 +32,7 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -129,7 +129,6 @@ public class SigninActivity extends BasePracticeActivity {
      * Initailizing the view
      */
     public void initViews(SignInScreenMode signInScreenMode) {
-//        signinButton = (TextView) findViewById(R.id.signinTextview);
         signInButton = (Button) findViewById(R.id.signinButton);
         homeButton = (ImageView) findViewById(R.id.signInHome);
         gobackButton = (TextView) findViewById(R.id.goBackButtonTextview);

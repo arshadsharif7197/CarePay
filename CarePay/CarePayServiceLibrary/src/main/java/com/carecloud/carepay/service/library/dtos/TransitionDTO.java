@@ -1,5 +1,6 @@
 package com.carecloud.carepay.service.library.dtos;
 
+import com.carecloud.carepay.service.library.appointment.DataDTO;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -18,6 +19,9 @@ public class TransitionDTO {
     @SerializedName("query_string")
     @Expose
     private  JsonObject queryString;
+    @SerializedName("data")
+    @Expose
+    private DataDTO data;
 
     /**
      *
@@ -71,5 +75,23 @@ public class TransitionDTO {
      */
     public void setQueryString(JsonObject queryString) {
         this.queryString = queryString;
+    }
+
+    /**
+     *
+     * @return
+     *     The data
+     */
+    public DataDTO getData() {
+        return data;
+    }
+
+    /**
+     *
+     * @param data
+     *     The data
+     */
+    public void setData(DataDTO data) {
+        this.data = data;
     }
 }

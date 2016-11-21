@@ -11,12 +11,15 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,27 +29,41 @@ import java.io.IOException;
  */
 public class ImageCaptureHelper {
 
-    public static final  int            REQUEST_CAMERA        = 0;
-    public static final  int            SELECT_FILE           = 1;
-    public static final  int            ROUND_IMAGE           = 11;
-    public static final  int            RECTANGULAR_IMAGE     = 22;
-    public static final  String         CHOOSER_NAME          = "Select File";
-    public static final  CharSequence[] chooseActionDlOptions = {
-            "Take Photo",
-            "Choose from Library",
-            "Cancel"
-    };
-    public static final  String         chooseActionDlgTitle  = "Add Photo!";
-    private static final String         LOG_TAG               = ImageCaptureHelper.class.getSimpleName();
-    private String    userChoosenTask;
-    private ImageView imageViewTarget;
-    private int       imgWidth;
-    private int       imgHeight;
-    private Activity  context;
+    public static final int            REQUEST_CAMERA        = 0;
+    public static final int            SELECT_FILE           = 1;
+    public static final int            ROUND_IMAGE           = 11;
+    public static final int            RECTANGULAR_IMAGE     = 22;
+    public static final String         CHOOSER_NAME          = "Select File";
+    public static final CharSequence[] chooseActionDlOptions = new CharSequence[3];
+    public static String chooseActionDlgTitle;
 
-    public ImageCaptureHelper(Activity activity, ImageView targetImageView) {
-        context = activity;
-        imageViewTarget = targetImageView;
+    private static final String LOG_TAG = ImageCaptureHelper.class.getSimpleName();
+    private String               userChoosenTask;
+    private ImageView            imageViewTarget;
+    private int                  imgWidth;
+    private int                  imgHeight;
+    private Activity             context;
+
+    public enum CameraType {
+        DEFAULT_CAMERA, CUSTOM_CAMERA;
+    }
+
+    /**
+     * C-Tor
+     * @param activity The activity using the helper
+     * @param targetImageView The target view where the captured image will be placed
+     * @param demographicLabelsDTO The label from remote
+     */
+    public ImageCaptureHelper(Activity activity, ImageView targetImageView, DemographicLabelsDTO demographicLabelsDTO) {
+        this.context = activity;
+        this.imageViewTarget = targetImageView;
+
+        chooseActionDlOptions[0] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsTakePhotoOption() : CarePayConstants.NOT_DEFINED);
+        chooseActionDlOptions[1] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsChooseFromLibraryOption() : CarePayConstants.NOT_DEFINED);
+        chooseActionDlOptions[2] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCancelLabel() : CarePayConstants.NOT_DEFINED);
+
+        chooseActionDlgTitle = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCaptureOptionsTitle() : CarePayConstants.NOT_DEFINED);
+
         imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
         imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
         resetTargetView();
@@ -84,6 +101,16 @@ public class ImageCaptureHelper {
         this.userChoosenTask = userChoosenTask;
     }
 
+    private static Bitmap imageBitmap;
+
+    public static Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public static void setImageBitmap(Bitmap imageBitmap) {
+        ImageCaptureHelper.imageBitmap = imageBitmap;
+    }
+
     /**
      * Callback method to be used upon returning from Camera activity
      *
@@ -92,8 +119,8 @@ public class ImageCaptureHelper {
      * @return The bitmap
      */
     public Bitmap onCaptureImageResult(Intent data, int shape) {
-       byte[] bytes =  data.getByteArrayExtra("data");
-        Bitmap thumbnail = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        Bundle extras = data.getExtras();
+        Bitmap thumbnail = (Bitmap) extras.get("data");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         if (thumbnail != null) {
             // compress
@@ -101,7 +128,26 @@ public class ImageCaptureHelper {
         }
 
         return setCapturedImageToTargetView(thumbnail, shape);
+    }
 
+    /**
+     * Callback method to be used upon returning from Camera activity
+     *
+     * @param shape The intended shape of the captured image
+     * @return The bitmap
+     */
+    public Bitmap onCaptureImageResult(int shape) {
+        if (imageBitmap == null) {
+            return null;
+        }
+        Bitmap thumbnail = imageBitmap;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        if (thumbnail != null) {
+            // compress
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
+        }
+
+        return setCapturedImageToTargetView(thumbnail, shape);
     }
 
     /**
@@ -146,8 +192,21 @@ public class ImageCaptureHelper {
     }
 
     public Intent cameraIntent(Context context) {
-        return  new Intent(context, CarePayCameraActivity.class);
-}
+        return new Intent(context, CarePayCameraActivity.class);
+    }
+
+    /**
+     * Genrate an intent to launch a camera
+     *
+     * @param cameraType CAMERA_DEFAULT or CAMERA_CUSTOM
+     * @return The intent
+     */
+    public Intent getCameraIntent(CameraType cameraType) {
+        if (cameraType == CameraType.CUSTOM_CAMERA) {
+            return cameraIntent(context);
+        }
+        return cameraIntent(); // launch default
+    }
 
     /**
      * Builds a scaled square bitmap from another bitmap
@@ -225,11 +284,11 @@ public class ImageCaptureHelper {
         int croppedHeight = origHeigth;
         int cropSize;
         // calculate
-        if(origWidth < origHeigth ) {
+        if (origWidth < origHeigth) {
             cropSize = origHeigth - origWidth;
             yyCoord = cropSize;
             croppedHeight = origWidth;
-        } else if(origWidth > origHeigth) {
+        } else if (origWidth > origHeigth) {
             cropSize = origWidth - origHeigth;
             xxCoord = cropSize;
             croppedWidth = origHeigth;

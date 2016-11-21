@@ -28,6 +28,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("providers_schedule")
     @Expose
     private List<ProvidersScheduleDTO> providersSchedule = new ArrayList<>();
+    @SerializedName("cancellation_reasons")
+    @Expose
+    private List<CancellationReasonDTO> cancellationReasons = new ArrayList<CancellationReasonDTO>();
 
     /**
      * 
@@ -117,6 +120,24 @@ public class AppointmentPayloadModel implements Serializable {
      */
     public void setProvidersSchedule(List<ProvidersScheduleDTO> providersSchedule) {
         this.providersSchedule = providersSchedule;
+    }
+
+    /**
+     *
+     * @return
+     *     The cancellationReasons
+     */
+    public List<CancellationReasonDTO> getCancellationReasons() {
+        return cancellationReasons;
+    }
+
+    /**
+     *
+     * @param cancellationReasons
+     *     The cancellation_reasons
+     */
+    public void setCancellationReasons(List<CancellationReasonDTO> cancellationReasons) {
+        this.cancellationReasons = cancellationReasons;
     }
 
 }

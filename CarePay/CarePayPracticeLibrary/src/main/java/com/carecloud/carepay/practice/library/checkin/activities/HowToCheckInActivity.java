@@ -1,37 +1,33 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
-import com.carecloud.carepay.practice.library.checkin.dtos.ScanQRCodeResultDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.QRCodeScanResultDTO;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
+import com.carecloud.carepaylibray.qrcodescanner.ScannerActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.HashMap;
@@ -55,6 +51,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     private ProgressDialog                  dialog;
 
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
+    private static final int QR_SCAN_REQUEST_CODE =0;
+    private static final int QR_RESULT_CODE_TABLET=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,41 +216,12 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
             Intent intent = new Intent();
             intent.setAction("com.carecloud.carepay.practice.clover.qrscanner.CloverQRScannerActivity");
-            startActivity(intent);
+            //startActivity(intent);
+            startActivityForResult(intent, QR_SCAN_REQUEST_CODE);
         } else {
-            try {
-                //start the scanning activity from the com.google.zxing.client.android.SCAN intent
-                Intent intent = new Intent(ACTION_SCAN);
-                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-                startActivityForResult(intent, 0);
-            } catch (ActivityNotFoundException anfe) {
-                //on catch, show the download dialog
-                showDialog(HowToCheckInActivity.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
-            }
+            Intent intent = new Intent(HowToCheckInActivity.this, ScannerActivity.class);
+            startActivityForResult(intent, QR_SCAN_REQUEST_CODE);
         }
-    }
-
-    //alert dialog for downloadDialog if scanner app not found
-    private static AlertDialog showDialog(final Activity act, CharSequence title, CharSequence message, CharSequence buttonYes, CharSequence buttonNo) {
-        AlertDialog.Builder downloadDialog = new AlertDialog.Builder(act);
-        downloadDialog.setTitle(title);
-        downloadDialog.setMessage(message);
-        downloadDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int listener) {
-                Uri uri = Uri.parse("market://search?q=pname:" + "com.google.zxing.client.android");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                try {
-                    act.startActivity(intent);
-                } catch (ActivityNotFoundException anfe) {
-                    anfe.printStackTrace();
-                }
-            }
-        });
-        downloadDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int listener) {
-            }
-        });
-        return downloadDialog.show();
     }
 
     /**
@@ -263,14 +232,11 @@ public class HowToCheckInActivity extends BasePracticeActivity {
      * @param intent      result intent
      */
         public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            //get the extras that are returned from the intent
-            String contents = intent.getStringExtra("SCAN_RESULT");
-            String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-
+        if (requestCode== QR_SCAN_REQUEST_CODE && resultCode == RESULT_OK) {
             try {
                 /*Process scanned QR code*/
-                processScannedQRCOde(contents);
+                String scanResult = intent.getStringExtra("SCAN_RESULT");
+                processScannedQRCOde(scanResult);
             } catch (JsonSyntaxException ex) {
                 SystemUtil.showDialogMessage(this,
                         signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle(),
@@ -288,23 +254,28 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     private void processScannedQRCOde(String qrCodeData) {
         instantiateProgressDialog();
         Gson gson = new Gson();
-        ScanQRCodeResultDTO scanQRCodeResultDTO = gson.fromJson(qrCodeData,
-                ScanQRCodeResultDTO.class);
+        QRCodeScanResultDTO scanQRCodeResultDTO = gson.fromJson(qrCodeData, QRCodeScanResultDTO.class);
 
-        JsonObject queryStringObject = signinPatientModeDTO.getMetadata().getTransitions()
-                .getAction().getQueryString();
+        if(scanQRCodeResultDTO!=null && scanQRCodeResultDTO.getPracticeMgmt()
+                .equals(ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt())
+                && scanQRCodeResultDTO.getPracticeId()
+                .equals(ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId())){
+            CognitoAppHelper.setUser(scanQRCodeResultDTO.getUserName());
+           // ApplicationMode.getInstance().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
+            Map<String, String> queryMap = new HashMap<String, String>();
+            queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());
+            WorkflowServiceHelper.getInstance().execute(signinPatientModeDTO.getMetadata()
+                            .getTransitions().getAction(), appointmentCallBack, queryMap);
 
-        QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-
-        WorkflowServiceHelper.getInstance().execute(signinPatientModeDTO.getMetadata()
-                .getTransitions().getAction(), appointmentCallBack,
-                getQueryParam(queryStrings, scanQRCodeResultDTO));
+        }else{
+            SystemUtil.showDialogMessage(this,"Invalid QR Code","This QR code is not valid for this practice.");
+        }
     }
 
     /**
      * @param queryStrings the query strings for the url
      * @return queryMap
-     */
+     *//*
     private Map<String, String> getQueryParam(QueryStrings queryStrings, ScanQRCodeResultDTO scanQRCodeResultDTO) {
         Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.put(queryStrings.getAppointmentId().getName(), scanQRCodeResultDTO.getAppointmentId());
@@ -312,7 +283,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         queryMap.put(queryStrings.getPracticeId().getName(), scanQRCodeResultDTO.getPracticeId());
 
         return queryMap;
-    }
+    }*/
 
     /**
      * Call back for appointment API.

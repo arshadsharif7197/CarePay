@@ -5,7 +5,7 @@ import android.text.Editable;
 import android.util.Log;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

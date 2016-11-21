@@ -40,7 +40,6 @@
                 <EditText
                     android:id="@+id/emailEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:hint="@string/signin_signup_email_hint"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:nextFocusForward="@+id/passwordEditText"/>
@@ -56,7 +55,7 @@
                 <EditText
                     android:id="@+id/createPasswordEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:hint="@string/create_password_text"
+
                     android:inputType="textPassword"
                     android:layout_gravity="center_vertical"
                     android:nextFocusForward="@+id/repeatPasswordEditText"/>
@@ -72,12 +71,13 @@
                 <EditText
                     android:id="@+id/repeatPasswordEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:hint="@string/repeat_password_text"
+
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"/>
             </android.support.design.widget.TextInputLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                android:id="@+id/singupPasswordFormatHint"
                 android:text="@string/signup_password_format_instructions"
                 style="@style/SignupInstructionsStyle"
                 android:layout_width="match_parent"/>

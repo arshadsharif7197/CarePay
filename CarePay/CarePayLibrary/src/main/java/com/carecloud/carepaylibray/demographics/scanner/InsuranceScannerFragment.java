@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.scanner;
+package com.carecloud.carepaylibray.demographics.scanner;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,15 +22,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -89,11 +89,11 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         // fetch global labels
         Activity activity = getActivity();
-        if (activity instanceof DemographicsActivity) {
-            globalLabelsDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
-        } else if (activity instanceof DemographicReviewActivity) {
+        if (activity instanceof DemographicsLabelsHolder) {
+            globalLabelsDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
+        } else if (activity instanceof DemographicsReviewLabelsHolder) {
             // init global labels DTO here
-            globalLabelsDTO = ((DemographicReviewActivity) getActivity()).getLabelsDTO();
+            globalLabelsDTO = ((DemographicsReviewLabelsHolder) getActivity()).getLabelsDTO();
         }
 
         // create the view
@@ -126,7 +126,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.setHint(label);
 
         frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
-        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
+        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView, globalLabelsDTO);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
@@ -134,12 +134,12 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(insuranceFrontScanHelper);
+                selectImage(insuranceFrontScanHelper, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
         backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
-        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView);
+        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView, globalLabelsDTO);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
         btnScanBackInsurance.setText(label);
@@ -147,7 +147,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                selectImage(insuranceBackScanHelper);
+                selectImage(insuranceBackScanHelper, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
 
             }
         });
@@ -299,7 +299,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                     try {
                         URL url = new URL(photoFrontURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
-                        Picasso.with(getContext()).load(photoFrontURL)
+                        Picasso.with(getActivity()).load(photoFrontURL)
                                 .resize(insuranceFrontScanHelper.getImgWidth(), insuranceFrontScanHelper.getImgHeight())
                                 .into(frontInsuranceImageView);
                         String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
@@ -317,7 +317,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                     try {
                         URL url = new URL(photoBackURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
-                        Picasso.with(getContext()).load(photoBackURL)
+                        Picasso.with(getActivity()).load(photoBackURL)
                                 .resize(insuranceBackScanHelper.getImgWidth(), insuranceBackScanHelper.getImgHeight())
                                 .into(backInsuranceImageView);
                         String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();

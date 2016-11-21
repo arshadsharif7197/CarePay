@@ -95,6 +95,11 @@ public class SystemUtil {
         view.setTypeface(typeface);
     }
 
+    public static void setGothamRoundedLightTypeface(Context context, TextView view) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_light.otf");
+        view.setTypeface(typeface);
+    }
+
     public static void setGothamRoundedBoldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_bold.otf");
         view.setTypeface(typeface);
