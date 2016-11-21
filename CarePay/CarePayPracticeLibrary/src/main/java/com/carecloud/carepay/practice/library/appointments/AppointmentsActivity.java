@@ -3,34 +3,25 @@ package com.carecloud.carepay.practice.library.appointments;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
-import com.carecloud.carepay.practice.library.appointments.services.AppointmentService;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -41,10 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AppointmentsActivity extends BasePracticeActivity implements View.OnClickListener {
     private RecyclerView appointmentsRecyclerView;
@@ -83,11 +70,14 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         noAppointmentsDescription = (CarePayTextView ) findViewById(R.id.no_apt_message_desc);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
-        try{
+
+        try {
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-            getAppointments();
-        }catch(JsonSyntaxException jsonSyntaxException){
-            Log.e(TAG, "jsonSyntaxException: " + jsonSyntaxException.getMessage());
+            getAppointmentList();
+        } catch (JsonSyntaxException ex) {
+            SystemUtil.showDialogMessage(this, getString(R.string.alert_title_server_error),
+                    getString(R.string.alert_title_server_error));
+            ex.printStackTrace();
         }
     }
 
@@ -121,10 +111,10 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         int viewId = view.getId();
 
         if (viewId == R.id.logoutTextview) {
-            Map<String, String> query = new HashMap<>();
             Map<String, String> headers = new HashMap<>();
-            headers.put("x-api-key", HttpConstants.getApiStartKey());
-            headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+            headers.put("x-api-key", "*");
+            headers.put("transition", "true");
+            //headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
             WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getLogout(), logOutCall, headers);
         } else if (viewId == R.id.btnHome) {
             //WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getAuthenticate(), homeCall);
@@ -176,7 +166,10 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         noAppointmentsDescription.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getNoAppointmentsMessageText()));
     }
 
-    private void getAppointments(){
+    /**
+     * Method to update appointment list to UI
+     */
+    private void getAppointmentList(){
         if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
                 && appointmentsResultModel.getPayload().getAppointments() != null
                 && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
@@ -187,26 +180,34 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             appointmentListWithToday = new ArrayList<>();
             populateWithLabels();
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
+                appointmentListWithToday.add(appointmentDTO);
+                /*
                 String title = getToday(appointmentDTO.getPayload().getStartTime());
                 if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
                     appointmentListWithToday.add(appointmentDTO);
                 }
-                else{
+             /*   else{
                     appointmentForTextview.setVisibility(View.INVISIBLE);
                     selectAppointmentTextview.setVisibility(View.INVISIBLE);
                     noAppointmentView.setVisibility(View.VISIBLE);
-                }
-
+                }*/
             }
             if (appointmentListWithToday != null) {
-                appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentListWithToday, appointmentsResultModel);
+                appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentsItems, appointmentsResultModel);
                 appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
+            }else{
+                appointmentForTextview.setVisibility(View.INVISIBLE);
+                selectAppointmentTextview.setVisibility(View.INVISIBLE);
+                noAppointmentView.setVisibility(View.VISIBLE);
             }
 
             //Layout manager for the Recycler View
             appointmentsLayoutManager = new LinearLayoutManager(AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
             appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
+        }else{
+            appointmentForTextview.setVisibility(View.INVISIBLE);
+            selectAppointmentTextview.setVisibility(View.INVISIBLE);
+            noAppointmentView.setVisibility(View.VISIBLE);
         }
     }
-
 }

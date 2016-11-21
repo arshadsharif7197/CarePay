@@ -6,73 +6,193 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:baselineAligned="false"
               tools:context="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight=".4"
         android:background="@drawable/background_default"
         android:orientation="vertical"
-        android:padding="40dp">
+        android:paddingEnd="@dimen/dimen_5dp"
+        android:paddingStart="@dimen/checkin_main_panel_start_padding">
 
-        <ImageView
-            android:id="@+id/titleHeaderTextview"
-            android:layout_width="@dimen/home_logo_width"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/home_logo"
-            android:src="@drawable/cp_logo"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/checkin_logo_height"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/checkinBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/checkin_ic_btn_bg_clear"
+                android:drawablePadding="@dimen/dimen_10dp"
+                android:drawableStart="@drawable/icn_arrow_left"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_14dp"
+                android:paddingStart="@dimen/dimen_14dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:text="Go Back"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                android:visibility="visible"
+                app:customAssetFont="gotham_rounded_medium"/>
+
+            <ImageView
+                android:id="@+id/checkinLogo"
+                android:layout_width="@dimen/home_logo_width"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/home_logo"
+                android:src="@drawable/checkin_cp_logo_aligned_right"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="24"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="115dp"
             android:text="Let's get you checked in!"
             android:textColor="@color/white"
-            android:textSize="32sp"
+            android:textSize="@dimen/dimen_30dp"
             app:customAssetFont="gotham_rounded_bold"/>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="Demographics  Insurance"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:customAssetFont="gotham_rounded_bold"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"/>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Demographics  Insurance"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:customAssetFont="gotham_rounded_bold"/>
+        <View
+            android:layout_width="@dimen/checkin_separator_width"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/white_opacity_50"/>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Demographics  Insurance"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:customAssetFont="gotham_rounded_bold"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"/>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/checkinSectionDemogrInsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:text="Demographics  &amp; Insurance"
+                android:textColor="@color/white_opacity_60"
+                android:textSize="@dimen/text_size_16sp"
+                app:customAssetFont="gotham_rounded_light"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/checkinSectionConsentFormsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:text="Consent Forms"
+                    android:textColor="@color/white_opacity_60"
+                    android:textSize="@dimen/text_size_16sp"
+                    app:customAssetFont="gotham_rounded_light"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/checkinConsentFormCounterTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:background="@drawable/checkin_counter_forms_bg"
+                    android:paddingEnd="@dimen/dimen_10dp"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:text="1 of 2"
+                    android:textColor="@color/white"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/checkinSectionIntakeFormsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:clickable="true"
+                    android:text="Patient Intake"
+                    android:textColor="@color/white_opacity_60"
+                    android:textSize="@dimen/text_size_16sp"
+                    app:customAssetFont="gotham_rounded_light"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/checkinIntakeFormCounterTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:background="@drawable/checkin_counter_forms_bg"
+                    android:paddingEnd="@dimen/dimen_10dp"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:text="1 of 2"
+                    android:textColor="@color/white"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/checkinSectionPaymentsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:text="Payment"
+                android:textColor="@color/white_opacity_60"
+                android:textSize="@dimen/text_size_16sp"
+                app:customAssetFont="gotham_rounded_light"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="54"/>
+
+        <ImageView
+            android:id="@+id/checkinHomeClickable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Demographics  Insurance"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:customAssetFont="gotham_rounded_bold"/>
+            android:src="@drawable/checkin_ic_icn_home"
+            android:clickable="true"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"/>
+
 
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/checkInContentHolderId"
+        style="@style/CheckinContainerStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:background="@color/white">
+        android:layout_weight=".6">
 
     </FrameLayout>
+
 </LinearLayout>

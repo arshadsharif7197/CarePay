@@ -1,9 +1,8 @@
-package com.carecloud.carepaylibray.utils;
+package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.carecloud.carepaylibray.constants.CarePayConstants;
 
 /**
  * Created by Jahirul Bhuiyan on 9/6/2016.

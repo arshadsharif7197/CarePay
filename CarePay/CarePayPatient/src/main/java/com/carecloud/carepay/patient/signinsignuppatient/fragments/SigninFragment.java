@@ -39,7 +39,7 @@ import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 
 
-
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -85,7 +85,10 @@ public class SigninFragment extends Fragment {
     CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
-            WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback);
+            Map<String, String> query = new HashMap<>();
+            Map<String, String> header = new HashMap<>();
+            header.put("Accept-Language",langaueid);
+            WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback,query,header);
             progressBar.setVisibility(View.INVISIBLE);
         }
 
@@ -107,12 +110,13 @@ public class SigninFragment extends Fragment {
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
     private SignInLablesDTO signInLablesDTO;
+    String langaueid;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
-
+       langaueid=ApplicationPreferences.Instance.getUserLanguage();
         signInLablesDTO = ((SigninSignupActivity) getActivity()).getSignInLablesDTO();
         signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
         parentLayout = (LinearLayout) view.findViewById(R.id.signin_layout);
@@ -128,6 +132,10 @@ public class SigninFragment extends Fragment {
 
         isEmptyEmail = true;
         isEmptyPassword = true;
+
+        emailEditText.setText("aa29@cc.com");
+        passwordEditText.setText("Test123!");
+
         return view;
     }
 
@@ -183,13 +191,13 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // relaunch select language
+
                 Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("x-api-key", HttpConstants.getApiStartKey());
                 Map<String, String> header = new HashMap<>();
                 header.put("transition", "true");
-                queryMap.put("transition", "true");
+                header.put("x-api-key", HttpConstants.getApiStartKey());
                 TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getLanguage();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, loginCallback, header, queryMap);
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, loginCallback, queryMap, header);
             }
         });
     }
@@ -214,7 +222,7 @@ public class SigninFragment extends Fragment {
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
         if (signInSignUpDTO != null) {
-            String emailAddress = signInSignUpDTO.getMetadata().getDataModels().getSignin().getProperties().getEmail().getLabel();
+            String emailAddress = signInLablesDTO.getEmail();
             if (SystemUtil.isNotEmptyString(emailAddress)) {
                 emailTextInput.setTag(emailAddress);
             }

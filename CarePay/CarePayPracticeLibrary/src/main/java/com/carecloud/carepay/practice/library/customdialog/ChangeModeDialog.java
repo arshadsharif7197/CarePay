@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -78,6 +79,7 @@ public class ChangeModeDialog extends Dialog implements View.OnClickListener {
         int viewId = view.getId();
         if (viewId == R.id.dialog_patient_mode_option) {
             patientModeClickListener.onPatientModeSelected();
+            ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         } else if (viewId == R.id.dialog_logout_option) {
             logoutClickListener.onLogoutSelected();
         }

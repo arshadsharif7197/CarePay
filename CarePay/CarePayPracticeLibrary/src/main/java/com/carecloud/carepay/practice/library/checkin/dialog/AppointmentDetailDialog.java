@@ -23,7 +23,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -198,7 +198,7 @@ public class AppointmentDetailDialog extends Dialog {
     private Map<String, String> getQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-        queryMap.put(queryStrings.getPracticeMgmt().getName(), patientBalanceDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeManagement().getName(), patientBalanceDTO.getMetadata().getPracticeMgmt());
         queryMap.put(queryStrings.getPracticeId().getName(), patientBalanceDTO.getMetadata().getPracticeId());
 
         return queryMap;

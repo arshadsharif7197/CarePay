@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    >
+    android:gravity="center">
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_width="@dimen/dimen_370dp"
@@ -21,7 +22,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/appointmentLocationTextview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +31,8 @@
                 android:paddingBottom="7dp"
                 android:paddingTop="@dimen/dimen_5dp"
                 android:textColor="@color/charcoal"
-                android:textSize="@dimen/payment_receipt_layout_margin" />
+                android:textSize="@dimen/payment_receipt_layout_margin"
+                app:customAssetFont="gotham_rounded_bold"/>
 
             <LinearLayout
                 android:id="@+id/headerlayout"
@@ -40,23 +42,26 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointmentDateTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
                     android:gravity="center_horizontal"
                     android:textColor="@color/charcoal"
-                    android:textSize="@dimen/apt_dl_text_date" />
+                    android:textSize="@dimen/apt_dl_text_date"
+                    app:customAssetFont="proxima_nova_extra_bold"/>
 
-                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointmentTimeTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_20dp"
                     android:gravity="center_horizontal"
                     android:textColor="@color/slateGray"
-                    android:textSize="@dimen/dimen_18dp" />
+                    android:textSize="@dimen/dimen_18dp"
+                    app:customAssetFont="gotham_rounded_bold"/>
+                />
 
             </LinearLayout>
 
@@ -104,22 +109,24 @@
                 android:paddingLeft="@dimen/apt_dl_margin"
                 android:paddingRight="@dimen/apt_dl_margin">
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointmentNameTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:textColor="@color/bright_cerulean"
-                    android:textSize="@dimen/dimen_24dp" />
+                    android:textSize="@dimen/dimen_24dp"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointmentTypeTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
                     android:gravity="center_horizontal"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/dimen_18dp" />
+                    android:textSize="@dimen/dimen_18dp"
+                    app:customAssetFont="proxima_nova_regular"/>
 
                 <TextView
                     android:id="@+id/checkInTextview"

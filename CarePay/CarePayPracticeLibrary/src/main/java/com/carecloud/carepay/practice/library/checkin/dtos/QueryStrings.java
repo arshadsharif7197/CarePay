@@ -1,24 +1,22 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
-import com.carecloud.carepaylibray.appointments.models.QueryString;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by sudhir_pingale on 11/11/2016.
- * Model for Query Strings
- */
 public class QueryStrings {
 
+    @SerializedName("practice_mgmt")
+    @Expose
+    private QueryString practiceManagement;
+    @SerializedName("patient_id")
+    @Expose
+    private QueryString patientId;
     @SerializedName("start_date")
     @Expose
     private QueryString startDate;
     @SerializedName("end_date")
     @Expose
     private QueryString endDate;
-    @SerializedName("practice_mgmt")
-    @Expose
-    private QueryString practiceMgmt;
     @SerializedName("practice_id")
     @Expose
     private QueryString practiceId;
@@ -27,7 +25,43 @@ public class QueryStrings {
     private QueryString appointmentId;
 
     /**
-     * 
+     *
+     * @return
+     *     The practiceManagement
+     */
+    public QueryString getPracticeManagement() {
+        return practiceManagement;
+    }
+
+    /**
+     *
+     * @param practiceManagement
+     *     The practiceManagement
+     */
+    public void setPracticeManagement(QueryString practiceManagement) {
+        this.practiceManagement = practiceManagement;
+    }
+
+    /**
+     *
+     * @return
+     *     The patientId
+     */
+    public QueryString getPatientId() {
+        return patientId;
+    }
+
+    /**
+     *
+     * @param patientId
+     *     The patientId
+     */
+    public void setPatientId(QueryString patientId) {
+        this.patientId = patientId;
+    }
+
+    /**
+     *
      * @return
      *     The startDate
      */
@@ -36,16 +70,16 @@ public class QueryStrings {
     }
 
     /**
-     * 
+     *
      * @param startDate
-     *     The start_date
+     *     The startDate
      */
     public void setStartDate(QueryString startDate) {
         this.startDate = startDate;
     }
 
     /**
-     * 
+     *
      * @return
      *     The endDate
      */
@@ -54,30 +88,12 @@ public class QueryStrings {
     }
 
     /**
-     * 
+     *
      * @param endDate
-     *     The end_date
+     *     The endDate
      */
     public void setEndDate(QueryString endDate) {
         this.endDate = endDate;
-    }
-
-    /**
-     *
-     * @return
-     *     The practiceMgmt
-     */
-    public QueryString getPracticeMgmt() {
-        return practiceMgmt;
-    }
-
-    /**
-     *
-     * @param practiceMgmt
-     *     The practice_mgmt
-     */
-    public void setPracticeMgmt(QueryString practiceMgmt) {
-        this.practiceMgmt = practiceMgmt;
     }
 
     /**
@@ -92,7 +108,7 @@ public class QueryStrings {
     /**
      *
      * @param practiceId
-     *     The practice_id
+     *     The practiceId
      */
     public void setPracticeId(QueryString practiceId) {
         this.practiceId = practiceId;
@@ -110,11 +126,9 @@ public class QueryStrings {
     /**
      *
      * @param appointmentId
-     *     The appointment_id
+     *     The appointmentId
      */
     public void setAppointmentId(QueryString appointmentId) {
         this.appointmentId = appointmentId;
     }
-
-
 }

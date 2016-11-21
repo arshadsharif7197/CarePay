@@ -15,6 +15,9 @@ public class SigninPatientModeMetadataDTO {
     @SerializedName("transitions")
     @Expose
     private SigninPatientModeTransitionsDTO transitions;
+    @SerializedName("data_models")
+    @Expose
+    private SignInPatientModeDataModelDTO dataModels;
 
     /**
      * 
@@ -68,6 +71,20 @@ public class SigninPatientModeMetadataDTO {
      */
     public void setTransitions(SigninPatientModeTransitionsDTO transitions) {
         this.transitions = transitions;
+    }
+
+    /**
+     * @return The dataModels
+     */
+    public SignInPatientModeDataModelDTO getLoginDataModels() {
+        return dataModels;
+    }
+
+    /**
+     * @param dataModels The data_models
+     */
+    public void setLoginDataModels(SignInPatientModeDataModelDTO dataModels) {
+        this.dataModels = dataModels;
     }
 
 }

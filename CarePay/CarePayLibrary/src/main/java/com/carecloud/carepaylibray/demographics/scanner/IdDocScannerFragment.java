@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.scanner;
+package com.carecloud.carepaylibray.demographics.scanner;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,15 +22,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -54,19 +54,19 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
-    private static String[]                              states;
-    private        View                                  view;
-    private        ImageCaptureHelper                    scannerFront;
-    private        ImageCaptureHelper                    scannerBack;
-    private        Button                                scanFrontButton;
-    private        Button                                scanBackButton;
-    private        EditText                              idNumberEdit;
-    private        TextInputLayout                       idNumberInputText;
-    private        TextView                              idStateClickable;
-    private        TextView                              stateLabel;
-    private        DemographicIdDocPayloadDTO            model;
-    private        DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
-    private        DemographicLabelsDTO                  globalLabelsDTO;
+    private static String[] states;
+    private View view;
+    private ImageCaptureHelper scannerFront;
+    private ImageCaptureHelper scannerBack;
+    private Button scanFrontButton;
+    private Button scanBackButton;
+    private EditText idNumberEdit;
+    private TextInputLayout idNumberInputText;
+    private TextView idStateClickable;
+    private TextView stateLabel;
+    private DemographicIdDocPayloadDTO model;
+    private DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
+    private DemographicLabelsDTO globalLabelsDTO;
 
     @Nullable
     @Override
@@ -74,18 +74,22 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                              @Nullable Bundle savedInstanceState) {
         // fetch the labels
         Activity activity = getActivity();
-        if (activity instanceof DemographicsActivity) {
-            globalLabelsDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
-        } else if (activity instanceof DemographicReviewActivity) {
+        if (activity instanceof DemographicsLabelsHolder) {
+            globalLabelsDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
+        } else if (activity instanceof DemographicsReviewLabelsHolder) {
             // instantiate the global labels here
         }
 
         // create the view
-        view = inflater.inflate(R.layout.fragment_demographics_scan_license, container, false);
+        view = inflater.inflate(getLayoutRes(), container, false);
 
         initializeUIFields();
 
         return view;
+    }
+
+    protected int getLayoutRes() {
+        return R.layout.fragment_demographics_scan_license;
     }
 
     private void getOptions() {
@@ -112,10 +116,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         setEditText();
 
         ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
-        scannerFront = new ImageCaptureHelper(getActivity(), imageFront);
+        scannerFront = new ImageCaptureHelper(getActivity(), imageFront, globalLabelsDTO);
 
         ImageView imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
-        scannerBack = new ImageCaptureHelper(getActivity(), imageBack);
+        scannerBack = new ImageCaptureHelper(getActivity(), imageBack, globalLabelsDTO);
 
         // init views (labels and logic)
         String label;
@@ -127,7 +131,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerFront);
+                selectImage(scannerFront, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -137,7 +141,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerBack);
+                selectImage(scannerBack, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -167,7 +171,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
 
-        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentNumber.getLabel();
+        label = StringUtil.captialize(idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentNumber.getLabel());
         idNumberInputText.setTag(label);
         idNumberEdit.setTag(idNumberInputText);
         idNumberEdit.setHint(label);
@@ -274,7 +278,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + frontPic);
                     scannerFront.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                                                                                 R.drawable.icn_camera));
+                            R.drawable.icn_camera));
                 }
             }
             // add back image
@@ -289,7 +293,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
                     scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                                                                                R.drawable.icn_camera));
+                            R.drawable.icn_camera));
                 }
             }
         }

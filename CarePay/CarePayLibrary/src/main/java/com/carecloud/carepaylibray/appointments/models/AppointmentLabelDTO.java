@@ -155,6 +155,15 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("qr_code_error_message")
     @Expose
     private String qrCodeErrorMessage;
+    @SerializedName("cancel_appointment_reasons_title")
+    @Expose
+    private String cancelAppointmentReasonsTitle;
+    @SerializedName("cancel_appointment_other_reason_label")
+    @Expose
+    private String cancelAppointmentOtherReasonLabel;
+    @SerializedName("cancel_appointment_other_reason_hint")
+    @Expose
+    private String cancelAppointmentOtherReasonHint;
 
     /**
      * @return The appointmentsHeading
@@ -840,5 +849,49 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setQrCodeErrorMessage(String qrCodeErrorMessage) {
         this.qrCodeErrorMessage = qrCodeErrorMessage;
+    }
+
+    /**
+     * @return The cancelAppointmentReasonsTitle
+     */
+    public String getCancelAppointmentReasonsTitle() {
+        return StringUtil.getLabelForView(cancelAppointmentReasonsTitle);
+    }
+
+    /**
+     * @param cancelAppointmentReasonsTitle The cancel_appointment_reasons_title
+     */
+    public void setCancelAppointmentReasonsTitle(String cancelAppointmentReasonsTitle) {
+        this.cancelAppointmentReasonsTitle = cancelAppointmentReasonsTitle;
+    }
+
+    /**
+     * @return The cancelAppointmentOtherReasonLabel
+     */
+    public String getCancelAppointmentOtherReasonLabel() {
+        return StringUtil.getLabelForView(cancelAppointmentOtherReasonLabel);
+    }
+
+    /**
+     * @param cancelAppointmentOtherReasonLabel The cancel_appointment_other_reason_label
+     */
+    public void setCancelAppointmentOtherReasonLabel(String cancelAppointmentOtherReasonLabel) {
+        this.cancelAppointmentOtherReasonLabel = cancelAppointmentOtherReasonLabel;
+    }
+
+    /**
+     *
+     * @return The cancelAppointmentOtherReasonHint
+     */
+    public String getCancelAppointmentOtherReasonHint() {
+        return StringUtil.getLabelForView(cancelAppointmentOtherReasonHint);
+    }
+
+    /**
+     *
+     * @param cancelAppointmentOtherReasonHint The cancel_appointment_other_reason_hint
+     */
+    public void setCancelAppointmentOtherReasonHint(String cancelAppointmentOtherReasonHint) {
+        this.cancelAppointmentOtherReasonHint = cancelAppointmentOtherReasonHint;
     }
 }

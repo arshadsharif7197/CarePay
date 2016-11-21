@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.scanner;
+package com.carecloud.carepaylibray.demographics.scanner;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -31,6 +31,7 @@ public abstract class DocumentScannerFragment extends Fragment {
     protected ImageCaptureHelper imageCaptureHelper;
     protected NextAddRemoveStatusModifier buttonsStatusCallback;
     protected Bitmap bitmap;
+    protected ImageCaptureHelper.CameraType cameraType;
 
     @Nullable
     @Override
@@ -45,8 +46,9 @@ public abstract class DocumentScannerFragment extends Fragment {
      *
      * @param imageCaptureHelper The camera helper used with a particular imageview
      */
-    public void selectImage(final ImageCaptureHelper imageCaptureHelper) {
+    public void selectImage(final ImageCaptureHelper imageCaptureHelper, final ImageCaptureHelper.CameraType cameraType) {
         this.imageCaptureHelper = imageCaptureHelper;
+        this.cameraType = cameraType;
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
@@ -59,8 +61,7 @@ public abstract class DocumentScannerFragment extends Fragment {
                             boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
                             if (result) {
                                 // uncomment when camera activity
-                                startActivityForResult(imageCaptureHelper.cameraIntent(getContext()), ImageCaptureHelper.REQUEST_CAMERA);
-//                                startActivityForResult(imageCaptureHelper.cameraIntent(), ImageCaptureHelper.REQUEST_CAMERA);
+                                startActivityForResult(imageCaptureHelper.getCameraIntent(cameraType), ImageCaptureHelper.REQUEST_CAMERA);
                             }
                         } else if (item == 1) {  // "Select from Gallery" chosen
                             imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
@@ -138,7 +139,11 @@ public abstract class DocumentScannerFragment extends Fragment {
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
                 bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
+                if(cameraType == ImageCaptureHelper.CameraType.CUSTOM_CAMERA) {
+                    bitmap = imageCaptureHelper.onCaptureImageResult(getImageShape());
+                } else {
+                    bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
+                }
             }
             updateModelAndViewsAfterScan(imageCaptureHelper);
         }

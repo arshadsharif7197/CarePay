@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.scanner;
+package com.carecloud.carepaylibray.demographics.scanner;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,11 +14,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.constants.CarePayConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -42,6 +42,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     private Button buttonChangeCurrentPhoto;
     private DemographicPersDetailsPayloadDTO model;
     private String recaptureCaption;
+    private DemographicLabelsDTO globalLabelsDTO;
 
     @Nullable
     @Override
@@ -49,20 +50,20 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         // set label for capture button
         Activity activity = getActivity();
         DemographicLabelsDTO labelsMetaDTO = null;
-        if (activity instanceof DemographicsActivity) {
-            labelsMetaDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
+        if (activity instanceof DemographicsLabelsHolder) {
+            labelsMetaDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
         }
 
         recaptureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileReCaptureCaption();
 
-        View view = inflater.inflate(R.layout.fragment_demographics_picture, container, false);
+        View view = inflater.inflate(getLayoutRes(), container, false);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage);
+        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(imageCaptureHelper);
+                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
         });
         String captureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileCaptureCaption();
@@ -72,6 +73,10 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         populateViewsFromModel();
 
         return view;
+    }
+
+    protected int getLayoutRes() {
+        return R.layout.fragment_demographics_picture;
     }
 
     @Override
@@ -138,5 +143,9 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
     public void setPayloadDTO(DemographicPersDetailsPayloadDTO model) {
         this.model = model;
+    }
+
+    public void setGlobalLabelsDTO(DemographicLabelsDTO globalLabelsDTO) {
+        this.globalLabelsDTO = globalLabelsDTO;
     }
 }

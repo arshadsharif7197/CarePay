@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.carecloud.carepay.patient">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.SET_DEBUG_APP"/>
-    <uses-feature android:name="android.hardware.camera"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SET_DEBUG_APP" />
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name=".base.CarePayPatientApplication"
@@ -15,7 +16,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme">
-        <activity android:name=".patientsplash.SplashActivity"
+        <activity
+            android:name=".patientsplash.SplashActivity"
             android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,26 +26,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.carecloud.carepay.patient.demographics.activities.DemographicsActivity"
+            android:name=".demographics.activities.DemographicsActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name="com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity" />
-        <activity android:name="com.carecloud.carepay.patient.consentforms.SignatureActivity" />
-        <activity android:name="com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity" />
+        <activity android:name=".demographics.activities.DemographicReviewActivity" />
+        <activity android:name=".consentforms.SignatureActivity" />
+        <activity android:name=".selectlanguage.SelectLanguageActivity" />
         <activity
-            android:name="com.carecloud.carepay.patient.consentforms.ConsentActivity"
+            android:name=".consentforms.ConsentActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity"
+            android:name=".intakeforms.activities.InTakeWebViewActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.carecloud.carepay.patient.payment.PaymentActivity"
-            android:parentActivityName="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity">
+            android:name=".signinsignuppatient.SigninSignupActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".payment.PaymentActivity"
+            android:parentActivityName=".appointments.activities.AppointmentsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" />
         </activity>
-        <activity android:name="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" />
-        <activity android:name="com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity" />
+        <activity android:name=".appointments.activities.AppointmentsActivity" />
+        <activity android:name=".appointments.activities.AddAppointmentActivity" />
+        <activity android:name=".eligibility.activities.EligibilityActivity"></activity>
     </application>
 
 </manifest>

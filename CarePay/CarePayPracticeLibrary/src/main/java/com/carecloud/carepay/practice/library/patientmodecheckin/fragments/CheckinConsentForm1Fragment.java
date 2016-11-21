@@ -31,9 +31,14 @@ public class CheckinConsentForm1Fragment extends Fragment {
                 // transition
                 CheckinConsentForm2Fragment fragment = new CheckinConsentForm2Fragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
+                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 2,
+                                                                                PatientModeCheckinActivity.NUM_CONSENT_FORMS);
+
             }
         });
 
         return view;
     }
+
+
 }

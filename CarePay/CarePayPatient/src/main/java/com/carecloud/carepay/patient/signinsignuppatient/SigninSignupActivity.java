@@ -27,6 +27,7 @@ public class SigninSignupActivity extends BasePatientActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_signup);
         signInSignUpDTO = getConvertedDTO(SignInSignUpDTO.class);
+        signInLablesDTO=signInSignUpDTO.getMetadata().getLabels();
         if(signInSignUpDTO!=null && signInSignUpDTO.getPayload()!=null && signInSignUpDTO.getPayload().getPatientAppSignin()!=null && signInSignUpDTO.getPayload().getPatientAppSignin().getCognito()!=null){
             ApplicationMode.getInstance().setCognitoDTO(signInSignUpDTO.getPayload().getPatientAppSignin().getCognito());
             CognitoAppHelper.init(getApplicationContext());

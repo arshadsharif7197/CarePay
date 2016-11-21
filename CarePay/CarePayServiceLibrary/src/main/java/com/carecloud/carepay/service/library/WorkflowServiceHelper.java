@@ -6,7 +6,6 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 import java.io.IOException;
@@ -58,9 +57,9 @@ public class WorkflowServiceHelper {
         if ((ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
                 || ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
                 && ApplicationMode.getInstance().getUserPracticeDTO() != null) {
-            userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeUser());
-            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
+            userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getUserName());
+           if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+               userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
             }
 
         } else if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
@@ -92,7 +91,18 @@ public class WorkflowServiceHelper {
     public static Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
+        if( ApplicationPreferences.Instance.getUserLanguage().isEmpty()) {
+            appStartHeaders.put("Accept-Language", "en");
+        } else {
+            appStartHeaders.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
+        }
         return appStartHeaders;
+    }
+
+    public static  Map<String, String> getPreferredLanguageHeader(){
+        Map<String, String> prefredLanguage = new HashMap<>();
+        prefredLanguage.put("Accept-Language",ApplicationPreferences.Instance.getUserLanguage());
+        return prefredLanguage;
     }
 
     /**
@@ -165,9 +175,12 @@ public class WorkflowServiceHelper {
                 call = workflowService.executePost(transitionDTO.getUrl(), queryMap);
             } else if (jsonBody != null && queryMap.size() > 0) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+            } else if (jsonBody != null) {
+                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+            } else if (jsonBody != null) {
+                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
             } else {
                 call = workflowService.executePost(transitionDTO.getUrl());
-
             }
         }
         executeCallback(callback, call);

@@ -5,6 +5,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -23,6 +24,7 @@ public class CarePayApplication extends MultiDexApplication {
 
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         PracticeNavigationHelper.initInstance(this);
+        ApplicationPreferences.createPreferences(this);
     }
 
     private void setHttpConstants() {

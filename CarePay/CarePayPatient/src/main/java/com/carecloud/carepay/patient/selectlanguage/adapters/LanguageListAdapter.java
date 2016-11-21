@@ -12,7 +12,7 @@ import android.widget.RadioButton;
 
 import com.carecloud.carepay.patient.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.utils.ApplicationPreferences;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
@@ -51,11 +51,13 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         LanguageOptionModel languageSelected = languageListLanguageOptionModels.get(position);
         String languageName = languageSelected.getValue();
-       languageID=languageSelected.getLanguageId();
         holder.languageNameRadioButton.setText(languageName);
-        if (ApplicationPreferences.Instance.getUserLanguage().equals(languageName)) {
+
+        if (ApplicationPreferences.Instance.getUserLanguage().equals(languageSelected.getLanguageId())) {
             selectedLanguage = holder.languageNameRadioButton;
-            selectedLanguage.performClick();
+            selectedLanguage.setChecked(true);
+            selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            itemClickListener.onLanguageChange(languageSelected.getValue(), languageSelected.getLanguageId());
         }
     }
 
@@ -96,13 +98,19 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
                     selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                     SystemUtil.setProximaNovaSemiboldTypeface(context, selectedLanguage);
                     if (itemClickListener != null) {
-                        itemClickListener.onLanguageChange(selectedLanguage.getText().toString(),languageID);
+                        String selLangValue = selectedLanguage.getText().toString();
+                        // search sel lang id
+                        languageID = languageListLanguageOptionModels.get(0).getLanguageId();
+                        for (LanguageOptionModel langOpt : languageListLanguageOptionModels) {
+                            if (langOpt.getValue().equals(selLangValue)) {
+                                languageID = langOpt.getLanguageId();
+                            }
+                        }
+                        itemClickListener.onLanguageChange(selLangValue, languageID);
 
                     }
                 }
             });
         }
     }
-
-
 }
