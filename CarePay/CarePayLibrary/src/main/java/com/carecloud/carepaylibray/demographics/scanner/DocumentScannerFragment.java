@@ -29,7 +29,6 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 public abstract class DocumentScannerFragment extends Fragment {
 
     protected ImageCaptureHelper imageCaptureHelper;
-    protected NextAddRemoveStatusModifier buttonsStatusCallback;
     protected Bitmap bitmap;
     protected ImageCaptureHelper.CameraType cameraType;
 
@@ -157,15 +156,6 @@ public abstract class DocumentScannerFragment extends Fragment {
     public abstract int getImageShape();
 
     /**
-     * Set the callback that will enable this fragment to change the status of butons in another fragment
-     *
-     * @param buttonsStatusCallback The callback
-     */
-    public void setButtonsStatusCallback(NextAddRemoveStatusModifier buttonsStatusCallback) {
-        this.buttonsStatusCallback = buttonsStatusCallback;
-    }
-
-    /**
      * Updates the number the button label and the number textview accoring to doc scanned (license or insurance)
      */
     protected abstract void updateModelAndViewsAfterScan(ImageCaptureHelper scanner);
@@ -179,17 +169,4 @@ public abstract class DocumentScannerFragment extends Fragment {
      * Set the typefaces
      */
     protected abstract void setTypefaces(View view);
-
-    /**
-     * Callback interface to change the status of buttons of another fragment
-     */
-    public interface NextAddRemoveStatusModifier {
-
-        void showAddCardButton(boolean isVisible);
-
-        void enableNextButton(boolean isEnabled);
-
-        void scrollToBottom();
-    }
-
 }

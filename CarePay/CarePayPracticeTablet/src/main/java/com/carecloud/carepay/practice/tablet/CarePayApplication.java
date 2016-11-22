@@ -33,6 +33,7 @@ public class CarePayApplication extends Application implements Application.Activ
         registerActivityLifecycleCallbacks(this);
     }
 
+
     private void setHttpConstants() {
         DeviceIdentifierDTO deviceIdentifierDTO=new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);

@@ -133,7 +133,6 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         if (bitmap != null) {
             buttonChangeCurrentPhoto.setText(recaptureCaption);
         }
-        buttonsStatusCallback.enableNextButton(true);
     }
 
     @Override
