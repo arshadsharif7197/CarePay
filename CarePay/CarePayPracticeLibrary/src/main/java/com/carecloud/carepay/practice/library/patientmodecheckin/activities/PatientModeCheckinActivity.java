@@ -14,6 +14,7 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsFragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsRevFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinInsurancesSummaryFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm2Fragment;
@@ -63,7 +64,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity {
         initializeViews();
 
         // place the initial fragment
-        CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
+        CheckinDemographicsRevFragment fragment = new CheckinDemographicsRevFragment();
         navigateToFragment(fragment, false);
         toggleHighlight(SUBFLOW_DEMOGRAPHICS_INS, true);
     }
