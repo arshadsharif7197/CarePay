@@ -169,6 +169,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     }
 
     @Override
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_insurance_review, container, false);
 
@@ -291,66 +292,73 @@ toolbar.setVisibility(view.GONE);
                 cityTextView.setText(city);
             }
 
+            // initializeInsurances from the model
+            initializeInsuranceFromModel();
 
-            if (insurances != null) {
-
-                if (insurances.size() > 0 && insurances.get(0) != null) {
-
-                    String plan1 = insurances.get(0).getInsurancePlan();
-                    if (SystemUtil.isNotEmptyString(plan1)) {
-                        insurance1planTextView.setText(plan1);
-                    }
-                    String company1 = insurances.get(0).getInsuranceProvider();
-                    if (SystemUtil.isNotEmptyString(company1)) {
-                        insurance1companyTextView.setText(company1);
-                    }
-
-                    String memberid = insurances.get(0).getInsuranceMemberId();
-                    if (SystemUtil.isNotEmptyString(memberid)) {
-                        insurance1policyNumberTextView.setText(memberid);
-                    }
-                    if (insurances.size() > 1 && insurances.get(1) != null) {
-
-                        healthInsurance2.setVisibility(View.VISIBLE);
-                        String plan2 = insurances.get(1).getInsurancePlan();
-                        if (SystemUtil.isNotEmptyString(plan2)) {
-                            insurance2planTextView.setText(plan2);
-                        }
-                        String company2 = insurances.get(1).getInsuranceProvider();
-                        if (SystemUtil.isNotEmptyString(company2)) {
-                            insurance2companyTextView.setText(company2);
-                        }
-
-                        String memberid2 = insurances.get(1).getInsuranceMemberId();
-                        if (SystemUtil.isNotEmptyString(memberid2)) {
-                            insurance2policyNumberTextView.setText(memberid2);
-                        }
-
-                        if (insurances.size() > 2 && insurances.get(2) != null) {
-
-                            healthInsurance3.setVisibility(View.VISIBLE);
-                            String plan3 = insurances.get(2).getInsurancePlan();
-                            if (SystemUtil.isNotEmptyString(plan3)) {
-                                insurance3planTextView.setText(plan3);
-                            }
-                            String company3 = insurances.get(2).getInsuranceProvider();
-                            if (SystemUtil.isNotEmptyString(company3)) {
-                                insurance3companyTextView.setText(company3);
-                            }
-
-                            String memberid3 = insurances.get(2).getInsuranceMemberId();
-                            if (SystemUtil.isNotEmptyString(memberid3)) {
-                                insurance3policyNumberTextView.setText(memberid3);
-                            }
-
-                        }
-                    }
-                }
-
-            }
         }
     }
 
+    private void initializeInsuranceFromModel(){
+
+        if (insurances != null) {
+
+            if (insurances.size() > 0 && insurances.get(0) != null) {
+
+                String plan1 = insurances.get(0).getInsurancePlan();
+                if (SystemUtil.isNotEmptyString(plan1)) {
+                    insurance1planTextView.setText(plan1);
+                }
+                String company1 = insurances.get(0).getInsuranceProvider();
+                if (SystemUtil.isNotEmptyString(company1)) {
+                    insurance1companyTextView.setText(company1);
+                }
+
+                String memberid = insurances.get(0).getInsuranceMemberId();
+                if (SystemUtil.isNotEmptyString(memberid)) {
+                    insurance1policyNumberTextView.setText(memberid);
+                }
+                if (insurances.size() > 1 && insurances.get(1) != null) {
+
+                    healthInsurance2.setVisibility(View.VISIBLE);
+                    String plan2 = insurances.get(1).getInsurancePlan();
+                    if (SystemUtil.isNotEmptyString(plan2)) {
+                        insurance2planTextView.setText(plan2);
+                    }
+                    String company2 = insurances.get(1).getInsuranceProvider();
+                    if (SystemUtil.isNotEmptyString(company2)) {
+                        insurance2companyTextView.setText(company2);
+                    }
+
+                    String memberid2 = insurances.get(1).getInsuranceMemberId();
+                    if (SystemUtil.isNotEmptyString(memberid2)) {
+                        insurance2policyNumberTextView.setText(memberid2);
+                    }
+
+                    if (insurances.size() > 2 && insurances.get(2) != null) {
+
+                        healthInsurance3.setVisibility(View.VISIBLE);
+                        String plan3 = insurances.get(2).getInsurancePlan();
+                        if (SystemUtil.isNotEmptyString(plan3)) {
+                            insurance3planTextView.setText(plan3);
+                        }
+                        String company3 = insurances.get(2).getInsuranceProvider();
+                        if (SystemUtil.isNotEmptyString(company3)) {
+                            insurance3companyTextView.setText(company3);
+                        }
+
+                        String memberid3 = insurances.get(2).getInsuranceMemberId();
+                        if (SystemUtil.isNotEmptyString(memberid3)) {
+                            insurance3policyNumberTextView.setText(memberid3);
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+    }
+    
     /**
      * .
      * Initializing the view
@@ -392,6 +400,19 @@ toolbar.setVisibility(view.GONE);
 
 
         //  Personal Deatails Model View
+
+        initializePersonalDetailsSectionView ();
+        //  Address Model View
+        initializeAddressSectionView ();
+
+        //  Insurance Model View
+
+        initializeInsuranceSectionView();
+
+
+    }
+
+    private void initializePersonalDetailsSectionView (){
         firstNameLabel = (TextView) view.findViewById(R.id.reviewFirstNameLabel);
         firstNameLabel.setText(persDetailsMetaDTO.properties.firstName.getLabel().toUpperCase());
         firstnameTextView = (TextView) view.findViewById(R.id.reviewFirstNameTextView);
@@ -427,8 +448,9 @@ toolbar.setVisibility(view.GONE);
         driverLicenseLabel = (TextView) view.findViewById(R.id.reviewDriverLicenseLabel);
         driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel().toUpperCase());
         driverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
+    }
 
-        //  Address Model View
+    private void initializeAddressSectionView (){
         address1Label = (TextView) view.findViewById(R.id.reviewAddress1label);
         address1Label.setText(addressMetaDTO.properties.address1.getLabel().toUpperCase());
         address1TextView = (TextView) view.findViewById(R.id.reviewAddress1TextView);
@@ -450,8 +472,10 @@ toolbar.setVisibility(view.GONE);
         zipcodeLabel = (TextView) view.findViewById(R.id.reviewZipcodeLabel);
         zipcodeLabel.setText(addressMetaDTO.properties.zipcode.getLabel().toUpperCase());
         zipcodeTextView = (TextView) view.findViewById(R.id.reviewZipcodeTextView);
+    }
 
-        //  Insurance Model View
+    private void initializeInsuranceSectionView(){
+
 
         healthInsurance2 = (LinearLayout) view.findViewById(R.id.insurnace2);
         healthInsurance3 = (LinearLayout) view.findViewById(R.id.insurance3);
