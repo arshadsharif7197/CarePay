@@ -61,15 +61,13 @@ public class WorkflowServiceHelper {
            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
             }
-
         } else if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
             userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
             if (CognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
                 userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
             }
         }
-
-
+        userAuthHeaders.putAll(getPreferredLanguageHeader());
         return userAuthHeaders;
     }
 
@@ -101,7 +99,11 @@ public class WorkflowServiceHelper {
 
     public static  Map<String, String> getPreferredLanguageHeader(){
         Map<String, String> prefredLanguage = new HashMap<>();
-        prefredLanguage.put("Accept-Language",ApplicationPreferences.Instance.getUserLanguage());
+        if( ApplicationPreferences.Instance.getUserLanguage().isEmpty()) {
+            prefredLanguage.put("Accept-Language", "en");
+        } else {
+            prefredLanguage.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
+        }
         return prefredLanguage;
     }
 
