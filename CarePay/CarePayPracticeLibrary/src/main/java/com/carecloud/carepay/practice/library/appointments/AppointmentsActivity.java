@@ -182,17 +182,15 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             appointmentListWithToday = new ArrayList<>();
             populateWithLabels();
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
-                appointmentListWithToday.add(appointmentDTO);
-                /*
                 String title = getToday(appointmentDTO.getPayload().getStartTime());
                 if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
                     appointmentListWithToday.add(appointmentDTO);
                 }
-             /*   else{
+               else{
                     appointmentForTextview.setVisibility(View.INVISIBLE);
                     selectAppointmentTextview.setVisibility(View.INVISIBLE);
                     noAppointmentView.setVisibility(View.VISIBLE);
-                }*/
+                }
             }
             if (appointmentListWithToday != null) {
                 appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentsItems, appointmentsResultModel);

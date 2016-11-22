@@ -250,7 +250,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         // stop preview before making changes
         try {
             if(!isPracticeCamera)
-           camera.stopPreview();
+                camera.stopPreview();
         } catch (Exception e) {
             // ignore: tried to stop a non-existent preview
         }
@@ -333,7 +333,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
                     camera = Camera.open(getBackFaceCamera());
                     camera.setDisplayOrientation(90);
                 }
-                 // attempt to get a Camera instance
+                // attempt to get a Camera instance
             } catch (Exception e) {
                 // Camera is not available (in use or does not exist)
             }
