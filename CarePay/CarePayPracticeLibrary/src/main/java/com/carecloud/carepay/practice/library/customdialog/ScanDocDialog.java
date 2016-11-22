@@ -21,6 +21,8 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 
 import java.io.ByteArrayOutputStream;
 
@@ -41,20 +43,25 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
     private CarePayTextView contentViewTitleLabel;
     private  View childActionView;
     private LayoutInflater inflater;
+    private DemographicLabelsDTO demographicLabelsDTO;
 
 
     public interface  SaveScanDocListener {
         public void onSaveScanDoc(byte[] bytes);
     }
 
+
     /**
      * Constructor.
      * @param context context
+     * @param  demographicLabelsDTO demographicLabelsDTO for labels
+     * @param isFooterVisible boolean
      * @param saveScanDocListener listener
      */
-    public ScanDocDialog(Context context, SaveScanDocListener saveScanDocListener){
-        super(context);
+    public ScanDocDialog(Context context, DemographicLabelsDTO demographicLabelsDTO, boolean isFooterVisible, SaveScanDocListener saveScanDocListener){
+        super(context,demographicLabelsDTO,isFooterVisible);
         this.context = context;
+        this.demographicLabelsDTO = demographicLabelsDTO;
         this.saveScanDocListener = saveScanDocListener;
         inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -85,11 +92,10 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
     }
 
     private void onSetViewLabel(){
-        //TODO labels will be get from DTO and Set
-        setDialogTitle("Scan Insurance Card");
-        contentViewTitleLabel.setText(context.getString(R.string.insurance_scan_content_title));
-        scanImageButton.setText(context.getString(R.string.scan));
-        scanClearImageButton.setText(context.getString(R.string.clear));
+        setDialogTitle(this.demographicLabelsDTO.getDemographicsInsuranceScanInsuranceCard());
+        contentViewTitleLabel.setText(demographicLabelsDTO.getDemographicsInsuranceScanMsg());
+        scanImageButton.setText(demographicLabelsDTO.getDemographicsInsuranceScan());
+        scanClearImageButton.setText(demographicLabelsDTO.getDemographicsInsuranceClear());
     }
 
 
@@ -146,7 +152,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
         } catch (Exception excetion) {
             Log.e("CameraRND", "Error setting camera start: " + excetion.getMessage());
         }
-        scanImageButton.setText(context.getString(R.string.scan));
+        scanImageButton.setText(demographicLabelsDTO.getDemographicsInsuranceScan());
         cameraImageBitmap = null;
         isCapturing = true;
         scanClearImageButton.setEnabled(false);
@@ -164,7 +170,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
         }
         carePayCameraPreview.setVisibility(View.INVISIBLE);
         cameraCaptureImage.setVisibility(View.VISIBLE);
-        scanImageButton.setText(context.getString(R.string.save));
+        scanImageButton.setText(demographicLabelsDTO.getDemographicsInsuranceSave());
         isCapturing = false;
         scanClearImageButton.setEnabled(true);
         onClearButtonTextColor();
@@ -185,7 +191,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
         if(scanClearImageButton.isEnabled()){
             scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
         }else{
-            scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.light_gray));
+            scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.white));
         }
     }
 }

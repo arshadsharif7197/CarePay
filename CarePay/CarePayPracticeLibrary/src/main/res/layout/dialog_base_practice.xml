@@ -37,7 +37,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_5dp"
             android:textColor="@color/white_opacity_50"
-            android:text="CANCEL"
             app:customAssetFont="gotham_rounded_bold"
             android:textSize="@dimen/text_size_12sp" />
     </LinearLayout>
@@ -48,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/dimen_26dp"
+        android:background="@android:color/white"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -80,7 +80,6 @@
             android:layout_marginTop="@dimen/dimen_30dp"
             android:background="@android:color/white"
             android:gravity="center"
-            android:visibility="gone"
             android:orientation="horizontal">
 
             <Button
@@ -91,8 +90,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 android:textAllCaps="false"
-                android:enabled="false"
-                android:text="Scan" />
+                android:enabled="false" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

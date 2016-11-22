@@ -22,7 +22,6 @@
             android:gravity="center"
             android:paddingLeft="@dimen/dimen_106dp"
             android:paddingRight="@dimen/dimen_106dp"
-            android:text="@string/insurance_scan_content_title"
             android:textSize="@dimen/text_size_16sp"
             app:customAssetFont="proxima_nova_regular" />
 
@@ -74,8 +73,7 @@
                 android:textColor="@color/white"
                 android:enabled="false"
                 android:textSize="@dimen/text_size_22sp"
-                android:textAllCaps="false"
-                android:text="@string/clear" />
+                android:textAllCaps="false" />
 
             <Button
                 android:id="@+id/scan_button"
@@ -85,8 +83,7 @@
                 android:background="@drawable/bg_yellow_overlay"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                android:textAllCaps="false"
-                android:text="@string/scan" />
+                android:textAllCaps="false" />
         </LinearLayout>
 
     </LinearLayout>

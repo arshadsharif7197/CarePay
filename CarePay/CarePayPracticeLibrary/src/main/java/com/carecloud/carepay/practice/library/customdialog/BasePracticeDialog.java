@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 
 /**
  * Created by prem_mourya on 11/21/2016.
@@ -20,15 +22,19 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
 
 
     private Context context;
+    private boolean isFooterVisible;
+    private DemographicLabelsDTO demographicLabelsDTO;
 
 
     /**
      * Constructor.
      * @param context context
      */
-    public BasePracticeDialog(Context context) {
+    public BasePracticeDialog(Context context, DemographicLabelsDTO demographicLabelsDTO, boolean isFooterVisible) {
         super(context);
         this.context =context;
+        this.demographicLabelsDTO = demographicLabelsDTO;
+        this.isFooterVisible =isFooterVisible;
     }
 
     @Override
@@ -39,11 +45,12 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         onInitialization();
         //TODO labels will be get from DTO and Set
-        setDialogCancelText(context.getString(R.string.cancel));
+        setDialogCancelText(demographicLabelsDTO.getDemographicsCancelLabel());
     }
 
     private void onInitialization(){
         ((LinearLayout) findViewById(R.id.closeViewLayout)).setOnClickListener(this);
+        ((LinearLayout) findViewById(R.id.footer_layout)).setVisibility(isFooterVisible?View.VISIBLE:View.GONE);
     }
 
     @Override
