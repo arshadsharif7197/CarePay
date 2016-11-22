@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -39,6 +40,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
     private  SaveScanDocListener saveScanDocListener;
     private CarePayTextView contentViewTitleLabel;
     private  View childActionView;
+    private LayoutInflater inflater;
 
 
     public interface  SaveScanDocListener {
@@ -54,22 +56,18 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
         super(context);
         this.context = context;
         this.saveScanDocListener = saveScanDocListener;
+        inflater = (LayoutInflater) this.context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        onAddChildLayout();
+        onAddContentView(inflater);
         onInitialization();
         onSetViewLabel();
     }
 
-    private void onAddChildLayout(){
-        LayoutInflater inflater = (LayoutInflater) this.context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        childActionView = inflater.inflate(R.layout.dialog_scan_camera_doc, null);
-        ((LinearLayout)findViewById(R.id.base_dialog_content_layout)).addView(childActionView);
-    }
 
     private void onInitialization() {
         carePayCameraPreview = (CarePayCameraPreview) childActionView.findViewById(R.id.camera_preview);
@@ -87,12 +85,24 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
     }
 
     private void onSetViewLabel(){
-        //labels will be get from DTO and Set
+        //TODO labels will be get from DTO and Set
         setDialogTitle("Scan Insurance Card");
-        contentViewTitleLabel.setText("Place your your health insurance card in front of the camera and press “Scan” to take a picture.");
-        scanImageButton.setText("Scan");
-        scanClearImageButton.setText("Clear");
+        contentViewTitleLabel.setText(context.getString(R.string.insurance_scan_content_title));
+        scanImageButton.setText(context.getString(R.string.scan));
+        scanClearImageButton.setText(context.getString(R.string.clear));
     }
+
+
+    @Override
+    protected void onAddContentView(LayoutInflater inflater) {
+        childActionView = inflater.inflate(R.layout.dialog_scan_camera_doc, null);
+        ((FrameLayout)findViewById(R.id.base_dialog_content_layout)).addView(childActionView);
+    }
+
+    @Override
+    protected void onAddFooterView(LayoutInflater inflater) {
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -118,6 +128,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
     }
 
 
+
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -135,7 +146,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
         } catch (Exception excetion) {
             Log.e("CameraRND", "Error setting camera start: " + excetion.getMessage());
         }
-        scanImageButton.setText("Scan");
+        scanImageButton.setText(context.getString(R.string.scan));
         cameraImageBitmap = null;
         isCapturing = true;
         scanClearImageButton.setEnabled(false);
@@ -153,7 +164,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
         }
         carePayCameraPreview.setVisibility(View.INVISIBLE);
         cameraCaptureImage.setVisibility(View.VISIBLE);
-        scanImageButton.setText("Save");
+        scanImageButton.setText(context.getString(R.string.save));
         isCapturing = false;
         scanClearImageButton.setEnabled(true);
         onClearButtonTextColor();

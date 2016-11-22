@@ -22,7 +22,7 @@
             android:gravity="center"
             android:paddingLeft="@dimen/dimen_106dp"
             android:paddingRight="@dimen/dimen_106dp"
-            android:text="Place your your health insurance card in front of the camera and press “Scan” to take a picture."
+            android:text="@string/insurance_scan_content_title"
             android:textSize="@dimen/text_size_16sp"
             app:customAssetFont="proxima_nova_regular" />
 
@@ -75,7 +75,7 @@
                 android:enabled="false"
                 android:textSize="@dimen/text_size_22sp"
                 android:textAllCaps="false"
-                android:text="Clear" />
+                android:text="@string/clear" />
 
             <Button
                 android:id="@+id/scan_button"
@@ -86,7 +86,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 android:textAllCaps="false"
-                android:text="Scan" />
+                android:text="@string/scan" />
         </LinearLayout>
 
     </LinearLayout>

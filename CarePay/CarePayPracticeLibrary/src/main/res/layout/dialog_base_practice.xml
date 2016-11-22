@@ -61,14 +61,38 @@
             android:textSize="@dimen/text_size_23sp"
             app:customAssetFont="gotham_rounded_medium" />
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/base_dialog_content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="vertical">
 
-        </LinearLayout>
+        </FrameLayout>
+        <LinearLayout
+            android:id="@+id/footer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/dimen_30dp"
+            android:paddingLeft="@dimen/dimen_24dp"
+            android:paddingRight="@dimen/dimen_24dp"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/footer_main_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_50dp"
+                android:background="@drawable/bg_yellow_overlay"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                android:textAllCaps="false"
+                android:enabled="false"
+                android:text="Scan" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -11,16 +12,23 @@ import android.widget.LinearLayout;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
-import org.json.JSONObject;
-
 /**
  * Created by prem_mourya on 11/21/2016.
  */
 
-public class BasePracticeDialog extends Dialog implements View.OnClickListener {
+public abstract class BasePracticeDialog extends Dialog implements View.OnClickListener {
 
+
+    private Context context;
+
+
+    /**
+     * Constructor.
+     * @param context context
+     */
     public BasePracticeDialog(Context context) {
         super(context);
+        this.context =context;
     }
 
     @Override
@@ -30,8 +38,8 @@ public class BasePracticeDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.dialog_base_practice);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         onInitialization();
-        //labels will be get from DTO and Set
-        setDialogCancelText("CANCEL");
+        //TODO labels will be get from DTO and Set
+        setDialogCancelText(context.getString(R.string.cancel));
     }
 
     private void onInitialization(){
@@ -43,7 +51,7 @@ public class BasePracticeDialog extends Dialog implements View.OnClickListener {
         int viewId = view.getId();
 
         if(viewId == R.id.closeViewLayout){
-            dismiss();
+            onDialogCancel();
         }
     }
 
@@ -54,4 +62,19 @@ public class BasePracticeDialog extends Dialog implements View.OnClickListener {
     private void setDialogCancelText(String title){
         ((CarePayTextView) findViewById(R.id.closeTextView)).setText(title);
     }
+
+    // if caller want to change on cancel then override this method in extended class
+    protected  void onDialogCancel(){
+        dismiss();
+    }
+
+    protected abstract  void onAddContentView(LayoutInflater inflater);
+
+    /**
+     * inflate the footer view by default visibility gone if have footer then override this method in extended class
+     * @param inflater
+     */
+    protected abstract void onAddFooterView(LayoutInflater inflater);
+
+
 }

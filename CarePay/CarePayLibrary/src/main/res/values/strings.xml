@@ -421,4 +421,12 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
 
     <integer name="viewfinder_border_width">4</integer>
     <integer name="viewfinder_border_length">60</integer>
+
+    <string name="scan">Scan</string>
+    <string name="clear">Clear</string>
+    <string name="save">Save</string>
+    <string name="cancel">CANCEL</string>
+    <string name="insurance_scan_content_title">Place your your health insurance card in front of the camera and press “Scan” to take a picture.</string>
+    <string name="insurance_scan_header"></string>
+
 </resources>
