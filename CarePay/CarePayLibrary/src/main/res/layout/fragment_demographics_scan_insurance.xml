@@ -116,7 +116,6 @@
             android:id="@+id/reviewinsurncecardnum"
             style="@style/SigninSignupEditStyle"
             android:imeOptions="actionNone"
-            android:maxLength="10"
             android:inputType="textFilter"/>
     </android.support.design.widget.TextInputLayout>
 

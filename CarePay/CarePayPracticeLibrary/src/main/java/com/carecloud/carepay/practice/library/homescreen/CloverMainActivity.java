@@ -424,6 +424,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            // log out previous user from Cognito
+            CognitoAppHelper.getPool().getUser().signOut();
+            CognitoAppHelper.setUser(null);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
             CloverMainActivity.this.finish();
         }

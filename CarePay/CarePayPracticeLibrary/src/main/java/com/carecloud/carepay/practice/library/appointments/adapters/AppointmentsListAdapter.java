@@ -88,8 +88,14 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         String startDay = StringUtils.substringBefore(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal(), ",");
         String endDay =DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal()
                 .substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
-        String strToday = startDay.replace(startDay, "Today")+ endDay ;
+        String strToday;
+        if(DateUtil.getInstance().isToday()) {
+            strToday = startDay.replace(startDay, "Today") + endDay;
+        }else{
+            strToday = startDay + endDay;
+        }
         holder.appointmentDate.setText(strToday);
+
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckInTextview.setText(StringUtil.getLabelForView(
                 appointmentLabels.getAppointmentsPracticeCheckin()));

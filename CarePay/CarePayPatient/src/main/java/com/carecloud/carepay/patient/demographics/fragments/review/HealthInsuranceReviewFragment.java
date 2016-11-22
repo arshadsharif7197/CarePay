@@ -121,11 +121,13 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographichealthinsuranceReviewProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
         detailsScrollView = (ScrollView) view.findViewById(R.id.updateInsuranceDocsScroll);
-
         initViewFromModels();
-        setButtons();
-        setCardContainers();
         setSwitch();
+        setCardContainers();
+        if(demographicDTO.getPayload().getDemographics().getPayload().getInsurances() !=null ){
+            doYouHaveInsuranceSwitch.setChecked(true);
+        }
+        setButtons();
         setTypefaces(view);
         return view;
     }
@@ -240,14 +242,14 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
     }
 
 
-    private void openNewFragment() {
+   /* private void openNewFragment() {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         Fragment fragment = ReviewFragment.newInstance();
         transaction.replace(R.id.root_layout, fragment, HealthInsuranceReviewFragment.class.getName());
         transaction.commit();
     }
-
+*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -278,7 +280,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
     }
 
-    private void getTheModels() {
+   /* private void getTheModels() {
         List<DemographicInsurancePayloadDTO> payload = ((DemographicReviewActivity) getActivity()).getInsurances();
         if (payload != null) {
             insuranceModelList = payload;
@@ -297,7 +299,7 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
                 }
             }
         }
-    }
+    }*/
 
     private void setCardContainers() {
 
@@ -308,56 +310,6 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
 
         fm = getChildFragmentManager();
 
- /*       // add insurance fragments
-        insuranceModel1 = getInsuranceModelAtIndex(0);
-        if (insuranceModel1 == null) {
-            insuranceModel1 = new DemographicInsurancePayloadDTO();
-        }
-        InsuranceScannerFragment insuranceFragment = (InsuranceScannerFragment) fm.findFragmentByTag("insurance1");
-        if (insuranceFragment == null) {
-            insuranceFragment = new InsuranceScannerFragment();
-            insuranceFragment.setButtonsStatusCallback(null);
-            insuranceFragment.setInsuranceDTO(insuranceModel1); // set the model (if avail)
-            insuranceFragment.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
-        }
-        fm.beginTransaction()
-                .replace(R.id.insuranceDocument1, insuranceFragment, "insurance1")
-                .commit();
-
-        insuranceModel2 = getInsuranceModelAtIndex(1);
-        if (insuranceModel2 == null) {
-            insuranceModel2 = new DemographicInsurancePayloadDTO();
-        } else {
-            isSecondCardAdded = true;
-        }
-        InsuranceScannerFragment extraInsuranceFrag1 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance2");
-        if (extraInsuranceFrag1 == null) {
-            extraInsuranceFrag1 = new InsuranceScannerFragment();
-            extraInsuranceFrag1.setButtonsStatusCallback(null);
-            extraInsuranceFrag1.setInsuranceDTO(insuranceModel2); // set the model (if avail)
-            extraInsuranceFrag1.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
-        }
-        fm.beginTransaction()
-                .replace(R.id.insuranceDocument2, extraInsuranceFrag1, "insurance2")
-                .commit();
-
-        insuranceModel3 = getInsuranceModelAtIndex(2);
-        if (insuranceModel3 == null) {
-            insuranceModel3 = new DemographicInsurancePayloadDTO();
-        } else {
-            isThirdCardAdded = true;
-        }
-        InsuranceScannerFragment extraInsuranceFrag2 = (InsuranceScannerFragment) fm.findFragmentByTag("insurance3");
-        if (extraInsuranceFrag2 == null) {
-            extraInsuranceFrag2 = new InsuranceScannerFragment();
-            extraInsuranceFrag2.setButtonsStatusCallback(null);
-            extraInsuranceFrag2.setInsuranceDTO(insuranceModel3); // set the model (if avail)
-            extraInsuranceFrag2.setInsuranceMetadataDTO(insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
-        }
-        fm.beginTransaction()
-                .replace(R.id.insuranceDocument3, extraInsuranceFrag2, "insurance3")
-                .commit();
-*/
         insContainersWrapper = (LinearLayout) view.findViewById(R.id.insuranceHoldersContainer);
         createInsuranceFragments(insContainersWrapper);
     }
@@ -402,19 +354,14 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         return model;
     }
 
-    /**
-     * Toggles visible/invisible a container of an insurance card details
-     *
-     * @param cardContainer The container
-     * @param isVisible     Whether visible
-     */
+  /*
     private void showInsuranceCard(FrameLayout cardContainer, boolean isVisible) {
         if (isVisible) {
             cardContainer.setVisibility(View.VISIBLE);
         } else {
             cardContainer.setVisibility(View.GONE);
         }
-    }
+    }*/
 
     private void setSwitch() {
         // set the switch
@@ -444,10 +391,10 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         }
     }
 
-    public void scrollToBottom() {
+   /* public void scrollToBottom() {
         View bottomView = view.findViewById(R.id.updateInsuranceDocsScroll);
         detailsScrollView.scrollTo(0, bottomView.getBottom());
-    }
+    }*/
 
     protected void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), healthInsuranceTitleTextView);

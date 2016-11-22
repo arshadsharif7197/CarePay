@@ -263,6 +263,14 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 ethnicityTextView.setText(" ");
             }
 
+            String driversLicensenumber=idDocPayloadDTO.getIdNumber();
+            if (SystemUtil.isNotEmptyString(driversLicensenumber) && !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(driversLicensenumber)) {
+                driverLicenseTextView.setText(driversLicensenumber);
+            } else {
+                ethnicityTextView.setText(" ");
+            }
+
+
             String addresline1 = demographicAddressPayloadDTO.getAddress1();
             if (SystemUtil.isNotEmptyString(addresline1)) {
                 address1TextView.setText(addresline1);
