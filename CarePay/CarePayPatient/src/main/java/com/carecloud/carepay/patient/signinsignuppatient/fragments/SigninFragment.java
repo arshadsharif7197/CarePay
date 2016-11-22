@@ -133,9 +133,6 @@ public class SigninFragment extends Fragment {
         isEmptyEmail = true;
         isEmptyPassword = true;
 
-        emailEditText.setText("aa102@cc.com");
-        passwordEditText.setText("Test123!");
-
         return view;
     }
 
