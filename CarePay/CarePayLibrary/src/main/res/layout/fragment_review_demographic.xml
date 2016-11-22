@@ -23,12 +23,14 @@
 
 
     <ScrollView
+        android:id="@+id/adddemoScrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
         android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/adddemoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="17dp"
@@ -328,7 +330,7 @@
 
                         <EditText
                             android:id="@+id/cityId"
-                            style="@style/CityEditTextStyle"
+                            style="@style/SigninSignupEditStyle"
                             android:nextFocusRight="@+id/stateAutoCompleteTextView" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -341,7 +343,7 @@
 
                         <EditText
                             android:id="@+id/stateAutoCompleteTextView"
-                            style="@style/EditTextStyle"
+                            style="@style/SigninSignupEditStyle"
                             android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
                             android:imeOptions="actionDone"
                             android:inputType="textCapCharacters"
