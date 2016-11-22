@@ -1,4 +1,3 @@
-
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.content.DialogInterface;
@@ -28,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -53,14 +51,6 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
-import com.google.gson.Gson;
-import com.smartystreets.api.us_zipcode.City;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
@@ -70,17 +60,26 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+import com.google.gson.Gson;
+import com.smartystreets.api.us_zipcode.City;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+
 
 public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener {
 
+    int selectedDataArray;
     private Button buttonAddDemographicInfo;
     private View view;
-
     private String[] gender;
     private String[] race;
     private String[] ethnicity;
-    int selectedDataArray;
-
     private ProgressBar demographicProgressBar;
 
     private DemographicMetadataEntityAddressDTO addressMetaDTO;
@@ -147,11 +146,11 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     private City smartyStreetsResponse;
 
 
-    public static CheckinDemographicsFragment newInstance() {
-        return new CheckinDemographicsFragment();
+    public CheckinDemographicsFragment() {
     }
 
-    public CheckinDemographicsFragment() {
+    public static CheckinDemographicsFragment newInstance() {
+        return new CheckinDemographicsFragment();
     }
 
     @Override
@@ -181,7 +180,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         return view;
     }
 
-    private void initializeDemographicsDTO(){
+    private void initializeDemographicsDTO() {
         demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
         addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
@@ -191,8 +190,8 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
-            int size=demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for(int i=0;i>size;i++) {
+            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
+            for (int i = 0; i > size; i++) {
                 demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
             }
         }
@@ -201,9 +200,9 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
     private void initialiseUIFields() {
 
-        adddemoScrollView= (ScrollView) view.findViewById(R.id.adddemoScrollview);
-        addDemoLineraLayout= (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
-        addDemoLineraLayout.setPadding(20,0,20,0);
+        adddemoScrollView = (ScrollView) view.findViewById(R.id.adddemoScrollview);
+        addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
+        addDemoLineraLayout.setPadding(20, 0, 20, 0);
 
         updateDemoGraphicTitleTextView = (TextView) view.findViewById(R.id.detailsReviewHeading);
         updateDemoGraphicTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateDemographicTitle());
@@ -334,7 +333,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         }
     }*/
-
     private void formatEditText() {
 
         firstNameText.addTextChangedListener(new TextWatcher() {
@@ -568,6 +566,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
 
     }
+
     private boolean isZipCodeValid() {
         String zipCode = zipCodeEditText.getText().toString();
         if (StringUtil.isNullOrEmpty(zipCode)) {
@@ -580,6 +579,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
                 null);
         return isValidFormat;
     }
+
     private boolean isPhoneNumberValid() {
         final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
         final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
@@ -622,14 +622,13 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             zipCodeEditText.requestFocus();
         }
 
-        boolean isdobValid=isDateOfBirthValid();
-        if(!isdobValid){
+        boolean isdobValid = isDateOfBirthValid();
+        if (!isdobValid) {
             dobEditText.requestFocus();
         }
 
 
-
-        return isPhoneValid && isZipValid && isdobValid  && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
+        return isPhoneValid && isZipValid && isdobValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
 
     }
 
@@ -638,9 +637,9 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
         if (view == buttonAddDemographicInfo) {
 
-         //   openNewFragment();
+            //   openNewFragment();
 
-            if (isAllFieldsValid() ) {
+            if (isAllFieldsValid()) {
                 // update the model
                 updateModels();
                 // post the changes
@@ -704,6 +703,8 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
                         String ethnicity = dataArray[position];
                         ethnicityDataTextView.setText(ethnicity);
 
+                        break;
+                    default:
                         break;
                 }
                 alert.dismiss();
@@ -1088,12 +1089,12 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             }
 
             String city = demographicAddressPayloadDTO.getCity();
-            if (SystemUtil.isNotEmptyString(city) || ! cityEditText.getText().toString().isEmpty()) {
+            if (SystemUtil.isNotEmptyString(city) || !cityEditText.getText().toString().isEmpty()) {
                 cityEditText.setText(city);
                 cityEditText.requestFocus();
             }
             String state = demographicAddressPayloadDTO.getState();
-            if (SystemUtil.isNotEmptyString(state) || ! stateEditText.getText().toString().isEmpty()) {
+            if (SystemUtil.isNotEmptyString(state) || !stateEditText.getText().toString().isEmpty()) {
                 stateEditText.setText(state);
                 stateEditText.requestFocus();
             }
@@ -1120,10 +1121,10 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     }
 
 
-private void openNewFragment() {
-    CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
-    ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-    ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
+    private void openNewFragment() {
+        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
+        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+        ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
 
     }
 
