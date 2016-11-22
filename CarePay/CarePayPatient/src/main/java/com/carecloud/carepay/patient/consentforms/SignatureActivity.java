@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
@@ -33,6 +32,12 @@ import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayload
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
+
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
 
@@ -41,10 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
+
 
 
 public class SignatureActivity extends AppCompatActivity {
@@ -69,10 +71,7 @@ public class SignatureActivity extends AppCompatActivity {
 
 
     private Map<Integer, List<String>> stringMap = new HashMap<>();
-    private String patientSignature;
-    private String legalSignature;
-    private String legalFirstNameLabel;
-    private String legalLastNameLabel;
+
     private String signatureAsBase64;
     private boolean isLegalFirstNameEmpty;
     private boolean isLegalLastNameEmpty;
@@ -301,11 +300,6 @@ public class SignatureActivity extends AppCompatActivity {
                 } else {
                     Intent intent = getIntent();
                     if (intent.hasExtra("consentform")) {
-                       /* Intent data = new Intent();
-                        data.putExtra("signature_base64", signatureAsBase64);
-                        data.putExtra("patient_signed", signedByPatient);
-                        data.putExtra("legal_signed", signedByLegal);
-                        setResult(9999, data);*/
                         numOfLaunches++;
                         finish();
                     }
