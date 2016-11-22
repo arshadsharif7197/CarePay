@@ -21,13 +21,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
-import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
-import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
@@ -38,9 +35,12 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoMetaDataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
+import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibrary.R;
 import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -338,12 +338,12 @@ public class HealthInsuranceReviewFragment extends InsuranceScannerFragment impl
         }
     }
 
-    private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int i) {
+    private DemographicInsurancePayloadDTO getInsuranceModelAtIndex(int ii) {
         DemographicInsurancePayloadDTO model = null;
         if (insuranceModelList != null) {
             int numOfInsurances = insuranceModelList.size();
-            if (numOfInsurances > i) { // check if the list has an item at index i
-                model = insuranceModelList.get(i);
+            if (numOfInsurances > ii) { // check if the list has an item at index i
+                model = insuranceModelList.get(ii);
             }
         }
         return model;
