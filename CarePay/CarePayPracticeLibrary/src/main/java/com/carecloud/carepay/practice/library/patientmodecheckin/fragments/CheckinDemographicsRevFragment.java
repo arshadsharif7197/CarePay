@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -35,6 +34,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -48,17 +48,21 @@ import java.util.Map;
 
 
 
-
 public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {
 
-   /* WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
+    WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PracticeNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+
+            CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
+            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+            ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
+            ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
+                    PatientModeCheckinActivity.NUM_CONSENT_FORMS);
 
             // end-splash activity and transition
             // SplashActivity.this.finish();
@@ -68,7 +72,25 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         public void onFailure(String exceptionMessage) {
             //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
         }
-    };*/
+    };
+    /* WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
+         @Override
+         public void onPreExecute() {
+         }
+
+         @Override
+         public void onPostExecute(WorkflowDTO workflowDTO) {
+             PracticeNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+
+             // end-splash activity and transition
+             // SplashActivity.this.finish();
+         }
+
+         @Override
+         public void onFailure(String exceptionMessage) {
+             //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+         }
+     };*/
     private View view;
     private Button correctInformationButton;
     private Button updateInformationUpdate;
@@ -132,8 +154,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     private LinearLayout healthInsurance3;
     private ProgressBar demographicProgressBar;
     private DemographicDTO demographicDTO;
-
-
     private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
@@ -146,10 +166,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     private DemographicMetadataEntityAddressDTO addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-
-
-
-
     private boolean isPhoneEmpty;
     private int selectedDataArray;
     private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
@@ -169,9 +185,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     }
 
     @Override
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_insurance_review, container, false);
-
 
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.review_toolbar);
@@ -180,9 +196,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-toolbar.setVisibility(view.GONE);
+        toolbar.setVisibility(view.GONE);
 
-     //   DemographicReviewActivity.isFromReview = true;
+        //   DemographicReviewActivity.isFromReview = true;
         //initModels();
         initializeDemographicsDTO();
         initialiseUIFields();
@@ -195,20 +211,20 @@ toolbar.setVisibility(view.GONE);
      * Initialize the models from main Demographic Review Activity
      */
 
-    private void initializeDemographicsDTO(){
+    private void initializeDemographicsDTO() {
         demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
         addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
         idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
-        insurancesMetaDTO=demographicDTO.getMetadata().getDataModels().demographic.insurances;
+        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
 
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
 
-            int size=demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for(int i=0;i>size;i++) {
+            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
+            for (int i = 0; i > size; i++) {
                 demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
             }
         }
@@ -291,64 +307,71 @@ toolbar.setVisibility(view.GONE);
                 cityTextView.setText(city);
             }
 
+            // initializeInsurances from the model
+            initializeInsuranceFromModel();
 
-            if (insurances != null) {
+        }
+    }
 
-                if (insurances.size() > 0 && insurances.get(0) != null) {
+    private void initializeInsuranceFromModel() {
 
-                    String plan1 = insurances.get(0).getInsurancePlan();
-                    if (SystemUtil.isNotEmptyString(plan1)) {
-                        insurance1planTextView.setText(plan1);
-                    }
-                    String company1 = insurances.get(0).getInsuranceProvider();
-                    if (SystemUtil.isNotEmptyString(company1)) {
-                        insurance1companyTextView.setText(company1);
-                    }
+        if (insurances != null) {
 
-                    String memberid = insurances.get(0).getInsuranceMemberId();
-                    if (SystemUtil.isNotEmptyString(memberid)) {
-                        insurance1policyNumberTextView.setText(memberid);
-                    }
-                    if (insurances.size() > 1 && insurances.get(1) != null) {
+            if (insurances.size() > 0 && insurances.get(0) != null) {
 
-                        healthInsurance2.setVisibility(View.VISIBLE);
-                        String plan2 = insurances.get(1).getInsurancePlan();
-                        if (SystemUtil.isNotEmptyString(plan2)) {
-                            insurance2planTextView.setText(plan2);
-                        }
-                        String company2 = insurances.get(1).getInsuranceProvider();
-                        if (SystemUtil.isNotEmptyString(company2)) {
-                            insurance2companyTextView.setText(company2);
-                        }
-
-                        String memberid2 = insurances.get(1).getInsuranceMemberId();
-                        if (SystemUtil.isNotEmptyString(memberid2)) {
-                            insurance2policyNumberTextView.setText(memberid2);
-                        }
-
-                        if (insurances.size() > 2 && insurances.get(2) != null) {
-
-                            healthInsurance3.setVisibility(View.VISIBLE);
-                            String plan3 = insurances.get(2).getInsurancePlan();
-                            if (SystemUtil.isNotEmptyString(plan3)) {
-                                insurance3planTextView.setText(plan3);
-                            }
-                            String company3 = insurances.get(2).getInsuranceProvider();
-                            if (SystemUtil.isNotEmptyString(company3)) {
-                                insurance3companyTextView.setText(company3);
-                            }
-
-                            String memberid3 = insurances.get(2).getInsuranceMemberId();
-                            if (SystemUtil.isNotEmptyString(memberid3)) {
-                                insurance3policyNumberTextView.setText(memberid3);
-                            }
-
-                        }
-                    }
+                String plan1 = insurances.get(0).getInsurancePlan();
+                if (SystemUtil.isNotEmptyString(plan1)) {
+                    insurance1planTextView.setText(plan1);
+                }
+                String company1 = insurances.get(0).getInsuranceProvider();
+                if (SystemUtil.isNotEmptyString(company1)) {
+                    insurance1companyTextView.setText(company1);
                 }
 
+                String memberid = insurances.get(0).getInsuranceMemberId();
+                if (SystemUtil.isNotEmptyString(memberid)) {
+                    insurance1policyNumberTextView.setText(memberid);
+                }
+                if (insurances.size() > 1 && insurances.get(1) != null) {
+
+                    healthInsurance2.setVisibility(View.VISIBLE);
+                    String plan2 = insurances.get(1).getInsurancePlan();
+                    if (SystemUtil.isNotEmptyString(plan2)) {
+                        insurance2planTextView.setText(plan2);
+                    }
+                    String company2 = insurances.get(1).getInsuranceProvider();
+                    if (SystemUtil.isNotEmptyString(company2)) {
+                        insurance2companyTextView.setText(company2);
+                    }
+
+                    String memberid2 = insurances.get(1).getInsuranceMemberId();
+                    if (SystemUtil.isNotEmptyString(memberid2)) {
+                        insurance2policyNumberTextView.setText(memberid2);
+                    }
+
+                    if (insurances.size() > 2 && insurances.get(2) != null) {
+
+                        healthInsurance3.setVisibility(View.VISIBLE);
+                        String plan3 = insurances.get(2).getInsurancePlan();
+                        if (SystemUtil.isNotEmptyString(plan3)) {
+                            insurance3planTextView.setText(plan3);
+                        }
+                        String company3 = insurances.get(2).getInsuranceProvider();
+                        if (SystemUtil.isNotEmptyString(company3)) {
+                            insurance3companyTextView.setText(company3);
+                        }
+
+                        String memberid3 = insurances.get(2).getInsuranceMemberId();
+                        if (SystemUtil.isNotEmptyString(memberid3)) {
+                            insurance3policyNumberTextView.setText(memberid3);
+                        }
+
+                    }
+                }
             }
+
         }
+
     }
 
     /**
@@ -392,6 +415,19 @@ toolbar.setVisibility(view.GONE);
 
 
         //  Personal Deatails Model View
+
+        initializePersonalDetailsSectionView();
+        //  Address Model View
+        initializeAddressSectionView();
+
+        //  Insurance Model View
+
+        initializeInsuranceSectionView();
+
+
+    }
+
+    private void initializePersonalDetailsSectionView() {
         firstNameLabel = (TextView) view.findViewById(R.id.reviewFirstNameLabel);
         firstNameLabel.setText(persDetailsMetaDTO.properties.firstName.getLabel().toUpperCase());
         firstnameTextView = (TextView) view.findViewById(R.id.reviewFirstNameTextView);
@@ -427,8 +463,9 @@ toolbar.setVisibility(view.GONE);
         driverLicenseLabel = (TextView) view.findViewById(R.id.reviewDriverLicenseLabel);
         driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel().toUpperCase());
         driverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
+    }
 
-        //  Address Model View
+    private void initializeAddressSectionView() {
         address1Label = (TextView) view.findViewById(R.id.reviewAddress1label);
         address1Label.setText(addressMetaDTO.properties.address1.getLabel().toUpperCase());
         address1TextView = (TextView) view.findViewById(R.id.reviewAddress1TextView);
@@ -450,8 +487,10 @@ toolbar.setVisibility(view.GONE);
         zipcodeLabel = (TextView) view.findViewById(R.id.reviewZipcodeLabel);
         zipcodeLabel.setText(addressMetaDTO.properties.zipcode.getLabel().toUpperCase());
         zipcodeTextView = (TextView) view.findViewById(R.id.reviewZipcodeTextView);
+    }
 
-        //  Insurance Model View
+    private void initializeInsuranceSectionView() {
+
 
         healthInsurance2 = (LinearLayout) view.findViewById(R.id.insurnace2);
         healthInsurance3 = (LinearLayout) view.findViewById(R.id.insurance3);
@@ -493,58 +532,34 @@ toolbar.setVisibility(view.GONE);
 
     }
 
-        WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-
-                CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
-                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-                ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
-                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
-                        PatientModeCheckinActivity.NUM_CONSENT_FORMS);
-
-                // end-splash activity and transition
-                // SplashActivity.this.finish();
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
-            }
-        };
-
     /**
      * @param view on click listener
      */
     @Override
     public void onClick(View view) {
-        if (view == correctInformationButton){
+        if (view == correctInformationButton) {
 
-            ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
+            ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             Map<String, String> queries = new HashMap<>();
-            queries.put("practice_mgmt",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt() );
-            queries.put("practice_id",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+            queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
+            queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
             Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
-            header.put("transition","true");
+            header.put("transition", "true");
 
-            Gson gson= new Gson();
-            String demographicinfo=gson.toJson(demographicDTO.getPayload());
-            TransitionDTO transitionDTO=demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback,demographicinfo,queries,header);
+            Gson gson = new Gson();
+            String demographicinfo = gson.toJson(demographicDTO.getPayload());
+            TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demographicinfo, queries, header);
 
 
         } else if (view == updateInformationUpdate) {
 
             // transition
             CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
-            ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-            ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(false);
+            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+            ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(false);
           /*  FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //            WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getUpdateDemographics(), consentformcallback);
             FragmentTransaction transaction = fragmentManager.beginTransaction();
