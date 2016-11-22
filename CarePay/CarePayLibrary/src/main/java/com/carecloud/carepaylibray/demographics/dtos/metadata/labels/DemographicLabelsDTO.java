@@ -241,17 +241,41 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsAllSetGoButton;
 
-    @SerializedName("demographics_documents_remove") @Expose
+    @SerializedName("demographics_documents_remove")
+    @Expose
     private String documentsRemove;
 
-    @SerializedName("demographics_take_pic_option") @Expose
+    @SerializedName("demographics_take_pic_option")
+    @Expose
     private String demographicsTakePhotoOption;
 
-    @SerializedName("demographics_select_gallery_option") @Expose
+    @SerializedName("demographics_select_gallery_option")
+    @Expose
     private String demographicsChooseFromLibraryOption;
 
-    @SerializedName("demographics_select_capture_option_title") @Expose
+    @SerializedName("demographics_select_capture_option_title")
+    @Expose
     private String demographicsCaptureOptionsTitle;
+
+    @SerializedName("demographics_insurance_scan_insurance_card")
+    @Expose
+    private String demographicsInsuranceScanInsuranceCard;
+
+    @SerializedName("demographics_insurance_scan_msg")
+    @Expose
+    private String demographicsInsuranceScanMsg;
+
+    @SerializedName("demographics_insurance_scan")
+    @Expose
+    private String demographicsInsuranceScan;
+
+    @SerializedName("demographics_insurance_save")
+    @Expose
+    private String demographicsInsuranceSave;
+
+    @SerializedName("demographics_insurance_clear")
+    @Expose
+    private String demographicsInsuranceClear;
 
     /**
      * @return The demographicsUpdateButton
@@ -994,5 +1018,45 @@ public class DemographicLabelsDTO {
      */
     public void setDemographicsCaptureOptionsTitle(String demographicsCaptureOptionsTitle) {
         this.demographicsCaptureOptionsTitle = demographicsCaptureOptionsTitle;
+    }
+
+    public String getDemographicsInsuranceScanInsuranceCard() {
+        return StringUtil.getLabelForView(demographicsInsuranceScanInsuranceCard);
+    }
+
+    public void setDemographicsInsuranceScanInsuranceCard(String demographicsInsuranceScanInsuranceCard) {
+        this.demographicsInsuranceScanInsuranceCard = demographicsInsuranceScanInsuranceCard;
+    }
+
+    public String getDemographicsInsuranceScanMsg() {
+        return StringUtil.getLabelForView(demographicsInsuranceScanMsg);
+    }
+
+    public void setDemographicsInsuranceScanMsg(String demographicsInsuranceScanMsg) {
+        this.demographicsInsuranceScanMsg = demographicsInsuranceScanMsg;
+    }
+
+    public String getDemographicsInsuranceScan() {
+        return StringUtil.getLabelForView(demographicsInsuranceScan);
+    }
+
+    public void setDemographicsInsuranceScan(String demographicsInsuranceScan) {
+        this.demographicsInsuranceScan = demographicsInsuranceScan;
+    }
+
+    public String getDemographicsInsuranceSave() {
+        return StringUtil.getLabelForView(demographicsInsuranceSave);
+    }
+
+    public void setDemographicsInsuranceSave(String demographicsInsuranceSave) {
+        this.demographicsInsuranceSave = demographicsInsuranceSave;
+    }
+
+    public String getDemographicsInsuranceClear() {
+        return StringUtil.getLabelForView(demographicsInsuranceClear);
+    }
+
+    public void setDemographicsInsuranceClear(String demographicsInsuranceClear) {
+        this.demographicsInsuranceClear = demographicsInsuranceClear;
     }
 }
