@@ -61,8 +61,7 @@ import java.util.List;
  * Implements demographics details screen
  */
 public class DemographicsDetailsFragment extends Fragment
-        implements View.OnClickListener,
-                   DocumentScannerFragment.NextAddRemoveStatusModifier {
+        implements View.OnClickListener{
 
     private View     view;
     private String[] raceArray;
@@ -399,7 +398,6 @@ public class DemographicsDetailsFragment extends Fragment
         if (fragment == null) {
             fragment = new ProfilePictureFragment();
             fragment.setGlobalLabelsDTO(globalLabelDTO);
-            fragment.setButtonsStatusCallback(this);
             fragment.setPayloadDTO(persDetailsDTO);
         }
         fm.beginTransaction()
@@ -583,20 +581,5 @@ public class DemographicsDetailsFragment extends Fragment
 
     public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
         this.persDetailsMetaDTO = persDetailsMetaDTO;
-    }
-
-    @Override
-    public void showAddCardButton(boolean isVisible) {
-
-    }
-
-    @Override
-    public void enableNextButton(boolean isEnabled) {
-        nextButton.setEnabled(isEnabled);
-    }
-
-    @Override
-    public void scrollToBottom() {
-
     }
 }
