@@ -45,7 +45,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 import java.util.Locale;
 
@@ -130,6 +129,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
 
+
     private void instantiateViewsRefs() {
         backButton = (CarePayTextView) findViewById(R.id.checkinBack);
         logoImageView = (ImageView) findViewById(R.id.checkinLogo);
@@ -181,6 +181,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         transaction.commit();
     }
 
+    /**
+     * Getter
+     * @return The main DTO
+     */
     public DemographicDTO getDemographicDTO() {
         return demographicDTO;
     }
