@@ -44,7 +44,6 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
         setContentView(R.layout.dialog_base_practice);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         onInitialization();
-        //TODO labels will be get from DTO and Set
         setDialogCancelText(demographicLabelsDTO.getDemographicsCancelLabel());
     }
 
@@ -79,7 +78,7 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
 
     /**
      * inflate the footer view by default visibility gone if have footer then override this method in extended class
-     * @param inflater
+     * @param inflater inflater
      */
     protected abstract void onAddFooterView(LayoutInflater inflater);
 
