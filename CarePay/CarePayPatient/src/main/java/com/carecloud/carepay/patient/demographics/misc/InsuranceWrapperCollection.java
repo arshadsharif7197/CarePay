@@ -72,14 +72,6 @@ import java.util.List;
      * @param payloadDTOs The list of payloads
      */
     public void addAll(List<DemographicInsurancePayloadDTO> payloadDTOs) {
-        if(payloadDTOs == null || payloadDTOs.size() == 0) {
-            add(new DemographicInsurancePayloadDTO());
-            if(callback != null) {
-                callback.onAfterRemove();
-            }
-            return;
-        }
-
         for (DemographicInsurancePayloadDTO payloadDTO : payloadDTOs) {
             add(payloadDTO);
         }
@@ -104,5 +96,23 @@ import java.util.List;
             payloads.add(insuranceWrapper.getWrapperPayloadDTO());
         }
         return payloads;
+    }
+
+    /**
+     * @return Whether the collection is empty
+     */
+    public boolean isEmpty() {
+        return wrappers.isEmpty();
+    }
+
+    /**
+     * @return The last wrapper
+     */
+    public InsuranceWrapper getLast() {
+        int count = wrappers.size();
+        if(count > 0) {
+            return wrappers.get(wrappers.size() - 1);
+        }
+        return null;
     }
 }

@@ -487,11 +487,11 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             btnScanBackInsurance.setText(label);
         }
 
-        if (buttonsStatusCallback != null) {
-            // invoke parent fragment to enable 'Next' button
-            buttonsStatusCallback.enableNextButton(true);
-            buttonsStatusCallback.scrollToBottom();
-        }
+//        if (buttonsStatusCallback != null) {
+//            // invoke parent fragment to enable 'Next' button
+//            buttonsStatusCallback.enableNextButton(true);
+//            buttonsStatusCallback.scrollToBottom();
+//        }
     }
 
     @Override

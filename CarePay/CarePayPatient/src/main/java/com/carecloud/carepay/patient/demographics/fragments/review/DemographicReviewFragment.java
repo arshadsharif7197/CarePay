@@ -445,6 +445,31 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             }
         });
+        zipCodeEditText.addTextChangedListener(new TextWatcher() {
+            int prevLen = 0;
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+                prevLen = charSequence.length();
+                zipCodeEditText.setSelection(charSequence.length());
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String zip = zipCodeEditText.getText().toString();
+                isZipEmpty = StringUtil.isNullOrEmpty(zip);
+                if (!isZipEmpty) {
+                    zipcodeLabel.setError(null);
+                    zipcodeLabel.setErrorEnabled(false);
+                }
+
+                StringUtil.autoFormatZipcode(editable, prevLen);
+            }
+        });
 
     }
 
@@ -463,6 +488,19 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             phoneNumberLabel.setErrorEnabled(false);
         }
         return true;
+    }
+    
+    private boolean checkZip() {
+        String zipCode = zipCodeEditText.getText().toString();
+        if (StringUtil.isNullOrEmpty(zipCode)) {
+            return true;
+        }
+        // apply validate from backend
+        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
+                zipcodeLabel,
+                addressMetaDTO.properties.zipcode,
+                null);
+        return isValidFormat;
     }
 
 
@@ -485,8 +523,12 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if (!isPhoneValid) {
             phoneNumberEditText.requestFocus();
         }
+        boolean isZipValid = checkZip();
+        if (!isZipValid) {
+            zipCodeEditText.requestFocus();
+        }
 
-        return isPhoneValid;
+        return isPhoneValid && isZipValid;
     }
 
     @Override
@@ -855,29 +897,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
             }
         }, demographicinfo, queries, header);
-       /* DemographicService apptService = (new BaseServiceGenerator(getActivity()))
-                .createService(DemographicService.class); // String token, String searchString
-        Call<ResponseBody> call = apptService.updateDemographicInformation(postPayloadModel);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.v(LOG_TAG, "" + response.code());
-                if (response.code() == 200) {
-                    demographicProgressBar.setVisibility(View.GONE);
 
-                    Log.d(LOG_TAG, "demogr post succeeded");
-
-                    openNewFragment();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.d(LOG_TAG, "demogr post failed", throwable);
-                demographicProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "demo post failed", Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     private void initViewFromModels() {

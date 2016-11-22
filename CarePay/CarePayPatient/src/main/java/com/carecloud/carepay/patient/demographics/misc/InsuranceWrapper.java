@@ -21,7 +21,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 /**
  * Wrapper of an entity holding a insurance scanner fragment
  */
-class InsuranceWrapper {
+public class InsuranceWrapper {
 
     private InsuranceScannerFragment wrapperScannerFragment;
     private LinearLayout             holderWrapperView;
@@ -47,7 +47,7 @@ class InsuranceWrapper {
                                                                                 ViewGroup.LayoutParams.WRAP_CONTENT));
         removeClickable.setGravity(Gravity.CENTER);
         removeClickable.setClickable(true);
-        removeClickable.setPadding(0, 5, 0, 5);
+        removeClickable.setPadding(0, 8, 0, 8);
         removeClickable.setText(labels == null ? CarePayConstants.NOT_DEFINED : labels.getDocumentsRemove());
         removeClickable.setTextSize(14);
         removeClickable.setTextColor(ContextCompat.getColor(context, com.carecloud.carepaylibrary.R.color.harvard_crimson));
