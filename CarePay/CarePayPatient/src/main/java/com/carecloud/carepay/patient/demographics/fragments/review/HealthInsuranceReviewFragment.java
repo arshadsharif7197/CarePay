@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
@@ -40,7 +41,6 @@ import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.carecloud.carepaylibrary.R;
 import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
