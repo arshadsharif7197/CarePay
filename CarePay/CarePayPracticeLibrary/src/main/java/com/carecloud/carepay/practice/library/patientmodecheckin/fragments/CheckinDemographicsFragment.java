@@ -46,23 +46,21 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+
+import com.carecloud.carepaylibray.utils.ValidationHelper;
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
@@ -143,7 +141,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     private boolean isZipEmpty;
     private boolean isDriversLicenseEmpty;
 
-    private ScrollView adddemoScrollView;
     private LinearLayout addDemoLineraLayout;
 
     private String stateAbbr = null;
@@ -204,86 +201,45 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
     private void initialiseUIFields() {
 
-        adddemoScrollView = (ScrollView) view.findViewById(R.id.adddemoScrollview);
         addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
         addDemoLineraLayout.setPadding(20, 0, 20, 0);
 
         updateDemoGraphicTitleTextView = (TextView) view.findViewById(R.id.detailsReviewHeading);
-        updateDemoGraphicTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateDemographicTitle());
-
         peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
-        peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
-
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
-        demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
-
         addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);
-        addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
 
         optinalLabelTextView = (TextView) view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
-        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
 
         dateformatLabelTextView = (TextView) view.findViewById(R.id.dobformatlabel);
-        dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
-
-
         phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        phoneNumberEditText.setHint(addressMetaDTO.properties.phone.getLabel());
 
         firstNameText = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
-        firstNameText.setHint(persDetailsMetaDTO.properties.firstName.getLabel());
-
         lastNameText = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
-        lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
-
         middleNameText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
-        middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
 
         dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        dobEditText.setHint(persDetailsMetaDTO.properties.dateOfBirth.getLabel());
-
         address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
-        address1EditText.setHint(addressMetaDTO.properties.address1.getLabel());
-
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
-        address2EditText.setHint(addressMetaDTO.properties.address2.getLabel());
-
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
-        zipCodeEditText.setHint(addressMetaDTO.properties.zipcode.getLabel());
-
         cityEditText = (EditText) view.findViewById(R.id.cityId);
-        cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
-
         stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
         stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
 
         driverlicenseEditText = (EditText) view.findViewById(R.id.driverLicenseEditText);
-        driverlicenseEditText.setHint(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
 
         buttonAddDemographicInfo = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
-        buttonAddDemographicInfo.setOnClickListener(this);
-        buttonAddDemographicInfo.setText(globalLabelsMetaDTO.getDemographicsUpdateButton().toUpperCase());
+
 
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
-        raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-        raceDataTextView.setOnClickListener(this);
         raceLabelTextView = (TextView) view.findViewById(R.id.raceDataTextView);
-        raceLabelTextView.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
-
         ethnicityDataTextView = (TextView) view.findViewById(R.id.ethnicityListDataTextView);
-        ethnicityDataTextView.setOnClickListener(this);
-        ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
         ethnicityLabelTextView = (TextView) view.findViewById(R.id.ethnicityDataTextView);
-        ethnicityLabelTextView.setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
-
-
         selectGender = (TextView) view.findViewById(R.id.chooseGenderTextView);
-        selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-        selectGender.setOnClickListener(this);
         genderLabelTextView = (TextView) view.findViewById(R.id.genderTextView);
-        genderLabelTextView.setText(persDetailsMetaDTO.properties.gender.getLabel());
+
 
         firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
         middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
@@ -296,6 +252,13 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         stateLabel = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+        initializeLabels();
+        initializeOptionsArray();
+
+
+    }
+
+    private void initializeOptionsArray() {
 
         List<MetadataOptionDTO> options = persDetailsMetaDTO.properties.primaryRace.options;
         List<String> races = new ArrayList<>();
@@ -317,6 +280,46 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             genders.add(o.getLabel());
         }
         gender = genders.toArray(new String[0]);
+
+    }
+
+    private void initializeLabels() {
+        firstNameText.setHint(persDetailsMetaDTO.properties.firstName.getLabel());
+        lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
+        middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
+
+        updateDemoGraphicTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateDemographicTitle());
+        peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
+        demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
+        addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
+        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
+
+
+        dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
+        phoneNumberEditText.setHint(addressMetaDTO.properties.phone.getLabel());
+        dobEditText.setHint(persDetailsMetaDTO.properties.dateOfBirth.getLabel());
+        address1EditText.setHint(addressMetaDTO.properties.address1.getLabel());
+        address2EditText.setHint(addressMetaDTO.properties.address2.getLabel());
+        cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
+        zipCodeEditText.setHint(addressMetaDTO.properties.zipcode.getLabel());
+
+        driverlicenseEditText.setHint(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
+
+        selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        selectGender.setOnClickListener(this);
+
+        ethnicityDataTextView.setOnClickListener(this);
+        ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        ethnicityLabelTextView.setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
+
+        genderLabelTextView.setText(persDetailsMetaDTO.properties.gender.getLabel());
+
+        raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        raceDataTextView.setOnClickListener(this);
+
+        raceLabelTextView.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
+        buttonAddDemographicInfo.setOnClickListener(this);
+        buttonAddDemographicInfo.setText(globalLabelsMetaDTO.getDemographicsUpdateButton().toUpperCase());
 
     }
 
