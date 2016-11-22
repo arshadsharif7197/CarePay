@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -35,6 +34,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -48,17 +48,21 @@ import java.util.Map;
 
 
 
-
 public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {
 
-   /* WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
+    WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PracticeNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+
+            CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
+            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+            ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
+            ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
+                    PatientModeCheckinActivity.NUM_CONSENT_FORMS);
 
             // end-splash activity and transition
             // SplashActivity.this.finish();
@@ -68,7 +72,25 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         public void onFailure(String exceptionMessage) {
             //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
         }
-    };*/
+    };
+    /* WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
+         @Override
+         public void onPreExecute() {
+         }
+
+         @Override
+         public void onPostExecute(WorkflowDTO workflowDTO) {
+             PracticeNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+
+             // end-splash activity and transition
+             // SplashActivity.this.finish();
+         }
+
+         @Override
+         public void onFailure(String exceptionMessage) {
+             //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+         }
+     };*/
     private View view;
     private Button correctInformationButton;
     private Button updateInformationUpdate;
@@ -132,8 +154,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     private LinearLayout healthInsurance3;
     private ProgressBar demographicProgressBar;
     private DemographicDTO demographicDTO;
-
-
     private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
@@ -146,10 +166,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     private DemographicMetadataEntityAddressDTO addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-
-
-
-
     private boolean isPhoneEmpty;
     private int selectedDataArray;
     private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
@@ -174,16 +190,15 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         view = inflater.inflate(R.layout.fragment_insurance_review, container, false);
 
 
-
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.review_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-toolbar.setVisibility(view.GONE);
+        toolbar.setVisibility(view.GONE);
 
-     //   DemographicReviewActivity.isFromReview = true;
+        //   DemographicReviewActivity.isFromReview = true;
         //initModels();
         initializeDemographicsDTO();
         initialiseUIFields();
@@ -196,20 +211,20 @@ toolbar.setVisibility(view.GONE);
      * Initialize the models from main Demographic Review Activity
      */
 
-    private void initializeDemographicsDTO(){
+    private void initializeDemographicsDTO() {
         demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
         addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
         idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
-        insurancesMetaDTO=demographicDTO.getMetadata().getDataModels().demographic.insurances;
+        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
 
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
 
-            int size=demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for(int i=0;i>size;i++) {
+            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
+            for (int i = 0; i > size; i++) {
                 demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
             }
         }
@@ -298,7 +313,7 @@ toolbar.setVisibility(view.GONE);
         }
     }
 
-    private void initializeInsuranceFromModel(){
+    private void initializeInsuranceFromModel() {
 
         if (insurances != null) {
 
@@ -358,7 +373,7 @@ toolbar.setVisibility(view.GONE);
         }
 
     }
-    
+
     /**
      * .
      * Initializing the view
@@ -401,9 +416,9 @@ toolbar.setVisibility(view.GONE);
 
         //  Personal Deatails Model View
 
-        initializePersonalDetailsSectionView ();
+        initializePersonalDetailsSectionView();
         //  Address Model View
-        initializeAddressSectionView ();
+        initializeAddressSectionView();
 
         //  Insurance Model View
 
@@ -412,7 +427,7 @@ toolbar.setVisibility(view.GONE);
 
     }
 
-    private void initializePersonalDetailsSectionView (){
+    private void initializePersonalDetailsSectionView() {
         firstNameLabel = (TextView) view.findViewById(R.id.reviewFirstNameLabel);
         firstNameLabel.setText(persDetailsMetaDTO.properties.firstName.getLabel().toUpperCase());
         firstnameTextView = (TextView) view.findViewById(R.id.reviewFirstNameTextView);
@@ -450,7 +465,7 @@ toolbar.setVisibility(view.GONE);
         driverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
     }
 
-    private void initializeAddressSectionView (){
+    private void initializeAddressSectionView() {
         address1Label = (TextView) view.findViewById(R.id.reviewAddress1label);
         address1Label.setText(addressMetaDTO.properties.address1.getLabel().toUpperCase());
         address1TextView = (TextView) view.findViewById(R.id.reviewAddress1TextView);
@@ -474,7 +489,7 @@ toolbar.setVisibility(view.GONE);
         zipcodeTextView = (TextView) view.findViewById(R.id.reviewZipcodeTextView);
     }
 
-    private void initializeInsuranceSectionView(){
+    private void initializeInsuranceSectionView() {
 
 
         healthInsurance2 = (LinearLayout) view.findViewById(R.id.insurnace2);
@@ -517,58 +532,34 @@ toolbar.setVisibility(view.GONE);
 
     }
 
-        WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-
-                CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
-                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-                ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
-                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
-                        PatientModeCheckinActivity.NUM_CONSENT_FORMS);
-
-                // end-splash activity and transition
-                // SplashActivity.this.finish();
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
-            }
-        };
-
     /**
      * @param view on click listener
      */
     @Override
     public void onClick(View view) {
-        if (view == correctInformationButton){
+        if (view == correctInformationButton) {
 
-            ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
+            ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             Map<String, String> queries = new HashMap<>();
-            queries.put("practice_mgmt",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt() );
-            queries.put("practice_id",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+            queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
+            queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
             Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
-            header.put("transition","true");
+            header.put("transition", "true");
 
-            Gson gson= new Gson();
-            String demographicinfo=gson.toJson(demographicDTO.getPayload());
-            TransitionDTO transitionDTO=demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback,demographicinfo,queries,header);
+            Gson gson = new Gson();
+            String demographicinfo = gson.toJson(demographicDTO.getPayload());
+            TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demographicinfo, queries, header);
 
 
         } else if (view == updateInformationUpdate) {
 
             // transition
             CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
-            ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-            ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(false);
+            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+            ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(false);
           /*  FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //            WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getUpdateDemographics(), consentformcallback);
             FragmentTransaction transaction = fragmentManager.beginTransaction();
