@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 
-import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapper;
-import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
-import com.carecloud.carepay.patient.demographics.misc.OnClickRemoveOrAddCallback;
+import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
+import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
+import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
