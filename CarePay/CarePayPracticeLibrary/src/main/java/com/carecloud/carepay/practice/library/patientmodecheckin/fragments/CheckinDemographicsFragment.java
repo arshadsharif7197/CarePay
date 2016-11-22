@@ -66,7 +66,7 @@ import java.util.Map;
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener, DocumentScannerFragment.NextAddRemoveStatusModifier {
+public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener {
 
     private String[] genderArray;
     private String[] raceArray;
@@ -284,7 +284,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         PracticeProfilePictureFragment fragment = (PracticeProfilePictureFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
             fragment = new PracticeProfilePictureFragment();
-            fragment.setButtonsStatusCallback(this);
             fragment.setPayloadDTO(demographicPersDetailsPayloadDTO);
         }
         fm.beginTransaction()
@@ -298,7 +297,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         if (drivinglicensefragment == null) {
             drivinglicensefragment = new PracticeIdDocScannerFragment();
-            drivinglicensefragment.setButtonsStatusCallback(this);
             drivinglicensefragment.setModel(demographicIdDocPayloadDTO);
         }
         drivingLicnesefm.beginTransaction()
@@ -1041,20 +1039,5 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 //            }
 
         }
-    }
-
-    @Override
-    public void showAddCardButton(boolean isVisible) {
-
-    }
-
-    @Override
-    public void enableNextButton(boolean isEnabled) {
-
-    }
-
-    @Override
-    public void scrollToBottom() {
-
     }
 }

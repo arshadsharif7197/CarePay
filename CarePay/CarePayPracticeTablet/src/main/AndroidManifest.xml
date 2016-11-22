@@ -53,7 +53,6 @@
         <activity android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.customdialog.ScanDocDialogActivity"   android:theme="@android:style/Theme.Dialog" />
         <activity android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"/>
     </application>
 
