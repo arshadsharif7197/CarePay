@@ -111,22 +111,22 @@ public class CustomFilterPopupWindow extends PopupWindow
      * @return filtered appoinment list
      */
     private HashSet<String> getFilteredAppointment() {
-        HashSet<String> providerAppointmentList = new HashSet<>();
-        HashSet<String> locationAppoinementList = new HashSet<>();
+        HashSet<String> providerAppointmentsList = new HashSet<>();
+        HashSet<String> locationAppoinementsList = new HashSet<>();
 
         for (FilterDataDTO filterDataDTO : selectedFilters) {
             if (filterDataDTO.getFilterDataType() == FilterDataDTO.FilterDataType.PROVIDER) {
-                providerAppointmentList.addAll(filterDataDTO.getAppointmentList());
+                providerAppointmentsList.addAll(filterDataDTO.getAppointmentList());
             }else {
-                locationAppoinementList.addAll(filterDataDTO.getAppointmentList());
+                locationAppoinementsList.addAll(filterDataDTO.getAppointmentList());
             }
         }
-        if(locationAppoinementList.size()>0 && providerAppointmentList.size()>0) {
-            providerAppointmentList.retainAll(locationAppoinementList);
-        }else if(locationAppoinementList.size()>0 && providerAppointmentList.size()==0) {
-            return locationAppoinementList;
+        if(locationAppoinementsList.size()>0 && providerAppointmentsList.size()>0) {
+            providerAppointmentsList.retainAll(locationAppoinementsList);
+        }else if(locationAppoinementsList.size()>0 && providerAppointmentsList.size()==0) {
+            return locationAppoinementsList;
         }
-        return providerAppointmentList;
+        return providerAppointmentsList;
     }
 
     private HashSet<String> getPatientAppointment() {
