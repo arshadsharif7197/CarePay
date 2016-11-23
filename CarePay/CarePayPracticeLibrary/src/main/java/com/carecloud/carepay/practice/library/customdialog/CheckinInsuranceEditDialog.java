@@ -33,14 +33,18 @@ import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.squareup.picasso.Picasso;
+
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import com.squareup.picasso.Picasso;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -98,7 +102,6 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
      * @param isFooterVisibity boolean
      *  @param demographicDTO DTO
      *   @param index for index
-     * @return
      */
     public CheckinInsuranceEditDialog(Context context,boolean isFooterVisibity,DemographicDTO demographicDTO,int index){
         super(context,demographicDTO.getMetadata().getLabels().getDemographicsCancelLabel(),isFooterVisibity);
