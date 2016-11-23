@@ -52,8 +52,8 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         super.onCreate(savedInstanceState);
         inTakeForm = getConvertedDTO(IntakeResponseModel.class);
         setContentView(com.carecloud.carepaylibrary.R.layout.activity_in_take_web_view);
-        //getIntakeFormData();
-        initForm();
+        getIntakeFormData();
+        //initForm();
     }
 
 
