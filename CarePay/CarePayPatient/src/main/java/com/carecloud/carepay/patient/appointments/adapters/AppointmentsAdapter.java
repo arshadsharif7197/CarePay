@@ -206,12 +206,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.bright_cerulean));
             }
 
-            if(isPending && (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_TODAY) ||
+            /*if(isPending && (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_TODAY) ||
                     sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_UPCOMING))){
                 holder.cellAvatar.setVisibility(View.VISIBLE);
                 holder.cellAvatar.setImageDrawable(context.getResources()
                         .getDrawable(R.drawable.icn_cell_avatar_badge_pending));
-            }
+            }*/
 
             if (isCheckedIn) {
                 holder.appointmentItemLinearLayout.setBackgroundColor(
