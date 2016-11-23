@@ -9,15 +9,15 @@
     <Button
         android:id="@+id/signButton"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/dimen_50dp"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="2dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="31dp"
+        android:layout_marginTop="@dimen/dimen_30dp"
         android:background="@drawable/bg_silver_overlay"
         android:text="Sign Consent For Medical Care"
         android:textColor="@color/white"
-        android:textSize="17sp" />
+        android:textSize="@dimen/dimen_17dp" />
 
     <ScrollView
         android:id="@+id/consentform_scrollView"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/signButton"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
         android:fillViewport="true"
         android:scrollbars="vertical">
 
@@ -91,7 +91,7 @@
                 android:gravity="center"
                 android:text="August 1st, 2016"
                 android:textColor="@color/Feldgrau"
-                android:textSize="24sp"
+                android:textSize="@dimen/dimen_24dp"
                 app:customAssetFont="proxima_nova_regular" />
 
 

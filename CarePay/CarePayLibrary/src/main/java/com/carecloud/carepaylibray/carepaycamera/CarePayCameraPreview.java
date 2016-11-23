@@ -378,8 +378,21 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return camera;
     }
 
+    CarePayCameraCallback carePayCameraCallback;
+
     public void takePicture() {
+        this.carePayCameraCallback=(CarePayCameraCallback)context;
         camera.takePicture(null, null, pictureCallback);
+    }
+
+    /**
+     * Call back for practice app
+      */
+
+    public void takePicturePractice(CarePayCameraCallback carePayCameraCallback) {
+        isPracticeCamera = true;
+        this.carePayCameraCallback=carePayCameraCallback;
+        camera.takePicture(null, null, picturePracticeCallback);
     }
 
     private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
@@ -387,6 +400,16 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
 
+            genarateCropedBitmap(data);
+            releaseCamera();
+        }
+    };
+
+    //for practice app removed releaseCamera method call, camera will be  restart
+    private Camera.PictureCallback picturePracticeCallback = new Camera.PictureCallback() {
+
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
             genarateCropedBitmap(data);
         }
     };
@@ -413,8 +436,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         } else {
             capturedBitmap = rotateBitmap(capturedBitmap, 90);
         }
-        releaseCamera();
-        ((CarePayCameraCallback) context).onCapturedSuccess(capturedBitmap);
+
+        this.carePayCameraCallback.onCapturedSuccess(capturedBitmap);
     }
 
 
@@ -442,20 +465,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
     }
 
-    // for practice app
-    public void takePicturePractice() {
-        isPracticeCamera = true;
-        camera.takePicture(null, null, picturePracticeCallback);
-    }
 
-    //for practice app removed releaseCamera method call, camera will be  restart
-    private Camera.PictureCallback picturePracticeCallback = new Camera.PictureCallback() {
 
-        @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
-            genarateCropedBitmap(data);
-        }
-    };
 
     /**
      * Rounded bitmap

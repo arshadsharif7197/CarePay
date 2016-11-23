@@ -42,6 +42,8 @@ import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoin
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -55,7 +57,12 @@ import java.util.Locale;
  * Main activity for patient check in flow
  */
 
-public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback {
+public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback, DemographicsReviewLabelsHolder {
+
+    public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
+    public final static int SUBFLOW_CONSENT          = 1;
+    public final static int SUBFLOW_INTAKE           = 2;
+    public final static int SUBFLOW_PAYMENTS         = 3;
 
     private static final int NUM_OF_SUBFLOWS   = 4;
     public static final  int NUM_CONSENT_FORMS = 2;
@@ -66,10 +73,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private ImageView       logoImageView;
     private ImageView       homeClickable;
 
-    public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
-    public final static int SUBFLOW_CONSENT          = 1;
-    public final static int SUBFLOW_INTAKE           = 2;
-    public final static int SUBFLOW_PAYMENTS         = 3;
     private View[] sectionTitleTextViews;
     private String preposition = "of";
     private TextView consentCounterTextView;
@@ -79,22 +82,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     // TODO : Will be create separate fragment in next sprint
     private ConsentFormLabelsDTO consentFormLabelsDTO;
 
-    private AppointmentsPayloadDTO appointmentsPayloadDTO;
+    private AppointmentsPayloadDTO  appointmentsPayloadDTO;
     private AppointmentsResultModel appointmentsResultModel;
 
-    private String signMedicareLabel;
+    private String         signMedicareLabel;
     private ConsentFormDTO consentFormDTO;
-    private TextView title;
+    private TextView       title;
     private FormId showingForm = FormId.FORM1;
-    private View indicator0;
-    private View indicator1;
-    private View indicator2;
+    private View   indicator0;
+    private View   indicator1;
+    private View   indicator2;
     private String readCarefullySign;
     private String medicareDescription;
     private String medicareForm;
-    private String providerName = " ";
+    private String providerName     = " ";
     private String patientFirstName = " ";
-    private String patientLastName = " ";
+    private String patientLastName  = " ";
     private String authorizationDescription1;
     private String authorizationDescription2;
     private String authForm;
@@ -116,6 +119,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
         // place the initial fragment
         CheckinDemographicsRevFragment fragment = new CheckinDemographicsRevFragment();
+//        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
         navigateToFragment(fragment, false);
         toggleHighlight(SUBFLOW_DEMOGRAPHICS_INS, true);
 
@@ -128,7 +132,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         super.onDestroy();
         unregisterReceiver(intakeFormReceiver);
     }
-
 
     private void instantiateViewsRefs() {
         backButton = (CarePayTextView) findViewById(R.id.checkinBack);
@@ -152,14 +155,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 onBackPressed();
             }
         });
 
         homeClickable.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 PatientModeCheckinActivity.this.finish();
             }
         });
@@ -181,8 +184,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         transaction.commit();
     }
 
+    /**
+     * Getter
+     *
+     * @return The main DTO
+     */
     public DemographicDTO getDemographicDTO() {
         return demographicDTO;
+    }
+
+    /**
+     * Re-sets the global DTO from a string JSON
+     *
+     * @param jsonString The main DTO as string
+     */
+    public void resetDemographicDTO(String jsonString) {
+        this.demographicDTO = getConvertedDTO(DemographicDTO.class, jsonString);
     }
 
     /**
@@ -291,6 +308,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         }
         super.onBackPressed();
     }
+
+    @Override
+    public DemographicLabelsDTO getLabelsDTO() {
+        return demographicDTO.getMetadata().getLabels();
+    }
     /* ############# Consent Form TODO: will change to different fragment */
 
     /**
@@ -311,10 +333,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if (showingForm == FormId.FORM1) {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignConsentForMedicareTitle());
             intent.putExtra("Header_Title", signMedicareLabel);
-            intent.putExtra("Subtitle",consentFormLabelsDTO.getConsentReadCarefullyWarning());
+            intent.putExtra("Subtitle", consentFormLabelsDTO.getConsentReadCarefullyWarning());
         } else if (showingForm == FormId.FORM2) {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignAuthorizationFormTitle());
-            intent.putExtra("Subtitle",consentFormLabelsDTO.getBeforeSignatureWarningText());
+            intent.putExtra("Subtitle", consentFormLabelsDTO.getBeforeSignatureWarningText());
 
         } else {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
@@ -344,12 +366,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     /**
      * Consent form navigation
+     *
      * @param workflowJson consent DTO
      */
     public void getConsentFormInformation(String workflowJson) {
-        consentFormDTO=getConvertedDTO(ConsentFormDTO.class,workflowJson);
-        if ( consentFormDTO != null) {
-            ConsentFormMetadataDTO consentFormMetadataDTO = consentFormDTO.getMetadata();
+        consentFormDTO = getConvertedDTO(ConsentFormDTO.class, workflowJson);
+        if (consentFormDTO != null) {
             ConsentFormPayloadDTO consentFormPayloadDTO = consentFormDTO.getConsentFormPayloadDTO();
             ConsentFormAppointmentsPayloadDTO consentFormAppointmentsPayloadDTO = consentFormPayloadDTO.getConsentFormAppointmentPayload().get(0);
             ConsentFormAppoPayloadDTO consentFormAppoPayloadDTO = consentFormAppointmentsPayloadDTO.getAppointmentPayload();
@@ -357,6 +379,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             patientLastName = consentFormAppoPayloadDTO.getAppointmentPatient().getLastName();
             providerName = consentFormAppoPayloadDTO.getAppoPayloadProvider().getName();
 
+            ConsentFormMetadataDTO consentFormMetadataDTO = consentFormDTO.getMetadata();
             if (consentFormMetadataDTO != null) {
                 consentFormLabelsDTO = consentFormMetadataDTO.getLabel();
 
@@ -541,14 +564,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     BroadcastReceiver intakeFormReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.hasExtra("INTAKE_WORKFLOW"))
-            inTakeForm=getConvertedDTO(IntakeResponseModel.class,intent.getStringExtra("INTAKE_WORKFLOW"));
+            if (intent.hasExtra("INTAKE_WORKFLOW")) {
+                inTakeForm = getConvertedDTO(IntakeResponseModel.class, intent.getStringExtra("INTAKE_WORKFLOW"));
+            }
             CheckinIntakeForm1Fragment fragment = new CheckinIntakeForm1Fragment();
             navigateToFragment(fragment, false);
             // TODO: SAUL Create Intake Fragment
             //navigateToFragment("INTAKEFRAGMENT", false);
-
-
         }
     };
 

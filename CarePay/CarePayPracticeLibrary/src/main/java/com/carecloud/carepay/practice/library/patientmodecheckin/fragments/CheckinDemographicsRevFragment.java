@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -29,6 +30,8 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -47,7 +50,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {
 
     WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
@@ -63,7 +65,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
                     PatientModeCheckinActivity.NUM_CONSENT_FORMS);
-
+            Bundle bundle = new Bundle();
+            bundle.putString(CarePayConstants.ATTR_RESPONSE, workflowDTO.toString());
+            fragment.setArguments(bundle);
             // end-splash activity and transition
             // SplashActivity.this.finish();
         }
@@ -91,85 +95,87 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
              //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
          }
      };*/
-    private View view;
-    private Button correctInformationButton;
-    private Button updateInformationUpdate;
-    private TextView reviewTitleTextView;
-    private TextView reviewSubtitileTextView;
-    private TextView addressSectionTextView;
-    private TextView peronalInfoSectionTextview;
-    private TextView demographicSectionTextView;
-    private TextView healthInsurance1SecionTextView;
-    private TextView healthInsurance2SecionTextView;
-    private TextView healthInsurance3SecionTextView;
-    private TextView firstnameTextView;
-    private TextView middlenameTextView;
-    private TextView lastNameTextView;
-    private TextView dobTExtView;
-    private TextView phoneNumberTextView;
-    private TextView genderTextView;
-    private TextView driverLicenseTextView;
-    private TextView raceTextView;
-    private TextView ethnicityTextView;
-    private TextView insurance1companyTextView;
-    private TextView insurance1planTextView;
-    private TextView insurance1policyNumberTextView;
-    private TextView insurance2companyTextView;
-    private TextView insurance2planTextView;
-    private TextView insurance2policyNumberTextView;
-    private TextView insurance3companyTextView;
-    private TextView insurance3planTextView;
-    private TextView insurance3policyNumberTextView;
-    private TextView address1TextView;
-    private TextView address2TextView;
-    private TextView cityTextView;
-    private TextView stateTextView;
-    private TextView zipcodeTextView;
+    private View        view;
+    private Button      correctInformationButton;
+    private Button      updateInformationUpdate;
+    private TextView    reviewTitleTextView;
+    private TextView    reviewSubtitileTextView;
+    private TextView    addressSectionTextView;
+    private TextView    peronalInfoSectionTextview;
+    private TextView    demographicSectionTextView;
+    private TextView    healthInsurance1SecionTextView;
+    private TextView    healthInsurance2SecionTextView;
+    private TextView    healthInsurance3SecionTextView;
+    private TextView    firstnameTextView;
+    private TextView    middlenameTextView;
+    private TextView    lastNameTextView;
+    private TextView    dobTExtView;
+    private TextView    phoneNumberTextView;
+    private TextView    genderTextView;
+    private TextView    driverLicenseTextView;
+    private TextView    raceTextView;
+    private TextView    ethnicityTextView;
+    private TextView    insurance1companyTextView;
+    private TextView    insurance1planTextView;
+    private TextView    insurance1policyNumberTextView;
+    private TextView    insurance2companyTextView;
+    private TextView    insurance2planTextView;
+    private TextView    insurance2policyNumberTextView;
+    private TextView    insurance3companyTextView;
+    private TextView    insurance3planTextView;
+    private TextView    insurance3policyNumberTextView;
+    private TextView    address1TextView;
+    private TextView    address2TextView;
+    private TextView    cityTextView;
+    private TextView    stateTextView;
+    private TextView    zipcodeTextView;
     private FrameLayout addressline2label;
-    private View address2labelview;
-    private TextView firstNameLabel;
-    private TextView lastNameLabel;
-    private TextView middleNameLabel;
-    private TextView phoneNumberLabel;
-    private TextView dobLabel;
-    private TextView genderLabel;
-    private TextView raceLabel;
-    private TextView ethnicityLabel;
-    private TextView insurance1companyLabel;
-    private TextView insurance1planLabel;
-    private TextView insurance1policyNumberLabel;
-    private TextView address1Label;
-    private TextView address2Label;
-    private TextView stateLabel;
-    private TextView cityLabel;
-    private TextView zipcodeLabel;
-    private TextView driverLicenseLabel;
-    private TextView insurance2companyLabel;
-    private TextView insurance2planLabel;
-    private TextView insurance2policyNumberLabel;
-    private TextView insurance3companyLabel;
-    private TextView insurance3planLabel;
-    private TextView insurance3policyNumberLabel;
-    private LinearLayout healthInsurance2;
-    private LinearLayout healthInsurance3;
-    private ProgressBar demographicProgressBar;
-    private DemographicDTO demographicDTO;
-    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
-    private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
-    private DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
-    private List<DemographicInsurancePayloadDTO> insurances;
-    private DemographicIdDocPayloadDTO idDocPayloadDTO;
-    private DemographicInsurancePayloadDTO insuranceModel1;
-    private DemographicInsurancePayloadDTO insuranceModel2;
-    private DemographicInsurancePayloadDTO insuranceModel3;
-    private DemographicLabelsDTO globalLabelsMetaDTO;
-    private DemographicMetadataEntityAddressDTO addressMetaDTO;
+    private View        address2labelview;
+    private TextView    firstNameLabel;
+    private TextView    lastNameLabel;
+    private TextView    middleNameLabel;
+    private TextView    phoneNumberLabel;
+    private TextView    dobLabel;
+    private TextView    genderLabel;
+    private TextView    raceLabel;
+    private TextView    ethnicityLabel;
+    private TextView    insurance1companyLabel;
+    private TextView    insurance1planLabel;
+    private TextView    insurance1policyNumberLabel;
+    private TextView    address1Label;
+    private TextView    address2Label;
+    private TextView    stateLabel;
+    private TextView    cityLabel;
+    private TextView    zipcodeLabel;
+    private TextView    driverLicenseLabel;
+    private TextView    insurance2companyLabel;
+    private TextView    insurance2planLabel;
+    private TextView    insurance2policyNumberLabel;
+    private TextView    insurance3companyLabel;
+    private TextView    insurance3planLabel;
+    private TextView    insurance3policyNumberLabel;
+
+    private LinearLayout                            healthInsurance1;
+    private LinearLayout                            healthInsurance2;
+    private LinearLayout                            healthInsurance3;
+    private ProgressBar                             demographicProgressBar;
+    private DemographicDTO                          demographicDTO;
+    private DemographicPersDetailsPayloadDTO        demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO            demographicAddressPayloadDTO;
+    private DemographicInsurancePayloadDTO          demographicInsurancePayloadDTO;
+    private List<DemographicInsurancePayloadDTO>    insurances;
+    private DemographicIdDocPayloadDTO              idDocPayloadDTO;
+    private DemographicInsurancePayloadDTO          insuranceModel1;
+    private DemographicInsurancePayloadDTO          insuranceModel2;
+    private DemographicInsurancePayloadDTO          insuranceModel3;
+    private DemographicLabelsDTO                    globalLabelsMetaDTO;
+    private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-    private boolean isPhoneEmpty;
-    private int selectedDataArray;
-    private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
+    private boolean                                 isPhoneEmpty;
+    private int                                     selectedDataArray;
+    private DemographicIdDocPayloadDTO              demographicIdDocPayloadDTO;
+    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
 
     public CheckinDemographicsRevFragment() {
     }
@@ -212,23 +218,34 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
      */
 
     private void initializeDemographicsDTO() {
+        // fetch the main DTO
         demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
+
+        // fetch the metadata
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
         addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
         idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
         insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
 
-        if (demographicDTO.getPayload().getDemographics() != null) {
-            demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
-            demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
-
-            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for (int i = 0; i > size; i++) {
-                demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
+        // get the payloads
+        DemographicPayloadInfoDTO demographicPayloadInfoDTO = demographicDTO.getPayload().getDemographics();
+        if (demographicPayloadInfoDTO != null) {
+            DemographicPayloadDTO payload = demographicPayloadInfoDTO.getPayload();
+            if (payload != null) {
+                // get personal
+                demographicPersDetailsPayloadDTO = payload.getPersonalDetails();
+                // get address
+                demographicAddressPayloadDTO = payload.getAddress();
+                // get id docs
+                int size = payload.getIdDocuments().size();
+                for (int i = 0; i > size; i++) {
+                    demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
+                }
+                // get insurances
+                insurances = payload.getInsurances(); // (Mr Rahul G. should use more comments ;) )
             }
         }
-
     }
 
     private void populateViewsFromModel() {
@@ -349,6 +366,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                         insurance2policyNumberTextView.setText(memberid2);
                     }
 
+
                     if (insurances.size() > 2 && insurances.get(2) != null) {
 
                         healthInsurance3.setVisibility(View.VISIBLE);
@@ -365,13 +383,10 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                         if (SystemUtil.isNotEmptyString(memberid3)) {
                             insurance3policyNumberTextView.setText(memberid3);
                         }
-
                     }
                 }
             }
-
         }
-
     }
 
     /**
@@ -490,46 +505,44 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     }
 
     private void initializeInsuranceSectionView() {
-
-
+        healthInsurance1 = (LinearLayout) view.findViewById(R.id.insurance1);
         healthInsurance2 = (LinearLayout) view.findViewById(R.id.insurnace2);
         healthInsurance3 = (LinearLayout) view.findViewById(R.id.insurance3);
-        insurance1planLabel = (TextView) view.findViewById(R.id.reviewPlanLabel);
-        insurance1planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
-        insurance1planTextView = (TextView) view.findViewById(R.id.reviewPlanTextView);
 
-        insurance1companyLabel = (TextView) view.findViewById(R.id.reviewCompanyLabel);
-        insurance1companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
-        insurance1companyTextView = (TextView) view.findViewById(R.id.reviewCompanyTextView);
+        insurance1planLabel = (TextView) view.findViewById(R.id.reviewPlanLabel);
+        insurance2planLabel = (TextView) view.findViewById(R.id.reviewPlan2Label);
+        insurance3planLabel = (TextView) view.findViewById(R.id.reviewPlan3Label);
 
         insurance1policyNumberLabel = (TextView) view.findViewById(R.id.reviewInsuranceCardNoLabel);
-        insurance1policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
-        insurance1policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView);
+        insurance2policyNumberLabel = (TextView) view.findViewById(R.id.reviewInsurance2CardNoLabel);
+        insurance3policyNumberLabel = (TextView) view.findViewById(R.id.reviewInsurance3CardNoLabel);
 
-        insurance2planLabel = (TextView) view.findViewById(R.id.reviewPlan2Label);
-        insurance2planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
+        insurance1planTextView = (TextView) view.findViewById(R.id.reviewPlanTextView);
         insurance2planTextView = (TextView) view.findViewById(R.id.reviewPlan2TextView);
-
-        insurance3planLabel = (TextView) view.findViewById(R.id.reviewPlan3Label);
-        insurance3planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
         insurance3planTextView = (TextView) view.findViewById(R.id.reviewPlan3TextView);
 
-        insurance2companyLabel = (TextView) view.findViewById(R.id.reviewCompany2Label);
-        insurance2companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
+        insurance1companyTextView = (TextView) view.findViewById(R.id.reviewCompanyTextView);
         insurance2companyTextView = (TextView) view.findViewById(R.id.reviewCompany2TextView);
-
-        insurance3companyLabel = (TextView) view.findViewById(R.id.reviewCompany3Label);
-        insurance3companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
         insurance3companyTextView = (TextView) view.findViewById(R.id.reviewCompany3TextView);
 
-        insurance2policyNumberLabel = (TextView) view.findViewById(R.id.reviewInsurance2CardNoLabel);
-        insurance2policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
-        insurance2policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurance2PolicyNoTextView);
 
-        insurance3policyNumberLabel = (TextView) view.findViewById(R.id.reviewInsurance3CardNoLabel);
-        insurance3policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
+        insurance1companyLabel = (TextView) view.findViewById(R.id.reviewCompanyLabel);
+        insurance2companyLabel = (TextView) view.findViewById(R.id.reviewCompany2Label);
+        insurance3companyLabel = (TextView) view.findViewById(R.id.reviewCompany3Label);
+
+        insurance1policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView);
+        insurance2policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurance2PolicyNoTextView);
         insurance3policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurance3PolicyNoTextView);
 
+        insurance1policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
+        insurance1planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
+        insurance1companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
+        insurance2planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
+        insurance2companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
+        insurance2policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
+        insurance3planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
+        insurance3companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
+        insurance3policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
     }
 
     /**
@@ -628,11 +641,11 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
         setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewRaceTextView));
+                                       (TextView) view.findViewById(R.id.reviewRaceTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewEthnicityTextView));
+                                       (TextView) view.findViewById(R.id.reviewEthnicityTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewGenderTextView));
+                                       (TextView) view.findViewById(R.id.reviewGenderTextView));
 
 
         //PN - extra Bold
@@ -663,33 +676,33 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
         //PN-Regular
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewRaceLabel));
+                                      (TextView) view.findViewById(R.id.reviewRaceLabel));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewEthnicityLabel));
+                                      (TextView) view.findViewById(R.id.reviewEthnicityLabel));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewCompanyTextView));
+                                      (TextView) view.findViewById(R.id.reviewCompanyTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewPlanTextView));
+                                      (TextView) view.findViewById(R.id.reviewPlanTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView));
+                                      (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewFirstNameTextView));
+                                      (TextView) view.findViewById(R.id.reviewFirstNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewLastNameTextView));
+                                      (TextView) view.findViewById(R.id.reviewLastNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewMiddelNameTextView));
+                                      (TextView) view.findViewById(R.id.reviewMiddelNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewDOBTextView));
+                                      (TextView) view.findViewById(R.id.reviewDOBTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewPhoneNumberTextView));
+                                      (TextView) view.findViewById(R.id.reviewPhoneNumberTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewGenderLabel));
+                                      (TextView) view.findViewById(R.id.reviewGenderLabel));
 
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewDriverLicenseTextView));
+                                      (TextView) view.findViewById(R.id.reviewDriverLicenseTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewAddress1TextView));
+                                      (TextView) view.findViewById(R.id.reviewAddress1TextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewAddress2TextView));
+                                      (TextView) view.findViewById(R.id.reviewAddress2TextView));
     }
 }
