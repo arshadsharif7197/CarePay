@@ -58,7 +58,8 @@
                     android:id="@+id/reasonTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="@color/Munsell">
+                    android:textColorHint="@color/Munsell"
+                    android:visibility="gone">
 
                     <EditText
                         android:id="@+id/reasonEditText"
