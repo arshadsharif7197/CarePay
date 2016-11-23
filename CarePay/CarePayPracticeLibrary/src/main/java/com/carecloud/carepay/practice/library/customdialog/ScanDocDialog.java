@@ -59,7 +59,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
      * @param saveScanDocListener listener
      */
     public ScanDocDialog(Context context, DemographicLabelsDTO demographicLabelsDTO, boolean isFooterVisible, SaveScanDocListener saveScanDocListener){
-        super(context,demographicLabelsDTO,isFooterVisible);
+        super(context,demographicLabelsDTO.getDemographicsCancelLabel(),isFooterVisible);
         this.context = context;
         this.demographicLabelsDTO = demographicLabelsDTO;
         this.saveScanDocListener = saveScanDocListener;
@@ -118,7 +118,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
 
             if (isCapturing) {
                 if (carePayCameraPreview != null) {
-                    carePayCameraPreview.takePicturePractice();
+                    carePayCameraPreview.takePicturePractice(this);
                 }
             } else {
                 onSaveImage();

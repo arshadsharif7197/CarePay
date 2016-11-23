@@ -59,7 +59,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"/>
+        <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
+                  android:windowSoftInputMode="adjustNothing"/>
 
         <activity android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"/>
     </application>
