@@ -157,11 +157,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
         postPayloadModel.setInsurances(insurancePayloadDTOs);
 
-        // transition
-//        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
-//        ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-
-//         TODO: 11/22/2016 uncommnent
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
         queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());

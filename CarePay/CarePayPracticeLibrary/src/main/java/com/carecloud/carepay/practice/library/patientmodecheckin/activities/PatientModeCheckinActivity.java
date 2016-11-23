@@ -44,6 +44,8 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Locale;
@@ -54,7 +56,7 @@ import java.util.Locale;
  * Main activity for patient check in flow
  */
 
-public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback {
+public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback, DemographicsReviewLabelsHolder {
 
     private static final int NUM_OF_SUBFLOWS   = 4;
     public static final  int NUM_CONSENT_FORMS = 2;
@@ -293,6 +295,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             toggleVisibleBackButton(false);
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public DemographicLabelsDTO getLabelsDTO() {
+        return demographicDTO.getMetadata().getLabels();
     }
     /* ############# Consent Form TODO: will change to different fragment */
 
