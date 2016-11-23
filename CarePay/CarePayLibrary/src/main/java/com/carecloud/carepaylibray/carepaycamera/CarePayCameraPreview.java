@@ -2,53 +2,118 @@ package com.carecloud.carepaylibray.carepaycamera;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Camera;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.io.ByteArrayOutputStream;
+import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
+
 import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by Jahirul Bhuiyan on 11/10/2016.
+ * Capture Image Camera view
  */
 
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+    public enum CameraType {
+        CAPTURE_PHOTO, SCAN_DOC
+    }
+
     private SurfaceHolder cameraSurfaceHolder;
     private Camera camera;
-    int borderWidth=2;
-    int shadowWidth=100;
-    float borderCornerRadius=15;
+    int borderWidth = 2;
+    int shadowWidth = 100;
+    float borderCornerRadius = 15;
     Context context;
     private Bitmap capturedBitmap;
     private boolean isPracticeCamera;
+    boolean surfaceCreated;
 
+    public CameraType cameraType = CameraType.SCAN_DOC;
+
+    /**
+     * Constructor
+     *
+     * @param context caller context
+     */
     public CarePayCameraPreview(Context context) {
         super(context);
+        this.context = context;
         initialize(context);
     }
 
+    /**
+     * Camera initialization
+     *
+     * @param context caller context
+     */
     private void initialize(Context context) {
-        this.context=context;
+        this.context = context;
         camera = getCameraInstance();
         setBackgroundColor(Color.parseColor("#aa575555"));
         cameraSurfaceHolder = getHolder();
         cameraSurfaceHolder.addCallback(this);
+        autoFocusHandler = new Handler();
         setFocusable(true);
         setFocusableInTouchMode(true);
+
         cameraSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    }
+
+    /**
+     * Get front camera if available otherwisw defaulft camera
+     *
+     * @return
+     */
+    public static int getFrontFaceCamera() {
+        int numberOfCameras = Camera.getNumberOfCameras();
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        int defaultCameraId = -1;
+        for (int i = 0; i < numberOfCameras; i++) {
+            defaultCameraId = i;
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                return i;
+            }
+        }
+        return defaultCameraId;
+    }
+
+    /**
+     * Get back camera if available otherwisw defaulft camera
+     *
+     * @return
+     */
+    public static int getBackFaceCamera() {
+        int numberOfCameras = Camera.getNumberOfCameras();
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        int defaultCameraId = -1;
+        for (int i = 0; i < numberOfCameras; i++) {
+            defaultCameraId = i;
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                return i;
+            }
+        }
+        return defaultCameraId;
     }
 
     /**
@@ -58,9 +123,11 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * @param context sender context
      * @param attrs   styleable attributes
      */
+
     public CarePayCameraPreview(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
+        this.context = context;
     }
 
     /**
@@ -75,40 +142,94 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     public CarePayCameraPreview(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.context = context;
         initialize(context);
     }
 
+    Rect shadowRect = null;
+
     /**
      * On draw
+     *
      * @param canvas canvas
      */
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        Paint transparentPaint = new Paint();
-        transparentPaint.setColor(getResources().getColor(android.R.color.transparent));
-        transparentPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        transparentPaint.setAntiAlias(true);
+        if (cameraType == CameraType.SCAN_DOC) {
+            Paint transparentPaint = new Paint();
+            transparentPaint.setColor(getResources().getColor(android.R.color.transparent));
+            transparentPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            transparentPaint.setAntiAlias(true);
+            Rect rect;
 
-        final Rect rect = new Rect(getLeft()+shadowWidth,
-                getTop()+shadowWidth,
-                getRight()-shadowWidth,
-                getBottom()-shadowWidth);
-        final RectF rectF = new RectF(rect);
-
-        canvas.drawRoundRect(rectF, borderCornerRadius, borderCornerRadius, transparentPaint);
-        Paint borderPaint = new Paint();
-        borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setStrokeWidth(borderWidth); // set stroke width
-        borderPaint.setColor(Color.parseColor("#ffffff"));
-        canvas.drawRoundRect(rectF, borderCornerRadius, borderCornerRadius, borderPaint);
+            if (DisplayUtils.getScreenOrientation(getContext()) == Configuration.ORIENTATION_PORTRAIT) {
+                rect = new Rect(getLeft() + shadowWidth,
+                        getTop() + shadowWidth * 2,
+                        getRight() - shadowWidth,
+                        getBottom() - shadowWidth * 2);
+                shadowRect = rect;
+            } else {
+                rect = new Rect(getLeft() + shadowWidth * 2,
+                        getTop() + shadowWidth,
+                        getRight() - shadowWidth * 2,
+                        getBottom() - shadowWidth);
+                shadowRect = rect;
+            }
+            RectF shadowRectF = new RectF(shadowRect);
+            canvas.drawRoundRect(shadowRectF, borderCornerRadius, borderCornerRadius, transparentPaint);
+            Paint borderPaint = new Paint();
+            borderPaint.setStyle(Paint.Style.STROKE);
+            borderPaint.setStrokeWidth(borderWidth); // set stroke width
+            borderPaint.setColor(Color.parseColor("#ffffff"));
+            canvas.drawRoundRect(shadowRectF, borderCornerRadius, borderCornerRadius, borderPaint);
+        }
     }
+
+    // Mimic continuous auto-focusing
+    Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
+        public void onAutoFocus(boolean success, Camera camera) {
+            scheduleAutoFocus();
+        }
+    };
+
+    /**
+     * Camera autofous
+     */
+    public void safeAutoFocus() {
+        try {
+            camera.autoFocus(autoFocusCB);
+        } catch (RuntimeException re) {
+            // Horrible hack to deal with autofocus errors on Sony devices
+            // See https://github.com/dm77/barcodescanner/issues/7 for example
+            scheduleAutoFocus(); // wait 1 sec and then do check again
+        }
+    }
+
+    private Handler autoFocusHandler;
+
+    /**
+     * Schedule focus
+     */
+    private void scheduleAutoFocus() {
+        autoFocusHandler.postDelayed(doAutoFocus, 1000);
+    }
+
+    private Runnable doAutoFocus = new Runnable() {
+        public void run() {
+            if (camera != null && surfaceCreated) {
+                safeAutoFocus();
+            }
+        }
+    };
 
     /**
      * On size change
-     * @param width  width
-     * @param height height
-     * @param oldWidth oldWidth
+     *
+     * @param width     width
+     * @param height    height
+     * @param oldWidth  oldWidth
      * @param oldHeight oldHeight
      */
     @Override
@@ -119,30 +240,39 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     /**
      * On serface created
+     *
      * @param holder serface holder
      */
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
+        surfaceCreated = true;
         try {
+            surfaceCreated = true;
             camera.setPreviewDisplay(holder);
-            camera.setDisplayOrientation(90);
             camera.startPreview();
+            if (surfaceCreated) { // check if surface created before using autofocus
+                safeAutoFocus();
+            } else {
+                scheduleAutoFocus(); // wait 1 sec and then do check again
+            }
         } catch (IOException e) {
             Log.d("CameraRND", "Error setting camera preview: " + e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.d("CameraRND", "Error setting camera : " + e.getMessage());
         }
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
         // empty. Take care of releasing the Camera preview in your activity.
+        surfaceCreated = false;
     }
 
     /**
      * serfave change
+     *
      * @param holder holder
      * @param format format
-     * @param width width
+     * @param width  width
      * @param height height
      */
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -156,8 +286,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         // stop preview before making changes
         try {
-            if(!isPracticeCamera)
-           camera.stopPreview();
+            if (!isPracticeCamera)
+                camera.stopPreview();
         } catch (Exception e) {
             // ignore: tried to stop a non-existent preview
         }
@@ -177,6 +307,12 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             camera.setParameters(params);
             camera.setPreviewDisplay(cameraSurfaceHolder);
             camera.startPreview();
+
+            if (surfaceCreated) { // check if surface created before using autofocus
+                safeAutoFocus();
+            } else {
+                scheduleAutoFocus(); // wait 1 sec and then do check again
+            }
 
         } catch (Exception e) {
             Log.d("CameraRND", "Error starting camera preview: " + e.getMessage());
@@ -222,12 +358,19 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     /**
      * A safe way to get an instance of the Camera object.
      */
-    private  Camera getCameraInstance() {
+    private Camera getCameraInstance() {
         Camera camera = null;
-        if(checkCameraHardware()) {
+        if (checkCameraHardware()) {
 
             try {
-                camera = Camera.open(); // attempt to get a Camera instance
+                if (cameraType == CameraType.CAPTURE_PHOTO) {
+                    camera = Camera.open(getFrontFaceCamera());
+                    camera.setDisplayOrientation(90);
+                } else {
+                    camera = Camera.open(getBackFaceCamera());
+                    camera.setDisplayOrientation(90);
+                }
+                // attempt to get a Camera instance
             } catch (Exception e) {
                 // Camera is not available (in use or does not exist)
             }
@@ -235,7 +378,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return camera;
     }
 
-    public void takePicture(){
+    public void takePicture() {
         camera.takePicture(null, null, pictureCallback);
     }
 
@@ -243,14 +386,54 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            capturedBitmap = scaleCenterCrop(capturedBitmap, getWidth()-borderWidth, getHeight()-borderWidth);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-            releaseCamera();
-            ((CarePayCameraCallback)context).onCapturedSuccess(capturedBitmap);
+
+            genarateCropedBitmap(data);
         }
     };
+
+    private void genarateCropedBitmap(byte[] data) {
+
+        Bitmap capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        if (cameraType == CameraType.SCAN_DOC) {
+            Rect rectFrame = shadowRect;
+
+            double scaleWidth = (float) capturedBitmap.getWidth() / getHeight();
+            double scaleHeight = (float) capturedBitmap.getHeight() / getWidth();
+
+            int cropedWidth = (int) (scaleWidth * rectFrame.height());
+            int cropedHeight = (int) (scaleHeight * rectFrame.width());
+
+            int left = (int) (rectFrame.top * scaleWidth) - 5;
+            int top = (int) (rectFrame.left * scaleHeight) - 5;
+
+            Log.d("Scales:", "scaleWidth: " + scaleWidth + "  scaleHeight: " + scaleHeight + "  cropedWidth: " + cropedWidth + "  cropedHeight: " + cropedHeight + "  left: " + left + "  top: " + top);
+
+            capturedBitmap = Bitmap.createBitmap(capturedBitmap, left, top, cropedWidth, cropedHeight);
+
+        } else {
+            capturedBitmap = rotateBitmap(capturedBitmap, 90);
+        }
+        releaseCamera();
+        ((CarePayCameraCallback) context).onCapturedSuccess(capturedBitmap);
+    }
+
+
+    private int dpToPx(int dp) {
+        Resources resources = getResources();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
+    }
+
+    /**
+     * Rotale original bitmap by sending angle
+     * @param source source bitmap
+     * @param angle angle
+     * @return
+     */
+    public Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
 
     private void releaseCamera() {
         if (camera != null) {
@@ -260,8 +443,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     }
 
     // for practice app
-    public void takePicturePractice(){
-        isPracticeCamera= true;
+    public void takePicturePractice() {
+        isPracticeCamera = true;
         camera.takePicture(null, null, picturePracticeCallback);
     }
 
@@ -270,54 +453,13 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            capturedBitmap = scaleCenterCrop(capturedBitmap,  getWidth()-borderWidth, getHeight()-borderWidth);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-            ((CarePayCameraCallback)context).onCapturedSuccess(capturedBitmap);
+            genarateCropedBitmap(data);
         }
     };
-    /**
-     * Crop captured image in center
-     * @param source source
-     * @param newHeight newHeight
-     * @param newWidth newWidth
-     * @return bitmap
-     */
-    public Bitmap scaleCenterCrop(Bitmap source, int newHeight, int newWidth) {
-        int sourceWidth = source.getWidth();
-        int sourceHeight = source.getHeight();
-
-        // Compute the scaling factors to fit the new height and width, respectively.
-        // To cover the final image, the final scaling will be the bigger
-        // of these two.
-        float xScale = (float) newWidth / sourceWidth;
-        float yScale = (float) newHeight / sourceHeight;
-        float scale = Math.max(xScale, yScale);
-
-        // Now get the size of the source bitmap when scaled
-        float scaledWidth = scale * sourceWidth;
-        float scaledHeight = scale * sourceHeight;
-
-        // Let's find out the upper left coordinates if the scaled bitmap
-        // should be centered in the new size give by the parameters
-        float left = (newWidth - scaledWidth) / 2;
-        float top = (newHeight - scaledHeight) / 2;
-
-        // The target rectangle for the new, scaled version of the source bitmap will now
-        // be
-        RectF targetRect = new RectF(left, top, left + scaledWidth, top + scaledHeight);
-
-        // Finally, we create a new bitmap of the specified size and draw our new,
-        // scaled bitmap onto it.
-        Bitmap dest = Bitmap.createBitmap(newWidth, newHeight, source.getConfig());
-        Canvas canvas = new Canvas(dest);
-        canvas.drawBitmap(source, null, targetRect, null);
-        return getRoundedCornerBitmap(dest);
-    }
 
     /**
      * Rounded bitmap
+     *
      * @param bitmap
      * @return
      */
@@ -348,7 +490,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     }
 
     // for restart camera needed camera object
-    public Camera getCameraObject(){
-        return  camera;
+    public Camera getCameraObject() {
+        return camera;
     }
 }

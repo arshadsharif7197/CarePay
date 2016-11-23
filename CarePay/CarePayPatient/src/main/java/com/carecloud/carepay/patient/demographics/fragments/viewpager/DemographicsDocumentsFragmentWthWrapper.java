@@ -19,11 +19,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 
-import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapper;
-import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
-import com.carecloud.carepay.patient.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
@@ -31,6 +29,9 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
+import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
+import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -47,9 +48,7 @@ import java.util.List;
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
-public class DemographicsDocumentsFragmentWthWrapper extends Fragment
-//        implements DocumentScannerFragment.NextAddRemoveStatusModifier
-{
+public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
 
     private FragmentManager                        fm;
     private View                                   view;

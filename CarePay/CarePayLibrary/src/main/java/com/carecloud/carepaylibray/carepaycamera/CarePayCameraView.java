@@ -82,4 +82,8 @@ public class CarePayCameraView extends RelativeLayout {
     private Bitmap getCapturedBitmap() {
         return carePayCameraPreview == null ? null : carePayCameraPreview.getCapturedBitmap();
     }
+
+    public CarePayCameraPreview getCarePayCameraPreview() {
+        return carePayCameraPreview;
+    }
 }

@@ -28,6 +28,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreen
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -277,7 +278,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 //        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
 
         // TODO: 11/17/2016  (for build/test); remove after testing ready
-        if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             getDemographicInformation();
         }
     }
@@ -507,6 +508,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     /**
      * For build/test
+     *
      * @param demographicDTO The DTO
      */
     private void launchPatientModeCheckinActivity(DemographicDTO demographicDTO) {
@@ -518,5 +520,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         intent.putExtra(getApplicationContext().getClass().getSimpleName(), gson.toJson(demographicDTO, DemographicDTO.class));
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // log out previous user from Cognito
+        Log.v(this.getClass().getSimpleName(), "sign out Cognito");
+        CognitoAppHelper.getPool().getUser().signOut();
+        CognitoAppHelper.setUser(null);
     }
 }

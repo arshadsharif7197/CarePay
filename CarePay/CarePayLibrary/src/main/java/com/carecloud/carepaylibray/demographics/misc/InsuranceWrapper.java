@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.misc;
+package com.carecloud.carepaylibray.demographics.misc;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +26,15 @@ public class InsuranceWrapper {
     private InsuranceScannerFragment wrapperScannerFragment;
     private LinearLayout             holderWrapperView;
 
+    /**
+     * Ctor
+     * @param context The context
+     * @param labels Tghe labels from remote
+     * @param metadata The metadata
+     * @param payload The payload
+     * @param parentView The parent view (holfing the wrapppers)
+     * @param clickListener  OnClick log-back
+     */
     public InsuranceWrapper(AppCompatActivity context,
                             DemographicLabelsDTO labels,
                             DemographicMetadataEntityItemInsuranceDTO metadata,

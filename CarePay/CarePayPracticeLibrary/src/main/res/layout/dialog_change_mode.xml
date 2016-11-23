@@ -19,7 +19,7 @@
         <ImageView
             style="@style/HomeButtonIconStyle"
             android:contentDescription="@string/home_icon_check_in"
-            android:src="@drawable/icn_patient_mode"/>
+            android:src="@drawable/face_icon"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -59,7 +59,7 @@
         <ImageView
             style="@style/HomeButtonIconStyle"
             android:contentDescription="@string/home_icon_check_in"
-            android:src="@drawable/icn_log_out"/>
+            android:src="@drawable/log_out"/>
 
         <FrameLayout
             android:layout_width="match_parent"

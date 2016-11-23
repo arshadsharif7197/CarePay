@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.misc;
+package com.carecloud.carepaylibray.demographics.misc;
 
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;

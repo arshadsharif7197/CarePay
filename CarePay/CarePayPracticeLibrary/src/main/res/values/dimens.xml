@@ -38,6 +38,7 @@
     <dimen name="dimen_500dp">500dp</dimen>
     <dimen name="dimen_612dp">612dp</dimen>
 
+    <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_18sp">18sp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
