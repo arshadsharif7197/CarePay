@@ -23,17 +23,17 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
 
     private Context context;
     private boolean isFooterVisible;
-    private DemographicLabelsDTO demographicLabelsDTO;
+    private String cancelString;
 
 
     /**
      * Constructor.
      * @param context context
      */
-    public BasePracticeDialog(Context context, DemographicLabelsDTO demographicLabelsDTO, boolean isFooterVisible) {
+    public BasePracticeDialog(Context context, String cancelString, boolean isFooterVisible) {
         super(context);
         this.context =context;
-        this.demographicLabelsDTO = demographicLabelsDTO;
+        this.cancelString = cancelString;
         this.isFooterVisible =isFooterVisible;
     }
 
@@ -44,7 +44,7 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
         setContentView(R.layout.dialog_base_practice);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         onInitialization();
-        setDialogCancelText(demographicLabelsDTO.getDemographicsCancelLabel());
+        setDialogCancelText(cancelString);
     }
 
     private void onInitialization(){
