@@ -24,7 +24,7 @@ public class CheckinConsentForm1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkin_consent_form1, container, false);
 
-        signConsentForm = (Button) view.findViewById(R.id.checkinConsentForm1SignClickable);
+        signConsentForm = (Button) view.findViewById(R.id.signButton);
         signConsentForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

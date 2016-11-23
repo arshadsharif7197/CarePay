@@ -13,5 +13,8 @@ public class PracticeNavigationStateConstants {
     public static final String PRACTICE_APPOINTMENTS = "appointments";
     public static final String PATIENT_MODE_SPLASH="patient_mode_start";
     public static final String PATIENT_MODE_CHECKIN_SUBFLOW="demographics_verify";
+    public static final String CONSENT_FORMS="consent_forms";
+    public static final String INTAKE_FORMS="intake_forms";
+    public static final String PAYMENTS="payments";
 
 }
