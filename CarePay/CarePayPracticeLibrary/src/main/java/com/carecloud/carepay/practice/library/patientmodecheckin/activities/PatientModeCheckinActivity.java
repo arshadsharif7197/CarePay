@@ -47,6 +47,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.Locale;
 
@@ -117,6 +118,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
         // place the initial fragment
         CheckinDemographicsRevFragment fragment = new CheckinDemographicsRevFragment();
+//        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
         navigateToFragment(fragment, false);
         toggleHighlight(SUBFLOW_DEMOGRAPHICS_INS, true);
 

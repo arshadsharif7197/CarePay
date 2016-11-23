@@ -17,6 +17,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -32,6 +33,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -73,6 +75,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_review_health_insurance, container, false);
 
         initDTOs();
+        initViewsHandlers();
 
         fm = getChildFragmentManager();
 
@@ -80,11 +83,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.healthinsurance_review_toolbar);
         toolbar.setVisibility(View.GONE);
 
-        // init view handlers
-        demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographichealthinsuranceReviewProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
-        detailsScrollView = (ScrollView) view.findViewById(R.id.updateInsuranceDocsScroll);
-        setSwitch();
         setCardContainers();
 
         if (insurancePayloadDTOs != null) {
@@ -92,13 +91,25 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         }
 
         setButtons();
+        setSwitch();
         setTypefaces(view);
 
         return view;
     }
 
+    private void initViewsHandlers() {
+        demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographichealthinsuranceReviewProgressBar);
+        detailsScrollView = (ScrollView) view.findViewById(R.id.updateInsuranceDocsScroll);
+        healthInsuranceTitleTextView = (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle);
+        healthInsuranceTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateInsuranceScreenTitle());
+        addInsuranceaInfoButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
+        haveMultipleHealthInsuranceTextView = (TextView) view.findViewById(R.id.multipleInsurancesClickable);
+        insContainersWrapper = (LinearLayout) view.findViewById(R.id.insuranceHoldersContainer);
+        doYouHaveInsuranceSwitch = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
+    }
+
     private void initDTOs() {
-        demographicDTO = ((PatientModeCheckinActivity)getActivity()).getDemographicDTO();
+        demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
 
         insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
@@ -106,9 +117,9 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         // get the payload
         insurancePayloadDTOs = new ArrayList<>(); // init in case no payload
         DemographicPayloadResponseDTO payloadResponseDTO = demographicDTO.getPayload();
-        if(payloadResponseDTO != null) {
+        if (payloadResponseDTO != null) {
             DemographicPayloadInfoDTO demographicPayloadInfoDTO = payloadResponseDTO.getDemographics();
-            if(demographicPayloadInfoDTO != null) {
+            if (demographicPayloadInfoDTO != null) {
                 DemographicPayloadDTO payloadDTO = demographicPayloadInfoDTO.getPayload();
                 if (payloadDTO != null) {
                     insurancePayloadDTOs = payloadDTO.getInsurances();
@@ -123,10 +134,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     }
 
     private void setButtons() {
-        // next button
-        healthInsuranceTitleTextView = (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle);
-        healthInsuranceTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateInsuranceScreenTitle());
-        addInsuranceaInfoButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
         addInsuranceaInfoButton.setText(globalLabelsMetaDTO.getDemographicsInsuranceUpdateButton().toUpperCase());
         addInsuranceaInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +141,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
                 postUpdates();
             }
         });
-        haveMultipleHealthInsuranceTextView = (TextView) view.findViewById(R.id.multipleInsurancesClickable);
         haveMultipleHealthInsuranceTextView.setText(globalLabelsMetaDTO.getDemographicsDocumentsMultiInsLabel());
         haveMultipleHealthInsuranceTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,10 +185,10 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 CheckinDemographicsRevFragment demInsRevFrag = (CheckinDemographicsRevFragment) fm.findFragmentByTag(CheckinDemographicsRevFragment.class.getSimpleName());
-                if(demInsRevFrag == null) {
+                if (demInsRevFrag == null) {
                     demInsRevFrag = new CheckinDemographicsRevFragment();
                 }
-                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(demInsRevFrag, true);
+                ((PatientModeCheckinActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
             }
 
             @Override
@@ -199,13 +205,10 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     }
 
     private void setCardContainers() {
-
         // fetch nested fragments containers
         isThirdCardAdded = false;
 
         fm = getChildFragmentManager();
-
-        insContainersWrapper = (LinearLayout) view.findViewById(R.id.insuranceHoldersContainer);
         createInsuranceFragments(insContainersWrapper);
     }
 
@@ -220,6 +223,9 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
                                                                 @Override
                                                                 public void onAfterRemove() {
                                                                     showAddCardButton(true);
+                                                                    if (wrapperCollection1.isEmpty()) {
+                                                                        doYouHaveInsuranceSwitch.setChecked(false);
+                                                                    }
                                                                 }
 
                                                                 @Override
@@ -230,7 +236,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         wrapperCollection1.addAll(insurancePayloadDTOs);
     }
 
-    private void setSwitch() {
+    private void setSwitch_old() {
         // set the switch
         fm.executePendingTransactions();
         doYouHaveInsuranceSwitch = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
@@ -242,8 +248,30 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
                 insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
             }
         });
-
     }
+
+    private void setSwitch() {
+        // set the switch
+        fm.executePendingTransactions();
+
+        doYouHaveInsuranceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
+                insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
+                haveMultipleHealthInsuranceTextView.setVisibility(on ? View.VISIBLE : View.GONE);
+                if (on && wrapperCollection1.isEmpty()) {
+                    insurancePayloadDTOs.clear();
+                    insurancePayloadDTOs.add(new DemographicInsurancePayloadDTO());
+                    wrapperCollection1.addAll(insurancePayloadDTOs);
+                }
+            }
+        });
+        String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
+        doYouHaveInsuranceSwitch.setText(label);
+        SystemUtil.hideSoftKeyboard(getActivity());
+        doYouHaveInsuranceSwitch.setChecked(!(insurancePayloadDTOs.size() == 0));
+    }
+
 
     /**
      * @param isVisible checking add card button is visible or not
