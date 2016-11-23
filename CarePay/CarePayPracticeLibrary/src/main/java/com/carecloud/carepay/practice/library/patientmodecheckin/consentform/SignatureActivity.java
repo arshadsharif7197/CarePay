@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.consentforms;
+package com.carecloud.carepay.practice.library.patientmodecheckin.consentform;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,15 +8,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -30,14 +27,7 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedi
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
-
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
 
@@ -46,7 +36,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
 
 public class SignatureActivity extends AppCompatActivity {
@@ -71,18 +64,18 @@ public class SignatureActivity extends AppCompatActivity {
 
 
     private Map<Integer, List<String>> stringMap = new HashMap<>();
-
+    private String patientSignature;
+    private String legalSignature;
+    private String legalFirstNameLabel;
+    private String legalLastNameLabel;
     private String signatureAsBase64;
-    private boolean isLegalFirstNameEmpty;
-    private boolean isLegalLastNameEmpty;
-    private boolean isSignatureEmpty;
     private boolean signedByPatient = true;
     private boolean signedByLegal = false;
-
 
     private ConseFormsPayloadDTO conseFormsPayloadDTO;
     private ConsentFormPayloadDTO consentFormPayloadDTO;
     private ConsentFormDTO consentFormDTO;
+
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -91,8 +84,14 @@ public class SignatureActivity extends AppCompatActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+
             //ConsentActivity.this.finish();
-            PatientNavigationHelper.getInstance(SignatureActivity.this).navigateToWorkflow(workflowDTO);
+           // PatientNavigationHelper.getInstance(SignatureActivity.this).navigateToWorkflow(workflowDTO);
+
+            Intent intent=new Intent("INTAKE_FORM_NAVIGATION_SENDER");
+            intent.putExtra("INTAKE_WORKFLOW", workflowDTO.toString());
+            sendBroadcast(intent);
+            finish();
         }
 
         @Override
@@ -100,7 +99,6 @@ public class SignatureActivity extends AppCompatActivity {
 
         }
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,37 +135,6 @@ public class SignatureActivity extends AppCompatActivity {
         setEditTexts();
         onClickListeners();
         signatureActivity = this;
-
-        isLegalFirstNameEmpty = true;
-        isLegalLastNameEmpty = true;
-        isSignatureEmpty = true;
-
-        signaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
-            @Override
-            public void onStartSigning() {
-
-            }
-
-            @Override
-            public void onSigned() {
-                if(switchButton.isChecked()) {
-                    clearButton.setVisibility(View.VISIBLE);
-                    signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
-
-                    isSignatureEmpty = false;
-                    enableAgreeButton();
-                } else {
-                    clearButton.setVisibility(View.VISIBLE);
-                    signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
-                    agreeButton.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onClear() {
-                clearButton.setVisibility(View.GONE);
-            }
-        });
     }
 
     /**
@@ -189,13 +156,13 @@ public class SignatureActivity extends AppCompatActivity {
         legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
         beforesignWarningTextView = (TextView) findViewById(R.id.beforesignwarnigTextView);
         String headerTitle = getIntent().getExtras().getString("Header_Title");
-        String subtitle = getIntent().getExtras().getString("Subtitle");
+        String subtitle=getIntent().getExtras().getString("Subtitle");
         beforesignWarningTextView.setText(subtitle);
         titleTextView.setText(headerTitle);
         initviewfromModel();
-        switchButton.setChecked(false);
-        setTextWatchers();
+
     }
+
 
     private void initviewfromModel() {
 
@@ -211,53 +178,6 @@ public class SignatureActivity extends AppCompatActivity {
 
     }
 
-    private void setTextWatchers() {
-        legalFirstNameET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isLegalFirstNameEmpty = StringUtil.isNullOrEmpty(legalFirstNameET.getText().toString());
-                if (!isLegalFirstNameEmpty) {
-                    legalFirstName.setError(null);
-                    legalFirstName.setErrorEnabled(false);
-                }
-                // enableNextButton();
-            }
-        });
-
-        legalLastNameET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isLegalLastNameEmpty = StringUtil.isNullOrEmpty(legalLastNameET.getText().toString());
-                if (!isLegalLastNameEmpty) {
-                    legalLastName.setError(null);
-                    legalLastName.setErrorEnabled(false);
-                }
-                // enableNextButton();
-            }
-        });
-
-    }
-
     /**
      * On click Listeners
      */
@@ -270,15 +190,8 @@ public class SignatureActivity extends AppCompatActivity {
                     showData(true);
                     signedByLegal = true;
                     signedByPatient = false;
-                } else { // turn off
+                } else {
                     showData(false);
-                    signedByLegal = false;
-                    signedByPatient = true;
-
-                    legalFirstNameET.setText("");
-                    legalFirstNameET.clearFocus();
-                    legalLastNameET.setText("");
-                    legalLastNameET.clearFocus();
                 }
             }
         });
@@ -300,13 +213,40 @@ public class SignatureActivity extends AppCompatActivity {
                 } else {
                     Intent intent = getIntent();
                     if (intent.hasExtra("consentform")) {
+                       /* Intent data = new Intent();
+                        data.putExtra("signature_base64", signatureAsBase64);
+                        data.putExtra("patient_signed", signedByPatient);
+                        data.putExtra("legal_signed", signedByLegal);
+                        setResult(9999, data);*/
                         numOfLaunches++;
                         finish();
                     }
                 }
             }
         });
+
+        signaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
+            @Override
+            public void onStartSigning() {
+
+            }
+
+            @Override
+            public void onSigned() {
+                clearButton.setVisibility(View.VISIBLE);
+                signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
+                agreeButton.setEnabled(true);
+            }
+
+            @Override
+            public void onClear() {
+                clearButton.setVisibility(View.GONE);
+            }
+        });
+
+
     }
+
 
     private void setEditTexts() {
 
@@ -318,46 +258,6 @@ public class SignatureActivity extends AppCompatActivity {
 
         setChangeFocusListeners();
 
-        setOnChangeTextListeners();
-
-    }
-
-    private void setOnChangeTextListeners() {
-        legalFirstNameET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence seq, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence seq, int start, int before, int count) {
-                isLegalFirstNameEmpty = seq.length() == 0;
-                enableAgreeButton();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        legalLastNameET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence seq, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence seq, int start, int before, int count) {
-                isLegalLastNameEmpty = seq.length() == 0;
-                enableAgreeButton();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
     }
 
     private void setChangeFocusListeners() {
@@ -390,13 +290,8 @@ public class SignatureActivity extends AppCompatActivity {
     private void clearSignature() {
         if (signaturePad != null) {
             signaturePad.clear();
-            isSignatureEmpty = true;
-            enableAgreeButton();
+            agreeButton.setEnabled(false);
         }
-    }
-
-    private void enableAgreeButton() {
-        agreeButton.setEnabled(!isLegalFirstNameEmpty && !isLegalLastNameEmpty && !isSignatureEmpty);
     }
 
     private void showData(boolean isChecked) {
@@ -406,6 +301,7 @@ public class SignatureActivity extends AppCompatActivity {
             legalLastName.setVisibility(View.GONE);
             legalFirstNameET.setVisibility(View.GONE);
             legalLastNameET.setVisibility(View.GONE);
+
         } else {
             String leagalrepresentative = consentFormLabelsDTO.getLegalSignatureLabel();
             int indexFirstPercent = leagalrepresentative.indexOf(' ');
@@ -418,6 +314,7 @@ public class SignatureActivity extends AppCompatActivity {
             legalLastName.setVisibility(View.VISIBLE);
             legalFirstNameET.setVisibility(View.VISIBLE);
             legalLastNameET.setVisibility(View.VISIBLE);
+
         }
     }
 

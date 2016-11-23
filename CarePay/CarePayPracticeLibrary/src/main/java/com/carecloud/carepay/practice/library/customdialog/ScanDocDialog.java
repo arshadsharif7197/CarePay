@@ -118,7 +118,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
 
             if (isCapturing) {
                 if (carePayCameraPreview != null) {
-                    carePayCameraPreview.takePicturePractice(this);
+                    carePayCameraPreview.takePicturePractice();
                 }
             } else {
                 onSaveImage();

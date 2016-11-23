@@ -1,10 +1,7 @@
-package com.carecloud.carepay.patient.demographics.misc;
+package com.carecloud.carepaylibray.demographics.misc;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
-
-import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
 
 /**
  * Created by lsoco_user on 11/15/2016.
@@ -25,7 +22,6 @@ class OnClickRemoveListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        Log.v(DemographicsDocumentsFragmentWthWrapper.class.getSimpleName(), "remove clicked");
         wrapperCollection.remove(insuranceWrapper);
         if (callback != null) {
             callback.onAfterRemove();

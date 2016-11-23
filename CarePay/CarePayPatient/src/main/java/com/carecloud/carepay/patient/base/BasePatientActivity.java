@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 /**
@@ -40,5 +42,20 @@ public abstract class BasePatientActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * Common WorkflowDTO which will converted to the desire DTO with dtoClass params
+     *
+     * @param dtoClass class to convert
+     * @param <S>      Dynamic class to convert
+     * @return Dynamic converted class object
+     */
+    public <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+
+        if (!StringUtil.isNullOrEmpty(jsonString)) {
+            Gson gson = new Gson();
+            return gson.fromJson(jsonString, dtoClass);
+        }
+        return null;
+    }
 
 }

@@ -9,6 +9,7 @@ import android.view.WindowManager;
 
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
 import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 /**
@@ -44,6 +45,22 @@ public abstract class BasePracticeActivity extends AppCompatActivity implements 
     }
 
     /**
+     * Common WorkflowDTO which will converted to the desire DTO with dtoClass params
+     *
+     * @param dtoClass class to convert
+     * @param <S>      Dynamic class to convert
+     * @return Dynamic converted class object
+     */
+    public <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+
+        if (!StringUtil.isNullOrEmpty(jsonString)) {
+            Gson gson = new Gson();
+            return gson.fromJson(jsonString, dtoClass);
+        }
+        return null;
+    }
+
+    /**
      * Show/Hide system ui like status bar or navigation bar.
      */
     public void setSystemUiVisibility() {
@@ -62,4 +79,6 @@ public abstract class BasePracticeActivity extends AppCompatActivity implements 
     public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
 
     }
+
+
 }

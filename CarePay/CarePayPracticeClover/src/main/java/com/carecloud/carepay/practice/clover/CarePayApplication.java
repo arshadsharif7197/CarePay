@@ -49,7 +49,6 @@ public class CarePayApplication extends MultiDexApplication implements Applicati
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
     }
 
     @Override
@@ -79,7 +78,7 @@ public class CarePayApplication extends MultiDexApplication implements Applicati
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        if(activity instanceof CloverMainActivity || activity instanceof SigninActivity) {
+        if(activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
             CognitoAppHelper.getPool().getUser().signOut();
