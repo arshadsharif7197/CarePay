@@ -473,7 +473,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     }
 
-    private boolean checkPhoneNumber() {
+    private boolean isPhoneNumberValid() {
         final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
         final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
         if (!isPhoneEmpty) { // check validity only if non-empty
@@ -490,7 +490,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         return true;
     }
     
-    private boolean checkZip() {
+    private boolean isZipCodeValid() {
         String zipCode = zipCodeEditText.getText().toString();
         if (StringUtil.isNullOrEmpty(zipCode)) {
             return true;
@@ -516,14 +516,14 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         return true;
     }
 
-    private boolean checkReadyForNext() {
+    private boolean isAllFieldsValid() {
 
-        boolean isPhoneValid = checkPhoneNumber();
+        boolean isPhoneValid = isPhoneNumberValid();
         // for non-required field, check validity only if non-empty
         if (!isPhoneValid) {
             phoneNumberEditText.requestFocus();
         }
-        boolean isZipValid = checkZip();
+        boolean isZipValid = isZipCodeValid();
         if (!isZipValid) {
             zipCodeEditText.requestFocus();
         }
@@ -535,7 +535,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     public void onClick(View view) {
         String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
         if (view == buttonAddDemographicInfo) {
-            if (checkReadyForNext() && isDateOfBirthValid() && !isFirstNameEmpty && !isLastNameEmpty) {
+            if (isAllFieldsValid() && isDateOfBirthValid() && !isFirstNameEmpty && !isLastNameEmpty) {
                 // update the model
                 updateModels();
                 // post the changes

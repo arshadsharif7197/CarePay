@@ -240,7 +240,9 @@ public class SigninActivity extends BasePracticeActivity {
             spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
             langSpinner.setAdapter(spinnerArrayAdapter);
-            if (defaultLangOption != null) { // this should be always true, as there's always a default option
+            if (defaultLangOption != null && !ApplicationPreferences.Instance.getUserLanguage().isEmpty()) { // this should be always true, as there's always a default option
+                langSpinner.setSelection(spinnerArrayAdapter.getPosition(ApplicationPreferences.Instance.getUserLanguage().toUpperCase()));
+            }else{
                 langSpinner.setSelection(indexDefault);
                 ApplicationPreferences.Instance.setPracticeLanguage(defaultLangOption.getCode());
             }

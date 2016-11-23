@@ -53,7 +53,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="99"
+                android:gravity="left"
                 android:scrollbars="vertical"
+                android:textSize="@dimen/consent_Contentview_textSize"
                 android:text="@string/constentcontent" />
 
             <TextView

@@ -198,7 +198,6 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
                     beforeSignWarning = consentFormLabelsDTO.getBeforeSignatureWarningText();
                     legalsignLabel = consentFormLabelsDTO.getLegalSignatureLabel();
                     patientSignLabel = consentFormLabelsDTO.getPatientSignatureHeading();
-                    formbuilder();
 
                     replaceFragment(getConsentForm(), false);
                     Log.d(LOG_TAG, "consent form information");
@@ -210,24 +209,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     }
 
 
-    private void formbuilder() {
-        // insert the patient's first and last names
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        SpannableString firstSpannable = new SpannableString(patientFirstName);
-        SpannableString lastSpannable = new SpannableString(patientFirstName);
 
-
-        int indexFirstComma = medicareDescription.indexOf(',');
-        String upToFirstCommaSubstring = medicareDescription.substring(0, indexFirstComma + 1);
-        String fromSecCommaOnSubstring = medicareDescription.substring(medicareDescription.indexOf(',', indexFirstComma + 1), medicareDescription.length());
-        firstSpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(ConsentActivity.this, R.color.blue_cerulian)), 0, patientFirstName.length(), 0);
-        medicareForm = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstCommaSubstring, firstSpannable, patientLastName, fromSecCommaOnSubstring);
-
-        int indexFirstPercent = authorizationDescription2.indexOf('%');
-        String upToFirspercentSubstring = authorizationDescription2.substring(0, indexFirstPercent);
-        String fromSecpercentOnSubstring = authorizationDescription2.substring(authorizationDescription2.indexOf(',', indexFirstComma + 1), authorizationDescription2.length());
-        authForm = String.format(Locale.getDefault(), "%s %s %s", upToFirspercentSubstring, providerName, fromSecpercentOnSubstring);
-    }
 
     private Fragment getConsentForm() {
 
@@ -294,14 +276,14 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         if (formName.equals("form1")) {
             formData.setTitle(consentFormLabelsDTO.getConsentForMedicareTitle());
             formData.setDescription(readCarefullySign);
-            formData.setContent(medicareForm);
+            formData.setContent(medicareDescription);
             formData.setButtonLabel(consentFormLabelsDTO.getSignConsentForMedicareTitle().toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else if (formName.equals("form2")) {
             formData.setTitle(consentFormLabelsDTO.getAuthorizationFormTitle());
             formData.setDescription(readCarefullySign);
             formData.setContent(authorizationDescription1);
-            formData.setContent2(authForm);
+            formData.setContent2(authorizationDescription2);
             formData.setButtonLabel(consentFormLabelsDTO.getSignAuthorizationFormTitle().toUpperCase());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else { //form3

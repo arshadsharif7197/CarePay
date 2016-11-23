@@ -189,6 +189,7 @@
     <dimen name="consent_gender_left_margin">50dp</dimen>
     <dimen name="consent_minor_textsize">17sp</dimen>
     <dimen name="consent_minor_info_textsize">14sp</dimen>
+    <dimen name="consent_Contentview_textSize">18sp</dimen>
     <dimen name="consent_view_margin_top_bottom">10dp</dimen>
     <dimen name="date_textview_top_bottom">42dp</dimen>
     <dimen name="consentform_relativeLayout_margin">3dp</dimen>
