@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -55,7 +56,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     private Button      addInsuranceaInfoButton;
     private ProgressBar demographicProgressBar;
 
-    private DemographicInsurancePayloadDTO         insuranceModel1;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO                   globalLabelsMetaDTO;
 
@@ -86,13 +86,11 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         demographicProgressBar.setVisibility(View.GONE);
         setCardContainers();
 
-        if (insurancePayloadDTOs != null) {
-            doYouHaveInsuranceSwitch.setChecked(true);
-        }
-
         setButtons();
         setSwitch();
         setTypefaces(view);
+
+        doYouHaveInsuranceSwitch.setChecked(!(insurancePayloadDTOs.size() == 0));
 
         return view;
     }
@@ -188,6 +186,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
                 if (demInsRevFrag == null) {
                     demInsRevFrag = new CheckinDemographicsRevFragment();
                 }
+                ((PatientModeCheckinActivity)getActivity()).resetDemographicDTO(workflowDTO.toString());
                 ((PatientModeCheckinActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
             }
 
@@ -236,20 +235,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         wrapperCollection1.addAll(insurancePayloadDTOs);
     }
 
-    private void setSwitch_old() {
-        // set the switch
-        fm.executePendingTransactions();
-        doYouHaveInsuranceSwitch = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
-        doYouHaveInsuranceSwitch.setText(globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel());
-
-        doYouHaveInsuranceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-                insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
-            }
-        });
-    }
-
     private void setSwitch() {
         // set the switch
         fm.executePendingTransactions();
@@ -269,7 +254,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
         doYouHaveInsuranceSwitch.setText(label);
         SystemUtil.hideSoftKeyboard(getActivity());
-        doYouHaveInsuranceSwitch.setChecked(!(insurancePayloadDTOs.size() == 0));
     }
 
 

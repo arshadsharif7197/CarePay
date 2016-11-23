@@ -132,7 +132,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         unregisterReceiver(intakeFormReceiver);
     }
 
-
     private void instantiateViewsRefs() {
         backButton = (CarePayTextView) findViewById(R.id.checkinBack);
         logoImageView = (ImageView) findViewById(R.id.checkinLogo);
@@ -190,6 +189,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      */
     public DemographicDTO getDemographicDTO() {
         return demographicDTO;
+    }
+
+    /**
+     * Re-sets the global DTO from a string JSON
+     * @param jsonString The main DTO as string
+     */
+    public void resetDemographicDTO(String jsonString) {
+        this.demographicDTO = getConvertedDTO(DemographicDTO.class, jsonString);
     }
 
     /**
