@@ -108,7 +108,7 @@ public class CustomFilterPopupWindow extends PopupWindow
     /**
      * Filter appointment by provider and location
      * and operation between provider and location
-     * @return
+     * @return filtered appoinment list
      */
     private HashSet<String> getFilteredAppointment() {
         HashSet<String> appoinementList = new HashSet<>();
