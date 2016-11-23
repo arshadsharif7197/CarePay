@@ -2,16 +2,11 @@ package com.carecloud.carepay.practice.library.customdialog;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -28,7 +23,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
@@ -37,22 +31,22 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+
 
 /**
  * Created by prem_mourya on 11/23/2016.
@@ -97,6 +91,15 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
 
     protected Bitmap bitmap;
 
+
+    /**
+     * for insurance Dialog edit
+     * @param context context
+     * @param isFooterVisibity boolean
+     *  @param demographicDTO DTO
+     *   @param index for index
+     * @return
+     */
     public CheckinInsuranceEditDialog(Context context,boolean isFooterVisibity,DemographicDTO demographicDTO,int index){
         super(context,demographicDTO.getMetadata().getLabels().getDemographicsCancelLabel(),isFooterVisibity);
         this.context = context;
@@ -119,21 +122,21 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     }
 
     private void initializeUIFields() {
+
         getOptions();
 
-        String label;
 
         saveChangesButton = (Button)view.findViewById(R.id.saveChangesButton);
         removeButton = (Button)view.findViewById(R.id.removeutton);
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 dismiss();
             }
         });
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 onRemoveChanges();
                 dismiss();
             }
@@ -157,7 +160,6 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         insuranceFrontScanHelper = new ImageCaptureHelper((Activity) context, frontInsuranceImageView, globalLabelsDTO);
 
         btnScanFrontInsurance = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_insurance_scan_insurance_frontbtn);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
         btnScanFrontInsurance.setText(this.globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel());
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +182,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         });
 
         final String cancelLabel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
-
+        String label;
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
 
         providerTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_docs_provider);
