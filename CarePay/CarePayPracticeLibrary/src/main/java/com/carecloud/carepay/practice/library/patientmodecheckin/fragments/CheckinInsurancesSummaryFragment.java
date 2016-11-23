@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -171,13 +172,12 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         header.put("transition", "false");
 
         Gson gson = new Gson();
-        String demographicinfo = gson.toJson(postPayloadModel);
-        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-
+        String body = gson.toJson(postPayloadModel);
+        final TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+        final DemographicPayloadDTO newPayload = postPayloadModel;
         WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-
             }
 
             @Override
@@ -187,15 +187,19 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
                 if (demInsRevFrag == null) {
                     demInsRevFrag = new CheckinDemographicsRevFragment();
                 }
-                ((PatientModeCheckinActivity)getActivity()).resetDemographicDTO(workflowDTO.toString());
-                ((PatientModeCheckinActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
+
+                // update the main DTO in the activity
+                Gson gson = new Gson();
+                ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
+
+                // move to demographics review
+                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(demInsRevFrag, true);
             }
 
             @Override
             public void onFailure(String exceptionMessage) {
-
             }
-        }, demographicinfo, queries, header);
+        }, body, queries, header);
     }
 
     private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {

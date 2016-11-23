@@ -149,10 +149,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     public CheckinDemographicsFragment() {
     }
 
-    public static CheckinDemographicsFragment newInstance() {
-        return new CheckinDemographicsFragment();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -644,12 +640,16 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         if (view == buttonAddDemographicInfo) {
 
             //   openNewFragment();
-
             if (isAllFieldsValid()) {
                 // update the model
                 updateModels();
+
                 // post the changes
-                postUpdates();
+//                postUpdates();
+
+                // next
+                openNewFragment();
+
                 // hide the keyboard
                 SystemUtil.hideSoftKeyboard(getActivity());
             }
@@ -663,7 +663,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             selectedDataArray = 2;
             final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectRace();
             showAlertDialogWithListview(race, title, cancelLabel);
-
 
         } else if (view == ethnicityDataTextView) {
             selectedDataArray = 3;
@@ -718,18 +717,16 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         });
     }
 
-
     private void updateModels() {
 
+        // save the personal details
         if (demographicPersDetailsPayloadDTO == null) {
             demographicPersDetailsPayloadDTO = new DemographicPersDetailsPayloadDTO();
         }
-
         String firstName = firstNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(firstName)) {
             demographicPersDetailsPayloadDTO.setFirstName(firstName);
         }
-
         String middleName = middleNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(middleName)) {
             demographicPersDetailsPayloadDTO.setMiddleName(middleName);
@@ -738,31 +735,27 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         if (!StringUtil.isNullOrEmpty(lastName)) {
             demographicPersDetailsPayloadDTO.setLastName(lastName);
         }
-
         String dateOfBirth = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
-
             demographicPersDetailsPayloadDTO.setDateOfBirth(
                     DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
         }
-
         String gender = selectGender.getText().toString();
         if (!StringUtil.isNullOrEmpty(gender)) {
             demographicPersDetailsPayloadDTO.setGender(gender);
         }
-
         String race = raceDataTextView.getText().toString();
         if (!StringUtil.isNullOrEmpty(race)) {
             demographicPersDetailsPayloadDTO.setPrimaryRace(race);
         }
-
         String ethnicity = ethnicityDataTextView.getText().toString();
         if (!StringUtil.isNullOrEmpty(ethnicity)) {
             demographicPersDetailsPayloadDTO.setEthnicity(ethnicity);
         }
+        demographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
 
-
+        // save id doc
         if (demographicIdDocPayloadDTO == null) {
             demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         }
@@ -770,8 +763,11 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         if (!StringUtil.isNullOrEmpty(driverLicense)) {
             demographicIdDocPayloadDTO.setIdNumber(driverLicense);
         }
+        List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
+        ids.add(demographicIdDocPayloadDTO);
+        demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
 
-
+        // save address
         if (demographicAddressPayloadDTO == null) {
             demographicAddressPayloadDTO = new DemographicAddressPayloadDTO();
         }
@@ -793,17 +789,19 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             // 'de-format' before saving to model
             demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumber));
         }
-
         String city = cityEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(city)) {
             demographicAddressPayloadDTO.setCity(city);
         }
-
         String state = stateEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(state)) {
             demographicAddressPayloadDTO.setState(state);
         }
+        demographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
 
+        // update gson in the activity
+        Gson gson = new Gson();
+        ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
     }
 
     private void setEditTexts(View view) {
@@ -854,7 +852,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
         setChangeFocusListeners();
     }
-
 
     private void setChangeFocusListeners() {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -1125,7 +1122,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         hideSoftKeyboard(getActivity());
 
     }
-
 
     private void openNewFragment() {
         CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
