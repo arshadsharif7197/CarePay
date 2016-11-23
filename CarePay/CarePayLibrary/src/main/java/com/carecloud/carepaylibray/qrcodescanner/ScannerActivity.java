@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.qrcodescanner;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
@@ -16,11 +17,10 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_scanner);
-
-
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         zxingcannerView = new ZXingScannerView(this);
         contentFrame.addView(zxingcannerView);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     @Override
@@ -34,6 +34,12 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
     public void onPause() {
         super.onPause();
         zxingcannerView.stopCamera();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override

@@ -109,7 +109,7 @@ public class ViewFinderView extends View implements IViewFinder {
 
         drawViewFinderMask(canvas);
         drawViewFinderBorder(canvas);
-        drawLaser(canvas);
+        //drawLaser(canvas);
     }
 
     public void drawViewFinderMask(Canvas canvas) {
