@@ -30,17 +30,17 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
-import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-import com.carecloud.carepaylibray.utils.StringUtil;
+
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import com.squareup.picasso.Picasso;
