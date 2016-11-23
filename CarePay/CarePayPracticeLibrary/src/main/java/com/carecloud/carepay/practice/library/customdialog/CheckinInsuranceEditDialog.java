@@ -35,6 +35,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import com.carecloud.carepaylibray.utils.StringUtil;
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
