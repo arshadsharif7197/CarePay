@@ -3,7 +3,9 @@ package com.carecloud.carepaylibray.intake.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class IntakeResponseModel {
+import java.io.Serializable;
+
+public class IntakeResponseModel implements Serializable {
 
     @SerializedName("metadata")
     @Expose

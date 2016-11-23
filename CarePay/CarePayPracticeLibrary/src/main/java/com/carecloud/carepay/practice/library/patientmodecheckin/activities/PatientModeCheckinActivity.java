@@ -568,6 +568,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 inTakeForm = getConvertedDTO(IntakeResponseModel.class, intent.getStringExtra("INTAKE_WORKFLOW"));
             }
             CheckinIntakeForm1Fragment fragment = new CheckinIntakeForm1Fragment();
+            Bundle bundle = new Bundle();
+            Gson gson = new Gson();
+            String intakeFormDTO = gson.toJson(inTakeForm);
+            bundle.putString(CarePayConstants.INTAKE_BUNDLE, intakeFormDTO);
             navigateToFragment(fragment, false);
             // TODO: SAUL Create Intake Fragment
             //navigateToFragment("INTAKEFRAGMENT", false);
