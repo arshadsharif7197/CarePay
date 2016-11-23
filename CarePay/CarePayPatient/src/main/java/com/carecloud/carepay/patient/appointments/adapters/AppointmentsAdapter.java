@@ -16,13 +16,13 @@ import android.widget.LinearLayout;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.CancelAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
@@ -206,6 +206,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.bright_cerulean));
             }
 
+            /*if(isPending && (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_TODAY) ||
+                    sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_UPCOMING))){
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                holder.cellAvatar.setImageDrawable(context.getResources()
+                        .getDrawable(R.drawable.icn_cell_avatar_badge_pending));
+            }*/
+
             if (isCheckedIn) {
                 holder.appointmentItemLinearLayout.setBackgroundColor(
                         ContextCompat.getColor(context, R.color.checked_in_appointment_bg));
@@ -328,12 +335,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private String getSectionHeaderTitle(String appointmentRawDate) {
         // Current date
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
         Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // Appointment date
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
         Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         if (convertedAppointmentDate.after(currentConvertedDate)
@@ -342,6 +351,21 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
             return CarePayConstants.DAY_OVER;
         } else {
+            // Get appointment date/time in required format
+            DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
+            Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDate();
+
+            // Get current date/time in required format
+            String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
+            Date currentDateTemp = DateUtil.getInstance().setDateRaw(currentTime).getDate();
+
+            if (appointmentTime != null && currentDate != null) {
+                long differenceInMilli = appointmentTime.getTime() - currentDateTemp.getTime();
+                long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+                if (differenceInMinutes < 0) {
+                    return CarePayConstants.DAY_OVER;
+                }
+            }
             return CarePayConstants.DAY_TODAY;
         }
     }

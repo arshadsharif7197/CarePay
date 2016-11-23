@@ -167,9 +167,25 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 for (FilterDataDTO dataDTO : originalFilterableDataDTOList) {
                     try {
-                        if (dataDTO.getDisplayText().toUpperCase().startsWith(constraint.toString().toUpperCase())) {
+                        String displayName = dataDTO.getDisplayText();
+                        String[] nameList = displayName.split(" ");
+                        String middleName = "";
+                        String lastName = "";
+                        if(nameList.length > 0) {
+                            if(nameList.length > 2) {
+                                middleName = nameList[1];
+                                lastName = nameList[2];
+                            } else {
+                                lastName = nameList[1];
+                            }
+                        }
+
+                        if (displayName.toUpperCase().startsWith(constraint.toString().toUpperCase())
+                                || lastName.toUpperCase().startsWith(constraint.toString().toUpperCase())
+                                || middleName.toUpperCase().startsWith(constraint.toString().toUpperCase())) {
                             filterableDataDTOList.add(dataDTO);
                         }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
