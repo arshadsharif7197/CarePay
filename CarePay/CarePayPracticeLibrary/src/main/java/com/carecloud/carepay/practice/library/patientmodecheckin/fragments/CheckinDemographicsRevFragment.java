@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -63,8 +64,10 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
             ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
-                                                                             PatientModeCheckinActivity.NUM_CONSENT_FORMS);
-
+                    PatientModeCheckinActivity.NUM_CONSENT_FORMS);
+            Bundle bundle = new Bundle();
+            bundle.putString(CarePayConstants.ATTR_RESPONSE, workflowDTO.toString());
+            fragment.setArguments(bundle);
             // end-splash activity and transition
             // SplashActivity.this.finish();
         }
