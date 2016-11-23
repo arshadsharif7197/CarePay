@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -35,6 +34,10 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadR
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -42,8 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 public class CheckinInsurancesSummaryFragment extends Fragment {
 

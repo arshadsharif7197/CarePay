@@ -42,9 +42,9 @@ import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoin
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
+import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
