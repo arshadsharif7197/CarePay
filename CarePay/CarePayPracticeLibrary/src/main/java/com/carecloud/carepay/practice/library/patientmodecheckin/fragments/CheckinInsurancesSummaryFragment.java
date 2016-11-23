@@ -17,6 +17,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
@@ -28,9 +32,12 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -151,38 +158,43 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         postPayloadModel.setInsurances(insurancePayloadDTOs);
 
         // transition
-        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
-        ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
+//        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
+//        ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
 
-        // TODO: 11/22/2016 uncommnent
-//        Map<String, String> queries = new HashMap<>();
-//        queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
-//        queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
-//        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
-//
-//        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
-//        header.put("transition", "false");
-//
-//        Gson gson = new Gson();
-//        String demographicinfo = gson.toJson(postPayloadModel);
-//        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-//
-//        WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
-//            @Override
-//            public void onPreExecute() {
-//
-//            }
-//
-//            @Override
-//            public void onPostExecute(WorkflowDTO workflowDTO) {
-//                getActivity().finish();
-//            }
-//
-//            @Override
-//            public void onFailure(String exceptionMessage) {
-//
-//            }
-//        }, demographicinfo, queries, header);
+//         TODO: 11/22/2016 uncommnent
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
+        queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+
+        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        header.put("transition", "false");
+
+        Gson gson = new Gson();
+        String demographicinfo = gson.toJson(postPayloadModel);
+        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CheckinDemographicsRevFragment demInsRevFrag = (CheckinDemographicsRevFragment) fm.findFragmentByTag(CheckinDemographicsRevFragment.class.getSimpleName());
+                if(demInsRevFrag == null) {
+                    demInsRevFrag = new CheckinDemographicsRevFragment();
+                }
+                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(demInsRevFrag, true);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+
+            }
+        }, demographicinfo, queries, header);
     }
 
     private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
