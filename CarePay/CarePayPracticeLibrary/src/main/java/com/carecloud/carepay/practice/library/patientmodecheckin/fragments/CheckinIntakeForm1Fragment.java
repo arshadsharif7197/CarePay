@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
@@ -62,9 +63,11 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
         Bundle bundle = getArguments();
-        inTakeForm = (IntakeResponseModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+        String intakeFormDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+        Gson gson = new Gson();
+        inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
         getIntakeFormData();
-
+        
         return view;
     }
 
