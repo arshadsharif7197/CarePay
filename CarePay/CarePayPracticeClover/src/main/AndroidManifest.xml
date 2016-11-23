@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -50,7 +51,7 @@
         <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"/>
+        <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity" />
         <activity
             android:name="com.carecloud.carepay.practice.clover.cloverqrcodescanner.CloverQRScannerActivity"
             android:label="@string/qr_code_scanner">
@@ -59,10 +60,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
-                  android:windowSoftInputMode="adjustNothing"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
+            android:windowSoftInputMode="adjustNothing" />
 
-        <activity android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>
