@@ -46,7 +46,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     private Bitmap capturedBitmap;
     private boolean isPracticeCamera;
     boolean surfaceCreated;
-    private CarePayCameraCallback carePayCameraCallback;
 
     public CameraType cameraType = CameraType.SCAN_DOC;
 
@@ -379,8 +378,21 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return camera;
     }
 
+    CarePayCameraCallback carePayCameraCallback;
+
     public void takePicture() {
+        this.carePayCameraCallback=(CarePayCameraCallback)context;
         camera.takePicture(null, null, pictureCallback);
+    }
+
+    /**
+     * Call back for practice app
+      */
+
+    public void takePicturePractice(CarePayCameraCallback carePayCameraCallback) {
+        isPracticeCamera = true;
+        this.carePayCameraCallback=carePayCameraCallback;
+        camera.takePicture(null, null, picturePracticeCallback);
     }
 
     private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
@@ -388,6 +400,16 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
 
+            genarateCropedBitmap(data);
+            releaseCamera();
+        }
+    };
+
+    //for practice app removed releaseCamera method call, camera will be  restart
+    private Camera.PictureCallback picturePracticeCallback = new Camera.PictureCallback() {
+
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
             genarateCropedBitmap(data);
         }
     };
@@ -410,13 +432,12 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             Log.d("Scales:", "scaleWidth: " + scaleWidth + "  scaleHeight: " + scaleHeight + "  cropedWidth: " + cropedWidth + "  cropedHeight: " + cropedHeight + "  left: " + left + "  top: " + top);
 
             capturedBitmap = Bitmap.createBitmap(capturedBitmap, left, top, cropedWidth, cropedHeight);
-            carePayCameraCallback.onCapturedSuccess(capturedBitmap);
+
         } else {
             capturedBitmap = rotateBitmap(capturedBitmap, 90);
-            releaseCamera();
-            ((CarePayCameraCallback) context).onCapturedSuccess(capturedBitmap);
         }
 
+        this.carePayCameraCallback.onCapturedSuccess(capturedBitmap);
     }
 
 
@@ -444,25 +465,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
     }
 
-    /**
-     * take image from practice
-     * @param carePayCameraCallback callback
-     * @return
-     */
-    public void takePicturePractice(CarePayCameraCallback carePayCameraCallback) {
-        isPracticeCamera = true;
-        this.carePayCameraCallback = carePayCameraCallback;
-        camera.takePicture(null, null, picturePracticeCallback);
-    }
 
-    //for practice app removed releaseCamera method call, camera will be  restart
-    private Camera.PictureCallback picturePracticeCallback = new Camera.PictureCallback() {
 
-        @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
-            genarateCropedBitmap(data);
-        }
-    };
 
     /**
      * Rounded bitmap

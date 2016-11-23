@@ -185,19 +185,11 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                 String title = getToday(appointmentDTO.getPayload().getStartTime());
                 if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
                     appointmentListWithToday.add(appointmentDTO);
-                } else {
-                    appointmentForTextview.setVisibility(View.INVISIBLE);
-                    selectAppointmentTextview.setVisibility(View.INVISIBLE);
-                    noAppointmentView.setVisibility(View.VISIBLE);
                 }
             }
             if (appointmentListWithToday != null) {
                 appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentsItems, appointmentsResultModel);
                 appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
-            } else {
-                appointmentForTextview.setVisibility(View.INVISIBLE);
-                selectAppointmentTextview.setVisibility(View.INVISIBLE);
-                noAppointmentView.setVisibility(View.VISIBLE);
             }
 
             //Layout manager for the Recycler View
