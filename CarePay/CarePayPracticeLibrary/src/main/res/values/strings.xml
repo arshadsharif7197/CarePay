@@ -24,4 +24,7 @@
     <string name="qr_code_scanner">QR Code Scanner</string>
     <string name="signin_failed">Sign-in failed</string>
     <string name="find_my_appointments_unsuccessful">Could not find the appointments, please check the information.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
