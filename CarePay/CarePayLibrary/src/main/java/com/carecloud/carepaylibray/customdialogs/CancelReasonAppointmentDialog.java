@@ -110,7 +110,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         }
 
         // Add Other radio button
-        addCancelReason(label.getCancelAppointmentOtherReasonLabel(), 100);
+        //addCancelReason(label.getCancelAppointmentOtherReasonLabel(), 100);
     }
 
     @SuppressLint("InflateParams")
