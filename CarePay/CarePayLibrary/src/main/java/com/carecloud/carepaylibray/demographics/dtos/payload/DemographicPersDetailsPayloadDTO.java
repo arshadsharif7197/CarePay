@@ -23,6 +23,12 @@ public class DemographicPersDetailsPayloadDTO extends BasePersonModel {
     @SerializedName("preferred_language") @Expose
     private String preferredLanguage;
 
+    @SerializedName("add_unlisted_allergies") @Expose
+    private String addUnlistedAllergies;
+
+    @SerializedName("add_unlisted_medications") @Expose
+    private String addUnlistedMedications;
+
 
 
     /**
@@ -79,5 +85,33 @@ public class DemographicPersDetailsPayloadDTO extends BasePersonModel {
      */
     public void setPreferredLanguage(String preferredLanguage) {
         this.preferredLanguage = preferredLanguage;
+    }
+
+    /**
+     * @return The addUnlistedAllergies
+     */
+    public String getAddUnlistedAllergies() {
+        return addUnlistedAllergies;
+    }
+
+    /**
+     * @param addUnlistedAllergies The add_unlisted_allergies
+     */
+    public void setAddUnlistedAllergies(String addUnlistedAllergies) {
+        this.addUnlistedAllergies = addUnlistedAllergies;
+    }
+
+    /**
+     * @return The addUnlistedMedications
+     */
+    public String getAddUnlistedMedications() {
+        return addUnlistedMedications;
+    }
+
+    /**
+     * @param addUnlistedMedications The add_unlisted_medications
+     */
+    public void setAddUnlistedMedications(String addUnlistedMedications) {
+        this.addUnlistedMedications = addUnlistedMedications;
     }
 }

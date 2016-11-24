@@ -18,12 +18,14 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
@@ -54,14 +56,18 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     View view;
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
-
+        Bundle bundle = getArguments();
+        String intakeFormDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+        Gson gson = new Gson();
+        inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
         getIntakeFormData();
-
+        
         return view;
     }
 
@@ -71,18 +77,26 @@ public class CheckinIntakeForm1Fragment extends Fragment {
      */
     public void getIntakeFormData() {
 
+
+        Map<String, String> header = new HashMap<>();
+
+        header.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
+        header.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
+        header.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());
+        header.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
+
+        WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
+
+/*
         Map<String, String> queryString = new HashMap<>();
-
         queryString.put("appointment_id", "4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");//model.getMetadata().getAppointmentId()
-
         CognitoAppHelper.setUser("srios@carecloud.com");
         TransitionDTO transitionDTO = new TransitionDTO();
         transitionDTO.setMethod("GET");
-
         transitionDTO.setUrl("dev/workflow/carepay/patient_mode/intake_forms");
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-
         WorkflowServiceHelper.getInstance().execute(transitionDTO, intakeFormCallback, queryString);
+*/
 
 
     }
