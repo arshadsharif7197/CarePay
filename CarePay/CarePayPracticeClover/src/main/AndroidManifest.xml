@@ -67,6 +67,9 @@
         <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

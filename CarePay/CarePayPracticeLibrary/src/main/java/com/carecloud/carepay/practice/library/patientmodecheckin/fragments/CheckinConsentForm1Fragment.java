@@ -57,7 +57,8 @@ public class CheckinConsentForm1Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.consent_form_layout, container, false);
+        //View view = inflater.inflate(R.layout.consent_form_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_checkin_consent_form2, container, false);
 
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
