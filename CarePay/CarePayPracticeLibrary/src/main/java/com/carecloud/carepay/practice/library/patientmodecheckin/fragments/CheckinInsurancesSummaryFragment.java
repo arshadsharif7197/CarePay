@@ -163,6 +163,8 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
         postPayloadModel.setInsurances(insurancePayloadDTOs);
 
+        demographicDTO.getPayload().getDemographics().getPayload().setInsurances(insurancePayloadDTOs);
+
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
         queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
@@ -172,9 +174,8 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         header.put("transition", "false");
 
         Gson gson = new Gson();
-        String body = gson.toJson(postPayloadModel);
+        String body = gson.toJson(demographicDTO.getPayload());
         final TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-        final DemographicPayloadDTO newPayload = postPayloadModel;
         WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
