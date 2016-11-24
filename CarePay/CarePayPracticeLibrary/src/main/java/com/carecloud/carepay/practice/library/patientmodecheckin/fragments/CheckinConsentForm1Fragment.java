@@ -14,17 +14,18 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.ConsentForm1Fragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.FormData;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.google.gson.Gson;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 import java.util.Date;
+
 
 
 /**
@@ -33,28 +34,21 @@ import java.util.Date;
 
 public class CheckinConsentForm1Fragment extends Fragment {
 
-    private Button signConsentForm;
     Date date = new Date();
-    private CarePayTextView titleTextView;
-    private CarePayTextView descriptionTextView;
-    private CarePayTextView contentTextView;
-    private CarePayTextView dateTextView;
-    private CarePayTextView agreeTextview;
-    private CarePayTextView minorInfoTextview;
-    private CarePayTextView minorFirstNameTextview;
-    private CarePayTextView minorLastNameTextview;
-    private CarePayTextView minorDobTextview;
-    private TextView minorGenderTextview;
+    private Button signConsentFormButton;
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+    private TextView contentTextView;
+    private TextView dateTextView;
     private Button signButton;
     private IFragmentCallback fragmentCallback;
     private ScrollView consentFormScrollView;
     private ConsentFormLabelsDTO consentFormLabelsDTO;
     private ConsentFormDTO consentFormDTO;
-
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View clickListener) {
-            if (clickListener.getId() == R.id.signButton && fragmentCallback != null) {
+            if (clickListener.getId() == com.carecloud.carepaylibrary.R.id.signButton && fragmentCallback != null) {
                 fragmentCallback.signButtonClicked();
             }
         }
@@ -63,21 +57,33 @@ public class CheckinConsentForm1Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_checkin_consent_form1, container, false);
-        initViews(view);
-        signConsentForm.setOnClickListener(new View.OnClickListener() {
+        View view = inflater.inflate(R.layout.consent_form_layout, container, false);
+
+        titleTextView = (TextView) view.findViewById(R.id.titleTv);
+        descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
+        contentTextView = (TextView) view.findViewById(R.id.contentTv);
+        dateTextView = (TextView) view.findViewById(R.id.dateTv);
+        consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
+        signConsentFormButton = (Button) view.findViewById(R.id.signButton);
+        //  signConsentFormButton.setEnabled(false);
+        /*signConsentFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // transition
-                CheckinConsentForm2Fragment fragment = new CheckinConsentForm2Fragment();
+                CheckinIntakeForm1Fragment fragment = new CheckinIntakeForm1Fragment();
                 ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 2,
-                                                                                PatientModeCheckinActivity.NUM_CONSENT_FORMS);
+                ((PatientModeCheckinActivity)getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_INTAKE, true);
+                ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, false);
+                ((PatientModeCheckinActivity)getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, true);
+                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, 1,
+                                                                                PatientModeCheckinActivity.NUM_INTAKE_FORMS);
 
             }
-        });
+        });*/
+        setTypefaces(view);
 
         return view;
+
     }
 
     @Override
@@ -88,40 +94,29 @@ public class CheckinConsentForm1Fragment extends Fragment {
 
         if (context instanceof PatientModeCheckinActivity) {
             activity = (Activity) context;
-
             try {
                 fragmentCallback = (IFragmentCallback) activity;
             } catch (Exception e) {
-                Log.d(ConsentForm1Fragment.class.getSimpleName(), e.getMessage(), e);
+                Log.e("Error", " Exception");
             }
         }
-
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (signButton != null) {
-            signButton.setOnClickListener(clickListener);
+        if (signConsentFormButton != null) {
+            signConsentFormButton.setOnClickListener(clickListener);
         }
-        String workflowDTO  = getArguments().getString(CarePayConstants.ATTR_RESPONSE);
-        if(workflowDTO!=null){
-            Gson gson = new Gson();
-            ConsentFormDTO consentFormDTO = gson.fromJson(workflowDTO, ConsentFormDTO.class);
-            titleTextView.setText(consentFormDTO.getMetadata().getLabel().getAuthorizationFormTitle());
-            descriptionTextView.setText(consentFormDTO.getMetadata().getLabel().getConsentReadCarefullyWarning());
-            contentTextView.setText(consentFormDTO.getMetadata().getLabel().getAuthorizationGrantText());
-            agreeTextview.setText(consentFormDTO.getMetadata().getLabel().getAuthorizationLegalText());
-            minorInfoTextview.setText(consentFormDTO.getMetadata().getLabel().getMinorsInformation());
-            minorFirstNameTextview.setText(consentFormDTO.getMetadata().getLabel().getLegalFirstNameLabel());
-            minorLastNameTextview.setText(consentFormDTO.getMetadata().getLabel().getLegalLastNameLabel());
-            minorDobTextview.setText(consentFormDTO.getMetadata().getLabel().getSelectDateLabel());
-            minorGenderTextview.setText(consentFormDTO.getMetadata().getLabel().getSelectGenderLabel());
 
-            signButton.setText(consentFormDTO.getMetadata().getLabel().getSignConsentForMedicareTitle());
+        FormData formData = (FormData) getArguments().getSerializable(CarePayConstants.FORM_DATA);
 
-        }
+        titleTextView.setText(formData.getTitle());
+        descriptionTextView.setText(formData.getDescription());
+        contentTextView.setText(formData.getContent());
+        dateTextView.setText(formData.getDate());
+        signConsentFormButton.setText(formData.getButtonLabel());
 
         // enable next button on scrolling all the way to the bottom
         setEnableNextButtonOnFullScroll();
@@ -136,28 +131,19 @@ public class CheckinConsentForm1Fragment extends Fragment {
                 int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
 
                 if (diff == 0) {
-                    signButton.setEnabled(true);
+                    signConsentFormButton.setEnabled(true);
                 }
             }
         });
     }
 
-    private void initViews(View view){
-        titleTextView = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.titleTv);
-        descriptionTextView = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.descriptionTv);
-        contentTextView = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.contentTv);
-        dateTextView = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.dateTv);
-        agreeTextview = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.agreeTextview);
-        minorInfoTextview = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.minor_information);
-        minorFirstNameTextview = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.minor_first_name);
-        minorLastNameTextview = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.minor_last_name);
-        minorDobTextview = (CarePayTextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.dob_ET);
-        minorGenderTextview = (TextView) view.findViewById(com.carecloud.carepay.practice.library.R.id.minor_gender);
-        consentFormScrollView = (ScrollView) view.findViewById(com.carecloud.carepay.practice.library.R.id.consentform_scrollView);
-        signButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.signButton);
-        signButton.setEnabled(false);
+    private void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.titleTv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.descriptionTv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.contentTv));
+        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.dateTv));
 
-        signConsentForm = (Button) view.findViewById(R.id.signButton);
     }
-}
 
+
+}
