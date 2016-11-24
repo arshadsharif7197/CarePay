@@ -320,11 +320,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      */
     @Override
     public void signButtonClicked() {
-        Intent intent = new Intent(this, SignatureActivity.class);
+        Intent intent = new Intent(this, PracticeAppSignatureActivity.class);
 
         intent.putExtra("consentFormLabelsDTO", consentFormLabelsDTO);
         intent.putExtra("consentform", showingForm);
-        if (SignatureActivity.numOfLaunches == 2) {
+        if (PracticeAppSignatureActivity.numOfLaunches == 1) {
             // pass the whole DTO
             Gson gson = new Gson();
             String consentformDTO = gson.toJson(consentFormDTO);
@@ -338,8 +338,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignAuthorizationFormTitle());
             intent.putExtra("Subtitle", consentFormLabelsDTO.getBeforeSignatureWarningText());
 
-        } else {
-            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
         }
 
         startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
@@ -351,8 +349,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CarePayConstants.SIGNATURE_REQ_CODE) {
-            if (SignatureActivity.isBackButtonClicked) {
-                SignatureActivity.isBackButtonClicked = false;
+            if (PracticeAppSignatureActivity.isBackButtonClicked) {
+                PracticeAppSignatureActivity.isBackButtonClicked = false;
             } else {
                 Fragment fragment = getNextConsentForm();
                 if (fragment != null) {
@@ -384,28 +382,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 consentFormLabelsDTO = consentFormMetadataDTO.getLabel();
 
                 if (consentFormLabelsDTO != null) {
-                    /*String authorizationTitle = consentFormLabelsDTO.getAuthorizationFormTitle();
-                    String medicareTitle = consentFormLabelsDTO.getConsentForMedicareTitle();
-                    String hippaTitle = consentFormLabelsDTO.getHipaaAgreementTitle();*/
                     medicareDescription = consentFormLabelsDTO.getConsentForMedicareText();
                     readCarefullySign = consentFormLabelsDTO.getConsentReadCarefullyWarning();
                     authorizationDescription1 = consentFormLabelsDTO.getAuthorizationGrantText();
                     authorizationDescription2 = consentFormLabelsDTO.getAuthorizationLegalText();
-                    /*String hippaDescription = consentFormLabelsDTO.getHipaaConfidentialityAgreementText();
-                    String consentMainTitle = consentFormLabelsDTO.getConsentMainTitle();
-                    String signAuthLabel = consentFormLabelsDTO.getSignAuthorizationFormTitle();*/
                     signMedicareLabel = consentFormLabelsDTO.getSignConsentForMedicareTitle();
-                    /*String signHippaLabel = consentFormLabelsDTO.getSignHipaaAgreementTitle();
-                    String legalFirstNameLabel = consentFormLabelsDTO.getLegalFirstNameLabel();
-                    String legalLastNameLabel = consentFormLabelsDTO.getLegalLastNameLabel();
-                    String clearSignLabel = consentFormLabelsDTO.getSignClearButton();
-                    String signButtonLabel = consentFormLabelsDTO.getConfirmSignatureButton();
-                    String unabletoSignLabel = consentFormLabelsDTO.getUnableToSignText();
-                    String beforeSignWarning = consentFormLabelsDTO.getBeforeSignatureWarningText();
-                    String legalsignLabel = consentFormLabelsDTO.getLegalSignatureLabel();
-                    String patientSignLabel = consentFormLabelsDTO.getPatientSignatureHeading();*/
-                    formbuilder();
-
                     navigateToFragment(getConsentForm(), false);
                     Log.d(this.getClass().getSimpleName(), "consent form information");
                 }
@@ -416,48 +397,23 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
 
-    private void formbuilder() {
-        // insert the patient's first and last names
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        SpannableString firstSpannable = new SpannableString(patientFirstName);
-        SpannableString lastSpannable = new SpannableString(patientFirstName);
-
-
-        int indexFirstComma = medicareDescription.indexOf(',');
-        String upToFirstCommaSubstring = medicareDescription.substring(0, indexFirstComma + 1);
-        String fromSecCommaOnSubstring = medicareDescription.substring(medicareDescription.indexOf(',', indexFirstComma + 1), medicareDescription.length());
-        firstSpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.blue_cerulian)), 0, patientFirstName.length(), 0);
-        medicareForm = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstCommaSubstring, firstSpannable, patientLastName, fromSecCommaOnSubstring);
-
-        int indexFirstPercent = authorizationDescription2.indexOf('%');
-        String upToFirspercentSubstring = authorizationDescription2.substring(0, indexFirstPercent);
-        String fromSecpercentOnSubstring = authorizationDescription2.substring(authorizationDescription2.indexOf(',', indexFirstComma + 1), authorizationDescription2.length());
-        authForm = String.format(Locale.getDefault(), "%s %s %s", upToFirspercentSubstring, providerName, fromSecpercentOnSubstring);
-    }
 
     private Fragment getConsentForm() {
 
         if (showingForm == FormId.FORM1) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form1"));
-            ConsentForm1Fragment consentForm1Fragment = new ConsentForm1Fragment();
+            CheckinConsentForm1Fragment consentForm1Fragment = new CheckinConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
             //updateTitle(FormId.FORM1);
             return consentForm1Fragment;
-        } else if (showingForm == FormId.FORM2) {
+        } else  {
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form2"));
-            ConsentForm2Fragment consentForm2Fragment = new ConsentForm2Fragment();
+            CheckinConsentForm2Fragment consentForm2Fragment = new CheckinConsentForm2Fragment();
             consentForm2Fragment.setArguments(bundle);
             //updateTitle(FormId.FORM2);
             return consentForm2Fragment;
-        } else {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form3"));
-            ConsentForm1Fragment consentForm1Fragment = new ConsentForm1Fragment();
-            consentForm1Fragment.setArguments(bundle);
-            //updateTitle(FormId.FORM3);
-            return consentForm1Fragment;
         }
     }
 
@@ -467,23 +423,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if (formName.equals("form1")) {
             formData.setTitle(consentFormLabelsDTO.getConsentForMedicareTitle());
             formData.setDescription(readCarefullySign);
-            formData.setContent(medicareForm);
-            formData.setButtonLabel(consentFormLabelsDTO.getSignConsentForMedicareTitle().toUpperCase());
+            formData.setContent(medicareDescription );
+            formData.setButtonLabel(consentFormLabelsDTO.getSignFormButton());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else if (formName.equals("form2")) {
             formData.setTitle(consentFormLabelsDTO.getAuthorizationFormTitle());
             formData.setDescription(readCarefullySign);
             formData.setContent(authorizationDescription1);
-            formData.setContent2(authForm);
-            formData.setButtonLabel(consentFormLabelsDTO.getSignAuthorizationFormTitle().toUpperCase());
-            formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
-        } else { //form3
-            formData.setTitle(consentFormLabelsDTO.getHipaaAgreementTitle());
-            formData.setDescription(readCarefullySign);
-            formData.setContent(consentFormLabelsDTO.getHipaaConfidentialityAgreementText());
-            formData.setButtonLabel(consentFormLabelsDTO.getSignHipaaAgreementTitle().toUpperCase());
+            formData.setContent2(authorizationDescription2);
+            formData.setButtonLabel(consentFormLabelsDTO.getSignFormButton());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         }
+
+
 
         return formData;
 
@@ -526,7 +478,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      * Enum to identify the forms
      */
     public enum FormId {
-        FORM1, FORM2, FORM3, NONE;
+        FORM1, FORM2, NONE;
 
         /**
          * Go to next
@@ -534,18 +486,17 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         public FormId next() {
             if (this.equals(FORM1)) {
                 return FORM2;
-            } else if (this.equals(FORM2)) {
-                return FORM3;
+            } else {
+                return NONE;
             }
-            return NONE;
         }
 
         /**
          * Go to prev
          */
         public FormId prev() {
-            if (this.equals(FORM3)) {
-                return FORM2;
+            if (this.equals(FORM2)) {
+                return FORM1;
             } else if (this.equals(FORM2)) {
                 return FORM1;
             }

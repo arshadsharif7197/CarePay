@@ -14,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -37,7 +37,6 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -50,6 +49,8 @@ import java.util.List;
 import java.util.Map;
 
 
+
+
 public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {
 
     WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
@@ -60,16 +61,23 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
 
-            CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(getContext(), workflowDTO);
+
+        /*    CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
             ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
+
                     PatientModeCheckinActivity.NUM_CONSENT_FORMS);
             Bundle bundle = new Bundle();
             bundle.putString(CarePayConstants.ATTR_RESPONSE, workflowDTO.toString());
             fragment.setArguments(bundle);
             // end-splash activity and transition
             // SplashActivity.this.finish();
+
+                                                                             PatientModeCheckinActivity.NUM_CONSENT_FORMS);*/
+
+
         }
 
         @Override
@@ -77,105 +85,88 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
-    /* WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
-         @Override
-         public void onPreExecute() {
-         }
 
-         @Override
-         public void onPostExecute(WorkflowDTO workflowDTO) {
-             PracticeNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-
-             // end-splash activity and transition
-             // SplashActivity.this.finish();
-         }
-
-         @Override
-         public void onFailure(String exceptionMessage) {
-             //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
-         }
-     };*/
-    private View        view;
-    private Button      correctInformationButton;
-    private Button      updateInformationUpdate;
-    private TextView    reviewTitleTextView;
-    private TextView    reviewSubtitileTextView;
-    private TextView    addressSectionTextView;
-    private TextView    peronalInfoSectionTextview;
-    private TextView    demographicSectionTextView;
-    private TextView    healthInsurance1SecionTextView;
-    private TextView    healthInsurance2SecionTextView;
-    private TextView    healthInsurance3SecionTextView;
-    private TextView    firstnameTextView;
-    private TextView    middlenameTextView;
-    private TextView    lastNameTextView;
-    private TextView    dobTExtView;
-    private TextView    phoneNumberTextView;
-    private TextView    genderTextView;
-    private TextView    driverLicenseTextView;
-    private TextView    raceTextView;
-    private TextView    ethnicityTextView;
-    private TextView    insurance1companyTextView;
-    private TextView    insurance1planTextView;
-    private TextView    insurance1policyNumberTextView;
-    private TextView    insurance2companyTextView;
-    private TextView    insurance2planTextView;
-    private TextView    insurance2policyNumberTextView;
-    private TextView    insurance3companyTextView;
-    private TextView    insurance3planTextView;
-    private TextView    insurance3policyNumberTextView;
-    private TextView    address1TextView;
-    private TextView    address2TextView;
-    private TextView    cityTextView;
-    private TextView    stateTextView;
-    private TextView    zipcodeTextView;
+    private View view;
+    private Button correctInformationButton;
+    private Button updateInformationUpdate;
+    private TextView reviewTitleTextView;
+    private TextView reviewSubtitileTextView;
+    private TextView addressSectionTextView;
+    private TextView peronalInfoSectionTextview;
+    private TextView demographicSectionTextView;
+    private TextView healthInsurance1SecionTextView;
+    private TextView healthInsurance2SecionTextView;
+    private TextView healthInsurance3SecionTextView;
+    private TextView firstnameTextView;
+    private TextView middlenameTextView;
+    private TextView lastNameTextView;
+    private TextView dobTExtView;
+    private TextView phoneNumberTextView;
+    private TextView genderTextView;
+    private TextView driverLicenseTextView;
+    private TextView raceTextView;
+    private TextView ethnicityTextView;
+    private TextView insurance1companyTextView;
+    private TextView insurance1planTextView;
+    private TextView insurance1policyNumberTextView;
+    private TextView insurance2companyTextView;
+    private TextView insurance2planTextView;
+    private TextView insurance2policyNumberTextView;
+    private TextView insurance3companyTextView;
+    private TextView insurance3planTextView;
+    private TextView insurance3policyNumberTextView;
+    private TextView address1TextView;
+    private TextView address2TextView;
+    private TextView cityTextView;
+    private TextView stateTextView;
+    private TextView zipcodeTextView;
     private FrameLayout addressline2label;
-    private View        address2labelview;
-    private TextView    firstNameLabel;
-    private TextView    lastNameLabel;
-    private TextView    middleNameLabel;
-    private TextView    phoneNumberLabel;
-    private TextView    dobLabel;
-    private TextView    genderLabel;
-    private TextView    raceLabel;
-    private TextView    ethnicityLabel;
-    private TextView    insurance1companyLabel;
-    private TextView    insurance1planLabel;
-    private TextView    insurance1policyNumberLabel;
-    private TextView    address1Label;
-    private TextView    address2Label;
-    private TextView    stateLabel;
-    private TextView    cityLabel;
-    private TextView    zipcodeLabel;
-    private TextView    driverLicenseLabel;
-    private TextView    insurance2companyLabel;
-    private TextView    insurance2planLabel;
-    private TextView    insurance2policyNumberLabel;
-    private TextView    insurance3companyLabel;
-    private TextView    insurance3planLabel;
-    private TextView    insurance3policyNumberLabel;
+    private View address2labelview;
+    private TextView firstNameLabel;
+    private TextView lastNameLabel;
+    private TextView middleNameLabel;
+    private TextView phoneNumberLabel;
+    private TextView dobLabel;
+    private TextView genderLabel;
+    private TextView raceLabel;
+    private TextView ethnicityLabel;
+    private TextView insurance1companyLabel;
+    private TextView insurance1planLabel;
+    private TextView insurance1policyNumberLabel;
+    private TextView address1Label;
+    private TextView address2Label;
+    private TextView stateLabel;
+    private TextView cityLabel;
+    private TextView zipcodeLabel;
+    private TextView driverLicenseLabel;
+    private TextView insurance2companyLabel;
+    private TextView insurance2planLabel;
+    private TextView insurance2policyNumberLabel;
+    private TextView insurance3companyLabel;
+    private TextView insurance3planLabel;
+    private TextView insurance3policyNumberLabel;
 
-    private LinearLayout                            healthInsurance1;
-    private LinearLayout                            healthInsurance2;
-    private LinearLayout                            healthInsurance3;
-    private ProgressBar                             demographicProgressBar;
-    private DemographicDTO                          demographicDTO;
-    private DemographicPersDetailsPayloadDTO        demographicPersDetailsPayloadDTO;
-    private DemographicAddressPayloadDTO            demographicAddressPayloadDTO;
-    private DemographicInsurancePayloadDTO          demographicInsurancePayloadDTO;
-    private List<DemographicInsurancePayloadDTO>    insurances;
-    private DemographicIdDocPayloadDTO              idDocPayloadDTO;
-    private DemographicInsurancePayloadDTO          insuranceModel1;
-    private DemographicInsurancePayloadDTO          insuranceModel2;
-    private DemographicInsurancePayloadDTO          insuranceModel3;
-    private DemographicLabelsDTO                    globalLabelsMetaDTO;
-    private DemographicMetadataEntityAddressDTO     addressMetaDTO;
+    private LinearLayout healthInsurance1;
+    private LinearLayout healthInsurance2;
+    private LinearLayout healthInsurance3;
+    private ProgressBar demographicProgressBar;
+    private DemographicDTO demographicDTO;
+    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
+    private DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
+    private List<DemographicInsurancePayloadDTO> insurances;
+    private DemographicIdDocPayloadDTO idDocPayloadDTO;
+    private DemographicInsurancePayloadDTO insuranceModel1;
+    private DemographicInsurancePayloadDTO insuranceModel2;
+    private DemographicInsurancePayloadDTO insuranceModel3;
+    private DemographicLabelsDTO globalLabelsMetaDTO;
+    private DemographicMetadataEntityAddressDTO addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
-    private boolean                                 isPhoneEmpty;
-    private int                                     selectedDataArray;
-    private DemographicIdDocPayloadDTO              demographicIdDocPayloadDTO;
-    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
+    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    private boolean isPhoneEmpty;
+    private int selectedDataArray;
+    private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
+    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
 
     public CheckinDemographicsRevFragment() {
     }
@@ -243,7 +234,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                     demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
                 }
                 // get insurances
-                insurances = payload.getInsurances(); // (Mr Rahul G. should use more comments ;) )
+                insurances = payload.getInsurances(); // (Mr Rahul G. should use more comments :wink: )
             }
         }
     }
@@ -560,6 +551,8 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
             Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
             header.put("transition", "true");
+            header.put("username_patient", "rgirase@carecloud.com");
+            header.put("username", "practice@cc.com");
 
             Gson gson = new Gson();
             String demographicinfo = gson.toJson(demographicDTO.getPayload());
@@ -573,62 +566,8 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
             ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(false);
-          /*  FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//            WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getUpdateDemographics(), consentformcallback);
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            CheckinDemographicsFragment demographicReviewFragment = new CheckinDemographicsFragment();
-            transaction.replace(R.id.root_layout, demographicReviewFragment, CheckinDemographicsRevFragment.class.getName());
-            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-                    R.anim.enter_from_left, R.anim.exit_to_right);
-            transaction.addToBackStack("CheckinDemographicsRevFragment -> CheckinDemographicsFragment");
-            transaction.commit();*/
         }
     }
-
-   /* private void launchDemographics(ConsentFormDTO consentFormDTO) {
-        // do to Demographics
-        Intent intent = new Intent(getActivity(), ConsentActivity.class);
-        if (consentFormDTO != null) {
-            // pass the object into the gson
-            Gson gson = new Gson();
-            String dtostring = gson.toJson(consentFormDTO, ConsentFormDTO.class);
-            intent.putExtra("consentform_model", dtostring);
-            startActivity(intent);
-        }
-
-    }*/
-
-    /*public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
-        return idDocsMetaDTO;
-    }
-
-    public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
-        this.idDocsMetaDTO = idDocsMetaDTO;
-    }
-
-    public DemographicMetadataEntityPersDetailsDTO getPersDetailsMetaDTO() {
-        return persDetailsMetaDTO;
-    }
-
-    public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
-        this.persDetailsMetaDTO = persDetailsMetaDTO;
-    }
-
-    public DemographicMetadataEntityInsurancesDTO getInsurancesMetaDTO() {
-        return insurancesMetaDTO;
-    }
-
-    public void setInsurancesMetaDTO(DemographicMetadataEntityInsurancesDTO insurancesMetaDTO) {
-        this.insurancesMetaDTO = insurancesMetaDTO;
-    }
-
-    public DemographicMetadataEntityAddressDTO getAddressMetaDTO() {
-        return addressMetaDTO;
-    }
-
-    public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {
-        this.addressMetaDTO = addressMetaDTO;
-    }*/
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), reviewTitleTextView);
@@ -641,11 +580,11 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
         setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
         setProximaNovaSemiboldTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.reviewRaceTextView));
+                (TextView) view.findViewById(R.id.reviewRaceTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.reviewEthnicityTextView));
+                (TextView) view.findViewById(R.id.reviewEthnicityTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.reviewGenderTextView));
+                (TextView) view.findViewById(R.id.reviewGenderTextView));
 
 
         //PN - extra Bold
@@ -676,33 +615,33 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
         //PN-Regular
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewRaceLabel));
+                (TextView) view.findViewById(R.id.reviewRaceLabel));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewEthnicityLabel));
+                (TextView) view.findViewById(R.id.reviewEthnicityLabel));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewCompanyTextView));
+                (TextView) view.findViewById(R.id.reviewCompanyTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewPlanTextView));
+                (TextView) view.findViewById(R.id.reviewPlanTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView));
+                (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewFirstNameTextView));
+                (TextView) view.findViewById(R.id.reviewFirstNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewLastNameTextView));
+                (TextView) view.findViewById(R.id.reviewLastNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewMiddelNameTextView));
+                (TextView) view.findViewById(R.id.reviewMiddelNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewDOBTextView));
+                (TextView) view.findViewById(R.id.reviewDOBTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewPhoneNumberTextView));
+                (TextView) view.findViewById(R.id.reviewPhoneNumberTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewGenderLabel));
+                (TextView) view.findViewById(R.id.reviewGenderLabel));
 
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewDriverLicenseTextView));
+                (TextView) view.findViewById(R.id.reviewDriverLicenseTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewAddress1TextView));
+                (TextView) view.findViewById(R.id.reviewAddress1TextView));
         setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.reviewAddress2TextView));
+                (TextView) view.findViewById(R.id.reviewAddress2TextView));
     }
 }

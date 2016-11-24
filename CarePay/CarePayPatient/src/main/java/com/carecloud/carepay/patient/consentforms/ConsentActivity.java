@@ -277,20 +277,20 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
             formData.setTitle(consentFormLabelsDTO.getConsentForMedicareTitle());
             formData.setDescription(readCarefullySign);
             formData.setContent(medicareDescription);
-            formData.setButtonLabel(consentFormLabelsDTO.getSignConsentForMedicareTitle().toUpperCase());
+            formData.setButtonLabel(consentFormLabelsDTO.getSignFormButton());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else if (formName.equals("form2")) {
             formData.setTitle(consentFormLabelsDTO.getAuthorizationFormTitle());
             formData.setDescription(readCarefullySign);
             formData.setContent(authorizationDescription1);
             formData.setContent2(authorizationDescription2);
-            formData.setButtonLabel(consentFormLabelsDTO.getSignAuthorizationFormTitle().toUpperCase());
+            formData.setButtonLabel(consentFormLabelsDTO.getSignFormButton());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         } else { //form3
             formData.setTitle(consentFormLabelsDTO.getHipaaAgreementTitle());
             formData.setDescription(readCarefullySign);
             formData.setContent(consentFormLabelsDTO.getHipaaConfidentialityAgreementText());
-            formData.setButtonLabel(consentFormLabelsDTO.getSignHipaaAgreementTitle().toUpperCase());
+            formData.setButtonLabel(consentFormLabelsDTO.getSignFormButton());
             formData.setDate(DateUtil.getInstance().getDateAsMonthLiteralDayOrdinalYear());
         }
 
