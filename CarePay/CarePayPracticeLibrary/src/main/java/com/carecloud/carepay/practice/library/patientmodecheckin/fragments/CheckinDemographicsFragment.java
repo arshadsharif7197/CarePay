@@ -138,7 +138,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     private boolean isCityEmpty;
     private boolean isStateEmtpy;
     private boolean isZipEmpty;
-    private boolean isDriversLicenseEmpty;
 
     private LinearLayout addDemoLineraLayout;
 
