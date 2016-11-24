@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,9 +48,9 @@ import java.util.List;
 import java.util.Map;
 
 
-
-
 public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {
+
+    private static final int MAX_INSURANCES = 3;
 
     WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
@@ -60,24 +59,8 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-
+            demographicProgressBar.setVisibility(View.GONE);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(getContext(), workflowDTO);
-
-        /*    CheckinConsentForm1Fragment fragment = new CheckinConsentForm1Fragment();
-            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-            ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
-            ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
-
-                    PatientModeCheckinActivity.NUM_CONSENT_FORMS);
-            Bundle bundle = new Bundle();
-            bundle.putString(CarePayConstants.ATTR_RESPONSE, workflowDTO.toString());
-            fragment.setArguments(bundle);
-            // end-splash activity and transition
-            // SplashActivity.this.finish();
-
-                                                                             PatientModeCheckinActivity.NUM_CONSENT_FORMS);*/
-
-
         }
 
         @Override
@@ -86,93 +69,71 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         }
     };
 
-    private View view;
-    private Button correctInformationButton;
-    private Button updateInformationUpdate;
-    private TextView reviewTitleTextView;
-    private TextView reviewSubtitileTextView;
-    private TextView addressSectionTextView;
-    private TextView peronalInfoSectionTextview;
-    private TextView demographicSectionTextView;
-    private TextView healthInsurance1SecionTextView;
-    private TextView healthInsurance2SecionTextView;
-    private TextView healthInsurance3SecionTextView;
-    private TextView firstnameTextView;
-    private TextView middlenameTextView;
-    private TextView lastNameTextView;
-    private TextView dobTExtView;
-    private TextView phoneNumberTextView;
-    private TextView genderTextView;
-    private TextView driverLicenseTextView;
-    private TextView raceTextView;
-    private TextView ethnicityTextView;
-    private TextView insurance1companyTextView;
-    private TextView insurance1planTextView;
-    private TextView insurance1policyNumberTextView;
-    private TextView insurance2companyTextView;
-    private TextView insurance2planTextView;
-    private TextView insurance2policyNumberTextView;
-    private TextView insurance3companyTextView;
-    private TextView insurance3planTextView;
-    private TextView insurance3policyNumberTextView;
-    private TextView address1TextView;
-    private TextView address2TextView;
-    private TextView cityTextView;
-    private TextView stateTextView;
-    private TextView zipcodeTextView;
-    private FrameLayout addressline2label;
-    private View address2labelview;
-    private TextView firstNameLabel;
-    private TextView lastNameLabel;
-    private TextView middleNameLabel;
-    private TextView phoneNumberLabel;
-    private TextView dobLabel;
-    private TextView genderLabel;
-    private TextView raceLabel;
-    private TextView ethnicityLabel;
-    private TextView insurance1companyLabel;
-    private TextView insurance1planLabel;
-    private TextView insurance1policyNumberLabel;
-    private TextView address1Label;
-    private TextView address2Label;
-    private TextView stateLabel;
-    private TextView cityLabel;
-    private TextView zipcodeLabel;
-    private TextView driverLicenseLabel;
-    private TextView insurance2companyLabel;
-    private TextView insurance2planLabel;
-    private TextView insurance2policyNumberLabel;
-    private TextView insurance3companyLabel;
-    private TextView insurance3planLabel;
-    private TextView insurance3policyNumberLabel;
-
-    private LinearLayout healthInsurance1;
-    private LinearLayout healthInsurance2;
-    private LinearLayout healthInsurance3;
-    private ProgressBar demographicProgressBar;
-    private DemographicDTO demographicDTO;
-    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
-    private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
-    private DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
-    private List<DemographicInsurancePayloadDTO> insurances;
-    private DemographicIdDocPayloadDTO idDocPayloadDTO;
-    private DemographicInsurancePayloadDTO insuranceModel1;
-    private DemographicInsurancePayloadDTO insuranceModel2;
-    private DemographicInsurancePayloadDTO insuranceModel3;
-    private DemographicLabelsDTO globalLabelsMetaDTO;
-    private DemographicMetadataEntityAddressDTO addressMetaDTO;
+    private View                                    view;
+    private Button                                  correctInformationButton;
+    private Button                                  updateInformationUpdate;
+    private TextView                                reviewTitleTextView;
+    private TextView                                reviewSubtitileTextView;
+    private TextView                                addressSectionTextView;
+    private TextView                                peronalInfoSectionTextview;
+    private TextView                                demographicSectionTextView;
+    private TextView                                healthInsurance1SecionTextView;
+    private TextView                                healthInsurance2SecionTextView;
+    private TextView                                healthInsurance3SecionTextView;
+    private TextView                                firstnameTextView;
+    private TextView                                middlenameTextView;
+    private TextView                                lastNameTextView;
+    private TextView                                dobTExtView;
+    private TextView                                phoneNumberTextView;
+    private TextView                                genderTextView;
+    private TextView                                raceTextView;
+    private TextView                                ethnicityTextView;
+    private TextView                                address1TextView;
+    private TextView                                address2TextView;
+    private TextView                                cityTextView;
+    private TextView                                stateTextView;
+    private TextView                                zipcodeTextView;
+    private TextView                                firstNameLabel;
+    private TextView                                lastNameLabel;
+    private TextView                                middleNameLabel;
+    private TextView                                phoneNumberLabel;
+    private TextView                                dobLabel;
+    private TextView                                genderLabel;
+    private TextView                                raceLabel;
+    private TextView                                ethnicityLabel;
+    private TextView                                insurance1companyLabel;
+    private TextView                                insurance1planLabel;
+    private TextView                                insurance1policyNumberLabel;
+    private TextView                                address1Label;
+    private TextView                                address2Label;
+    private TextView                                stateLabel;
+    private TextView                                cityLabel;
+    private TextView                                zipcodeLabel;
+    private TextView                                driverLicenseLabel;
+    private TextView                                insurance2companyLabel;
+    private TextView                                insurance2planLabel;
+    private TextView                                insurance2policyNumberLabel;
+    private TextView                                insurance3companyLabel;
+    private TextView                                insurance3planLabel;
+    private TextView                                insurance3policyNumberLabel;
+    private ProgressBar                             demographicProgressBar;
+    private DemographicDTO                          demographicDTO;
+    private DemographicPersDetailsPayloadDTO        demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO            demographicAddressPayloadDTO;
+    private List<DemographicInsurancePayloadDTO>    insurances;
+    private DemographicLabelsDTO                    globalLabelsMetaDTO;
+    private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-    private boolean isPhoneEmpty;
-    private int selectedDataArray;
-    private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
+    private TextView[]                              companyTextViews;
+    private TextView[]                              planTextViews;
+    private TextView[]                              policyTextViews;
+    private LinearLayout[]                          insContainers;
+    private DemographicIdDocPayloadDTO              demographicIdDocPayloadDTO;
+    private TextView                                getDriverLicenseTextView;
 
     public CheckinDemographicsRevFragment() {
-    }
-
-    public static CheckinDemographicsRevFragment newInstance() {
-        return new CheckinDemographicsRevFragment();
     }
 
     @Override
@@ -186,7 +147,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_insurance_review, container, false);
 
-
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.review_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
@@ -195,8 +155,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setVisibility(view.GONE);
 
-        //   DemographicReviewActivity.isFromReview = true;
-        //initModels();
         initializeDemographicsDTO();
         initialiseUIFields();
         setTypefaces(view);
@@ -207,7 +165,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     /**
      * Initialize the models from main Demographic Review Activity
      */
-
     private void initializeDemographicsDTO() {
         // fetch the main DTO
         demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
@@ -229,12 +186,16 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                 // get address
                 demographicAddressPayloadDTO = payload.getAddress();
                 // get id docs
-                int size = payload.getIdDocuments().size();
-                for (int i = 0; i > size; i++) {
-                    demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
+
+                List<DemographicIdDocPayloadDTO> idDocs = payload.getIdDocuments();
+                if (idDocs != null) {
+                    int size = payload.getIdDocuments().size();
+                    if (size > 0) {
+                        demographicIdDocPayloadDTO = idDocs.get(0);
+                    }
                 }
                 // get insurances
-                insurances = payload.getInsurances(); // (Mr Rahul G. should use more comments :wink: )
+                insurances = payload.getInsurances();
             }
         }
     }
@@ -294,7 +255,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                 address1TextView.setText(addresline1);
             }
 
-
             String addresline2 = demographicAddressPayloadDTO.getAddress2();
             if (SystemUtil.isNotEmptyString(addresline2)) {
                 address2TextView.setText(addresline2);
@@ -315,67 +275,35 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                 cityTextView.setText(city);
             }
 
+            String driversLicense = demographicIdDocPayloadDTO.getIdNumber();
+            if (SystemUtil.isNotEmptyString(driversLicense)) {
+                getDriverLicenseTextView.setText(driversLicense);
+            }
+
             // initializeInsurances from the model
             initializeInsuranceFromModel();
-
         }
     }
 
     private void initializeInsuranceFromModel() {
 
         if (insurances != null) {
+            for (int i = 0; i < insurances.size(); i++) {
+                DemographicInsurancePayloadDTO insurance = insurances.get(i);
 
-            if (insurances.size() > 0 && insurances.get(0) != null) {
-
-                String plan1 = insurances.get(0).getInsurancePlan();
-                if (SystemUtil.isNotEmptyString(plan1)) {
-                    insurance1planTextView.setText(plan1);
+                String plan = insurance.getInsurancePlan();
+                if (SystemUtil.isNotEmptyString(plan)) {
+                    planTextViews[i].setText(plan);
                 }
-                String company1 = insurances.get(0).getInsuranceProvider();
-                if (SystemUtil.isNotEmptyString(company1)) {
-                    insurance1companyTextView.setText(company1);
+                String company = insurance.getInsuranceProvider();
+                if (SystemUtil.isNotEmptyString(company)) {
+                    companyTextViews[i].setText(company);
                 }
-
-                String memberid = insurances.get(0).getInsuranceMemberId();
+                String memberid = insurance.getInsuranceMemberId();
                 if (SystemUtil.isNotEmptyString(memberid)) {
-                    insurance1policyNumberTextView.setText(memberid);
+                    policyTextViews[i].setText(memberid);
                 }
-                if (insurances.size() > 1 && insurances.get(1) != null) {
-
-                    healthInsurance2.setVisibility(View.VISIBLE);
-                    String plan2 = insurances.get(1).getInsurancePlan();
-                    if (SystemUtil.isNotEmptyString(plan2)) {
-                        insurance2planTextView.setText(plan2);
-                    }
-                    String company2 = insurances.get(1).getInsuranceProvider();
-                    if (SystemUtil.isNotEmptyString(company2)) {
-                        insurance2companyTextView.setText(company2);
-                    }
-
-                    String memberid2 = insurances.get(1).getInsuranceMemberId();
-                    if (SystemUtil.isNotEmptyString(memberid2)) {
-                        insurance2policyNumberTextView.setText(memberid2);
-                    }
-
-
-                    if (insurances.size() > 2 && insurances.get(2) != null) {
-
-                        healthInsurance3.setVisibility(View.VISIBLE);
-                        String plan3 = insurances.get(2).getInsurancePlan();
-                        if (SystemUtil.isNotEmptyString(plan3)) {
-                            insurance3planTextView.setText(plan3);
-                        }
-                        String company3 = insurances.get(2).getInsuranceProvider();
-                        if (SystemUtil.isNotEmptyString(company3)) {
-                            insurance3companyTextView.setText(company3);
-                        }
-
-                        String memberid3 = insurances.get(2).getInsuranceMemberId();
-                        if (SystemUtil.isNotEmptyString(memberid3)) {
-                            insurance3policyNumberTextView.setText(memberid3);
-                        }
-                    }
-                }
+                insContainers[i].setVisibility(View.VISIBLE);
             }
         }
     }
@@ -384,7 +312,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
      * .
      * Initializing the view
      */
-
     private void initialiseUIFields() {
 
         correctInformationButton = (Button) view.findViewById(R.id.YesCorrectButton);
@@ -407,6 +334,8 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         addressSectionTextView = (TextView) view.findViewById(R.id.reviewAddress);
         addressSectionTextView.setText(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
 
+        getDriverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
+
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicSectionLabel);
         demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
 
@@ -419,18 +348,14 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         healthInsurance3SecionTextView = (TextView) view.findViewById(R.id.healthInsurance3SubTitle);
         healthInsurance3SecionTextView.setText(globalLabelsMetaDTO.getDemographicsHealthinsurance3Section().toUpperCase());
 
-
         //  Personal Deatails Model View
-
         initializePersonalDetailsSectionView();
+
         //  Address Model View
         initializeAddressSectionView();
 
         //  Insurance Model View
-
         initializeInsuranceSectionView();
-
-
     }
 
     private void initializePersonalDetailsSectionView() {
@@ -468,7 +393,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
         driverLicenseLabel = (TextView) view.findViewById(R.id.reviewDriverLicenseLabel);
         driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel().toUpperCase());
-        driverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
     }
 
     private void initializeAddressSectionView() {
@@ -479,8 +403,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         address2Label = (TextView) view.findViewById(R.id.reviewAddress2label);
         address2Label.setText(addressMetaDTO.properties.address2.getLabel().toUpperCase());
         address2TextView = (TextView) view.findViewById(R.id.reviewAddress2TextView);
-        addressline2label = (FrameLayout) view.findViewById(R.id.address2layout);
-        address2labelview = view.findViewById(R.id.address2labelview);
 
         cityLabel = (TextView) view.findViewById(R.id.reviewCityLabel);
         cityLabel.setText(addressMetaDTO.properties.city.getLabel().toUpperCase());
@@ -496,9 +418,14 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     }
 
     private void initializeInsuranceSectionView() {
-        healthInsurance1 = (LinearLayout) view.findViewById(R.id.insurance1);
-        healthInsurance2 = (LinearLayout) view.findViewById(R.id.insurnace2);
-        healthInsurance3 = (LinearLayout) view.findViewById(R.id.insurance3);
+        insContainers = new LinearLayout[MAX_INSURANCES];
+        insContainers[0] = (LinearLayout) view.findViewById(R.id.insurance1);
+        insContainers[1] = (LinearLayout) view.findViewById(R.id.insurnace2);
+        insContainers[2] = (LinearLayout) view.findViewById(R.id.insurance3);
+
+        insurance1companyLabel = (TextView) view.findViewById(R.id.reviewCompanyLabel);
+        insurance2companyLabel = (TextView) view.findViewById(R.id.reviewCompany2Label);
+        insurance3companyLabel = (TextView) view.findViewById(R.id.reviewCompany3Label);
 
         insurance1planLabel = (TextView) view.findViewById(R.id.reviewPlanLabel);
         insurance2planLabel = (TextView) view.findViewById(R.id.reviewPlan2Label);
@@ -508,22 +435,24 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         insurance2policyNumberLabel = (TextView) view.findViewById(R.id.reviewInsurance2CardNoLabel);
         insurance3policyNumberLabel = (TextView) view.findViewById(R.id.reviewInsurance3CardNoLabel);
 
-        insurance1planTextView = (TextView) view.findViewById(R.id.reviewPlanTextView);
-        insurance2planTextView = (TextView) view.findViewById(R.id.reviewPlan2TextView);
-        insurance3planTextView = (TextView) view.findViewById(R.id.reviewPlan3TextView);
+        companyTextViews = new TextView[MAX_INSURANCES];
+        companyTextViews[0] = (TextView) view.findViewById(R.id.reviewCompanyTextView);
+        companyTextViews[1] = (TextView) view.findViewById(R.id.reviewCompany2TextView);
+        companyTextViews[2] = (TextView) view.findViewById(R.id.reviewCompany3TextView);
 
-        insurance1companyTextView = (TextView) view.findViewById(R.id.reviewCompanyTextView);
-        insurance2companyTextView = (TextView) view.findViewById(R.id.reviewCompany2TextView);
-        insurance3companyTextView = (TextView) view.findViewById(R.id.reviewCompany3TextView);
+        planTextViews = new TextView[MAX_INSURANCES];
+        planTextViews[0] = (TextView) view.findViewById(R.id.reviewPlanTextView);
+        planTextViews[1] = (TextView) view.findViewById(R.id.reviewPlan2TextView);
+        planTextViews[2] = (TextView) view.findViewById(R.id.reviewPlan3TextView);
 
+        policyTextViews = new TextView[MAX_INSURANCES];
+        policyTextViews[0] = (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView);
+        policyTextViews[1] = (TextView) view.findViewById(R.id.reviewInsurance2PolicyNoTextView);
+        policyTextViews[2] = (TextView) view.findViewById(R.id.reviewInsurance3PolicyNoTextView);
 
-        insurance1companyLabel = (TextView) view.findViewById(R.id.reviewCompanyLabel);
-        insurance2companyLabel = (TextView) view.findViewById(R.id.reviewCompany2Label);
-        insurance3companyLabel = (TextView) view.findViewById(R.id.reviewCompany3Label);
-
-        insurance1policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView);
-        insurance2policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurance2PolicyNoTextView);
-        insurance3policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurance3PolicyNoTextView);
+        insContainers[0].setVisibility(View.GONE);
+        insContainers[1].setVisibility(View.GONE);
+        insContainers[2].setVisibility(View.GONE);
 
         insurance1policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
         insurance1planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
@@ -542,7 +471,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     @Override
     public void onClick(View view) {
         if (view == correctInformationButton) {
-
             ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             Map<String, String> queries = new HashMap<>();
             queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
@@ -555,13 +483,11 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             header.put("username", "practice@cc.com");
 
             Gson gson = new Gson();
-            String demographicinfo = gson.toJson(demographicDTO.getPayload());
+            String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
             TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demographicinfo, queries, header);
-
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
 
         } else if (view == updateInformationUpdate) {
-
             // transition
             CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
@@ -580,12 +506,11 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
         setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewRaceTextView));
+                                       (TextView) view.findViewById(R.id.reviewRaceTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewEthnicityTextView));
+                                       (TextView) view.findViewById(R.id.reviewEthnicityTextView));
         setProximaNovaSemiboldTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewGenderTextView));
-
+                                       (TextView) view.findViewById(R.id.reviewGenderTextView));
 
         //PN - extra Bold
         setProximaNovaExtraboldTypeface(getActivity(), insurance1companyLabel);
@@ -615,33 +540,33 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
         //PN-Regular
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewRaceLabel));
+                                      (TextView) view.findViewById(R.id.reviewRaceLabel));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewEthnicityLabel));
+                                      (TextView) view.findViewById(R.id.reviewEthnicityLabel));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewCompanyTextView));
+                                      (TextView) view.findViewById(R.id.reviewCompanyTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewPlanTextView));
+                                      (TextView) view.findViewById(R.id.reviewPlanTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView));
+                                      (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewFirstNameTextView));
+                                      (TextView) view.findViewById(R.id.reviewFirstNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewLastNameTextView));
+                                      (TextView) view.findViewById(R.id.reviewLastNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewMiddelNameTextView));
+                                      (TextView) view.findViewById(R.id.reviewMiddelNameTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewDOBTextView));
+                                      (TextView) view.findViewById(R.id.reviewDOBTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewPhoneNumberTextView));
+                                      (TextView) view.findViewById(R.id.reviewPhoneNumberTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewGenderLabel));
+                                      (TextView) view.findViewById(R.id.reviewGenderLabel));
 
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewDriverLicenseTextView));
+                                      (TextView) view.findViewById(R.id.reviewDriverLicenseTextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewAddress1TextView));
+                                      (TextView) view.findViewById(R.id.reviewAddress1TextView));
         setProximaNovaRegularTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.reviewAddress2TextView));
+                                      (TextView) view.findViewById(R.id.reviewAddress2TextView));
     }
 }
