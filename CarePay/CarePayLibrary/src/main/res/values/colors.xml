@@ -78,4 +78,8 @@
     <color name="viewfinder_mask">#60000000</color>
     <color name="viewfinder_laser">#00cc0000</color>
     <color name="viewfinder_border">#ffafed44</color>
+
+    <color name="consent_title">#ff35a5e1</color>
+
+
 </resources>

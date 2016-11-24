@@ -73,8 +73,8 @@ public class DemographicsDetailsFragment extends Fragment
     private TextView        ethnicityTextView;
     private TextView        genderTextView;
     private EditText        dobEdit;
-    private TextView        addUnlistedAllergyTextView;
-    private TextView        addUnlistedMedTextView;
+    private EditText        addUnlistedAllergyTextView;
+    private EditText        addUnlistedMedTextView;
     private TextView        addAnotherAllergyTextView;
     private TextView        addAnotherMedTextView;
     private Button          nextButton;
@@ -355,15 +355,15 @@ public class DemographicsDetailsFragment extends Fragment
         nextButton.setText(label);
         nextButton.setOnClickListener(this);
 
-        addUnlistedAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
+        addUnlistedAllergyTextView = (EditText) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
         label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsAllergyAddUnlistedLabel();
-        addUnlistedAllergyTextView.setText(label);
-        addUnlistedAllergyTextView.setOnClickListener(this);
+        //addUnlistedAllergyTextView.setText(label);
+        //addUnlistedAllergyTextView.setOnClickListener(this);
 
-        addUnlistedMedTextView = (TextView) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
+        addUnlistedMedTextView = (EditText) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
         label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsMedAddUnlistedLabel();
-        addUnlistedMedTextView.setText(label);
-        addUnlistedMedTextView.setOnClickListener(this);
+        //addUnlistedMedTextView.setText(label);
+        //addUnlistedMedTextView.setOnClickListener(this);
 
         // rec views
         setupRecyclerViews();
@@ -505,6 +505,16 @@ public class DemographicsDetailsFragment extends Fragment
             // convert back to raw format
             Date dob = DateUtil.parseFromDateAsMMddyyyy(formattedDob);
             persDetailsDTO.setDateOfBirth(DateUtil.getDateRaw(dob));
+        }
+
+        String addUnlistedAllergies = addUnlistedAllergyTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(addUnlistedAllergies)) {
+            persDetailsDTO.setAddUnlistedAllergies(addUnlistedAllergies);
+        }
+
+        String addUnlistedMedications = addUnlistedMedTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(addUnlistedMedications)) {
+            persDetailsDTO.setAddUnlistedMedications(addUnlistedMedications);
         }
         ((DemographicsActivity) getActivity()).setDetailsModel(persDetailsDTO); // save the updated persDetailsDTO in the activity
     }

@@ -105,13 +105,28 @@ public class CustomFilterPopupWindow extends PopupWindow
         return strings;
     }
 
+    /**
+     * Filter appointment by provider and location
+     * and operation between provider and location
+     * @return filtered appoinment list
+     */
     private HashSet<String> getFilteredAppointment() {
-        HashSet<String> strings = new HashSet<>();
-        for (FilterDataDTO patient : selectedFilters) {
-            strings.addAll(patient.getAppointmentList());
-        }
+        HashSet<String> providerAppointmentsList = new HashSet<>();
+        HashSet<String> locationAppoinementsList = new HashSet<>();
 
-        return strings;
+        for (FilterDataDTO filterDataDTO : selectedFilters) {
+            if (filterDataDTO.getFilterDataType() == FilterDataDTO.FilterDataType.PROVIDER) {
+                providerAppointmentsList.addAll(filterDataDTO.getAppointmentList());
+            }else {
+                locationAppoinementsList.addAll(filterDataDTO.getAppointmentList());
+            }
+        }
+        if(locationAppoinementsList.size()>0 && providerAppointmentsList.size()>0) {
+            providerAppointmentsList.retainAll(locationAppoinementsList);
+        }else if(locationAppoinementsList.size()>0 && providerAppointmentsList.size()==0) {
+            return locationAppoinementsList;
+        }
+        return providerAppointmentsList;
     }
 
     private HashSet<String> getPatientAppointment() {
@@ -130,7 +145,7 @@ public class CustomFilterPopupWindow extends PopupWindow
         clearFiltersButton = (Button) popupWindowLayout.findViewById(R.id.clearFiltersButton);
         ImageView closeFilterWindowImageView = (ImageView) popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
 
-        titleTextView= (CarePayTextView) popupWindowLayout.findViewById(R.id.titleTextView);
+        titleTextView = (CarePayTextView) popupWindowLayout.findViewById(R.id.titleTextView);
 
         closeFilterWindowImageView.setOnClickListener(closeFilterWindowListener);
         clearSearchImageView.setOnClickListener(clearSearchTextListener);
@@ -143,15 +158,15 @@ public class CustomFilterPopupWindow extends PopupWindow
         SystemUtil.setGothamRoundedMediumTypeface(context, clearFiltersButton);
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         titleTextView.setText(title);
     }
 
-    public void setSearchHint(String hint){
+    public void setSearchHint(String hint) {
         searchPatientEditText.setHint(hint);
     }
 
-    public void setClearFiltersButtonText(String text){
+    public void setClearFiltersButtonText(String text) {
         clearFiltersButton.setText(text);
     }
 
@@ -197,11 +212,11 @@ public class CustomFilterPopupWindow extends PopupWindow
         }
     };
 
-    private void clearSelection(){
-        for (FilterDataDTO filterDataDTO:filterableDoctorsLocationList) {
+    private void clearSelection() {
+        for (FilterDataDTO filterDataDTO : filterableDoctorsLocationList) {
             filterDataDTO.setChecked(false);
         }
-        for (FilterDataDTO filterDataDTO:filterablePatientsList) {
+        for (FilterDataDTO filterDataDTO : filterablePatientsList) {
             filterDataDTO.setChecked(false);
         }
     }
@@ -222,7 +237,7 @@ public class CustomFilterPopupWindow extends PopupWindow
 
         @Override
         public void onTextChanged(CharSequence string, int start, int before, int count) {
-            if(filterableDataRecyclerView.getAdapter() instanceof  CustomFilterListAdapter){
+            if (filterableDataRecyclerView.getAdapter() instanceof CustomFilterListAdapter) {
                 return;
             }
 

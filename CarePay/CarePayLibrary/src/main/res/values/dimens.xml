@@ -24,6 +24,10 @@
     <dimen name="dimen_60dp">60dp</dimen>
     <dimen name="dimen_370dp">370dp</dimen>
     <dimen name="dimen_390dp">390dp</dimen>
+    <dimen name="dimen_130dp">130dp</dimen>
+    <dimen name="dimen_114dp">114dp</dimen>
+
+
 
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
