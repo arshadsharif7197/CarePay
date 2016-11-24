@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
@@ -42,9 +37,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class CheckinInsurancesSummaryFragment extends Fragment {
@@ -165,42 +158,18 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
 
         demographicDTO.getPayload().getDemographics().getPayload().setInsurances(insurancePayloadDTOs);
 
-        Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
-        queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
-        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        CheckinDemographicsRevFragment demInsRevFrag = (CheckinDemographicsRevFragment) fm.findFragmentByTag(CheckinDemographicsRevFragment.class.getSimpleName());
+        if (demInsRevFrag == null) {
+            demInsRevFrag = new CheckinDemographicsRevFragment();
+        }
 
-        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
-        header.put("transition", "false");
-
+        // update the main DTO in the activity
         Gson gson = new Gson();
-        String body = gson.toJson(demographicDTO.getPayload());
-        final TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-            }
+        ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
 
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                CheckinDemographicsRevFragment demInsRevFrag = (CheckinDemographicsRevFragment) fm.findFragmentByTag(CheckinDemographicsRevFragment.class.getSimpleName());
-                if (demInsRevFrag == null) {
-                    demInsRevFrag = new CheckinDemographicsRevFragment();
-                }
-
-                // update the main DTO in the activity
-                Gson gson = new Gson();
-                ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
-
-                // move to demographics review
-                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(demInsRevFrag, true);
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-            }
-        }, body, queries, header);
+        // move to demographics review
+        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
     }
 
     private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {

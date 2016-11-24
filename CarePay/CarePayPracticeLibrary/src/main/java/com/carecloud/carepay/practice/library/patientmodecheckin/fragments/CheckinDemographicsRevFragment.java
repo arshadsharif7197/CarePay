@@ -5,12 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -70,8 +68,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
             ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 1,
-
-                    PatientModeCheckinActivity.NUM_CONSENT_FORMS);
+                                                                             PatientModeCheckinActivity.NUM_CONSENT_FORMS);
             Bundle bundle = new Bundle();
             bundle.putString(CarePayConstants.ATTR_RESPONSE, workflowDTO.toString());
             fragment.setArguments(bundle);
@@ -89,9 +86,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         }
     };
 
-    private View view;
-    private Button correctInformationButton;
-    private Button updateInformationUpdate;
+    private View     view;
+    private Button   correctInformationButton;
+    private Button   updateInformationUpdate;
     private TextView reviewTitleTextView;
     private TextView reviewSubtitileTextView;
     private TextView addressSectionTextView;
@@ -106,25 +103,13 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     private TextView dobTExtView;
     private TextView phoneNumberTextView;
     private TextView genderTextView;
-    private TextView driverLicenseTextView;
     private TextView raceTextView;
     private TextView ethnicityTextView;
-    private TextView insurance1companyTextView;
-    private TextView insurance1planTextView;
-    private TextView insurance1policyNumberTextView;
-    private TextView insurance2companyTextView;
-    private TextView insurance2planTextView;
-    private TextView insurance2policyNumberTextView;
-    private TextView insurance3companyTextView;
-    private TextView insurance3planTextView;
-    private TextView insurance3policyNumberTextView;
     private TextView address1TextView;
     private TextView address2TextView;
     private TextView cityTextView;
     private TextView stateTextView;
     private TextView zipcodeTextView;
-    private FrameLayout addressline2label;
-    private View address2labelview;
     private TextView firstNameLabel;
     private TextView lastNameLabel;
     private TextView middleNameLabel;
@@ -149,31 +134,24 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     private TextView insurance3planLabel;
     private TextView insurance3policyNumberLabel;
 
-    private LinearLayout healthInsurance1;
-    private LinearLayout healthInsurance2;
-    private LinearLayout healthInsurance3;
-    private ProgressBar demographicProgressBar;
-    private DemographicDTO demographicDTO;
-    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
-    private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
-    private DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
-    private List<DemographicInsurancePayloadDTO> insurances;
-    private DemographicIdDocPayloadDTO idDocPayloadDTO;
-    private DemographicInsurancePayloadDTO insuranceModel1;
-    private DemographicInsurancePayloadDTO insuranceModel2;
-    private DemographicInsurancePayloadDTO insuranceModel3;
-    private DemographicLabelsDTO globalLabelsMetaDTO;
-    private DemographicMetadataEntityAddressDTO addressMetaDTO;
+    private LinearLayout                            healthInsurance1;
+    private LinearLayout                            healthInsurance2;
+    private LinearLayout                            healthInsurance3;
+    private ProgressBar                             demographicProgressBar;
+    private DemographicDTO                          demographicDTO;
+    private DemographicPersDetailsPayloadDTO        demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO            demographicAddressPayloadDTO;
+    private List<DemographicInsurancePayloadDTO>    insurances;
+    private DemographicLabelsDTO                    globalLabelsMetaDTO;
+    private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-    private boolean isPhoneEmpty;
-    private int selectedDataArray;
-    private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
+    private DemographicIdDocPayloadDTO              demographicIdDocPayloadDTO;
+    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
 
-    private TextView[] companyTextViews;
-    private TextView[] planTextViews;
-    private TextView[] policyTextViews;
+    private TextView[]     companyTextViews;
+    private TextView[]     planTextViews;
+    private TextView[]     policyTextViews;
     private LinearLayout[] insContainers;
 
     public CheckinDemographicsRevFragment() {
@@ -190,7 +168,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_insurance_review, container, false);
 
-
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.review_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
@@ -199,8 +176,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setVisibility(view.GONE);
 
-        //   DemographicReviewActivity.isFromReview = true;
-        //initModels();
         initializeDemographicsDTO();
         initialiseUIFields();
         setTypefaces(view);
@@ -234,9 +209,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                 // get id docs
 
                 List<DemographicIdDocPayloadDTO> idDocs = payload.getIdDocuments();
-                if(idDocs != null) {
+                if (idDocs != null) {
                     int size = payload.getIdDocuments().size();
-                    if(size > 0) {
+                    if (size > 0) {
                         demographicIdDocPayloadDTO = idDocs.get(0);
                     }
                 }
@@ -324,14 +299,13 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
             // initializeInsurances from the model
             initializeInsuranceFromModel();
-
         }
     }
 
     private void initializeInsuranceFromModel() {
 
-        if(insurances != null) {
-            for(int i = 0; i < insurances.size(); i++) {
+        if (insurances != null) {
+            for (int i = 0; i < insurances.size(); i++) {
                 DemographicInsurancePayloadDTO insurance = insurances.get(i);
 
                 String plan = insurance.getInsurancePlan();
@@ -399,8 +373,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         //  Insurance Model View
 
         initializeInsuranceSectionView();
-
-
     }
 
     private void initializePersonalDetailsSectionView() {
@@ -438,7 +410,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
         driverLicenseLabel = (TextView) view.findViewById(R.id.reviewDriverLicenseLabel);
         driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel().toUpperCase());
-        driverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
     }
 
     private void initializeAddressSectionView() {
@@ -449,8 +420,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         address2Label = (TextView) view.findViewById(R.id.reviewAddress2label);
         address2Label.setText(addressMetaDTO.properties.address2.getLabel().toUpperCase());
         address2TextView = (TextView) view.findViewById(R.id.reviewAddress2TextView);
-        addressline2label = (FrameLayout) view.findViewById(R.id.address2layout);
-        address2labelview = view.findViewById(R.id.address2labelview);
 
         cityLabel = (TextView) view.findViewById(R.id.reviewCityLabel);
         cityLabel.setText(addressMetaDTO.properties.city.getLabel().toUpperCase());
@@ -484,19 +453,19 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         insurance3policyNumberLabel = (TextView) view.findViewById(R.id.reviewInsurance3CardNoLabel);
 
         companyTextViews = new TextView[MAX_INSURANCES];
-        companyTextViews[0] = insurance1companyTextView = (TextView) view.findViewById(R.id.reviewCompanyTextView);
-        companyTextViews[1] = insurance2companyTextView = (TextView) view.findViewById(R.id.reviewCompany2TextView);
-        companyTextViews[2] = insurance3companyTextView = (TextView) view.findViewById(R.id.reviewCompany3TextView);
+        companyTextViews[0] = (TextView) view.findViewById(R.id.reviewCompanyTextView);
+        companyTextViews[1] = (TextView) view.findViewById(R.id.reviewCompany2TextView);
+        companyTextViews[2] = (TextView) view.findViewById(R.id.reviewCompany3TextView);
 
         planTextViews = new TextView[MAX_INSURANCES];
-        planTextViews[0] = insurance1planTextView = (TextView) view.findViewById(R.id.reviewPlanTextView);
-        planTextViews[1] = insurance2planTextView = (TextView) view.findViewById(R.id.reviewPlan2TextView);
-        planTextViews[2] = insurance3planTextView = (TextView) view.findViewById(R.id.reviewPlan3TextView);
+        planTextViews[0] = (TextView) view.findViewById(R.id.reviewPlanTextView);
+        planTextViews[1] = (TextView) view.findViewById(R.id.reviewPlan2TextView);
+        planTextViews[2] = (TextView) view.findViewById(R.id.reviewPlan3TextView);
 
         policyTextViews = new TextView[MAX_INSURANCES];
-        policyTextViews[0] = insurance1policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView);
-        policyTextViews[1] = insurance2policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurance2PolicyNoTextView);
-        policyTextViews[2] = insurance3policyNumberTextView = (TextView) view.findViewById(R.id.reviewInsurance3PolicyNoTextView);
+        policyTextViews[0] = (TextView) view.findViewById(R.id.reviewInsurancePolicyNoTextView);
+        policyTextViews[1] = (TextView) view.findViewById(R.id.reviewInsurance2PolicyNoTextView);
+        policyTextViews[2] = (TextView) view.findViewById(R.id.reviewInsurance3PolicyNoTextView);
 
         insContainers[0].setVisibility(View.GONE);
         insContainers[1].setVisibility(View.GONE);
@@ -531,9 +500,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             header.put("username", "practice@cc.com");
 
             Gson gson = new Gson();
-            String demographicinfo = gson.toJson(demographicDTO.getPayload());
+            String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
             TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demographicinfo, queries, header);
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
 
         } else if (view == updateInformationUpdate) {
             // transition
@@ -542,6 +511,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(false);
         }
     }
+
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), reviewTitleTextView);
