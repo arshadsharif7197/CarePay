@@ -23,6 +23,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
+import com.google.gson.Gson;
 
 import java.util.Date;
 
@@ -58,8 +59,15 @@ public class ConsentForm1Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.consent_form_layout, container, false);
 
-        consentFormDTO=((PatientModeCheckinActivity)getActivity()).getConsentFormDTO();
+      //  consentFormDTO=((PatientModeCheckinActivity)getActivity()).getConsentFormDTO();
+      //  String workflowDTO = savedInstanceState.getString("Test");
+       // Gson gson = new Gson();
+        //ConsentFormDTO consentFormDTO = gson.fromJson(workflowDTO, ConsentFormDTO.class);
 
+        //Gson gson = new Gson();
+        //ConsentFormDTO consentFormDTO = gson.fromJson(workflowDTO.toString(), ConsentFormDTO.class);
+        //consentFormDTO.getMetadata().getLabel().getConfirmSignatureButton();
+//        Log.d("Testing",consentFormDTO.getState());
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
         contentTextView = (TextView) view.findViewById(R.id.contentTv);
@@ -97,15 +105,20 @@ public class ConsentForm1Fragment extends Fragment {
         if (signButton != null) {
             signButton.setOnClickListener(clickListener);
         }
+        String workflowDTO  = getArguments().getString("Test");
+        if(workflowDTO!=null){
+            Gson gson = new Gson();
+            ConsentFormDTO consentFormDTO = gson.fromJson(workflowDTO, ConsentFormDTO.class);
+        }
 
-        FormData formData = (FormData) getArguments().getSerializable(CarePayConstants.FORM_DATA);
+     /*   FormData formData = (FormData) getArguments().getSerializable(CarePayConstants.FORM_DATA);
 
         //     titleTextView.setText(consentFormLabelsDTO.getConsentForMedicareTitle());
         titleTextView.setText(formData.getTitle());
         descriptionTextView.setText(formData.getDescription());
         contentTextView.setText(formData.getContent());
         dateTextView.setText(formData.getDate());
-        signButton.setText(formData.getButtonLabel());
+        signButton.setText(formData.getButtonLabel());*/
 
         // enable next button on scrolling all the way to the bottom
         setEnableNextButtonOnFullScroll();
