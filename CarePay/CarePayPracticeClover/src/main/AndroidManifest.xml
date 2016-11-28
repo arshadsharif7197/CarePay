@@ -70,6 +70,10 @@
         <activity
             android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.intakeforms.activities.InTakeWebViewActivity"
+            android:screenOrientation="landscape" />
+
     </application>
 
 </manifest>

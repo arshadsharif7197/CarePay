@@ -9,16 +9,10 @@
 
     <Button
         android:id="@+id/signButton"
+        style="@style/Consent_form_Button"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="@dimen/dimen_30dp"
-        android:background="@drawable/bg_silver_overlay"
-        android:text="Sign Consent For Medical Care"
-        android:textColor="@color/white"
-        android:textSize="@dimen/dimen_17dp" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
     <ScrollView
         android:id="@+id/consentform_scrollView"

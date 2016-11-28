@@ -10,6 +10,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.patientmodecheckin.intakeforms.activities.InTakeActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.intakeforms.activities.InTakeWebViewActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -26,6 +29,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormAuthorizationPayloadDTO;
 
+import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforhipaa.ConsentFormHippaPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedicare.ConsentFormMedicarePayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
@@ -301,7 +305,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         agreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (numOfLaunches == 1) {
+                if (numOfLaunches == 2) {
                     addToPayload();
                     navigateToNext();
                     numOfLaunches = 0;
@@ -459,16 +463,14 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
 
     private void navigateToNext() {
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
-        queries.put("practice_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
-
+        queries.put("practice_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
+        queries.put("practice_mgmt", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeMgmt());
 
         Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
-        header.put("transition", "true");
-        header.put("username_patient","rgirase@carecloud.com");
-        header.put("username","practice@cc.com");
-
+        header.put("transition","true");
+        //header.put("username_patient","rgirase@carecloud.com");
+        //header.put("username","practice@cc.com");
         Gson gson = new Gson();
         String body = gson.toJson(consentFormPayloadDTO);
         TransitionDTO transitionDTO = consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
@@ -498,6 +500,14 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
                 consentFormPayloadDTO.setConsentforms(conseFormsPayloadDTO);
                 break;
 
+            case 3:
+                ConsentFormHippaPayloadDTO consentFormHippaPayloadDTO = new ConsentFormHippaPayloadDTO();
+                consentFormHippaPayloadDTO.setSignature(signatureAsBase64);
+                consentFormHippaPayloadDTO.setSignedByLegal(signedByLegal);
+                consentFormHippaPayloadDTO.setSignedByPatient(signedByPatient);
+                conseFormsPayloadDTO.setConsentFormHippaPayload(consentFormHippaPayloadDTO);
+                consentFormPayloadDTO.setConsentforms(conseFormsPayloadDTO);
+                break;
 
             default:
                 break;
