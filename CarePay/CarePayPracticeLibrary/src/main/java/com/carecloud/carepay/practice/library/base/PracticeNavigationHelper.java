@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.base;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
@@ -108,14 +107,8 @@ public class PracticeNavigationHelper {
                 break;
             }
             case PracticeNavigationStateConstants.INTAKE_FORMS: {
-                Log.d("FormIntake","In Intake form");
                 intent = new Intent(context, InTakeWebViewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-              /*  if (context instanceof PatientModeCheckinActivity) {
-                    ((PatientModeCheckinActivity) context).getIntakeFormInformation(workflowDTO.toString());
-                    return;
-                }*/
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
             default: {
@@ -128,9 +121,7 @@ public class PracticeNavigationHelper {
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         Bundle bundle = new Bundle();
         bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
-        if(bundle!=null) {
-            intent.putExtras(bundle);
-        }
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
