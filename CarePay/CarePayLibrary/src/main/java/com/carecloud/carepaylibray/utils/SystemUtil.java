@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -244,6 +245,20 @@ public class SystemUtil {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+    }
+
+    /**
+     * Decode a base64 to a bitmap
+     * @param bitmapString The bitmap as base64
+     * @return The bitmap
+     */
+    public static Bitmap base64ToBitmap(String bitmapString) {
+        try {
+            byte[] decodedString = Base64.decode(bitmapString, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        } catch(IllegalArgumentException exc) {
+            return null;
+        }
     }
 
     /**

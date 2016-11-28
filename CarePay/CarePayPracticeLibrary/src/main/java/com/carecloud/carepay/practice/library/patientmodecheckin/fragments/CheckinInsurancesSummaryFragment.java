@@ -146,29 +146,27 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     private void postUpdates() {
         demographicProgressBar.setVisibility(View.VISIBLE);
 
+        // build the new payload
         insurancePayloadDTOs.clear();
         for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
             if (isInsuaranceNonTrivial(payloadDTO)) {
                 insurancePayloadDTOs.add(payloadDTO);
             }
         }
-
         DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
         postPayloadModel.setInsurances(insurancePayloadDTOs);
-
         demographicDTO.getPayload().getDemographics().getPayload().setInsurances(insurancePayloadDTOs);
 
+
+        final Gson gson = new Gson();
+        ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
+
+        // move to demographics review
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CheckinDemographicsRevFragment demInsRevFrag = (CheckinDemographicsRevFragment) fm.findFragmentByTag(CheckinDemographicsRevFragment.class.getSimpleName());
         if (demInsRevFrag == null) {
             demInsRevFrag = new CheckinDemographicsRevFragment();
         }
-
-        // update the main DTO in the activity
-        Gson gson = new Gson();
-        ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
-
-        // move to demographics review
         ((PatientModeCheckinActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
     }
 

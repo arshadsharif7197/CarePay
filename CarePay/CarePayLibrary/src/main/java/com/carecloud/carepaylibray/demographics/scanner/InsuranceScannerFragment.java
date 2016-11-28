@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -59,27 +60,27 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private String[] providerDataArray;
     private String[] cardTypeDataArray;
 
-    private View view;
+    private View               view;
     private ImageCaptureHelper insuranceFrontScanHelper;
     private ImageCaptureHelper insuranceBackScanHelper;
-    private Button btnScanFrontInsurance;
-    private Button btnScanBackInsurance;
-    private EditText insuranceCardNumEditText;
-    private TextView planTextView;
-    private TextView providerTextView;
-    private TextView cardTypeTextView;
-    private ImageView frontInsuranceImageView;
-    private ImageView backInsuranceImageView;
-    private TextInputLayout insuranceCardNumberTextInput;
-    private TextView insurancePlanLabel;
-    private TextView insuranceProviderLabel;
-    private TextView insuranceTypeLabel;
+    private Button             btnScanFrontInsurance;
+    private Button             btnScanBackInsurance;
+    private EditText           insuranceCardNumEditText;
+    private TextView           planTextView;
+    private TextView           providerTextView;
+    private TextView           cardTypeTextView;
+    private ImageView          frontInsuranceImageView;
+    private ImageView          backInsuranceImageView;
+    private TextInputLayout    insuranceCardNumberTextInput;
+    private TextView           insurancePlanLabel;
+    private TextView           insuranceProviderLabel;
+    private TextView           insuranceTypeLabel;
 
-    private DemographicInsurancePayloadDTO insuranceDTO;
+    private DemographicInsurancePayloadDTO            insuranceDTO;
     private DemographicMetadataEntityItemInsuranceDTO insuranceMetadataDTO;
-    private DemographicLabelsDTO globalLabelsDTO;
-    private DemographicInsurancePhotoDTO insurancefrontPhotoDto;
-    private DemographicInsurancePhotoDTO insurancebackPhotoDto;
+    private DemographicLabelsDTO                      globalLabelsDTO;
+    private DemographicInsurancePhotoDTO              insurancefrontPhotoDto;
+    private DemographicInsurancePhotoDTO              insurancebackPhotoDto;
 
 
     @Nullable
@@ -201,7 +202,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         List<MetadataOptionDTO> optionDTOs;
         // init the providers
-        if(insuranceMetadataDTO.properties.insuranceProvider != null
+        if (insuranceMetadataDTO.properties.insuranceProvider != null
                 && insuranceMetadataDTO.properties.insuranceProvider.options != null) {
             optionDTOs = insuranceMetadataDTO.properties.insuranceProvider.options;
             List<String> providers = new ArrayList<>();
@@ -215,7 +216,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
 
         // init the plans
-        if(insuranceMetadataDTO.properties.insurancePlan != null &&
+        if (insuranceMetadataDTO.properties.insurancePlan != null &&
                 insuranceMetadataDTO.properties.insurancePlan.options != null) {
             optionDTOs = insuranceMetadataDTO.properties.insurancePlan.options;
             List<String> plans = new ArrayList<>();
@@ -229,7 +230,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
 
         // init the type options
-        if(insuranceMetadataDTO.properties.insuranceType != null &&
+        if (insuranceMetadataDTO.properties.insuranceType != null &&
                 insuranceMetadataDTO.properties.insuranceType.options != null) {
             optionDTOs = insuranceMetadataDTO.properties.insuranceType.options;
             List<String> cardTypes = new ArrayList<>();
@@ -305,10 +306,18 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
                         btnScanFrontInsurance.setText(label);
                     } catch (MalformedURLException e) {
-                        Log.d(LOG_TAG, "invalid url: " + photoFrontURL);
-                        // (re)load the placeholder
-                        frontInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.icn_camera));
+//                        Log.d(LOG_TAG, "invalid url: " + photoFrontURL);
+                        // test if base64
+                        Bitmap bitmap;
+                        if(!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.base64ToBitmap(photoFrontURL)) != null ) {
+                            Log.v(LOG_TAG, "load as base64");
+                            frontInsuranceImageView.setImageBitmap(bitmap);
+                        } else {
+                            Log.v(LOG_TAG, "load as the placeholder");
+                            // if no, (re)-load the placeholder
+                            backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                                                                              R.drawable.icn_camera));
+                        }
                     }
                 }
 
@@ -323,36 +332,44 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
                         btnScanBackInsurance.setText(label1);
                     } catch (MalformedURLException e) {
-                        Log.d(LOG_TAG, "invalid url: " + photoBackURL);
-                        // (re)load  the placeholder
-                        backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.icn_camera));
+//                        Log.d(LOG_TAG, "invalid url: " + photoBackURL);
+                        // test if base64
+                        Bitmap bitmap;
+                        if(!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.base64ToBitmap(photoBackURL)) != null ) {
+                            Log.v(LOG_TAG, "load as base64");
+                            backInsuranceImageView.setImageBitmap(bitmap);
+                        } else {
+                            Log.v(LOG_TAG, "load as the placeholder");
+                            // if no, (re)-load the placeholder
+                            backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                                                                              R.drawable.icn_camera));
+                        }
                     }
                 }
             }
+        }
 
-            // (used for Review)
-            insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
-            insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
+        // (used for Review)
+        insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
+        insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
 
-            String insProvider = insuranceDTO.getInsuranceProvider();
-            if (!StringUtil.isNullOrEmpty(insProvider)) {
-                providerTextView.setText(insuranceDTO.getInsuranceProvider());
-            }
-            String insPlan = insuranceDTO.getInsurancePlan();
-            if (!StringUtil.isNullOrEmpty(insPlan)) {
-                planTextView.setText(insPlan);
-            }
-            String insNum = insuranceDTO.getInsuranceMemberId();
-            if (!StringUtil.isNullOrEmpty(insNum)) {
-                insuranceCardNumEditText.setText(insNum);
-                insuranceCardNumEditText.requestFocus(); // required for CAPS hint
-                view.requestFocus();
-            }
-            String insCardType = insuranceDTO.getInsuranceType();
-            if (!StringUtil.isNullOrEmpty(insCardType)) {
-                cardTypeTextView.setText(insCardType);
-            }
+        String insProvider = insuranceDTO.getInsuranceProvider();
+        if (!StringUtil.isNullOrEmpty(insProvider)) {
+            providerTextView.setText(insuranceDTO.getInsuranceProvider());
+        }
+        String insPlan = insuranceDTO.getInsurancePlan();
+        if (!StringUtil.isNullOrEmpty(insPlan)) {
+            planTextView.setText(insPlan);
+        }
+        String insNum = insuranceDTO.getInsuranceMemberId();
+        if (!StringUtil.isNullOrEmpty(insNum)) {
+            insuranceCardNumEditText.setText(insNum);
+            insuranceCardNumEditText.requestFocus(); // required for CAPS hint
+            view.requestFocus();
+        }
+        String insCardType = insuranceDTO.getInsuranceType();
+        if (!StringUtil.isNullOrEmpty(insCardType)) {
+            cardTypeTextView.setText(insCardType);
         }
     }
 
@@ -361,6 +378,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
      *
      * @return insurance insuranceDTO
      */
+
     public DemographicInsurancePayloadDTO getBitmapsFromImageViews() {
         Bitmap bitmapFront = null;
         Bitmap bitmapBack = null;
@@ -486,12 +504,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
             btnScanBackInsurance.setText(label);
         }
-
-//        if (buttonsStatusCallback != null) {
-//            // invoke parent fragment to enable 'Next' button
-//            buttonsStatusCallback.enableNextButton(true);
-//            buttonsStatusCallback.scrollToBottom();
-//        }
     }
 
     @Override
@@ -548,25 +560,26 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     protected void showChooseDialog(final String[] options, String title, String cancelLabel,
                                     final TextView selectionDestination) {
         SystemUtil.showChooseDialog(getActivity(),
-                options, title, cancelLabel,
-                selectionDestination,
-                new SystemUtil.OnClickItemCallback() {
-                    @Override
-                    public void executeOnClick(TextView destination, String selectedOption) {
-                        updateModel(selectionDestination);
-                        if (selectionDestination == providerTextView) {
-                            enablePlanClickable(true);
-                        }
-                    }
-                });
+                                    options, title, cancelLabel,
+                                    selectionDestination,
+                                    new SystemUtil.OnClickItemCallback() {
+                                        @Override
+                                        public void executeOnClick(TextView destination, String selectedOption) {
+                                            updateModel(selectionDestination);
+                                            if (selectionDestination == providerTextView) {
+                                                enablePlanClickable(true);
+                                            }
+                                        }
+                                    });
     }
 
     /**
      * Set the type of the insurance card using an index (eg 0 for Primary, 1 Secondary etc)
+     *
      * @param typeIndex The index
      */
     public void setCardTypeFromIndex(int typeIndex) {
-        if(cardTypeDataArray != null && cardTypeDataArray.length > typeIndex) {
+        if (cardTypeDataArray != null && cardTypeDataArray.length > typeIndex) {
             cardTypeTextView.setText(cardTypeDataArray[typeIndex]);
         }
     }
