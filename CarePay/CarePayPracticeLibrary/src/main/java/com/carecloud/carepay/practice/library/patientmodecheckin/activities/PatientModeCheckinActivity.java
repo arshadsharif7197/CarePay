@@ -564,6 +564,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         }
     };
 
+
+    /**
+     * IntakeForm Navigation
+     */
     public void getIntakeFormInformation(String workflowJson) {
         //Todo call this method instead of activity
         appointmentsResultModel = getConvertedDTO(IntakeResponseModel.class, workflowJson);
@@ -579,7 +583,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                     Gson gson = new Gson();
                     String intakeFormDTO = gson.toJson(inTakeForm);
                     bundle.putString(CarePayConstants.INTAKE_BUNDLE, intakeFormDTO);
-                    navigateToFragment(fragment, false);                }
+                    navigateToFragment(fragment, false);
+                }
             }
         }
     }

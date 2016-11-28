@@ -130,7 +130,8 @@ public class PracticeNavigationHelper {
         bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
         if(bundle!=null) {
             intent.putExtras(bundle);
-        }context.startActivity(intent);
+        }
+        context.startActivity(intent);
     }
 
     /**
