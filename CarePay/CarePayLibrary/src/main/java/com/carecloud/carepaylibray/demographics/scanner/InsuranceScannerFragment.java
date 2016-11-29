@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -79,8 +77,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private DemographicInsurancePayloadDTO            insuranceDTO;
     private DemographicMetadataEntityItemInsuranceDTO insuranceMetadataDTO;
     private DemographicLabelsDTO                      globalLabelsDTO;
-    private DemographicInsurancePhotoDTO              insurancefrontPhotoDto;
-    private DemographicInsurancePhotoDTO              insurancebackPhotoDto;
 
 
     @Nullable
@@ -350,8 +346,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
 
         // (used for Review)
-        insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
-        insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
+//        insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
+//        insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
 
         String insProvider = insuranceDTO.getInsuranceProvider();
         if (!StringUtil.isNullOrEmpty(insProvider)) {
@@ -371,49 +367,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         if (!StringUtil.isNullOrEmpty(insCardType)) {
             cardTypeTextView.setText(insCardType);
         }
-    }
-
-    /**
-     * Converting bitmap images to base64 and posting to server in insuranceDTO
-     *
-     * @return insurance insuranceDTO
-     */
-
-    public DemographicInsurancePayloadDTO getBitmapsFromImageViews() {
-        Bitmap bitmapFront = null;
-        Bitmap bitmapBack = null;
-        BitmapDrawable frontDrawable = (BitmapDrawable) insuranceBackScanHelper.getImageViewTarget().getDrawable();
-        BitmapDrawable backDrawable = (BitmapDrawable) insuranceFrontScanHelper.getImageViewTarget().getDrawable();
-
-        if (frontDrawable != null && backDrawable != null) {
-            bitmapBack = frontDrawable.getBitmap();
-            bitmapFront = backDrawable.getBitmap();
-
-            insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
-            insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
-
-            insurancebackPhotoDto.setInsurancePhoto(SystemUtil.encodeToBase64(
-                    bitmapBack, Bitmap.CompressFormat.JPEG, 100));
-
-            insurancefrontPhotoDto.setInsurancePhoto(SystemUtil.encodeToBase64(
-                    bitmapFront, Bitmap.CompressFormat.JPEG, 100));
-
-            List<DemographicInsurancePhotoDTO> photos = insuranceDTO.getInsurancePhotos();
-            if (photos == null) {
-                photos = new ArrayList<>();
-            } else {
-                photos.clear();
-            }
-
-            photos.add(0, insurancefrontPhotoDto);
-            photos.add(1, insurancebackPhotoDto);
-            insuranceDTO.setInsurancePhotos(photos);
-            insuranceDTO.setInsuranceMemberId(insuranceCardNumEditText.getText().toString());
-            insuranceDTO.setInsurancePlan(planTextView.getText().toString());
-            insuranceDTO.setInsuranceProvider(providerTextView.getText().toString());
-        }
-
-        return insuranceDTO;
     }
 
     private void setEditTexts(final View view) {
@@ -571,16 +524,5 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                                             }
                                         }
                                     });
-    }
-
-    /**
-     * Set the type of the insurance card using an index (eg 0 for Primary, 1 Secondary etc)
-     *
-     * @param typeIndex The index
-     */
-    public void setCardTypeFromIndex(int typeIndex) {
-        if (cardTypeDataArray != null && cardTypeDataArray.length > typeIndex) {
-            cardTypeTextView.setText(cardTypeDataArray[typeIndex]);
-        }
     }
 }

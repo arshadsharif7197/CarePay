@@ -479,8 +479,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
             Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
             header.put("transition", "true");
-            header.put("username_patient", "rgirase@carecloud.com");
-            header.put("username", "practice@cc.com");
+            header.put("username_patient", demographicDTO.getPayload().getDemographics().getMetadata().getUsername());
 
             Gson gson = new Gson();
             String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
