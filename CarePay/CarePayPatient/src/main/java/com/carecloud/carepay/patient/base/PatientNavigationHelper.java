@@ -9,6 +9,7 @@ import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivit
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
@@ -80,12 +81,14 @@ public class PatientNavigationHelper {
                 break;
             }
             case PatientNavigationStateConstants.DEMOGRAPHIC_VERIFY: {
-                intent = new Intent(context, DemographicReviewActivity.class);
+//                intent = new Intent(context, DemographicReviewActivity.class);
+                intent = new Intent(context, NewReviewDemographicsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
             case PatientNavigationStateConstants.CONSENT_FORMS: {
                 intent = new Intent(context, ConsentActivity.class);
-
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
             case PatientNavigationStateConstants.INTAKE_FORMS: {
@@ -98,12 +101,10 @@ public class PatientNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-
             default: {
                 intent = new Intent(context, AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
-
             }
         }
 
@@ -111,8 +112,8 @@ public class PatientNavigationHelper {
             intent.putExtra(PatientNavigationHelper.class.getSimpleName(), bundle);
         }
         context.startActivity(intent);
-        if (context instanceof AppCompatActivity) {
-            ((AppCompatActivity) context).finish();
-        }
+//        if (context instanceof AppCompatActivity) {
+//            ((AppCompatActivity) context).finish();
+//        }
     }
 }

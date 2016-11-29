@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -186,7 +187,8 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
     private void launchDemographics(DemographicDTO demographicDTO) {
         // do to Demographics
-        Intent intent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
+//        Intent intent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NewReviewDemographicsActivity.class);
         if (demographicDTO != null) {
             // pass the object into the gson
             Gson gson = new Gson();
