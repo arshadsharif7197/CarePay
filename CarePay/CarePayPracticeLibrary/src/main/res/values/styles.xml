@@ -53,4 +53,11 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- Checkin styles -->
+
+
+    <style name="CheckinContainerStyle">
+        <item name="android:background">@color/white</item>
+    </style>
+
 </resources>

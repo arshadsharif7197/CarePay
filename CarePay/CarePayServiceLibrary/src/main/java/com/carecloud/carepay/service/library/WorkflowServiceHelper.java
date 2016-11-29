@@ -61,15 +61,13 @@ public class WorkflowServiceHelper {
            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
             }
-
         } else if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
             userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
             if (CognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
                 userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
             }
         }
-
-
+        userAuthHeaders.putAll(getPreferredLanguageHeader());
         return userAuthHeaders;
     }
 
@@ -91,13 +89,21 @@ public class WorkflowServiceHelper {
     public static Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
-        appStartHeaders.put("Accept-Language",ApplicationPreferences.Instance.getUserLanguage());
+        if( ApplicationPreferences.Instance.getUserLanguage().isEmpty()) {
+            appStartHeaders.put("Accept-Language", "en");
+        } else {
+            appStartHeaders.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
+        }
         return appStartHeaders;
     }
 
     public static  Map<String, String> getPreferredLanguageHeader(){
         Map<String, String> prefredLanguage = new HashMap<>();
-        prefredLanguage.put("Accept-Language",ApplicationPreferences.Instance.getUserLanguage());
+        if( ApplicationPreferences.Instance.getUserLanguage().isEmpty()) {
+            prefredLanguage.put("Accept-Language", "en");
+        } else {
+            prefredLanguage.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
+        }
         return prefredLanguage;
     }
 
@@ -173,9 +179,10 @@ public class WorkflowServiceHelper {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
             } else if (jsonBody != null) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
-            }else {
+            } else if (jsonBody != null) {
+                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+            } else {
                 call = workflowService.executePost(transitionDTO.getUrl());
-
             }
         }
         executeCallback(callback, call);

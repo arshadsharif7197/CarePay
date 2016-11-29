@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
@@ -87,25 +88,35 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         String startDay = StringUtils.substringBefore(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal(), ",");
         String endDay =DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal()
                 .substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
-        String strToday = startDay.replace(startDay, "Today")+ endDay ;
+        String strToday;
+        if(DateUtil.getInstance().isToday()) {
+            strToday = startDay.replace(startDay, "Today") + endDay;
+        }else{
+            strToday = startDay + endDay;
+        }
         holder.appointmentDate.setText(strToday);
+
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckInTextview.setText(StringUtil.getLabelForView(
                 appointmentLabels.getAppointmentsPracticeCheckin()));
+        GradientDrawable shape =  new GradientDrawable();
+        shape.setCornerRadius(50.0f);
         if(!item.getAppointmentStatusModel().getName().equals("Pending"))
         {
-            GradientDrawable shape =  new GradientDrawable();
-            //shape.setShape(GradientDrawable.OVAL);
-            shape.setCornerRadius(50.0f);
             shape.setColor(Color.LTGRAY);
-            if(Build.VERSION.SDK_INT>=16) {
-                holder.startCheckInTextview.setBackground(shape);
-            }else{
-                holder.startCheckInTextview.setBackgroundDrawable(shape);
-            }
-            holder.startCheckInTextview.setBackground(shape);
-            holder.startCheckInTextview.setClickable(false);
+            holder.startCheckInTextview.setEnabled(false);
+
+        }else{
+            int color =  Color.parseColor("#7ED321");
+            shape.setColor(color);
+            holder.startCheckInTextview.setClickable(true);
         }
+        if(Build.VERSION.SDK_INT>=16) {
+            holder.startCheckInTextview.setBackground(shape);
+        }else{
+            holder.startCheckInTextview.setBackgroundDrawable(shape);
+        }
+        holder.startCheckInTextview.setBackground(shape);
         String photoUrl = item.getProvider().getPhoto();
         if (TextUtils.isEmpty(photoUrl)) {
             holder.shortNameTextview.setText(StringUtil.onShortDrName(item.getProvider().getName()));
@@ -167,24 +178,24 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
         private TextView shortNameTextview;
         private TextView startCheckInTextview;
-        private CustomProxyNovaSemiBoldLabel doctorName;
-        private CustomProxyNovaRegularLabel doctorType;
-        private CustomGothamRoundedBoldLabel appointmentLocation;
-        private CustomProxyNovaExtraBold appointmentDate;
-        private CustomGothamRoundedBoldLabel appointmentTime;
+        private CarePayTextView doctorName;
+        private CarePayTextView doctorType;
+        private CarePayTextView appointmentLocation;
+        private CarePayTextView appointmentDate;
+        private CarePayTextView appointmentTime;
         //private ImageView cellAvatar;
         private ImageView profileImage;
 
         AppointmentsListViewHolder(View itemView) {
             super(itemView);
 
-            doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.appointmentNameTextView);
-            doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.appointmentTypeTextView);
+            doctorName = (CarePayTextView) itemView.findViewById(R.id.appointmentNameTextView);
+            doctorType = (CarePayTextView) itemView.findViewById(R.id.appointmentTypeTextView);
             shortNameTextview = (TextView) itemView.findViewById(R.id.appointmentShortnameTextView);
             startCheckInTextview = (TextView) itemView.findViewById(R.id.checkInTextview);
-            appointmentLocation = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.appointmentLocationTextview);
-            appointmentDate = (CustomProxyNovaExtraBold) itemView.findViewById(R.id.appointmentDateTextView);
-            appointmentTime = (CustomGothamRoundedBoldLabel) itemView.findViewById(R.id.appointmentTimeTextView);
+            appointmentLocation = (CarePayTextView) itemView.findViewById(R.id.appointmentLocationTextview);
+            appointmentDate = (CarePayTextView) itemView.findViewById(R.id.appointmentDateTextView);
+            appointmentTime = (CarePayTextView) itemView.findViewById(R.id.appointmentTimeTextView);
             //cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
             profileImage = (ImageView) itemView.findViewById(R.id.appointUserPicImageView);
 

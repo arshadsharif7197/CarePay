@@ -9,6 +9,7 @@
             <enum name="proxima_nova_light" value="4"/>
             <enum name="proxima_nova_regular" value="5"/>
             <enum name="proxima_nova_semi_bold" value="6"/>
+            <enum name="gotham_rounded_light" value="7"/>
         </attr>
     </declare-styleable>
     <declare-styleable name="BarcodeScannerView">

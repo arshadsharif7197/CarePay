@@ -23,12 +23,14 @@
 
 
     <ScrollView
+        android:id="@+id/adddemoScrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
         android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/adddemoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="17dp"
@@ -61,8 +63,9 @@
                 <EditText
                     android:id="@+id/reviewdemogrFirstNameEdit"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
+                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
                     android:inputType="textPersonName"
+                    android:maxLength="100"
                     android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit" />
             </android.support.design.widget.TextInputLayout>
 
@@ -79,9 +82,10 @@
                     <EditText
                         android:id="@+id/reviewdemogrMiddleNameEdit"
                         style="@style/SigninSignupEditStyle"
-                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
+                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
+                        android:maxLength="100"
                         android:nextFocusForward="@+id/reviewdemogrsLastNameEdit" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -100,9 +104,10 @@
                 <EditText
                     android:id="@+id/reviewdemogrLastNameEdit"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
+                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName"
+                    android:maxLength="100"
                     android:nextFocusForward="@+id/reviewdemogrEmailEdit" />
             </android.support.design.widget.TextInputLayout>
 
@@ -264,6 +269,7 @@
                         android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress"
+                        android:maxLength="50"
                         android:nextFocusForward="@+id/addressEditText2Id"
                         app:hintTextAppearance="@style/FloatingLabelStyle" />
 
@@ -285,6 +291,7 @@
                             android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
+                            android:maxLength="50"
                             android:nextFocusForward="@+id/zipCodeId" />
                     </android.support.design.widget.TextInputLayout>
 
@@ -323,7 +330,7 @@
 
                         <EditText
                             android:id="@+id/cityId"
-                            style="@style/CityEditTextStyle"
+                            style="@style/SigninSignupEditStyle"
                             android:nextFocusRight="@+id/stateAutoCompleteTextView" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -336,7 +343,7 @@
 
                         <EditText
                             android:id="@+id/stateAutoCompleteTextView"
-                            style="@style/EditTextStyle"
+                            style="@style/SigninSignupEditStyle"
                             android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
                             android:imeOptions="actionDone"
                             android:inputType="textCapCharacters"

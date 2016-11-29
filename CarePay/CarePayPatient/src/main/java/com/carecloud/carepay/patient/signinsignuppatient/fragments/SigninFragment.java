@@ -132,6 +132,7 @@ public class SigninFragment extends Fragment {
 
         isEmptyEmail = true;
         isEmptyPassword = true;
+
         return view;
     }
 
@@ -151,7 +152,6 @@ public class SigninFragment extends Fragment {
             String changeLangugae = signInLablesDTO.getChangeLanguageLink();
             changeLanguageTextView.setText(changeLangugae);
         }
-
     }
 
     private void setClickbles(View view) {

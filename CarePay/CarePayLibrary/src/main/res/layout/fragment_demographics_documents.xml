@@ -109,6 +109,7 @@
     <Button
         android:id="@+id/demographicsDocsNextButton"
         style="@style/DemographicsNextButtonStyle"
+        android:layout_marginTop="5dp"
         android:text="@string/demogr_next" />
 
 </LinearLayout>

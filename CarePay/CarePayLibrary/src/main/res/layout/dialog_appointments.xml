@@ -176,6 +176,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:ellipsize="none"
+                        android:gravity="start"
                         android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
                         android:maxLines="2"
                         android:textColor="@color/bermudagrey"

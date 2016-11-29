@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import java.io.ByteArrayOutputStream;
 
@@ -24,12 +25,8 @@ public class CarePayCameraActivity extends AppCompatActivity implements CarePayC
 
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream);
-        byte[] byteArray = stream.toByteArray();
-        Intent intent = new Intent();
-        intent.putExtra("data",byteArray);
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_OK, null);
+        ImageCaptureHelper.setImageBitmap(bitmap);
         finish();
     }
 }

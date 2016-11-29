@@ -32,7 +32,7 @@ public class ApplicationPreferences {
     }
 
     public String getUserLanguage() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, "");
+        return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, "en");
     }
 
     public void setPracticeLanguage(String language) {
@@ -41,7 +41,7 @@ public class ApplicationPreferences {
     }
 
     public String getPracticeLanguage() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_PRACTICE_SELECTED_LANGUAGE, "");
+        return sharedPreferences.getString(CarePayConstants.PREFERENCE_PRACTICE_SELECTED_LANGUAGE, "en");
     }
 
     public void writeStringToSharedPref(String key, String value) {

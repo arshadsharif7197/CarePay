@@ -24,6 +24,10 @@
     <dimen name="dimen_60dp">60dp</dimen>
     <dimen name="dimen_370dp">370dp</dimen>
     <dimen name="dimen_390dp">390dp</dimen>
+    <dimen name="dimen_130dp">130dp</dimen>
+    <dimen name="dimen_114dp">114dp</dimen>
+
+
 
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
@@ -87,7 +91,7 @@
     </dimen>
     <dimen name="demographics_docs_number_text_size" format="float" type="dimen">17.0sp</dimen>
     <dimen name="demographics_docs_clickable_text_size" format="float" type="dimen">14.0sp</dimen>
-    <dimen name="demographics_docs_section_container_margin_top">30dp</dimen>
+    <dimen name="demographics_docs_section_container_margin_top">25dp</dimen>
     <dimen name="demographics_docs_thumbnail_width">100dp</dimen>
     <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
     <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
@@ -189,6 +193,7 @@
     <dimen name="consent_gender_left_margin">50dp</dimen>
     <dimen name="consent_minor_textsize">17sp</dimen>
     <dimen name="consent_minor_info_textsize">14sp</dimen>
+    <dimen name="consent_Contentview_textSize">18sp</dimen>
     <dimen name="consent_view_margin_top_bottom">10dp</dimen>
     <dimen name="date_textview_top_bottom">42dp</dimen>
     <dimen name="consentform_relativeLayout_margin">3dp</dimen>

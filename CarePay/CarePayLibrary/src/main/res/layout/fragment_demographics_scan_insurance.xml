@@ -10,7 +10,6 @@
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
     android:orientation="vertical"
-    android:background="@color/demographics_scan_insurance_bg"
     android:padding="2dp">
 
     <LinearLayout
@@ -117,7 +116,6 @@
             android:id="@+id/reviewinsurncecardnum"
             style="@style/SigninSignupEditStyle"
             android:imeOptions="actionNone"
-            android:maxLength="10"
             android:inputType="textFilter"/>
     </android.support.design.widget.TextInputLayout>
 

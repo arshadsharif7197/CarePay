@@ -106,4 +106,11 @@
     <color name="appointment_card_partial_bg">#35a5e1</color> <!-- background appointment card -->
     <color name="scan_camera_backgroung_bg">#ff424242</color>
     <color name="scan_camera_bg">#50acacac</color>
+
+    <!-- Checkin -->
+    <color name="white_opacity_60">#99ffffff</color>
+    <color name="white_opacity_50">#80ffffff</color>
+    <color name="black_opacity_70">#3c000000</color>
+    <color name="white_30opacity">#4Dffffff</color>
+
 </resources>

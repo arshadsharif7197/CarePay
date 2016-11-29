@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.fragments.scanner.ProfilePictureFragment;
+
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
@@ -33,10 +33,12 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.DocumentScannerFragment;
+
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
+import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -59,8 +61,7 @@ import java.util.List;
  * Implements demographics details screen
  */
 public class DemographicsDetailsFragment extends Fragment
-        implements View.OnClickListener,
-                   DocumentScannerFragment.NextAddRemoveStatusModifier {
+        implements View.OnClickListener{
 
     private View     view;
     private String[] raceArray;
@@ -72,8 +73,8 @@ public class DemographicsDetailsFragment extends Fragment
     private TextView        ethnicityTextView;
     private TextView        genderTextView;
     private EditText        dobEdit;
-    private TextView        addUnlistedAllergyTextView;
-    private TextView        addUnlistedMedTextView;
+    private EditText        addUnlistedAllergyTextView;
+    private EditText        addUnlistedMedTextView;
     private TextView        addAnotherAllergyTextView;
     private TextView        addAnotherMedTextView;
     private Button          nextButton;
@@ -354,15 +355,15 @@ public class DemographicsDetailsFragment extends Fragment
         nextButton.setText(label);
         nextButton.setOnClickListener(this);
 
-        addUnlistedAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
+        addUnlistedAllergyTextView = (EditText) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
         label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsAllergyAddUnlistedLabel();
-        addUnlistedAllergyTextView.setText(label);
-        addUnlistedAllergyTextView.setOnClickListener(this);
+        //addUnlistedAllergyTextView.setText(label);
+        //addUnlistedAllergyTextView.setOnClickListener(this);
 
-        addUnlistedMedTextView = (TextView) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
+        addUnlistedMedTextView = (EditText) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
         label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsMedAddUnlistedLabel();
-        addUnlistedMedTextView.setText(label);
-        addUnlistedMedTextView.setOnClickListener(this);
+        //addUnlistedMedTextView.setText(label);
+        //addUnlistedMedTextView.setOnClickListener(this);
 
         // rec views
         setupRecyclerViews();
@@ -396,7 +397,7 @@ public class DemographicsDetailsFragment extends Fragment
         ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
             fragment = new ProfilePictureFragment();
-            fragment.setButtonsStatusCallback(this);
+            fragment.setGlobalLabelsDTO(globalLabelDTO);
             fragment.setPayloadDTO(persDetailsDTO);
         }
         fm.beginTransaction()
@@ -404,7 +405,7 @@ public class DemographicsDetailsFragment extends Fragment
                 .commit();
 
         // set the fonts
-        setTypefaces(view);
+        setTypefaces();
     }
 
     /**
@@ -505,6 +506,16 @@ public class DemographicsDetailsFragment extends Fragment
             Date dob = DateUtil.parseFromDateAsMMddyyyy(formattedDob);
             persDetailsDTO.setDateOfBirth(DateUtil.getDateRaw(dob));
         }
+
+        String addUnlistedAllergies = addUnlistedAllergyTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(addUnlistedAllergies)) {
+            persDetailsDTO.setAddUnlistedAllergies(addUnlistedAllergies);
+        }
+
+        String addUnlistedMedications = addUnlistedMedTextView.getText().toString();
+        if (!StringUtil.isNullOrEmpty(addUnlistedMedications)) {
+            persDetailsDTO.setAddUnlistedMedications(addUnlistedMedications);
+        }
         ((DemographicsActivity) getActivity()).setDetailsModel(persDetailsDTO); // save the updated persDetailsDTO in the activity
     }
 
@@ -537,7 +548,7 @@ public class DemographicsDetailsFragment extends Fragment
                                     });
     }
 
-    private void setTypefaces(View view) {
+    private void setTypefaces() {
         Context context = getActivity();
 
         setGothamRoundedMediumTypeface(context, header);
@@ -580,20 +591,5 @@ public class DemographicsDetailsFragment extends Fragment
 
     public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
         this.persDetailsMetaDTO = persDetailsMetaDTO;
-    }
-
-    @Override
-    public void showAddCardButton(boolean isVisible) {
-
-    }
-
-    @Override
-    public void enableNextButton(boolean isEnabled) {
-        nextButton.setEnabled(isEnabled);
-    }
-
-    @Override
-    public void scrollToBottom() {
-
     }
 }

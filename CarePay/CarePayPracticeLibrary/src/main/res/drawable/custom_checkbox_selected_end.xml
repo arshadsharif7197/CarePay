@@ -5,6 +5,8 @@
         android:height="@dimen/custom_appointment_dialog_checkbox_normal_end_size">
         <shape android:shape="oval">
             <solid android:color="@color/yellowGreen" />
+            <size android:height="@dimen/custom_appointment_dialog_checkbox_normal_end_size"
+                android:width="@dimen/custom_appointment_dialog_checkbox_normal_end_size"/>
         </shape></item>
 
 </layer-list>

@@ -9,6 +9,7 @@ import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -24,7 +25,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 public class PracticeNavigationHelper {
 
     private static PracticeNavigationHelper instance;
-    private static Context                  context;
+    private static Context context;
 
     private PracticeNavigationHelper() {
 
@@ -91,6 +92,24 @@ public class PracticeNavigationHelper {
                 intent = new Intent(context, HowToCheckInActivity.class);
                 break;
             }
+
+            case PracticeNavigationStateConstants.PATIENT_MODE_CHECKIN_SUBFLOW: {
+                intent = new Intent(context, PatientModeCheckinActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                break;
+            }
+            case PracticeNavigationStateConstants.CONSENT_FORMS: {
+                if (context instanceof PatientModeCheckinActivity) {
+                    ((PatientModeCheckinActivity) context).getConsentFormInformation(workflowDTO.toString());
+                    return;
+                }
+                break;
+            }
+            case PracticeNavigationStateConstants.INTAKE_FORMS: {
+//                intent = new Intent(context, InTakeWebViewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            }
             default: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -98,7 +117,7 @@ public class PracticeNavigationHelper {
 
             }
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         Bundle bundle = new Bundle();
         bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
         intent.putExtras(bundle);

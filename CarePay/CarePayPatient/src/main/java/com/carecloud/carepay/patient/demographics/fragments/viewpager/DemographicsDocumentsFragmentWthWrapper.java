@@ -18,12 +18,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.DocumentScannerFragment;
-import com.carecloud.carepay.patient.demographics.fragments.scanner.IdDocScannerFragment;
-import com.carecloud.carepay.patient.demographics.misc.InsuranceWrapperCollection;
-import com.carecloud.carepay.patient.demographics.misc.OnClickRemoveOrAddCallback;
+
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
@@ -31,6 +29,10 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
+import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
+import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
+import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
@@ -46,12 +48,11 @@ import java.util.List;
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
-public class DemographicsDocumentsFragmentWthWrapper extends Fragment
-        implements DocumentScannerFragment.NextAddRemoveStatusModifier {
+public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
 
     private FragmentManager                        fm;
     private View                                   view;
-    private ScrollView                             detailsScrollView;
+    private ScrollView                             mainScrollView;
     private FrameLayout                            idCardContainer;
     private TextView                               multipleInsClickable;
     private Button                                 nextButton;
@@ -82,7 +83,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         getPayloadDTOs();
 
         // fetch the scroll view
-        detailsScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
+        mainScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
 
         initializeUIFields();
 
@@ -139,7 +140,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         setTypefaces();
 
         // hide add card button
-        showAddCardButton(false);
+        showAddCardButton(switchCompat.isChecked());
     }
 
     private void getOptions() {
@@ -167,6 +168,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
 
         if (insuranceDTOsList == null) {
             insuranceDTOsList = new ArrayList<>();
+            insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
+        } else if(insuranceDTOsList.size() == 0) {
+            insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
         }
     }
 
@@ -185,7 +189,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
                 // clear the list
                 insuranceDTOsList.clear();
 
-                             for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
+                for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
                     if (isInsuaranceNonTrivial(payloadDTO)) {
                         insuranceDTOsList.add(payloadDTO);
                     }
@@ -227,7 +231,6 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         IdDocScannerFragment idDocFragment = (IdDocScannerFragment) fm.findFragmentByTag("license");
         if (idDocFragment == null) {
             idDocFragment = new IdDocScannerFragment();
-            idDocFragment.setButtonsStatusCallback(this);
             idDocFragment.setModel(demPayloadIdDocDTO); // set the model
             idDocFragment.setIdDocsMetaDTO(idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
         }
@@ -248,6 +251,10 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
                                                                 @Override
                                                                 public void onAfterRemove() {
                                                                     showAddCardButton(true);
+                                                                    scrollToLast();
+                                                                    if(wrapperCollection1.isEmpty()) {
+                                                                        switchCompat.setChecked(false);
+                                                                    }
                                                                 }
 
                                                                 @Override
@@ -256,6 +263,14 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
                                                                 }
                                                             });
         wrapperCollection1.addAll(insuranceDTOsList);
+    }
+
+    private void scrollToLast() {
+        InsuranceWrapper lastAdded = wrapperCollection1.getLast();
+        if(lastAdded != null) {
+            View container = lastAdded.getHolderWrapperView();
+            mainScrollView.scrollTo(0, container.getTop());
+        }
     }
 
     private void showCard(FrameLayout cardContainer, boolean isVisible) {
@@ -287,6 +302,12 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 insContainersWrapper.setVisibility(on ? View.VISIBLE : View.GONE);
+                multipleInsClickable.setVisibility(on ? View.VISIBLE : View.GONE);
+                if(on && wrapperCollection1.isEmpty()) {
+                    insuranceDTOsList.clear();
+                    insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
+                    wrapperCollection1.addAll(insuranceDTOsList);
+                }
             }
         });
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
@@ -302,19 +323,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment
         this.insurancesMetaDTO = insurancesMetaDTO;
     }
 
-    @Override
     public void showAddCardButton(boolean isVisible) {
         multipleInsClickable.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void enableNextButton(boolean isEnabled) {
-        nextButton.setEnabled(isEnabled);
-    }
-
-    @Override
-    public void scrollToBottom() {
-        View bottomView = view.findViewById(R.id.demographicsDocsBottomView);
-        detailsScrollView.scrollTo(0, bottomView.getBottom());
     }
 }

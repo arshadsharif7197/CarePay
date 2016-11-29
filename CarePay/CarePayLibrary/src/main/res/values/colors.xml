@@ -27,6 +27,7 @@
 
     <color name="Munsell">#eceff1</color>
     <color name="paint_color_thumbnail">#BAB399</color>
+    <color name="silver">#cfd8dc</color>
 
     <color name="grayRound">#546e7a</color>
     <color name="light_gray_dialog">#eceff1</color>
@@ -72,9 +73,13 @@
     <color name="white_transparent">#26ffffff</color>
     <color name="manatee">#9ba4a9</color>
 
-    <color name="demographics_scan_insurance_bg">#f4f6f7</color> <!-- background insurance -->
+    <color name="white_opacity_60">#99ffffff</color>
 
     <color name="viewfinder_mask">#60000000</color>
     <color name="viewfinder_laser">#00cc0000</color>
     <color name="viewfinder_border">#ffafed44</color>
+
+    <color name="consent_title">#ff35a5e1</color>
+
+
 </resources>

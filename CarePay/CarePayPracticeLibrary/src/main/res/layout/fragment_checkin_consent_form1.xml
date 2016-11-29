@@ -1,48 +1,307 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/dimen_50dp">
 
-    <LinearLayout
+
+    <Button
+        android:id="@+id/signButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkinConsentForm1Header"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Header"
-            android:layout_gravity="center"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:text="Sign Consent For Medical Care" />
 
-    </LinearLayout>
+    <ScrollView
+        android:id="@+id/consentform_scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/signButton"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:fillViewport="true"
+        android:paddingBottom="-40dp"
+        android:scrollbars="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/checkinConsentForm1Content"
-        android:orientation="vertical">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Consent Form 1"
-            android:gravity="center"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkinConsentForm1Footer"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/checkinConsentForm1SignClickable"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign Consent For Medical Care"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:orientation="vertical">
 
-</LinearLayout>
+            <RelativeLayout
+                android:id="@+id/top_consentform_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@id/titleTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:gravity="top|center"
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:textColor="@color/consent_title"
+                    android:textSize="@dimen/text_size_28sp"
+                    app:customAssetFont="gotham_rounded_medium" />
+
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/descriptionTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/titleTv"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="@dimen/dimen_48dp"
+                    android:background="@color/light_gray"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:layout_marginLeft="@dimen/dimen_114dp"
+                    android:layout_marginRight="@dimen/dimen_114dp"
+                    android:paddingRight="@dimen/dimen_20dp"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/text_size_16sp"
+                    app:customAssetFont="proxima_nova_regular" />
+
+            </RelativeLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/contentTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop"
+                android:gravity="left"
+                android:maxLines="99"
+                android:paddingBottom="@dimen/dimen_30dp"
+                android:paddingLeft="@dimen/dimen_130dp"
+                android:paddingRight="@dimen/dimen_130dp"
+                android:paddingTop="@dimen/dimen_30dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/Feldgrau"
+                android:textSize="@dimen/dimen_18dp"
+                app:customAssetFont="proxima_nova_regular" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17.0dp"
+                android:layout_marginRight="17dp"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/minor_information"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginTop="@dimen/consent_top"
+                    android:gravity="start"
+                    android:paddingBottom="@dimen/dimen_30dp"
+                    android:paddingLeft="@dimen/dimen_114dp"
+                    android:paddingRight="@dimen/dimen_114dp"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/minor_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginTop="@dimen/consent_top"
+                    android:gravity="start"
+                    android:paddingLeft="@dimen/dimen_114dp"
+                    android:paddingRight="@dimen/dimen_114dp"
+                    android:textColor="@color/payne_gray"
+                    android:textSize="10sp"
+                    app:customAssetFont="proxima_nova_extra_bold" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/consentform_textinput_margintop"
+                    android:paddingLeft="@dimen/dimen_114dp"
+                    android:paddingRight="@dimen/dimen_114dp"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/minorFirstNameET"
+                        style="@style/SigninSignupEditStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext" />
+                </android.support.design.widget.TextInputLayout>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/minor_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginTop="@dimen/consent_top"
+                    android:gravity="start"
+                    android:paddingLeft="@dimen/dimen_114dp"
+                    android:paddingRight="@dimen/dimen_114dp"
+                    android:textColor="@color/payne_gray"
+                    android:textSize="10sp"
+                    app:customAssetFont="proxima_nova_extra_bold" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/minorLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/consentform_textinput_margintop"
+                    android:paddingLeft="@dimen/dimen_114dp"
+                    android:paddingRight="@dimen/dimen_114dp"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/minorLastNameET"
+                        style="@style/SigninSignupEditStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone" />
+                </android.support.design.widget.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginRight="@dimen/consentform_relativeLayout_margin">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/dob_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                        android:layout_marginTop="@dimen/consent_top"
+                        android:gravity="start"
+                        android:paddingLeft="@dimen/dimen_114dp"
+                        android:paddingRight="@dimen/dimen_114dp"
+                        android:textColor="@color/payne_gray"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/minor_dateofbirth"
+                        style="@style/reviewDemographicrelativelayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/consent_minor_textsize" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="@dimen/dimen_114dp"
+                        android:layout_marginRight="@dimen/dimen_114dp" />
+
+                </RelativeLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_114dp"
+                    android:layout_marginRight="@dimen/dimen_114dp"/>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                    android:layout_marginRight="@dimen/consentform_relativeLayout_margin">
+
+                    <TextView
+                        android:id="@+id/minor_gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:paddingLeft="@dimen/dimen_114dp"
+                        android:paddingRight="@dimen/dimen_114dp"
+                        android:paddingTop="@dimen/dimen_10dp"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/consent_minor_textsize" />
+
+
+                    <TextView
+                        android:id="@+id/choose_genderTextView"
+                        style="@style/ConsentForm_GenderStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/consent_gender_left_margin"
+                        android:layout_toRightOf="@id/minor_gender"
+                        android:clickable="true"
+                        android:layout_marginRight="@dimen/dimen_114dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="@dimen/dimen_114dp"
+                        android:layout_marginRight="@dimen/dimen_114dp" />
+
+                </RelativeLayout>
+
+                <View
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_114dp"
+                    android:layout_marginRight="@dimen/dimen_114dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/content2Tv"
+                style="@style/ConsentActivityContentTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:maxLines="99"
+                android:scrollbars="vertical"
+                android:textSize="@dimen/consent_Contentview_textSize" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/agreeTextview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                android:layout_marginTop="@dimen/consent_top"
+                android:gravity="start"
+                android:paddingLeft="@dimen/dimen_130dp"
+                android:paddingRight="@dimen/dimen_130dp"
+                android:textColor="@color/Feldgrau"
+                android:textSize="@dimen/text_size_18sp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                app:customAssetFont="proxima_nova_regular"
+                />
+
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/dateTv"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/consentform_relativeLayout_margin"
+                android:layout_marginTop="@dimen/consent_top"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_114dp"
+                android:paddingRight="@dimen/dimen_114dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:text="Aug 1st, 2016"
+                android:textColor="@color/Feldgrau"
+                android:textSize="@dimen/dimen_24dp"
+                app:customAssetFont="proxima_nova_regular" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/dimen_114dp"
+                android:layout_marginRight="@dimen/dimen_114dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>
