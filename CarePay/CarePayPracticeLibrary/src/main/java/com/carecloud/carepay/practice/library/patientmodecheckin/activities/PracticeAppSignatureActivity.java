@@ -25,12 +25,11 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormAuthorizationPayloadDTO;
-
+import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforhipaa.ConsentFormHippaPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedicare.ConsentFormMedicarePayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -92,7 +91,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             //ConsentActivity.this.finish();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(getApplicationContext(),workflowDTO);
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(PracticeAppSignatureActivity.this, workflowDTO);
         }
 
         @Override
@@ -107,7 +106,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
 
-        getWindow().setLayout(650,850);
+        getWindow().setLayout(650, 850);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -158,7 +157,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
 
             @Override
             public void onSigned() {
-                if(switchButton.isChecked()) {
+                if (switchButton.isChecked()) {
                     clearButton.setVisibility(View.VISIBLE);
                     signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
 
@@ -202,7 +201,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         titleTextView.setText(headerTitle);
         initviewfromModel();
         switchButton.setChecked(false);
-       // setTextWatchers();
+        // setTextWatchers();
     }
 
     private void initviewfromModel() {
@@ -301,10 +300,11 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         agreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (numOfLaunches == 1) {
+                if (numOfLaunches == 2) {
                     addToPayload();
                     navigateToNext();
                     numOfLaunches = 0;
+
                 } else {
                     Intent intent = getIntent();
                     if (intent.hasExtra("consentform")) {
@@ -459,15 +459,14 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
 
     private void navigateToNext() {
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
+        queries.put("practice_mgmt", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeMgmt());
         queries.put("practice_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
 
 
         Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
         header.put("transition", "true");
-        header.put("username_patient","rgirase@carecloud.com");
-        header.put("username","practice@cc.com");
+        header.put("username_patient", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getUsername());
 
         Gson gson = new Gson();
         String body = gson.toJson(consentFormPayloadDTO);
@@ -497,10 +496,22 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
                 conseFormsPayloadDTO.setConsentFormAuthorizationPayloadDTO(consentFormAuthorizationPayloadDTO);
                 consentFormPayloadDTO.setConsentforms(conseFormsPayloadDTO);
                 break;
-
-
+            case 3:
+                ConsentFormHippaPayloadDTO consentFormHippaPayloadDTO = new ConsentFormHippaPayloadDTO();
+                consentFormHippaPayloadDTO.setSignature(signatureAsBase64);
+                consentFormHippaPayloadDTO.setSignedByLegal(signedByLegal);
+                consentFormHippaPayloadDTO.setSignedByPatient(signedByPatient);
+                conseFormsPayloadDTO.setConsentFormHippaPayload(consentFormHippaPayloadDTO);
+                consentFormPayloadDTO.setConsentforms(conseFormsPayloadDTO);
             default:
                 break;
         }
+    }
+
+    public void launchIntake(String workflowJson) {
+        Intent intent = new Intent();
+        intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
+        intent.putExtra("INTAKE_WORKFLOW", workflowJson);
+        sendBroadcast(intent);
     }
 }

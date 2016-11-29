@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -95,6 +96,7 @@ public class CheckinConsentForm2Fragment extends Fragment {
     private String providerName;
     private String patienFirstName;
     private String patientLastName;
+    private LinearLayout mainContainer;
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
@@ -154,6 +156,8 @@ public class CheckinConsentForm2Fragment extends Fragment {
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
         dobTextView = (TextView) view.findViewById(R.id.dobET);
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
+        mainContainer= (LinearLayout) view.findViewById(R.id.consenrform2_mainContainer);
+        mainContainer.setPadding(10,50,10,0);
         initViewFromModels();
         getLabels();
         setEditTexts();
@@ -161,7 +165,6 @@ public class CheckinConsentForm2Fragment extends Fragment {
         onClickListners();
         setEnableNextButtonOnFullScroll();
         setTypefaces(view);
-
         return view;
     }
 
