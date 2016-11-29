@@ -32,19 +32,23 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+
+
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
 public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {

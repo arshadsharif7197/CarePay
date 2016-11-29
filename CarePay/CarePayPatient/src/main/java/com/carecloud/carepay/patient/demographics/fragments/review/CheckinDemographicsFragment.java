@@ -44,6 +44,14 @@ import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
@@ -52,16 +60,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener {
 
+    private static final String LOG_TAG = CheckinDemographicsFragment.class.getSimpleName();
     int selectedDataArray;
     private Button buttonAddDemographicInfo;
     private View view;
