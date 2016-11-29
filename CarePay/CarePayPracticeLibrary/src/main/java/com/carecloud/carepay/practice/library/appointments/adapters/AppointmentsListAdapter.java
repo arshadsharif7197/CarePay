@@ -99,20 +99,24 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckInTextview.setText(StringUtil.getLabelForView(
                 appointmentLabels.getAppointmentsPracticeCheckin()));
+        GradientDrawable shape =  new GradientDrawable();
+        shape.setCornerRadius(50.0f);
         if(!item.getAppointmentStatusModel().getName().equals("Pending"))
         {
-            GradientDrawable shape =  new GradientDrawable();
-            //shape.setShape(GradientDrawable.OVAL);
-            shape.setCornerRadius(50.0f);
             shape.setColor(Color.LTGRAY);
-            if(Build.VERSION.SDK_INT>=16) {
-                holder.startCheckInTextview.setBackground(shape);
-            }else{
-                holder.startCheckInTextview.setBackgroundDrawable(shape);
-            }
-            holder.startCheckInTextview.setBackground(shape);
-            holder.startCheckInTextview.setClickable(false);
+            holder.startCheckInTextview.setEnabled(false);
+
+        }else{
+            int color =  Color.parseColor("#7ED321");
+            shape.setColor(color);
+            holder.startCheckInTextview.setClickable(true);
         }
+        if(Build.VERSION.SDK_INT>=16) {
+            holder.startCheckInTextview.setBackground(shape);
+        }else{
+            holder.startCheckInTextview.setBackgroundDrawable(shape);
+        }
+        holder.startCheckInTextview.setBackground(shape);
         String photoUrl = item.getProvider().getPhoto();
         if (TextUtils.isEmpty(photoUrl)) {
             holder.shortNameTextview.setText(StringUtil.onShortDrName(item.getProvider().getName()));

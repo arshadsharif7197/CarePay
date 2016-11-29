@@ -105,6 +105,11 @@ public class PracticeNavigationHelper {
                 }
                 break;
             }
+            case PracticeNavigationStateConstants.INTAKE_FORMS: {
+//                intent = new Intent(context, InTakeWebViewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            }
             default: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -112,7 +117,7 @@ public class PracticeNavigationHelper {
 
             }
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         Bundle bundle = new Bundle();
         bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
         intent.putExtras(bundle);

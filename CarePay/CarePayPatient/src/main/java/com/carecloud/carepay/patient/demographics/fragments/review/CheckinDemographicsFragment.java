@@ -1,4 +1,3 @@
-
 package com.carecloud.carepay.patient.demographics.fragments.review;
 
 import android.content.DialogInterface;
@@ -6,8 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,16 +26,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
-import com.carecloud.carepaylibrary.R;
-
-
+import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
@@ -48,17 +39,12 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-
-
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
@@ -72,21 +58,18 @@ import com.smartystreets.api.us_zipcode.City;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
-public class DemographicReviewFragment extends Fragment implements View.OnClickListener {
+public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener {
 
+    private static final String LOG_TAG = CheckinDemographicsFragment.class.getSimpleName();
+    int selectedDataArray;
     private Button buttonAddDemographicInfo;
     private View view;
-
     private String[] gender;
     private String[] race;
     private String[] ethnicity;
-    int selectedDataArray;
-
     private ProgressBar demographicProgressBar;
 
     private DemographicMetadataEntityAddressDTO addressMetaDTO;
@@ -145,29 +128,22 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
     private boolean isStateEmtpy;
     private boolean isZipEmpty;
 
+    private LinearLayout addDemoLineraLayout;
+
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
 
-    public static DemographicReviewFragment newInstance() {
-        return new DemographicReviewFragment();
-    }
-
-    public DemographicReviewFragment() {
+    public CheckinDemographicsFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
-        DemographicReviewActivity.isFromReview = false;
-        globalLabelsMetaDTO = ((DemographicReviewActivity) getActivity()).getLabelsDTO();
-        addressMetaDTO = ((DemographicReviewActivity) getActivity()).getAddressEntityMetaDTO();
-        persDetailsMetaDTO = ((DemographicReviewActivity) getActivity()).getPersDetailsMetaDTO();
-        idDocsMetaDTO = ((DemographicReviewActivity) getActivity()).getIdDocsMetaDTO();
-        demographicDTO= ((DemographicReviewActivity) getActivity()).getModel();
 
-        initModels();
+        initializeDemographicsDTO();
+        //initModels();
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
@@ -176,94 +152,77 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setVisibility(view.GONE);
 
         initialiseUIFields();
         setEditTexts(view);
         setTypefaces(view);
         initViewFromModels();
 
+
         formatEditText();
         return view;
     }
 
+    private void initializeDemographicsDTO() {
+        demographicDTO = ((NewReviewDemographicsActivity) getActivity()).getDemographicDTO();
+        globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
+        addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
+        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
+        idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
+
+        if (demographicDTO.getPayload().getDemographics() != null) {
+            demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+            demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
+            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
+            for (int i = 0; i > size; i++) {
+                demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
+            }
+        }
+
+    }
+
     private void initialiseUIFields() {
 
+        addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
+        addDemoLineraLayout.setPadding(20, 0, 20, 0);
+
         updateDemoGraphicTitleTextView = (TextView) view.findViewById(R.id.detailsReviewHeading);
-        updateDemoGraphicTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateDemographicTitle());
-
         peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
-        peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
-
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
-        demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
-
         addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);
-        addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
 
         optinalLabelTextView = (TextView) view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
-        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
 
         dateformatLabelTextView = (TextView) view.findViewById(R.id.dobformatlabel);
-        dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
-
-
         phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        phoneNumberEditText.setHint(addressMetaDTO.properties.phone.getLabel());
 
         firstNameText = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
-        firstNameText.setHint(persDetailsMetaDTO.properties.firstName.getLabel());
-
         lastNameText = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
-        lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
-
         middleNameText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
-        middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
 
         dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        dobEditText.setHint(persDetailsMetaDTO.properties.dateOfBirth.getLabel());
-
         address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
-        address1EditText.setHint(addressMetaDTO.properties.address1.getLabel());
-
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
-        address2EditText.setHint(addressMetaDTO.properties.address2.getLabel());
-
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
-        zipCodeEditText.setHint(addressMetaDTO.properties.zipcode.getLabel());
-
         cityEditText = (EditText) view.findViewById(R.id.cityId);
-        cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
-
         stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
         stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
 
         driverlicenseEditText = (EditText) view.findViewById(R.id.driverLicenseEditText);
-        driverlicenseEditText.setHint(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
 
         buttonAddDemographicInfo = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
-        buttonAddDemographicInfo.setOnClickListener(this);
-        buttonAddDemographicInfo.setText(globalLabelsMetaDTO.getDemographicsUpdateButton().toUpperCase());
+
 
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
-        raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-        raceDataTextView.setOnClickListener(this);
         raceLabelTextView = (TextView) view.findViewById(R.id.raceDataTextView);
-        raceLabelTextView.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
-
         ethnicityDataTextView = (TextView) view.findViewById(R.id.ethnicityListDataTextView);
-        ethnicityDataTextView.setOnClickListener(this);
-        ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
         ethnicityLabelTextView = (TextView) view.findViewById(R.id.ethnicityDataTextView);
-        ethnicityLabelTextView.setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
-
-
         selectGender = (TextView) view.findViewById(R.id.chooseGenderTextView);
-        selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-        selectGender.setOnClickListener(this);
         genderLabelTextView = (TextView) view.findViewById(R.id.genderTextView);
-        genderLabelTextView.setText(persDetailsMetaDTO.properties.gender.getLabel());
+
 
         firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
         middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
@@ -276,6 +235,13 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         stateLabel = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+        initializeLabels();
+        initializeOptionsArray();
+
+
+    }
+
+    private void initializeOptionsArray() {
 
         List<MetadataOptionDTO> options = persDetailsMetaDTO.properties.primaryRace.options;
         List<String> races = new ArrayList<>();
@@ -300,22 +266,44 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     }
 
-    /**
-     * Initialize the models from main Demographic Review Activity
-     */
-    public void initModels() {
-        demographicAddressPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicAddressPayloadDTO();
-        if (demographicAddressPayloadDTO == null) {
-            demographicAddressPayloadDTO = new DemographicAddressPayloadDTO();
-        }
-        demographicPersDetailsPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicPersDetailsPayloadDTO();
-        if (demographicPersDetailsPayloadDTO == null) {
-            demographicPersDetailsPayloadDTO = new DemographicPersDetailsPayloadDTO();
-        }
-        demographicIdDocPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicPayloadIdDocDTO();
-        if (demographicIdDocPayloadDTO == null) {
-            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
-        }
+    private void initializeLabels() {
+        firstNameText.setHint(persDetailsMetaDTO.properties.firstName.getLabel());
+        lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
+        middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
+
+        updateDemoGraphicTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateDemographicTitle());
+        peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
+        demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
+        addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
+        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
+
+
+        dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
+        phoneNumberEditText.setHint(addressMetaDTO.properties.phone.getLabel());
+        dobEditText.setHint(persDetailsMetaDTO.properties.dateOfBirth.getLabel());
+        address1EditText.setHint(addressMetaDTO.properties.address1.getLabel());
+        address2EditText.setHint(addressMetaDTO.properties.address2.getLabel());
+        cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
+        zipCodeEditText.setHint(addressMetaDTO.properties.zipcode.getLabel());
+
+        driverlicenseEditText.setHint(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
+
+        selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        selectGender.setOnClickListener(this);
+
+        ethnicityDataTextView.setOnClickListener(this);
+        ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        ethnicityLabelTextView.setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
+
+        genderLabelTextView.setText(persDetailsMetaDTO.properties.gender.getLabel());
+
+        raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        raceDataTextView.setOnClickListener(this);
+
+        raceLabelTextView.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
+        buttonAddDemographicInfo.setOnClickListener(this);
+        buttonAddDemographicInfo.setText(globalLabelsMetaDTO.getDemographicsUpdateButton().toUpperCase());
+
     }
 
     private void formatEditText() {
@@ -438,9 +426,35 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                     lastNameLabel.setError(null);
                     lastNameLabel.setErrorEnabled(false);
                 } else {
-                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage();
+                    final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage();
                     lastNameLabel.setError(lastNameError);
                     lastNameLabel.setErrorEnabled(true);
+                }
+
+            }
+        });
+
+        address1EditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isAddressEmpty = StringUtil.isNullOrEmpty(address1EditText.getText().toString());
+                if (!isAddressEmpty) {
+                    address1Label.setError(null);
+                    address1Label.setErrorEnabled(false);
+                } else {
+                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage();
+                    address1Label.setError(lastNameError);
+                    address1Label.setErrorEnabled(true);
                 }
 
             }
@@ -471,6 +485,72 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
         });
 
+        cityEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isCityEmpty = StringUtil.isNullOrEmpty(cityEditText.getText().toString());
+                if (!isCityEmpty) {
+                    cityLabel.setError(null);
+                    cityLabel.setErrorEnabled(false);
+                } else {
+                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.city.validations.get(0).getErrorMessage();
+                    cityLabel.setError(lastNameError);
+                    cityLabel.setErrorEnabled(true);
+                }
+
+            }
+        });
+
+        stateEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isStateEmtpy = StringUtil.isNullOrEmpty(stateEditText.getText().toString());
+                if (!isStateEmtpy) {
+                    stateLabel.setError(null);
+                    stateLabel.setErrorEnabled(false);
+                } else {
+                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
+                    stateLabel.setError(lastNameError);
+                    stateLabel.setErrorEnabled(true);
+                }
+
+            }
+        });
+
+
+    }
+
+    private boolean isZipCodeValid() {
+        String zipCode = zipCodeEditText.getText().toString();
+        if (StringUtil.isNullOrEmpty(zipCode)) {
+            return true;
+        }
+        // apply validate from backend
+        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
+                zipcodeLabel,
+                addressMetaDTO.properties.zipcode,
+                null);
+        return isValidFormat;
     }
 
     private boolean isPhoneNumberValid() {
@@ -489,20 +569,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         }
         return true;
     }
-    
-    private boolean isZipCodeValid() {
-        String zipCode = zipCodeEditText.getText().toString();
-        if (StringUtil.isNullOrEmpty(zipCode)) {
-            return true;
-        }
-        // apply validate from backend
-        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
-                zipcodeLabel,
-                addressMetaDTO.properties.zipcode,
-                null);
-        return isValidFormat;
-    }
-
 
     private boolean isDateOfBirthValid() {
         final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
@@ -528,18 +594,32 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             zipCodeEditText.requestFocus();
         }
 
-        return isPhoneValid && isZipValid;
+        boolean isdobValid = isDateOfBirthValid();
+        if (!isdobValid) {
+            dobEditText.requestFocus();
+        }
+
+
+        return isPhoneValid && isZipValid && isdobValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
+
     }
 
     @Override
     public void onClick(View view) {
         String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
         if (view == buttonAddDemographicInfo) {
-            if (isAllFieldsValid() && isDateOfBirthValid() && !isFirstNameEmpty && !isLastNameEmpty) {
+
+            //   openNewFragment();
+            if (isAllFieldsValid()) {
                 // update the model
                 updateModels();
+
                 // post the changes
-                postUpdates();
+//                postUpdates();
+
+                // next
+                openNewFragment();
+
                 // hide the keyboard
                 SystemUtil.hideSoftKeyboard(getActivity());
             }
@@ -553,7 +633,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             selectedDataArray = 2;
             final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectRace();
             showAlertDialogWithListview(race, title, cancelLabel);
-
 
         } else if (view == ethnicityDataTextView) {
             selectedDataArray = 3;
@@ -600,24 +679,24 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
                         ethnicityDataTextView.setText(ethnicity);
 
                         break;
+                    default:
+                        break;
                 }
                 alert.dismiss();
             }
         });
     }
 
-
     private void updateModels() {
 
+        // save the personal details
         if (demographicPersDetailsPayloadDTO == null) {
             demographicPersDetailsPayloadDTO = new DemographicPersDetailsPayloadDTO();
         }
-
         String firstName = firstNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(firstName)) {
             demographicPersDetailsPayloadDTO.setFirstName(firstName);
         }
-
         String middleName = middleNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(middleName)) {
             demographicPersDetailsPayloadDTO.setMiddleName(middleName);
@@ -626,31 +705,27 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if (!StringUtil.isNullOrEmpty(lastName)) {
             demographicPersDetailsPayloadDTO.setLastName(lastName);
         }
-
         String dateOfBirth = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
-
             demographicPersDetailsPayloadDTO.setDateOfBirth(
                     DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
         }
-
         String gender = selectGender.getText().toString();
         if (!StringUtil.isNullOrEmpty(gender)) {
             demographicPersDetailsPayloadDTO.setGender(gender);
         }
-
         String race = raceDataTextView.getText().toString();
         if (!StringUtil.isNullOrEmpty(race)) {
             demographicPersDetailsPayloadDTO.setPrimaryRace(race);
         }
-
         String ethnicity = ethnicityDataTextView.getText().toString();
         if (!StringUtil.isNullOrEmpty(ethnicity)) {
             demographicPersDetailsPayloadDTO.setEthnicity(ethnicity);
         }
+        demographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
 
-
+        // save id doc
         if (demographicIdDocPayloadDTO == null) {
             demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         }
@@ -658,8 +733,11 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         if (!StringUtil.isNullOrEmpty(driverLicense)) {
             demographicIdDocPayloadDTO.setIdNumber(driverLicense);
         }
+        List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
+        ids.add(demographicIdDocPayloadDTO);
+        demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
 
-
+        // save address
         if (demographicAddressPayloadDTO == null) {
             demographicAddressPayloadDTO = new DemographicAddressPayloadDTO();
         }
@@ -681,17 +759,19 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             // 'de-format' before saving to model
             demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumber));
         }
-
         String city = cityEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(city)) {
             demographicAddressPayloadDTO.setCity(city);
         }
-
         String state = stateEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(state)) {
             demographicAddressPayloadDTO.setState(state);
         }
+        demographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
 
+        // update gson in the activity
+        Gson gson = new Gson();
+        ((NewReviewDemographicsActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
     }
 
     private void setEditTexts(View view) {
@@ -742,7 +822,6 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
         setChangeFocusListeners();
     }
-
 
     private void setChangeFocusListeners() {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -858,58 +937,7 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
         });
     }
 
-    private void postUpdates() {
-        demographicProgressBar.setVisibility(View.VISIBLE);
-        DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
-        postPayloadModel.setAddress(demographicAddressPayloadDTO);
-        postPayloadModel.setPersonalDetails(demographicPersDetailsPayloadDTO);
-        postPayloadModel.setInsurances(insurances);
-        // add id docs
-        List<DemographicIdDocPayloadDTO> idDocDTOs = new ArrayList<>();
-        idDocDTOs.add(demographicIdDocPayloadDTO);
-        postPayloadModel.setIdDocuments(idDocDTOs);
-
-        Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt() );
-        queries.put("practice_id",demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
-        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
-
-        Map<String, String> header = new HashMap<>();
-        header.put("transition","false");
-      //  WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getUpdateDemographics(), consentformcallback,queries,header);
-
-        Gson gson= new Gson();
-        String demographicinfo=gson.toJson(postPayloadModel);
-        TransitionDTO transitionDTO= demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                openNewFragment();
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-
-            }
-        }, demographicinfo, queries, header);
-
-    }
-
     private void initViewFromModels() {
-        demographicAddressPayloadDTO = ((DemographicReviewActivity) getActivity())
-                .getDemographicAddressPayloadDTO();
-
-        demographicPersDetailsPayloadDTO = ((DemographicReviewActivity) getActivity())
-                .getDemographicPersDetailsPayloadDTO();
-        insurances = ((DemographicReviewActivity) getActivity())
-                .getInsurances();
-        demographicIdDocPayloadDTO = ((DemographicReviewActivity) getActivity())
-                .getDemographicPayloadIdDocDTO();
 
         if (demographicPersDetailsPayloadDTO != null) {
             //Personal Details
@@ -992,12 +1020,12 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
             }
 
             String city = demographicAddressPayloadDTO.getCity();
-            if (SystemUtil.isNotEmptyString(city) || ! cityEditText.getText().toString().isEmpty()) {
+            if (SystemUtil.isNotEmptyString(city) || !cityEditText.getText().toString().isEmpty()) {
                 cityEditText.setText(city);
                 cityEditText.requestFocus();
             }
             String state = demographicAddressPayloadDTO.getState();
-            if (SystemUtil.isNotEmptyString(state) || ! stateEditText.getText().toString().isEmpty()) {
+            if (SystemUtil.isNotEmptyString(state) || !stateEditText.getText().toString().isEmpty()) {
                 stateEditText.setText(state);
                 stateEditText.requestFocus();
             }
@@ -1023,28 +1051,9 @@ public class DemographicReviewFragment extends Fragment implements View.OnClickL
 
     }
 
-
     private void openNewFragment() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentByTag(DemographicReviewFragment.class.getName());
-        if (fragment == null) {
-            fragment = HealthInsuranceReviewFragment.newInstance();
-        }
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.root_layout, fragment, HealthInsuranceReviewFragment.class.getName());
-        transaction.addToBackStack("DemographicReviewFragment -> HealthInsuranceReviewFragment");
-        transaction.commit();
-
-        ((DemographicReviewActivity) getActivity())
-                .setDemographicAddressPayloadDTO(
-                        demographicAddressPayloadDTO);
-        ((DemographicReviewActivity) getActivity())
-                .setDemographicPersDetailsPayloadDTO(
-                        demographicPersDetailsPayloadDTO);
-        ((DemographicReviewActivity) getActivity())
-                .setInsurances(insurances);
-        ((DemographicReviewActivity) getActivity())
-                .setDemographicPayloadIdDocDTO(demographicIdDocPayloadDTO);
+        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
+        ((NewReviewDemographicsActivity) getActivity()).navigateToFragment(fragment, true);
 
     }
 
