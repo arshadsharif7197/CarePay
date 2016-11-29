@@ -503,10 +503,16 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
                 consentFormHippaPayloadDTO.setSignedByPatient(signedByPatient);
                 conseFormsPayloadDTO.setConsentFormHippaPayload(consentFormHippaPayloadDTO);
                 consentFormPayloadDTO.setConsentforms(conseFormsPayloadDTO);
+
             default:
                 break;
         }
     }
+
+    /**
+     *
+     * @param workflowJson intake forms json
+     */
 
     public void launchIntake(String workflowJson) {
         Intent intent = new Intent();

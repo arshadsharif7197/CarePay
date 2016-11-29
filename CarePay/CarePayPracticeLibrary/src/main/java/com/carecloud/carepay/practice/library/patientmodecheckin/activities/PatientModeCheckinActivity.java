@@ -423,26 +423,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         }
     }
 
-    public void getIntakeFormInformation(String workflowJson) {
-        //Todo call this method instead of activity
-        intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, workflowJson);
-        if (intakeResponseModel != null) {
-            PayloadModel intakeFormPayloadDTO = intakeResponseModel.getPayload();
-            MetadataModel intakeFormMetadataDTO = intakeResponseModel.getMetadata();
-            if (intakeFormMetadataDTO != null) {
-                intakeFormDTO = intakeFormMetadataDTO.getLabel();
-                if (intakeFormDTO != null) {
-                    CheckinIntakeForm1Fragment fragment = new CheckinIntakeForm1Fragment();
-                    Bundle bundle = new Bundle();
-                    Gson gson = new Gson();
-                    String intakeFormDTO = gson.toJson(intakeResponseModel);
-                    bundle.putString(CarePayConstants.INTAKE_BUNDLE, intakeFormDTO);
-                    navigateToFragment(fragment, false);
-                }
-            }
-        }
-    }
-
     private Fragment getConsentForm() {
 
         if (showingForm == FormId.FORM1) {
