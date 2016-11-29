@@ -305,7 +305,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 //                        Log.d(LOG_TAG, "invalid url: " + photoFrontURL);
                         // test if base64
                         Bitmap bitmap;
-                        if(!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.base64ToBitmap(photoFrontURL)) != null ) {
+                        if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.base64ToBitmap(photoFrontURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
                             frontInsuranceImageView.setImageBitmap(bitmap);
                         } else {
@@ -331,7 +331,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 //                        Log.d(LOG_TAG, "invalid url: " + photoBackURL);
                         // test if base64
                         Bitmap bitmap;
-                        if(!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.base64ToBitmap(photoBackURL)) != null ) {
+                        if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.base64ToBitmap(photoBackURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
                             backInsuranceImageView.setImageBitmap(bitmap);
                         } else {
