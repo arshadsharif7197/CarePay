@@ -503,6 +503,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
                 consentFormHippaPayloadDTO.setSignedByPatient(signedByPatient);
                 conseFormsPayloadDTO.setConsentFormHippaPayload(consentFormHippaPayloadDTO);
                 consentFormPayloadDTO.setConsentforms(conseFormsPayloadDTO);
+                break;
 
             default:
                 break;
