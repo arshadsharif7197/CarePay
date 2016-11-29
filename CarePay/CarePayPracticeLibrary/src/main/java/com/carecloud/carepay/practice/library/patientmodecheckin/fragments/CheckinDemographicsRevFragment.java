@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_DEMOGRAPHICS_INS;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -471,7 +472,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     @Override
     public void onClick(View view) {
         if (view == correctInformationButton) {
-            ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             Map<String, String> queries = new HashMap<>();
             queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
             queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
@@ -567,5 +567,12 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                                       (TextView) view.findViewById(R.id.reviewAddress1TextView));
         setProximaNovaRegularTypeface(getActivity(),
                                       (TextView) view.findViewById(R.id.reviewAddress2TextView));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((PatientModeCheckinActivity)getActivity()).updateSection(
+                new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_DEMOGRAPHICS_INS, 0, 0));
     }
 }

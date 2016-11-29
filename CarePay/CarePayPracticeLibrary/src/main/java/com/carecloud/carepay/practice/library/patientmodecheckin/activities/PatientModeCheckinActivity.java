@@ -21,10 +21,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.For
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsRevFragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinInsurancesSummaryFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm2Fragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinPaymentFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -41,27 +38,24 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
-import com.carecloud.carepaylibray.intake.models.MetadataModel;
-import com.carecloud.carepaylibray.intake.models.PayloadModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.Locale;
 
-
 /**
  * Created by lsoco_user on 11/16/2016.
  * Main activity for patient check in flow
  */
-
-public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback, DemographicsReviewLabelsHolder {
+public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback,
+                                                                                DemographicsReviewLabelsHolder {
 
     public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
     public final static int SUBFLOW_CONSENT = 1;
     public final static int SUBFLOW_INTAKE = 2;
     public final static int SUBFLOW_PAYMENTS = 3;
-    public static final int NUM_CONSENT_FORMS = 2;
+    public static final int NUM_CONSENT_FORMS = 3;
     public static final int NUM_INTAKE_FORMS = 2;
     private static final int NUM_OF_SUBFLOWS = 4;
     private DemographicDTO demographicDTO;
@@ -117,13 +111,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             String intakeFormDTO = gson.toJson(intakeResponseModel);
             bundle.putString(CarePayConstants.INTAKE_BUNDLE, intakeFormDTO);
             fragment.setArguments(bundle);
-            navigateToFragment(fragment, false);
+            navigateToFragment(fragment, true);
             // TODO: SAUL Create Intake Fragment
             //navigateToFragment("INTAKEFRAGMENT", false);
         }
     };
     private LabelModel intakeFormDTO;
     private String consentMainTitle;
+    private FlowStateInfo currentFlowStateInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +198,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 if (addToBackStack) {
                     transaction.addToBackStack(fragment.getClass().getName());
                 }
-//                transaction.commit();
                 transaction.commitAllowingStateLoss();
             }
         });
@@ -226,114 +220,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void resetDemographicDTO(String jsonString) {
         this.demographicDTO = getConvertedDTO(DemographicDTO.class, jsonString);
     }
-
-    /**
-     * Toogle visible the back button (and hides/shows accordingly the logo)
-     *
-     * @param isVisible Whether to toggle visible
-     */
-    public void toggleVisibleBackButton(boolean isVisible) {
-        if (isVisible) {
-            backButton.setVisibility(View.VISIBLE);
-            logoImageView.setVisibility(View.GONE);
-        } else {
-            backButton.setVisibility(View.GONE);
-            logoImageView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * Highlights the title of the current subflow
-     *
-     * @param subflow   The subflow id:
-     *                  (0 - demographics & insurance, 1 - consent, 2 - intake, 3 - payments)
-     * @param highlight Whether is hightlight
-     */
-    public void toggleHighlight(int subflow, boolean highlight) {
-        // limit case
-        if (subflow == SUBFLOW_DEMOGRAPHICS_INS && !highlight) { // can't go before 'demographics'
-            return;
-        }
-        // if highlight true, highlight current and reset previous if there is one
-        TextView currentSection = (TextView) sectionTitleTextViews[subflow];
-        TextView prevSection = subflow > SUBFLOW_DEMOGRAPHICS_INS ? (TextView) sectionTitleTextViews[subflow - 1] : null;
-        if (highlight) {
-            SystemUtil.setGothamRoundedBoldTypeface(this, currentSection);
-            currentSection.setTextColor(ContextCompat.getColor(this, R.color.white));
-            if (prevSection != null) {
-                SystemUtil.setGothamRoundedLightTypeface(this, prevSection);
-                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
-            }
-        } else { // if highlight false, reset current and hightlight previous if there is one
-            if (prevSection != null) {
-                SystemUtil.setGothamRoundedLightTypeface(this, currentSection);
-                currentSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
-                SystemUtil.setGothamRoundedBoldTypeface(this, prevSection);
-                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white));
-            }
-        }
-    }
-
-    /**
-     * Increments/decrements the counter of the current form in a specific sub-flow
-     * (0 - demographics & insurance, 1 - consent, 2 - intake, 3 - payments)
-     *
-     * @param formSubflow The sub-flow id
-     * @param formIndex   The index
-     * @param maxIndex    The num of forms
-     */
-    public void changeCounterOfForm(int formSubflow, int formIndex, int maxIndex) {
-        // if increment true, increment
-        TextView formCounterTextView = null;
-        if (formSubflow == SUBFLOW_CONSENT) {
-            formCounterTextView = consentCounterTextView;
-        } else if (formSubflow == SUBFLOW_INTAKE) { // intake forms
-            formCounterTextView = intakeCounterTextView;
-        }
-        // format the string
-        String counterString = String.format(Locale.getDefault(), "%d %s %d", formIndex, preposition, maxIndex);
-        formCounterTextView.setText(counterString);
-    }
-
-    /**
-     * Toggle visible the form counter
-     *
-     * @param formSubflow THe form
-     * @param visible     Whether visible
-     */
-    public void toggleVisibleFormCounter(int formSubflow, boolean visible) {
-        TextView formCounterTextView = null;
-        if (formSubflow == SUBFLOW_CONSENT) {
-            formCounterTextView = consentCounterTextView;
-        } else if (formSubflow == SUBFLOW_INTAKE) { // intake forms
-            formCounterTextView = intakeCounterTextView;
-        }
-        formCounterTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
-        if (currentFragment instanceof CheckinPaymentFragment) {
-            toggleHighlight(SUBFLOW_PAYMENTS, false);
-            toggleVisibleFormCounter(SUBFLOW_INTAKE, true);
-        } else if (currentFragment instanceof CheckinIntakeForm1Fragment) {
-            toggleHighlight(SUBFLOW_INTAKE, false); // un-highlight in take flow
-            toggleVisibleFormCounter(SUBFLOW_INTAKE, false);
-            toggleVisibleFormCounter(SUBFLOW_CONSENT, true);
-        } else if (currentFragment instanceof CheckinIntakeForm2Fragment) {
-            changeCounterOfForm(SUBFLOW_INTAKE, 1, NUM_INTAKE_FORMS);
-        } else if (currentFragment instanceof CheckinConsentForm1Fragment) {
-            toggleHighlight(SUBFLOW_CONSENT, false);
-            toggleVisibleFormCounter(SUBFLOW_CONSENT, false);
-        } else if (currentFragment instanceof CheckinConsentForm2Fragment) {
-            changeCounterOfForm(SUBFLOW_CONSENT, 1, NUM_CONSENT_FORMS);
-        } else if (currentFragment instanceof CheckinInsurancesSummaryFragment) {
-            toggleVisibleBackButton(false);
-        }
-        super.onBackPressed();
-    }
-    /* ############# Consent Form TODO: will change to different fragment */
 
     @Override
     public DemographicLabelsDTO getLabelsDTO() {
@@ -361,14 +247,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         } else if (showingForm == FormId.FORM2) {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignAuthorizationFormTitle());
             intent.putExtra("Subtitle", consentFormLabelsDTO.getBeforeSignatureWarningText());
-
         } else {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
             intent.putExtra("Subtitle", consentFormLabelsDTO.getBeforeSignatureWarningText());
         }
-
         startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
-
     }
 
     @Override
@@ -414,7 +297,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                     authorizationDescription1 = consentFormLabelsDTO.getAuthorizationGrantText();
                     authorizationDescription2 = consentFormLabelsDTO.getAuthorizationLegalText();
                     signMedicareLabel = consentFormLabelsDTO.getSignConsentForMedicareTitle();
-                    navigateToFragment(getConsentForm(), false);
+                    navigateToFragment(getConsentForm(), true);
                     Log.d(this.getClass().getSimpleName(), "consent form information");
                 }
             }
@@ -512,7 +395,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     /* ############# END Consent Form TODO: will change to different fragment */
 
-
     /**
      * Enum to identify the forms
      */
@@ -544,4 +426,144 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         }
     }
 
+
+    //////////////////////////////
+    // navigation panel framework //
+    //////////////////////////////
+    /**
+     * Highlights the title of the current subflow
+     *
+     * @param subflow   The subflow id:
+     *                  (0 - demographics & insurance, 1 - consent, 2 - intake, 3 - payments)
+     * @param highlight Whether is hightlight
+     */
+    public void toggleHighlight(int subflow, boolean highlight) {
+        // limit case
+        if (subflow == SUBFLOW_DEMOGRAPHICS_INS && !highlight) { // can't go before 'demographics'
+            return;
+        }
+        // if highlight true, highlight current and reset previous if there is one
+        TextView currentSection = (TextView) sectionTitleTextViews[subflow];
+        TextView prevSection = subflow > SUBFLOW_DEMOGRAPHICS_INS ? (TextView) sectionTitleTextViews[subflow - 1] : null;
+        if (highlight) {
+            SystemUtil.setGothamRoundedBoldTypeface(this, currentSection);
+            currentSection.setTextColor(ContextCompat.getColor(this, R.color.white));
+            if (prevSection != null) {
+                SystemUtil.setGothamRoundedLightTypeface(this, prevSection);
+                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
+            }
+        } else { // if highlight false, reset current and hightlight previous if there is one
+            if (prevSection != null) {
+                SystemUtil.setGothamRoundedLightTypeface(this, currentSection);
+                currentSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
+                SystemUtil.setGothamRoundedBoldTypeface(this, prevSection);
+                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white));
+            }
+        }
+    }
+
+    /**
+     * Increments/decrements the counter of the current form in a specific sub-flow
+     * (0 - demographics & insurance, 1 - consent, 2 - intake, 3 - payments)
+     *
+     * @param formSubflow The sub-flow id
+     * @param formIndex   The index
+     * @param maxIndex    The num of forms
+     */
+    public void changeCounterOfForm(int formSubflow, int formIndex, int maxIndex) {
+        // if increment true, increment
+        TextView formCounterTextView = null;
+        if (formSubflow == SUBFLOW_CONSENT) {
+            formCounterTextView = consentCounterTextView;
+        } else if (formSubflow == SUBFLOW_INTAKE) { // intake forms
+            formCounterTextView = intakeCounterTextView;
+        }
+        // format the string
+        String counterString = String.format(Locale.getDefault(), "%d %s %d", formIndex, preposition, maxIndex);
+        formCounterTextView.setText(counterString);
+    }
+
+    /**
+     * Toggle visible the form counter
+     *
+     * @param formSubflow THe form
+     * @param visible     Whether visible
+     */
+    public void toggleVisibleFormCounter(int formSubflow, boolean visible) {
+        TextView formCounterTextView = null;
+        if (formSubflow == SUBFLOW_CONSENT) {
+            formCounterTextView = consentCounterTextView;
+        } else if (formSubflow == SUBFLOW_INTAKE) { // intake forms
+            formCounterTextView = intakeCounterTextView;
+        }
+        formCounterTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Toogle visible the back button (and hides/shows accordingly the logo)
+     *
+     * @param isVisible Whether to toggle visible
+     */
+    public void toggleVisibleBackButton(boolean isVisible) {
+        if (isVisible) {
+            backButton.setVisibility(View.VISIBLE);
+            logoImageView.setVisibility(View.GONE);
+        } else {
+            backButton.setVisibility(View.GONE);
+            logoImageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Update a section
+     *
+     * @param stateInfo The state of the flow
+     */
+    public void updateSection(FlowStateInfo stateInfo) {
+        if (currentFlowStateInfo != null) {
+            // reset the current state
+            int subflow = currentFlowStateInfo.subflow;
+            toggleHighlight(subflow, false);
+            if (subflow == SUBFLOW_CONSENT || subflow == SUBFLOW_INTAKE) {
+                toggleVisibleFormCounter(subflow, false);
+            }
+        }
+        currentFlowStateInfo = stateInfo;
+        if (currentFlowStateInfo != null) {
+            // set the current state
+            int subflow = currentFlowStateInfo.subflow;
+            toggleHighlight(currentFlowStateInfo.subflow, true);
+            if (subflow == SUBFLOW_CONSENT || subflow == SUBFLOW_INTAKE) {
+                toggleVisibleFormCounter(subflow, true);
+                changeCounterOfForm(subflow, currentFlowStateInfo.fragmentIndex, currentFlowStateInfo.maxFragIndex);
+            }
+        }
+    }
+
+    /**
+     * Class holding info about the curent point in the checkin flow
+     */
+    public static class FlowStateInfo {
+
+        int subflow;
+        int fragmentIndex;
+        int maxFragIndex;
+
+        /**
+         * Ctor
+         *
+         * @param subflow       The subflow
+         * @param fragmentIndex The index of the current fragment (if necessary)
+         * @param maxFragIndex  The meximum number of the fragments
+         */
+        public FlowStateInfo(int subflow, int fragmentIndex, int maxFragIndex) {
+            this.subflow = subflow;
+            this.fragmentIndex = fragmentIndex;
+            this.maxFragIndex = maxFragIndex;
+        }
+    }
+
+    public FormId getShowingForm() {
+        return showingForm;
+    }
 }

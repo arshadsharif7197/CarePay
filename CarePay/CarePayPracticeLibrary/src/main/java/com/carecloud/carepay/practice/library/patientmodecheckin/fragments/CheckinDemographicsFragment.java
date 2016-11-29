@@ -1049,14 +1049,12 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
         rootview.requestFocus();
         hideSoftKeyboard(getActivity());
-
     }
 
     private void openNewFragment() {
         CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
         ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
         ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
-
     }
 
     public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
@@ -1082,7 +1080,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {
         this.addressMetaDTO = addressMetaDTO;
     }
-
 
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
