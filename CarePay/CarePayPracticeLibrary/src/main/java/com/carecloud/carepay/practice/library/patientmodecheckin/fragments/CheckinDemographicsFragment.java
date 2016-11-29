@@ -24,15 +24,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -44,7 +39,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -66,11 +60,7 @@ import com.smartystreets.api.us_zipcode.City;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-
 
 
 public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener {
@@ -317,23 +307,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
     }
 
-    /**
-     * Initialize the models from main Demographic Review Activity
-     */
-   /* public void initModels() {
-        demographicAddressPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicAddressPayloadDTO();
-        if (demographicAddressPayloadDTO == null) {
-            demographicAddressPayloadDTO = new DemographicAddressPayloadDTO();
-        }
-        demographicPersDetailsPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicPersDetailsPayloadDTO();
-        if (demographicPersDetailsPayloadDTO == null) {
-            demographicPersDetailsPayloadDTO = new DemographicPersDetailsPayloadDTO();
-        }
-        demographicIdDocPayloadDTO = ((DemographicReviewActivity) getActivity()).getDemographicPayloadIdDocDTO();
-        if (demographicIdDocPayloadDTO == null) {
-            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
-        }
-    }*/
     private void formatEditText() {
 
         firstNameText.addTextChangedListener(new TextWatcher() {
@@ -597,7 +570,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         }
         return true;
     }
-
 
     private boolean isDateOfBirthValid() {
         final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
@@ -965,48 +937,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             }
         });
     }
-
-    private void postUpdates() {
-        demographicProgressBar.setVisibility(View.VISIBLE);
-        DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
-        postPayloadModel.setAddress(demographicAddressPayloadDTO);
-        postPayloadModel.setPersonalDetails(demographicPersDetailsPayloadDTO);
-        postPayloadModel.setInsurances(insurances);
-        // add id docs
-        List<DemographicIdDocPayloadDTO> idDocDTOs = new ArrayList<>();
-        idDocDTOs.add(demographicIdDocPayloadDTO);
-        postPayloadModel.setIdDocuments(idDocDTOs);
-
-        Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
-        queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
-        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
-
-        Map<String, String> header = new HashMap<>();
-        header.put("transition", "false");
-        //  WorkflowServiceHelper.getInstance().execute(demographicDTO.getMetadata().getTransitions().getUpdateDemographics(), consentformcallback,queries,header);
-
-        Gson gson = new Gson();
-        String demographicinfo = gson.toJson(postPayloadModel);
-        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                openNewFragment();
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-
-            }
-        }, demographicinfo, queries, header);
-    }
-
 
     private void initViewFromModels() {
 

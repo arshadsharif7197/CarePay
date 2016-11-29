@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
+package com.carecloud.carepay.patient.demographics.fragments.review;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -102,7 +102,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     }
 
     private void initDTOs() {
-        demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
+        demographicDTO = ((NewReviewDemographicsActivity) getActivity()).getDemographicDTO();
 
         insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
@@ -159,7 +159,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
 
 
         final Gson gson = new Gson();
-        ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
+        ((NewReviewDemographicsActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
 
         // move to demographics review
         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -167,7 +167,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         if (demInsRevFrag == null) {
             demInsRevFrag = new CheckinDemographicsRevFragment();
         }
-        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
+        ((NewReviewDemographicsActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
     }
 
     private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {

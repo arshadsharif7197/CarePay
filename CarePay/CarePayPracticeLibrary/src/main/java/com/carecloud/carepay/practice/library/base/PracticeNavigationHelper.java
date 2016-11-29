@@ -10,7 +10,6 @@ import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInAct
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.patientmodecheckin.intakeforms.activities.InTakeWebViewActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -107,7 +106,7 @@ public class PracticeNavigationHelper {
                 break;
             }
             case PracticeNavigationStateConstants.INTAKE_FORMS: {
-                intent = new Intent(context, InTakeWebViewActivity.class);
+//                intent = new Intent(context, InTakeWebViewActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
