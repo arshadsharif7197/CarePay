@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.fragments.review.news.CheckinDemographicsRevFragment;
+import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsRevFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;

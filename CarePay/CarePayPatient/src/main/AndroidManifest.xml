@@ -28,7 +28,6 @@
         <activity
             android:name=".demographics.activities.DemographicsActivity"
             android:windowSoftInputMode="adjustResize" />
-        <!--<activity android:name=".demographics.activities.DemographicReviewActivity" />-->
         <activity android:name=".demographics.activities.NewReviewDemographicsActivity" />
         <activity android:name=".consentforms.SignatureActivity" />
         <activity android:name=".selectlanguage.SelectLanguageActivity" />

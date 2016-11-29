@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;

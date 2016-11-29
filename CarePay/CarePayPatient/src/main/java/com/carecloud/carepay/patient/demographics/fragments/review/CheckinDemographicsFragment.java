@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.review.news;
+package com.carecloud.carepay.patient.demographics.fragments.review;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
