@@ -149,9 +149,9 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         // build the new payload
         insurancePayloadDTOs.clear();
         for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
-            if (isInsuaranceNonTrivial(payloadDTO)) {
+//            if (isInsuaranceNonTrivial(payloadDTO)) {
                 insurancePayloadDTOs.add(payloadDTO);
-            }
+//            }
         }
         DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
         postPayloadModel.setInsurances(insurancePayloadDTOs);

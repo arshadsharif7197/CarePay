@@ -68,7 +68,7 @@ public class InsuranceWrapper {
         // add the fragment
         wrapperScannerFragment = new InsuranceScannerFragment();
         wrapperScannerFragment.setInsuranceMetadataDTO(metadata);
-        wrapperScannerFragment.setInsuranceDTO(payload);
+        wrapperScannerFragment.setInsuranceDTO(payload, SystemUtil.getPlaceholderAsBase64(context));
         FragmentManager fm = context.getSupportFragmentManager();
         fm.beginTransaction().replace(fragHolderId, wrapperScannerFragment).commit();
 
