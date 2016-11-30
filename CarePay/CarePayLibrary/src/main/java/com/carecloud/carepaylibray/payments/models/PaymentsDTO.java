@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentsDTO {
 
-    @SerializedName("paymentsMetadata")
+    @SerializedName("metadata")
     @Expose
     private PaymentsMetadataDTO paymentsMetadata;
     @SerializedName("state")

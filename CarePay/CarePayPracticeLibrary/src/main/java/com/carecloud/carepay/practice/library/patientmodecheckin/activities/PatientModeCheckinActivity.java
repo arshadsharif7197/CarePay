@@ -24,7 +24,9 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Check
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsRevFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
@@ -39,6 +41,10 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
+import com.carecloud.carepaylibray.intake.models.MetadataModel;
+import com.carecloud.carepaylibray.intake.models.PayloadModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsMetadataDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -95,6 +101,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private String authorizationDescription1;
     private String authorizationDescription2;
     private String authForm;
+    private PaymentsDTO paymentsDTO;
 
     private int consentFormIndex;
     private int intakeFormIndex = 1;
@@ -328,6 +335,24 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             }
         }
     }
+
+
+    /**
+     * Consent form navigation
+     *
+     * @param workflowJson intake DTO
+     */
+    public void getPaymentInformation(String workflowJson) {
+        ResponsibilityFragment responsibilityFragment = new ResponsibilityFragment();
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, workflowJson);
+        //bundle.putString(CarePayConstants.COPAY, workflowJson);
+        responsibilityFragment.setArguments(bundle);
+        navigateToFragment(responsibilityFragment, false);
+    }
+
+
 
     private Fragment getConsentForm() {
 

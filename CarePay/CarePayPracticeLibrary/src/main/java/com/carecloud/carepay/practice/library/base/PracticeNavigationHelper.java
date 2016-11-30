@@ -114,6 +114,13 @@ public class PracticeNavigationHelper {
                 }
                 break;
             }
+            case PracticeNavigationStateConstants.PAYMENTS: {
+                if (context instanceof PatientModeCheckinActivity) {
+                    ((PatientModeCheckinActivity) context).getPaymentInformation(workflowDTO.toString());
+                    return;
+                }
+                break;
+            }
             default: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
