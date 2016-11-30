@@ -64,7 +64,7 @@
             android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
-            android:theme="@style/Theme.AppCompat.Dialog"/>
+            android:theme="@style/Theme.MyDialog"/>
 
         <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"

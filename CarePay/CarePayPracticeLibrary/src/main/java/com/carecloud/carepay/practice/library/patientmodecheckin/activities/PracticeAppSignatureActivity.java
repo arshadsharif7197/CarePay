@@ -2,27 +2,34 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ActionBarOverlayLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.carecloud.carepay.practice.library.R;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
+
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibrary.R;
+
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormAuthorizationPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforhipaa.ConsentFormHippaPayloadDTO;
@@ -30,6 +37,7 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedi
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -65,6 +73,8 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
     private EditText legalLastNameET;
     private TextInputLayout legalFirstName;
     private TextInputLayout legalLastName;
+   private String headerTitle;
+    private ImageView closeButton;
 
     private ConsentFormLabelsDTO consentFormLabelsDTO;
 
@@ -106,7 +116,10 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
 
-        getWindow().setLayout(650, 850);
+        getWindow().setLayout(ActionBarOverlayLayout.LayoutParams.WRAP_CONTENT, 900);
+        getWindow().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.signatureview_rounded_border));
+
+      //  getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -122,14 +135,16 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
             Gson gson = new Gson();
             consentFormDTO = gson.fromJson(consentFormDTOString, ConsentFormDTO.class);
         }
+        initViews();
         Toolbar toolbar = (Toolbar) findViewById(R.id.signup_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
-        title.setText(consentFormLabelsDTO.getSignatureActivityTitleText());
+        title.setText(StringUtil.captialize(headerTitle));
         setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", title);
         toolbar.setTitle(consentFormLabelsDTO.getSignatureActivityTitleText());
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
+        title.setGravity(Gravity.CENTER);
+       // toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(toolbar);
-        toolbar.setVisibility(View.GONE);
+      //  toolbar.setVisibility(View.GONE);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,7 +154,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
                 finish();
             }
         });
-        initViews();
+
         setTypefaces();
         setEditTexts();
         onClickListeners();
@@ -159,20 +174,22 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
             public void onSigned() {
                 if (switchButton.isChecked()) {
                     clearButton.setVisibility(View.VISIBLE);
+                 //   agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.signatureview_rounded_border));
                     signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
-
                     isSignatureEmpty = false;
                     enableAgreeButton();
                 } else {
                     clearButton.setVisibility(View.VISIBLE);
                     signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
                     agreeButton.setEnabled(true);
+                    agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_green_overlay));
                 }
             }
 
             @Override
             public void onClear() {
                 clearButton.setVisibility(View.GONE);
+                agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_silver_overlay));
             }
         });
     }
@@ -184,9 +201,11 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         //initViews data
 
         titleTextView = (TextView) findViewById(R.id.titleTv);
+        titleTextView.setVisibility(View.GONE);
         signatureHelpTextView = (TextView) findViewById(R.id.helperTv);
         switchButton = (SwitchCompat) findViewById(R.id.switchButton);
         agreeButton = (Button) findViewById(R.id.agreeBtn);
+        agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_silver_overlay));
         signaturePad = (SignaturePad) findViewById(R.id.signature_pad);
         signaturePad.setMinWidth(1);
         clearButton = (Button) findViewById(R.id.clearBtn);
@@ -195,10 +214,13 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         legalFirstNameET = (EditText) findViewById(R.id.legalFirstNameET);
         legalLastNameET = (EditText) findViewById(R.id.legalLastNameET);
         beforesignWarningTextView = (TextView) findViewById(R.id.beforesignwarnigTextView);
-        String headerTitle = getIntent().getExtras().getString("Header_Title");
+        beforesignWarningTextView.setPadding(10,25,0,10);
+       // closeButton= (ImageView) findViewById(R.id.imageView_close);
+         //  closeButton.setVisibility(View.VISIBLE);
+        headerTitle = getIntent().getExtras().getString("Header_Title");
         String subtitle = getIntent().getExtras().getString("Subtitle");
         beforesignWarningTextView.setText(subtitle);
-        titleTextView.setText(headerTitle);
+      //  titleTextView.setText(headerTitle);
         initviewfromModel();
         switchButton.setChecked(false);
         // setTextWatchers();
@@ -404,7 +426,10 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
     }
 
     private void enableAgreeButton() {
-        agreeButton.setEnabled(!isLegalFirstNameEmpty && !isLegalLastNameEmpty && !isSignatureEmpty);
+        if(!isLegalFirstNameEmpty && !isLegalLastNameEmpty && !isSignatureEmpty){
+            agreeButton.setEnabled(true);
+            agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_green_overlay));
+        }
     }
 
     private void showData(boolean isChecked) {
@@ -421,7 +446,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
             String fromSecSpaceOnSubstring = leagalrepresentative.substring(indexFirstPercent + 1, indexFirstPercent + 15);
             String uptothirdSpace = leagalrepresentative.substring(leagalrepresentative.indexOf(' ', indexFirstPercent + 2), leagalrepresentative.length());
             String signature = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstspaceSubstring, fromSecSpaceOnSubstring, "\n", uptothirdSpace);
-            signatureHelpTextView.setText(signature);
+            signatureHelpTextView.setText(leagalrepresentative);
             legalFirstName.setVisibility(View.VISIBLE);
             legalLastName.setVisibility(View.VISIBLE);
             legalFirstNameET.setVisibility(View.VISIBLE);

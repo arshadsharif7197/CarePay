@@ -1,131 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/munsell"
-    android:orientation="vertical">
-
-    <include layout="@layout/toolbar_signup" />
-
-    <RelativeLayout
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/munsell"
+        android:orientation="vertical">
 
 
-        <TextView
-            android:id="@+id/titleTv"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sigtxt_hgt"
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/marginleftright"
-            android:layout_marginRight="@dimen/marginleftright"
-            android:textColor="@color/charcoal"
-            android:textSize="@dimen/respons_total_label_text_size" />
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/switchButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/beforesignwarnigTextView"
-            android:layout_marginLeft="@dimen/marginleftright"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:layout_marginRight="@dimen/marginleftright"
-            android:layout_marginTop="@dimen/margintop"
-            android:textColor="@color/charcoal"
-            android:textSize="17sp" />
-        <View
-            android:layout_below="@+id/switchButton"
-            android:layout_height="1dp"
-            android:layout_width="match_parent"
-            android:background="@color/cadet_gray"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="21dp"
-            android:layout_marginRight="21dp"/>
+        <include layout="@layout/toolbar_signup" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/legalFirstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/switchButton"
-            android:layout_marginTop="10dp"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            style="@style/TextInputLayoutStyle"
-            android:visibility="gone">
-        <EditText
-            android:id="@+id/legalFirstNameET"
-            style="@style/SigninSignupEditStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/switchButton"
-            android:layout_marginStart="@dimen/marginleftright"
-            android:layout_marginEnd="@dimen/marginleftright"
-            android:imeOptions="actionNext"
-            app:customAssetFont="proxima_nova_regular"
-            android:inputType="textPersonName"
-            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
-            android:visibility="gone"/>
-        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/legalLastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/legalFirstName"
-            style="@style/TextInputLayoutStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/consentform_textinput_margintop">
-            <EditText
-                android:id="@+id/legalLastNameET"
-                style="@style/SigninSignupEditStyle"
+            <TextView
+                android:id="@+id/titleTv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sigtxt_hgt"
+                android:layout_marginLeft="@dimen/marginleftright"
+                android:layout_marginRight="@dimen/marginleftright"
+                android:gravity="center"
+                android:textColor="@color/charcoal"
+                android:textSize="@dimen/respons_total_label_text_size" />
+
+            <TextView
+                android:id="@+id/beforesignwarnigTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginleftright"
-                android:layout_marginEnd="@dimen/marginleftright"
-                app:customAssetFont="proxima_nova_regular"
-                android:inputType="textPersonName"
-                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+                android:layout_alignStart="@+id/titleTv"
+                android:layout_below="@+id/titleTv"
+                android:layout_marginLeft="@dimen/marginleftright"
+                android:layout_marginRight="@dimen/marginleftright"
+                android:gravity="center"
+                android:textColor="@color/cadet_gray"
+                android:textSize="@dimen/demographics_docs_button_text_size" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switchButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/beforesignwarnigTextView"
+                android:layout_marginLeft="@dimen/marginleftright"
+                android:layout_marginRight="@dimen/marginleftright"
+                android:layout_marginTop="@dimen/margintop"
+                android:paddingEnd="14dp"
+                android:paddingStart="14dp"
+                android:textColor="@color/charcoal"
+                android:textSize="17sp"
+                android:theme="@style/HaveHealthInsurance" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/switchButton"
+                android:layout_marginLeft="21dp"
+                android:layout_marginRight="21dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/cadet_gray" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/legalFirstName"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/switchButton"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <EditText
+                    android:id="@+id/legalFirstNameET"
+                    style="@style/SigninSignupEditStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/switchButton"
+                    android:layout_marginEnd="@dimen/marginleftright"
+                    android:layout_marginStart="@dimen/marginleftright"
+                    android:digits="@string/restrict_letters_space"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:maxLength="100"
+                    android:visibility="gone"
+                    app:customAssetFont="proxima_nova_regular" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/legalLastName"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/legalFirstName"
-                android:imeOptions="actionDone"
-                android:visibility="gone"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="@dimen/consentform_textinput_margintop"
+                android:visibility="gone"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
-        <include
-            android:id="@+id/signature_view"
-            layout="@layout/signature_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/legalLastName"
-            android:textColorHint="@color/pastelblue"
-            android:layout_marginLeft="@dimen/marginleftright"
-            android:layout_marginRight="@dimen/marginleftright"
-            android:layout_marginTop="@dimen/consent_top" />
+                <EditText
+                    android:id="@+id/legalLastNameET"
+                    style="@style/SigninSignupEditStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/legalFirstName"
+                    android:layout_marginEnd="@dimen/marginleftright"
+                    android:layout_marginStart="@dimen/marginleftright"
+                    android:digits="@string/restrict_letters_space"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPersonName"
+                    android:maxLength="100"
+                    android:visibility="gone"
+                    app:customAssetFont="proxima_nova_regular" />
+            </android.support.design.widget.TextInputLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2">
 
-        <Button
-            android:id="@+id/agreeBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/marginleftright"
-            android:layout_marginRight="@dimen/marginleftright"
-            android:layout_marginBottom="@dimen/marginleftright"
-            android:background="@drawable/button_selector"
-            android:enabled="false"
-            android:textColor="@color/white" />
+                <include
+                    android:id="@+id/signature_view"
+                    layout="@layout/signature_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/legalLastName"
+                    android:layout_marginLeft="@dimen/marginleftright"
+                    android:layout_marginRight="@dimen/marginleftright"
+                    android:layout_marginTop="@dimen/consent_top"
+                    android:textColorHint="@color/pastelblue" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/beforesignwarnigTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/marginleftright"
-            android:layout_marginRight="@dimen/marginleftright"
-            android:textColor="@color/cadet_gray"
-            android:textSize="@dimen/demographics_docs_button_text_size"
-            android:layout_below="@+id/titleTv"
-            android:layout_alignStart="@+id/titleTv" />
-    </RelativeLayout>
+            <Button
+                android:id="@+id/agreeBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/marginleftright"
+                android:layout_marginLeft="@dimen/marginleftright"
+                android:layout_marginRight="@dimen/marginleftright"
+                android:background="@drawable/button_selector"
+                android:enabled="false"
+                android:textColor="@color/white" />
+
 </LinearLayout>
+

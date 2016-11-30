@@ -69,6 +69,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         dateTextView = (TextView) view.findViewById(R.id.dateTv);
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
         signConsentFormButton = (Button) view.findViewById(R.id.signButton);
+        signConsentFormButton.setEnabled(false);
         mainContainer = (LinearLayout) view.findViewById(R.id.consenrform1_mainContainer);
         mainContainer.setPadding(10, 50, 10, 0);
 
@@ -115,17 +116,24 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
 
     private void setEnableNextButtonOnFullScroll() {
         // enable next button on scrolling all the way to the bottom
-        consentFormScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-            @Override
-            public void onScrollChanged() {
-                View view = consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
-                int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
 
-                if (diff == 0) {
-                    signConsentFormButton.setEnabled(true);
+        if (consentFormScrollView.getScrollY() == 0) {
+            signConsentFormButton.setEnabled(true);
+        } else {
+
+            consentFormScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                @Override
+                public void onScrollChanged() {
+                    View view = consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
+                    int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
+
+                    if (diff == 0) {
+                        signConsentFormButton.setEnabled(true);
+                    }
                 }
-            }
-        });
+            });
+
+        }
     }
 
     private void setTypefaces(View view) {
