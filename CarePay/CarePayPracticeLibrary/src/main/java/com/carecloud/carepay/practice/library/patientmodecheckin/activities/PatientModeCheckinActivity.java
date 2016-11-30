@@ -56,9 +56,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public final static  int SUBFLOW_CONSENT          = 1;
     public final static  int SUBFLOW_INTAKE           = 2;
     public final static  int SUBFLOW_PAYMENTS         = 3;
-    public static final  int NUM_CONSENT_FORMS        = 3;
-    public static final  int NUM_INTAKE_FORMS         = 3;
+//    public static final  int NUM_CONSENT_FORMS        = 3;
+//    public static final  int NUM_INTAKE_FORMS         = 3;
     private static final int NUM_OF_SUBFLOWS          = 4;
+    private int numIntakeForms = 3;
+    private int numConsentForms = 3;
 
     private DemographicDTO  demographicDTO;
     private CarePayTextView backButton;
@@ -272,6 +274,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             }
 
         }
+    }
+
+    public int getNumIntakeForms() {
+        return numIntakeForms;
+    }
+
+    public void setNumIntakeForms(int numIntakeForms) {
+        this.numIntakeForms = numIntakeForms;
+    }
+
+    public int getNumConsentForms() {
+        return numConsentForms;
+    }
+
+    public void setNumConsentForms(int numConsentForms) {
+        this.numConsentForms = numConsentForms;
     }
 
     ////////////////////////////
@@ -591,10 +609,17 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
             consentFormIndex = currentFlowStateInfo.fragmentIndex;
             switch (consentFormIndex) {
-                case 1: showingForm = FormId.FORM1; break;
-                case 2: showingForm = FormId.FORM2; break;
-                case 3: showingForm = FormId.FORM3; break;
-                default: break;
+                case 1:
+                    showingForm = FormId.FORM1;
+                    break;
+                case 2:
+                    showingForm = FormId.FORM2;
+                    break;
+                case 3:
+                    showingForm = FormId.FORM3;
+                    break;
+                default:
+                    break;
             }
             super.onBackPressed();
         } else if (currentFlowStateInfo.subflow == SUBFLOW_INTAKE) {
