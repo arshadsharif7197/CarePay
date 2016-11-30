@@ -27,7 +27,7 @@ public class PaymentsLabelDTO {
 
     /**
      *
-     * @param paymentPartialAmountTitle
+     * @param paymentPartialAmountTitle The Payment Partial Amount Title
      */
     public void setPaymentPartialAmountTitle(String paymentPartialAmountTitle) {
         this.paymentPartialAmountTitle = paymentPartialAmountTitle;
@@ -43,7 +43,7 @@ public class PaymentsLabelDTO {
 
     /**
      *
-     * @param paymentPartialAmountButton
+     * @param paymentPartialAmountButton The Payment Partial Amount Button
      */
     public void setPaymentPartialAmountButton(String paymentPartialAmountButton) {
         this.paymentPartialAmountButton = paymentPartialAmountButton;
@@ -59,7 +59,7 @@ public class PaymentsLabelDTO {
 
     /**
      *
-     * @param paymentTotalAmountButton
+     * @param paymentTotalAmountButton The Payment Total Amount Button
      */
     public void setPaymentTotalAmountButton(String paymentTotalAmountButton) {
         this.paymentTotalAmountButton = paymentTotalAmountButton;

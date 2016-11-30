@@ -16,21 +16,16 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
-import com.carecloud.carepaylibray.intake.models.PaymentModel;
+
 import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import org.json.JSONObject;
 
 /**
  * Created by prem_mourya on 10/4/2016.
  */
-
 public class PartialPaymentDialog extends Dialog implements View.OnClickListener, TextWatcher {
 
     private Context context;
@@ -51,7 +46,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     String paymentPartialButton;
     String paymentTotalButton;
 
-
+    /**
+     *
+     * @param context The context
+     * @param paymentsDTO The payments DTO
+     */
     public PartialPaymentDialog(Context context, PaymentsDTO paymentsDTO) {
         super(context);
         this.context = context;
@@ -139,6 +138,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     }
 
+    /**
+     *  partial payment labels
+      */
     public void getPartialPaymentLabels() {
         if (paymentsDTO != null) {
             paymentsMetadataDTO = paymentsDTO.getPaymentsMetadata();
