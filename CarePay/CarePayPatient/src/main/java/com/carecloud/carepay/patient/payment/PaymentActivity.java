@@ -23,7 +23,6 @@ public class PaymentActivity extends BasePatientActivity {
 
         Intent intent = getIntent();
         paymentsDTO = getConvertedDTO(PaymentsDTO.class);
-        Log.d("DTP",paymentsDTO.toString());
 
 
         FragmentManager fm = getSupportFragmentManager();
