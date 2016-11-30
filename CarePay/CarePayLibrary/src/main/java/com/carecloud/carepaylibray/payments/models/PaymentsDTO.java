@@ -9,6 +9,10 @@ public class PaymentsDTO {
     @SerializedName("metadata")
     @Expose
     private PaymentsMetadataDTO paymentsMetadata;
+
+    @SerializedName("payload")
+    @Expose
+    private PaymentsPayloadDTO payload;
     @SerializedName("state")
     @Expose
     private String state;
@@ -29,6 +33,18 @@ public class PaymentsDTO {
      */
     public void setPaymentsMetadata(PaymentsMetadataDTO paymentsMetadata) {
         this.paymentsMetadata = paymentsMetadata;
+    }
+    public PaymentsPayloadDTO getPayload() {
+        return payload;
+    }
+
+    /**
+     *
+     * @param payload
+     * The payload
+     */
+    public void setPayload(PaymentsPayloadDTO payload) {
+        this.payload = payload;
     }
 
     /**
