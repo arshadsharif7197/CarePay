@@ -354,9 +354,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, workflowJson);
         //bundle.putString(CarePayConstants.COPAY, workflowJson);
         responsibilityFragment.setArguments(bundle);
-        navigateToFragment(responsibilityFragment, false);
+        navigateToFragment(responsibilityFragment, true);
     }
-
 
 
     private Fragment getConsentForm() {
