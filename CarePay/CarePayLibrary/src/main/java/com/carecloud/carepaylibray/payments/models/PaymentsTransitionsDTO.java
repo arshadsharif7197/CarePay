@@ -6,110 +6,131 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentsTransitionsDTO {
 
-    @SerializedName("confirm_payment")
+    @SerializedName("make_payment")
     @Expose
-    private PaymentsConfirmDTO paymentsConfirm;
-    @SerializedName("post_payment")
+    private PaymentsMakePaymentDTO makePayment;
+    @SerializedName("add_credit_card")
     @Expose
-    private PaymentsPostPayDTO paymentsPostPay;
-    @SerializedName("post_credit_cards")
+    private PaymentsAddCreditCardDTO addCreditCard;
+    @SerializedName("delete_credit_card")
     @Expose
-    private PaymentsPostCreditCardsDTO paymentsPostCreditCards;
-    @SerializedName("delete_credit_cards")
+    private PaymentsDeleteCreditCardsDTO deleteCreditCard;
+    @SerializedName("add_payment_plan")
     @Expose
-    private PaymentsDeleteCreditCardsDTO paymentsDeleteCreditCards;
-    @SerializedName("checkin_appointment")
+    private PaymentsAddPaymentPlanDTO addPaymentPlan;
+    @SerializedName("delete_payment_plan")
     @Expose
-    private PaymentsCheckinAppointmentDTO paymentsCheckinAppointment;
+    private PayementsDeletePaymentPlanDTO deletePaymentPlan;
+    @SerializedName("modify_payment_plan")
+    @Expose
+    private PaymentsModifyPaymentPlanDTO modifyPaymentPlan;
 
     /**
-     * 
+     *
      * @return
-     *     The paymentsConfirm
+     * The makePayment
      */
-    public PaymentsConfirmDTO getPaymentsConfirm() {
-        return paymentsConfirm;
+    public PaymentsMakePaymentDTO getMakePayment() {
+        return makePayment;
     }
 
     /**
-     * 
-     * @param paymentsConfirm
-     *     The confirm_payment
+     *
+     * @param makePayment
+     * The make_payment
      */
-    public void setPaymentsConfirm(PaymentsConfirmDTO paymentsConfirm) {
-        this.paymentsConfirm = paymentsConfirm;
+    public void setMakePayment(PaymentsMakePaymentDTO makePayment) {
+        this.makePayment = makePayment;
     }
 
     /**
-     * 
+     *
      * @return
-     *     The paymentsPostPay
+     * The addCreditCard
      */
-    public PaymentsPostPayDTO getPaymentsPostPay() {
-        return paymentsPostPay;
+    public PaymentsAddCreditCardDTO getAddCreditCard() {
+        return addCreditCard;
     }
 
     /**
-     * 
-     * @param paymentsPostPay
-     *     The post_payment
+     *
+     * @param addCreditCard
+     * The add_credit_card
      */
-    public void setPaymentsPostPay(PaymentsPostPayDTO paymentsPostPay) {
-        this.paymentsPostPay = paymentsPostPay;
+    public void setAddCreditCard(PaymentsAddCreditCardDTO addCreditCard) {
+        this.addCreditCard = addCreditCard;
     }
 
     /**
-     * 
+     *
      * @return
-     *     The paymentsPostCreditCards
+     * The deleteCreditCard
      */
-    public PaymentsPostCreditCardsDTO getPaymentsPostCreditCards() {
-        return paymentsPostCreditCards;
+    public PaymentsDeleteCreditCardsDTO getDeleteCreditCard() {
+        return deleteCreditCard;
     }
 
     /**
-     * 
-     * @param paymentsPostCreditCards
-     *     The post_credit_cards
+     *
+     * @param deleteCreditCard
+     * The delete_credit_card
      */
-    public void setPaymentsPostCreditCards(PaymentsPostCreditCardsDTO paymentsPostCreditCards) {
-        this.paymentsPostCreditCards = paymentsPostCreditCards;
+    public void setDeleteCreditCard(PaymentsDeleteCreditCardsDTO deleteCreditCard) {
+        this.deleteCreditCard = deleteCreditCard;
     }
 
     /**
-     * 
+     *
      * @return
-     *     The paymentsDeleteCreditCards
+     * The addPaymentPlan
      */
-    public PaymentsDeleteCreditCardsDTO getPaymentsDeleteCreditCards() {
-        return paymentsDeleteCreditCards;
+    public PaymentsAddPaymentPlanDTO getAddPaymentPlan() {
+        return addPaymentPlan;
     }
 
     /**
-     * 
-     * @param paymentsDeleteCreditCards
-     *     The delete_credit_cards
+     *
+     * @param addPaymentPlan
+     * The add_payment_plan
      */
-    public void setPaymentsDeleteCreditCards(PaymentsDeleteCreditCardsDTO paymentsDeleteCreditCards) {
-        this.paymentsDeleteCreditCards = paymentsDeleteCreditCards;
+    public void setAddPaymentPlan(PaymentsAddPaymentPlanDTO addPaymentPlan) {
+        this.addPaymentPlan = addPaymentPlan;
     }
 
     /**
-     * 
+     *
      * @return
-     *     The paymentsCheckinAppointment
+     * The deletePaymentPlan
      */
-    public PaymentsCheckinAppointmentDTO getPaymentsCheckinAppointment() {
-        return paymentsCheckinAppointment;
+    public PayementsDeletePaymentPlanDTO getDeletePaymentPlan() {
+        return deletePaymentPlan;
     }
 
     /**
-     * 
-     * @param paymentsCheckinAppointment
-     *     The checkin_appointment
+     *
+     * @param deletePaymentPlan
+     * The delete_payment_plan
      */
-    public void setPaymentsCheckinAppointment(PaymentsCheckinAppointmentDTO paymentsCheckinAppointment) {
-        this.paymentsCheckinAppointment = paymentsCheckinAppointment;
+    public void setDeletePaymentPlan(PayementsDeletePaymentPlanDTO deletePaymentPlan) {
+        this.deletePaymentPlan = deletePaymentPlan;
+    }
+
+    /**
+     *
+     * @return
+     * The modifyPaymentPlan
+     */
+    public PaymentsModifyPaymentPlanDTO getModifyPaymentPlan() {
+        return modifyPaymentPlan;
+    }
+
+    /**
+     *
+     * @param modifyPaymentPlan
+     * The modify_payment_plan
+     */
+    public void setModifyPaymentPlan(PaymentsModifyPaymentPlanDTO modifyPaymentPlan) {
+        this.modifyPaymentPlan = modifyPaymentPlan;
     }
 
 }
