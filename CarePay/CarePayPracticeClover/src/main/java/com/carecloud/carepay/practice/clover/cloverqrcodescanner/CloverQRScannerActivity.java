@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.clover.sdk.internal.util.Strings;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.scanner.BarcodeResult;
 import com.clover.sdk.v3.scanner.BarcodeScanner;
@@ -29,7 +30,7 @@ public class CloverQRScannerActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             BarcodeResult barcodeResult = new BarcodeResult(intent);
 
-            if (barcodeResult.isBarcodeAction()) {
+            if (barcodeResult.isBarcodeAction() && !Strings.isNullOrEmpty( barcodeResult.getBarcode())) {
                 String barcode = barcodeResult.getBarcode();
                 intent = new Intent();
                 intent.putExtra("SCAN_RESULT",barcode);

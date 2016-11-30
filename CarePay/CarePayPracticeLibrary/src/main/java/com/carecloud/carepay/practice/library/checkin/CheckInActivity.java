@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.checkin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -123,6 +124,11 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // send a broadcast
+                Intent intent = new Intent();
+                intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
+                intent.putExtra("appointments_checking_in", "" + checkingInAppointments.size());
+                sendBroadcast(intent);
                 onBackPressed();
             }
         };

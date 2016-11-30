@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_DEMOGRAPHICS_INS;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -48,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {
+public class CheckinDemographicsRevFragment extends BaseCheckinFragment implements View.OnClickListener {
 
     private static final int MAX_INSURANCES = 3;
 
@@ -471,7 +473,6 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     @Override
     public void onClick(View view) {
         if (view == correctInformationButton) {
-            ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_CONSENT, true);
             Map<String, String> queries = new HashMap<>();
             queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
             queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
@@ -479,8 +480,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
             Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
             header.put("transition", "true");
-            header.put("username_patient", "rgirase@carecloud.com");
-            header.put("username", "practice@cc.com");
+            header.put("username_patient", demographicDTO.getPayload().getDemographics().getMetadata().getUsername());
 
             Gson gson = new Gson();
             String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
@@ -568,5 +568,17 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                                       (TextView) view.findViewById(R.id.reviewAddress1TextView));
         setProximaNovaRegularTypeface(getActivity(),
                                       (TextView) view.findViewById(R.id.reviewAddress2TextView));
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_DEMOGRAPHICS_INS, 0, 0);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
     }
 }
