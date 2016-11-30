@@ -22,12 +22,14 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
+
+import com.carecloud.carepay.practice.library.R;
+
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
-import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormAuthorizationPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforhipaa.ConsentFormHippaPayloadDTO;
@@ -116,6 +118,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
 
         getWindow().setLayout(ActionBarOverlayLayout.LayoutParams.WRAP_CONTENT, 900);
         getWindow().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.signatureview_rounded_border));
+
       //  getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -443,7 +446,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
             String fromSecSpaceOnSubstring = leagalrepresentative.substring(indexFirstPercent + 1, indexFirstPercent + 15);
             String uptothirdSpace = leagalrepresentative.substring(leagalrepresentative.indexOf(' ', indexFirstPercent + 2), leagalrepresentative.length());
             String signature = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstspaceSubstring, fromSecSpaceOnSubstring, "\n", uptothirdSpace);
-            signatureHelpTextView.setText(signature);
+            signatureHelpTextView.setText(leagalrepresentative);
             legalFirstName.setVisibility(View.VISIBLE);
             legalLastName.setVisibility(View.VISIBLE);
             legalFirstNameET.setVisibility(View.VISIBLE);
