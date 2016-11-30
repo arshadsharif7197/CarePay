@@ -36,7 +36,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private CarePayTextView partialPaymentPayingToday;
     private Button payPartialButton;
     //changes are needed when model will come
-    private double fullAmount = 108.00;
+    private double fullAmount = 0.00;
     private String amountMsg = "Pending amount: ";
     private String amountSymbol = "$";
     PaymentsDTO paymentsDTO;
