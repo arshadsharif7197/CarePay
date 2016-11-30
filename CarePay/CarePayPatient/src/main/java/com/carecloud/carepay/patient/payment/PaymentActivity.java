@@ -16,6 +16,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class PaymentActivity extends BasePatientActivity {
     PaymentsDTO paymentsDTO;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
