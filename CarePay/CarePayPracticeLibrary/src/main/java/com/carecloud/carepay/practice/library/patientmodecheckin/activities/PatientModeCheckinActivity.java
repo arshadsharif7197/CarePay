@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,7 +27,6 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Check
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
@@ -41,10 +41,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
-import com.carecloud.carepaylibray.intake.models.MetadataModel;
-import com.carecloud.carepaylibray.intake.models.PayloadModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsMetadataDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -103,6 +100,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private String authForm;
     private PaymentsDTO paymentsDTO;
 
+
     private int consentFormIndex;
     private int intakeFormIndex = 1;
 
@@ -138,7 +136,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_mode_checkin);
-
         demographicDTO = getConvertedDTO(DemographicDTO.class);
 
         instantiateViewsRefs();
@@ -157,6 +154,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(intakeFormReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     private void instantiateViewsRefs() {
