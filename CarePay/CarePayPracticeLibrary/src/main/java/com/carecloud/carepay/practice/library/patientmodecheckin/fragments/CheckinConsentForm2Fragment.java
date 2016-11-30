@@ -381,7 +381,6 @@ public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
         flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
                                                                      formIndex,
                                                                      ((PatientModeCheckinActivity)getActivity()).getNumConsentForms());
-
     }
 
     @Override
