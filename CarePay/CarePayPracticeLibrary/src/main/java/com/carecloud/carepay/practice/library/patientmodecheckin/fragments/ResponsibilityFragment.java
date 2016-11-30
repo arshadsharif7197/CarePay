@@ -67,7 +67,7 @@ public class ResponsibilityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_responsibility, container, false);
 
         Bundle bundle = getArguments();
-        ArrayList<PayloadPaymentModel> paymentList2 = (ArrayList<PayloadPaymentModel>) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+        //ArrayList<PayloadPaymentModel> paymentList2 = (ArrayList<PayloadPaymentModel>) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);

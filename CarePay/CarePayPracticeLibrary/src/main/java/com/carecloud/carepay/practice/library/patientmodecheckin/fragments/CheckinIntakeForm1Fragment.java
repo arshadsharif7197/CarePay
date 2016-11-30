@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,11 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.activities.Pati
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
@@ -56,23 +61,20 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
     private View view;
     private int formIndex;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
-        Bundle bundle = getArguments();
-        String intakeFormDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-        Gson gson = new Gson();
-        inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
-        getIntakeFormData();
+
 
         return view;
     }
 
 
     /**
-     * Call the intake form data for findings if any.
+     * TODO REMOVE LOGIC FOR WorkflowServiceHelper from consent dto
      */
     public void getIntakeFormData() {
 
@@ -117,17 +119,25 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         mStepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarIntakePractice);
         mStepProgressBar.setCumulativeDots(true);
         mStepProgressBar.setNumDots(inTakeForm.getPayload().getIntakeForms().size());
-        ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, mStepProgressBar.getCurrentProgressDot() + 1,
-                                                                         mStepProgressBar.getNumDots());
 
+
+        /*((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, mStepProgressBar.getCurrentProgressDot() + 1,
+                                                                         mStepProgressBar.getNumDots());
+*/
         //call javascript to show next intake form.
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mStepProgressBar.getCurrentProgressDot() < mStepProgressBar.getNumDots() - 1) {
                     mStepProgressBar.next();
+/*
                     ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, mStepProgressBar.getCurrentProgressDot() + 1,
                                                                                      mStepProgressBar.getNumDots());
+*/
+
+
+
+
                 }
 
                 if (mStepProgressBar.getCurrentProgressDot() == mStepProgressBar.getNumDots() - 1) {
@@ -162,8 +172,9 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
             flowStateInfo.fragmentIndex = formIndex;
             ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
             ((PatientModeCheckinActivity) getActivity()).setConsentFormIndex(formIndex);
-            mWebView.loadUrl("javascript:nextIntakeForm()");
+
         }
+        mWebView.loadUrl("javascript:nextIntakeForm()");
     }
 
     /**
@@ -228,10 +239,14 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
 
         header.put("transition", "true");
 
-        queryString.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());
+        //inTakeForm.getPayload().getFindings().getPayload().setFindings(jsonAnswers);
+        // String body = gson.toJson(inTakeForm);
+        // UpdateIntakeModel transitionUpdateIntake =  inTakeForm.getMetadata().getTransitions().getUpdateIntake();
+
+        queryString.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());//050bd799-de01-4692-a950-10d12d20dd2e
         queryString.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
         queryString.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
-        queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
+        queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());//cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2
         queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
         WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
@@ -263,6 +278,12 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        String intakeFormDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+        Gson gson = new Gson();
+        inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
+        getIntakeFormData();
+        ((PatientModeCheckinActivity) getActivity()).setNumIntakeForms(inTakeForm.getPayload().getIntakeForms().size());
         flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_INTAKE,
                                                                      formIndex,
                                                                      ((PatientModeCheckinActivity)getActivity()).getNumIntakeForms());
