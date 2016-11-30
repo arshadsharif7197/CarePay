@@ -59,11 +59,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public final static  int SUBFLOW_CONSENT          = 1;
     public final static  int SUBFLOW_INTAKE           = 2;
     public final static  int SUBFLOW_PAYMENTS         = 3;
-//    public static final  int NUM_CONSENT_FORMS        = 3;
-//    public static final  int NUM_INTAKE_FORMS         = 3;
     private static final int NUM_OF_SUBFLOWS          = 4;
-    private int numIntakeForms = 3;
-    private int numConsentForms = 3;
+    private              int numIntakeForms           = 3;
+    private              int numConsentForms          = 3;
 
     private DemographicDTO  demographicDTO;
     private CarePayTextView backButton;
@@ -86,9 +84,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private ConsentFormDTO consentFormDTO;
     private TextView       title;
     private FormId showingForm = FormId.FORM1;
-    private View   indicator0;
-    private View   indicator1;
-    private View   indicator2;
     private String readCarefullySign;
     private String medicareDescription;
     private String medicareForm;
@@ -494,27 +489,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      * @param highlight Whether is hightlight
      */
     public void toggleHighlight(int subflow, boolean highlight) {
-        // limit case
-        if (subflow == SUBFLOW_DEMOGRAPHICS_INS && !highlight) { // can't go before 'demographics'
-            return;
-        }
         // if highlight true, highlight current and reset previous if there is one
         TextView currentSection = (TextView) sectionTitleTextViews[subflow];
-        TextView prevSection = subflow > SUBFLOW_DEMOGRAPHICS_INS ? (TextView) sectionTitleTextViews[subflow - 1] : null;
         if (highlight) {
             SystemUtil.setGothamRoundedBoldTypeface(this, currentSection);
             currentSection.setTextColor(ContextCompat.getColor(this, R.color.white));
-            if (prevSection != null) {
-                SystemUtil.setGothamRoundedLightTypeface(this, prevSection);
-                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
-            }
         } else { // if highlight false, reset current and hightlight previous if there is one
-            if (prevSection != null) {
-                SystemUtil.setGothamRoundedLightTypeface(this, currentSection);
-                currentSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
-                SystemUtil.setGothamRoundedBoldTypeface(this, prevSection);
-                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white));
-            }
+            SystemUtil.setGothamRoundedLightTypeface(this, currentSection);
+            currentSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
         }
     }
 
@@ -588,7 +570,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if (currentFlowStateInfo != null) {
             // set the current state
             int subflow = currentFlowStateInfo.subflow;
-            toggleHighlight(currentFlowStateInfo.subflow, true);
+            toggleHighlight(subflow, true);
             if (subflow == SUBFLOW_CONSENT || subflow == SUBFLOW_INTAKE) {
                 toggleVisibleFormCounter(subflow, true);
                 changeCounterOfForm(subflow, currentFlowStateInfo.fragmentIndex, currentFlowStateInfo.maxFragIndex);
@@ -643,18 +625,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if (currentFlowStateInfo.subflow == SUBFLOW_CONSENT) {
             Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
             consentFormIndex = currentFlowStateInfo.fragmentIndex;
-            switch (consentFormIndex) {
-                case 1:
-                    showingForm = FormId.FORM1;
-                    break;
-                case 2:
-                    showingForm = FormId.FORM2;
-                    break;
-                case 3:
-                    showingForm = FormId.FORM3;
-                    break;
-                default:
-                    break;
+
+            if (consentFormIndex == 1) {
+                showingForm = FormId.FORM1;
+            } else {
+                showingForm = showingForm.prev();
             }
             super.onBackPressed();
         } else if (currentFlowStateInfo.subflow == SUBFLOW_INTAKE) {
