@@ -590,7 +590,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if (currentFlowStateInfo.subflow == SUBFLOW_CONSENT) {
             Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
             consentFormIndex = currentFlowStateInfo.fragmentIndex;
-            showingForm = showingForm.prev();
+            switch (consentFormIndex) {
+                case 1: showingForm = FormId.FORM1; break;
+                case 2: showingForm = FormId.FORM2; break;
+                case 3: showingForm = FormId.FORM3; break;
+                default: break;
+            }
             super.onBackPressed();
         } else if (currentFlowStateInfo.subflow == SUBFLOW_INTAKE) {
             Log.v("back", "intake: " + currentFlowStateInfo.fragmentIndex);
