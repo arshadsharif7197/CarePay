@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     private TextView healthInsuranceTitleTextView;
     private TextView haveMultipleHealthInsuranceTextView;
 
-    private boolean                    isThirdCardAdded;
     private LinearLayout               insContainersWrapper;
     private InsuranceWrapperCollection wrapperCollection1;
     private ScrollView                 detailsScrollView;
@@ -87,6 +87,10 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
 
         doYouHaveInsuranceSwitch.setChecked(!(insurancePayloadDTOs.size() == 0));
 
+        if (insurancePayloadDTOs.size() == 3) {
+            Log.v("show_card", "hiding add card...");
+            showAddCardButton(false);
+        }
         return view;
     }
 
@@ -149,9 +153,9 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         // build the new payload
         insurancePayloadDTOs.clear();
         for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
-//            if (isInsuaranceNonTrivial(payloadDTO)) {
-                insurancePayloadDTOs.add(payloadDTO);
-//            }
+            if (isInsuaranceNonTrivial(payloadDTO)) {
+            insurancePayloadDTOs.add(payloadDTO);
+            }
         }
         DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
         postPayloadModel.setInsurances(insurancePayloadDTOs);
@@ -177,14 +181,12 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     }
 
     private void setCardContainers() {
-        // fetch nested fragments containers
-        isThirdCardAdded = false;
-
         fm = getChildFragmentManager();
         createInsuranceFragments(insContainersWrapper);
     }
 
     private void createInsuranceFragments(LinearLayout insContainersWrapper) {
+
         DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO
                 = (insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
         wrapperCollection1 = new InsuranceWrapperCollection((AppCompatActivity) getActivity(),
@@ -237,9 +239,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         if (!isVisible) {
             haveMultipleHealthInsuranceTextView.setVisibility(View.GONE);
         } else {
-            if (!isThirdCardAdded) { // show only if there is another add possibility
-                haveMultipleHealthInsuranceTextView.setVisibility(View.VISIBLE);
-            }
+            haveMultipleHealthInsuranceTextView.setVisibility(View.VISIBLE);
         }
     }
 
