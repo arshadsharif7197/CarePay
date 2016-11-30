@@ -161,7 +161,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
      * Call java script functions to change intake form index
      */
     public void nextIntakeFormDisplayed() {
-        if (formIndex < ((PatientModeCheckinActivity)getActivity()).getIntakeFormIndex()) {
+        if (formIndex < ((PatientModeCheckinActivity)getActivity()).getNumIntakeForms()) {
             ++formIndex;
             ((PatientModeCheckinActivity) getActivity()).setIntakeFormIndex(formIndex);
             flowStateInfo.fragmentIndex = formIndex;
