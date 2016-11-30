@@ -16,21 +16,20 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+
+import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsMetadataDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import org.json.JSONObject;
 
 /**
  * Created by prem_mourya on 10/4/2016.
  */
-
 public class PartialPaymentDialog extends Dialog implements View.OnClickListener, TextWatcher {
 
     private Context context;
-    private JSONObject paymentModel;
+    //private JSONObject paymentModel;
     private EditText enterPartialAmountEditText;
     private CarePayTextView partialPaymentTotalAmountTitle;
     private CarePayTextView amountSymbolTextView;
@@ -40,11 +39,22 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private double fullAmount = 108.00;
     private String amountMsg = "Pending amount: ";
     private String amountSymbol = "$";
+    PaymentsDTO paymentsDTO;
+    private PaymentsLabelDTO paymentsLabelsDTO;
+    PaymentsMetadataDTO paymentsMetadataDTO;
+    String paymentTitle;
+    String paymentPartialButton;
+    String paymentTotalButton;
 
-    public PartialPaymentDialog(Context context, JSONObject paymentModel) {
+    /**
+     *
+     * @param context The context
+     * @param paymentsDTO The payments DTO
+     */
+    public PartialPaymentDialog(Context context, PaymentsDTO paymentsDTO) {
         super(context);
         this.context = context;
-        this.paymentModel = paymentModel;
+        this.paymentsDTO = paymentsDTO;
     }
 
     @Override
@@ -58,7 +68,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
-
+        //getPartialPaymentLabels();
         findViewById(R.id.dialogCloseImageView).setOnClickListener(this);
         enterPartialAmountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
         partialPaymentTotalAmountTitle = (CarePayTextView) findViewById(R.id.partialPaymentTotalAmountTitle);
@@ -78,6 +88,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
         SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
     }
+
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
@@ -125,5 +136,23 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     private void onPaymentClick() {
 
+    }
+
+    /**
+     *  partial payment labels
+      */
+    public void getPartialPaymentLabels() {
+        if (paymentsDTO != null) {
+            paymentsMetadataDTO = paymentsDTO.getPaymentsMetadata();
+            if (paymentsMetadataDTO != null) {
+                paymentsLabelsDTO = paymentsMetadataDTO.getPaymentsLabel();
+                if (paymentsLabelsDTO != null) {
+                    paymentTitle = paymentsLabelsDTO.getPaymentPartialAmountTitle();
+                    paymentPartialButton = paymentsLabelsDTO.getPaymentPartialAmountButton();
+                    paymentTotalButton = paymentsLabelsDTO.getPaymentTotalAmountButton();
+
+                }
+            }
+        }
     }
 }

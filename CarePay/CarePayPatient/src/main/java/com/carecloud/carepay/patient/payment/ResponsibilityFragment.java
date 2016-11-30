@@ -17,10 +17,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.services.AppointmentService;
+import com.carecloud.carepay.patient.payment.dialogs.PartialPaymentDialog;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
+import com.carecloud.carepaylibray.intake.models.PaymentModel;
+import com.carecloud.carepaylibray.intake.models.PaymentsModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
@@ -54,7 +57,7 @@ public class ResponsibilityFragment extends Fragment {
     private TextView responseTotal;
     private TextView responseCopay;
     private TextView responsePreviousBalance;
-//    private AppointmentsResultModel appointmentsModel = null;
+    private PaymentsDTO paymentDTO = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,6 +105,7 @@ public class ResponsibilityFragment extends Fragment {
         makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                new PartialPaymentDialog(getActivity(), paymentDTO).show();
 
             }
         });
