@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauth
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
@@ -53,7 +54,7 @@ import java.util.List;
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinConsentForm2Fragment extends Fragment {
+public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
     Date date = new Date();
     private TextView titleTextView;
     private TextView descriptionTextView;
@@ -115,7 +116,8 @@ public class CheckinConsentForm2Fragment extends Fragment {
             }
         }
     };
-    private Button signConsentForm;
+    private Button                                   signConsentForm;
+    private int                                      formIndex;
 
     @Nullable
     @Override
@@ -126,18 +128,6 @@ public class CheckinConsentForm2Fragment extends Fragment {
 
         consentFormDTO = ((PatientModeCheckinActivity) getActivity()).getConsentFormDTO();
         signConsentForm = (Button) view.findViewById(R.id.signButton);
-      /*  signConsentForm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // transition
-                CheckinConsentForm2Fragment fragment = new CheckinConsentForm2Fragment();
-                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 2,
-                                                                                PatientModeCheckinActivity.NUM_CONSENT_FORMS);
-
-            }
-        });
-*/
 
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
@@ -165,6 +155,7 @@ public class CheckinConsentForm2Fragment extends Fragment {
         onClickListners();
         setEnableNextButtonOnFullScroll();
         setTypefaces(view);
+
         return view;
     }
 
@@ -380,4 +371,20 @@ public class CheckinConsentForm2Fragment extends Fragment {
         setProximaNovaRegularTypeface(getActivity(), minorGender);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        formIndex = ((PatientModeCheckinActivity)getActivity()).getConsentFormIndex();
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
+                                                                     formIndex,
+                                                                     ((PatientModeCheckinActivity)getActivity()).getNumConsentForms());
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // set the index of the form
+        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
+    }
 }
