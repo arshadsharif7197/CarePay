@@ -23,10 +23,10 @@ public class PaymentsPayloadIntakeFormsDTO {
     }
 
     /**
-     * @param eTag The ETag
+     * @param etag The ETag
      */
-    public void setETag(String eTag) {
-        this.etag = eTag;
+    public void setETag(String etag) {
+        this.etag = etag;
     }
 
     /**
