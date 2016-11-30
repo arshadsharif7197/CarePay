@@ -29,25 +29,24 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import java.util.Date;
 
 
-
 /**
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinConsentForm1Fragment extends Fragment {
+public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
 
     Date date = new Date();
-    private Button signConsentFormButton;
-    private TextView titleTextView;
-    private TextView descriptionTextView;
-    private TextView contentTextView;
-    private TextView dateTextView;
-    private Button signButton;
-    private IFragmentCallback fragmentCallback;
-    private ScrollView consentFormScrollView;
+    private Button               signConsentFormButton;
+    private TextView             titleTextView;
+    private TextView             descriptionTextView;
+    private TextView             contentTextView;
+    private TextView             dateTextView;
+    private Button               signButton;
+    private IFragmentCallback    fragmentCallback;
+    private ScrollView           consentFormScrollView;
     private ConsentFormLabelsDTO consentFormLabelsDTO;
-    private ConsentFormDTO consentFormDTO;
-    private LinearLayout mainContainer;
+    private ConsentFormDTO       consentFormDTO;
+    private LinearLayout         mainContainer;
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View clickListener) {
@@ -70,13 +69,10 @@ public class CheckinConsentForm1Fragment extends Fragment {
         dateTextView = (TextView) view.findViewById(R.id.dateTv);
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
         signConsentFormButton = (Button) view.findViewById(R.id.signButton);
-        mainContainer= (LinearLayout) view.findViewById(R.id.consenrform1_mainContainer);
-        mainContainer.setPadding(10,50,10,0);
+        mainContainer = (LinearLayout) view.findViewById(R.id.consenrform1_mainContainer);
+        mainContainer.setPadding(10, 50, 10, 0);
 
         setTypefaces(view);
-
-        // set the index of the form
-        formIndex = ((PatientModeCheckinActivity)getActivity()).getShowingForm().ordinal() + 1;
 
         return view;
     }
@@ -141,11 +137,19 @@ public class CheckinConsentForm1Fragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // set the index of the form
+        formIndex = ((PatientModeCheckinActivity) getActivity()).getConsentFormIndex();
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
+                                                                     formIndex,
+                                                                     PatientModeCheckinActivity.NUM_CONSENT_FORMS);
+
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        ((PatientModeCheckinActivity)getActivity()).updateSection(
-                new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
-                                                             formIndex,
-                                                             PatientModeCheckinActivity.NUM_CONSENT_FORMS));
+        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
     }
 }

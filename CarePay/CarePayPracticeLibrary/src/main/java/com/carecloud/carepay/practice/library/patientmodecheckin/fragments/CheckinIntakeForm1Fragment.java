@@ -45,7 +45,7 @@ import static com.carecloud.carepay.practice.library.patientmodecheckin.activiti
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinIntakeForm1Fragment extends Fragment {
+public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
 
     private Button continueButton;
 
@@ -58,7 +58,7 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     private StepProgressBar     mStepProgressBar;
     public String TAG = CheckinIntakeForm1Fragment.class.getSimpleName();
     private View view;
-    private int formIndex = 0;
+    private int formIndex;
 
 
     @Nullable
@@ -161,12 +161,12 @@ public class CheckinIntakeForm1Fragment extends Fragment {
      * Call java script functions to change intake form index
      */
     public void nextIntakeFormDisplayed() {
-        formIndex++;
-        if(formIndex <= PatientModeCheckinActivity.NUM_CONSENT_FORMS) {
-            ((PatientModeCheckinActivity) getActivity()).updateSection(
-                    new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_INTAKE,
-                                                                 formIndex,
-                                                                 PatientModeCheckinActivity.NUM_CONSENT_FORMS));
+        if (formIndex < PatientModeCheckinActivity.NUM_CONSENT_FORMS) {
+            ++formIndex;
+            ((PatientModeCheckinActivity) getActivity()).setIntakeFormIndex(formIndex);
+            flowStateInfo.fragmentIndex = formIndex;
+            ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
+            ((PatientModeCheckinActivity) getActivity()).setConsentFormIndex(formIndex);
             mWebView.loadUrl("javascript:nextIntakeForm()");
         }
     }
@@ -223,7 +223,6 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         }
     }
 
-
     /**
      * TODO update workservice helper when available
      */
@@ -270,12 +269,18 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     };
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_INTAKE,
+                                                                     formIndex,
+                                                                     PatientModeCheckinActivity.NUM_INTAKE_FORMS);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        formIndex = 1;
-        ((PatientModeCheckinActivity) getActivity()).updateSection(
-                new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_INTAKE,
-                                                             formIndex,
-                                                             PatientModeCheckinActivity.NUM_INTAKE_FORMS));
+        formIndex = ((PatientModeCheckinActivity) getActivity()).getIntakeFormIndex();
+        flowStateInfo.fragmentIndex = formIndex;
+        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
     }
 }

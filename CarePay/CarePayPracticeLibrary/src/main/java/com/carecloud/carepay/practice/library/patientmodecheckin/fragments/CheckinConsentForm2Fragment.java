@@ -54,7 +54,7 @@ import java.util.List;
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinConsentForm2Fragment extends Fragment {
+public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
     Date date = new Date();
     private TextView titleTextView;
     private TextView descriptionTextView;
@@ -116,8 +116,8 @@ public class CheckinConsentForm2Fragment extends Fragment {
             }
         }
     };
-    private Button signConsentForm;
-    private int formIndex;
+    private Button                                   signConsentForm;
+    private int                                      formIndex;
 
     @Nullable
     @Override
@@ -155,9 +155,6 @@ public class CheckinConsentForm2Fragment extends Fragment {
         onClickListners();
         setEnableNextButtonOnFullScroll();
         setTypefaces(view);
-
-        // set the index of the form
-        formIndex = ((PatientModeCheckinActivity)getActivity()).getShowingForm().ordinal() + 1;
 
         return view;
     }
@@ -375,12 +372,19 @@ public class CheckinConsentForm2Fragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        ((PatientModeCheckinActivity)getActivity()).updateSection(
-                new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
-                                                             formIndex,
-                                                             PatientModeCheckinActivity.NUM_CONSENT_FORMS));
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        formIndex = ((PatientModeCheckinActivity)getActivity()).getConsentFormIndex();
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
+                                                                     formIndex,
+                                                                     PatientModeCheckinActivity.NUM_CONSENT_FORMS);
+
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // set the index of the form
+        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
+    }
 }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.FormData;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsRevFragment;
@@ -51,17 +52,18 @@ import java.util.Locale;
 public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback,
                                                                                 DemographicsReviewLabelsHolder {
 
-    public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
-    public final static int SUBFLOW_CONSENT = 1;
-    public final static int SUBFLOW_INTAKE = 2;
-    public final static int SUBFLOW_PAYMENTS = 3;
-    public static final int NUM_CONSENT_FORMS = 3;
-    public static final int NUM_INTAKE_FORMS = 2;
-    private static final int NUM_OF_SUBFLOWS = 4;
-    private DemographicDTO demographicDTO;
+    public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
+    public final static  int SUBFLOW_CONSENT          = 1;
+    public final static  int SUBFLOW_INTAKE           = 2;
+    public final static  int SUBFLOW_PAYMENTS         = 3;
+    public static final  int NUM_CONSENT_FORMS        = 3;
+    public static final  int NUM_INTAKE_FORMS         = 3;
+    private static final int NUM_OF_SUBFLOWS          = 4;
+
+    private DemographicDTO  demographicDTO;
     private CarePayTextView backButton;
-    private ImageView logoImageView;
-    private ImageView homeClickable;
+    private ImageView       logoImageView;
+    private ImageView       homeClickable;
 
     private View[] sectionTitleTextViews;
     private String preposition = "of";
@@ -72,25 +74,28 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     // TODO : Will be create separate fragment in next sprint
     private ConsentFormLabelsDTO consentFormLabelsDTO;
 
-    private AppointmentsPayloadDTO appointmentsPayloadDTO;
+    private AppointmentsPayloadDTO  appointmentsPayloadDTO;
     private AppointmentsResultModel appointmentsResultModel;
 
-    private String signMedicareLabel;
+    private String         signMedicareLabel;
     private ConsentFormDTO consentFormDTO;
-    private TextView title;
+    private TextView       title;
     private FormId showingForm = FormId.FORM1;
-    private View indicator0;
-    private View indicator1;
-    private View indicator2;
+    private View   indicator0;
+    private View   indicator1;
+    private View   indicator2;
     private String readCarefullySign;
     private String medicareDescription;
     private String medicareForm;
-    private String providerName = " ";
+    private String providerName     = " ";
     private String patientFirstName = " ";
-    private String patientLastName = " ";
+    private String patientLastName  = " ";
     private String authorizationDescription1;
     private String authorizationDescription2;
     private String authForm;
+
+    private int consentFormIndex;
+    private int intakeFormIndex = 1;
 
 
     // Intake Form
@@ -116,8 +121,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             //navigateToFragment("INTAKEFRAGMENT", false);
         }
     };
-    private LabelModel intakeFormDTO;
-    private String consentMainTitle;
+    private LabelModel    intakeFormDTO;
+    private String        consentMainTitle;
     private FlowStateInfo currentFlowStateInfo;
 
     @Override
@@ -133,9 +138,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
         // place the initial fragment
         CheckinDemographicsRevFragment fragment = new CheckinDemographicsRevFragment();
-//        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
         navigateToFragment(fragment, false);
-        toggleHighlight(SUBFLOW_DEMOGRAPHICS_INS, true);
 
         // Intake form Navigation TODO: will be managed by fragment
         registerReceiver(intakeFormReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
@@ -271,6 +274,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         }
     }
 
+    ////////////////////////////
+    // Consent form framework //
+    ////////////////////////////
+
     /**
      * Consent form navigation
      *
@@ -301,32 +308,31 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                     Log.d(this.getClass().getSimpleName(), "consent form information");
                 }
             }
-
-
         }
     }
 
     private Fragment getConsentForm() {
 
         if (showingForm == FormId.FORM1) {
+            consentFormIndex = 1;
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form1"));
             CheckinConsentForm1Fragment consentForm1Fragment = new CheckinConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
             return consentForm1Fragment;
         } else if (showingForm == FormId.FORM2) {
+            consentFormIndex = 2;
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form2"));
             CheckinConsentForm2Fragment consentForm2Fragment = new CheckinConsentForm2Fragment();
             consentForm2Fragment.setArguments(bundle);
-
             return consentForm2Fragment;
         } else {
+            consentFormIndex = 3;
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form3"));
             CheckinConsentForm1Fragment consentForm1Fragment = new CheckinConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
-
             return consentForm1Fragment;
         }
     }
@@ -392,9 +398,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         this.appointmentsPayloadDTO = appointmentsPayloadDTO;
     }
 
-
-    /* ############# END Consent Form TODO: will change to different fragment */
-
     /**
      * Enum to identify the forms
      */
@@ -417,8 +420,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
          * Go to prev
          */
         public FormId prev() {
-            if (this.equals(FORM2)) {
-                return FORM1;
+            if (this.equals(FORM3)) {
+                return FORM2;
             } else if (this.equals(FORM2)) {
                 return FORM1;
             }
@@ -426,10 +429,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         }
     }
 
-
     //////////////////////////////
     // navigation panel framework //
     //////////////////////////////
+
     /**
      * Highlights the title of the current subflow
      *
@@ -546,7 +549,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public static class FlowStateInfo {
 
         int subflow;
-        int fragmentIndex;
+        public int fragmentIndex;
         int maxFragIndex;
 
         /**
@@ -563,7 +566,42 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         }
     }
 
-    public FormId getShowingForm() {
-        return showingForm;
+    public int getConsentFormIndex() {
+        return consentFormIndex;
+    }
+
+    public void setConsentFormIndex(int consentFormIndex) {
+        this.consentFormIndex = consentFormIndex;
+    }
+
+    public int getIntakeFormIndex() {
+        return intakeFormIndex;
+    }
+
+    public void setIntakeFormIndex(int intakeFormIndex) {
+        this.intakeFormIndex = intakeFormIndex;
+    }
+
+    @Override
+    public void onBackPressed() {
+        BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
+        currentFlowStateInfo = fragment.getFlowStateInfo();
+
+        if (currentFlowStateInfo.subflow == SUBFLOW_CONSENT) {
+            Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
+            consentFormIndex = currentFlowStateInfo.fragmentIndex;
+            showingForm = showingForm.prev();
+            super.onBackPressed();
+        } else if (currentFlowStateInfo.subflow == SUBFLOW_INTAKE) {
+            Log.v("back", "intake: " + currentFlowStateInfo.fragmentIndex);
+            currentFlowStateInfo.fragmentIndex = --intakeFormIndex;
+            updateSection(currentFlowStateInfo);
+            if (intakeFormIndex == 0) {
+                intakeFormIndex = 1;
+                super.onBackPressed();
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 }

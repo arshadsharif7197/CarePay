@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {
+public class CheckinDemographicsRevFragment extends BaseCheckinFragment implements View.OnClickListener {
 
     private static final int MAX_INSURANCES = 3;
 
@@ -570,9 +571,14 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_DEMOGRAPHICS_INS, 0, 0);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        ((PatientModeCheckinActivity)getActivity()).updateSection(
-                new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_DEMOGRAPHICS_INS, 0, 0));
+        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
     }
 }
