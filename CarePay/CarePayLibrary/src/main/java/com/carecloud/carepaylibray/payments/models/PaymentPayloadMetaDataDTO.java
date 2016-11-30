@@ -6,6 +6,7 @@ package com.carecloud.carepaylibray.payments.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 public class PaymentPayloadMetaDataDTO {
     @SerializedName("user_id")
     @Expose
@@ -30,126 +31,98 @@ public class PaymentPayloadMetaDataDTO {
     private String updatedDt;
 
     /**
-     *
-     * @return
-     * The userId
+     * @return The userId
      */
     public String getUserId() {
         return userId;
     }
 
     /**
-     *
-     * @param userId
-     * The user_id
+     * @param userId The user_id
      */
     public void setUserId(String userId) {
         this.userId = userId;
     }
 
     /**
-     *
-     * @return
-     * The username
+     * @return The username
      */
     public String getUsername() {
         return username;
     }
 
     /**
-     *
-     * @param username
-     * The username
+     * @param username The username
      */
     public void setUsername(String username) {
         this.username = username;
     }
 
     /**
-     *
-     * @return
-     * The practiceMgmt
+     * @return The practiceMgmt
      */
     public String getPracticeMgmt() {
         return practiceMgmt;
     }
 
     /**
-     *
-     * @param practiceMgmt
-     * The practice_mgmt
+     * @param practiceMgmt The practice_mgmt
      */
     public void setPracticeMgmt(String practiceMgmt) {
         this.practiceMgmt = practiceMgmt;
     }
 
     /**
-     *
-     * @return
-     * The practiceId
+     * @return The practiceId
      */
     public String getPracticeId() {
         return practiceId;
     }
 
     /**
-     *
-     * @param practiceId
-     * The practice_id
+     * @param practiceId The practice_id
      */
     public void setPracticeId(String practiceId) {
         this.practiceId = practiceId;
     }
 
     /**
-     *
-     * @return
-     * The patientId
+     * @return The patientId
      */
     public String getPatientId() {
         return patientId;
     }
 
     /**
-     *
-     * @param patientId
-     * The patient_id
+     * @param patientId The patient_id
      */
     public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
     /**
-     *
-     * @return
-     * The createdDt
+     * @return The createdDt
      */
     public String getCreatedDt() {
         return createdDt;
     }
 
     /**
-     *
-     * @param createdDt
-     * The created_dt
+     * @param createdDt The created_dt
      */
     public void setCreatedDt(String createdDt) {
         this.createdDt = createdDt;
     }
 
     /**
-     *
-     * @return
-     * The updatedDt
+     * @return The updatedDt
      */
     public String getUpdatedDt() {
         return updatedDt;
     }
 
     /**
-     *
-     * @param updatedDt
-     * The updated_dt
+     * @param updatedDt The updated_dt
      */
     public void setUpdatedDt(String updatedDt) {
         this.updatedDt = updatedDt;

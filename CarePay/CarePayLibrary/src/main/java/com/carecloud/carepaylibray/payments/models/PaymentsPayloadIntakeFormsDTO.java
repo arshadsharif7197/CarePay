@@ -10,42 +10,34 @@ import com.google.gson.annotations.SerializedName;
 public class PaymentsPayloadIntakeFormsDTO {
     @SerializedName("ETag")
     @Expose
-    private String eTag;
+    private String etag;
     @SerializedName("ServerSideEncryption")
     @Expose
     private String serverSideEncryption;
 
     /**
-     *
-     * @return
-     * The eTag
+     * @return The eTag
      */
     public String getETag() {
-        return eTag;
+        return etag;
     }
 
     /**
-     *
-     * @param eTag
-     * The ETag
+     * @param eTag The ETag
      */
     public void setETag(String eTag) {
-        this.eTag = eTag;
+        this.etag = eTag;
     }
 
     /**
-     *
-     * @return
-     * The serverSideEncryption
+     * @return The serverSideEncryption
      */
     public String getServerSideEncryption() {
         return serverSideEncryption;
     }
 
     /**
-     *
-     * @param serverSideEncryption
-     * The ServerSideEncryption
+     * @param serverSideEncryption The ServerSideEncryption
      */
     public void setServerSideEncryption(String serverSideEncryption) {
         this.serverSideEncryption = serverSideEncryption;
