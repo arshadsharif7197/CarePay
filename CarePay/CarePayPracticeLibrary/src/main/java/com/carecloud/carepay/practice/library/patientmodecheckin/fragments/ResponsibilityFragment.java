@@ -21,7 +21,8 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.payments.models.PaymentsMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
@@ -45,8 +46,8 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
     private AppCompatActivity appCompatActivity;
     private String copayStr = "";
     private String previousBalanceStr = "";
-    private PaymentsMetadataDTO metadataDTO;
-    PaymentsDTO paymentsDTO;
+    private PaymentsMetadataModel metadataDTO;
+    PaymentsModel paymentsDTO;
     private TextView responseTotal;
     private TextView responseCopay;
     private TextView responsePreviousBalance;
@@ -138,15 +139,15 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
     private void getPaymentInformation() {
         PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
                 .createService(PaymentsService.class);
-        Call<PaymentsDTO> call = paymentService.fetchPaymentInformation();
-        call.enqueue(new Callback<PaymentsDTO>() {
+        Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
+        call.enqueue(new Callback<PaymentsModel>() {
             @Override
-            public void onResponse(Call<PaymentsDTO> call, Response<PaymentsDTO> response) {
-                PaymentsDTO paymentsDTO = response.body();
+            public void onResponse(Call<PaymentsModel> call, Response<PaymentsModel> response) {
+                PaymentsModel paymentsDTO = response.body();
             }
 
             @Override
-            public void onFailure(Call<PaymentsDTO> call, Throwable throwable) {
+            public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
             }
         });
     }
