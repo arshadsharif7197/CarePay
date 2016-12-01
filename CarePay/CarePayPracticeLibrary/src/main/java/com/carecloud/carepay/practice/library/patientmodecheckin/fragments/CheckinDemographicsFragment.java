@@ -62,26 +62,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * Fragment to update the demographisc info (except insurances)
+ */
 public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener {
 
     int selectedDataArray;
-    private Button buttonAddDemographicInfo;
-    private View view;
-    private String[] gender;
-    private String[] race;
-    private String[] ethnicity;
+    private Button      buttonAddDemographicInfo;
+    private View        view;
+    private String[]    gender;
+    private String[]    race;
+    private String[]    ethnicity;
     private ProgressBar demographicProgressBar;
 
-    private DemographicMetadataEntityAddressDTO addressMetaDTO;
+    private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-    private DemographicLabelsDTO globalLabelsMetaDTO;
-    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
-    private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
-    private List<DemographicInsurancePayloadDTO> insurances;
-    private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
-    private DemographicDTO demographicDTO;
+    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
+    private DemographicLabelsDTO                    globalLabelsMetaDTO;
+    private DemographicPersDetailsPayloadDTO        demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO            demographicAddressPayloadDTO;
+    private List<DemographicInsurancePayloadDTO>    insurances;
+    private DemographicIdDocPayloadDTO              demographicIdDocPayloadDTO;
+    private DemographicDTO                          demographicDTO;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -106,7 +108,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     private TextInputLayout stateLabel;
     private TextInputLayout zipcodeLabel;
     private TextInputLayout doblabel;
-    private LinearLayout rootview;
+    private LinearLayout    rootview;
 
     private TextView addressSectionTextView;
     private TextView peronalInfoSectionTextview;
@@ -548,9 +550,9 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         }
         // apply validate from backend
         boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
-                zipcodeLabel,
-                addressMetaDTO.properties.zipcode,
-                null);
+                                                                                     zipcodeLabel,
+                                                                                     addressMetaDTO.properties.zipcode,
+                                                                                     null);
         return isValidFormat;
     }
 
@@ -1034,7 +1036,6 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             if (SystemUtil.isNotEmptyString(zipcode)) {
                 zipCodeEditText.setText(StringUtil.formatZipCode(zipcode));
                 zipCodeEditText.requestFocus();
-
             }
 
             String phoneumber = demographicAddressPayloadDTO.getPhone();
@@ -1049,14 +1050,12 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
         rootview.requestFocus();
         hideSoftKeyboard(getActivity());
-
     }
 
     private void openNewFragment() {
         CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
         ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
         ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
-
     }
 
     public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
@@ -1083,10 +1082,9 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         this.addressMetaDTO = addressMetaDTO;
     }
 
-
     private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.detailsReviewHeading));
+                                       (TextView) view.findViewById(R.id.detailsReviewHeading));
 
         if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
             setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
