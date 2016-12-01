@@ -23,7 +23,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
 import com.google.gson.JsonObject;
 
@@ -145,15 +145,15 @@ public class ResponsibilityFragment extends Fragment {
     private void getPaymentInformation() {
         PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
                 .createService(PaymentsService.class);
-        Call<PaymentsDTO> call = paymentService.fetchPaymentInformation();
-        call.enqueue(new Callback<PaymentsDTO>() {
+        Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
+        call.enqueue(new Callback<PaymentsModel>() {
             @Override
-            public void onResponse(Call<PaymentsDTO> call, Response<PaymentsDTO> response) {
-                PaymentsDTO paymentsDTO = response.body();
+            public void onResponse(Call<PaymentsModel> call, Response<PaymentsModel> response) {
+                PaymentsModel paymentsDTO = response.body();
             }
 
             @Override
-            public void onFailure(Call<PaymentsDTO> call, Throwable throwable) {
+            public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
             }
         });
     }
