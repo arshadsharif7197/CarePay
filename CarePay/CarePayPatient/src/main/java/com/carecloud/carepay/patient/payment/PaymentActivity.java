@@ -4,20 +4,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.intake.models.PaymentModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class PaymentActivity extends AppCompatActivity {
-
+public class PaymentActivity extends BasePatientActivity {
+    PaymentsDTO paymentsDTO;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
         Intent intent = getIntent();
+        paymentsDTO = getConvertedDTO(PaymentsDTO.class);
+
 
         FragmentManager fm = getSupportFragmentManager();
         ResponsibilityFragment fragment = (ResponsibilityFragment)

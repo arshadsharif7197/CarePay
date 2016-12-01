@@ -262,6 +262,16 @@ public class SystemUtil {
     }
 
     /**
+     * Convert the image capture place holder into a base64
+     * @param context The context
+     * @return The base64 string
+     */
+    public static String getPlaceholderAsBase64(Context context) {
+        Bitmap placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.icn_camera);
+        return SystemUtil.encodeToBase64(placeholder, Bitmap.CompressFormat.JPEG, 90);
+    }
+
+    /**
      * Utility to convert dp to pixels.
      *
      * @param context   The context

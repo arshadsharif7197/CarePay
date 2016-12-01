@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/activity_patient_mode_checkin"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:baselineAligned="false"
-              tools:context="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_patient_mode_checkin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    tools:context="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -21,7 +21,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="6"/>
+            android:layout_weight="6" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,20 +45,20 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 android:visibility="visible"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium" />
 
             <ImageView
                 android:id="@+id/checkinLogo"
                 android:layout_width="@dimen/home_logo_width"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/home_logo"
-                android:src="@drawable/checkin_cp_logo_aligned_right"/>
+                android:src="@drawable/checkin_cp_logo_aligned_right" />
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="24"/>
+            android:layout_weight="24" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="wrap_content"
@@ -66,22 +66,22 @@
             android:text="Let's get you checked in!"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_30dp"
-            app:customAssetFont="gotham_rounded_bold"/>
+            app:customAssetFont="gotham_rounded_bold" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"/>
+            android:layout_weight="4" />
 
         <View
             android:layout_width="@dimen/checkin_separator_width"
             android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/white_opacity_50"/>
+            android:background="@color/white_opacity_50" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="6"/>
+            android:layout_weight="6" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,7 +96,7 @@
                 android:text="Demographics  &amp; Insurance"
                 android:textColor="@color/white_opacity_60"
                 android:textSize="@dimen/text_size_16sp"
-                app:customAssetFont="gotham_rounded_light"/>
+                app:customAssetFont="gotham_rounded_light" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
                     android:text="Consent Forms"
                     android:textColor="@color/white_opacity_60"
                     android:textSize="@dimen/text_size_16sp"
-                    app:customAssetFont="gotham_rounded_light"/>
+                    app:customAssetFont="gotham_rounded_light" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkinConsentFormCounterTextView"
@@ -122,7 +122,7 @@
                     android:paddingStart="@dimen/dimen_10dp"
                     android:text="1 of 2"
                     android:textColor="@color/white"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
@@ -139,7 +139,7 @@
                     android:text="Patient Intake"
                     android:textColor="@color/white_opacity_60"
                     android:textSize="@dimen/text_size_16sp"
-                    app:customAssetFont="gotham_rounded_light"/>
+                    app:customAssetFont="gotham_rounded_light" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkinIntakeFormCounterTextView"
@@ -151,7 +151,7 @@
                     android:paddingStart="@dimen/dimen_10dp"
                     android:text="1 of 2"
                     android:textColor="@color/white"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -162,26 +162,26 @@
                 android:text="Payment"
                 android:textColor="@color/white_opacity_60"
                 android:textSize="@dimen/text_size_16sp"
-                app:customAssetFont="gotham_rounded_light"/>
+                app:customAssetFont="gotham_rounded_light" />
 
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="54"/>
+            android:layout_weight="54" />
 
         <ImageView
             android:id="@+id/checkinHomeClickable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/checkin_ic_icn_home"
-            android:clickable="true"/>
+            android:clickable="true"
+            android:src="@drawable/checkin_ic_icn_home" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="6"/>
+            android:layout_weight="6" />
 
 
     </LinearLayout>

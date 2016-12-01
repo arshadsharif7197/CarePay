@@ -128,6 +128,7 @@ public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
 
         consentFormDTO = ((PatientModeCheckinActivity) getActivity()).getConsentFormDTO();
         signConsentForm = (Button) view.findViewById(R.id.signButton);
+        signConsentForm.setEnabled(false);
 
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
@@ -341,6 +342,7 @@ public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
 
     private void setEnableNextButtonOnFullScroll() {
         // enable next button on scrolling all the way to the bottom
+
         consentFormScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
@@ -348,10 +350,11 @@ public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
                 int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
 
                 if (diff == 0) {
-                    signConsentForm.setEnabled(true);
+                        signConsentForm.setEnabled(true);
                 }
             }
         });
+
     }
 
     private void setTypefaces(View view) {
@@ -378,7 +381,6 @@ public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
         flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
                                                                      formIndex,
                                                                      ((PatientModeCheckinActivity)getActivity()).getNumConsentForms());
-
     }
 
     @Override

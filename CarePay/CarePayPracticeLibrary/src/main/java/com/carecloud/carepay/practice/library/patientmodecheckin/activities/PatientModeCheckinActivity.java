@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Check
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsRevFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -39,6 +41,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -56,11 +59,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public final static  int SUBFLOW_CONSENT          = 1;
     public final static  int SUBFLOW_INTAKE           = 2;
     public final static  int SUBFLOW_PAYMENTS         = 3;
-//    public static final  int NUM_CONSENT_FORMS        = 3;
-//    public static final  int NUM_INTAKE_FORMS         = 3;
     private static final int NUM_OF_SUBFLOWS          = 4;
-    private int numIntakeForms = 3;
-    private int numConsentForms = 3;
+    private              int numIntakeForms           = 3;
+    private              int numConsentForms          = 3;
 
     private DemographicDTO  demographicDTO;
     private CarePayTextView backButton;
@@ -83,9 +84,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private ConsentFormDTO consentFormDTO;
     private TextView       title;
     private FormId showingForm = FormId.FORM1;
-    private View   indicator0;
-    private View   indicator1;
-    private View   indicator2;
     private String readCarefullySign;
     private String medicareDescription;
     private String medicareForm;
@@ -95,6 +93,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private String authorizationDescription1;
     private String authorizationDescription2;
     private String authForm;
+    private PaymentsDTO paymentsDTO;
+
 
     private int consentFormIndex;
     private int intakeFormIndex = 1;
@@ -131,7 +131,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_mode_checkin);
-
         demographicDTO = getConvertedDTO(DemographicDTO.class);
 
         instantiateViewsRefs();
@@ -150,6 +149,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(intakeFormReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     private void instantiateViewsRefs() {
@@ -329,6 +341,23 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         }
     }
 
+
+    /**
+     * Consent form navigation
+     *
+     * @param workflowJson intake DTO
+     */
+    public void getPaymentInformation(String workflowJson) {
+        ResponsibilityFragment responsibilityFragment = new ResponsibilityFragment();
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, workflowJson);
+        //bundle.putString(CarePayConstants.COPAY, workflowJson);
+        responsibilityFragment.setArguments(bundle);
+        navigateToFragment(responsibilityFragment, true);
+    }
+
+
     private Fragment getConsentForm() {
 
         if (showingForm == FormId.FORM1) {
@@ -459,27 +488,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      * @param highlight Whether is hightlight
      */
     public void toggleHighlight(int subflow, boolean highlight) {
-        // limit case
-        if (subflow == SUBFLOW_DEMOGRAPHICS_INS && !highlight) { // can't go before 'demographics'
-            return;
-        }
         // if highlight true, highlight current and reset previous if there is one
         TextView currentSection = (TextView) sectionTitleTextViews[subflow];
-        TextView prevSection = subflow > SUBFLOW_DEMOGRAPHICS_INS ? (TextView) sectionTitleTextViews[subflow - 1] : null;
         if (highlight) {
             SystemUtil.setGothamRoundedBoldTypeface(this, currentSection);
             currentSection.setTextColor(ContextCompat.getColor(this, R.color.white));
-            if (prevSection != null) {
-                SystemUtil.setGothamRoundedLightTypeface(this, prevSection);
-                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
-            }
         } else { // if highlight false, reset current and hightlight previous if there is one
-            if (prevSection != null) {
-                SystemUtil.setGothamRoundedLightTypeface(this, currentSection);
-                currentSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
-                SystemUtil.setGothamRoundedBoldTypeface(this, prevSection);
-                prevSection.setTextColor(ContextCompat.getColor(this, R.color.white));
-            }
+            SystemUtil.setGothamRoundedLightTypeface(this, currentSection);
+            currentSection.setTextColor(ContextCompat.getColor(this, R.color.white_opacity_60));
         }
     }
 
@@ -553,7 +569,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if (currentFlowStateInfo != null) {
             // set the current state
             int subflow = currentFlowStateInfo.subflow;
-            toggleHighlight(currentFlowStateInfo.subflow, true);
+            toggleHighlight(subflow, true);
             if (subflow == SUBFLOW_CONSENT || subflow == SUBFLOW_INTAKE) {
                 toggleVisibleFormCounter(subflow, true);
                 changeCounterOfForm(subflow, currentFlowStateInfo.fragmentIndex, currentFlowStateInfo.maxFragIndex);
@@ -608,18 +624,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if (currentFlowStateInfo.subflow == SUBFLOW_CONSENT) {
             Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
             consentFormIndex = currentFlowStateInfo.fragmentIndex;
-            switch (consentFormIndex) {
-                case 1:
-                    showingForm = FormId.FORM1;
-                    break;
-                case 2:
-                    showingForm = FormId.FORM2;
-                    break;
-                case 3:
-                    showingForm = FormId.FORM3;
-                    break;
-                default:
-                    break;
+
+            if (consentFormIndex == 1) {
+                showingForm = FormId.FORM1;
+            } else {
+                showingForm = showingForm.prev();
             }
             super.onBackPressed();
         } else if (currentFlowStateInfo.subflow == SUBFLOW_INTAKE) {
