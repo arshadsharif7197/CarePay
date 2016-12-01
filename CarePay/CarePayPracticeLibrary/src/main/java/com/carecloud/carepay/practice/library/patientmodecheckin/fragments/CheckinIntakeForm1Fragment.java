@@ -51,13 +51,13 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
 
     private Button continueButton;
 
-    private WebView             mWebView;
-    private TextView            headerTitleTextView;
+    private WebView mWebView;
+    private TextView headerTitleTextView;
     private IntakeResponseModel inTakeForm;
-    private Toolbar             intakeFormsToolbar;
-    private LabelModel          labelsModel;
-    private Button              nextButton;
-    private StepProgressBar     mStepProgressBar;
+    private Toolbar intakeFormsToolbar;
+    private LabelModel labelsModel;
+    private Button nextButton;
+    private StepProgressBar mStepProgressBar;
     public String TAG = CheckinIntakeForm1Fragment.class.getSimpleName();
     private View view;
     private int formIndex;
@@ -71,13 +71,12 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
 
-
         return view;
     }
 
 
     /**
-     * TODO REMOVE LOGIC FOR WorkflowServiceHelper from consent dto
+     * Call to intake forms in order to get Findings if any.
      */
     public void getIntakeFormData() {
 
@@ -112,35 +111,36 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         }
     };
 
+    /**
+     * Initialize objects after getting intake form data.
+     */
     public void initForm() {
         labelsModel = inTakeForm.getMetadata().getLabel();
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.intakeBtnNext);
         nextButton.setEnabled(true);
         nextButton.setText(labelsModel.getNextQuestionButtonText());
-        formCurrentIntakesForm=1;
+        formCurrentIntakesForm = 1;
 
         //call javascript to show next intake form.
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(formCurrentIntakesForm >= (formTotalIntakesForms-1)){
+                if (formCurrentIntakesForm >= (formTotalIntakesForms - 1)) {
                     nextButton.setText(labelsModel.getFinishQuestionsButtonText());
-                }else{
+                } else {
                     nextButton.setText(labelsModel.getNextQuestionButtonText());
                 }
 
                 nextIntakeFormDisplayed();
             }
         });
-
         //init webview
         mWebView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
         //speed webview loading
-        if (Build.VERSION.SDK_INT >= 19) {
+        if (Build.VERSION.SDK_INT >= 19){
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        }
-        else {
+        } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -159,7 +159,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
      * Call java script functions to change intake form index
      */
     public void nextIntakeFormDisplayed() {
-        if (formIndex < ((PatientModeCheckinActivity)getActivity()).getNumIntakeForms()) {
+        if (formIndex < ((PatientModeCheckinActivity) getActivity()).getNumIntakeForms()) {
             ++formIndex;
             ((PatientModeCheckinActivity) getActivity()).setIntakeFormIndex(formIndex);
             flowStateInfo.fragmentIndex = formIndex;
@@ -209,12 +209,12 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
             return null;
         }
 
-        // Should accept a collection of XML encoded answers.
+        /**
+         * Submit answers from web view to endpoint update_intake
+         * */
         @JavascriptInterface
         public void saveAnswers(String intakeFormModelList) {
-
             updateIntakeForm(intakeFormModelList);
-
         }
 
         @JavascriptInterface
@@ -224,7 +224,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
     }
 
     /**
-     * TODO update workservice helper when available
+     * Update intakes forms based on answers.
      */
     public void updateIntakeForm(String jsonAnswers) {
 
@@ -273,11 +273,11 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         Gson gson = new Gson();
         inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
         getIntakeFormData();
-        formTotalIntakesForms=inTakeForm.getPayload().getIntakeForms().size();
+        formTotalIntakesForms = inTakeForm.getPayload().getIntakeForms().size();
         ((PatientModeCheckinActivity) getActivity()).setNumIntakeForms(inTakeForm.getPayload().getIntakeForms().size());
         flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_INTAKE,
-                                                                     formIndex,
-                                                                     ((PatientModeCheckinActivity)getActivity()).getNumIntakeForms());
+                formIndex,
+                ((PatientModeCheckinActivity) getActivity()).getNumIntakeForms());
 
     }
 
