@@ -26,6 +26,11 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="Theme.MyDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <!-- Home Screen -->
     <style name="HomeScreenAlertStyle">
         <item name="android:layout_width">wrap_content</item>

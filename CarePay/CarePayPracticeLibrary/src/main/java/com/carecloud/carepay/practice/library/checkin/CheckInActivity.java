@@ -169,7 +169,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                 AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
                 if (appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase(getString(R.string.checked_in))) {
                     waitingRoomAppointments.add(appointmentPayloadDTO);
-                } else {
+                } else if(!appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase("Cancelled")) {
                     checkingInAppointments.add(appointmentPayloadDTO);
                 }
                 addProviderOnProviderFilterList(doctorsList, appointmentPayloadDTO);

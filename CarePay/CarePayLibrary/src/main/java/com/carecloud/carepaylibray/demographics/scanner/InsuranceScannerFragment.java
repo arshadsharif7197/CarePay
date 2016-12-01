@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -288,10 +289,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         if (insuranceDTO != null) {
             // populate with images
             List<DemographicInsurancePhotoDTO> photos = insuranceDTO.getInsurancePhotos();
-            if (photos == null) {
-                Log.v(LOG_TAG, InsuranceScannerFragment.class.getSimpleName() + " no insurance photos");
-            } else {
-                if (photos.size() > 0) {
+            if (photos != null && photos.size() > 0) {
+                // add the first photo
                     String photoFrontURL = photos.get(0).getInsurancePhoto();
                     try {
                         URL url = new URL(photoFrontURL);
@@ -302,8 +301,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
                         btnScanFrontInsurance.setText(label);
                     } catch (MalformedURLException e) {
-//                        Log.d(LOG_TAG, "invalid url: " + photoFrontURL);
-                        // test if base64
                         Bitmap bitmap;
                         if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.base64ToBitmap(photoFrontURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
@@ -315,8 +312,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                                                                                               R.drawable.icn_camera));
                         }
                     }
-                }
 
+                // add the second photo
                 if (photos.size() > 1) {
                     String photoBackURL = photos.get(1).getInsurancePhoto();
                     try {
@@ -328,8 +325,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
                         btnScanBackInsurance.setText(label1);
                     } catch (MalformedURLException e) {
-//                        Log.d(LOG_TAG, "invalid url: " + photoBackURL);
-                        // test if base64
                         Bitmap bitmap;
                         if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.base64ToBitmap(photoBackURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
@@ -344,10 +339,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                 }
             }
         }
-
-        // (used for Review)
-//        insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
-//        insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
 
         String insProvider = insuranceDTO.getInsuranceProvider();
         if (!StringUtil.isNullOrEmpty(insProvider)) {
@@ -469,22 +460,35 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
      *
      * @param insuranceDTO The DTO
      */
-    public void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO) {
+    public void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {
         this.insuranceDTO = insuranceDTO;
         List<DemographicInsurancePhotoDTO> photoDTOs = insuranceDTO.getInsurancePhotos();
         if (photoDTOs == null) { // create the list of photos (front and back) if null
             photoDTOs = new ArrayList<>();
             // create two empty photos DTOs
-            photoDTOs.add(new DemographicInsurancePhotoDTO());
-            photoDTOs.add(new DemographicInsurancePhotoDTO());
+            DemographicInsurancePhotoDTO frontPhoto = new DemographicInsurancePhotoDTO();
+            DemographicInsurancePhotoDTO backPhoto = new DemographicInsurancePhotoDTO();
+            frontPhoto.setInsurancePhoto(placeholderBase64);
+            backPhoto.setInsurancePhoto(placeholderBase64);
+            photoDTOs.add(frontPhoto);
+            photoDTOs.add(backPhoto);
             this.insuranceDTO.setInsurancePhotos(photoDTOs);
+            Log.v("ins_scanner", "loaded both placeholder (null)");
         } else {
             if (photoDTOs.size() == 0) {
                 // create two empty photos DTOs
-                photoDTOs.add(new DemographicInsurancePhotoDTO());
-                photoDTOs.add(new DemographicInsurancePhotoDTO());
+                DemographicInsurancePhotoDTO frontPhoto = new DemographicInsurancePhotoDTO();
+                DemographicInsurancePhotoDTO backPhoto = new DemographicInsurancePhotoDTO();
+                frontPhoto.setInsurancePhoto(placeholderBase64);
+                backPhoto.setInsurancePhoto(placeholderBase64);
+                photoDTOs.add(frontPhoto);
+                photoDTOs.add(backPhoto);
+                Log.v("ins_scanner", "loaded both placeholder (size 0)");
             } else if (photoDTOs.size() == 1) {
-                photoDTOs.add(1, new DemographicInsurancePhotoDTO()); // create the second
+                DemographicInsurancePhotoDTO backPhoto = new DemographicInsurancePhotoDTO();
+                backPhoto.setInsurancePhoto(placeholderBase64);
+                photoDTOs.add(1, backPhoto); // create the second
+                Log.v("ins_scanner", "loaded second placeholder");
             }
         }
     }
