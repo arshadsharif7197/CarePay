@@ -29,7 +29,7 @@
                 style="@style/PaymentEditTextStyle"
                 android:hint="@string/credit_card_number"
                 android:inputType="textEmailAddress"
-                android:maxLength="20"
+                android:maxLength="19"
                 android:digits="@string/restrict_digits_space"/>
 
 

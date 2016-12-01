@@ -638,6 +638,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             if (intakeFormIndex == 0) {
                 intakeFormIndex = 1;
                 super.onBackPressed();
+            }else{
+                getFragmentManager().popBackStack();
+                CheckinIntakeForm1Fragment intakeForm1Fragment = (CheckinIntakeForm1Fragment)  getSupportFragmentManager().findFragmentByTag(CheckinIntakeForm1Fragment.class.getSimpleName());
+                if(intakeForm1Fragment != null ){
+                    //intakeForm1Fragment.previousIntakeForm();
+                }
             }
         } else {
             super.onBackPressed();
