@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentsMetadataModel {
 
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
     private PaymentsLabelDTO paymentsLabel;
     @SerializedName("links")

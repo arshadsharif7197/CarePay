@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
+
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -53,6 +54,15 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_close_button")
     @Expose
     private String paymentCloseButton;
+    @SerializedName("payment_partial_amount_title")
+    @Expose
+    private String paymentPartialAmountTitle;
+    @SerializedName("payment_pay_total_amount_button")
+    @Expose
+    private String paymentPayTotalAmountButton;
+    @SerializedName("payment_partial_amount_button")
+    @Expose
+    private String paymentPartialAmountButton;
 
     /**
      * @return The demographicsCheckinHeading
@@ -278,4 +288,45 @@ public class PaymentsLabelDTO {
         this.paymentCloseButton = paymentCloseButton;
     }
 
+    /**
+     * @return The paymentPartialAmountTitle
+     */
+    public String getPaymentPartialAmountTitle() {
+        return StringUtil.getLabelForView(paymentPartialAmountTitle);
+    }
+
+    /**
+     * @param paymentPartialAmountTitle The payment_partial_amount_title
+     */
+    public void setPaymentPartialAmountTitle(String paymentPartialAmountTitle) {
+        this.paymentPartialAmountTitle = paymentPartialAmountTitle;
+    }
+
+    /**
+     * @return The paymentPayTotalAmountButton
+     */
+    public String getPaymentPayTotalAmountButton() {
+        return StringUtil.getLabelForView(paymentPayTotalAmountButton);
+    }
+
+    /**
+     * @param paymentPayTotalAmountButton The payment_pay_total_amount_button
+     */
+    public void setPaymentPayTotalAmountButton(String paymentPayTotalAmountButton) {
+        this.paymentPayTotalAmountButton = paymentPayTotalAmountButton;
+    }
+
+    /**
+     * @return The paymentPartialAmountButton
+     */
+    public String getPaymentPartialAmountButton() {
+        return StringUtil.getLabelForView(paymentPartialAmountButton);
+    }
+
+    /**
+     * @param paymentPartialAmountButton The payment_partial_amount_button
+     */
+    public void setPaymentPartialAmountButton(String paymentPartialAmountButton) {
+        this.paymentPartialAmountButton = paymentPartialAmountButton;
+    }
 }

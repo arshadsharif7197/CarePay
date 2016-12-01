@@ -88,10 +88,12 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         // Current date
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
         Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // Appointment date
         String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
         Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         String strDay;

@@ -51,7 +51,7 @@ public abstract class BasePracticeActivity extends AppCompatActivity implements 
      * @param <S>      Dynamic class to convert
      * @return Dynamic converted class object
      */
-    public <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+    public static  <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
 
         if (!StringUtil.isNullOrEmpty(jsonString)) {
             Gson gson = new Gson();

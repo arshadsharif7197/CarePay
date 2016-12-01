@@ -10,6 +10,7 @@ import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInAct
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -106,8 +107,18 @@ public class PracticeNavigationHelper {
                 break;
             }
             case PracticeNavigationStateConstants.INTAKE_FORMS: {
-//                intent = new Intent(context, InTakeWebViewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                if (context instanceof PracticeAppSignatureActivity) {
+                    ((PracticeAppSignatureActivity) context).launchIntake(workflowDTO.toString());
+                    ((PracticeAppSignatureActivity) context).finish();
+                    return;
+                }
+                break;
+            }
+            case PracticeNavigationStateConstants.PAYMENTS: {
+                if (context instanceof PatientModeCheckinActivity) {
+                    ((PatientModeCheckinActivity) context).getPaymentInformation(workflowDTO.toString());
+                    return;
+                }
                 break;
             }
             default: {

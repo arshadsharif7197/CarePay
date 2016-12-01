@@ -23,6 +23,10 @@ public class LabelModel {
     @SerializedName("finish_questions_button_text")
     @Expose
     private String finishQuestionsButtonText;
+    @SerializedName("intake_form_fill_warning")
+    @Expose
+    private String intakeFormFillWarningTitle;
+
 
     /**
      *
@@ -131,5 +135,24 @@ public class LabelModel {
     public void setFinishQuestionsButtonText(String finishQuestionsButtonText) {
         this.finishQuestionsButtonText = finishQuestionsButtonText;
     }
+
+    /**
+     *
+     * @return
+     * The intakeFormFillWarningTitle
+     */
+    public String getIntakeFormFillWarningTitle() {
+        return intakeFormFillWarningTitle;
+    }
+
+    /**
+     *
+     * @param intakeFormFillWarningTitle
+     * The intake_form_fill_warning
+     */
+    public void setIntakeFormFillWarningTitle(String intakeFormFillWarningTitle) {
+        this.intakeFormFillWarningTitle = intakeFormFillWarningTitle;
+    }
+
 
 }

@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.signin;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -282,10 +283,10 @@ public class SigninActivity extends BasePracticeActivity {
 
     private void setEnabledSigninButton(boolean enabled) {
         if (!enabled) {
-            signInButton.setBackground(getResources().getDrawable(R.drawable.bg_silver_overlay));
+            signInButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_silver_overlay));
         } else {
 
-            signInButton.setBackground(getResources().getDrawable(R.drawable.bg_green_overlay));
+            signInButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_green_overlay));
         }
         signInButton.setEnabled(enabled);
     }
