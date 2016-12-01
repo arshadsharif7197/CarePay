@@ -35,7 +35,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
                 android:background="@drawable/button_blue_border"
-                android:text="@string/add_new_credit_card"
                 android:textColor="@color/bright_cerulean" />
 
             <Button
@@ -45,8 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/addNewCardButton"
                 android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                android:background="@drawable/button_selector"
-                android:text="@string/next" />
+                android:background="@drawable/button_selector" />
 
         </RelativeLayout>
     </RelativeLayout>

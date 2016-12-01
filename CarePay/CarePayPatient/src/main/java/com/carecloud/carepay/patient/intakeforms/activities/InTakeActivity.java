@@ -26,8 +26,8 @@ import com.carecloud.carepay.patient.intakeforms.services.InTakeService;
 import com.carecloud.carepay.patient.intakeforms.utils.JsonFormParseSimulator;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
@@ -127,7 +127,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
                                     && intakeResponseModel.getPayload().getPayments().getPayload() != null) {
                                 Intent intent = new Intent(InTakeActivity.this, PaymentActivity.class);
                                 ArrayList<PayloadPaymentModel> paymentList = intakeResponseModel.getPayload().getPayments().getPayload();
-                                intent.putExtra(CarePayConstants.INTAKE_BUNDLE, paymentList);
+                                intent.putExtra(CarePayConstants.INTAKE_BUNDLE, intakeResponseModel);
                                 startActivity(intent);
                             }
                         }

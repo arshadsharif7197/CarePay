@@ -19,6 +19,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -156,6 +157,13 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 if (fragment == null) {
                     fragment = new ChooseCreditCardFragment();
                 }
+
+                Bundle arguments = getArguments();
+                Bundle args = new Bundle();
+                args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                fragment.setArguments(args);
+
                 FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
                 fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
                 fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());

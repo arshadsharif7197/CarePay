@@ -41,7 +41,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -93,7 +93,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private String authorizationDescription1;
     private String authorizationDescription2;
     private String authForm;
-    private PaymentsDTO paymentsDTO;
+    private PaymentsModel paymentsDTO;
 
 
     private int consentFormIndex;
