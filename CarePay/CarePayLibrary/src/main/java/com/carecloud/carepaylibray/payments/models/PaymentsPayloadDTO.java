@@ -17,7 +17,7 @@ public class PaymentsPayloadDTO {
     private PaymentsPayloadIntakeFormsDTO intakeForms;
     @SerializedName("patient_balances")
     @Expose
-    private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();;
+    private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();
     @SerializedName("payment_settings")
     @Expose
     private PaymentsPayloadSettingsDTO paymentSettings;
