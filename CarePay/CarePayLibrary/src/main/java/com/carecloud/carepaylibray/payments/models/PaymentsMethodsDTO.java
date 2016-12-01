@@ -6,15 +6,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentsMethodsDTO {
 
-    @SerializedName("short_name")
+
+    @SerializedName("type")
     @Expose
-    private String shortName;
-    @SerializedName("long_name")
-    @Expose
-    private String longName;
+    private String type;
     @SerializedName("label")
     @Expose
     private String label;
+    @SerializedName("button_label")
+    @Expose
+    private String buttonLabel;
     @SerializedName("image_url")
     @Expose
     private String imageUrl;
@@ -22,37 +23,19 @@ public class PaymentsMethodsDTO {
     /**
      *
      * @return
-     * The shortName
+     * The type
      */
-    public String getShortName() {
-        return shortName;
+    public String getType() {
+        return type;
     }
 
     /**
      *
-     * @param shortName
-     * The short_name
+     * @param type
+     * The type
      */
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    /**
-     *
-     * @return
-     * The longName
-     */
-    public String getLongName() {
-        return longName;
-    }
-
-    /**
-     *
-     * @param longName
-     * The long_name
-     */
-    public void setLongName(String longName) {
-        this.longName = longName;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
@@ -71,6 +54,24 @@ public class PaymentsMethodsDTO {
      */
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    /**
+     *
+     * @return
+     * The buttonLabel
+     */
+    public String getButtonLabel() {
+        return buttonLabel;
+    }
+
+    /**
+     *
+     * @param buttonLabel
+     * The button_label
+     */
+    public void setButtonLabel(String buttonLabel) {
+        this.buttonLabel = buttonLabel;
     }
 
     /**
