@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class PaymentsModel implements Serializable {
 
-    @SerializedName("paymentsMetadata")
+    @SerializedName("metadata")
     @Expose
     private PaymentsMetadataModel paymentsMetadata;
     @SerializedName("payload")

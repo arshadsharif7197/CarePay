@@ -33,6 +33,7 @@ public class PaymentActivity extends BasePatientActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
                 intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
+        bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTO);
         fragment.setArguments(bundle);
         fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
                 ResponsibilityFragment.class.getSimpleName()).commit();

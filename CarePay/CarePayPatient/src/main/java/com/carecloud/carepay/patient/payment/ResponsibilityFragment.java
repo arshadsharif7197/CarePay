@@ -89,9 +89,12 @@ public class ResponsibilityFragment extends Fragment {
                     fragment = new PaymentMethodFragment();
                 }
 
-                //Bundle bundle = new Bundle();
-                //bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
-                //fragment.setArguments(bundle);
+                Bundle arguments = getArguments();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                fragment.setArguments(bundle);
+
                 FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
                 fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
                 fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());

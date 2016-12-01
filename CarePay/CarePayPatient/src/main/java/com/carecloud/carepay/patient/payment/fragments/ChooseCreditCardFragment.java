@@ -41,7 +41,6 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
     private Button nextButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
-//    private String[] creditCardsArray;
 
     private PaymentsModel paymentsModel;
 
