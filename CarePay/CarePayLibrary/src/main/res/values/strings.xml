@@ -370,10 +370,12 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="check">Check</string>
     <string name="paypal">Paypal</string>
     <string name="apple_pay">Apple Pay</string>
+    <string name="google_pay">Google Pay</string>
     <string name="choose_payment_method">CHOOSE PAYMENT METHOD</string>
     <string name="choose_credit_card">CHOOSE CREDIT CARD</string>
     <string name="create_payment_plan_instead">CREATE PAYMENT PLAN INSTEAD</string>
     <string name="pay_using_apple_pay">PAY USING APPLE PAY</string>
+    <string name="pay_using_google_pay">PAY USING GOOGLE PAY</string>
     <string name="pay_using_paypal">PAY USING PAYPAL</string>
     <string name="scan_check">SCAN CHECK</string>
     <string name="next">NEXT</string>
