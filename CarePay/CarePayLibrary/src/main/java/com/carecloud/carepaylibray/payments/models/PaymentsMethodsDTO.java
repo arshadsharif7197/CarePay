@@ -6,47 +6,89 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentsMethodsDTO {
 
-    @SerializedName("method")
+    @SerializedName("short_name")
     @Expose
-    private String method;
-    @SerializedName("url")
+    private String shortName;
+    @SerializedName("long_name")
     @Expose
-    private String url;
+    private String longName;
+    @SerializedName("label")
+    @Expose
+    private String label;
+    @SerializedName("image_url")
+    @Expose
+    private String imageUrl;
 
     /**
-     * 
+     *
      * @return
-     *     The method
+     * The shortName
      */
-    public String getMethod() {
-        return method;
+    public String getShortName() {
+        return shortName;
     }
 
     /**
-     * 
-     * @param method
-     *     The method
+     *
+     * @param shortName
+     * The short_name
      */
-    public void setMethod(String method) {
-        this.method = method;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     /**
-     * 
+     *
      * @return
-     *     The url
+     * The longName
      */
-    public String getUrl() {
-        return url;
+    public String getLongName() {
+        return longName;
     }
 
     /**
-     * 
-     * @param url
-     *     The url
+     *
+     * @param longName
+     * The long_name
      */
-    public void setUrl(String url) {
-        this.url = url;
+    public void setLongName(String longName) {
+        this.longName = longName;
+    }
+
+    /**
+     *
+     * @return
+     * The label
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     *
+     * @param label
+     * The label
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
+     *
+     * @return
+     * The imageUrl
+     */
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    /**
+     *
+     * @param imageUrl
+     * The image_url
+     */
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }
