@@ -3,6 +3,9 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Rahul on 11/30/16.
  */
@@ -14,7 +17,7 @@ public class PaymentsPayloadDTO {
     private PaymentsPayloadIntakeFormsDTO intakeForms;
     @SerializedName("patient_balances")
     @Expose
-    private PaymentsPatientBalancessDTO patientBalances;
+    private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();;
     @SerializedName("payment_settings")
     @Expose
     private PaymentsPayloadSettingsDTO paymentSettings;

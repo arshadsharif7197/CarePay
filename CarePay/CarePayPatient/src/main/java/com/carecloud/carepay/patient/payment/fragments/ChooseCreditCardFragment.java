@@ -22,10 +22,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.models.PaymentCreditCardPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPatientCreditCardsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -101,11 +101,11 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         if (paymentsModel != null) {
-            PaymentPatientCreditCardsDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
-            List<PaymentCreditCardPayloadDTO> creditCardList = patientCreditCards.getPayload();
+            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
+            List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
 
             for (int i = 0; i < creditCardList.size(); i++) {
-                PaymentCreditCardPayloadDTO creditCardItem = creditCardList.get(i);
+                PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
                 chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
                         getEncodedCardNumber(creditCardItem.getCardType(), creditCardItem.getCardNumber()), i),
                         radioGroupLayoutParam);

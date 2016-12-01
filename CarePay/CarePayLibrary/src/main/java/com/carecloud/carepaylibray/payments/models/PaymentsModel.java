@@ -13,7 +13,7 @@ public class PaymentsModel implements Serializable {
     private PaymentsMetadataModel paymentsMetadata;
     @SerializedName("payload")
     @Expose
-    private PaymentPayloadModel paymentPayload;
+    private PaymentsPayloadDTO paymentPayload;
     @SerializedName("state")
     @Expose
     private String state;
@@ -32,11 +32,11 @@ public class PaymentsModel implements Serializable {
         this.paymentsMetadata = paymentsMetadata;
     }
 
-    public PaymentPayloadModel getPaymentPayload() {
+    public PaymentsPayloadDTO getPaymentPayload() {
         return paymentPayload;
     }
 
-    public void setPaymentPayload(PaymentPayloadModel paymentPayload) {
+    public void setPaymentPayload(PaymentsPayloadDTO paymentPayload) {
         this.paymentPayload = paymentPayload;
     }
 
