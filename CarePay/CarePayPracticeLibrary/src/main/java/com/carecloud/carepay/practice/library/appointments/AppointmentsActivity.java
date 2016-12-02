@@ -174,6 +174,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
      * Method to update appointment list to UI
      */
     private void getAppointmentList() {
+        populateWithLabels();
         if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
                 && appointmentsResultModel.getPayload().getAppointments() != null
                 && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
@@ -182,7 +183,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
 
             appointmentListWithToday = new ArrayList<>();
-            populateWithLabels();
+
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
                 String title = getToday(appointmentDTO.getPayload().getStartTime());
                 if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {

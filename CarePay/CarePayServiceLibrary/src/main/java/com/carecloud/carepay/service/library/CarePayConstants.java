@@ -39,6 +39,7 @@ public class CarePayConstants {
     public static final String INTAKE_BUNDLE  = "intake_bundle";
     public static final String COPAY  = "Copay";
     public static final String ACCOUNT  = "Account";
+    public static final String PATIENT  = "Patient";
     public static final String DOLLAR  = "$";
     public static final String RESPONSIBILITY_FORMATTER  = "#0.00";
 

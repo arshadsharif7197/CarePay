@@ -100,4 +100,20 @@ public class PaymentsPayloadDTO {
         this.patientCreditCards = patientCreditCards;
     }
 
+    /**
+     *
+     * @return The patientBalances
+     */
+    public List<PaymentsPatientBalancessDTO> getPatientBalances() {
+        return patientBalances;
+    }
+
+    /**
+     *
+     * @param patientBalances The patient_balances
+     */
+    public void setPatientBalances(List<PaymentsPatientBalancessDTO>patientBalances) {
+        this.patientBalances = patientBalances;
+    }
+
 }

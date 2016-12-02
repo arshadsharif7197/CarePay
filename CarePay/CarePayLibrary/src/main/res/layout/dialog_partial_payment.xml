@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content" />
             <EditText
                 android:layout_width="wrap_content"
-                android:hint="108.00"
+                android:hint="0.00"
                 android:textSize="@dimen/payment_header_amount_size"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white_transparent"
