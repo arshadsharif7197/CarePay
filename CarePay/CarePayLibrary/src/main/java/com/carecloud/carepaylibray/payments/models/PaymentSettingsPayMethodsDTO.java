@@ -24,15 +24,9 @@ public class PaymentSettingsPayMethodsDTO {
     @SerializedName("paypal")
     @Expose
     private Boolean paypal;
-    @SerializedName("apple_pay")
-    @Expose
-    private Boolean applePay;
     @SerializedName("android_pay")
     @Expose
     private Boolean androidPay;
-    @SerializedName("venmo")
-    @Expose
-    private Boolean venmo;
 
     /**
      *
@@ -127,24 +121,6 @@ public class PaymentSettingsPayMethodsDTO {
     /**
      *
      * @return
-     * The applePay
-     */
-    public Boolean getApplePay() {
-        return applePay;
-    }
-
-    /**
-     *
-     * @param applePay
-     * The apple_pay
-     */
-    public void setApplePay(Boolean applePay) {
-        this.applePay = applePay;
-    }
-
-    /**
-     *
-     * @return
      * The androidPay
      */
     public Boolean getAndroidPay() {
@@ -160,21 +136,4 @@ public class PaymentSettingsPayMethodsDTO {
         this.androidPay = androidPay;
     }
 
-    /**
-     *
-     * @return
-     * The venmo
-     */
-    public Boolean getVenmo() {
-        return venmo;
-    }
-
-    /**
-     *
-     * @param venmo
-     * The venmo
-     */
-    public void setVenmo(Boolean venmo) {
-        this.venmo = venmo;
-    }
 }
