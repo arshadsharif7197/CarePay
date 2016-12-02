@@ -47,8 +47,10 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        String titleLabel = "";
         Bundle arguments = getArguments();
         if (arguments != null) {
+            titleLabel = arguments.getString("payment_method");
             paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
         }
 
@@ -57,9 +59,10 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         activity = getActivity();
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(R.string.credit_card);
+        title.setText(titleLabel);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
+
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);

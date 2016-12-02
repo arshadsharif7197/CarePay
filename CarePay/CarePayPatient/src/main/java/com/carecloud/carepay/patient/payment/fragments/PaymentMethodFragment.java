@@ -33,6 +33,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private Button paymentChoiceButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
+    private String selectedPaymentMethod;
     private String[] paymentMethodsArray;
     private String[] createPaymentMethodButtonCaptionArray;
     private int[] paymentMethodsDrawableArray;
@@ -119,6 +120,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         for (int i = 0; i < paymentMethodsArray.length; i++) {
             if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentMethodsArray[i])) {
+                selectedPaymentMethod = selectedRadioButton.getText().toString();
                 paymentChoiceButton.setText(createPaymentMethodButtonCaptionArray[i]);
             }
         }
@@ -160,6 +162,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
                 Bundle arguments = getArguments();
                 Bundle args = new Bundle();
+                args.putString("payment_method", selectedPaymentMethod);
                 args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
                         arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
                 fragment.setArguments(args);
