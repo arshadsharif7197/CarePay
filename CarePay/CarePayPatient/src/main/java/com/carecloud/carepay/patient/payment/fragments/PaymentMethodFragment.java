@@ -80,7 +80,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         if (bundle != null) {
             paymentsDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
         }
-        getLabels();
         return view;
     }
 
@@ -163,6 +162,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private View.OnClickListener paymentChoiceButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            getLabels();
             if (paymentChoiceButton.getText().equals(getString(R.string.choose_credit_card))) {
                 FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                 ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
@@ -183,7 +183,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 fragmentTransaction.commit();
 
             }else if (paymentChoiceButton.getText().equals(getString(R.string.cash))) {
-                new LargeAlertDialog(getActivity(), "Please See The Front Desk","BACK TO PAYMENTS", new LargeAlertDialog.LargeAlertInterface(){
+                new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface(){
                     @Override
                     public void onActionButton() {
                     }
