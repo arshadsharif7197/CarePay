@@ -20,8 +20,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,11 +41,17 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
     private Button nextButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
-    private String[] creditCardsArray;
+
+    private PaymentsModel paymentsModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_choose_credit_card, container, false);
         activity = getActivity();
@@ -55,10 +69,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
         radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
 
-        // TODO : Change the array to dynamic credit cards info from APIs
-        creditCardsArray = new String[]{"VISA 4567 ****", "MasterCard 0123 ****"};
-
-        initilizeViews(view);
+        initializeViews(view);
         return view;
     }
 
@@ -70,7 +81,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         radioButtonView.setText(cardInfo);
         radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.payment_credit_card_button_selector, 0, R.drawable.check_box_intake, 0);
-        radioButtonView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+        radioButtonView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         radioButtonView.setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
         radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));
         radioButtonView.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin));
@@ -78,27 +89,48 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         return radioButtonView;
     }
 
-    private void initilizeViews(View view) {
+    private void initializeViews(View view) {
         chooseCreditCardRadioGroup = (RadioGroup) view.findViewById(R.id.chooseCreditCardRadioGroup);
-        nextButton = (Button) view.findViewById(R.id.nextButton);
-        addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         chooseCreditCardRadioGroup.setOnCheckedChangeListener(this);
+
+        nextButton = (Button) view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(nextButtonListener);
-        addNewCardButton.setOnClickListener(addNewCardButtonListener);
         nextButton.setVisibility(View.INVISIBLE);
 
-        for (int i = 0; i < creditCardsArray.length; i++) {
-            chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(creditCardsArray[i], i),
-                    radioGroupLayoutParam);
+        addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
-            View dividerLineView = new View(activity);
-            dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 1
-            ));
-            dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
-            chooseCreditCardRadioGroup.addView(dividerLineView);
-            onSetRadioButtonRegularTypeFace();
+        if (paymentsModel != null) {
+            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
+            List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
+
+            for (int i = 0; i < creditCardList.size(); i++) {
+                PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
+                chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
+                        getEncodedCardNumber(creditCardItem.getCardType(), creditCardItem.getCardNumber()), i),
+                        radioGroupLayoutParam);
+
+                View dividerLineView = new View(activity);
+                dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, 1
+                ));
+
+                dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
+                chooseCreditCardRadioGroup.addView(dividerLineView);
+                onSetRadioButtonRegularTypeFace();
+            }
+
+            PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
+            nextButton.setText(paymentsLabel.getPaymentNextButton());
+            addNewCardButton.setText(paymentsLabel.getPaymentAddNewCreditCardButton());
         }
+    }
+
+    private String getEncodedCardNumber(String cardType, String cardNumber) {
+        if (!StringUtil.isNullOrEmpty(cardNumber)) {
+            return cardType + " **** " + cardNumber.substring(cardNumber.length() - 4, cardNumber.length());
+        }
+        return "";
     }
 
     @Override
