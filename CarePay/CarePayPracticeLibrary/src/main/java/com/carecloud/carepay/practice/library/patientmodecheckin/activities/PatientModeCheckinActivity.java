@@ -350,9 +350,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void getPaymentInformation(String workflowJson) {
         ResponsibilityFragment responsibilityFragment = new ResponsibilityFragment();
         Bundle bundle = new Bundle();
-        Gson gson = new Gson();
         bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, workflowJson);
-        //bundle.putString(CarePayConstants.COPAY, workflowJson);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, workflowJson);
         responsibilityFragment.setArguments(bundle);
         navigateToFragment(responsibilityFragment, true);
     }
@@ -621,29 +620,36 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
         currentFlowStateInfo = fragment.getFlowStateInfo();
 
-        if (currentFlowStateInfo.subflow == SUBFLOW_CONSENT) {
-            Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
-            consentFormIndex = currentFlowStateInfo.fragmentIndex;
+        if (currentFlowStateInfo != null) {
+            if (currentFlowStateInfo.subflow == SUBFLOW_CONSENT) {
+                Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
+                consentFormIndex = currentFlowStateInfo.fragmentIndex;
 
-            if (consentFormIndex == 1) {
-                showingForm = FormId.FORM1;
-            } else {
-                showingForm = showingForm.prev();
-            }
-            super.onBackPressed();
-        } else if (currentFlowStateInfo.subflow == SUBFLOW_INTAKE) {
-            Log.v("back", "intake: " + currentFlowStateInfo.fragmentIndex);
-            currentFlowStateInfo.fragmentIndex = --intakeFormIndex;
-            updateSection(currentFlowStateInfo);
-            if (intakeFormIndex == 0) {
-                intakeFormIndex = 1;
-                super.onBackPressed();
-            }else{
-                getFragmentManager().popBackStack();
-                CheckinIntakeForm1Fragment intakeForm1Fragment = (CheckinIntakeForm1Fragment)  getSupportFragmentManager().findFragmentByTag(CheckinIntakeForm1Fragment.class.getSimpleName());
-                if(intakeForm1Fragment != null ){
-                    //intakeForm1Fragment.previousIntakeForm();
+                if (consentFormIndex == 1) {
+                    showingForm = FormId.FORM1;
+                } else {
+                    showingForm = showingForm.prev();
                 }
+                super.onBackPressed();
+            } else if (currentFlowStateInfo.subflow == SUBFLOW_INTAKE) {
+                Log.v("back", "intake: " + currentFlowStateInfo.fragmentIndex);
+                currentFlowStateInfo.fragmentIndex = --intakeFormIndex;
+                updateSection(currentFlowStateInfo);
+
+                if (intakeFormIndex == 0) {
+                    intakeFormIndex = 1;
+                    super.onBackPressed();
+                } else {
+                    getFragmentManager().popBackStack();
+                    CheckinIntakeForm1Fragment intakeForm1Fragment = (CheckinIntakeForm1Fragment)
+                            getSupportFragmentManager().findFragmentByTag(CheckinIntakeForm1Fragment.class.getSimpleName());
+
+                    if (intakeForm1Fragment != null) {
+                        //intakeForm1Fragment.previousIntakeForm();
+                    }
+                }
+            } else {
+                super.onBackPressed();
             }
         } else {
             super.onBackPressed();
