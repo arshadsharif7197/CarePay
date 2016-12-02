@@ -100,8 +100,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             shape.setColor(Color.LTGRAY);
             holder.startCheckInTextview.setEnabled(false);
         } else {
-            int color = Color.parseColor("#7ED321");
-            shape.setColor(color);
+            shape.setColor(context.getResources().getColor(R.color.dark_green));
             holder.startCheckInTextview.setClickable(true);
         }
 

@@ -266,14 +266,14 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         if (bitmap != null) {
             if (scanner == insuranceFrontScanHelper) {
                 // change button caption to 'rescan'
-                btnScanFrontInsurance.setText(R.string.demogr_docs_rescan_front);
+                btnScanFrontInsurance.setText(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED:globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel());
                 // save from image
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO frontDTO = insuranceDTO.getInsurancePhotos().get(0);
                 frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
             } else if (scanner == insuranceBackScanHelper) {
                 // change button caption to 'rescan'
-                btnScanBackInsurance.setText(R.string.demogr_docs_rescan_back);
+                btnScanBackInsurance.setText(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED:globalLabelsDTO.getDemographicsDocumentsRescanBackLabel());
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO backDTO = insuranceDTO.getInsurancePhotos().get(1);
                 backDTO.setInsurancePhoto(imageAsBase64); // create the image dto
