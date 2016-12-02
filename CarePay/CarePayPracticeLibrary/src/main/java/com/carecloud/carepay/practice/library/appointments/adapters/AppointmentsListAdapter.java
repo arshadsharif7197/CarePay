@@ -131,8 +131,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.startCheckInTextview.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-                TextView startCheckInTextview=((TextView)v);
+            public void onClick(View view) {
+                TextView startCheckInTextview=((TextView)view);
                 int pos = (Integer) startCheckInTextview.getTag();
                 Map<String, String> queries = new HashMap<>();
                 queries.put("practice_mgmt", ((AppointmentDTO) object).getMetadata().getPracticeMgmt());

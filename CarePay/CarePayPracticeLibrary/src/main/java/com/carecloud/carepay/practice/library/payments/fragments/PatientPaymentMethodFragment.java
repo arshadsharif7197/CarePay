@@ -3,8 +3,6 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -59,7 +57,9 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
         radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
 
-        // TODO : Change the arrays to dynamic payment methods info from APIs
+        /**
+         * Change the arrays to dynamic payment methods info from APIs
+         */
         paymentMethodsArray = new String[]{getString(R.string.credit_card), getString(R.string.cash),
                 getString(R.string.check), getString(R.string.paypal), getString(R.string.android_pay)};
         createPaymentMethodButtonCaptionArray = new String[]{getString(R.string.choose_credit_card),
