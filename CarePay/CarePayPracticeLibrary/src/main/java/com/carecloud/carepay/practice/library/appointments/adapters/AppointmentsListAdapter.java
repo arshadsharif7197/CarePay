@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -23,26 +24,17 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
-
-
-
 
 /**
  * Created by harshal_patil on 10/19/2016.
@@ -101,21 +93,23 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 appointmentLabels.getAppointmentsPracticeCheckin()));
         GradientDrawable shape =  new GradientDrawable();
         shape.setCornerRadius(50.0f);
-        if(!item.getAppointmentStatusModel().getName().equals("Pending"))
-        {
-            shape.setColor(Color.LTGRAY);
-       //     holder.startCheckInTextview.setEnabled(false);
 
-        }else{
-            int color =  Color.parseColor("#7ED321");
+        if (!item.getAppointmentStatusModel().getName().equals("Pending")) {
+            shape.setColor(Color.LTGRAY);
+            holder.startCheckInTextview.setEnabled(false);
+
+        } else {
+            int color = Color.parseColor("#7ED321");
             shape.setColor(color);
             holder.startCheckInTextview.setClickable(true);
         }
-        if(Build.VERSION.SDK_INT>=16) {
+
+        if (Build.VERSION.SDK_INT >= 16) {
             holder.startCheckInTextview.setBackground(shape);
-        }else{
+        } else {
             holder.startCheckInTextview.setBackgroundDrawable(shape);
         }
+
         holder.startCheckInTextview.setBackground(shape);
         String photoUrl = item.getProvider().getPhoto();
         if (TextUtils.isEmpty(photoUrl)) {

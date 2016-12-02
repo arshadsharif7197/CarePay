@@ -2,7 +2,6 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +15,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.activities.Pati
 
 import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_PAYMENTS;
 
+import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
@@ -87,8 +87,15 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
             @Override
             public void onClick(View view) {
                 getPaymentInformation();
-                FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+                PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
+                Bundle arguments = getArguments();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                fragment.setArguments(bundle);
+
+                ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
 
             }
         });
