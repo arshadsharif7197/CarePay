@@ -27,9 +27,9 @@ import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayload
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -127,7 +127,6 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
-                    Log.e(LOG_TAG, ex.getMessage());
                 }
             }
         }
