@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.payments.services;
 
 
-import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 import org.json.JSONObject;
 
@@ -19,6 +19,6 @@ public interface PaymentsService {
     Call<Object> updateCarePayPayment(@Body JSONObject carePayPaymentsModel);
 
     @GET(value = "dev/workflow/carepay/patient_checkin/payments/information")
-    Call<PaymentsDTO> fetchPaymentInformation( );
+    Call<PaymentsModel> fetchPaymentInformation( );
 
 }

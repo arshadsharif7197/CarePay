@@ -22,11 +22,9 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
-import com.carecloud.carepaylibray.intake.models.PaymentModel;
-import com.carecloud.carepaylibray.intake.models.PaymentsModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
 import com.google.gson.JsonObject;
 
@@ -57,7 +55,7 @@ public class ResponsibilityFragment extends Fragment {
     private TextView responseTotal;
     private TextView responseCopay;
     private TextView responsePreviousBalance;
-    private PaymentsDTO paymentDTO = null;
+    private PaymentsModel paymentDTO = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,9 +89,12 @@ public class ResponsibilityFragment extends Fragment {
                     fragment = new PaymentMethodFragment();
                 }
 
-                //Bundle bundle = new Bundle();
-                //bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
-                //fragment.setArguments(bundle);
+                Bundle arguments = getArguments();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                fragment.setArguments(bundle);
+
                 FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
                 fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
                 fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
@@ -149,15 +150,15 @@ public class ResponsibilityFragment extends Fragment {
     private void getPaymentInformation() {
         PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
                 .createService(PaymentsService.class);
-        Call<PaymentsDTO> call = paymentService.fetchPaymentInformation();
-        call.enqueue(new Callback<PaymentsDTO>() {
+        Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
+        call.enqueue(new Callback<PaymentsModel>() {
             @Override
-            public void onResponse(Call<PaymentsDTO> call, Response<PaymentsDTO> response) {
-                PaymentsDTO paymentsDTO = response.body();
+            public void onResponse(Call<PaymentsModel> call, Response<PaymentsModel> response) {
+                PaymentsModel paymentsDTO = response.body();
             }
 
             @Override
-            public void onFailure(Call<PaymentsDTO> call, Throwable throwable) {
+            public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
             }
         });
     }

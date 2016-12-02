@@ -17,9 +17,9 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
-import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
@@ -39,9 +39,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private double fullAmount = 0.00;
     private String amountMsg = "Pending amount: ";
     private String amountSymbol = "$";
-    PaymentsDTO paymentsDTO;
+    PaymentsModel paymentsDTO;
     private PaymentsLabelDTO paymentsLabelsDTO;
-    PaymentsMetadataDTO paymentsMetadataDTO;
+    PaymentsMetadataModel paymentsMetadataDTO;
     String paymentTitle;
     String paymentPartialButton;
     String paymentTotalButton;
@@ -51,7 +51,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
      * @param context The context
      * @param paymentsDTO The payments DTO
      */
-    public PartialPaymentDialog(Context context, PaymentsDTO paymentsDTO) {
+    public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO) {
         super(context);
         this.context = context;
         this.paymentsDTO = paymentsDTO;
@@ -149,7 +149,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 if (paymentsLabelsDTO != null) {
                     paymentTitle = paymentsLabelsDTO.getPaymentPartialAmountTitle();
                     paymentPartialButton = paymentsLabelsDTO.getPaymentPartialAmountButton();
-                    paymentTotalButton = paymentsLabelsDTO.getPaymentTotalAmountButton();
+                    paymentTotalButton = paymentsLabelsDTO.getPaymentPayTotalAmountButton();
 
                 }
             }

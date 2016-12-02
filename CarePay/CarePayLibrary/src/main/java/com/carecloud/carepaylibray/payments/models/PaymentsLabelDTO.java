@@ -1,4 +1,3 @@
-
 package com.carecloud.carepaylibray.payments.models;
 
 
@@ -66,345 +65,268 @@ public class PaymentsLabelDTO {
     private String paymentPartialAmountButton;
 
     /**
-     *
-     * @return
-     * The demographicsCheckinHeading
+     * @return The demographicsCheckinHeading
      */
     public String getDemographicsCheckinHeading() {
-        return demographicsCheckinHeading;
+        return StringUtil.getLabelForView(demographicsCheckinHeading);
     }
 
     /**
-     *
-     * @param demographicsCheckinHeading
-     * The demographics_checkin_heading
+     * @param demographicsCheckinHeading The demographics_checkin_heading
      */
     public void setDemographicsCheckinHeading(String demographicsCheckinHeading) {
         this.demographicsCheckinHeading = demographicsCheckinHeading;
     }
 
     /**
-     *
-     * @return
-     * The demographicsAppointmentsHeading
+     * @return The demographicsAppointmentsHeading
      */
     public String getDemographicsAppointmentsHeading() {
-        return demographicsAppointmentsHeading;
+        return StringUtil.getLabelForView(demographicsAppointmentsHeading);
     }
 
     /**
-     *
-     * @param demographicsAppointmentsHeading
-     * The demographics_appointments_heading
+     * @param demographicsAppointmentsHeading The demographics_appointments_heading
      */
     public void setDemographicsAppointmentsHeading(String demographicsAppointmentsHeading) {
         this.demographicsAppointmentsHeading = demographicsAppointmentsHeading;
     }
 
     /**
-     *
-     * @return
-     * The demographicsInfomationCheckTitle
+     * @return The demographicsInfomationCheckTitle
      */
     public String getDemographicsInfomationCheckTitle() {
-        return demographicsInfomationCheckTitle;
+        return StringUtil.getLabelForView(demographicsInfomationCheckTitle);
     }
 
     /**
-     *
-     * @param demographicsInfomationCheckTitle
-     * The demographics_infomation_check_title
+     * @param demographicsInfomationCheckTitle The demographics_infomation_check_title
      */
     public void setDemographicsInfomationCheckTitle(String demographicsInfomationCheckTitle) {
         this.demographicsInfomationCheckTitle = demographicsInfomationCheckTitle;
     }
 
     /**
-     *
-     * @return
-     * The demographicsConsentFormsTitle
+     * @return The demographicsConsentFormsTitle
      */
     public String getDemographicsConsentFormsTitle() {
-        return demographicsConsentFormsTitle;
+        return StringUtil.getLabelForView(demographicsConsentFormsTitle);
     }
 
     /**
-     *
-     * @param demographicsConsentFormsTitle
-     * The demographics_consent_forms_title
+     * @param demographicsConsentFormsTitle The demographics_consent_forms_title
      */
     public void setDemographicsConsentFormsTitle(String demographicsConsentFormsTitle) {
         this.demographicsConsentFormsTitle = demographicsConsentFormsTitle;
     }
 
     /**
-     *
-     * @return
-     * The demographicsIntakeFormsTitle
+     * @return The demographicsIntakeFormsTitle
      */
     public String getDemographicsIntakeFormsTitle() {
-        return demographicsIntakeFormsTitle;
+        return StringUtil.getLabelForView(demographicsIntakeFormsTitle);
     }
 
     /**
-     *
-     * @param demographicsIntakeFormsTitle
-     * The demographics_intake_forms_title
+     * @param demographicsIntakeFormsTitle The demographics_intake_forms_title
      */
     public void setDemographicsIntakeFormsTitle(String demographicsIntakeFormsTitle) {
         this.demographicsIntakeFormsTitle = demographicsIntakeFormsTitle;
     }
 
     /**
-     *
-     * @return
-     * The demographicsPaymentTitle
+     * @return The demographicsPaymentTitle
      */
     public String getDemographicsPaymentTitle() {
-        return demographicsPaymentTitle;
+        return StringUtil.getLabelForView(demographicsPaymentTitle);
     }
 
     /**
-     *
-     * @param demographicsPaymentTitle
-     * The demographics_payment_title
+     * @param demographicsPaymentTitle The demographics_payment_title
      */
     public void setDemographicsPaymentTitle(String demographicsPaymentTitle) {
         this.demographicsPaymentTitle = demographicsPaymentTitle;
     }
 
     /**
-     *
-     * @return
-     * The demographicsPayButton
+     * @return The demographicsPayButton
      */
     public String getDemographicsPayButton() {
-        return demographicsPayButton;
+        return StringUtil.getLabelForView(demographicsPayButton);
     }
 
     /**
-     *
-     * @param demographicsPayButton
-     * The demographics_pay_button
+     * @param demographicsPayButton The demographics_pay_button
      */
     public void setDemographicsPayButton(String demographicsPayButton) {
         this.demographicsPayButton = demographicsPayButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentNextButton
+     * @return The paymentNextButton
      */
     public String getPaymentNextButton() {
-        return paymentNextButton;
+        return StringUtil.getLabelForView(paymentNextButton);
     }
 
     /**
-     *
-     * @param paymentNextButton
-     * The payment_next_button
+     * @param paymentNextButton The payment_next_button
      */
     public void setPaymentNextButton(String paymentNextButton) {
         this.paymentNextButton = paymentNextButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentAddNewCreditCardButton
+     * @return The paymentAddNewCreditCardButton
      */
     public String getPaymentAddNewCreditCardButton() {
-        return paymentAddNewCreditCardButton;
+        return StringUtil.getLabelForView(paymentAddNewCreditCardButton);
     }
 
     /**
-     *
-     * @param paymentAddNewCreditCardButton
-     * The payment_add_new_credit_card_button
+     * @param paymentAddNewCreditCardButton The payment_add_new_credit_card_button
      */
     public void setPaymentAddNewCreditCardButton(String paymentAddNewCreditCardButton) {
         this.paymentAddNewCreditCardButton = paymentAddNewCreditCardButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentMethodTitle
+     * @return The paymentMethodTitle
      */
     public String getPaymentMethodTitle() {
-        return paymentMethodTitle;
+        return StringUtil.getLabelForView(paymentMethodTitle);
     }
 
     /**
-     *
-     * @param paymentMethodTitle
-     * The payment_method_title
+     * @param paymentMethodTitle The payment_method_title
      */
     public void setPaymentMethodTitle(String paymentMethodTitle) {
         this.paymentMethodTitle = paymentMethodTitle;
     }
 
     /**
-     *
-     * @return
-     * The paymentChooseMethodButton
+     * @return The paymentChooseMethodButton
      */
     public String getPaymentChooseMethodButton() {
-        return paymentChooseMethodButton;
+        return StringUtil.getLabelForView(paymentChooseMethodButton);
     }
 
     /**
-     *
-     * @param paymentChooseMethodButton
-     * The payment_choose_method_button
+     * @param paymentChooseMethodButton The payment_choose_method_button
      */
     public void setPaymentChooseMethodButton(String paymentChooseMethodButton) {
         this.paymentChooseMethodButton = paymentChooseMethodButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentCreatePlanButton
+     * @return The paymentCreatePlanButton
      */
     public String getPaymentCreatePlanButton() {
-        return paymentCreatePlanButton;
+        return StringUtil.getLabelForView(paymentCreatePlanButton);
     }
 
     /**
-     *
-     * @param paymentCreatePlanButton
-     * The payment_create_plan_button
+     * @param paymentCreatePlanButton The payment_create_plan_button
      */
     public void setPaymentCreatePlanButton(String paymentCreatePlanButton) {
         this.paymentCreatePlanButton = paymentCreatePlanButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentChooseCreditCardButton
+     * @return The paymentChooseCreditCardButton
      */
     public String getPaymentChooseCreditCardButton() {
-        return paymentChooseCreditCardButton;
+        return StringUtil.getLabelForView(paymentChooseCreditCardButton);
     }
 
     /**
-     *
-     * @param paymentChooseCreditCardButton
-     * The payment_choose_credit_card_button
+     * @param paymentChooseCreditCardButton The payment_choose_credit_card_button
      */
     public void setPaymentChooseCreditCardButton(String paymentChooseCreditCardButton) {
         this.paymentChooseCreditCardButton = paymentChooseCreditCardButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentBackButton
+     * @return The paymentBackButton
      */
     public String getPaymentBackButton() {
-        return paymentBackButton;
+        return StringUtil.getLabelForView(paymentBackButton);
     }
 
     /**
-     *
-     * @param paymentBackButton
-     * The payment_back_button
+     * @param paymentBackButton The payment_back_button
      */
     public void setPaymentBackButton(String paymentBackButton) {
         this.paymentBackButton = paymentBackButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentSeeFrontDeskButton
+     * @return The paymentSeeFrontDeskButton
      */
     public String getPaymentSeeFrontDeskButton() {
-        return paymentSeeFrontDeskButton;
+        return StringUtil.getLabelForView(paymentSeeFrontDeskButton);
     }
 
     /**
-     *
-     * @param paymentSeeFrontDeskButton
-     * The payment_see_front_desk_button
+     * @param paymentSeeFrontDeskButton The payment_see_front_desk_button
      */
     public void setPaymentSeeFrontDeskButton(String paymentSeeFrontDeskButton) {
         this.paymentSeeFrontDeskButton = paymentSeeFrontDeskButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentCloseButton
+     * @return The paymentCloseButton
      */
     public String getPaymentCloseButton() {
-        return paymentCloseButton;
+        return StringUtil.getLabelForView(paymentCloseButton);
     }
 
     /**
-     *
-     * @param paymentCloseButton
-     * The payment_close_button
+     * @param paymentCloseButton The payment_close_button
      */
     public void setPaymentCloseButton(String paymentCloseButton) {
         this.paymentCloseButton = paymentCloseButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentPartialAmountTitle
+     * @return The paymentPartialAmountTitle
      */
     public String getPaymentPartialAmountTitle() {
-        return paymentPartialAmountTitle;
+        return StringUtil.getLabelForView(paymentPartialAmountTitle);
     }
 
     /**
-     *
-     * @param paymentPartialAmountTitle
-     * The payment_partial_amount_title
+     * @param paymentPartialAmountTitle The payment_partial_amount_title
      */
     public void setPaymentPartialAmountTitle(String paymentPartialAmountTitle) {
         this.paymentPartialAmountTitle = paymentPartialAmountTitle;
     }
 
     /**
-     *
-     * @return
-     * The paymentPayTotalAmountButton
+     * @return The paymentPayTotalAmountButton
      */
     public String getPaymentPayTotalAmountButton() {
-        return paymentPayTotalAmountButton;
+        return StringUtil.getLabelForView(paymentPayTotalAmountButton);
     }
 
     /**
-     *
-     * @param paymentPayTotalAmountButton
-     * The payment_pay_total_amount_button
+     * @param paymentPayTotalAmountButton The payment_pay_total_amount_button
      */
     public void setPaymentPayTotalAmountButton(String paymentPayTotalAmountButton) {
         this.paymentPayTotalAmountButton = paymentPayTotalAmountButton;
     }
 
     /**
-     *
-     * @return
-     * The paymentPartialAmountButton
+     * @return The paymentPartialAmountButton
      */
     public String getPaymentPartialAmountButton() {
-        return paymentPartialAmountButton;
+        return StringUtil.getLabelForView(paymentPartialAmountButton);
     }
 
     /**
-     *
-     * @param paymentPartialAmountButton
-     * The payment_partial_amount_button
+     * @param paymentPartialAmountButton The payment_partial_amount_button
      */
     public void setPaymentPartialAmountButton(String paymentPartialAmountButton) {
         this.paymentPartialAmountButton = paymentPartialAmountButton;
     }
-
 }
