@@ -162,7 +162,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
                 Bundle arguments = getArguments();
                 Bundle args = new Bundle();
-                args.putString("payment_method", selectedPaymentMethod);
+                args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
                 args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
                         arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
                 fragment.setArguments(args);

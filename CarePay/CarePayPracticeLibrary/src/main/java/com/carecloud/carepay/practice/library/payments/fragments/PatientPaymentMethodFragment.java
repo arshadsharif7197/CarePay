@@ -163,7 +163,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
                 PaymentsModel paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
 
                 Bundle args = new Bundle();
-                args.putString("payment_method", selectedPaymentMethod);
+                args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
                 args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsModel);
                 fragment.setArguments(args);
 

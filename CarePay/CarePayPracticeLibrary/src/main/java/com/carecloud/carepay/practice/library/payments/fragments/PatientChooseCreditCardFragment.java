@@ -49,7 +49,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment impleme
         String titleLabel = "";
         Bundle arguments = getArguments();
         if (arguments != null) {
-            titleLabel = arguments.getString("payment_method");
+            titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
             paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
         }
 

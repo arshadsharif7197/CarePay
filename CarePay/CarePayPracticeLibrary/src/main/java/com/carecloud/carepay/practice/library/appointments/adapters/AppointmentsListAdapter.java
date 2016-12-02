@@ -80,10 +80,11 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         String startDay = StringUtils.substringBefore(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal(), ",");
         String endDay =DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal()
                 .substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
+
         String strToday;
-        if(DateUtil.getInstance().isToday()) {
+        if (DateUtil.getInstance().isToday()) {
             strToday = startDay.replace(startDay, "Today") + endDay;
-        }else{
+        } else {
             strToday = startDay + endDay;
         }
         holder.appointmentDate.setText(strToday);
@@ -94,10 +95,10 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         GradientDrawable shape =  new GradientDrawable();
         shape.setCornerRadius(50.0f);
 
-        if (!item.getAppointmentStatusModel().getName().equals("Pending")) {
+        boolean isPending = item.getAppointmentStatusModel().getId() == 1;
+        if (!isPending) {
             shape.setColor(Color.LTGRAY);
             holder.startCheckInTextview.setEnabled(false);
-
         } else {
             int color = Color.parseColor("#7ED321");
             shape.setColor(color);

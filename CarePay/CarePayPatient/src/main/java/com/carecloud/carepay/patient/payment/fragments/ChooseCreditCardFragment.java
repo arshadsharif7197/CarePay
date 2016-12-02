@@ -50,7 +50,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         String titleLabel = "";
         Bundle arguments = getArguments();
         if (arguments != null) {
-            titleLabel = arguments.getString("payment_method");
+            titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
             paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
         }
 
