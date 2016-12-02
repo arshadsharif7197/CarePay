@@ -19,6 +19,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -57,10 +58,10 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         // TODO : Change the arrays to dynamic payment methods info from APIs
         paymentMethodsArray = new String[]{getString(R.string.credit_card), getString(R.string.cash),
-                getString(R.string.check), getString(R.string.paypal), getString(R.string.apple_pay)};
+                getString(R.string.check), getString(R.string.paypal), getString(R.string.android_pay)};
         createPaymentMethodButtonCaptionArray = new String[]{getString(R.string.choose_credit_card),
                 getString(R.string.cash), getString(R.string.scan_check),
-                getString(R.string.pay_using_paypal), getString(R.string.pay_using_apple_pay)};
+                getString(R.string.pay_using_paypal), getString(R.string.pay_using_android_pay)};
         paymentMethodsDrawableArray = new int[]{R.drawable.payment_credit_card_button_selector,
              R.drawable.payment_cash_button_selector, R.drawable.payment_check_button_selector,
              R.drawable.payment_paypal_button_selector, R.drawable.payment_apple_button_selector};
@@ -156,6 +157,13 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 if (fragment == null) {
                     fragment = new ChooseCreditCardFragment();
                 }
+
+                Bundle arguments = getArguments();
+                Bundle args = new Bundle();
+                args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                fragment.setArguments(args);
+
                 FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
                 fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
                 fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());

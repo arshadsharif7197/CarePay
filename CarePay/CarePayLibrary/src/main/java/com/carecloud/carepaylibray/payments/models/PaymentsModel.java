@@ -1,17 +1,19 @@
+
 package com.carecloud.carepaylibray.payments.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsDTO {
+import java.io.Serializable;
+
+public class PaymentsModel implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentsMetadataDTO paymentsMetadata;
-
+    private PaymentsMetadataModel paymentsMetadata;
     @SerializedName("payload")
     @Expose
-    private PaymentsPayloadDTO payload;
+    private PaymentsPayloadDTO paymentPayload;
     @SerializedName("state")
     @Expose
     private String state;
@@ -19,26 +21,23 @@ public class PaymentsDTO {
     /**
      * @return The paymentsMetadataDTO
      */
-    public PaymentsMetadataDTO getPaymentsMetadata() {
+    public PaymentsMetadataModel getPaymentsMetadata() {
         return paymentsMetadata;
     }
 
     /**
      * @param paymentsMetadata The paymentsMetadata
      */
-    public void setPaymentsMetadata(PaymentsMetadataDTO paymentsMetadata) {
+    public void setPaymentsMetadata(PaymentsMetadataModel paymentsMetadata) {
         this.paymentsMetadata = paymentsMetadata;
     }
 
-    public PaymentsPayloadDTO getPayload() {
-        return payload;
+    public PaymentsPayloadDTO getPaymentPayload() {
+        return paymentPayload;
     }
 
-    /**
-     * @param payload The payload
-     */
-    public void setPayload(PaymentsPayloadDTO payload) {
-        this.payload = payload;
+    public void setPaymentPayload(PaymentsPayloadDTO paymentPayload) {
+        this.paymentPayload = paymentPayload;
     }
 
     /**
