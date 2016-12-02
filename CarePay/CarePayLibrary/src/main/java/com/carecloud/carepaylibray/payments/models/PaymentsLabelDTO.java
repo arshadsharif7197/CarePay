@@ -63,6 +63,18 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_partial_amount_button")
     @Expose
     private String paymentPartialAmountButton;
+    @SerializedName("payment_pay_total_responsibility")
+    @Expose
+    private String paymentTotalResponsibility;
+    @SerializedName("payment_pay_previous_balance")
+    @Expose
+    private String paymentPreviousBalance;
+    @SerializedName("payment_insurance_copay")
+    @Expose
+    private String paymentInsuranceCopay;
+    @SerializedName("payment_responsibility_title")
+    @Expose
+    private String paymentResponsibilityTitle;
 
     /**
      * @return The demographicsCheckinHeading
@@ -329,4 +341,69 @@ public class PaymentsLabelDTO {
     public void setPaymentPartialAmountButton(String paymentPartialAmountButton) {
         this.paymentPartialAmountButton = paymentPartialAmountButton;
     }
+
+    /**
+     *
+     * @return paymentTotalResponsibility
+     */
+    public String getPaymentTotalResponsibility() {
+        return StringUtil.getLabelForView(paymentTotalResponsibility);
+    }
+
+    /**
+     *
+     * @param paymentTotalResponsibility The paymentTotalResponsibility
+     */
+    public void setPaymentTotalResponsibility(String paymentTotalResponsibility) {
+        this.paymentTotalResponsibility = paymentTotalResponsibility;
+    }
+
+    /**
+     *
+     * @return paymentInsuranceCopay
+     */
+    public String getPaymentInsuranceCopay() {
+        return StringUtil.getLabelForView(paymentInsuranceCopay);
+    }
+
+    /**
+     *
+     * @param paymentInsuranceCopay The paymentResponsibilityTitle
+     */
+    public void setPaymentInsuranceCopay(String paymentInsuranceCopay) {
+        this.paymentInsuranceCopay = paymentInsuranceCopay;
+    }
+
+    /**
+     *
+     * @return paymentResponsibilityTitle
+     */
+    public String getPaymentResponsibilityTitle() {
+        return StringUtil.getLabelForView(paymentResponsibilityTitle);
+    }
+
+    /**
+     *
+     * @param paymentResponsibilityTitle The paymentResponsibilityTitle
+     */
+    public void setPaymentResponsibilityTitle(String paymentResponsibilityTitle) {
+        this.paymentResponsibilityTitle = paymentResponsibilityTitle;
+    }
+
+    /**
+     *
+     * @return The paymentPreviousBalance
+     */
+    public String getPaymentPreviousBalance() {
+        return StringUtil.getLabelForView(paymentPreviousBalance);
+    }
+
+    /**
+     *
+     * @param paymentPreviousBalance The paymentPreviousBalance
+     */
+    public void setPaymentPreviousBalance(String paymentPreviousBalance) {
+        this.paymentPreviousBalance = paymentPreviousBalance;
+    }
+
 }

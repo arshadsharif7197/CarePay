@@ -218,7 +218,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         queryString.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
         queryString.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
         queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
-        queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
+        queryString.put("findings_id", "1");//inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
 
         WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
