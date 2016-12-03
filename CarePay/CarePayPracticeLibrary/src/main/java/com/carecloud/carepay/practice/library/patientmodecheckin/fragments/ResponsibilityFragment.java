@@ -29,11 +29,11 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_PAYMENTS;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_PAYMENTS;
 
 public class ResponsibilityFragment extends BaseCheckinFragment {
 
