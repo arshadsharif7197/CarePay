@@ -34,10 +34,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_PAYMENTS;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 public class ResponsibilityFragment extends BaseCheckinFragment {
 
@@ -75,14 +71,9 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
         getPaymentLabels();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-
-        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        setTypefaces(view);
 
         Button payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
         payTotalButton.setOnClickListener(new View.OnClickListener() {
@@ -170,22 +161,6 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
             public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
             }
         });
-    }
-
-    /**
-     * Helper to set the typefaces
-     *
-     * @param view The parent view
-     */
-    private void setTypefaces(View view) {
-        // set the typefaces
-        setGothamRoundedBookTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_total_label));
-        setGothamRoundedMediumTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_total));
-        setProximaNovaRegularTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_prev_balance_label));
-        setProximaNovaRegularTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_copay_label));
-        setProximaNovaSemiboldTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_prev_balance));
-        setProximaNovaSemiboldTypeface(appCompatActivity, (TextView) view.findViewById(R.id.respons_copay));
-        setGothamRoundedMediumTypeface(appCompatActivity, (Button) view.findViewById(R.id.pay_total_amount_button));
     }
 
     private void getPaymentLabels() {
