@@ -29,8 +29,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
-import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_PAYMENTS;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,7 +54,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appCompatActivity = (AppCompatActivity) getActivity();
-        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_PAYMENTS, 0, 0);
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(PatientModeCheckinActivity.SUBFLOW_PAYMENTS, 0, 0);
     }
 
     @Nullable
