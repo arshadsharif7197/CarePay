@@ -81,4 +81,17 @@ public abstract class BasePracticeActivity extends AppCompatActivity implements 
     }
 
 
+    /**
+     * Updates layout so in clover and devices with navigation bar is on screen don't hide content
+     * */
+    public void setNavigationBarVisibility(){
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+    }
+
+
 }

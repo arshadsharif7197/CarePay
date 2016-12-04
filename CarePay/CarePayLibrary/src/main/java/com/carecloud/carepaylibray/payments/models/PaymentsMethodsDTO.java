@@ -6,47 +6,90 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentsMethodsDTO {
 
-    @SerializedName("method")
+
+    @SerializedName("type")
     @Expose
-    private String method;
-    @SerializedName("url")
+    private String type;
+    @SerializedName("label")
     @Expose
-    private String url;
+    private String label;
+    @SerializedName("button_label")
+    @Expose
+    private String buttonLabel;
+    @SerializedName("image_url")
+    @Expose
+    private String imageUrl;
 
     /**
-     * 
+     *
      * @return
-     *     The method
+     * The type
      */
-    public String getMethod() {
-        return method;
+    public String getType() {
+        return type;
     }
 
     /**
-     * 
-     * @param method
-     *     The method
+     *
+     * @param type
+     * The type
      */
-    public void setMethod(String method) {
-        this.method = method;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
-     * 
+     *
      * @return
-     *     The url
+     * The label
      */
-    public String getUrl() {
-        return url;
+    public String getLabel() {
+        return label;
     }
 
     /**
-     * 
-     * @param url
-     *     The url
+     *
+     * @param label
+     * The label
      */
-    public void setUrl(String url) {
-        this.url = url;
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
+     *
+     * @return
+     * The buttonLabel
+     */
+    public String getButtonLabel() {
+        return buttonLabel;
+    }
+
+    /**
+     *
+     * @param buttonLabel
+     * The button_label
+     */
+    public void setButtonLabel(String buttonLabel) {
+        this.buttonLabel = buttonLabel;
+    }
+
+    /**
+     *
+     * @return
+     * The imageUrl
+     */
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    /**
+     *
+     * @param imageUrl
+     * The image_url
+     */
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }
