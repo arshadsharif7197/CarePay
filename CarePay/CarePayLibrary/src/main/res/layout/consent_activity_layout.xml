@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_consentforms" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/consent_top">
+
+        <View
+            android:id="@+id/indicator1"
+            android:layout_width="@dimen/rounded"
+            android:layout_height="@dimen/rounded"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/circle_indicator_gray"></View>
+
+
+        <View
+            android:id="@+id/indicator0"
+            android:layout_width="@dimen/rounded"
+            android:layout_height="@dimen/rounded"
+            android:layout_centerHorizontal="true"
+            android:layout_toLeftOf="@+id/indicator1"
+            android:layout_marginRight="@dimen/consent_top"
+            android:background="@drawable/circle_indicator_blue"/>
+
+
+        <View
+            android:id="@+id/indicator2"
+            android:layout_width="@dimen/rounded"
+            android:layout_height="@dimen/rounded"
+            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@+id/indicator1"
+            android:layout_marginLeft="@dimen/consent_top"
+            android:background="@drawable/circle_indicator_gray"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

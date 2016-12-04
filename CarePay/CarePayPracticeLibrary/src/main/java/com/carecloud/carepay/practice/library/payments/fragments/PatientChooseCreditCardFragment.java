@@ -1,11 +1,9 @@
-package com.carecloud.carepay.patient.payment.fragments;
+package com.carecloud.carepay.practice.library.payments.fragments;
 
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -34,7 +33,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
+public class PatientChooseCreditCardFragment extends BaseCheckinFragment implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup chooseCreditCardRadioGroup;
     private Button addNewCardButton;
@@ -62,9 +61,6 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         title.setText(titleLabel);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
-
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
@@ -170,16 +166,16 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-            AddNewCreditCardFragment fragment = (AddNewCreditCardFragment)
-                fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
-            if (fragment == null) {
-                fragment = new AddNewCreditCardFragment();
-            }
-            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-            fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
-            fragmentTransaction.commit();
+//            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+//            AddNewCreditCardFragment fragment = (AddNewCreditCardFragment)
+//                fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
+//            if (fragment == null) {
+//                fragment = new AddNewCreditCardFragment();
+//            }
+//            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+//            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+//            fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
+//            fragmentTransaction.commit();
         }
     };
 }
