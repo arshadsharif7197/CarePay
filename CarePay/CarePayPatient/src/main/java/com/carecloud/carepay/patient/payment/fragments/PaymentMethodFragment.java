@@ -165,7 +165,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // ToDo : Create payment plan action here - to be done
         }
     };
 

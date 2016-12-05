@@ -1,8 +1,9 @@
 package com.carecloud.carepaylibray.payments.models;
 
-import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
+
 
 /**
  * Created by harshal_patil on 12/4/2016.
@@ -21,7 +22,7 @@ public class PaymentMethodDTO implements Serializable
     @SerializedName("image_url")
     @Expose
     private String imageUrl;
-    private final static long serialVersionUID = -1821415622750805084L;
+    private static final long serialVersionUID = -1821415622750805084L;
 
     /**
      *
