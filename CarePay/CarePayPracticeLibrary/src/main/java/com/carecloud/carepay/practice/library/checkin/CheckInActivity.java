@@ -59,6 +59,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     CarePayTextView waitingRoomTextView;
     CarePayTextView checkingInCounterTextview;
     CarePayTextView waitingCounterTextview;
+    private boolean isFilterOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,12 +109,12 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     private void setLabels() {
         CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-        if(checkInLabelDTO!=null){
-            goBackTextview.setText(StringUtil.getFormatedLabal(CheckInActivity.this,"  "+ checkInLabelDTO.getGoBack()));
-            filterOnTextView.setText(StringUtil.getFormatedLabal(CheckInActivity.this,checkInLabelDTO.getPracticeCheckinFilterOn()));
-            filterTextView.setText(StringUtil.getFormatedLabal(CheckInActivity.this,checkInLabelDTO.getPracticeCheckinFilter()));
-            checkingInTextView.setText(StringUtil.getFormatedLabal(CheckInActivity.this,checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()).toUpperCase());
-            waitingRoomTextView.setText(StringUtil.getFormatedLabal(CheckInActivity.this,checkInLabelDTO.getPracticeCheckinWaitingRoom()).toUpperCase());
+        if (checkInLabelDTO != null) {
+            goBackTextview.setText(StringUtil.getFormatedLabal(CheckInActivity.this, "  " + checkInLabelDTO.getGoBack()));
+            filterOnTextView.setText(StringUtil.getFormatedLabal(CheckInActivity.this, checkInLabelDTO.getPracticeCheckinFilterOn()));
+            filterTextView.setText(StringUtil.getFormatedLabal(CheckInActivity.this, checkInLabelDTO.getPracticeCheckinFilter()));
+            checkingInTextView.setText(StringUtil.getFormatedLabal(CheckInActivity.this, checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()).toUpperCase());
+            waitingRoomTextView.setText(StringUtil.getFormatedLabal(CheckInActivity.this, checkInLabelDTO.getPracticeCheckinWaitingRoom()).toUpperCase());
             checkingInCounterTextview.setText("0");
             waitingCounterTextview.setText("0");
         }
@@ -147,6 +148,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                     customFilterPopupWindow.setClearFiltersButtonText(StringUtil.getFormatedLabal(CheckInActivity.this, checkInLabelDTO.getPracticeCheckinFilterClearFilters()));
                 }
                 customFilterPopupWindow.showPopWindow();
+                customFilterPopupWindow.showClearFilterButton(isFilterOn);
             }
         };
     }
@@ -169,7 +171,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                 AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
                 if (appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase(getString(R.string.checked_in))) {
                     waitingRoomAppointments.add(appointmentPayloadDTO);
-                } else if(!appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase("Cancelled")) {
+                } else if (!appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase("Cancelled")) {
                     checkingInAppointments.add(appointmentPayloadDTO);
                 }
                 addProviderOnProviderFilterList(doctorsList, appointmentPayloadDTO);
@@ -377,20 +379,22 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             }
         }
 
-        if(appointments.size()==appointmentDTOs.size()){
+        if (appointments.size() == appointmentDTOs.size()) {
             filterOnTextView.setVisibility(View.GONE);
             filterTextView.setVisibility(View.VISIBLE);
-        }else{
+            isFilterOn = false;
+        } else {
             filterOnTextView.setVisibility(View.VISIBLE);
             filterTextView.setVisibility(View.GONE);
+            isFilterOn = true;
         }
         setAdapter();
     }
 
-    private PatientBalanceDTO getPatientBalanceDTO(String patientId){
+    private PatientBalanceDTO getPatientBalanceDTO(String patientId) {
         List<PatientBalanceDTO> patientBalanceDTOList = checkInDTO.getPayload().getPatientBalances();
-        for (int i=0 ; i<patientBalanceDTOList.size();i++){
-            if (patientBalanceDTOList.get(i).getMetadata().getPatientId().equalsIgnoreCase(patientId)){
+        for (int i = 0; i < patientBalanceDTOList.size(); i++) {
+            if (patientBalanceDTOList.get(i).getMetadata().getPatientId().equalsIgnoreCase(patientId)) {
                 return patientBalanceDTOList.get(i);
             }
         }
@@ -403,9 +407,9 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
      * @param appointmentPayloadDTO the appointment payload dto
      */
     public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO) {
-            AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
-                    checkInDTO,getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
-                    appointmentPayloadDTO);
-            dialog.show();
+        AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
+                checkInDTO, getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
+                appointmentPayloadDTO);
+        dialog.show();
     }
 }
