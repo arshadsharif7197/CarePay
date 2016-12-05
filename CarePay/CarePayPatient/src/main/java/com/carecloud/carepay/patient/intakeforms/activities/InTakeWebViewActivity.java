@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.intakeforms.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -127,6 +128,13 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         //init webview
         mWebView = (WebView) findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
+        //speed webview loading
+        if (Build.VERSION.SDK_INT >= 19){
+            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         //load pages and links inside webview
@@ -218,8 +226,8 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         queryString.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
         queryString.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
         queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
-        queryString.put("findings_id", "1");//inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
-
+        //retrofit is not taking null for query parameters
+        queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId()==null?"":inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
         WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
 
