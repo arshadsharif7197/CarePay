@@ -173,7 +173,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void setAppointmentCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
         HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = practiceHomeScreenPayloadDTO.getAppointmentCounts();
         if (homeScreenAppointmentCountsDTO != null) {
-            checkedInCounterTextview.setText(String.valueOf(homeScreenAppointmentCountsDTO.getPendingCount() + homeScreenAppointmentCountsDTO.getPendingCount()));
+            int checkinCounter = homeScreenAppointmentCountsDTO.getPendingCount();
+            checkedInCounterTextview.setText(String.valueOf(checkinCounter));
         }
     }
 
@@ -222,8 +223,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     BroadcastReceiver newCheckedInReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            count = Integer.parseInt(checkedInCounterTextview.getText().toString()) + 1;
-            checkedInCounterTextview.setText(String.valueOf(count));
+            String count = intent.getExtras().getString("appointments_checking_in");
+            checkedInCounterTextview.setText(count);
         }
     };
 

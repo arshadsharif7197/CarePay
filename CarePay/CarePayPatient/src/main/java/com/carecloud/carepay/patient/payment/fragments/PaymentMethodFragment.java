@@ -19,7 +19,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -32,9 +37,15 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private Button paymentChoiceButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
+    private String selectedPaymentMethod;
     private String[] paymentMethodsArray;
     private String[] createPaymentMethodButtonCaptionArray;
     private int[] paymentMethodsDrawableArray;
+    private  PaymentsModel paymentsDTO;
+    private PaymentsMetadataModel paymentsMetadataModel;
+    private PaymentsLabelDTO paymentsLabelsDTO;
+    private String dialogTitle;
+    private String dialogText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,16 +68,19 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         // TODO : Change the arrays to dynamic payment methods info from APIs
         paymentMethodsArray = new String[]{getString(R.string.credit_card), getString(R.string.cash),
-                getString(R.string.check), getString(R.string.paypal), getString(R.string.apple_pay)};
+                getString(R.string.check), getString(R.string.paypal), getString(R.string.android_pay)};
         createPaymentMethodButtonCaptionArray = new String[]{getString(R.string.choose_credit_card),
                 getString(R.string.cash), getString(R.string.scan_check),
-                getString(R.string.pay_using_paypal), getString(R.string.pay_using_apple_pay)};
+                getString(R.string.pay_using_paypal), getString(R.string.pay_using_android_pay)};
         paymentMethodsDrawableArray = new int[]{R.drawable.payment_credit_card_button_selector,
              R.drawable.payment_cash_button_selector, R.drawable.payment_check_button_selector,
              R.drawable.payment_paypal_button_selector, R.drawable.payment_apple_button_selector};
 
         initilizeViews(view);
-
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            paymentsDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+        }
         return view;
     }
 
@@ -118,6 +132,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         for (int i = 0; i < paymentMethodsArray.length; i++) {
             if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentMethodsArray[i])) {
+                selectedPaymentMethod = selectedRadioButton.getText().toString();
                 paymentChoiceButton.setText(createPaymentMethodButtonCaptionArray[i]);
             }
         }
@@ -149,6 +164,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private View.OnClickListener paymentChoiceButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            getLabels();
             if (paymentChoiceButton.getText().equals(getString(R.string.choose_credit_card))) {
                 FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                 ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
@@ -156,12 +172,44 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 if (fragment == null) {
                     fragment = new ChooseCreditCardFragment();
                 }
+
+                Bundle arguments = getArguments();
+                Bundle args = new Bundle();
+                args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+                args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                fragment.setArguments(args);
+
                 FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
                 fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
                 fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
                 fragmentTransaction.commit();
 
+            }else if (paymentChoiceButton.getText().equals(getString(R.string.cash))) {
+                new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface(){
+                    @Override
+                    public void onActionButton() {
+                    }
+                }).show();
+
             }
         }
     };
+
+    /**
+     *  partial payment labels
+     */
+    public void getLabels() {
+        if (paymentsDTO != null) {
+            paymentsMetadataModel = paymentsDTO.getPaymentsMetadata();
+            if (paymentsMetadataModel != null) {
+                paymentsLabelsDTO = paymentsMetadataModel.getPaymentsLabel();
+                if (paymentsLabelsDTO != null) {
+                    dialogTitle = paymentsLabelsDTO.getPaymentSeeFrontDeskButton();
+                    dialogText= paymentsLabelsDTO.getPaymentBackButton();
+
+                }
+            }
+        }
+    }
 }

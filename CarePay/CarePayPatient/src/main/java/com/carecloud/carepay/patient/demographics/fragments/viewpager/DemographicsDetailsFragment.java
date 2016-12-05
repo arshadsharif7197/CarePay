@@ -488,15 +488,15 @@ public class DemographicsDetailsFragment extends Fragment
 
     private void updateViewsFromModel() {
         String race = raceTextView.getText().toString();
-        if (!StringUtil.isNullOrEmpty(race) && !race.equals(getString(R.string.chooseTextView))) {
+        if (!StringUtil.isNullOrEmpty(race) && !race.equals(globalLabelDTO.getDemographicsChooseLabel())) {
             persDetailsDTO.setPrimaryRace(race);
         }
         String ethnicity = ethnicityTextView.getText().toString();
-        if (!StringUtil.isNullOrEmpty(ethnicity) && !ethnicity.equals(getString(R.string.chooseTextView))) {
+        if (!StringUtil.isNullOrEmpty(ethnicity) && !ethnicity.equals(globalLabelDTO.getDemographicsChooseLabel())) {
             persDetailsDTO.setEthnicity(ethnicity);
         }
         String gender = genderTextView.getText().toString();
-        if (!StringUtil.isNullOrEmpty(gender) && !gender.equals(getString(R.string.chooseTextView))) {
+        if (!StringUtil.isNullOrEmpty(gender) && !gender.equals(globalLabelDTO.getDemographicsChooseLabel())) {
             persDetailsDTO.setGender(gender);
         }
         // at this point date of birth has been validated (if not empty nor null)

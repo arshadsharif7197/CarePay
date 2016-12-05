@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauth
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
@@ -52,7 +54,7 @@ import java.util.List;
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinConsentForm2Fragment extends Fragment {
+public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
     Date date = new Date();
     private TextView titleTextView;
     private TextView descriptionTextView;
@@ -95,6 +97,7 @@ public class CheckinConsentForm2Fragment extends Fragment {
     private String providerName;
     private String patienFirstName;
     private String patientLastName;
+    private LinearLayout mainContainer;
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
@@ -113,7 +116,8 @@ public class CheckinConsentForm2Fragment extends Fragment {
             }
         }
     };
-    private Button signConsentForm;
+    private Button                                   signConsentForm;
+    private int                                      formIndex;
 
     @Nullable
     @Override
@@ -124,18 +128,7 @@ public class CheckinConsentForm2Fragment extends Fragment {
 
         consentFormDTO = ((PatientModeCheckinActivity) getActivity()).getConsentFormDTO();
         signConsentForm = (Button) view.findViewById(R.id.signButton);
-      /*  signConsentForm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // transition
-                CheckinConsentForm2Fragment fragment = new CheckinConsentForm2Fragment();
-                ((PatientModeCheckinActivity)getActivity()).navigateToFragment(fragment, true);
-                ((PatientModeCheckinActivity)getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_CONSENT, 2,
-                                                                                PatientModeCheckinActivity.NUM_CONSENT_FORMS);
-
-            }
-        });
-*/
+        signConsentForm.setEnabled(false);
 
         titleTextView = (TextView) view.findViewById(R.id.titleTv);
         descriptionTextView = (TextView) view.findViewById(R.id.descriptionTv);
@@ -154,6 +147,8 @@ public class CheckinConsentForm2Fragment extends Fragment {
         minorLastNameEditText = (EditText) view.findViewById(R.id.minorLastNameET);
         dobTextView = (TextView) view.findViewById(R.id.dobET);
         consentFormScrollView = (ScrollView) view.findViewById(R.id.consentform_scrollView);
+        mainContainer= (LinearLayout) view.findViewById(R.id.consenrform2_mainContainer);
+        mainContainer.setPadding(10,50,10,0);
         initViewFromModels();
         getLabels();
         setEditTexts();
@@ -347,6 +342,7 @@ public class CheckinConsentForm2Fragment extends Fragment {
 
     private void setEnableNextButtonOnFullScroll() {
         // enable next button on scrolling all the way to the bottom
+
         consentFormScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
@@ -354,10 +350,11 @@ public class CheckinConsentForm2Fragment extends Fragment {
                 int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
 
                 if (diff == 0) {
-                    signConsentForm.setEnabled(true);
+                        signConsentForm.setEnabled(true);
                 }
             }
         });
+
     }
 
     private void setTypefaces(View view) {
@@ -377,4 +374,19 @@ public class CheckinConsentForm2Fragment extends Fragment {
         setProximaNovaRegularTypeface(getActivity(), minorGender);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        formIndex = ((PatientModeCheckinActivity)getActivity()).getConsentFormIndex();
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
+                                                                     formIndex,
+                                                                     ((PatientModeCheckinActivity)getActivity()).getNumConsentForms());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // set the index of the form
+        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
+    }
 }

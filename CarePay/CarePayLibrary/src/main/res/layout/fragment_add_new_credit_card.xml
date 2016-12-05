@@ -28,7 +28,10 @@
                 android:id="@+id/creditCardNoEditText"
                 style="@style/PaymentEditTextStyle"
                 android:hint="@string/credit_card_number"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:maxLength="19"
+                android:digits="@string/restrict_digits_space"/>
+
 
         </android.support.design.widget.TextInputLayout>
 

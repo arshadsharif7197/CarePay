@@ -4,9 +4,9 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsMetadataDTO {
+public class PaymentsMetadataModel {
 
-    @SerializedName("label")
+    @SerializedName("labels")
     @Expose
     private PaymentsLabelDTO paymentsLabel;
     @SerializedName("links")

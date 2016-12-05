@@ -88,10 +88,12 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         // Current date
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
         Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // Appointment date
         String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
         Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         String strDay;
@@ -172,6 +174,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
      * Method to update appointment list to UI
      */
     private void getAppointmentList() {
+        populateWithLabels();
         if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
                 && appointmentsResultModel.getPayload().getAppointments() != null
                 && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
@@ -180,7 +183,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
 
             appointmentListWithToday = new ArrayList<>();
-            populateWithLabels();
+
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
                 String title = getToday(appointmentDTO.getPayload().getStartTime());
                 if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {

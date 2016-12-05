@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -37,12 +39,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_INTAKE;
+
 
 /**
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinIntakeForm1Fragment extends Fragment {
+public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
+
     private Button continueButton;
 
     private WebView mWebView;
@@ -53,8 +59,10 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     private Button nextButton;
     private StepProgressBar mStepProgressBar;
     public String TAG = CheckinIntakeForm1Fragment.class.getSimpleName();
-    View view;
-
+    private View view;
+    private int formIndex;
+    private int formTotalIntakesForms;
+    private int formCurrentIntakesForm;
 
 
     @Nullable
@@ -62,18 +70,13 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
-        Bundle bundle = getArguments();
-        String intakeFormDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-        Gson gson = new Gson();
-        inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
-        getIntakeFormData();
-        
+
         return view;
     }
 
 
     /**
-     * TODO REMOVE LOGIC FOR WorkflowServiceHelper from consent dto
+     * Call to intake forms in order to get Findings if any.
      */
     public void getIntakeFormData() {
 
@@ -86,19 +89,6 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         header.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
 
         WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
-
-/*
-        Map<String, String> queryString = new HashMap<>();
-        queryString.put("appointment_id", "4c42acd1-8ed2-4f2e-b2f5-86b33b325a65");//model.getMetadata().getAppointmentId()
-        CognitoAppHelper.setUser("srios@carecloud.com");
-        TransitionDTO transitionDTO = new TransitionDTO();
-        transitionDTO.setMethod("GET");
-        transitionDTO.setUrl("dev/workflow/carepay/patient_mode/intake_forms");
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, intakeFormCallback, queryString);
-*/
-
-
     }
 
     /**
@@ -107,7 +97,6 @@ public class CheckinIntakeForm1Fragment extends Fragment {
     WorkflowServiceCallback intakeFormCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
         }
 
         @Override
@@ -122,41 +111,39 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         }
     };
 
+    /**
+     * Initialize objects after getting intake form data.
+     */
     public void initForm() {
         labelsModel = inTakeForm.getMetadata().getLabel();
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.intakeBtnNext);
         nextButton.setEnabled(true);
         nextButton.setText(labelsModel.getNextQuestionButtonText());
-
-        mStepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarIntakePractice);
-        mStepProgressBar.setCumulativeDots(true);
-        mStepProgressBar.setNumDots(inTakeForm.getPayload().getIntakeForms().size());
-        ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, mStepProgressBar.getCurrentProgressDot() + 1,
-                mStepProgressBar.getNumDots());
+        formCurrentIntakesForm = 1;
 
         //call javascript to show next intake form.
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mStepProgressBar.getCurrentProgressDot() < mStepProgressBar.getNumDots() - 1) {
-                    mStepProgressBar.next();
-                    ((PatientModeCheckinActivity) getActivity()).changeCounterOfForm(PatientModeCheckinActivity.SUBFLOW_INTAKE, mStepProgressBar.getCurrentProgressDot() + 1,
-                            mStepProgressBar.getNumDots());
-                }
-
-                if (mStepProgressBar.getCurrentProgressDot() == mStepProgressBar.getNumDots() - 1) {
+                if (formCurrentIntakesForm >= (formTotalIntakesForms - 1)) {
                     nextButton.setText(labelsModel.getFinishQuestionsButtonText());
                 } else {
                     nextButton.setText(labelsModel.getNextQuestionButtonText());
                 }
+
                 nextIntakeFormDisplayed();
             }
         });
-
-
         //init webview
         mWebView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
+        //speed webview loading
+        if (Build.VERSION.SDK_INT >= 19){
+            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         //load pages and links inside webview
@@ -165,12 +152,22 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         mWebView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "IntakeInterface");
         mWebView.loadUrl("file:///android_asset/intake-forms-webview/web-view.html");
 
+
     }
 
     /**
      * Call java script functions to change intake form index
      */
     public void nextIntakeFormDisplayed() {
+        if (formIndex < ((PatientModeCheckinActivity) getActivity()).getNumIntakeForms()) {
+            ++formIndex;
+            ((PatientModeCheckinActivity) getActivity()).setIntakeFormIndex(formIndex);
+            flowStateInfo.fragmentIndex = formIndex;
+            ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
+            ((PatientModeCheckinActivity) getActivity()).setConsentFormIndex(formIndex);
+
+        }
+        ++formCurrentIntakesForm;
         mWebView.loadUrl("javascript:nextIntakeForm()");
     }
 
@@ -212,24 +209,22 @@ public class CheckinIntakeForm1Fragment extends Fragment {
             return null;
         }
 
-        // Should accept a collection of XML encoded answers.
+        /**
+         * Submit answers from web view to endpoint update_intake
+         * */
         @JavascriptInterface
         public void saveAnswers(String intakeFormModelList) {
-
             updateIntakeForm(intakeFormModelList);
-
         }
 
         @JavascriptInterface
         public void makeToast(String message, boolean lengthLong) {
             Toast.makeText(context, message, (lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT)).show();
         }
-
     }
 
-
     /**
-     * TODO update workservice helper when available
+     * Update intakes forms based on answers.
      */
     public void updateIntakeForm(String jsonAnswers) {
 
@@ -238,26 +233,13 @@ public class CheckinIntakeForm1Fragment extends Fragment {
 
         header.put("transition", "true");
 
-        //inTakeForm.getPayload().getFindings().getPayload().setFindings(jsonAnswers);
-        // String body = gson.toJson(inTakeForm);
-        // UpdateIntakeModel transitionUpdateIntake =  inTakeForm.getMetadata().getTransitions().getUpdateIntake();
-
-        queryString.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());//050bd799-de01-4692-a950-10d12d20dd2e
+        queryString.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());
         queryString.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
         queryString.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
-        queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());//cd5bc403-4bfe-4d60-ae2d-99e26d4fd4a2
+        queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
         queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
-        //TODO remove this logic
-        CheckinPaymentFragment fragment = new CheckinPaymentFragment();
-        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-        ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
-        ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_PAYMENTS, true);
-        ((PatientModeCheckinActivity) getActivity()).toggleHighlight(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
-        ((PatientModeCheckinActivity) getActivity()).toggleVisibleFormCounter(PatientModeCheckinActivity.SUBFLOW_INTAKE, false);
-
-
-        // WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
+        WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
 
     }
 
@@ -272,8 +254,8 @@ public class CheckinIntakeForm1Fragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            //PatientNavigationHelper.getInstance(InTakeActivityWebView.this).navigateToWorkflow(workflowDTO);
-            SystemUtil.showDialogMessage(getActivity(), getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), "SUCCESS");
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(getActivity(), workflowDTO);
+
 
         }
 
@@ -283,5 +265,27 @@ public class CheckinIntakeForm1Fragment extends Fragment {
         }
     };
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        String intakeFormDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+        Gson gson = new Gson();
+        inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
+        getIntakeFormData();
+        formTotalIntakesForms = inTakeForm.getPayload().getIntakeForms().size();
+        ((PatientModeCheckinActivity) getActivity()).setNumIntakeForms(inTakeForm.getPayload().getIntakeForms().size());
+        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_INTAKE,
+                formIndex,
+                ((PatientModeCheckinActivity) getActivity()).getNumIntakeForms());
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        formIndex = ((PatientModeCheckinActivity) getActivity()).getIntakeFormIndex();
+        flowStateInfo.fragmentIndex = formIndex;
+        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
+    }
 }

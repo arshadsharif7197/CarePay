@@ -51,7 +51,7 @@ public abstract class BasePracticeActivity extends AppCompatActivity implements 
      * @param <S>      Dynamic class to convert
      * @return Dynamic converted class object
      */
-    public <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+    public static  <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
 
         if (!StringUtil.isNullOrEmpty(jsonString)) {
             Gson gson = new Gson();
@@ -77,6 +77,19 @@ public abstract class BasePracticeActivity extends AppCompatActivity implements 
 
     @Override
     public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
+
+    }
+
+
+    /**
+     * Updates layout so in clover and devices with navigation bar is on screen don't hide content
+     * */
+    public void setNavigationBarVisibility(){
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
 
     }
 

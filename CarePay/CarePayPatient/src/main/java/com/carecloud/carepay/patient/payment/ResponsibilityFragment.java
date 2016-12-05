@@ -17,19 +17,24 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.services.AppointmentService;
+import com.carecloud.carepay.patient.payment.dialogs.PartialPaymentDialog;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.intake.models.PayloadPaymentModel;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
 import com.google.gson.JsonObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedBookTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -54,7 +59,18 @@ public class ResponsibilityFragment extends Fragment {
     private TextView responseTotal;
     private TextView responseCopay;
     private TextView responsePreviousBalance;
-//    private AppointmentsResultModel appointmentsModel = null;
+    private PaymentsModel paymentDTO = null;
+    private TextView totalResponsibility;
+    private TextView prevBalanceResponsibility;
+    private TextView coPayResponsibility;
+    private Button payTotalButton;
+    private Button payPartialButton;
+    private String totalResponsibilityString;
+    private String titleResponsibilityString;
+    private String previousBalanceString;
+    private String insuranceCopayString;
+    private String payTotalAmountString;
+    private String payPartialAmountString;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,9 +104,14 @@ public class ResponsibilityFragment extends Fragment {
                     fragment = new PaymentMethodFragment();
                 }
 
-                //Bundle bundle = new Bundle();
-                //bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
-                //fragment.setArguments(bundle);
+                Bundle arguments = getArguments();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
+                        paymentDTO);
+                fragment.setArguments(bundle);
+
                 FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
                 fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
                 fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
@@ -102,6 +123,7 @@ public class ResponsibilityFragment extends Fragment {
         makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                new PartialPaymentDialog(getActivity(), paymentDTO).show();
 
             }
         });
@@ -109,16 +131,22 @@ public class ResponsibilityFragment extends Fragment {
         TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
         TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
         TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
+        totalResponsibility  = (TextView) view.findViewById(R.id.respons_total_label);
+        prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
+        coPayResponsibility= (TextView) view.findViewById(R.id.respons_copay_label);
+        payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
+        payPartialButton = (Button) view.findViewById(R.id.make_partial_payment_button);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            ArrayList<PayloadPaymentModel> paymentList = (ArrayList<PayloadPaymentModel>) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
-
-            if (paymentList != null && paymentList.size() > 0) {
-                for (PayloadPaymentModel payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+            paymentDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(1).getPayload();
+            getPaymentLabels();
+            if (paymentList != null && paymentList.size() > 1) {
+                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
                         copayStr = payment.getTotal();
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.ACCOUNT)) {
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         previousBalanceStr = payment.getTotal();
                     }
                 }
@@ -127,11 +155,15 @@ public class ResponsibilityFragment extends Fragment {
                     double copay = Double.parseDouble(copayStr);
                     double previousBalance = Double.parseDouble(previousBalanceStr);
                     double total = copay + previousBalance;
-
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
                     responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
                     responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
                     responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
+                    totalResponsibility.setText(totalResponsibilityString);
+                    prevBalanceResponsibility.setText(previousBalanceString);
+                    coPayResponsibility.setText(insuranceCopayString);
+                    payTotalButton.setText(payTotalAmountString);
+                    payPartialButton.setText(payPartialAmountString);
 
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
@@ -145,15 +177,15 @@ public class ResponsibilityFragment extends Fragment {
     private void getPaymentInformation() {
         PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
                 .createService(PaymentsService.class);
-        Call<PaymentsDTO> call = paymentService.fetchPaymentInformation();
-        call.enqueue(new Callback<PaymentsDTO>() {
+        Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
+        call.enqueue(new Callback<PaymentsModel>() {
             @Override
-            public void onResponse(Call<PaymentsDTO> call, Response<PaymentsDTO> response) {
-                PaymentsDTO paymentsDTO = response.body();
+            public void onResponse(Call<PaymentsModel> call, Response<PaymentsModel> response) {
+                PaymentsModel paymentsDTO = response.body();
             }
 
             @Override
-            public void onFailure(Call<PaymentsDTO> call, Throwable throwable) {
+            public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
             }
         });
     }
@@ -206,5 +238,23 @@ public class ResponsibilityFragment extends Fragment {
         appCompatActivity = activity;
     }
 
-
+    /**
+     *  payment labels
+     */
+    public void getPaymentLabels() {
+        if (paymentDTO != null) {
+            PaymentsMetadataModel paymentsMetadataDTO = paymentDTO.getPaymentsMetadata();
+            if (paymentsMetadataDTO != null) {
+                PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataDTO.getPaymentsLabel();
+                if (paymentsLabelsDTO != null) {
+                    totalResponsibilityString = paymentsLabelsDTO.getPaymentTotalResponsibility();
+                    titleResponsibilityString = paymentsLabelsDTO.getPaymentResponsibilityTitle();
+                    previousBalanceString = paymentsLabelsDTO.getPaymentPreviousBalance();
+                    insuranceCopayString = paymentsLabelsDTO.getPaymentInsuranceCopay();
+                    payTotalAmountString = paymentsLabelsDTO.getPaymentPayTotalAmountButton();
+                    payPartialAmountString = paymentsLabelsDTO.getPaymentPartialAmountButton();
+                }
+            }
+        }
+    }
 }
