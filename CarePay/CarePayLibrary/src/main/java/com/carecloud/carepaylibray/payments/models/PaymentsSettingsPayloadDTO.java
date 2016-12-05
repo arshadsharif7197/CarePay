@@ -15,7 +15,7 @@ public class PaymentsSettingsPayloadDTO {
     @SerializedName("payment_methods")
     @Expose
     //private List<PaymentSettingsPayMethodsDTO> paymentMethods = new ArrayList<PaymentSettingsPayMethodsDTO>();
-    private List<PaymentMethodDTO> paymentMethods = new ArrayList<PaymentMethodDTO>();
+    private List<PaymentsMethodsDTO> paymentMethods = new ArrayList<PaymentsMethodsDTO>();
     @SerializedName("payment_plans")
     @Expose
     private PaymentsSettingsPayloadPlansDTO paymentPlans;
@@ -31,7 +31,7 @@ public class PaymentsSettingsPayloadDTO {
     //public List<PaymentSettingsPayMethodsDTO> getPaymentMethods() {
       //  return paymentMethods;
     //}
-    public List<PaymentMethodDTO> getPaymentMethods() {
+    public List<PaymentsMethodsDTO> getPaymentMethods() {
         return paymentMethods;
     }
 
@@ -43,7 +43,7 @@ public class PaymentsSettingsPayloadDTO {
     //public void setPaymentMethods(List<PaymentSettingsPayMethodsDTO> paymentMethods) {
     //    this.paymentMethods = paymentMethods;
     //}
-    public void setPaymentMethods(List<PaymentMethodDTO> paymentMethods) {
+    public void setPaymentMethods(List<PaymentsMethodsDTO> paymentMethods) {
             this.paymentMethods = paymentMethods;
         }
 

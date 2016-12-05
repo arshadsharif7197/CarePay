@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentMethodDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsPayMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -52,7 +53,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private PaymentsLabelDTO paymentsLabelsDTO;
     private String dialogTitle;
     private String dialogText;
-    private List<PaymentMethodDTO> paymentList;
+    private List<PaymentsMethodsDTO> paymentList;
     private String titlePaymentMethodString;
 
     @Override
@@ -67,7 +68,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        getLabels();
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
@@ -142,6 +142,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentList.get(i).getLabel())) {
                 selectedPaymentMethod = selectedRadioButton.getText().toString();
                 paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
+                paymentChoiceButton.setTag(checkedId);
             }
         }
     }
@@ -171,35 +172,40 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private View.OnClickListener paymentChoiceButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (paymentChoiceButton.getText().equals(getString(R.string.choose_credit_card))) {
-
-                FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-                ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
-                        .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = new ChooseCreditCardFragment();
-                }
-
-                Bundle args = new Bundle();
-                args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-                args.putSerializable(CarePayConstants.INTAKE_BUNDLE,
-                        paymentsDTO);
-                fragment.setArguments(args);
-
-                FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-                fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-                fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
-                fragmentTransaction.commit();
-
-            }else if (paymentChoiceButton.getText().equals(getString(R.string.cash))) {
-
-                new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface(){
+            getLabels();
+            int position=(Integer)view.getTag();
+            switch(position){
+                case 0:
+                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface(){
                     @Override
                     public void onActionButton() {
                     }
                 }).show();
+                    break;
+                case 1:
+                    FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+                    ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
+                            .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
+                    if (fragment == null) {
+                        fragment = new ChooseCreditCardFragment();
+                    }
 
+                    Bundle args = new Bundle();
+                    args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+                    args.putSerializable(CarePayConstants.INTAKE_BUNDLE,
+                            paymentsDTO);
+                    fragment.setArguments(args);
+
+                    FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+                    fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+                    fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
+                    fragmentTransaction.commit();
+                    break;
+
+                default:
+                    return;
             }
+
         }
     };
 
