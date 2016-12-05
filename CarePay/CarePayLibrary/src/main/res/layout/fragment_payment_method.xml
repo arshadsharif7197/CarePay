@@ -8,38 +8,51 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
+    <ScrollView
+        android:id="@+id/scrollview_choices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        >
+
     <RelativeLayout
+        android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/payment_method_parent_layout_padding">
-
         <RadioGroup
             android:id="@+id/paymentMethodsRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="vertical"></RadioGroup>
-
-        <Button
-            android:id="@+id/createPaymentPlanButton"
-            style="@style/PaymentButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-            android:background="@drawable/button_blue_border"
-            android:text="@string/create_payment_plan_instead"
-            android:textColor="@color/bright_cerulean" />
+            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:orientation="vertical">
+        </RadioGroup>
 
         <Button
             android:id="@+id/paymentChoiceButton"
             style="@style/PaymentButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/createPaymentPlanButton"
+            android:layout_below="@+id/paymentMethodsRadioGroup"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_selector"
             android:text="@string/choose_payment_method" />
 
+        <Button
+            android:id="@+id/createPaymentPlanButton"
+            style="@style/PaymentButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/paymentChoiceButton"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+            android:background="@drawable/button_blue_border"
+            android:text="@string/create_payment_plan_instead"
+            android:textColor="@color/bright_cerulean" />
+
+
     </RelativeLayout>
+    </ScrollView>
+
 </LinearLayout>
