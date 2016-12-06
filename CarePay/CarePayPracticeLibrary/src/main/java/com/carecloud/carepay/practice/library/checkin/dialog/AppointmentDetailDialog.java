@@ -89,6 +89,9 @@ public class AppointmentDetailDialog extends Dialog {
         onInitialization();
         onSettingStyle();
         onSetValuesFromDTO();
+        if(balanceValueLabel.getText().toString().trim().equalsIgnoreCase(CarePayConstants.ZERO_BALANCE)){
+            paymentButton.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -245,6 +248,6 @@ public class AppointmentDetailDialog extends Dialog {
         for(PatientBalancePayloadDTO balancePayloadDTO : patientBalanceDTO.getPayload()){
             totalBalance+=balancePayloadDTO.getTotal();
         }
-        return " "+CarePayConstants.DOLLAR+totalBalance;
+        return " "+StringUtil.getFormattedBalanceAmount(totalBalance);
     }
 }
