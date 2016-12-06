@@ -76,11 +76,17 @@ public class ResponsibilityFragment extends Fragment {
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
 
         setGothamRoundedMediumTypeface(appCompatActivity, title);
-        toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         setTypefaces(view);
+
+        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
+        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
+        TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
+        TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
+        TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
 
         Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +103,7 @@ public class ResponsibilityFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
                         arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
-                bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
-                        paymentDTO);
+                bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentDTO);
                 fragment.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
@@ -113,24 +118,19 @@ public class ResponsibilityFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 new PartialPaymentDialog(getActivity(), paymentDTO).show();
-
             }
         });
-
-        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
-        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
-        TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
-        TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
-        TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
             paymentDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
 
             if (paymentDTO != null) {
-                List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(1).getPayload();
+                List<PaymentPatientBalancesPayloadDTO> paymentList
+                        = paymentDTO.getPaymentPayload().getPatientBalances().get(1).getPayload();
+
                 getPaymentLabels();
+
                 if (paymentList != null && paymentList.size() > 1) {
                     for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
                         if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
@@ -161,7 +161,15 @@ public class ResponsibilityFragment extends Fragment {
                 }
             }
         }
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     private void getPaymentInformation() {

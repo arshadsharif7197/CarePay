@@ -66,7 +66,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_pay_total_responsibility")
     @Expose
     private String paymentTotalResponsibility;
-    @SerializedName("payment_pay_previous_balance")
+    @SerializedName("payment_previous_balance")
     @Expose
     private String paymentPreviousBalance;
     @SerializedName("payment_insurance_copay")
@@ -105,6 +105,15 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_optional_hint")
     @Expose
     private String paymentOptionalHint;
+    @SerializedName("payment_terms")
+    @Expose
+    private String paymentTerms;
+    @SerializedName("payment_agree_and_pay")
+    @Expose
+    private String paymentAgreeAndPay;
+    @SerializedName("payment_agree_to_pay_terms")
+    @Expose
+    private String paymentAgreeToPayTerms;
 
     /**
      * @return The demographicsCheckinHeading
@@ -446,10 +455,26 @@ public class PaymentsLabelDTO {
 
     /**
      *
+     * @return The paymentTerms
+     */
+    public String getPaymentTerms() {
+        return StringUtil.getLabelForView(paymentTerms);
+    }
+
+    /**
+     *
      * @param paymentPlanHeading The paymentPlanHeading
      */
     public void setPaymentPlanHeading(String paymentPlanHeading) {
         this.paymentPlanHeading = paymentPlanHeading;
+    }
+
+    /**
+     *
+     * @param paymentTerms The paymentTerms
+     */
+    public void setPaymentTerms(String paymentTerms) {
+        this.paymentTerms = paymentTerms;
     }
 
     /**
@@ -462,6 +487,14 @@ public class PaymentsLabelDTO {
 
     /**
      *
+     * @return The paymentAgreeAndPay
+     */
+    public String getPaymentAgreeAndPay() {
+        return StringUtil.getLabelForView(paymentAgreeAndPay);
+    }
+
+    /**
+     *
      * @param paymentLetsEstablishPaymentPlan The paymentLetsEstablishPaymentPlan
      */
     public void setPaymentLetsEstablishPaymentPlan(String paymentLetsEstablishPaymentPlan) {
@@ -470,10 +503,26 @@ public class PaymentsLabelDTO {
 
     /**
      *
+     * @param paymentAgreeAndPay The paymentAgreeAndPay
+     */
+    public void setPaymentAgreeAndPay(String paymentAgreeAndPay) {
+        this.paymentAgreeAndPay = paymentAgreeAndPay;
+    }
+
+    /**
+     *
      * @return The paymentPlanName
      */
     public String getPaymentPlanName() {
         return StringUtil.getLabelForView(paymentPlanName);
+    }
+
+    /**
+     *
+     * @return The paymentAgreeToPayTerms
+     */
+    public String getPaymentAgreeToPayTerms() {
+        return StringUtil.getLabelForView(paymentAgreeToPayTerms);
     }
 
     /**
@@ -594,5 +643,13 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentOptionalHint(String paymentOptionalHint) {
         this.paymentOptionalHint = paymentOptionalHint;
+    }
+
+    /**
+     *
+     * @param paymentAgreeToPayTerms The paymentAgreeToPayTerms
+     */
+    public void setPaymentAgreeToPayTerms(String paymentAgreeToPayTerms) {
+        this.paymentAgreeToPayTerms = paymentAgreeToPayTerms;
     }
 }
