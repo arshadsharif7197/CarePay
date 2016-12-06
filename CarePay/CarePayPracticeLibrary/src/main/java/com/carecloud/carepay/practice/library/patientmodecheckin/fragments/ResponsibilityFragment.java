@@ -109,7 +109,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
 
         if (paymentsModel != null) {
             List<PaymentPatientBalancesPayloadDTO> paymentList =
-                    paymentsModel.getPaymentPayload().getPatientBalances().get(1).getPayload();
+                    paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload();
 
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {

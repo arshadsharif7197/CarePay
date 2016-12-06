@@ -237,7 +237,8 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         queryString.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
         queryString.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
         queryString.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
-        queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
+        //retrofit is not taking null as query parameters
+        queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId()==null?"":inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
         WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
 
