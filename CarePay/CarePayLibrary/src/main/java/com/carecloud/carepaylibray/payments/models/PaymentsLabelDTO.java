@@ -66,7 +66,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_pay_total_responsibility")
     @Expose
     private String paymentTotalResponsibility;
-    @SerializedName("payment_pay_previous_balance")
+    @SerializedName("payment_previous_balance")
     @Expose
     private String paymentPreviousBalance;
     @SerializedName("payment_insurance_copay")

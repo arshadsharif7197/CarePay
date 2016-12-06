@@ -37,7 +37,7 @@
             android:layout_below="@+id/paymentMethodsRadioGroup"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_selector"
-            android:text="@string/choose_payment_method" />
+            />
 
         <Button
             android:id="@+id/createPaymentPlanButton"
@@ -48,7 +48,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_blue_border"
-            android:text="@string/create_payment_plan_instead"
             android:textColor="@color/bright_cerulean" />
 
 

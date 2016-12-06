@@ -23,8 +23,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
-import com.carecloud.carepaylibray.payments.models.PaymentMethodDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsPayMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -55,6 +53,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private String dialogText;
     private List<PaymentsMethodsDTO> paymentList;
     private String titlePaymentMethodString;
+    private String paymentChooseMethodString;
+    private String paymentCreatePlanString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +63,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         activity = getActivity();
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(R.string.payment_method);
+        //title.setText(titlePaymentMethodString);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_back));
@@ -86,8 +86,9 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         paymentMethodsDrawableArray = new int[]{R.drawable.payment_credit_card_button_selector,
              R.drawable.payment_cash_button_selector, R.drawable.payment_check_button_selector,
              R.drawable.payment_paypal_button_selector, R.drawable.payment_apple_button_selector};
-
+        getLabels();
         initilizeViews(view);
+        title.setText(titlePaymentMethodString);
         toolbar.setTitle(titlePaymentMethodString);
         return view;
     }
@@ -116,6 +117,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         paymentChoiceButton.setOnClickListener(paymentChoiceButtonListener);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
         paymentChoiceButton.setEnabled(false);
+        paymentChoiceButton.setText(paymentChooseMethodString);
+        createPaymentPlanButton.setText(paymentCreatePlanString);
 
         for (int i = 0; i < paymentList.size(); i++) {
             paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getLabel(), i),
@@ -221,6 +224,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     dialogTitle = paymentsLabelsDTO.getPaymentSeeFrontDeskButton();
                     dialogText= paymentsLabelsDTO.getPaymentBackButton();
                     titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
+                    paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
+                    paymentCreatePlanString =  paymentsLabelsDTO.getPaymentCreatePlanButton();
                 }
             }
         }
