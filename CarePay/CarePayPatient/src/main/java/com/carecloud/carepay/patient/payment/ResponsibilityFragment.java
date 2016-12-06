@@ -140,7 +140,7 @@ public class ResponsibilityFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             paymentDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
-            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(1).getPayload();
+            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
             getPaymentLabels();
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
