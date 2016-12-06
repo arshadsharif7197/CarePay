@@ -41,9 +41,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private String[] paymentMethodsArray;
     private String[] createPaymentMethodButtonCaptionArray;
     private int[] paymentMethodsDrawableArray;
-    private  PaymentsModel paymentsDTO;
-    private PaymentsMetadataModel paymentsMetadataModel;
-    private PaymentsLabelDTO paymentsLabelsDTO;
+    private PaymentsModel paymentsDTO;
     private String dialogTitle;
     private String dialogText;
 
@@ -157,7 +155,23 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // ToDo : Create payment plan action here - to be done
+            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+            PaymentPlanFragment fragment = (PaymentPlanFragment) fragmentmanager
+                    .findFragmentByTag(PaymentPlanFragment.class.getSimpleName());
+            if (fragment == null) {
+                fragment = new PaymentPlanFragment();
+            }
+
+            Bundle arguments = getArguments();
+            Bundle args = new Bundle();
+            args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                    arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+            fragment.setArguments(args);
+
+            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+            fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
+            fragmentTransaction.commit();
         }
     };
 
@@ -185,13 +199,13 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
                 fragmentTransaction.commit();
 
-            }else if (paymentChoiceButton.getText().equals(getString(R.string.cash))) {
-                new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface(){
+            } else if (paymentChoiceButton.getText().equals(getString(R.string.cash))) {
+                new LargeAlertDialog(getActivity(), dialogTitle, dialogText,
+                        new LargeAlertDialog.LargeAlertInterface() {
                     @Override
                     public void onActionButton() {
                     }
                 }).show();
-
             }
         }
     };
@@ -201,13 +215,12 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
      */
     public void getLabels() {
         if (paymentsDTO != null) {
-            paymentsMetadataModel = paymentsDTO.getPaymentsMetadata();
+            PaymentsMetadataModel paymentsMetadataModel = paymentsDTO.getPaymentsMetadata();
             if (paymentsMetadataModel != null) {
-                paymentsLabelsDTO = paymentsMetadataModel.getPaymentsLabel();
+                PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataModel.getPaymentsLabel();
                 if (paymentsLabelsDTO != null) {
                     dialogTitle = paymentsLabelsDTO.getPaymentSeeFrontDeskButton();
                     dialogText= paymentsLabelsDTO.getPaymentBackButton();
-
                 }
             }
         }
