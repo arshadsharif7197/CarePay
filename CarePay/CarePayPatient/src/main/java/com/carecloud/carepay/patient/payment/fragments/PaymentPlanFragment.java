@@ -62,7 +62,7 @@ public class PaymentPlanFragment extends Fragment {
             public void onClick(View view1) {
 
                 //Goto Credit card screen to add
-                addedCreditCard.setText("VISA **** 1234");//Temporary added
+                addedCreditCard.setText("VISA **** 1234");//TODO: Temporary added, remove once real data integration
                 addedCreditCard.setVisibility(View.VISIBLE);
                 addChangeCreditCard.setTextColor(getActivity().getResources().getColor(R.color.charcoal));
                 addChangeCreditCard.setText(paymentsLabel.getPaymentChangeCard());
