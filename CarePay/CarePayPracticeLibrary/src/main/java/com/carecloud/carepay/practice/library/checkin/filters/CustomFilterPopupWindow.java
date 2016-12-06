@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -108,6 +109,7 @@ public class CustomFilterPopupWindow extends PopupWindow
     /**
      * Filter appointment by provider and location
      * and operation between provider and location
+     *
      * @return filtered appoinment list
      */
     private HashSet<String> getFilteredAppointment() {
@@ -117,13 +119,13 @@ public class CustomFilterPopupWindow extends PopupWindow
         for (FilterDataDTO filterDataDTO : selectedFilters) {
             if (filterDataDTO.getFilterDataType() == FilterDataDTO.FilterDataType.PROVIDER) {
                 providerAppointmentsList.addAll(filterDataDTO.getAppointmentList());
-            }else {
+            } else {
                 locationAppoinementsList.addAll(filterDataDTO.getAppointmentList());
             }
         }
-        if(locationAppoinementsList.size()>0 && providerAppointmentsList.size()>0) {
+        if (locationAppoinementsList.size() > 0 && providerAppointmentsList.size() > 0) {
             providerAppointmentsList.retainAll(locationAppoinementsList);
-        }else if(locationAppoinementsList.size()>0 && providerAppointmentsList.size()==0) {
+        } else if (locationAppoinementsList.size() > 0 && providerAppointmentsList.size() == 0) {
             return locationAppoinementsList;
         }
         return providerAppointmentsList;
@@ -152,7 +154,6 @@ public class CustomFilterPopupWindow extends PopupWindow
         searchPatientEditText.addTextChangedListener(searchEditTextWatcher);
         searchPatientEditText.setOnFocusChangeListener(searchPatientEditTextFocusChangeListener);
         clearFiltersButton.setOnClickListener(clearFilterListener);
-        clearFiltersButton.setVisibility(View.GONE);
 
         SystemUtil.setProximaNovaSemiboldTypefaceEdittext(context, searchPatientEditText);
         SystemUtil.setGothamRoundedMediumTypeface(context, clearFiltersButton);
@@ -172,6 +173,15 @@ public class CustomFilterPopupWindow extends PopupWindow
 
     public void showPopWindow() {
         showAtLocation(parentView, Gravity.TOP | Gravity.RIGHT, 0, 0);
+    }
+
+    /**
+     * Show/hide the clear filters button  if filters are on/off
+     *
+     * @param isFilterOn true if the user has an active filter on
+     */
+    public void showClearFilterButton(boolean isFilterOn) {
+        clearFiltersButton.setVisibility(isFilterOn ? View.VISIBLE : View.GONE);
     }
 
 
