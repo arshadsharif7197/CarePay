@@ -170,9 +170,10 @@ public class AppointmentsActivity extends BasePatientActivity implements
             drawer.closeDrawer(GravityCompat.START);
         }
 
-        CognitoAppHelper.getPool().getUser().signOut();
-        CognitoAppHelper.setUser(null);
-
+        if(CognitoAppHelper.getPool().getUser() != null){
+            CognitoAppHelper.getPool().getUser().signOut();
+            CognitoAppHelper.setUser(null);
+        }
         // finish the app
         finishAffinity();
     }
