@@ -50,10 +50,6 @@ public class PaymentPlanFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_payment_plan, container, false);
 
-        Bundle arguments = getArguments();
-        PaymentsModel paymentsModel = (PaymentsModel) arguments
-                .getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-
         paymentPlanName = (EditText) view.findViewById(R.id.payment_plan_name_edit);
         paymentPlanMonthNo = (EditText) view.findViewById(R.id.payment_plan_month_no_edit);
         paymentPlanMonthlyPayment = (EditText) view.findViewById(R.id.payment_plan_monthly_payment_edit);
@@ -72,6 +68,10 @@ public class PaymentPlanFragment extends Fragment {
                 addChangeCreditCard.setText(paymentsLabel.getPaymentChangeCard());
             }
         });
+
+        Bundle arguments = getArguments();
+        PaymentsModel paymentsModel = (PaymentsModel) arguments
+                .getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
 
         if (paymentsModel != null) {
             paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();

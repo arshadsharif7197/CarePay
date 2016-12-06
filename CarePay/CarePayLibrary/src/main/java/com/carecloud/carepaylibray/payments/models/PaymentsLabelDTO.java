@@ -585,7 +585,7 @@ public class PaymentsLabelDTO {
      * @return The paymentOptionalHint
      */
     public String getPaymentOptionalHint() {
-        return paymentOptionalHint;
+        return StringUtil.getLabelForView(paymentOptionalHint);
     }
 
     /**
