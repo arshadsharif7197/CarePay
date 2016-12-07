@@ -66,7 +66,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_pay_total_responsibility")
     @Expose
     private String paymentTotalResponsibility;
-    @SerializedName("payment_pay_previous_balance")
+    @SerializedName("payment_previous_balance")
     @Expose
     private String paymentPreviousBalance;
     @SerializedName("payment_insurance_copay")
@@ -75,6 +75,15 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_responsibility_title")
     @Expose
     private String paymentResponsibilityTitle;
+    @SerializedName("payment_terms")
+    @Expose
+    private String paymentTerms;
+    @SerializedName("payment_agree_and_pay")
+    @Expose
+    private String paymentAgreeAndPay;
+    @SerializedName("payment_agree_to_pay_terms")
+    @Expose
+    private String paymentAgreeToPayTerms;
 
     /**
      * @return The demographicsCheckinHeading
@@ -404,6 +413,54 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentPreviousBalance(String paymentPreviousBalance) {
         this.paymentPreviousBalance = paymentPreviousBalance;
+    }
+
+    /**
+     *
+     * @return The paymentTerms
+     */
+    public String getPaymentTerms() {
+        return StringUtil.getLabelForView(paymentTerms);
+    }
+
+    /**
+     *
+     * @param paymentTerms The paymentTerms
+     */
+    public void setPaymentTerms(String paymentTerms) {
+        this.paymentTerms = paymentTerms;
+    }
+
+    /**
+     *
+     * @return The paymentAgreeAndPay
+     */
+    public String getPaymentAgreeAndPay() {
+        return StringUtil.getLabelForView(paymentAgreeAndPay);
+    }
+
+    /**
+     *
+     * @param paymentAgreeAndPay The paymentAgreeAndPay
+     */
+    public void setPaymentAgreeAndPay(String paymentAgreeAndPay) {
+        this.paymentAgreeAndPay = paymentAgreeAndPay;
+    }
+
+    /**
+     *
+     * @return The paymentAgreeToPayTerms
+     */
+    public String getPaymentAgreeToPayTerms() {
+        return StringUtil.getLabelForView(paymentAgreeToPayTerms);
+    }
+
+    /**
+     *
+     * @param paymentAgreeToPayTerms The paymentAgreeToPayTerms
+     */
+    public void setPaymentAgreeToPayTerms(String paymentAgreeToPayTerms) {
+        this.paymentAgreeToPayTerms = paymentAgreeToPayTerms;
     }
 
 }

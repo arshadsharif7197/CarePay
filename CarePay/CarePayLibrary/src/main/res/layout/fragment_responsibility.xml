@@ -37,7 +37,6 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/respons_total"
                     style="@style/ResponsTotalStyle"
-                    android:text="$0.00"
                     app:customAssetFont="gotham_rounded_medium" />
             </LinearLayout>
 
@@ -64,7 +63,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/respons_previous_balance_label"
                         app:customAssetFont="proxima_nova_regular" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -124,15 +122,13 @@
 
                 <Button
                     android:id="@+id/pay_total_amount_button"
-                    style="@style/ResponsButtonStyle"
-                    android:text="@string/pay_total_amount" />
+                    style="@style/ResponsButtonStyle" />
 
                 <Button
                     android:id="@+id/make_partial_payment_button"
                     style="@style/ResponsButtonStyle"
                     android:layout_marginTop="@dimen/apt_popup_parent_padding"
                     android:background="@drawable/button_blue_border"
-                    android:text="@string/make_partial_payment"
                     android:textColor="@color/bright_cerulean" />
             </LinearLayout>
 
