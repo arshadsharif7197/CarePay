@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -202,7 +203,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            SystemUtil.showFaultDialog(HowToCheckInActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -302,9 +304,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(HowToCheckInActivity.this,
-                    getString(R.string.alert_title_server_error), exceptionMessage);
-            dismissDialog();
+            SystemUtil.showFaultDialog(HowToCheckInActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
