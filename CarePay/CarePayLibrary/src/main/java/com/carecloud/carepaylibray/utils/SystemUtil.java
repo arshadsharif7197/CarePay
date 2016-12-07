@@ -231,6 +231,37 @@ public class SystemUtil {
 
     }
 
+    /**
+     * Shows a default error message dialog
+     *
+     * @param context The context
+     */
+    public static void showFaultDialog(Context context)
+    {
+        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+
+        // set dialog message
+        alertDialogBuilder
+                .setTitle("Connection issue")
+                .setMessage("There was a problem with your request. Please try again later.")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        dialog.dismiss();
+                    }
+                });
+
+        // create alert dialog
+        android.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+        alertDialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.icn_notification_error);
+
+        // show it
+        alertDialog.show();
+    }
+
     public static boolean isNotEmptyString(String string) {
         return string != null && !string.isEmpty() && !string.equals("null");
     }
@@ -360,29 +391,4 @@ public class SystemUtil {
         void executeOnClick(TextView destination, String selectedOption);
     }
 
-    public static void showFaultDialog(Context context)
-    {
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
-
-        // set dialog message
-        alertDialogBuilder
-                .setTitle("Connection issue")
-                .setMessage("There was a problem with your request. Please try again later.")
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, close
-                        // current activity
-                        dialog.dismiss();
-                    }
-                });
-
-        // create alert dialog
-        android.app.AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
-        alertDialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.icn_notification_error);
-
-        // show it
-        alertDialog.show();
-    }
 }
