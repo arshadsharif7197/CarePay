@@ -87,12 +87,55 @@ public class ResponsibilityFragment extends Fragment {
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
 
         setGothamRoundedMediumTypeface(appCompatActivity, title);
-        toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         setTypefaces(view);
 
+        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
+        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
+        totalResponsibility  = (TextView) view.findViewById(R.id.respons_total_label);
+        prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
+        coPayResponsibility= (TextView) view.findViewById(R.id.respons_copay_label);
+        payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
+        payPartialButton = (Button) view.findViewById(R.id.make_partial_payment_button);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            paymentDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
+            getPaymentLabels();
+            toolbar.setTitle(titleResponsibilityString);
+            if (paymentList != null && paymentList.size() > 1) {
+                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
+                        copayStr = payment.getTotal();
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                        previousBalanceStr = payment.getTotal();
+                    }
+                }
+
+                try {
+                    double copay = Double.parseDouble(copayStr);
+                    double previousBalance = Double.parseDouble(previousBalanceStr);
+                    double total = copay + previousBalance;
+                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                    responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
+                    responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
+                    totalResponsibility.setText(totalResponsibilityString);
+                    prevBalanceResponsibility.setText(previousBalanceString);
+                    coPayResponsibility.setText(insuranceCopayString);
+                    payTotalButton.setText(payTotalAmountString);
+                    payPartialButton.setText(payPartialAmountString);
+
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                    Log.e(LOG_TAG, ex.getMessage());
+                }
+            }
+        }
         Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,50 +171,15 @@ public class ResponsibilityFragment extends Fragment {
             }
         });
 
-        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
-        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
-        totalResponsibility  = (TextView) view.findViewById(R.id.respons_total_label);
-        prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
-        coPayResponsibility= (TextView) view.findViewById(R.id.respons_copay_label);
-        payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
-        payPartialButton = (Button) view.findViewById(R.id.make_partial_payment_button);
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            paymentDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
-            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(1).getPayload();
-            getPaymentLabels();
-            if (paymentList != null && paymentList.size() > 1) {
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
-                        copayStr = payment.getTotal();
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                        previousBalanceStr = payment.getTotal();
-                    }
-                }
-
-                try {
-                    double copay = Double.parseDouble(copayStr);
-                    double previousBalance = Double.parseDouble(previousBalanceStr);
-                    double total = copay + previousBalance;
-                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-                    responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
-                    responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
-                    totalResponsibility.setText(totalResponsibilityString);
-                    prevBalanceResponsibility.setText(previousBalanceString);
-                    coPayResponsibility.setText(insuranceCopayString);
-                    payTotalButton.setText(payTotalAmountString);
-                    payPartialButton.setText(payPartialAmountString);
-
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                    Log.e(LOG_TAG, ex.getMessage());
-                }
-            }
-        }
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     private void getPaymentInformation() {
