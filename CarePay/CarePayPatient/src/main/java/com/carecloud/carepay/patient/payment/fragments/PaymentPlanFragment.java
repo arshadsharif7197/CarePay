@@ -104,7 +104,9 @@ public class PaymentPlanFragment extends Fragment {
         String previousBalanceStr = "";
 
         if (paymentsModel != null) {
-            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentsModel.getPaymentPayload().getPatientBalances().get(1).getPayload();
+            List<PaymentPatientBalancesPayloadDTO> paymentList
+                    = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload();
+
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
                     if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {

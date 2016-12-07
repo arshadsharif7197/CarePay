@@ -94,7 +94,8 @@ public class ResponsibilityFragment extends Fragment {
             public void onClick(View view) {
                 getPaymentInformation();
                 FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-                PaymentMethodFragment fragment = (PaymentMethodFragment) fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
+                PaymentMethodFragment fragment = (PaymentMethodFragment)
+                        fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new PaymentMethodFragment();
                 }
@@ -127,7 +128,7 @@ public class ResponsibilityFragment extends Fragment {
 
             if (paymentDTO != null) {
                 List<PaymentPatientBalancesPayloadDTO> paymentList
-                        = paymentDTO.getPaymentPayload().getPatientBalances().get(1).getPayload();
+                        = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
 
                 getPaymentLabels();
 
@@ -166,10 +167,8 @@ public class ResponsibilityFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     private void getPaymentInformation() {
@@ -235,7 +234,7 @@ public class ResponsibilityFragment extends Fragment {
     }
 
     /**
-     *  payment labels
+     * payment labels
      */
     public void getPaymentLabels() {
         if (paymentDTO != null) {
