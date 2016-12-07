@@ -51,7 +51,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         Bundle arguments = getArguments();
         if (arguments != null) {
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
-            paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
         }
 
         // Inflate the layout for this fragment

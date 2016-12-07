@@ -7,6 +7,7 @@ import android.util.Log;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -254,5 +255,16 @@ public class StringUtil {
         } else {
             return label;
         }
+    }
+
+    /**
+     * Returns formatted balance amount.
+     *
+     * @param amount string received from endpoint
+     * @return formatted balance amount
+     */
+    public static String getFormattedBalanceAmount(double amount) {
+        DecimalFormat decimalFormat = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+        return CarePayConstants.DOLLAR+decimalFormat.format(amount);
     }
 }
