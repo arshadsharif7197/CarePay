@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -162,6 +164,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
         @Override
         public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(context);
+            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
