@@ -179,7 +179,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 }
 
                 // Balance of at least $20
-                if ((previousBalance + coPay) > 20) {
+                if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
                     FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                     PaymentPlanFragment fragment = (PaymentPlanFragment) fragmentmanager
                             .findFragmentByTag(PaymentPlanFragment.class.getSimpleName());

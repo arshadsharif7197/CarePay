@@ -66,4 +66,6 @@ public class CarePayConstants {
     public static final String APPOINTMENT_HEADER_DATE_FORMAT            = "MM-dd-yyyy";
     public static final String PRACTICE_APP_MODE_DEFAULT_PIN = "1234";
     public static final String ZERO_BALANCE  = "$0.00";
+
+    public static final int PAYMENT_PLAN_REQUIRED_BALANCE = 20;
 }
