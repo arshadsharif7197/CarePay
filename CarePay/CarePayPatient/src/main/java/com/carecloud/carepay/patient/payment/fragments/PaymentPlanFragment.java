@@ -49,10 +49,10 @@ public class PaymentPlanFragment extends Fragment {
 
     private static final String LOG_TAG = PaymentPlanFragment.class.getSimpleName();
 
-    private int MIN_NO_OF_MONTH = 2;
-    private int MAX_NO_OF_MONTH = 120;
-    private int MIN_MONTHLY_PAYMENT = 10;
-    private double MAX_MONTHLY_PAYMENT = 9999999999.99;
+    private int minNumberOfMonths = 2;
+    private int maxNumberOfMonths = 120;
+    private int minMonthlyPayment = 10;
+    private double maxMonthlyPayment = 9999999999.99;
 
     private PaymentsModel paymentsModel;
     private PaymentsLabelDTO paymentsLabel;
@@ -439,55 +439,57 @@ public class PaymentPlanFragment extends Fragment {
                 .getPaymentSettings().getPayload().getPaymentPlans();
 
         if (paymentPlans != null) {
-            String maximumCyclesMonths = paymentPlans.getMaximumCyclesMonths();
-            String minimumCyclesMonths = paymentPlans.getMinimumCyclesMonths();
-            String maximumPayment = paymentPlans.getMaximumPayment();
             String minimumPayment = paymentPlans.getMinimumPayment();
-
             if (!StringUtil.isNullOrEmpty(minimumPayment)) {
-                MIN_MONTHLY_PAYMENT = Integer.parseInt(minimumPayment);
+                minMonthlyPayment = Integer.parseInt(minimumPayment);
             }
+
+            String maximumPayment = paymentPlans.getMaximumPayment();
             if (!StringUtil.isNullOrEmpty(maximumPayment)) {
-                MAX_MONTHLY_PAYMENT = Double.parseDouble(maximumPayment);
+                maxMonthlyPayment = Double.parseDouble(maximumPayment);
             }
+
+            String minimumCyclesMonths = paymentPlans.getMinimumCyclesMonths();
             if (!StringUtil.isNullOrEmpty(minimumCyclesMonths)) {
-                MIN_NO_OF_MONTH = Integer.parseInt(minimumCyclesMonths);
+                minNumberOfMonths = Integer.parseInt(minimumCyclesMonths);
             }
+
+            String maximumCyclesMonths = paymentPlans.getMaximumCyclesMonths();
             if (!StringUtil.isNullOrEmpty(maximumCyclesMonths)) {
-                MAX_NO_OF_MONTH = Integer.parseInt(maximumCyclesMonths);
+                maxNumberOfMonths = Integer.parseInt(maximumCyclesMonths);
             }
         }
 
         PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         try {
             int noOfMonths = Integer.parseInt(paymentPlanMonthNo.getText().toString());
-            if (noOfMonths < MIN_NO_OF_MONTH) {
+            if (noOfMonths < minNumberOfMonths) {
                 //minimum number of month should be 2
                 paymentPlanMonthInput.setError(String.format(
-                        paymentsLabel.getPaymentPlanMinMonthsError(), MIN_NO_OF_MONTH));
+                        paymentsLabel.getPaymentPlanMinMonthsError(), minNumberOfMonths));
                 paymentPlanMonthNo.requestFocus();
                 return false;
-            } else if (noOfMonths > MAX_NO_OF_MONTH) {
+            } else if (noOfMonths > maxNumberOfMonths) {
                 //maximum number of months should be 120 (10 yrs)
                 paymentPlanMonthInput.setError(String.format(
-                        paymentsLabel.getPaymentPlanMaxMonthsError(), MAX_NO_OF_MONTH));
+                        paymentsLabel.getPaymentPlanMaxMonthsError(), maxNumberOfMonths));
                 paymentPlanMonthNo.requestFocus();
                 return false;
             }
 
             double payment = Double.parseDouble(paymentPlanMonthlyPayment.getText().toString().replaceAll("[$,]", ""));
-            if (payment < MIN_MONTHLY_PAYMENT) {
+            if (payment < minMonthlyPayment) {
                 //Minimum monthly payment amount = $10.00
                 paymentPlanMonthlyInput.setError(String.format(
                         paymentsLabel.getPaymentPlanMinAmountError(),
-                        StringUtil.getFormattedBalanceAmount(MIN_MONTHLY_PAYMENT)));
+                        StringUtil.getFormattedBalanceAmount(minMonthlyPayment)));
                 paymentPlanMonthlyPayment.requestFocus();
                 return false;
-            } else if (payment > MAX_MONTHLY_PAYMENT) {
+            } else if (payment > maxMonthlyPayment) {
                 //maximum monthly payment amount = $9999999999.99
                 paymentPlanMonthlyInput.setError(String.format(
                         paymentsLabel.getPaymentPlanMaxAmountError(),
-                        StringUtil.getFormattedBalanceAmount(MAX_MONTHLY_PAYMENT)));
+                        StringUtil.getFormattedBalanceAmount(maxMonthlyPayment)));
                 paymentPlanMonthlyPayment.requestFocus();
                 return false;
             }
