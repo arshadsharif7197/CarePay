@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
@@ -118,11 +119,12 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 }
             }
         }
+        enterPartialAmountEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(Double.toString(fullAmount).length()+2)});
     }
 
     @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
+    public void onClick(View view) {
+        int viewId = view.getId();
         if (viewId == R.id.dialogCloseImageView) {
             cancel();
         } else if (viewId == R.id.payPartialButton) {
@@ -131,16 +133,16 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
+    public void afterTextChanged(Editable str) {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void beforeTextChanged(CharSequence str, int start, int count, int after) {
         amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white));
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(CharSequence str, int start, int before, int count) {
         try {
             if (amountChangeFlag) {
                 amountChangeFlag = false;
