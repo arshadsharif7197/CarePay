@@ -17,20 +17,20 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
-                android:id="@+id/goBackButtonTextview"
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/goBackButton"
                 android:layout_width="wrap_content"
-                android:layout_height="51dp"
-                android:layout_marginTop="21.4dp"
-                android:background="@drawable/bg_light_blue_overlay"
-                android:drawableStart="@drawable/icn_arrow_left"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:paddingEnd="20dp"
-                android:paddingStart="15dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_blue_overlay"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:drawableLeft="@drawable/icn_arrow_left"
+                android:drawablePadding="@dimen/dimen_10dp"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingRight="@dimen/dimen_15dp"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="22sp"
-                android:visibility="gone" />
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium" />
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -128,16 +128,18 @@
 
         </android.support.design.widget.TextInputLayout>
 
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/signinButton"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:textSize="17sp"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:layout_marginTop="31dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginStart="2dp"
-                android:background="@drawable/bg_silver_overlay"/>
+                android:background="@drawable/bg_silver_overlay"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium" />
 
         </LinearLayout>
 
@@ -164,10 +166,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="dfgdfgdf"
             android:textColor="@color/white"
             android:textSize="@dimen/forgotpassword_textsize"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="gotham_rounded_medium" />
 
     </LinearLayout>
 

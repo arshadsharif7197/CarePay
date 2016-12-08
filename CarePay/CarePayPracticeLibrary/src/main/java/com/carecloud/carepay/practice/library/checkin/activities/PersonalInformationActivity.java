@@ -45,9 +45,9 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     private EditText lastNameEditText;
     private EditText phoneNumberEditText;
     private CarePayButton findMyAppointmentButton;
-    private boolean isEmptyFirstName;
-    private boolean isEmptyLastName;
-    private boolean isEmptyPhoneNumber;
+    private boolean isEmptyFirstName = true;
+    private boolean isEmptyLastName = true;
+    private boolean isEmptyPhoneNumber = true;
     private boolean isEmptyDate = true;
     private SigninPatientModeDTO signinPatientModeDTO;
     private SigninPatientModeLabelsDTO labelsDTO;
@@ -355,13 +355,11 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
                 Map<String, String> headers = new HashMap<>();
                 CognitoAppHelper.setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
-             //   headers.put("transition", "false");
-             //   headers.put("username_patient", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
-               // SystemUtil.showDialogMessage(PersonalInformationActivity.this, getString(R.string.signin_failed),
-               //         getString(R.string.find_my_appointments_unsuccessful));
+                SystemUtil.showDialogMessage(PersonalInformationActivity.this, StringUtil.getLabelForView(labelsDTO.getSignInFailed()),
+                        StringUtil.getLabelForView(labelsDTO.getPersonalInfoIncorrectDetails()));
             }
         }
 
