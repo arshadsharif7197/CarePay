@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -366,7 +367,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(PersonalInformationActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(PersonalInformationActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -383,7 +385,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(PersonalInformationActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(PersonalInformationActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 }

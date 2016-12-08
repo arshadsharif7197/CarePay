@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.splash;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.carecloud.carepay.practice.library.R;
@@ -38,7 +39,8 @@ public class SplashActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(SplashActivity.this,getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(SplashActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 }
