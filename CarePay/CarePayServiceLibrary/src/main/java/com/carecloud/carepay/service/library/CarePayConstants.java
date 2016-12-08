@@ -66,4 +66,15 @@ public class CarePayConstants {
     public static final String APPOINTMENT_HEADER_DATE_FORMAT            = "MM-dd-yyyy";
     public static final String PRACTICE_APP_MODE_DEFAULT_PIN = "1234";
     public static final String ZERO_BALANCE  = "$0.00";
+
+    public static final String CASH  = "Cash";
+    public static final String CREDIT_CARD  = "CHOOSE CREDIT CARD";
+    public static final String CHECK  = "Check";
+    public static final String GIFT_CARD  = "Gift Card";
+    public static final String PAYPAL  = "PayPal";
+    public static final String APPLE_PAY  = "Apple Pay";
+    public static final String ANDROID_PAY  = "Android Pay";
+    public static final String HSA  = "HSA";
+    public static final String FSA  = "FSA";
+
 }

@@ -112,9 +112,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
                     if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
-                        copayStr = payment.getTotal();
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         previousBalanceStr = payment.getTotal();
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                        copayStr = payment.getTotal();
                     }
                 }
 

@@ -1,5 +1,10 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -70,7 +75,6 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         Button payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
@@ -124,6 +128,27 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                     double copay = Double.parseDouble(copayStr);
                     double previousBalance = Double.parseDouble(previousBalanceStr);
                     double total = copay + previousBalance;
+                    if(total == 0){
+                        payTotalButton.setClickable(false);
+                        payTotalButton.setEnabled(false);
+                        payPartialButton.setClickable(false);
+                        payPartialButton.setEnabled(false);
+                        payTotalButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                        payPartialButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                    }else{
+                        payTotalButton.setClickable(true);
+                        payTotalButton.setEnabled(true);
+                        payPartialButton.setEnabled(true);
+                        payPartialButton.setEnabled(true);
+                        payTotalButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+                        payTotalButton.setTextColor(Color.WHITE);
+                        payPartialButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                        payPartialButton.setBackgroundColor(Color.WHITE);
+                        GradientDrawable border = new GradientDrawable();
+                        border.setColor(Color.WHITE);
+                        border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
+                        payPartialButton.setBackground(border);
+                    }
 
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
                     responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));

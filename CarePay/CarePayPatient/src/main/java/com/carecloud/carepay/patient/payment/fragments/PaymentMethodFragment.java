@@ -92,8 +92,48 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         radioButtonView.setButtonDrawable(null);
         radioButtonView.setBackground(null);
         radioButtonView.setText(cardInfo);
-        radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
+        switch (cardInfo) {
+            case CarePayConstants.CASH:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[1], 0, R.drawable.check_box_intake, 0);
+                break;
+            case CarePayConstants.CREDIT_CARD:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
+                break;
+            case CarePayConstants.CHECK:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[2], 0, R.drawable.check_box_intake, 0);
+                break;
+            case CarePayConstants.GIFT_CARD:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
+                break;
+            case CarePayConstants.PAYPAL:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[3], 0, R.drawable.check_box_intake, 0);
+                break;
+            case CarePayConstants.APPLE_PAY:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[4], 0, R.drawable.check_box_intake, 0);
+                break;
+            case CarePayConstants.ANDROID_PAY:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
+                break;
+            case CarePayConstants.HSA:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
+                break;
+            case CarePayConstants.FSA:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
+                break;
+            default:
+                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
+                break;
+        }
         radioButtonView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         radioButtonView.setTextColor(ContextCompat.getColor(activity, R.color.radio_button_selector));
         radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));

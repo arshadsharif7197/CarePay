@@ -63,7 +63,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_partial_amount_button")
     @Expose
     private String paymentPartialAmountButton;
-    @SerializedName("payment_pay_total_responsibility")
+    @SerializedName("your_total_patient_responsibility")
     @Expose
     private String paymentTotalResponsibility;
     @SerializedName("payment_previous_balance")
