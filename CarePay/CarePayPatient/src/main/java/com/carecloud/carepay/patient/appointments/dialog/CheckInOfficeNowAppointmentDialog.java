@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.appointments.dialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -119,6 +121,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(getContext());
+            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 }
