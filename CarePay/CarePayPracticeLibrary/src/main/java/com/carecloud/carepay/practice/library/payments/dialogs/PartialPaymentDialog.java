@@ -99,9 +99,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
                     if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
-                        copayStr = payment.getTotal();
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         previousBalanceStr = payment.getTotal();
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                        copayStr = payment.getTotal();
                     }
                 }
 
@@ -145,15 +145,20 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     public void onTextChanged(CharSequence str, int start, int before, int count) {
         try {
             if (amountChangeFlag) {
+                // flag to avoid the onTextChanged listener call after setText manipulated number
                 amountChangeFlag = false;
                 String amountEditText = enterPartialAmountEditText.getText().toString();
+                // Only when user enters dot, we should show the decimal values as 00
                 if (amountEditText.endsWith(".")) {
                     amountEditText = amountEditText + "00";
                     enterPartialAmountEditText.setText(amountEditText);
                     enterPartialAmountEditText.setSelection(amountEditText.length() - 2);
+                // When user removes dot, we should show the integer before that
                 } else if (amountEditText.endsWith(".0")) {
                     enterPartialAmountEditText.setText(amountEditText.substring(0, amountEditText.length() - 2));
                     enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length());
+                // When user enters number, we should simply append the number entered
+                // Also adjusting the cursor position after removing DOT and appending number
                 } else {
                     if (amountEditText.contains(".")) {
                         enterPartialAmountEditText.setText(new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER).format(Double.parseDouble(amountEditText)));
@@ -166,6 +171,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                         enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length());
                     }
                 }
+                // Calculating the remaining amount after entering partial payment amount
                 onPendingAmountValidation(amountEditText);
             } else {
                 amountChangeFlag = true;
