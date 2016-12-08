@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,7 +28,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,17 +36,12 @@ import java.util.List;
 public class PaymentMethodFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup paymentMethodRadioGroup;
-    private Button createPaymentPlanButton;
     private Button paymentChoiceButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
     private String selectedPaymentMethod;
-    private String[] paymentMethodsArray;
-    private String[] createPaymentMethodButtonCaptionArray;
     private int[] paymentMethodsDrawableArray;
-    private  PaymentsModel paymentsDTO;
-    private PaymentsMetadataModel paymentsMetadataModel;
-    private PaymentsLabelDTO paymentsLabelsDTO;
+    private PaymentsModel paymentsDTO;
     private String dialogTitle;
     private String dialogText;
     private List<PaymentsMethodsDTO> paymentList;
@@ -84,8 +77,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 getString(R.string.cash), getString(R.string.scan_check),
                 getString(R.string.pay_using_paypal), getString(R.string.pay_using_android_pay)};*/
         paymentMethodsDrawableArray = new int[]{R.drawable.payment_credit_card_button_selector,
-             R.drawable.payment_cash_button_selector, R.drawable.payment_check_button_selector,
-             R.drawable.payment_paypal_button_selector, R.drawable.payment_apple_button_selector};
+                R.drawable.payment_cash_button_selector, R.drawable.payment_check_button_selector,
+                R.drawable.payment_paypal_button_selector, R.drawable.payment_apple_button_selector};
         getLabels();
         initilizeViews(view);
         title.setText(titlePaymentMethodString);
@@ -112,7 +105,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private void initilizeViews(View view) {
         paymentMethodRadioGroup = (RadioGroup) view.findViewById(R.id.paymentMethodsRadioGroup);
         paymentChoiceButton = (Button) view.findViewById(R.id.paymentChoiceButton);
-        createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
+        Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
         paymentMethodRadioGroup.setOnCheckedChangeListener(this);
         paymentChoiceButton.setOnClickListener(paymentChoiceButtonListener);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
@@ -169,6 +162,23 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+            PaymentPlanFragment fragment = (PaymentPlanFragment) fragmentmanager
+                    .findFragmentByTag(PaymentPlanFragment.class.getSimpleName());
+            if (fragment == null) {
+                fragment = new PaymentPlanFragment();
+            }
+
+            Bundle arguments = getArguments();
+            Bundle args = new Bundle();
+            args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                    arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+            fragment.setArguments(args);
+
+            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+            fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
+            fragmentTransaction.commit();
         }
     };
 
@@ -176,15 +186,16 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         @Override
         public void onClick(View view) {
             getLabels();
-            int position=(Integer)view.getTag();
-            switch(position){
+            int position = (Integer) view.getTag();
+            switch (position) {
                 case 0:
-                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface(){
-                    @Override
-                    public void onActionButton() {
-                    }
-                }).show();
+                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface() {
+                        @Override
+                        public void onActionButton() {
+                        }
+                    }).show();
                     break;
+
                 case 1:
                     FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                     ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
@@ -206,26 +217,25 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     break;
 
                 default:
-                    return;
+                    break;
             }
-
         }
     };
 
     /**
-     *  partial payment labels
+     * partial payment labels
      */
     public void getLabels() {
         if (paymentsDTO != null) {
-            paymentsMetadataModel = paymentsDTO.getPaymentsMetadata();
+            PaymentsMetadataModel paymentsMetadataModel = paymentsDTO.getPaymentsMetadata();
             if (paymentsMetadataModel != null) {
-                paymentsLabelsDTO = paymentsMetadataModel.getPaymentsLabel();
+                PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataModel.getPaymentsLabel();
                 if (paymentsLabelsDTO != null) {
                     dialogTitle = paymentsLabelsDTO.getPaymentSeeFrontDeskButton();
-                    dialogText= paymentsLabelsDTO.getPaymentBackButton();
+                    dialogText = paymentsLabelsDTO.getPaymentBackButton();
                     titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
                     paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
-                    paymentCreatePlanString =  paymentsLabelsDTO.getPaymentCreatePlanButton();
+                    paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
                 }
             }
         }

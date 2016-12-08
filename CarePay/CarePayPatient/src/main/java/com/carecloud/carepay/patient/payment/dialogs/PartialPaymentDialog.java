@@ -104,8 +104,10 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         partialPaymentPayingToday.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
         SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
+
         if (paymentsDTO != null) {
-            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(1).getPayload();
+            List<PaymentPatientBalancesPayloadDTO> paymentList
+                    = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
 
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
