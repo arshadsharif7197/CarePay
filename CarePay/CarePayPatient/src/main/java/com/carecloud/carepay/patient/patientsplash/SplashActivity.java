@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.patientsplash;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -72,7 +73,8 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(SplashActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

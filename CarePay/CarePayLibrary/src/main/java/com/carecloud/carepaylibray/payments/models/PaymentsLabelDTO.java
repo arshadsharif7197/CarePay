@@ -75,6 +75,36 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_responsibility_title")
     @Expose
     private String paymentResponsibilityTitle;
+    @SerializedName("payment_plan_heading")
+    @Expose
+    private String paymentPlanHeading;
+    @SerializedName("payment_lets_establish_payment_plan")
+    @Expose
+    private String paymentLetsEstablishPaymentPlan;
+    @SerializedName("payment_plan_name")
+    @Expose
+    private String paymentPlanName;
+    @SerializedName("payment_day_of_the_month")
+    @Expose
+    private String paymentDayOfTheMonth;
+    @SerializedName("payment_number_of_months")
+    @Expose
+    private String paymentNumberOfMonths;
+    @SerializedName("payment_monthly_payment")
+    @Expose
+    private String paymentMonthlyPayment;
+    @SerializedName("payment_change_card")
+    @Expose
+    private String paymentChangeCard;
+    @SerializedName("payment_create_plan")
+    @Expose
+    private String paymentCreatePlan;
+    @SerializedName("payment_add_card_button")
+    @Expose
+    private String paymentAddCardButton;
+    @SerializedName("payment_optional_hint")
+    @Expose
+    private String paymentOptionalHint;
     @SerializedName("payment_terms")
     @Expose
     private String paymentTerms;
@@ -417,10 +447,26 @@ public class PaymentsLabelDTO {
 
     /**
      *
+     * @return The paymentPlanHeading
+     */
+    public String getPaymentPlanHeading() {
+        return StringUtil.getLabelForView(paymentPlanHeading);
+    }
+
+    /**
+     *
      * @return The paymentTerms
      */
     public String getPaymentTerms() {
         return StringUtil.getLabelForView(paymentTerms);
+    }
+
+    /**
+     *
+     * @param paymentPlanHeading The paymentPlanHeading
+     */
+    public void setPaymentPlanHeading(String paymentPlanHeading) {
+        this.paymentPlanHeading = paymentPlanHeading;
     }
 
     /**
@@ -433,10 +479,26 @@ public class PaymentsLabelDTO {
 
     /**
      *
+     * @return The paymentLetsEstablishPaymentPlan
+     */
+    public String getPaymentLetsEstablishPaymentPlan() {
+        return StringUtil.getLabelForView(paymentLetsEstablishPaymentPlan);
+    }
+
+    /**
+     *
      * @return The paymentAgreeAndPay
      */
     public String getPaymentAgreeAndPay() {
         return StringUtil.getLabelForView(paymentAgreeAndPay);
+    }
+
+    /**
+     *
+     * @param paymentLetsEstablishPaymentPlan The paymentLetsEstablishPaymentPlan
+     */
+    public void setPaymentLetsEstablishPaymentPlan(String paymentLetsEstablishPaymentPlan) {
+        this.paymentLetsEstablishPaymentPlan = paymentLetsEstablishPaymentPlan;
     }
 
     /**
@@ -449,10 +511,138 @@ public class PaymentsLabelDTO {
 
     /**
      *
+     * @return The paymentPlanName
+     */
+    public String getPaymentPlanName() {
+        return StringUtil.getLabelForView(paymentPlanName);
+    }
+
+    /**
+     *
      * @return The paymentAgreeToPayTerms
      */
     public String getPaymentAgreeToPayTerms() {
         return StringUtil.getLabelForView(paymentAgreeToPayTerms);
+    }
+
+    /**
+     *
+     * @param paymentPlanName The paymentPlanName
+     */
+    public void setPaymentPlanName(String paymentPlanName) {
+        this.paymentPlanName = paymentPlanName;
+    }
+
+    /**
+     *
+     * @return The paymentDayOfTheMonth
+     */
+    public String getPaymentDayOfTheMonth() {
+        return StringUtil.getLabelForView(paymentDayOfTheMonth);
+    }
+
+    /**
+     *
+     * @param paymentDayOfTheMonth The paymentDayOfTheMonth
+     */
+    public void setPaymentDayOfTheMonth(String paymentDayOfTheMonth) {
+        this.paymentDayOfTheMonth = paymentDayOfTheMonth;
+    }
+
+    /**
+     *
+     * @return The paymentNumberOfMonths
+     */
+    public String getPaymentNumberOfMonths() {
+        return StringUtil.getLabelForView(paymentNumberOfMonths);
+    }
+
+    /**
+     *
+     * @param paymentNumberOfMonths The paymentNumberOfMonths
+     */
+    public void setPaymentNumberOfMonths(String paymentNumberOfMonths) {
+        this.paymentNumberOfMonths = paymentNumberOfMonths;
+    }
+
+    /**
+     *
+     * @return The paymentMonthlyPayment
+     */
+    public String getPaymentMonthlyPayment() {
+        return StringUtil.getLabelForView(paymentMonthlyPayment);
+    }
+
+    /**
+     *
+     * @param paymentMonthlyPayment The paymentMonthlyPayment
+     */
+    public void setPaymentMonthlyPayment(String paymentMonthlyPayment) {
+        this.paymentMonthlyPayment = paymentMonthlyPayment;
+    }
+
+    /**
+     *
+     * @return The paymentChangeCard
+     */
+    public String getPaymentChangeCard() {
+        return StringUtil.getLabelForView(paymentChangeCard);
+    }
+
+    /**
+     *
+     * @param paymentChangeCard The paymentChangeCard
+     */
+    public void setPaymentChangeCard(String paymentChangeCard) {
+        this.paymentChangeCard = paymentChangeCard;
+    }
+
+    /**
+     *
+     * @return The paymentCreatePlan
+     */
+    public String getPaymentCreatePlan() {
+        return StringUtil.getLabelForView(paymentCreatePlan);
+    }
+
+    /**
+     *
+     * @param paymentCreatePlan The paymentCreatePlan
+     */
+    public void setPaymentCreatePlan(String paymentCreatePlan) {
+        this.paymentCreatePlan = paymentCreatePlan;
+    }
+
+    /**
+     *
+     * @return The paymentAddCardButton
+     */
+    public String getPaymentAddCardButton() {
+        return StringUtil.getLabelForView(paymentAddCardButton);
+    }
+
+    /**
+     *
+     * @param paymentAddCardButton The paymentAddCardButton
+     */
+    public void setPaymentAddCardButton(String paymentAddCardButton) {
+        this.paymentAddCardButton = paymentAddCardButton;
+    }
+
+    /**
+     *
+     * @return The paymentOptionalHint
+     */
+    public String getPaymentOptionalHint() {
+        return StringUtil.getLabelForView(paymentOptionalHint);
+    }
+
+    /**
+     *
+     * @param paymentOptionalHint The paymentOptionalHint
+     */
+    public void setPaymentOptionalHint(String paymentOptionalHint) {
+        this.paymentOptionalHint = paymentOptionalHint;
     }
 
     /**
@@ -462,5 +652,4 @@ public class PaymentsLabelDTO {
     public void setPaymentAgreeToPayTerms(String paymentAgreeToPayTerms) {
         this.paymentAgreeToPayTerms = paymentAgreeToPayTerms;
     }
-
 }
