@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -90,7 +91,7 @@ public class SigninActivity extends BasePracticeActivity {
     private TextView signinButton;
     private TextView forgotPasswordButton;
     private TextView signinTitle;
-    private TextView gobackButton;
+    private CarePayButton gobackButton;
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
     private EditText emailEditText;
@@ -216,7 +217,8 @@ public class SigninActivity extends BasePracticeActivity {
     public void initViews(SignInScreenMode signInScreenMode) {
         signInButton = (Button) findViewById(R.id.signinButton);
         homeButton = (ImageView) findViewById(R.id.signInHome);
-        gobackButton = (TextView) findViewById(R.id.goBackButtonTextview);
+        gobackButton = (CarePayButton) findViewById(R.id.goBackButton);
+        gobackButton.setOnClickListener(goBackButtonListener);
         forgotPasswordButton = (TextView) findViewById(R.id.forgot_passwordTextview);
         passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
         emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
@@ -481,4 +483,14 @@ public class SigninActivity extends BasePracticeActivity {
     public enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
     }
+
+    /**
+     * Click listener for go back button
+     */
+    View.OnClickListener goBackButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            onBackPressed();
+        }
+    };
 }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
@@ -54,7 +53,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private String paymentPartialButton;
     private String copayStr = "";
     private String previousBalanceStr = "";
-    private boolean amountChangeFlag=true;
+    private boolean amountChangeFlag = true;
 
     /**
      * @param context     The context
@@ -119,7 +118,6 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 }
             }
         }
-        enterPartialAmountEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(Double.toString(fullAmount).length())});
     }
 
     @Override
@@ -143,38 +141,36 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if(amountChangeFlag){
-            amountChangeFlag = false;
-            String amountEditText = getFormatedNumber(enterPartialAmountEditText.getText().toString());
-            enterPartialAmountEditText.setText(amountEditText);
-            enterPartialAmountEditText.setSelection(amountEditText.length());
-            onPendingAmountValidation(amountEditText);
-        } else {
-            amountChangeFlag = true;
+        try {
+            if (amountChangeFlag) {
+                amountChangeFlag = false;
+                String amountEditText = enterPartialAmountEditText.getText().toString();
+                if (amountEditText.endsWith(".")) {
+                    amountEditText = amountEditText + "00";
+                    enterPartialAmountEditText.setText(amountEditText);
+                    enterPartialAmountEditText.setSelection(amountEditText.length() - 2);
+                } else if (amountEditText.endsWith(".0")) {
+                    enterPartialAmountEditText.setText(amountEditText.substring(0, amountEditText.length() - 2));
+                    enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length());
+                } else {
+                    if (amountEditText.contains(".")) {
+                        enterPartialAmountEditText.setText(new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER).format(Double.parseDouble(amountEditText)));
+                    } else {
+                        enterPartialAmountEditText.setText(amountEditText);
+                    }
+                    if (enterPartialAmountEditText.getText().toString().endsWith("0")) {
+                        enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length() - 1);
+                    } else {
+                        enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length());
+                    }
+                }
+                onPendingAmountValidation(amountEditText);
+            } else {
+                amountChangeFlag = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    private String getFormatedNumber(String amountText){
-        amountText = removeExtras(amountText);
-        int amountLen = amountText.length();
-        if (amountLen == 1){
-            return "0.0"+amountText;
-        } else if(amountLen == 2){
-            return "0."+amountText;
-        } else if(amountLen > 2){
-            return amountText.substring(0,amountLen-2)+"."+amountText.substring(amountLen-2,amountLen);
-        } else {
-            return "";
-        }
-    }
-
-    private String removeExtras(String number){
-        number = number.replace(".","");
-        if(number.startsWith("0")){
-            number = number.substring(1);
-            number = removeExtras(number);
-        }
-        return number;
     }
 
     private void onPendingAmountValidation(String amountEditText) {
@@ -184,16 +180,15 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             }
             double amountPay = Double.parseDouble(amountEditText);
             if ((amountPay > 0) && (amountPay <= fullAmount)) {
-                partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100));
                 payPartialButton.setEnabled(true);
             } else {
                 payPartialButton.setEnabled(false);
-                partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
             }
+            partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100));
         } else {
             amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white_transparent));
             payPartialButton.setEnabled(false);
-            partialPaymentTotalAmountTitle.setText(pendingAmountLabel+ " " + StringUtil.getFormattedBalanceAmount(fullAmount));
+            partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
         }
     }
 

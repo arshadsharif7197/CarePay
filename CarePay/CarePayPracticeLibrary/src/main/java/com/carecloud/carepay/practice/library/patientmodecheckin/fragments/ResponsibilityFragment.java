@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.payments.dialogs.PartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -95,7 +96,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
         payPartialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                new PartialPaymentDialog(getActivity(), paymentsModel).show();
             }
         });
 
