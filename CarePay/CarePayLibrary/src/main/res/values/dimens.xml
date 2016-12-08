@@ -6,6 +6,7 @@
     <dimen name="dimen_8dp">8dp</dimen>
     <dimen name="dimen_10dp">10dp</dimen>
     <dimen name="dimen_12dp">12dp</dimen>
+    <dimen name="dimen_14dp">14dp</dimen>
     <dimen name="dimen_15dp">15dp</dimen>
     <dimen name="dimen_17dp">17dp</dimen>
     <dimen name="dimen_18dp">18dp</dimen>
@@ -14,7 +15,9 @@
     <dimen name="dimen_22dp">22dp</dimen>
     <dimen name="dimen_25dp">25dp</dimen>
     <dimen name="dimen_26dp">26dp</dimen>
+    <dimen name="dimen_30dp">30dp</dimen>
     <dimen name="dimen_33dp">33dp</dimen>
+    <dimen name="dimen_40dp">40dp</dimen>
     <dimen name="dimen_24dp">24dp</dimen>
     <dimen name="dimen_500dp">500dp</dimen>
     <dimen name="dimen_400dp">400dp</dimen>
@@ -343,4 +346,9 @@
     <dimen name="cancel_button_height">48dp</dimen>
     <dimen name="demogr_onboard_allset_icon_margin_top">60dp</dimen>
     <dimen name="demogr_onboard_button_margin_top">43dp</dimen>
+
+    <!--Payment Plan-->
+    <dimen name="payment_plan_month_day_width">55dp</dimen>
+    <dimen name="payment_plan_credit_card_font">17sp</dimen>
+    <dimen name="payment_plan_credit_card_button_font">14sp</dimen>
 </resources>
