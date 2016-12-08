@@ -267,4 +267,17 @@ public class StringUtil {
         DecimalFormat decimalFormat = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
         return CarePayConstants.DOLLAR+decimalFormat.format(amount);
     }
+
+    /**
+     * Returns encoded credit card number
+     * @param cardType Card Type
+     * @param cardNumber Card Number
+     * @return encoded credit card number
+     */
+    public static String getEncodedCardNumber(String cardType, String cardNumber) {
+        if (!isNullOrEmpty(cardNumber)) {
+            return cardType + " **** " + cardNumber.substring(cardNumber.length() - 4, cardNumber.length());
+        }
+        return "";
+    }
 }

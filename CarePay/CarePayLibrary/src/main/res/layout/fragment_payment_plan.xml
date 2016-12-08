@@ -66,9 +66,9 @@
                             android:id="@+id/payment_plan_optional_hint"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:layout_marginEnd="@dimen/dimen_14dp"
-                            android:layout_alignParentEnd="true"
                             android:textSize="@dimen/apt_popup_optional"
                             app:customAssetFont="proxima_nova_semi_bold"
                             tools:ignore="RelativeOverlap" />
@@ -131,7 +131,7 @@
                         <EditText
                             android:id="@+id/payment_plan_month_no_edit"
                             style="@style/EditTextStyle"
-                            android:inputType="text"
+                            android:inputType="numberDecimal"
                             tools:ignore="LabelFor" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -144,7 +144,7 @@
                         <EditText
                             android:id="@+id/payment_plan_monthly_payment_edit"
                             style="@style/EditTextStyle"
-                            android:inputType="text"
+                            android:inputType="numberDecimal"
                             tools:ignore="LabelFor" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -152,16 +152,15 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_20dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:orientation="horizontal">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/payment_plan_credit_card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dimen_14dp"
-                            android:layout_weight="1"
+                            android:layout_weight="0.7"
                             android:drawablePadding="@dimen/dimen_5dp"
                             android:drawableStart="@drawable/payment_credit_card_button_selector"
                             android:gravity="start|center_vertical"
@@ -176,8 +175,8 @@
                             android:id="@+id/payment_plan_credit_card_button"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="end"
+                            android:layout_weight="0.4"
+                            android:gravity="end|center_vertical"
                             android:paddingBottom="@dimen/dimen_17dp"
                             android:paddingEnd="@dimen/dimen_14dp"
                             android:paddingStart="0dp"
@@ -269,6 +268,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@drawable/button_selector"
+            android:enabled="false"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/respons_button_text_size" />

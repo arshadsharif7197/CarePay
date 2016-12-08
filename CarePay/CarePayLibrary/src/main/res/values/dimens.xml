@@ -349,6 +349,6 @@
 
     <!--Payment Plan-->
     <dimen name="payment_plan_month_day_width">55dp</dimen>
-    <dimen name="payment_plan_credit_card_font">17sp</dimen>
+    <dimen name="payment_plan_credit_card_font">16sp</dimen>
     <dimen name="payment_plan_credit_card_button_font">14sp</dimen>
 </resources>

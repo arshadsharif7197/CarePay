@@ -114,6 +114,21 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_agree_to_pay_terms")
     @Expose
     private String paymentAgreeToPayTerms;
+    @SerializedName("payment_plan_create_condition_error")
+    @Expose
+    private String paymentPlanCreateConditionError;
+    @SerializedName("payment_plan_min_months_error")
+    @Expose
+    private String paymentPlanMinMonthsError;
+    @SerializedName("payment_plan_max_months_error")
+    @Expose
+    private String paymentPlanMaxMonthsError;
+    @SerializedName("payment_plan_min_amount_error")
+    @Expose
+    private String paymentPlanMinAmountError;
+    @SerializedName("payment_plan_max_amount_error")
+    @Expose
+    private String paymentPlanMaxAmountError;
 
     /**
      * @return The demographicsCheckinHeading
@@ -651,5 +666,85 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentAgreeToPayTerms(String paymentAgreeToPayTerms) {
         this.paymentAgreeToPayTerms = paymentAgreeToPayTerms;
+    }
+
+    /**
+     *
+     * @return paymentPlanCreateConditionError
+     */
+    public String getPaymentPlanCreateConditionError() {
+        return StringUtil.getLabelForView(paymentPlanCreateConditionError);
+    }
+
+    /**
+     *
+     * @param paymentPlanCreateConditionError paymentPlanCreateConditionError
+     */
+    public void setPaymentPlanCreateConditionError(String paymentPlanCreateConditionError) {
+        this.paymentPlanCreateConditionError = paymentPlanCreateConditionError;
+    }
+
+    /**
+     *
+     * @return paymentPlanMinMonthsError
+     */
+    public String getPaymentPlanMinMonthsError() {
+        return StringUtil.getLabelForView(paymentPlanMinMonthsError);
+    }
+
+    /**
+     *
+     * @param paymentPlanMinMonthsError paymentPlanMinMonthsError
+     */
+    public void setPaymentPlanMinMonthsError(String paymentPlanMinMonthsError) {
+        this.paymentPlanMinMonthsError = paymentPlanMinMonthsError;
+    }
+
+    /**
+     *
+     * @return paymentPlanMaxMonthsError
+     */
+    public String getPaymentPlanMaxMonthsError() {
+        return StringUtil.getLabelForView(paymentPlanMaxMonthsError);
+    }
+
+    /**
+     *
+     * @param paymentPlanMaxMonthsError paymentPlanMaxMonthsError
+     */
+    public void setPaymentPlanMaxMonthsError(String paymentPlanMaxMonthsError) {
+        this.paymentPlanMaxMonthsError = paymentPlanMaxMonthsError;
+    }
+
+    /**
+     *
+     * @return paymentPlanMinAmountError
+     */
+    public String getPaymentPlanMinAmountError() {
+        return StringUtil.getLabelForView(paymentPlanMinAmountError);
+    }
+
+    /**
+     *
+     * @param paymentPlanMinAmountError paymentPlanMinAmountError
+     */
+    public void setPaymentPlanMinAmountError(String paymentPlanMinAmountError) {
+        this.paymentPlanMinAmountError = paymentPlanMinAmountError;
+    }
+
+    /**
+     *
+     * @return paymentPlanMaxAmountError
+     */
+    public String getPaymentPlanMaxAmountError() {
+        return StringUtil.getLabelForView(paymentPlanMaxAmountError);
+    }
+
+    /**
+     *
+     * @param paymentPlanMaxAmountError paymentPlanMaxAmountError
+     */
+    public void setPaymentPlanMaxAmountError(String paymentPlanMaxAmountError) {
+        this.paymentPlanMaxAmountError = paymentPlanMaxAmountError;
     }
 }
