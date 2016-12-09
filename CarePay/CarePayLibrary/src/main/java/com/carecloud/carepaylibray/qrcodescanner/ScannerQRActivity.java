@@ -7,11 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.keyboard.Constants;
-import com.google.zxing.Result;
 import com.carecloud.carepaylibrary.R;
+import com.google.zxing.Result;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
@@ -19,7 +16,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * @since 1.0
  * */
 public class ScannerQRActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
-    private ZXingScannerView mScannerView;
+    private ZXingScannerView zXingScannerView;
     public static final String EXTRA_QR_CODE = "QR_CODE";
     private String headerTitle;
 
@@ -36,21 +33,21 @@ public class ScannerQRActivity extends AppCompatActivity implements ZXingScanner
         setContentView(com.carecloud.carepaylibrary.R.layout.activity_qr_scanner);
         setupToolbar();
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
-        mScannerView = new ZXingScannerView(this);
-        contentFrame.addView(mScannerView);
+        zXingScannerView = new ZXingScannerView(this);
+        contentFrame.addView(zXingScannerView);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mScannerView.setResultHandler(this);
-        mScannerView.startCamera();
+        zXingScannerView.setResultHandler(this);
+        zXingScannerView.startCamera();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mScannerView.stopCamera();
+        zXingScannerView.stopCamera();
     }
 
     @Override
@@ -80,7 +77,9 @@ public class ScannerQRActivity extends AppCompatActivity implements ZXingScanner
             case android.R.id.home:
                 finish();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
     }
 }

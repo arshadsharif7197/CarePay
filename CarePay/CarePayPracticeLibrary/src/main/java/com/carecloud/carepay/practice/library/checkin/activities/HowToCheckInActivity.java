@@ -336,7 +336,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     }
 
     /**
-     *
      * Launch activity for scanning qr code if permission is granted
      * */
     public void launchActivity() {
@@ -352,7 +351,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,  String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,  String permissions[], int grantResults[]) {
         switch (requestCode) {
             case CAMERA_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -361,6 +360,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 } else {
                     Toast.makeText(this, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show();
                 }
+                return;
+            default:
                 return;
         }
     }
