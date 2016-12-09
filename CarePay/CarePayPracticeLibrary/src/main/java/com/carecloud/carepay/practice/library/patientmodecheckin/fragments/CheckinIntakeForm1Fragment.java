@@ -119,7 +119,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.intakeBtnNext);
         nextButton.setEnabled(true);
-        nextButton.setText(labelsModel.getNextQuestionButtonText());
+
         formCurrentIntakesForm = 1;
 
         //call javascript to show next intake form.
@@ -135,6 +135,11 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
                 nextIntakeFormDisplayed();
             }
         });
+        if (formCurrentIntakesForm >= (formTotalIntakesForms - 1)) {
+            nextButton.setText(labelsModel.getFinishQuestionsButtonText());
+        }else{
+            nextButton.setText(labelsModel.getNextQuestionButtonText());
+        }
         //init webview
         mWebView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
         //speed webview loading
