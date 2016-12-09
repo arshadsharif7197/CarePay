@@ -131,6 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_marginTop="@dimen/marginleftright"
                 android:layout_marginBottom="@dimen/marginleftright"
                 android:layout_marginLeft="@dimen/marginleftright"
                 android:layout_marginRight="@dimen/marginleftright"
