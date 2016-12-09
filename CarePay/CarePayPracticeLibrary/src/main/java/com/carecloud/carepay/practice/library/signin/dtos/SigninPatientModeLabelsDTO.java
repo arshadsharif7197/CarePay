@@ -73,10 +73,15 @@ public class SigninPatientModeLabelsDTO {
     @SerializedName("invalid_qr_code_title")
     @Expose
     private String invalidQRCodeTitle;
-
     @SerializedName("carepay_signin_title")
     @Expose
     private String carepaySigninTitle;
+    @SerializedName("sign_in_failed")
+    @Expose
+    private String signInFailed;
+    @SerializedName("personal_info_incorrect_details")
+    @Expose
+    private String personalInfoIncorrectDetails;
 
     /**
      * 
@@ -487,5 +492,41 @@ public class SigninPatientModeLabelsDTO {
      */
     public void setInvalidQRCodeTitle(String invalidQRCodeTitle) {
         this.invalidQRCodeTitle = invalidQRCodeTitle;
+    }
+
+    /**
+     *
+     * @return
+     *     The signInFailed
+     */
+    public String getSignInFailed() {
+        return StringUtil.getLabelForView(signInFailed);
+    }
+
+    /**
+     *
+     * @param signInFailed
+     *     The signInFailed
+     */
+    public void setSignInFailed(String signInFailed) {
+        this.signInFailed = signInFailed;
+    }
+
+    /**
+     *
+     * @return
+     *     The personalInfoIncorrectDetails
+     */
+    public String getPersonalInfoIncorrectDetails() {
+        return StringUtil.getLabelForView(personalInfoIncorrectDetails);
+    }
+
+    /**
+     *
+     * @param personalInfoIncorrectDetails
+     *     The personalInfoIncorrectDetails
+     */
+    public void setPersonalInfoIncorrectDetails(String personalInfoIncorrectDetails) {
+        this.personalInfoIncorrectDetails = personalInfoIncorrectDetails;
     }
 }

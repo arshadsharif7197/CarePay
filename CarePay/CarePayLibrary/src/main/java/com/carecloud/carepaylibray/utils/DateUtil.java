@@ -113,7 +113,7 @@ public class DateUtil {
      * @return A string contains the formatted time
      */
     public String getTime12Hour() {
-        return String.format(Locale.getDefault(), "%d:%02d %s", (hour12==0 && amPm.equalsIgnoreCase("PM")) ? 12 : hour12, minute, amPm);
+        return String.format(Locale.getDefault(), "%d:%02d %s", (hour12==0) ? 12 : hour12, minute, amPm);
     }
 
     /**
