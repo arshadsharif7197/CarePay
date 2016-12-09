@@ -171,7 +171,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                         = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
 
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalance = Double.parseDouble(payment.getTotal());
                     } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         coPay = Double.parseDouble(payment.getTotal());

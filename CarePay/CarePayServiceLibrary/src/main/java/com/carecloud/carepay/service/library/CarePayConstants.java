@@ -39,7 +39,7 @@ public class CarePayConstants {
     public static final String INTAKE_BUNDLE  = "intake_bundle";
     public static final String COPAY  = "Copay";
     public static final String ACCOUNT  = "Account";
-    public static final String PATIENT  = "Patient";
+    public static final String PREVIOUS_BALANCE = "Patient";
     public static final String DOLLAR  = "$";
     public static final String RESPONSIBILITY_FORMATTER  = "#0.00";
 
@@ -68,4 +68,6 @@ public class CarePayConstants {
     public static final String ZERO_BALANCE  = "$0.00";
 
     public static final int PAYMENT_PLAN_REQUIRED_BALANCE = 20;
+    public static final String APPOINTMENTS_STATUS_COMPLETED = "completed";
+    public static final String PARTIAL_PAYMENT_AMOUNT = "partial_payment_amount";
 }

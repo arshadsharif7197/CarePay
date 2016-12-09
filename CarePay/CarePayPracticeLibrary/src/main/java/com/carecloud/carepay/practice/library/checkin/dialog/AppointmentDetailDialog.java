@@ -236,10 +236,14 @@ public class AppointmentDetailDialog extends Dialog {
         if (checkInStatusPayloadDTO != null) {
             CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
                     .getCheckInStatusData().getPayload();
-            demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete());
-            consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete());
-            intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete());
-            responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility());
+            demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete()
+                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+            consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete()
+                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+            intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete()
+                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+            responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility()
+                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
         }
     }
 

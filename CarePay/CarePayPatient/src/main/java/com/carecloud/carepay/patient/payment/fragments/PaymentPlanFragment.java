@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadCreditCardTypesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadPlansDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -137,7 +138,7 @@ public class PaymentPlanFragment extends Fragment {
 
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalanceStr = payment.getTotal();
                     } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         copayStr = payment.getTotal();
@@ -218,18 +219,26 @@ public class PaymentPlanFragment extends Fragment {
             }
         });
 
-        List<PaymentCreditCardsPayloadDTO> payload
-                = paymentsModel.getPaymentPayload().getPatientCreditCards().getPayload();
+        PaymentsPatientsCreditCardsPayloadDTO patientCreditCards
+                = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
-        if (payload != null && payload.size() > 0) {
-            // Get default credit card
-            PaymentCreditCardsPayloadDTO creditCard = payload.get(0);
-            String creditCardName = getCreditCardName(creditCard.getCardType());
-            addedCreditCard.setText(StringUtil.getEncodedCardNumber(creditCardName, creditCard.getCardNumber()));
-            addedCreditCard.setVisibility(View.VISIBLE);
+        if (patientCreditCards != null) {
+            List<PaymentCreditCardsPayloadDTO> payload = patientCreditCards.getPayload();
 
-            addChangeCreditCard.setText(paymentsLabel.getPaymentChangeCard());
-            isEmptyCreditCard = false;
+            if (payload != null && payload.size() > 0) {
+                // Get default credit card
+                PaymentCreditCardsPayloadDTO creditCard = payload.get(0);
+                String creditCardName = getCreditCardName(creditCard.getCardType());
+                addedCreditCard.setText(StringUtil.getEncodedCardNumber(
+                        creditCardName, creditCard.getCardNumber()));
+                addedCreditCard.setVisibility(View.VISIBLE);
+
+                addChangeCreditCard.setText(paymentsLabel.getPaymentChangeCard());
+                isEmptyCreditCard = false;
+            } else {
+                isEmptyCreditCard = true;
+                addChangeCreditCard.setText(paymentsLabel.getPaymentAddCardButton());
+            }
         } else {
             isEmptyCreditCard = true;
             addChangeCreditCard.setText(paymentsLabel.getPaymentAddCardButton());

@@ -62,23 +62,27 @@ public class ChooseCreditCardDialog extends Dialog implements RadioGroup.OnCheck
         chooseCreditCardRadioGroup.setOnCheckedChangeListener(this);
 
         if (paymentsModel != null) {
-            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
-            List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
+            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards
+                    = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
-            for (int i = 0; i < creditCardList.size(); i++) {
-                PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
-                String creditCardName = getCreditCardName(creditCardItem.getCardType());
-                chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
-                        StringUtil.getEncodedCardNumber(creditCardName,
-                                creditCardItem.getCardNumber()), i), radioGroupLayoutParam);
+            if (patientCreditCards != null) {
+                List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
 
-                View dividerLineView = new View(context);
-                dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                for (int i = 0; i < creditCardList.size(); i++) {
+                    PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
+                    String creditCardName = getCreditCardName(creditCardItem.getCardType());
+                    chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
+                            StringUtil.getEncodedCardNumber(creditCardName,
+                                    creditCardItem.getCardNumber()), i), radioGroupLayoutParam);
 
-                dividerLineView.setBackgroundColor(ContextCompat.getColor(context, R.color.cadet_gray));
-                chooseCreditCardRadioGroup.addView(dividerLineView);
-                onSetRadioButtonRegularTypeFace();
+                    View dividerLineView = new View(context);
+                    dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, 1));
+
+                    dividerLineView.setBackgroundColor(ContextCompat.getColor(context, R.color.cadet_gray));
+                    chooseCreditCardRadioGroup.addView(dividerLineView);
+                    onSetRadioButtonRegularTypeFace();
+                }
             }
         }
 

@@ -63,7 +63,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_partial_amount_button")
     @Expose
     private String paymentPartialAmountButton;
-    @SerializedName("payment_pay_total_responsibility")
+    @SerializedName("your_total_patient_responsibility")
     @Expose
     private String paymentTotalResponsibility;
     @SerializedName("payment_previous_balance")
@@ -129,6 +129,30 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_plan_max_amount_error")
     @Expose
     private String paymentPlanMaxAmountError;
+    @SerializedName("payment_pending_text")
+    @Expose
+    private String paymentPendingText;
+    @SerializedName("payment_how_much_text")
+    @Expose
+    private String paymentHowMuchText;
+    @SerializedName("payment_new_credit_card")
+    @Expose
+    private String paymentNewCreditCard;
+    @SerializedName("payment_credit_card_number")
+    @Expose
+    private String paymentCreditCardNumber;
+    @SerializedName("payment_verification_number")
+    @Expose
+    private String paymentVerificationNumber;
+    @SerializedName("payment_expiration_date")
+    @Expose
+    private String paymentExpirationDate;
+    @SerializedName("payment_pick_date")
+    @Expose
+    private String paymentPickDate;
+    @SerializedName("payment_save_card_on_file")
+    @Expose
+    private String paymentSaveCardOnFile;
 
     /**
      * @return The demographicsCheckinHeading
@@ -746,5 +770,148 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentPlanMaxAmountError(String paymentPlanMaxAmountError) {
         this.paymentPlanMaxAmountError = paymentPlanMaxAmountError;
+    }
+
+    /**
+     *
+     * @return paymentPendingText
+     */
+    public String getPaymentPendingText() {
+        return StringUtil.getLabelForView(paymentPendingText);
+    }
+
+    /**
+     * Sets payment pending text.
+     *
+     * @param paymentPendingText the payment pending text
+     */
+    public void setPaymentPendingText(String paymentPendingText) {
+        this.paymentPendingText = paymentPendingText;
+    }
+
+    /**
+     * Gets payment how much text.
+     *
+     * @return the payment how much text
+     */
+    public String getPaymentHowMuchText() {
+        return StringUtil.getLabelForView(paymentHowMuchText);
+    }
+
+    /**
+     * Sets payment how much text.
+     *
+     * @param paymentHowMuchText the payment how much text
+     */
+    public void setPaymentHowMuchText(String paymentHowMuchText) {
+        this.paymentHowMuchText = paymentHowMuchText;
+    }
+
+    /**
+     * Gets payment new credit card.
+     *
+     * @return the payment new credit card
+     */
+    public String getPaymentNewCreditCard() {
+        return StringUtil.getLabelForView(paymentNewCreditCard);
+    }
+
+    /**
+     * Sets payment new credit card.
+     *
+     * @param paymentNewCreditCard the payment new credit card
+     */
+    public void setPaymentNewCreditCard(String paymentNewCreditCard) {
+        this.paymentNewCreditCard = paymentNewCreditCard;
+    }
+
+    /**
+     * Gets payment credit card number.
+     *
+     * @return the payment credit card number
+     */
+    public String getPaymentCreditCardNumber() {
+        return StringUtil.getLabelForView(paymentCreditCardNumber);
+    }
+
+    /**
+     * Sets payment credit card number.
+     *
+     * @param paymentCreditCardNumber the payment credit card number
+     */
+    public void setPaymentCreditCardNumber(String paymentCreditCardNumber) {
+        this.paymentCreditCardNumber = paymentCreditCardNumber;
+    }
+
+    /**
+     * Gets payment verification number.
+     *
+     * @return the payment verification number
+     */
+    public String getPaymentVerificationNumber() {
+        return StringUtil.getLabelForView(paymentVerificationNumber);
+    }
+
+    /**
+     * Sets payment verification number.
+     *
+     * @param paymentVerificationNumber the payment verification number
+     */
+    public void setPaymentVerificationNumber(String paymentVerificationNumber) {
+        this.paymentVerificationNumber = paymentVerificationNumber;
+    }
+
+    /**
+     * Gets payment expiration date.
+     *
+     * @return the payment expiration date
+     */
+    public String getPaymentExpirationDate() {
+        return StringUtil.getLabelForView(paymentExpirationDate);
+    }
+
+    /**
+     * Sets payment expiration date.
+     *
+     * @param paymentExpirationDate the payment expiration date
+     */
+    public void setPaymentExpirationDate(String paymentExpirationDate) {
+        this.paymentExpirationDate = paymentExpirationDate;
+    }
+
+    /**
+     * Gets payment pick date.
+     *
+     * @return the payment pick date
+     */
+    public String getPaymentPickDate() {
+        return StringUtil.getLabelForView(paymentPickDate);
+    }
+
+    /**
+     * Sets payment pick date.
+     *
+     * @param paymentPickDate the payment pick date
+     */
+    public void setPaymentPickDate(String paymentPickDate) {
+        this.paymentPickDate = paymentPickDate;
+    }
+
+    /**
+     * Gets payment save card on file.
+     *
+     * @return the payment save card on file
+     */
+    public String getPaymentSaveCardOnFile() {
+        return StringUtil.getLabelForView(paymentSaveCardOnFile);
+    }
+
+    /**
+     * Sets payment save card on file.
+     *
+     * @param paymentSaveCardOnFile the payment save card on file
+     */
+    public void setPaymentSaveCardOnFile(String paymentSaveCardOnFile) {
+        this.paymentSaveCardOnFile = paymentSaveCardOnFile;
     }
 }

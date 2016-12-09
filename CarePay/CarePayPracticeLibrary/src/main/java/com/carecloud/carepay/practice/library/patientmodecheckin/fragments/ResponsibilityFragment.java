@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.payments.dialogs.PartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -95,7 +96,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
         payPartialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                new PartialPaymentDialog(getActivity(), paymentsModel).show();
             }
         });
 
@@ -113,7 +114,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
 
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalanceStr = payment.getTotal();
                     } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         copayStr = payment.getTotal();
