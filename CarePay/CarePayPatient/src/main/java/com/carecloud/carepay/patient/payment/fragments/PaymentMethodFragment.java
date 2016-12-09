@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -71,14 +72,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             paymentsDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
         }
         paymentList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
-/*        paymentMethodsArray = new String[]{getString(R.string.credit_card), getString(R.string.cash),
-                getString(R.string.check), getString(R.string.paypal), getString(R.string.android_pay)};
-        createPaymentMethodButtonCaptionArray = new String[]{getString(R.string.choose_credit_card),
-                getString(R.string.cash), getString(R.string.scan_check),
-                getString(R.string.pay_using_paypal), getString(R.string.pay_using_android_pay)};*/
-        paymentMethodsDrawableArray = new int[]{R.drawable.payment_credit_card_button_selector,
-                R.drawable.payment_cash_button_selector, R.drawable.payment_check_button_selector,
-                R.drawable.payment_paypal_button_selector, R.drawable.payment_apple_button_selector};
+
         getLabels();
         initilizeViews(view);
         title.setText(titlePaymentMethodString);
@@ -86,54 +80,24 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         return view;
     }
 
-    private RadioButton getPaymentMethodRadioButton(String cardInfo, int index) {
+    private RadioButton getPaymentMethodRadioButton(String cardType, String cardInfo, int index) {
         RadioButton radioButtonView = new RadioButton(activity);
         radioButtonView.setId(index);
         radioButtonView.setButtonDrawable(null);
         radioButtonView.setBackground(null);
         radioButtonView.setText(cardInfo);
-        switch (cardInfo) {
-            case CarePayConstants.CASH:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[1], 0, R.drawable.check_box_intake, 0);
-                break;
-            case CarePayConstants.CREDIT_CARD:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
-                break;
-            case CarePayConstants.CHECK:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[2], 0, R.drawable.check_box_intake, 0);
-                break;
-            case CarePayConstants.GIFT_CARD:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
-                break;
-            case CarePayConstants.PAYPAL:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[3], 0, R.drawable.check_box_intake, 0);
-                break;
-            case CarePayConstants.APPLE_PAY:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[4], 0, R.drawable.check_box_intake, 0);
-                break;
-            case CarePayConstants.ANDROID_PAY:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
-                break;
-            case CarePayConstants.HSA:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
-                break;
-            case CarePayConstants.FSA:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
-                break;
-            default:
-                radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                        paymentMethodsDrawableArray[0], 0, R.drawable.check_box_intake, 0);
-                break;
-        }
+        // Initialize HashMap.
+        HashMap<String, Integer> cardTypeMap = new HashMap<>();
+        cardTypeMap.put(CarePayConstants.TYPE_CASH, R.drawable.payment_cash_button_selector);
+        cardTypeMap.put(CarePayConstants.TYPE_CREDIT_CARD, R.drawable.payment_credit_card_button_selector);
+        cardTypeMap.put(CarePayConstants.TYPE_CHECK, R.drawable.payment_check_button_selector);
+        cardTypeMap.put(CarePayConstants.TYPE_GIFT_CARD, R.drawable.payment_credit_card_button_selector);
+        cardTypeMap.put(CarePayConstants.TYPE_PAYPAL, R.drawable.payment_paypal_button_selector);
+        cardTypeMap.put(CarePayConstants.TYPE_HSA, R.drawable.payment_credit_card_button_selector);
+        cardTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
+
+        radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                cardTypeMap.get(cardType), 0, R.drawable.check_box_intake, 0);
         radioButtonView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         radioButtonView.setTextColor(ContextCompat.getColor(activity, R.color.radio_button_selector));
         radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));
@@ -154,7 +118,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         createPaymentPlanButton.setText(paymentCreatePlanString);
 
         for (int i = 0; i < paymentList.size(); i++) {
-            paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getLabel(), i),
+            paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(), paymentList.get(i).getLabel(), i),
                     radioGroupLayoutParam);
 
             View dividerLineView = new View(activity);

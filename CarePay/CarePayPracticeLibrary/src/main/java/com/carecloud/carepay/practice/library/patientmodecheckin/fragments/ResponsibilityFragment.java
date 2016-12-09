@@ -118,7 +118,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
 
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PATIENT)) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalanceStr = payment.getTotal();
                     } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
                         copayStr = payment.getTotal();
