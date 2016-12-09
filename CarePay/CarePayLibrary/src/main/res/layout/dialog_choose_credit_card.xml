@@ -14,7 +14,6 @@
         android:layout_marginBottom="@dimen/visit_type_vertical_margin"
         android:layout_marginStart="@dimen/dimen_5dp"
         android:layout_marginTop="@dimen/visit_type_vertical_margin"
-        android:text="Choose Credit Card"
         android:textColor="@color/black"
         android:textSize="@dimen/visit_type_label_font"
         app:customAssetFont="proxima_nova_semi_bold" />
@@ -33,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:background="@null"
-        android:text="@string/cancel_button"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/visit_type_button_font" />
 

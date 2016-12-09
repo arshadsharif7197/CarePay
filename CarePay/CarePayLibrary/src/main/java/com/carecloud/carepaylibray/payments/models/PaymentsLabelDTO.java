@@ -153,6 +153,9 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_save_card_on_file")
     @Expose
     private String paymentSaveCardOnFile;
+    @SerializedName("payment_cancel_button")
+    @Expose
+    private String paymentCancelButton;
 
     /**
      * @return The demographicsCheckinHeading
@@ -913,5 +916,13 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentSaveCardOnFile(String paymentSaveCardOnFile) {
         this.paymentSaveCardOnFile = paymentSaveCardOnFile;
+    }
+
+    public String getPaymentCancelButton() {
+        return StringUtil.getLabelForView(paymentCancelButton);
+    }
+
+    public void setPaymentCancelButton(String paymentCancelButton) {
+        this.paymentCancelButton = paymentCancelButton;
     }
 }
