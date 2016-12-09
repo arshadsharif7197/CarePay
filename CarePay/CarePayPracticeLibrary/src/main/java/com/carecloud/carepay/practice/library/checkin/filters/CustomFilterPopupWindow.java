@@ -149,7 +149,7 @@ public class CustomFilterPopupWindow extends PopupWindow
 
     /**
      * Get appointmients from selected filters and patients
-     * @return
+     * @return filtered appointments
      */
     private HashSet<String> getFilteredPatientAppointment() {
         HashSet<String> strings = getFilteredAppointment();
@@ -202,7 +202,7 @@ public class CustomFilterPopupWindow extends PopupWindow
 
     /**
      * if patients was filtered by provider or location set TRUE or FALSE
-     * @param patientFiltered
+     * @param patientFiltered true or false if patient screen state
      */
     private void setPatientFiltered(boolean patientFiltered) {
         ((CheckInActivity)this.context).setPatientFiltered(patientFiltered);
@@ -326,7 +326,7 @@ public class CustomFilterPopupWindow extends PopupWindow
 
     /**
      * eval if the filteredDataDTO is checked if not is removed from selected Filters, added
-     * @param filteredDataDTO
+     * @param filteredDataDTO filtered element
      */
     private void evalSelectedFilter(FilterDataDTO filteredDataDTO){
         if (filteredDataDTO.isChecked()) {

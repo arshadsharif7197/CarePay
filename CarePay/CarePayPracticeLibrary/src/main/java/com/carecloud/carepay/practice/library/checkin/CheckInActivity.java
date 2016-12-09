@@ -417,7 +417,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     /**
      * if patients was filtered by provider or location set TRUE or FALSE
-     * @param patientFiltered
+     * @param patientFiltered true or false if patient screen state on filterpopup
      */
     public void setPatientFiltered(boolean patientFiltered){
         this.patientFiltered=patientFiltered;
