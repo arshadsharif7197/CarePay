@@ -60,7 +60,6 @@ public class PatientAddNewCreditCardFragment extends Fragment implements
      * (\\d{4}\\s)*  - A group of four digits, followed by a whitespace, e.g. "1234 ". Zero or more times.
      * \\d{0,4}      - Up to four (optional) digits.
      * (?<!\\s)$     - End of the string, but NOT with a whitespace just before it.
-     *
      * Example of matching strings:
      *  - "2304 52"
      *  - "2304"
@@ -111,18 +110,18 @@ public class PatientAddNewCreditCardFragment extends Fragment implements
 
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence str, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            public void onTextChanged(CharSequence str, int start, int before, int count) {
+                validateCreditCardDetails();
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                String originalString = s.toString();
+            public void afterTextChanged(Editable str) {
+                String originalString = str.toString();
 
                 if (isUpdating || originalString.matches(regexp)) {
 
@@ -149,22 +148,20 @@ public class PatientAddNewCreditCardFragment extends Fragment implements
                 Integer spaceIndex;
                 while (!spaceIndices.isEmpty()) {
                     spaceIndex = spaceIndices.removeLast();
-                    s.delete(spaceIndex, spaceIndex + 1);
+                    str.delete(spaceIndex, spaceIndex + 1);
                 }
 
 
-                for(int i = 0; ((i + 1) * GROUPSIZE + i) < s.length(); i++) {
-                    s.insert((i + 1) * GROUPSIZE + i, SPACE_STRING);
+                for(int i = 0; ((i + 1) * GROUPSIZE + i) < str.length(); i++) {
+                    str.insert((i + 1) * GROUPSIZE + i, SPACE_STRING);
                 }
 
                 int cursorPos = creditCardNoEditText.getSelectionStart();
-                if (cursorPos > 0 && s.charAt(cursorPos - 1) == SPACE_CHAR) {
+                if (cursorPos > 0 && str.charAt(cursorPos - 1) == SPACE_CHAR) {
                     creditCardNoEditText.setSelection(cursorPos - 1);
                 }
 
                 isUpdating = false;
-
-
 
             }
         });
@@ -172,17 +169,17 @@ public class PatientAddNewCreditCardFragment extends Fragment implements
 
         verificationCodeEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence str, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            public void onTextChanged(CharSequence str, int start, int before, int count) {
+                validateCreditCardDetails();
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable str) {
 
             }
         });
@@ -218,7 +215,6 @@ public class PatientAddNewCreditCardFragment extends Fragment implements
 
         setChangeFocusListeners();
         setActionListeners();
-        setTextChangeListeners();
 
         creditCardNoEditText.clearFocus();
         verificationCodeEditText.clearFocus();
@@ -282,42 +278,6 @@ public class PatientAddNewCreditCardFragment extends Fragment implements
                     return true;
                 }
                 return false;
-            }
-        });
-    }
-
-    private void setTextChangeListeners(){
-        creditCardNoEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validateCreditCardDetails();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        verificationCodeEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validateCreditCardDetails();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
     }
