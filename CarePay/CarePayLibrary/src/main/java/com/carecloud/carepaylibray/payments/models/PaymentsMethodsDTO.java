@@ -16,9 +16,6 @@ public class PaymentsMethodsDTO {
     @SerializedName("button_label")
     @Expose
     private String buttonLabel;
-    @SerializedName("image_url")
-    @Expose
-    private String imageUrl;
 
     /**
      *
@@ -63,33 +60,6 @@ public class PaymentsMethodsDTO {
      */
     public String getButtonLabel() {
         return buttonLabel;
-    }
-
-    /**
-     *
-     * @param buttonLabel
-     * The button_label
-     */
-    public void setButtonLabel(String buttonLabel) {
-        this.buttonLabel = buttonLabel;
-    }
-
-    /**
-     *
-     * @return
-     * The imageUrl
-     */
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    /**
-     *
-     * @param imageUrl
-     * The image_url
-     */
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
 }
