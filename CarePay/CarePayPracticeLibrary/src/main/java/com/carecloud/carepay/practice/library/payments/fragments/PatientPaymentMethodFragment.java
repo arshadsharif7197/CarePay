@@ -59,7 +59,6 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
         activity = getActivity();
 
         Gson gson = new Gson();
@@ -68,6 +67,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
         paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
 
+        View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);

@@ -108,8 +108,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
 
                 for (int i = 0; i < creditCardList.size(); i++) {
                     PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
-                    chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(StringUtil.
-                            getEncodedCardNumber(creditCardItem.getCardType(), creditCardItem.getCardNumber()), i),
+                    chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(StringUtil
+                            .getEncodedCardNumber(creditCardItem.getCardType(), creditCardItem.getCardNumber()), i),
                             radioGroupLayoutParam);
 
                     View dividerLineView = new View(activity);
