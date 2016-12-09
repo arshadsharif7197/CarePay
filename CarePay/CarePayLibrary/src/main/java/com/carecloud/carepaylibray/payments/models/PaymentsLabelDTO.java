@@ -114,6 +114,12 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_agree_to_pay_terms")
     @Expose
     private String paymentAgreeToPayTerms;
+    @SerializedName("payment_pending_text")
+    @Expose
+    private String paymentPendingText;
+    @SerializedName("payment_how_much_text")
+    @Expose
+    private String paymentHowMuchText;
 
     /**
      * @return The demographicsCheckinHeading
@@ -651,5 +657,41 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentAgreeToPayTerms(String paymentAgreeToPayTerms) {
         this.paymentAgreeToPayTerms = paymentAgreeToPayTerms;
+    }
+
+    /**
+     * Gets payment pending text.
+     *
+     * @return the payment pending text
+     */
+    public String getPaymentPendingText() {
+        return StringUtil.getLabelForView(paymentPendingText);
+    }
+
+    /**
+     * Sets payment pending text.
+     *
+     * @param paymentPendingText the payment pending text
+     */
+    public void setPaymentPendingText(String paymentPendingText) {
+        this.paymentPendingText = paymentPendingText;
+    }
+
+    /**
+     * Gets payment how much text.
+     *
+     * @return the payment how much text
+     */
+    public String getPaymentHowMuchText() {
+        return StringUtil.getLabelForView(paymentHowMuchText);
+    }
+
+    /**
+     * Sets payment how much text.
+     *
+     * @param paymentHowMuchText the payment how much text
+     */
+    public void setPaymentHowMuchText(String paymentHowMuchText) {
+        this.paymentHowMuchText = paymentHowMuchText;
     }
 }

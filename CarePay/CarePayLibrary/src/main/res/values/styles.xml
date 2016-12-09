@@ -13,11 +13,14 @@
         <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
 
         <!-- Hint color and labelMeta color in FALSE state -->
-        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
+        <item name="android:textColorHint">@color/payne_gray
+        </item> <!-- hint color when no focus -->
 
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
-        <item name="colorControlActivated">@color/light_gray</item> <!-- hint and underlying bar when focus -->
+        <item name="colorControlNormal">@color/light_gray
+        </item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/light_gray
+        </item> <!-- hint and underlying bar when focus -->
     </style>
 
 
@@ -110,19 +113,19 @@
     </style>
 
     <declare-styleable name="SympliTextView">
-        <attr name="fontPath" format="string"/>
+        <attr name="fontPath" format="string" />
 
         <!-- Inner shadow settings. -->
-        <attr name="innerShadowColor" format="color"/>
-        <attr name="innerShadowDx" format="dimension"/>
-        <attr name="innerShadowDy" format="dimension"/>
-        <attr name="innerShadowRadius" format="dimension"/>
+        <attr name="innerShadowColor" format="color" />
+        <attr name="innerShadowDx" format="dimension" />
+        <attr name="innerShadowDy" format="dimension" />
+        <attr name="innerShadowRadius" format="dimension" />
 
         <!-- Outer shadow settings. -->
-        <attr name="outerShadowColor" format="color"/>
-        <attr name="outerShadowDx" format="dimension"/>
-        <attr name="outerShadowDy" format="dimension"/>
-        <attr name="outerShadowRadius" format="dimension"/>
+        <attr name="outerShadowColor" format="color" />
+        <attr name="outerShadowDx" format="dimension" />
+        <attr name="outerShadowDy" format="dimension" />
+        <attr name="outerShadowRadius" format="dimension" />
     </declare-styleable>
 
 
@@ -176,7 +179,8 @@
     <style name="SignupRequireHintStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_left_right</item>
+        <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_left_right
+        </item>
         <item name="android:layout_gravity">end</item>
         <item name="android:textSize">@dimen/signup_optional_label_text_size</item>
     </style>
@@ -320,7 +324,8 @@
 
     <style name="DemographicsDocsImageButtonContainerStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height</item>
+        <item name="android:layout_height">@dimen/demographics_docs_image_button_container_height
+        </item>
         <item name="android:layout_marginTop">@dimen/signup_top_margin_edit_container</item>
         <item name="android:orientation">horizontal</item>
     </style>
@@ -353,7 +358,8 @@
 
     <style name="DemographicsAddRemoveInsuranceStyle" parent="DemographicsDocsButtonStyle">
         <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
-        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
+        </item>
         <item name="android:background">@drawable/button_scan_card</item>
     </style>
 
@@ -371,7 +377,8 @@
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:layout_marginStart">@dimen/signup_optional_label_margin_left_right</item>
+        <item name="android:layout_marginStart">@dimen/signup_optional_label_margin_left_right
+        </item>
         <item name="android:gravity">start</item>
 
     </style>
@@ -421,7 +428,7 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="SigninSignupTextInputStyle" parent="TextInputLayoutStyle"/>
+    <style name="SigninSignupTextInputStyle" parent="TextInputLayoutStyle" />
 
     <style name="SigninSignupEditStyle" parent="EditTextStyle">
         <item name="android:imeOptions">actionNext</item>
@@ -455,6 +462,7 @@
         <item name="android:layout_marginTop">@dimen/review_section_header</item>
         <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
+
     <style name="reviewDemographiclabel." parent="android:Widget.TextView">
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/review_textlable_textsize</item>
@@ -468,11 +476,13 @@
         <item name="android:layout_marginTop">@dimen/review_texviewmargin_top</item>
         <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
+
     <style name="Review_Screen_View_Style">
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/light_gray</item>
         <item name="android:layout_marginTop">@dimen/review_viewmargin_top</item>
     </style>
+
     <style name="reviewDemographicrelativelayout" parent="android:Widget.TextView">
         <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/textview_default_textsize</item>
@@ -481,9 +491,9 @@
         <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
     <!-- Consent forms -->
@@ -685,6 +695,7 @@
         <item name="android:textColor">@color/lightSlateGray</item>
         <item name="android:textSize">@dimen/textview_textsize</item>
     </style>
+
     <style name="intake_Form_View_Style">
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginLeft">@dimen/consentform_relativeLayout_margin</item>
@@ -746,15 +757,19 @@
     <style name="DefaultTextAppearanceProxyNovaSemiBoldLabel">
         <item name="android:textColor">@color/bright_cerulean</item>
     </style>
+
     <style name="DefaultTextAppearanceProxyNovaRegularLabel">
         <item name="android:textColor">@color/lightSlateGray</item>
     </style>
+
     <style name="DefaultTextAppearanceGothamRoundedBoldLabel">
         <item name="android:textColor">@color/bermudagrey</item>
     </style>
+
     <style name="DefaultTextAppearance">
         <item name="android:textColor">@color/charcoal</item>
     </style>
+
     <style name="DefaultTextAppearanceGothamRoundedMediumLabel">
         <item name="android:textColor">@color/white</item>
     </style>
@@ -762,5 +777,15 @@
     <style name="HaveHealthInsurance" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
+
+    <style name="TransparencyToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support Library compability -->
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppBaseTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppBaseTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
