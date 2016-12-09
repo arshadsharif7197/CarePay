@@ -1,12 +1,16 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -26,6 +30,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButto
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerActivity;
+import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -50,9 +55,11 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     private CustomGothamRoundedBookButton   manualSearchButton;
     private ProgressDialog                  dialog;
 
+
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     private static final int QR_SCAN_REQUEST_CODE =0;
     private static final int QR_RESULT_CODE_TABLET=1;
+    private static final int CAMERA_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,8 +226,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             //startActivity(intent);
             startActivityForResult(intent, QR_SCAN_REQUEST_CODE);
         } else {
-            Intent intent = new Intent(HowToCheckInActivity.this, ScannerActivity.class);
-            startActivityForResult(intent, QR_SCAN_REQUEST_CODE);
+            launchActivity();
         }
     }
 
@@ -328,4 +334,35 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             dialog.dismiss();
         }
     }
+
+    /**
+     *
+     * Launch activity for scanning qr code if permission is granted
+     * */
+    public void launchActivity() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION);
+        } else {
+            Intent intent = new Intent(this, ScannerQRActivity.class);
+            startActivityForResult(intent,QR_SCAN_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,  String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Intent intent = new Intent(this, ScannerQRActivity.class);
+                        startActivityForResult(intent,QR_SCAN_REQUEST_CODE);
+                } else {
+                    Toast.makeText(this, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show();
+                }
+                return;
+        }
+    }
+
 }
