@@ -74,7 +74,7 @@
     <color name="manatee">#9ba4a9</color>
 
     <color name="white_opacity_60">#99ffffff</color>
-
+    <color name="actionbar_opacity">#33000000</color>
     <color name="viewfinder_mask">#60000000</color>
     <color name="viewfinder_laser">#00cc0000</color>
     <color name="viewfinder_border">#ffafed44</color>
