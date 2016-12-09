@@ -1,5 +1,7 @@
 package com.carecloud.carepay.patient.payment;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -60,6 +62,9 @@ public class ResponsibilityFragment extends Fragment {
     private String insuranceCopayString;
     private String payTotalAmountString;
     private String payPartialAmountString;
+    private String titleResponsibilityString;
+    private Button payTotalAmountButton;
+    private Button makePartialPaymentButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,8 +92,64 @@ public class ResponsibilityFragment extends Fragment {
         TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
         TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
         TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
+        payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
+        makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            paymentDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
+            getPaymentLabels();
+            toolbar.setTitle(titleResponsibilityString);
+            if (paymentList != null && paymentList.size() > 1) {
+                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
+                        previousBalanceStr = payment.getTotal();
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                        copayStr = payment.getTotal();
+                    }
+                }
 
-        Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
+                try {
+                    double copay = Double.parseDouble(copayStr);
+                    double previousBalance = Double.parseDouble(previousBalanceStr);
+                    double total = copay + previousBalance;
+                    if(total == 0){
+                        payTotalAmountButton.setClickable(false);
+                        payTotalAmountButton.setEnabled(false);
+                        makePartialPaymentButton.setClickable(false);
+                        makePartialPaymentButton.setEnabled(false);
+                        payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                        makePartialPaymentButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                    }else{
+                        payTotalAmountButton.setClickable(true);
+                        payTotalAmountButton.setEnabled(true);
+                        makePartialPaymentButton.setEnabled(true);
+                        makePartialPaymentButton.setEnabled(true);
+                        payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+                        payTotalAmountButton.setTextColor(Color.WHITE);
+                        makePartialPaymentButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                        makePartialPaymentButton.setBackgroundColor(Color.WHITE);
+                        GradientDrawable border = new GradientDrawable();
+                        border.setColor(Color.WHITE);
+                        border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
+                        makePartialPaymentButton.setBackground(border);
+                    }
+                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                    responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
+                    responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
+                    totalResponsibility.setText(totalResponsibilityString);
+                    prevBalanceResponsibility.setText(previousBalanceString);
+                    coPayResponsibility.setText(insuranceCopayString);
+                    payTotalAmountButton.setText(payTotalAmountString);
+                    makePartialPaymentButton.setText(payPartialAmountString);
+
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                    Log.e(LOG_TAG, ex.getMessage());
+                }
+            }
+        }
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,54 +175,12 @@ public class ResponsibilityFragment extends Fragment {
             }
         });
 
-        Button makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
         makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new PartialPaymentDialog(getActivity(), paymentDTO).show();
             }
         });
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            paymentDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
-
-            if (paymentDTO != null) {
-                List<PaymentPatientBalancesPayloadDTO> paymentList
-                        = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
-
-                getPaymentLabels();
-
-                if (paymentList != null && paymentList.size() > 1) {
-                    for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                        if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
-                            previousBalanceStr = payment.getTotal();
-                        } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                            copayStr = payment.getTotal();
-                        }
-                    }
-
-                    try {
-                        double copay = Double.parseDouble(copayStr);
-                        double previousBalance = Double.parseDouble(previousBalanceStr);
-                        double total = copay + previousBalance;
-                        NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                        responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-                        responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
-                        responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
-                        totalResponsibility.setText(totalResponsibilityString);
-                        prevBalanceResponsibility.setText(previousBalanceString);
-                        coPayResponsibility.setText(insuranceCopayString);
-                        payTotalAmountButton.setText(payTotalAmountString);
-                        makePartialPaymentButton.setText(payPartialAmountString);
-
-                    } catch (NumberFormatException ex) {
-                        ex.printStackTrace();
-                        Log.e(LOG_TAG, ex.getMessage());
-                    }
-                }
-            }
-        }
 
         return view;
     }
@@ -242,6 +261,7 @@ public class ResponsibilityFragment extends Fragment {
             if (paymentsMetadataDTO != null) {
                 PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataDTO.getPaymentsLabel();
                 if (paymentsLabelsDTO != null) {
+                    totalResponsibilityString = paymentsLabelsDTO.getPaymentTotalResponsibility();
                     totalResponsibilityString = paymentsLabelsDTO.getPaymentTotalResponsibility();
                     previousBalanceString = paymentsLabelsDTO.getPaymentPreviousBalance();
                     insuranceCopayString = paymentsLabelsDTO.getPaymentInsuranceCopay();

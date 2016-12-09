@@ -91,7 +91,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private RadioButton getPaymentMethodRadioButton(String cardType, String cardInfo, int index) {
         RadioButton radioButtonView = new RadioButton(activity);
         radioButtonView.setId(index);
-        radioButtonView.setButtonDrawable(null);
+        radioButtonView.setButtonDrawable(android.R.color.transparent);
         radioButtonView.setBackground(null);
         radioButtonView.setText(cardInfo);
 
@@ -135,8 +135,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
 
             View dividerLineView = new View(activity);
             dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 1
-            ));
+                    LinearLayout.LayoutParams.MATCH_PARENT, 1));
 
             dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
             paymentMethodRadioGroup.addView(dividerLineView);
@@ -275,3 +274,4 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         }
     }
 }
+

@@ -99,7 +99,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
         boolean isPending = item.getAppointmentStatusModel().getId() == 1;
         if (!isPending) {
-            shape.setColor(Color.LTGRAY);
+            shape.setColor(context.getResources().getColor(R.color.light_gray));
+            shape.setAlpha(60);
             holder.startCheckInTextview.setClickable(false);
             holder.startCheckInTextview.setEnabled(false);
         } else {
