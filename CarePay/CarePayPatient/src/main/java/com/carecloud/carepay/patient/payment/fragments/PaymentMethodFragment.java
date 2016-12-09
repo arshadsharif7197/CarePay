@@ -195,7 +195,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
                     FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
                     fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-                    fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
+                    fragmentTransaction.addToBackStack(PaymentPlanFragment.class.getSimpleName());
                     fragmentTransaction.commit();
                 } else {
                     Toast.makeText(getActivity(), paymentsDTO.getPaymentsMetadata().getPaymentsLabel()
