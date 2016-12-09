@@ -88,9 +88,10 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
     }
 
     private RadioButton getPaymentMethodRadioButton(String cardType, String cardInfo, int index) {
+
         RadioButton radioButtonView = new RadioButton(activity);
         radioButtonView.setId(index);
-        radioButtonView.setButtonDrawable(null);
+        radioButtonView.setButtonDrawable(android.R.color.transparent);
         radioButtonView.setBackground(null);
         radioButtonView.setText(cardInfo);
         // Initialize HashMap.
@@ -126,7 +127,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
         paymentChoiceButton.setEnabled(false);
 
         for (int i = 0; i < paymentList.size(); i++) {
-            paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(), paymentList.get(i).getLabel(), i),
+          paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(), paymentList.get(i).getLabel(), i),
                     radioGroupLayoutParam);
 
             View dividerLineView = new View(activity);
@@ -182,6 +183,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
         @Override
         public void onClick(View view) {
             getLabels();
+
           /*  if (paymentChoiceButton.getText().equals(getString(R.string.choose_credit_card))) {
                 PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
 
