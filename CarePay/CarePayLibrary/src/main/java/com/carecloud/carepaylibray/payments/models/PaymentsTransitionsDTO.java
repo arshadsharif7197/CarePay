@@ -12,7 +12,7 @@ public class PaymentsTransitionsDTO {
     private PaymentsMakePaymentDTO makePayment;
     @SerializedName("add_credit_card")
     @Expose
-    private PaymentsAddCreditCardDTO addCreditCard;
+    private TransitionDTO addCreditCard;
     @SerializedName("delete_credit_card")
     @Expose
     private PaymentsDeleteCreditCardsDTO deleteCreditCard;
@@ -49,7 +49,7 @@ public class PaymentsTransitionsDTO {
      * @return
      * The addCreditCard
      */
-    public PaymentsAddCreditCardDTO getAddCreditCard() {
+    public TransitionDTO getAddCreditCard() {
         return addCreditCard;
     }
 
@@ -58,7 +58,7 @@ public class PaymentsTransitionsDTO {
      * @param addCreditCard
      * The add_credit_card
      */
-    public void setAddCreditCard(PaymentsAddCreditCardDTO addCreditCard) {
+    public void setAddCreditCard(TransitionDTO addCreditCard) {
         this.addCreditCard = addCreditCard;
     }
 

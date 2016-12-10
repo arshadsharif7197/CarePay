@@ -918,10 +918,18 @@ public class PaymentsLabelDTO {
         this.paymentSaveCardOnFile = paymentSaveCardOnFile;
     }
 
+    /**
+     *
+     * @return paymentCancelButton
+     */
     public String getPaymentCancelButton() {
         return StringUtil.getLabelForView(paymentCancelButton);
     }
 
+    /**
+     *
+     * @param paymentCancelButton paymentCancelButton
+     */
     public void setPaymentCancelButton(String paymentCancelButton) {
         this.paymentCancelButton = paymentCancelButton;
     }

@@ -1,4 +1,5 @@
-package com.carecloud.carepay.patient.payment.fragments;
+package com.carecloud.carepay.practice.library.payments.fragments;
+
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -34,7 +36,7 @@ import java.util.LinkedList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddNewCreditCardFragment extends Fragment implements
+public class PatientAddNewCreditCardFragment extends Fragment implements
         SimpleDatePickerDialog.OnDateSetListener{
 
     private TextInputLayout creditCardNoTextInput;
@@ -71,19 +73,19 @@ public class AddNewCreditCardFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout.fragment_add_new_credit_card,
+        final View addNewCreditCardView = inflater.inflate(R.layout.fragment_add_new_credit_card,
                 container, false);
         Bundle arguments = getArguments();
         if (arguments != null) {
             paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
         }
-        Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
-        TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
+        Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(R.id.toolbar_layout);
+        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentNewCreditCard());
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
+                R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         initilizeViews(addNewCreditCardView);
@@ -187,27 +189,27 @@ public class AddNewCreditCardFragment extends Fragment implements
     }
 
     private void initilizeViews(View view) {
-        creditCardNoTextInput = (TextInputLayout)view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
+        creditCardNoTextInput = (TextInputLayout)view.findViewById(R.id.creditCardNoTextInputLayout);
         creditCardNoTextInput.setTag(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentCreditCardNumber());
-        creditCardNoEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoEditText);
+        creditCardNoEditText = (EditText) view.findViewById(R.id.creditCardNoEditText);
         creditCardNoEditText.setHint(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentCreditCardNumber());
         creditCardNoEditText.setTag(creditCardNoTextInput);
 
-        verificationCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeTextInputLayout);
+        verificationCodeTextInput = (TextInputLayout) view.findViewById(R.id.verificationCodeTextInputLayout);
         verificationCodeTextInput.setTag(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentVerificationNumber());
-        verificationCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeEditText);
+        verificationCodeEditText = (EditText) view.findViewById(R.id.verificationCodeEditText);
         verificationCodeEditText.setHint(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentVerificationNumber());
         verificationCodeEditText.setTag(verificationCodeTextInput);
 
-        expirationDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.expirationDateTextView);
+        expirationDateTextView = (TextView) view.findViewById(R.id.expirationDateTextView);
         expirationDateTextView.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentExpirationDate());
-        pickDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.pickDateTextView);
+        pickDateTextView = (TextView) view.findViewById(R.id.pickDateTextView);
         pickDateTextView.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPickDate());
         pickDateTextView.setOnClickListener(pickDateListener);
 
-        saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
+        saveCardOnFileCheckBox = (CheckBox) view.findViewById(R.id.saveCardOnFileCheckBox);
         saveCardOnFileCheckBox.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentSaveCardOnFile());
-        nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
+        nextButton = (Button) view.findViewById(R.id.nextButton);
         nextButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentNextButton());
         nextButton.setOnClickListener(nextButtonListener);
 
@@ -290,7 +292,7 @@ public class AddNewCreditCardFragment extends Fragment implements
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //  Add New Credit Card details here - to be done after POST body available
+              //  Add New Credit Card details here - to be done after POST body available
 //            PaymentCreditCardsPayloadDTO creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
 //            Gson gson = new Gson();
 //            String body = gson.toJson(creditCardsPayloadDTO);

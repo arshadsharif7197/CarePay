@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
@@ -163,16 +164,12 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-//            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-//            AddNewCreditCardFragment fragment = (AddNewCreditCardFragment)
-//                fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
-//            if (fragment == null) {
-//                fragment = new AddNewCreditCardFragment();
-//            }
-//            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-//            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-//            fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
-//            fragmentTransaction.commit();
+            PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
+            Bundle args = new Bundle();
+            args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+            fragment.setArguments(args);
+
+            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
         }
     };
 }
