@@ -89,7 +89,8 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         nextButton = (Button) findViewById(com.carecloud.carepaylibrary.R.id.intakeBtnNext);
         nextButton.setEnabled(true);
-        nextButton.setText(labelsModel.getNextQuestionButtonText());
+
+
         //dynamic step progres bar
         mStepProgressBar = (StepProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.stepProgressBar2);
         mStepProgressBar.setCumulativeDots(true);
@@ -106,6 +107,11 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         SystemUtil.setGothamRoundedMediumTypeface(this, headerTitleTextView);
         headerTitleTextView.setText(String.format(labelsModel.getIntakeFormHeading(), mStepProgressBar.getCurrentProgressDot() + 1, mStepProgressBar.getNumDots()));
 
+        if (mStepProgressBar.getCurrentProgressDot() == mStepProgressBar.getNumDots() - 1) {
+            nextButton.setText(labelsModel.getFinishQuestionsButtonText());
+        }else{
+            nextButton.setText(labelsModel.getNextQuestionButtonText());
+        }
 
         //call javascript to show next intake form.
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +134,8 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         //init webview
         mWebView = (WebView) findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
         //speed webview loading
         if (Build.VERSION.SDK_INT >= 19){
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -135,8 +143,6 @@ public class InTakeWebViewActivity extends BasePatientActivity {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
         //load pages and links inside webview
         mWebView.setWebViewClient(new WebViewClient());
         //Interface that receive calls from javascript
