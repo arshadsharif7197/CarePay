@@ -3,94 +3,58 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Rahul on 11/30/16.
- */
-
 public class PaymentsSettingsPayloadCreditCardTypesDTO {
 
-    @SerializedName("master_card")
+    @SerializedName("type")
     @Expose
-    private Boolean masterCard;
-    @SerializedName("visa")
+    private String type;
+    @SerializedName("label")
     @Expose
-    private Boolean visa;
-    @SerializedName("american_express")
+    private String label;
+    @SerializedName("image_url")
     @Expose
-    private Boolean americanExpress;
-    @SerializedName("discover")
-    @Expose
-    private Boolean discover;
+    private String imageUrl;
 
     /**
-     *
-     * @return
-     * The masterCard
+     * @return The type
      */
-    public Boolean getMasterCard() {
-        return masterCard;
+    public String getType() {
+        return type;
     }
 
     /**
-     *
-     * @param masterCard
-     * The master_card
+     * @param type The type
      */
-    public void setMasterCard(Boolean masterCard) {
-        this.masterCard = masterCard;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
-     *
-     * @return
-     * The visa
+     * @return The label
      */
-    public Boolean getVisa() {
-        return visa;
+    public String getLabel() {
+        return label;
     }
 
     /**
-     *
-     * @param visa
-     * The visa
+     * @param label The label
      */
-    public void setVisa(Boolean visa) {
-        this.visa = visa;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     /**
-     *
-     * @return
-     * The americanExpress
+     * @return The imageUrl
      */
-    public Boolean getAmericanExpress() {
-        return americanExpress;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     /**
-     *
-     * @param americanExpress
-     * The american_express
+     * @param imageUrl The image_url
      */
-    public void setAmericanExpress(Boolean americanExpress) {
-        this.americanExpress = americanExpress;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    /**
-     *
-     * @return
-     * The discover
-     */
-    public Boolean getDiscover() {
-        return discover;
-    }
-
-    /**
-     *
-     * @param discover
-     * The discover
-     */
-    public void setDiscover(Boolean discover) {
-        this.discover = discover;
-    }
 }

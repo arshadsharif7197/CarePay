@@ -18,10 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -74,7 +76,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         paymentList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
 
         getLabels();
-        initilizeViews(view);
+        initializeViews(view);
         title.setText(titlePaymentMethodString);
         toolbar.setTitle(titlePaymentMethodString);
         return view;
@@ -106,7 +108,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         return radioButtonView;
     }
 
-    private void initilizeViews(View view) {
+    private void initializeViews(View view) {
         paymentMethodRadioGroup = (RadioGroup) view.findViewById(R.id.paymentMethodsRadioGroup);
         paymentChoiceButton = (Button) view.findViewById(R.id.paymentChoiceButton);
         Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
@@ -166,23 +168,44 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-            PaymentPlanFragment fragment = (PaymentPlanFragment) fragmentmanager
-                    .findFragmentByTag(PaymentPlanFragment.class.getSimpleName());
-            if (fragment == null) {
-                fragment = new PaymentPlanFragment();
+            if (paymentsDTO != null) {
+                double previousBalance = 0;
+                double coPay = 0;
+                List<PaymentPatientBalancesPayloadDTO> paymentList
+                        = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
+
+                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
+                        previousBalance = Double.parseDouble(payment.getTotal());
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                        coPay = Double.parseDouble(payment.getTotal());
+                    }
+                }
+
+                // Balance of at least $20
+                if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
+                    FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+                    PaymentPlanFragment fragment = (PaymentPlanFragment) fragmentmanager
+                            .findFragmentByTag(PaymentPlanFragment.class.getSimpleName());
+                    if (fragment == null) {
+                        fragment = new PaymentPlanFragment();
+                    }
+
+                    Bundle arguments = getArguments();
+                    Bundle args = new Bundle();
+                    args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                            arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                    fragment.setArguments(args);
+
+                    FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+                    fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+                    fragmentTransaction.addToBackStack(PaymentPlanFragment.class.getSimpleName());
+                    fragmentTransaction.commit();
+                } else {
+                    Toast.makeText(getActivity(), paymentsDTO.getPaymentsMetadata().getPaymentsLabel()
+                            .getPaymentPlanCreateConditionError(), Toast.LENGTH_SHORT).show();
+                }
             }
-
-            Bundle arguments = getArguments();
-            Bundle args = new Bundle();
-            args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
-                    arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
-            fragment.setArguments(args);
-
-            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-            fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
-            fragmentTransaction.commit();
         }
     };
 

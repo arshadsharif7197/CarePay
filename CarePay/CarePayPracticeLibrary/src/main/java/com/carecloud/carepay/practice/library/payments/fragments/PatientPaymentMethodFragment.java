@@ -3,8 +3,6 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,12 +16,14 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -37,23 +37,20 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PatientPaymentMethodFragment extends BaseCheckinFragment implements RadioGroup.OnCheckedChangeListener {
+public class PatientPaymentMethodFragment extends BaseCheckinFragment
+        implements RadioGroup.OnCheckedChangeListener {
 
-    private RadioGroup paymentMethodRadioGroup;
-    private Button createPaymentPlanButton;
-    private Button paymentChoiceButton;
     private Activity activity;
+    private Button paymentChoiceButton;
+    private RadioGroup paymentMethodRadioGroup;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
-    private String selectedPaymentMethod;
-    private String[] paymentMethodsArray;
-    private String[] createPaymentMethodButtonCaptionArray;
-    private int[] paymentMethodsDrawableArray;
+
     private PaymentsModel paymentsModel;
-    private PaymentsMetadataModel paymentsMetadataModel;
-    private PaymentsLabelDTO paymentsLabelsDTO;
+    private List<PaymentsMethodsDTO> paymentList;
+
     private String dialogTitle;
     private String dialogText;
-    private List<PaymentsMethodsDTO> paymentList;
+    private String selectedPaymentMethod;
     private String titlePaymentMethodString;
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
@@ -61,39 +58,43 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
+
         activity = getActivity();
+
         Gson gson = new Gson();
         Bundle arguments = getArguments();
         String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
         paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
+        paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
+
+        View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
 
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
         radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
-        getLabels();
+
         title.setText(titlePaymentMethodString);
         toolbar.setTitle(titlePaymentMethodString);
 
-        initilizeViews(view);
+        getLabels();
+        initializeViews(view);
 
         return view;
     }
 
     private RadioButton getPaymentMethodRadioButton(String cardType, String cardInfo, int index) {
-
         RadioButton radioButtonView = new RadioButton(activity);
         radioButtonView.setId(index);
         radioButtonView.setButtonDrawable(android.R.color.transparent);
         radioButtonView.setBackground(null);
         radioButtonView.setText(cardInfo);
+
         // Initialize HashMap.
         HashMap<String, Integer> cardTypeMap = new HashMap<>();
         cardTypeMap.put(CarePayConstants.TYPE_CASH, R.drawable.payment_cash_button_selector);
@@ -107,7 +108,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
         radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
                 cardTypeMap.get(cardType), 0, R.drawable.check_box_intake, 0);
 
-        radioButtonView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+        radioButtonView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         radioButtonView.setTextColor(ContextCompat.getColor(activity, R.color.radio_button_selector));
         radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));
         radioButtonView.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin));
@@ -115,25 +116,27 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
         return radioButtonView;
     }
 
-    private void initilizeViews(View view) {
+    private void initializeViews(View view) {
         paymentMethodRadioGroup = (RadioGroup) view.findViewById(R.id.paymentMethodsRadioGroup);
-        paymentChoiceButton = (Button) view.findViewById(R.id.paymentChoiceButton);
-        createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
         paymentMethodRadioGroup.setOnCheckedChangeListener(this);
-        paymentChoiceButton.setOnClickListener(paymentChoiceButtonListener);
+
+        Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
-        paymentChoiceButton.setText(paymentChooseMethodString);
         createPaymentPlanButton.setText(paymentCreatePlanString);
+
+        paymentChoiceButton = (Button) view.findViewById(R.id.paymentChoiceButton);
+        paymentChoiceButton.setOnClickListener(paymentChoiceButtonListener);
+        paymentChoiceButton.setText(paymentChooseMethodString);
         paymentChoiceButton.setEnabled(false);
 
         for (int i = 0; i < paymentList.size(); i++) {
-          paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(), paymentList.get(i).getLabel(), i),
-                    radioGroupLayoutParam);
+            paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(),
+                    paymentList.get(i).getLabel(), i), radioGroupLayoutParam);
 
             View dividerLineView = new View(activity);
             dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 1
-            ));
+                    LinearLayout.LayoutParams.MATCH_PARENT, 1));
+
             dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
             paymentMethodRadioGroup.addView(dividerLineView);
             onSetRadioButtonRegularTypeFace();
@@ -175,7 +178,40 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // ToDo : Create payment plan action here - to be done
+            if (paymentsModel != null) {
+
+                double previousBalance = 0;
+                double coPay = 0;
+                List<PaymentPatientBalancesPayloadDTO> paymentList
+                        = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload();
+
+                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
+                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
+                        previousBalance = Double.parseDouble(payment.getTotal());
+                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                        coPay = Double.parseDouble(payment.getTotal());
+                    }
+                }
+
+                // Balance of at least $20
+                if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
+                    PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
+
+                    Gson gson = new Gson();
+                    Bundle arguments = getArguments();
+                    String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+                    PaymentsModel paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
+
+                    Bundle args = new Bundle();
+                    args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsModel);
+                    fragment.setArguments(args);
+
+                    ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+                } else {
+                    Toast.makeText(getActivity(), paymentsModel.getPaymentsMetadata().getPaymentsLabel()
+                            .getPaymentPlanCreateConditionError(), Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     };
 
@@ -184,30 +220,17 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
         public void onClick(View view) {
             getLabels();
 
-          /*  if (paymentChoiceButton.getText().equals(getString(R.string.choose_credit_card))) {
-                PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
-
-                Gson gson = new Gson();
-                Bundle arguments = getArguments();
-                String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-                PaymentsModel paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-
-                Bundle args = new Bundle();
-                args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-                args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsModel);
-                fragment.setArguments(args);
-
-                ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-            }*/
-            int position=(Integer)view.getTag();
-            switch(position){
+            int position = (Integer) view.getTag();
+            switch (position) {
                 case 0:
-                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface(){
-                        @Override
-                        public void onActionButton() {
-                        }
-                    }).show();
+                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText,
+                            new LargeAlertDialog.LargeAlertInterface() {
+                                @Override
+                                public void onActionButton() {
+                                }
+                            }).show();
                     break;
+
                 case 1:
                     PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
 
@@ -225,27 +248,30 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment implements
                     break;
 
                 default:
-                    return;
+                    break;
             }
         }
     };
 
     /**
-     *  partial payment labels
+     * partial payment labels
      */
     public void getLabels() {
         if (paymentsModel != null) {
-            paymentsMetadataModel = paymentsModel.getPaymentsMetadata();
+            PaymentsMetadataModel paymentsMetadataModel = paymentsModel.getPaymentsMetadata();
+
             if (paymentsMetadataModel != null) {
-                paymentsLabelsDTO = paymentsMetadataModel.getPaymentsLabel();
+                PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataModel.getPaymentsLabel();
+
                 if (paymentsLabelsDTO != null) {
                     dialogTitle = paymentsLabelsDTO.getPaymentSeeFrontDeskButton();
-                    dialogText= paymentsLabelsDTO.getPaymentBackButton();
+                    dialogText = paymentsLabelsDTO.getPaymentBackButton();
                     titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
                     paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
-                    paymentCreatePlanString =  paymentsLabelsDTO.getPaymentCreatePlanButton();
+                    paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
                 }
             }
         }
     }
 }
+
