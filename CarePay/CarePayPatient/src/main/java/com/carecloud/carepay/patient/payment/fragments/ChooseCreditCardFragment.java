@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadCreditCardTypesDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -37,7 +38,6 @@ import java.util.List;
 public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup chooseCreditCardRadioGroup;
-    private Button addNewCardButton;
     private Button nextButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
@@ -100,27 +100,31 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         nextButton.setOnClickListener(nextButtonListener);
         nextButton.setVisibility(View.INVISIBLE);
 
-        addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         if (paymentsModel != null) {
             PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
-            List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
 
-            for (int i = 0; i < creditCardList.size(); i++) {
-                PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
-                chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
-                        getEncodedCardNumber(creditCardItem.getCardType(), creditCardItem.getCardNumber()), i),
-                        radioGroupLayoutParam);
+            if (patientCreditCards != null) {
+                List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
 
-                View dividerLineView = new View(activity);
-                dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, 1
-                ));
+                for (int i = 0; i < creditCardList.size(); i++) {
+                    PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
+                    String creditCardName = getCreditCardName(creditCardItem.getCardType());
+                    chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
+                            StringUtil.getEncodedCardNumber(creditCardName,
+                                    creditCardItem.getCardNumber()), i), radioGroupLayoutParam);
 
-                dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
-                chooseCreditCardRadioGroup.addView(dividerLineView);
-                onSetRadioButtonRegularTypeFace();
+                    View dividerLineView = new View(activity);
+                    dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, 1
+                    ));
+
+                    dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
+                    chooseCreditCardRadioGroup.addView(dividerLineView);
+                    onSetRadioButtonRegularTypeFace();
+                }
             }
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
@@ -129,11 +133,21 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         }
     }
 
-    private String getEncodedCardNumber(String cardType, String cardNumber) {
-        if (!StringUtil.isNullOrEmpty(cardNumber)) {
-            return cardType + " **** " + cardNumber.substring(cardNumber.length() - 4, cardNumber.length());
+    private String getCreditCardName(String cardType) {
+        if (paymentsModel != null) {
+            List<PaymentsSettingsPayloadCreditCardTypesDTO> creditCardType
+                    = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getCreditCardType();
+
+            if (creditCardType != null && creditCardType.size() > 0) {
+                for (int i = 0; i < creditCardType.size(); i++) {
+                    PaymentsSettingsPayloadCreditCardTypesDTO creditCardTypesDTO = creditCardType.get(i);
+                    if (creditCardTypesDTO.getType().equalsIgnoreCase(cardType)) {
+                        return creditCardTypesDTO.getLabel();
+                    }
+                }
+            }
         }
-        return "";
+        return cardType;
     }
 
     @Override
@@ -176,6 +190,10 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             if (fragment == null) {
                 fragment = new AddNewCreditCardFragment();
             }
+            Bundle args = new Bundle();
+            args.putSerializable(CarePayConstants.INTAKE_BUNDLE,
+                    paymentsModel);
+            fragment.setArguments(args);
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
             fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
             fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());

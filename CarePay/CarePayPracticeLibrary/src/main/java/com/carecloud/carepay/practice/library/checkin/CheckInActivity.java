@@ -40,6 +40,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     private RecyclerView checkinginRecyclerView;
     private RecyclerView waitingRoomRecyclerView;
     private Context context;
+    private boolean patientFiltered;
 
     CheckInDTO checkInDTO;
 
@@ -51,6 +52,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     ArrayList<FilterDataDTO> filterableDoctorLocationList = new ArrayList<>();
     ArrayList<FilterDataDTO> patientList;
+    private ArrayList<FilterDataDTO> searchedPatientList = new ArrayList<>();
 
     CarePayTextView goBackTextview;
     CarePayTextView filterOnTextView;
@@ -70,7 +72,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
-
+        patientFiltered=false;
         this.context = this;
         initializationView();
         populateList();
@@ -141,7 +143,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             @Override
             public void onClick(View view) {
                 CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-                CustomFilterPopupWindow customFilterPopupWindow = new CustomFilterPopupWindow(CheckInActivity.this, findViewById(R.id.activity_checked_in), filterableDoctorLocationList, patientList);
+                CustomFilterPopupWindow customFilterPopupWindow = new CustomFilterPopupWindow(CheckInActivity.this, findViewById(R.id.activity_checked_in), filterableDoctorLocationList, patientList, searchedPatientList);
                 if (checkInLabelDTO != null) {
                     customFilterPopupWindow.setTitle(StringUtil.getFormatedLabal(CheckInActivity.this, checkInLabelDTO.getPracticeCheckinFilter()));
                     customFilterPopupWindow.setSearchHint(StringUtil.getFormatedLabal(CheckInActivity.this, checkInLabelDTO.getPracticeCheckinFilterFindPatientByName()));
@@ -411,5 +413,21 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                 checkInDTO, getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
                 appointmentPayloadDTO);
         dialog.show();
+    }
+
+    /**
+     * if patients was filtered by provider or location set TRUE or FALSE
+     * @param patientFiltered true or false if patient screen state on filterpopup
+     */
+    public void setPatientFiltered(boolean patientFiltered){
+        this.patientFiltered=patientFiltered;
+    }
+
+    /**
+     * patients was filtered flag
+     * @return if patient was filtered by provider or location
+     */
+    public boolean isPatientFiltered(){
+        return this.patientFiltered;
     }
 }

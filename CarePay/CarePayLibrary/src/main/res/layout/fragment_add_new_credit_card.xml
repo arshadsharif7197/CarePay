@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.carecloud.carepay.patient.payment.fragments.AddNewCreditCardFragment">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/toolbar_layout"
@@ -12,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_layout"
-        android:padding="@dimen/payment_method_parent_layout_padding"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/payment_method_parent_layout_padding">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/creditCardNoTextInputLayout"
@@ -22,15 +23,15 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
             android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
-            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin">
+            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+            android:textColorHint="@color/payne_gray">
 
             <EditText
                 android:id="@+id/creditCardNoEditText"
                 style="@style/PaymentEditTextStyle"
-                android:hint="@string/credit_card_number"
-                android:inputType="textEmailAddress"
-                android:maxLength="19"
-                android:digits="@string/restrict_digits_space"/>
+                android:digits="@string/restrict_digits_slash"
+                android:inputType="number"
+                android:maxLength="12" />
 
 
         </android.support.design.widget.TextInputLayout>
@@ -48,13 +49,15 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
             android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
-            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin">
+            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+            android:textColorHint="@color/payne_gray">
 
             <EditText
                 android:id="@+id/verificationCodeEditText"
                 style="@style/PaymentEditTextStyle"
-                android:hint="@string/verification_code"
-                android:inputType="textEmailAddress" />
+                android:digits="@string/restrict_digits_slash"
+                android:inputType="number"
+                android:maxLength="3" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -70,23 +73,23 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/payment_method_layout_checkbox_margin">
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/expirationDateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/expiration_date"
                 android:textColor="@color/charcoal"
+                app:customAssetFont="proxima_nova_regular"
                 android:textSize="@dimen/payment_method_layout_label_text_size" />
 
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/pickDateTextView"
                 style="@style/PaymentPickDateLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="@string/pick_date" />
+                app:customAssetFont="proxima_nova_semi_bold"
+                android:clickable="true" />
 
         </RelativeLayout>
 
@@ -103,8 +106,7 @@
             android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
             android:background="@null"
             android:button="@null"
-            android:drawableRight="@drawable/cell_checkbox"
-            android:text="@string/save_card_on_file" />
+            android:drawableRight="@drawable/cell_checkbox" />
 
         <View
             android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,13 +12,13 @@ public class PaymentsTransitionsDTO {
     private PaymentsMakePaymentDTO makePayment;
     @SerializedName("add_credit_card")
     @Expose
-    private PaymentsAddCreditCardDTO addCreditCard;
+    private TransitionDTO addCreditCard;
     @SerializedName("delete_credit_card")
     @Expose
     private PaymentsDeleteCreditCardsDTO deleteCreditCard;
     @SerializedName("add_payment_plan")
     @Expose
-    private PaymentsAddPaymentPlanDTO addPaymentPlan;
+    private TransitionDTO addPaymentPlan;
     @SerializedName("delete_payment_plan")
     @Expose
     private PayementsDeletePaymentPlanDTO deletePaymentPlan;
@@ -48,7 +49,7 @@ public class PaymentsTransitionsDTO {
      * @return
      * The addCreditCard
      */
-    public PaymentsAddCreditCardDTO getAddCreditCard() {
+    public TransitionDTO getAddCreditCard() {
         return addCreditCard;
     }
 
@@ -57,7 +58,7 @@ public class PaymentsTransitionsDTO {
      * @param addCreditCard
      * The add_credit_card
      */
-    public void setAddCreditCard(PaymentsAddCreditCardDTO addCreditCard) {
+    public void setAddCreditCard(TransitionDTO addCreditCard) {
         this.addCreditCard = addCreditCard;
     }
 
@@ -84,7 +85,7 @@ public class PaymentsTransitionsDTO {
      * @return
      * The addPaymentPlan
      */
-    public PaymentsAddPaymentPlanDTO getAddPaymentPlan() {
+    public TransitionDTO getAddPaymentPlan() {
         return addPaymentPlan;
     }
 
@@ -93,7 +94,7 @@ public class PaymentsTransitionsDTO {
      * @param addPaymentPlan
      * The add_payment_plan
      */
-    public void setAddPaymentPlan(PaymentsAddPaymentPlanDTO addPaymentPlan) {
+    public void setAddPaymentPlan(TransitionDTO addPaymentPlan) {
         this.addPaymentPlan = addPaymentPlan;
     }
 

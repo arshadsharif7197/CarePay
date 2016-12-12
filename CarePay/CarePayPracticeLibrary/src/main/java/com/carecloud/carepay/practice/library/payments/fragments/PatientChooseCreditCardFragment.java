@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
@@ -33,10 +34,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PatientChooseCreditCardFragment extends BaseCheckinFragment implements RadioGroup.OnCheckedChangeListener {
+public class PatientChooseCreditCardFragment extends BaseCheckinFragment
+        implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup chooseCreditCardRadioGroup;
-    private Button addNewCardButton;
     private Button nextButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
@@ -96,40 +97,37 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment impleme
         nextButton.setOnClickListener(nextButtonListener);
         nextButton.setVisibility(View.INVISIBLE);
 
-        addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         if (paymentsModel != null) {
-            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
-            List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
+            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards
+                    = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
-            for (int i = 0; i < creditCardList.size(); i++) {
-                PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
-                chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
-                        getEncodedCardNumber(creditCardItem.getCardType(), creditCardItem.getCardNumber()), i),
-                        radioGroupLayoutParam);
+            if (patientCreditCards != null) {
+                List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
 
-                View dividerLineView = new View(activity);
-                dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, 1
-                ));
+                for (int i = 0; i < creditCardList.size(); i++) {
+                    PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
+                    chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(StringUtil
+                            .getEncodedCardNumber(creditCardItem.getCardType(), creditCardItem.getCardNumber()), i),
+                            radioGroupLayoutParam);
 
-                dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
-                chooseCreditCardRadioGroup.addView(dividerLineView);
-                onSetRadioButtonRegularTypeFace();
+                    View dividerLineView = new View(activity);
+                    dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, 1
+                    ));
+
+                    dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
+                    chooseCreditCardRadioGroup.addView(dividerLineView);
+                    onSetRadioButtonRegularTypeFace();
+                }
             }
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
             nextButton.setText(paymentsLabel.getPaymentNextButton());
             addNewCardButton.setText(paymentsLabel.getPaymentAddNewCreditCardButton());
         }
-    }
-
-    private String getEncodedCardNumber(String cardType, String cardNumber) {
-        if (!StringUtil.isNullOrEmpty(cardNumber)) {
-            return cardType + " **** " + cardNumber.substring(cardNumber.length() - 4, cardNumber.length());
-        }
-        return "";
     }
 
     @Override
@@ -166,16 +164,12 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment impleme
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-//            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-//            AddNewCreditCardFragment fragment = (AddNewCreditCardFragment)
-//                fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
-//            if (fragment == null) {
-//                fragment = new AddNewCreditCardFragment();
-//            }
-//            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-//            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-//            fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
-//            fragmentTransaction.commit();
+            PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
+            Bundle args = new Bundle();
+            args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+            fragment.setArguments(args);
+
+            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
         }
     };
 }

@@ -84,6 +84,8 @@ public class SimpleDatePickerDialogFragment extends DialogFragment {
                 getActivity(), onDateSetListener, year, month);
         if (minDate != NULL_INT) {
             simpleDatePickerDialog.setMinDate(minDate);
+        } else {
+            simpleDatePickerDialog.setMinDate(System.currentTimeMillis());
         }
         if (maxDate != NULL_INT) {
             simpleDatePickerDialog.setMaxDate(maxDate);
