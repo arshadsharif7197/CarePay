@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -264,11 +265,11 @@ public class SignatureActivity extends AppCompatActivity {
      * On click Listeners
      */
     private void onClickListeners() {
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 clearSignature();
-                if (switchButton.isChecked()) {
+                if (isChecked) {
                     showData(true);
                     signedByLegal = true;
                     signedByPatient = false;
@@ -282,6 +283,7 @@ public class SignatureActivity extends AppCompatActivity {
                     legalLastNameET.setText("");
                     legalLastNameET.clearFocus();
                 }
+
             }
         });
 
