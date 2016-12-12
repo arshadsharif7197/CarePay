@@ -75,9 +75,7 @@ public class CarePayConstants {
     public static final String TYPE_HSA  = "hsa";
     public static final String TYPE_FSA  = "fsa";
 
-
-    public static final String APPOINTMENTS_STATUS_NOT_STARTED = "not_started";
+    public static final int PAYMENT_PLAN_REQUIRED_BALANCE = 20;
     public static final String APPOINTMENTS_STATUS_COMPLETED = "completed";
-
     public static final String PARTIAL_PAYMENT_AMOUNT = "partial_payment_amount";
 }

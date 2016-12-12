@@ -18,7 +18,7 @@ public class PaymentsTransitionsDTO {
     private PaymentsDeleteCreditCardsDTO deleteCreditCard;
     @SerializedName("add_payment_plan")
     @Expose
-    private PaymentsAddPaymentPlanDTO addPaymentPlan;
+    private TransitionDTO addPaymentPlan;
     @SerializedName("delete_payment_plan")
     @Expose
     private PayementsDeletePaymentPlanDTO deletePaymentPlan;
@@ -85,7 +85,7 @@ public class PaymentsTransitionsDTO {
      * @return
      * The addPaymentPlan
      */
-    public PaymentsAddPaymentPlanDTO getAddPaymentPlan() {
+    public TransitionDTO getAddPaymentPlan() {
         return addPaymentPlan;
     }
 
@@ -94,7 +94,7 @@ public class PaymentsTransitionsDTO {
      * @param addPaymentPlan
      * The add_payment_plan
      */
-    public void setAddPaymentPlan(PaymentsAddPaymentPlanDTO addPaymentPlan) {
+    public void setAddPaymentPlan(TransitionDTO addPaymentPlan) {
         this.addPaymentPlan = addPaymentPlan;
     }
 

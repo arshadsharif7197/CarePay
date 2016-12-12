@@ -1,9 +1,7 @@
-package com.carecloud.carepay.patient.payment.fragments;
+package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -19,7 +17,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.dialogs.ChooseCreditCardDialog;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.ChooseCreditCardDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -46,9 +45,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PaymentPlanFragment extends Fragment {
+public class PatientPaymentPlanFragment extends BaseCheckinFragment {
 
-    private static final String LOG_TAG = PaymentPlanFragment.class.getSimpleName();
+    private static final String LOG_TAG = PatientPaymentPlanFragment.class.getSimpleName();
 
     private int minNumberOfMonths = 2;
     private int maxNumberOfMonths = 120;
@@ -114,8 +113,6 @@ public class PaymentPlanFragment extends Fragment {
 
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         Spinner monthDays = (Spinner) view.findViewById(R.id.payment_plan_month_day);

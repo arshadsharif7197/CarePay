@@ -27,7 +27,7 @@ public class FilterDataDTO {
     /**
      * Constructor with text and type
      * @param displayText text
-     * @param filterDataType type PATIENT, PROVIDER,LOCATION or HEADER
+     * @param filterDataType type PREVIOUS_BALANCE, PROVIDER,LOCATION or HEADER
      */
     public FilterDataDTO(String displayText,FilterDataType filterDataType) {
         this.filterDataType=filterDataType;
