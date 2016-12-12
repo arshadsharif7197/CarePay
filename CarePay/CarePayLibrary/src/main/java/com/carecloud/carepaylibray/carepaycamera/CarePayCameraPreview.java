@@ -22,6 +22,8 @@ import android.util.TypedValue;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 
 import java.io.IOException;
@@ -294,11 +296,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
 
         try {
-
-
             // set Camera parameters
             Camera.Parameters params = camera.getParameters();
-
             List<String> focusModes = params.getSupportedFocusModes();
             if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                 // Autofocus mode is supported
@@ -368,7 +367,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
                     camera.setDisplayOrientation(90);
                 } else {
                     camera = Camera.open(getBackFaceCamera());
-                    camera.setDisplayOrientation(90);
+                    camera.setDisplayOrientation(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)?270:90);
                 }
                 // attempt to get a Camera instance
             } catch (Exception e) {
@@ -418,6 +417,10 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         Bitmap capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
         if (cameraType == CameraType.SCAN_DOC) {
+
+            if(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)){
+                capturedBitmap = rotateBitmap(capturedBitmap, 270);
+            }
             Rect rectFrame = shadowRect;
 
             double scaleWidth = (float) capturedBitmap.getWidth() / getHeight();
