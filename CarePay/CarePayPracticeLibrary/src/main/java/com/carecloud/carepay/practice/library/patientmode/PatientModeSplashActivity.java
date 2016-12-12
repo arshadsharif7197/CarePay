@@ -15,9 +15,9 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabelsDTO;
-import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeOptionDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -75,11 +75,11 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
             if (patientModePayloadDTO != null) {
                 // set the languages spinner
-                int langaugelistsize = patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().size();
-                PatientModeOptionDTO defaultLangOption = null;
+                int langaugelistsize = patientModePayloadDTO.getLanguages().size();
+                LanguageOptionDTO defaultLangOption = null;
                 int indexDefault = 0;
                 for (int i = 0; i < langaugelistsize; i++) {
-                    PatientModeOptionDTO languageOption = patientModePayloadDTO.getPatientModeStart().getLanguage().getOptions().get(i);
+                    LanguageOptionDTO languageOption = patientModePayloadDTO.getLanguages().get(i);
                     languages.add(i, languageOption.getCode().toUpperCase());
                     if (languageOption.getDefault()) {
                         defaultLangOption = languageOption;

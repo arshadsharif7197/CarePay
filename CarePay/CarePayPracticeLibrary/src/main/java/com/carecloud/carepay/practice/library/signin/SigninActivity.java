@@ -231,11 +231,11 @@ public class SigninActivity extends BasePracticeActivity {
         signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
 
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN) {
-            int languageListSize = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().size();
+            int languageListSize = signinDTO.getPayload().getLanguages().size();
             LanguageOptionDTO defaultLangOption = null;
             int indexDefault = 0;
             for (int i = 0; i < languageListSize; i++) {
-                LanguageOptionDTO languageOption = signinDTO.getPayload().getPracticeModeSignin().getLanguage().getOptions().get(i);
+                LanguageOptionDTO languageOption = signinDTO.getPayload().getLanguages().get(i);
                 languages.add(i, languageOption.getCode().toUpperCase());
                 if (languageOption.getDefault()) {
                     defaultLangOption = languageOption;

@@ -9,30 +9,10 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class PracticeModeSigninDTO {
-    @SerializedName("language")
-    @Expose
-    private SigninLanguageDTO language;
+
     @SerializedName("cognito")
     @Expose
     private CognitoDTO cognito;
-
-    /**
-     *
-     * @return
-     * The language
-     */
-    public SigninLanguageDTO getLanguage() {
-        return language;
-    }
-
-    /**
-     *
-     * @param language
-     * The language
-     */
-    public void setLanguage(SigninLanguageDTO language) {
-        this.language = language;
-    }
 
     /**
      *
