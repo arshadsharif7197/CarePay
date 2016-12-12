@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.ChooseCreditCardDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -90,10 +91,15 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
             @Override
             public void onClick(View view1) {
 
-                //Goto Credit card screen to add
-                ChooseCreditCardDialog creditCardDialog = new ChooseCreditCardDialog(
-                        getActivity(), paymentsModel, creditCardClickListener);
-                creditCardDialog.show();
+                if (isEmptyCreditCard) {
+                    //Goto Add credit card screen
+                    addNewCreditCard();
+                } else {
+                    //Goto Credit card screen to add
+                    ChooseCreditCardDialog creditCardDialog = new ChooseCreditCardDialog(
+                            getActivity(), paymentsModel, creditCardClickListener);
+                    creditCardDialog.show();
+                }
             }
         });
 
@@ -290,9 +296,11 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
             }
 
             TextView selectedItem = (TextView) parent.getChildAt(0);
-            selectedItem.setText(item.concat(suffix));
-            selectedItem.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
-            SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), selectedItem);
+            if (selectedItem != null) {
+                selectedItem.setText(item.concat(suffix));
+                selectedItem.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), selectedItem);
+            }
         }
 
         @Override
@@ -505,6 +513,15 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
         }
 
         return true;
+    }
+
+    private void addNewCreditCard() {
+        PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+        fragment.setArguments(args);
+
+        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
     }
 
     private void createPaymentPlan() {

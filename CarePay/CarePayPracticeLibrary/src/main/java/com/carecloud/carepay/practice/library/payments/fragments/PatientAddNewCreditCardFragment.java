@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -36,7 +37,7 @@ import java.util.LinkedList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PatientAddNewCreditCardFragment extends Fragment implements
+public class PatientAddNewCreditCardFragment extends BaseCheckinFragment implements
         SimpleDatePickerDialog.OnDateSetListener{
 
     private TextInputLayout creditCardNoTextInput;
@@ -140,7 +141,8 @@ public class PatientAddNewCreditCardFragment extends Fragment implements
 
 
                 LinkedList<Integer> spaceIndices = new LinkedList <>();
-                for (int index = originalString.indexOf(SPACE_CHAR); index >= 0; index = originalString.indexOf(SPACE_CHAR, index + 1)) {
+                for (int index = originalString.indexOf(SPACE_CHAR); index >= 0;
+                     index = originalString.indexOf(SPACE_CHAR, index + 1)) {
                     spaceIndices.offerLast(index);
                 }
 
@@ -340,18 +342,19 @@ public class PatientAddNewCreditCardFragment extends Fragment implements
         datePickerDialogFragment.show(getChildFragmentManager(), null);
     }
 
-    private boolean validateCreditCardDetails(){
-        if(!(creditCardNoEditText.getText().toString().length()==12)){
+    private boolean validateCreditCardDetails() {
+        if (!(creditCardNoEditText.getText().toString().length() == 12)) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
         }
-        if(!(verificationCodeEditText.getText().toString().length()>0)){
+        if (!(verificationCodeEditText.getText().toString().length() > 0)) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
         }
-        if(!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPickDate())){
+        if (!pickDateTextView.getText().toString().equalsIgnoreCase(
+                paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPickDate())) {
             nextButton.setEnabled(true);
             nextButton.setClickable(true);
             return true;

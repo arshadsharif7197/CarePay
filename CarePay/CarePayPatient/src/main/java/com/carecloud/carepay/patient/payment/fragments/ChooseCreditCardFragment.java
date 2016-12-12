@@ -190,10 +190,11 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             if (fragment == null) {
                 fragment = new AddNewCreditCardFragment();
             }
+
             Bundle args = new Bundle();
-            args.putSerializable(CarePayConstants.INTAKE_BUNDLE,
-                    paymentsModel);
+            args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
             fragment.setArguments(args);
+
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
             fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
             fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
