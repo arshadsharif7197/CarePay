@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRadioButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -263,6 +264,8 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         @Override
         public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(context);
+            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 }

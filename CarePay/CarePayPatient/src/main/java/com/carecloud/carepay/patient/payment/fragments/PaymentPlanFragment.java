@@ -541,6 +541,8 @@ public class PaymentPlanFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(getActivity());
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 }

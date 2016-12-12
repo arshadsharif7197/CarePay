@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -258,7 +259,8 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(InTakeWebViewActivity.this, getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(InTakeWebViewActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -279,7 +281,8 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(InTakeWebViewActivity.this, getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(InTakeWebViewActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

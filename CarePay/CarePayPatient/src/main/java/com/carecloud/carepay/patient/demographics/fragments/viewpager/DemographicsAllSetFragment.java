@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.demographics.fragments.viewpager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDeta
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -59,7 +61,8 @@ public class DemographicsAllSetFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            SystemUtil.showFaultDialog(getActivity());
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

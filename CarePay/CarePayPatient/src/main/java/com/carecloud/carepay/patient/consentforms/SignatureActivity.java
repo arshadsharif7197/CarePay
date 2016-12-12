@@ -10,6 +10,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -97,7 +98,8 @@ public class SignatureActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            SystemUtil.showFaultDialog(SignatureActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

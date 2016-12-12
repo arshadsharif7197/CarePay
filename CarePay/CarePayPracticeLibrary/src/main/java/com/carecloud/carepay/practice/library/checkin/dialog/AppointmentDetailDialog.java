@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
@@ -219,8 +220,8 @@ public class AppointmentDetailDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(context,
-                    getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(context);
+            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

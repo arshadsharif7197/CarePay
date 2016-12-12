@@ -414,7 +414,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(CloverMainActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(CloverMainActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -435,7 +436,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(CloverMainActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(CloverMainActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -451,6 +453,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(CloverMainActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -480,7 +484,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            SystemUtil.showFaultDialog(CloverMainActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -502,6 +507,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
             @Override
             public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
+                SystemUtil.showFaultDialog(CloverMainActivity.this);
                 Log.e(LOG_TAG, "failed fetching demogr info", throwable);
             }
         });
