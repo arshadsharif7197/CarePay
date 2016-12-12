@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -183,6 +184,8 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
 
             @Override
             public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
+                SystemUtil.showFaultDialog(getActivity());
+                Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), throwable.getMessage());
             }
         });
     }

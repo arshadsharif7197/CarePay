@@ -70,7 +70,8 @@ public class SigninFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            //   SystemUtil.showDialogMessage(SplashActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(getActivity());
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
     private TextInputLayout emailTextInput;

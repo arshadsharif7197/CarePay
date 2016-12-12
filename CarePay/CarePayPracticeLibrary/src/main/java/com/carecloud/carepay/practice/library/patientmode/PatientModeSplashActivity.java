@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.patientmode;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,12 +18,13 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabels
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeOptionDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,7 +157,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            SystemUtil.showFaultDialog(PatientModeSplashActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 }

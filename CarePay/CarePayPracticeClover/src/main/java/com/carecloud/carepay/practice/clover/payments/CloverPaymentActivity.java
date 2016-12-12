@@ -14,6 +14,7 @@ import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
@@ -304,6 +305,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Object> call, Throwable callback) {
+                SystemUtil.showFaultDialog(CloverPaymentActivity.this);
                 Log.e(TAG, callback.getMessage());
             }
         });

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -139,7 +140,8 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(AppointmentsActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -157,7 +159,8 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(AppointmentsActivity.this, getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
