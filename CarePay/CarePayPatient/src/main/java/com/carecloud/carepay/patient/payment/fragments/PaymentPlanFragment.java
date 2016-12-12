@@ -3,6 +3,8 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -91,10 +93,15 @@ public class PaymentPlanFragment extends Fragment {
             @Override
             public void onClick(View view1) {
 
-                //Goto Credit card screen to add
-                ChooseCreditCardDialog creditCardDialog = new ChooseCreditCardDialog(
-                        getActivity(), paymentsModel, creditCardClickListener);
-                creditCardDialog.show();
+                if (isEmptyCreditCard) {
+                    //Goto Add credit card screen
+                    addNewCreditCard();
+                } else {
+                    //Goto Credit card screen to Choose
+                    ChooseCreditCardDialog creditCardDialog = new ChooseCreditCardDialog(
+                            getActivity(), paymentsModel, creditCardClickListener);
+                    creditCardDialog.show();
+                }
             }
         });
 
@@ -293,9 +300,11 @@ public class PaymentPlanFragment extends Fragment {
             }
 
             TextView selectedItem = (TextView) parent.getChildAt(0);
-            selectedItem.setText(item.concat(suffix));
-            selectedItem.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
-            SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), selectedItem);
+            if (selectedItem != null) {
+                selectedItem.setText(item.concat(suffix));
+                selectedItem.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), selectedItem);
+            }
         }
 
         @Override
@@ -508,6 +517,24 @@ public class PaymentPlanFragment extends Fragment {
         }
 
         return true;
+    }
+
+    private void addNewCreditCard() {
+        FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+        AddNewCreditCardFragment fragment = (AddNewCreditCardFragment)
+                fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
+        if (fragment == null) {
+            fragment = new AddNewCreditCardFragment();
+        }
+
+        Bundle args = new Bundle();
+        args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+        fragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+        fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+        fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
+        fragmentTransaction.commit();
     }
 
     private void createPaymentPlan() {
