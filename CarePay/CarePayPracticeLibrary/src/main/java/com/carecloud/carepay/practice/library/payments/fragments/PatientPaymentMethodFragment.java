@@ -105,8 +105,13 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         cardTypeMap.put(CarePayConstants.TYPE_HSA, R.drawable.payment_credit_card_button_selector);
         cardTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
 
-        radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                cardTypeMap.get(cardType), 0, R.drawable.check_box_intake, 0);
+        if(cardTypeMap.get(cardType)!=null) {
+            radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                    cardTypeMap.get(cardType), 0, R.drawable.check_box_intake, 0);
+        } else {
+            radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
+                    cardTypeMap.get(CarePayConstants.TYPE_CREDIT_CARD), 0, R.drawable.check_box_intake, 0);
+        }
 
         radioButtonView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         radioButtonView.setTextColor(ContextCompat.getColor(activity, R.color.radio_button_selector));
