@@ -42,18 +42,15 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
-
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class PracticeAppSignatureActivity extends AppCompatActivity {
 
