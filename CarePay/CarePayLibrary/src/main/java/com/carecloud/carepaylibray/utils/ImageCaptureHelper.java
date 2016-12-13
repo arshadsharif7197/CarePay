@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -37,6 +38,7 @@ public class ImageCaptureHelper {
     public static final CharSequence[] chooseActionDlOptions = new CharSequence[3];
     public static String chooseActionDlgTitle;
 
+    private static int           orientation                 = 0;
     private static final String LOG_TAG = ImageCaptureHelper.class.getSimpleName();
     private String               userChoosenTask;
     private ImageView            imageViewTarget;
@@ -112,6 +114,49 @@ public class ImageCaptureHelper {
     }
 
     /**
+     * Getter of device orientation
+     * @return orientation value
+     */
+    public static int getOrientation() {
+        return orientation;
+    }
+
+    /**
+     * Setter of device orientation
+     * @param orientation orientation value
+     */
+    public static void setOrientation(int orientation) {
+        ImageCaptureHelper.orientation = orientation;
+    }
+
+    /**
+     * Estimates the value of the orientation to degree
+     * @param orientation device orientation
+     * @return estimated degree value
+     */
+    public int orientationToQuadrantDegrees(int orientation) {
+        int degrees = 0;
+
+        if (orientation < 140 & orientation > 40) {
+            degrees = 180;
+        }
+
+        return degrees;
+    }
+    /**
+     * Rotate a bitmap from center point
+     * @param originalBitmap picture to be rotated
+     * @param degrees degrees to be rotated
+     * @return rotated picture
+     */
+    public Bitmap rotateBitmap(Bitmap originalBitmap, int degrees) {
+        Matrix matrix = new Matrix();
+        matrix.preRotate(degrees);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0,originalBitmap.getWidth(), originalBitmap.getHeight(), matrix, true);
+        return rotatedBitmap;
+    }
+
+    /**
      * Callback method to be used upon returning from Camera activity
      *
      * @param data  The intent used to launch the Camera
@@ -139,6 +184,10 @@ public class ImageCaptureHelper {
     public Bitmap onCaptureImageResult(int shape) {
         if (imageBitmap == null) {
             return null;
+        }
+        int degrees = orientationToQuadrantDegrees(orientation);
+        if (degrees > 0) {
+            imageBitmap = rotateBitmap(imageBitmap, degrees);
         }
         Bitmap thumbnail = imageBitmap;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
