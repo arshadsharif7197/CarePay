@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.patientsplash.dtos.LanguageListDTO;
 import com.carecloud.carepay.patient.patientsplash.dtos.PayloadDTO;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
@@ -64,7 +63,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     };
     private SelectLanguageDTO languageSelectionDTO;
     private PayloadDTO payloadDTO;
-    private LanguageListDTO languageListDTO;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,13 +109,11 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
 
         if (languageSelectionDTO != null) {
             payloadDTO = languageSelectionDTO.getPayload();
-            languageListDTO = payloadDTO.getLanguageSelection().getLanguage();
-
-            int size = languageListDTO.getOptions().size();
+            int size =payloadDTO.getLanguages().size();
             for (int i = 0; i < size; i++) {
                 languageOptionModel = new LanguageOptionModel();
-                languageOptionModel.setValue(languageListDTO.getOptions().get(i).getLabel());
-                languageOptionModel.setLanguageId(languageListDTO.getOptions().get(i).getCode());
+                languageOptionModel.setValue(payloadDTO.getLanguages().get(i).getLabel() );
+                languageOptionModel.setLanguageId(payloadDTO.getLanguages().get(i).getCode());
                 languageOptionModel.setChecked(false);
                 languageOptionModelList.add(languageOptionModel);
             }
