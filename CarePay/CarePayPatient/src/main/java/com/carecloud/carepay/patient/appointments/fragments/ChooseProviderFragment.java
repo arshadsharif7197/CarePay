@@ -13,38 +13,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepay.patient.appointments.dialog.VisitTypeDialog;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentProvidersDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.ProvidersScheduleDTO;
-import com.carecloud.carepay.patient.appointments.services.AppointmentService;
-import com.carecloud.carepay.service.library.CarePayConstants;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnProviderListItemClickListener,
         VisitTypeDialog.OnDialogListItemClickListener {
 
     private RecyclerView providersRecyclerView;
-    private ProgressBar appointmentProgressBar;
     private AppointmentsResultModel appointmentsResultModel;
 
     private ChooseProviderFragment chooseProviderFragment;
-    private List<ProvidersScheduleDTO> providersScheduleModel;
-    private List<Object> providersListWithHeader;
+    private List<AppointmentProvidersDTO> providersModel;
 
     @Override
     public void onStart() {
@@ -65,16 +57,23 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         final View chooseProviderView = inflater.inflate(R.layout.fragment_choose_provider, container, false);
         chooseProviderFragment = this;
 
+        Bundle extras = getActivity().getIntent().getExtras();
+        if (extras != null && extras.containsKey(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE)) {
+            Gson gson = new Gson();
+            String appointmentInfoString = extras.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
+            appointmentsResultModel = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
+        }
+
         // set the toolbar
         Toolbar toolbar = (Toolbar) chooseProviderView.findViewById(R.id.add_appointment_toolbar);
         TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
-        titleView.setText(R.string.apt_choose_provider_title);
+        titleView.setText(appointmentsResultModel.getMetadata().getLabel().getChooseProviderHeading());
         titleView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         toolbar.setTitle("");
 
         TextView otherView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_other);
         otherView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        otherView.setVisibility(View.VISIBLE);
+        otherView.setVisibility(View.GONE);
         otherView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,8 +101,6 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         });
 
         providersRecyclerView = ((RecyclerView) chooseProviderView.findViewById(R.id.providers_recycler_view));
-        appointmentProgressBar = (ProgressBar) chooseProviderView.findViewById(R.id.providers_progress_bar);
-        appointmentProgressBar.setVisibility(View.GONE);
 
         //Fetch provider data
         getProvidersInformation();
@@ -112,48 +109,32 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     }
 
     private void getProvidersInformation() {
-        appointmentProgressBar.setVisibility(View.VISIBLE);
-        AppointmentService aptService = (new BaseServiceGenerator(getActivity())).createService(AppointmentService.class);
-        Call<AppointmentsResultModel> call = aptService.getProvidersList();
-        call.enqueue(new Callback<AppointmentsResultModel>() {
+        if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
+                && appointmentsResultModel.getPayload().getProviders() != null
+                && appointmentsResultModel.getPayload().getProviders().size() > 0) {
 
-            @Override
-            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-                appointmentsResultModel = response.body();
-                appointmentProgressBar.setVisibility(View.GONE);
+            providersModel = appointmentsResultModel.getPayload().getProviders();
+            List<Object> providersListWithHeader = getProvidersListWithHeader();
 
-                if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
-                        && appointmentsResultModel.getPayload().getProvidersSchedule() != null
-                        && appointmentsResultModel.getPayload().getProvidersSchedule().size() > 0) {
-
-                    providersScheduleModel = appointmentsResultModel.getPayload().getProvidersSchedule();
-                    providersListWithHeader = getProvidersListWithHeader();
-
-                    if (providersListWithHeader != null && providersListWithHeader.size() > 0) {
-                        ProviderAdapter providerAdapter = new ProviderAdapter(
-                                getActivity(), providersListWithHeader, ChooseProviderFragment.this,
-                                chooseProviderFragment);
-                        providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        providersRecyclerView.setAdapter(providerAdapter);
-                    }
-                }
+            if (providersListWithHeader != null && providersListWithHeader.size() > 0) {
+                ProviderAdapter providerAdapter = new ProviderAdapter(
+                        getActivity(), providersListWithHeader, ChooseProviderFragment.this,
+                        chooseProviderFragment);
+                providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                providersRecyclerView.setAdapter(providerAdapter);
             }
-
-            @Override
-            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-                appointmentProgressBar.setVisibility(View.GONE);
-            }
-        });
+        }
     }
 
     private List<Object> getProvidersListWithHeader() {
         List<Object> providersListWithHeader = new ArrayList<>();
-        if (providersScheduleModel != null && providersScheduleModel.size() > 0) {
+        if (providersModel != null && providersModel.size() > 0) {
             AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
-            appointmentSectionHeaderModel.setAppointmentHeader(CarePayConstants.DAY_UPCOMING);
+            appointmentSectionHeaderModel.setAppointmentHeader(
+                    appointmentsResultModel.getMetadata().getLabel().getChooseProviderAllHeader());
             providersListWithHeader.add(appointmentSectionHeaderModel);
 
-            for (ProvidersScheduleDTO providersScheduleItem : providersScheduleModel) {
+            for (AppointmentProvidersDTO providersScheduleItem : providersModel) {
                 providersListWithHeader.add(providersScheduleItem);
             }
         }
@@ -161,14 +142,14 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         return providersListWithHeader;
     }
 
-    private void loadVisitTypeScreen(ProvidersScheduleDTO model) {
+    private void loadVisitTypeScreen(AppointmentProvidersDTO model) {
 //        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(getActivity(), model, this);
 //        visitTypeDialog.show();
     }
 
     @Override
     public void onProviderListItemClickListener(int position) {
-        ProvidersScheduleDTO model = providersScheduleModel.get(position);
+        AppointmentProvidersDTO model = providersModel.get(position - 1);
         loadVisitTypeScreen(model);
     }
 

@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,7 +15,7 @@ public class AppointmentProvidersDTO {
     private Integer id;
     @SerializedName("npi")
     @Expose
-    private Object npi;
+    private String npi;
     @SerializedName("name")
     @Expose
     private String name;
@@ -24,6 +25,9 @@ public class AppointmentProvidersDTO {
     @SerializedName("phone_number")
     @Expose
     private String phone;
+    @SerializedName("photo")
+    @Expose
+    private String photo;
 
     /**
      * 
@@ -48,8 +52,8 @@ public class AppointmentProvidersDTO {
      * @return
      *     The npi
      */
-    public Object getNpi() {
-        return npi;
+    public String getNpi() {
+        return StringUtil.getLabelForView(npi);
     }
 
     /**
@@ -57,7 +61,7 @@ public class AppointmentProvidersDTO {
      * @param npi
      *     The npi
      */
-    public void setNpi(Object npi) {
+    public void setNpi(String npi) {
         this.npi = npi;
     }
 
@@ -67,7 +71,7 @@ public class AppointmentProvidersDTO {
      *     The name
      */
     public String getName() {
-        return name;
+        return StringUtil.getLabelForView(name);
     }
 
     /**
@@ -103,7 +107,7 @@ public class AppointmentProvidersDTO {
      *     The phone
      */
     public String getPhone() {
-        return phone;
+        return StringUtil.getLabelForView(phone);
     }
 
     /**
@@ -115,4 +119,17 @@ public class AppointmentProvidersDTO {
         this.phone = phone;
     }
 
+    /**
+     * @return The photo
+     */
+    public String getPhoto() {
+        return StringUtil.getLabelForView(photo);
+    }
+
+    /**
+     * @param photo The photo
+     */
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 }
