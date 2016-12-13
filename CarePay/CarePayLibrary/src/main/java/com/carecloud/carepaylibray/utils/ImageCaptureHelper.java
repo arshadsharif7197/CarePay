@@ -143,8 +143,10 @@ public class ImageCaptureHelper {
 
         return degrees;
     }
+    
     /**
      * Rotate a bitmap from center point
+     *
      * @param originalBitmap picture to be rotated
      * @param degrees degrees to be rotated
      * @return rotated picture
