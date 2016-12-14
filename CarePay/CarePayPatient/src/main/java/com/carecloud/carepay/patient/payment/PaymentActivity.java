@@ -28,6 +28,7 @@ public class PaymentActivity extends BasePatientActivity {
                 fm.findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
         if (fragment == null) {
             fragment = new ResponsibilityFragment();
+        }
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
                     intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
@@ -37,7 +38,6 @@ public class PaymentActivity extends BasePatientActivity {
             fragment.setArguments(bundle);
             fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
                     ResponsibilityFragment.class.getSimpleName()).commit();
-        }
 
 
     }
