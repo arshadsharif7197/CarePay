@@ -48,10 +48,9 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class PaymentMethodFragment extends Fragment implements RadioGroup.OnCheckedChangeListener,
-        GoogleApiClient.OnConnectionFailedListener
-{
+        GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG ="PaymentMethodFragment";
+    private static final String TAG = "PaymentMethodFragment";
     private RadioGroup paymentMethodRadioGroup;
     private Button paymentChoiceButton;
     private Activity activity;
@@ -104,8 +103,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         return view;
     }
 
-    private void setGoogleApiClient()
-    {
+    private void setGoogleApiClient() {
         // [START basic_google_api_client]
         _GoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
@@ -116,7 +114,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         // [END basic_google_api_client]
 
     }
-
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -141,7 +138,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         cardTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
         cardTypeMap.put(CarePayConstants.TYPE_ANDROID_PAY, R.drawable.payment_android_button_selector);
 
-        if(cardTypeMap.get(cardType)!=null) {
+        if (cardTypeMap.get(cardType) != null) {
             radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
                     cardTypeMap.get(cardType), 0, R.drawable.check_box_intake, 0);
         } else {
@@ -157,8 +154,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     }
 
 
-    private void isAndroidPayReadyToUse()
-    {
+    private void isAndroidPayReadyToUse() {
         showOrHideProgressDialog();
         IsReadyToPayRequest req = IsReadyToPayRequest.newBuilder()
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.MASTERCARD)
@@ -169,25 +165,24 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         Wallet.Payments.isReadyToPay(_GoogleApiClient, req).setResultCallback(
                 new ResultCallback<BooleanResult>() {
-        @Override
-        public void onResult(@NonNull BooleanResult booleanResult) {
-            showOrHideProgressDialog();
-            if (booleanResult.getStatus().isSuccess()) {
-                if (booleanResult.getValue()) {
-                    showOrHideProgressDialog();
-                    addAndroidPayPaymentMethod();
-                }
-                else {
+                    @Override
+                    public void onResult(@NonNull BooleanResult booleanResult) {
+                        showOrHideProgressDialog();
+                        if (booleanResult.getStatus().isSuccess()) {
+                            if (booleanResult.getValue()) {
+                                showOrHideProgressDialog();
+                                addAndroidPayPaymentMethod();
+                            } else {
 
-                    showOrHideProgressDialog();
-                }
-            } else {
-                // Error making isReadyToPay call
-                Log.e(TAG, "isReadyToPay:" + booleanResult.getStatus());
-                showOrHideProgressDialog();
-            }
-        }
-    });
+                                showOrHideProgressDialog();
+                            }
+                        } else {
+                            // Error making isReadyToPay call
+                            Log.e(TAG, "isReadyToPay:" + booleanResult.getStatus());
+                            showOrHideProgressDialog();
+                        }
+                    }
+                });
 
     }
 
@@ -203,23 +198,21 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         createPaymentPlanButton.setText(paymentCreatePlanString);
 
         for (int i = 0; i < paymentList.size(); i++) {
-            addPaymentMethodOptionView(i) ;
+            addPaymentMethodOptionView(i);
         }
     }
 
 
-    private void  addAndroidPayPaymentMethod()
-    {
+    private void addAndroidPayPaymentMethod() {
         PaymentsMethodsDTO androidPayPaymentMethod = new PaymentsMethodsDTO();
         androidPayPaymentMethod.setLabel(PaymentConstants.ANDROID_PAY);
         androidPayPaymentMethod.setType(CarePayConstants.TYPE_ANDROID_PAY);
-        paymentList.add(androidPayPaymentMethod) ;
-        addPaymentMethodOptionView(paymentList.size()-1);
+        paymentList.add(androidPayPaymentMethod);
+        addPaymentMethodOptionView(paymentList.size() - 1);
     }
 
 
-    private void addPaymentMethodOptionView(int i)
-    {
+    private void addPaymentMethodOptionView(int i) {
         paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(), paymentList.get(i).getLabel(), i),
                 radioGroupLayoutParam);
 
@@ -234,14 +227,11 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
     private void showOrHideProgressDialog() {
 
-        if(_isProgressBarVisible)
-        {
+        if (_isProgressBarVisible) {
             _paymentMethodFragmentProgressBar.setVisibility(View.GONE);
             _isProgressBarVisible = false;
-        }
-        else
-        {
-            _paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE) ;
+        } else {
+            _paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE);
             _isProgressBarVisible = true;
         }
 
@@ -264,8 +254,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     paymentChoiceButton.setVisibility(View.GONE);
                 } else {
 
-                    if (paymentChoiceButton.getVisibility() == View.GONE)
-                    {
+                    if (paymentChoiceButton.getVisibility() == View.GONE) {
                         paymentChoiceButton.setVisibility(View.VISIBLE);
                     }
                     selectedPaymentMethod = selectedRadioButton.getText().toString();
