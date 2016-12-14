@@ -105,7 +105,7 @@ public class AppointmentsListFragment extends Fragment {
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
 
-        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getChecking_in();
+        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
         WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
     }
 
