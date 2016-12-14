@@ -1,13 +1,16 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,11 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
@@ -29,6 +34,13 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.BooleanResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wallet.IsReadyToPayRequest;
+import com.google.android.gms.wallet.Wallet;
+import com.google.android.gms.wallet.WalletConstants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,33 +48,43 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PaymentMethodFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
+public class PaymentMethodFragment extends Fragment implements RadioGroup.OnCheckedChangeListener,
+        GoogleApiClient.OnConnectionFailedListener
+{
 
+    private static final String TAG ="PaymentMethodFragment";
     private RadioGroup paymentMethodRadioGroup;
     private Button paymentChoiceButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
     private String selectedPaymentMethod;
-    private int[] paymentMethodsDrawableArray;
+    //private int[] paymentMethodsDrawableArray;
     private PaymentsModel paymentsDTO;
     private String dialogTitle;
     private String dialogText;
-    private List<PaymentsMethodsDTO> paymentList;
+    private List<PaymentsMethodsDTO> paymentList = null;
     private String titlePaymentMethodString;
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
+
+    private ProgressBar paymentMethodFragmentProgressBar;
+    private GoogleApiClient mGoogleApiClient;
+    private Boolean isProgressBarVisible = false;
+    private Boolean hasAndroidPayOption = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
         activity = getActivity();
+
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         //title.setText(titlePaymentMethodString);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_back));
+        paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
@@ -77,9 +99,31 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         getLabels();
         initializeViews(view);
+        setGoogleApiClient();
+        isAndroidPayReadyToUse();
         title.setText(titlePaymentMethodString);
         toolbar.setTitle(titlePaymentMethodString);
         return view;
+    }
+
+    private void setGoogleApiClient()
+    {
+        // [START basic_google_api_client]
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
+                        .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
+                        .build())
+                .enableAutoManage(getActivity(), this)
+                .build();
+        // [END basic_google_api_client]
+
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e(TAG, "onConnectionFailed:" + connectionResult.getErrorMessage());
+        Toast.makeText(getActivity(), "Google Play Services error", Toast.LENGTH_SHORT).show();
     }
 
     private RadioButton getPaymentMethodRadioButton(String cardType, String cardInfo, int index) {
@@ -97,6 +141,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         cardTypeMap.put(CarePayConstants.TYPE_PAYPAL, R.drawable.payment_paypal_button_selector);
         cardTypeMap.put(CarePayConstants.TYPE_HSA, R.drawable.payment_credit_card_button_selector);
         cardTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
+        cardTypeMap.put(CarePayConstants.TYPE_ANDROID_PAY, R.drawable.payment_android_button_selector);
 
         if(cardTypeMap.get(cardType)!=null) {
             radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
@@ -113,6 +158,44 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         return radioButtonView;
     }
 
+
+    private void isAndroidPayReadyToUse()
+    {
+        showOrHideProgressDialog();
+        IsReadyToPayRequest req = IsReadyToPayRequest.newBuilder()
+                .addAllowedCardNetwork(WalletConstants.CardNetwork.MASTERCARD)
+                .addAllowedCardNetwork(WalletConstants.CardNetwork.VISA)
+                .addAllowedCardNetwork(WalletConstants.CardNetwork.AMEX)
+                .addAllowedCardNetwork(WalletConstants.CardNetwork.DISCOVER)
+                .build();
+
+        Wallet.Payments.isReadyToPay(mGoogleApiClient, req).setResultCallback(
+                new ResultCallback<BooleanResult>() {
+        @Override
+        public void onResult(@NonNull BooleanResult booleanResult) {
+            showOrHideProgressDialog();
+            if (booleanResult.getStatus().isSuccess()) {
+                if (booleanResult.getValue()) {
+                    showOrHideProgressDialog();
+                    addAndroidPayPaymentMethod();
+                    hasAndroidPayOption = true;
+                }
+                else {
+
+                    showOrHideProgressDialog();
+                    hasAndroidPayOption = false;
+                }
+            } else {
+                // Error making isReadyToPay call
+                Log.e(TAG, "isReadyToPay:" + booleanResult.getStatus());
+                showOrHideProgressDialog();
+                hasAndroidPayOption = false;
+            }
+        }
+    });
+
+    }
+
     private void initializeViews(View view) {
         paymentMethodRadioGroup = (RadioGroup) view.findViewById(R.id.paymentMethodsRadioGroup);
         paymentChoiceButton = (Button) view.findViewById(R.id.paymentChoiceButton);
@@ -125,19 +208,54 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         createPaymentPlanButton.setText(paymentCreatePlanString);
 
         for (int i = 0; i < paymentList.size(); i++) {
-            paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(), paymentList.get(i).getLabel(), i),
-                    radioGroupLayoutParam);
-
-            View dividerLineView = new View(activity);
-            dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 1
-            ));
-            dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
-            paymentMethodRadioGroup.addView(dividerLineView);
-            onSetRadioButtonRegularTypeFace();
+            addPaymentMethodOptionView(i) ;
         }
     }
 
+
+    private void  addAndroidPayPaymentMethod()
+    {
+        PaymentsMethodsDTO androidPayPaymentMethod = new PaymentsMethodsDTO();
+        androidPayPaymentMethod.setLabel(PaymentConstants.ANDROID_PAY);
+        androidPayPaymentMethod.setType(CarePayConstants.TYPE_ANDROID_PAY);
+        paymentList.add(androidPayPaymentMethod) ;
+        addPaymentMethodOptionView(paymentList.size()-1);
+    }
+
+
+    private void addPaymentMethodOptionView(int i)
+    {
+        paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(), paymentList.get(i).getLabel(), i),
+                radioGroupLayoutParam);
+
+        View dividerLineView = new View(activity);
+        dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 1
+        ));
+        dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
+        paymentMethodRadioGroup.addView(dividerLineView);
+        onSetRadioButtonRegularTypeFace();
+    }
+
+    private void showOrHideProgressDialog() {
+
+        if(isProgressBarVisible)
+        {
+            paymentMethodFragmentProgressBar.setVisibility(View.GONE);
+            isProgressBarVisible = false;
+        }
+        else
+        {
+            paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE) ;
+            isProgressBarVisible = true;
+        }
+
+    }
+
+    /**
+     * If user chooses Android Pay as the option then hide
+     * the paymentChoiceButton and show Android Pay button.
+     **/
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         paymentChoiceButton.setEnabled(true);
@@ -147,10 +265,21 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         for (int i = 0; i < paymentList.size(); i++) {
             if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentList.get(i).getLabel())) {
-                selectedPaymentMethod = selectedRadioButton.getText().toString();
-                paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
-                paymentChoiceButton.setTag(checkedId);
+                if (selectedRadioButton.getText().toString().equalsIgnoreCase(PaymentConstants.ANDROID_PAY)) {
+                    paymentChoiceButton.setVisibility(View.GONE);
+                } else {
+
+                    if (paymentChoiceButton.getVisibility() == View.GONE) ;
+                    {
+                        paymentChoiceButton.setVisibility(View.VISIBLE);
+                    }
+                    selectedPaymentMethod = selectedRadioButton.getText().toString();
+                    paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
+                    paymentChoiceButton.setTag(checkedId);
+                }
+
             }
+
         }
     }
 
