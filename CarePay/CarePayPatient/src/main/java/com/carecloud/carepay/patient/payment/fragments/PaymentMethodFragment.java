@@ -66,10 +66,9 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
 
-    private ProgressBar paymentMethodFragmentProgressBar;
-    private GoogleApiClient mGoogleApiClient;
-    private Boolean isProgressBarVisible = false;
-    private Boolean hasAndroidPayOption = false;
+    private ProgressBar _paymentMethodFragmentProgressBar;
+    private GoogleApiClient _GoogleApiClient;
+    private Boolean _isProgressBarVisible = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +82,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_back));
-        paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
+        _paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
@@ -108,7 +107,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private void setGoogleApiClient()
     {
         // [START basic_google_api_client]
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+        _GoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
                         .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
                         .build())
@@ -168,7 +167,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.DISCOVER)
                 .build();
 
-        Wallet.Payments.isReadyToPay(mGoogleApiClient, req).setResultCallback(
+        Wallet.Payments.isReadyToPay(_GoogleApiClient, req).setResultCallback(
                 new ResultCallback<BooleanResult>() {
         @Override
         public void onResult(@NonNull BooleanResult booleanResult) {
@@ -177,18 +176,15 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 if (booleanResult.getValue()) {
                     showOrHideProgressDialog();
                     addAndroidPayPaymentMethod();
-                    hasAndroidPayOption = true;
                 }
                 else {
 
                     showOrHideProgressDialog();
-                    hasAndroidPayOption = false;
                 }
             } else {
                 // Error making isReadyToPay call
                 Log.e(TAG, "isReadyToPay:" + booleanResult.getStatus());
                 showOrHideProgressDialog();
-                hasAndroidPayOption = false;
             }
         }
     });
@@ -238,15 +234,15 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
     private void showOrHideProgressDialog() {
 
-        if(isProgressBarVisible)
+        if(_isProgressBarVisible)
         {
-            paymentMethodFragmentProgressBar.setVisibility(View.GONE);
-            isProgressBarVisible = false;
+            _paymentMethodFragmentProgressBar.setVisibility(View.GONE);
+            _isProgressBarVisible = false;
         }
         else
         {
-            paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE) ;
-            isProgressBarVisible = true;
+            _paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE) ;
+            _isProgressBarVisible = true;
         }
 
     }
@@ -268,7 +264,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     paymentChoiceButton.setVisibility(View.GONE);
                 } else {
 
-                    if (paymentChoiceButton.getVisibility() == View.GONE) ;
+                    if (paymentChoiceButton.getVisibility() == View.GONE)
                     {
                         paymentChoiceButton.setVisibility(View.VISIBLE);
                     }
