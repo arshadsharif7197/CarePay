@@ -220,7 +220,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
             Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
             header.put("transition", "true");
-            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckin(), transitionToDemographicsVerifyCallback, queries, header);
+            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getChecking_in(), transitionToDemographicsVerifyCallback, queries, header);
 
         }
 

@@ -147,7 +147,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 Map<String, String> header = new HashMap<>();
                 header.put("transition", "true");
 
-                TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCheckin();
+                TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getChecking_in();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
             }
         });

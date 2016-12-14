@@ -101,7 +101,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             new QrCodeViewDialog(context, appointmentDTO, appointmentInfo.getMetadata()).show();
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
-            TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckin();
+            TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getChecking_in();
             doTransition(transitionDTO, demographicsVerifyCallback);
             cancel();
         }
