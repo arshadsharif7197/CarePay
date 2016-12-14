@@ -24,7 +24,7 @@ public class PayloadIntakeFormModel {
     private String description;
     @SerializedName("providers")
     @Expose
-    private List<String> providers = new ArrayList<String>();
+    private List<Provider> providers = new ArrayList<Provider>();
     @SerializedName("providier_locations")
     @Expose
     private List<String> providierLocations = new ArrayList<String>();
@@ -115,7 +115,7 @@ public class PayloadIntakeFormModel {
      * @return
      *     The providers
      */
-    public List<String> getProviders() {
+    public List<Provider> getProviders() {
         return providers;
     }
 
@@ -124,7 +124,7 @@ public class PayloadIntakeFormModel {
      * @param providers
      *     The providers
      */
-    public void setProviders(List<String> providers) {
+    public void setProviders(List<Provider> providers) {
         this.providers = providers;
     }
 
