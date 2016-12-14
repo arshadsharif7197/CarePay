@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
