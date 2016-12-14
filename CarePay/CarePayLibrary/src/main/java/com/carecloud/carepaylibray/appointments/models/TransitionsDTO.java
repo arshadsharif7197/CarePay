@@ -25,6 +25,23 @@ public class TransitionsDTO {
     @SerializedName("logout") @Expose
     private TransitionDTO logout;
 
+    @SerializedName("checking_in") @Expose
+    private TransitionDTO checkingIn;
+
+    /**
+     * @return The checkingIn
+     */
+    public TransitionDTO getCheckingIn() {
+        return checkingIn;
+    }
+
+    /**
+     * @param checkingIn The checking_in
+     */
+    public void setCheckingIn(TransitionDTO checkingIn) {
+        this.checkingIn = checkingIn;
+    }
+
     /**
      *
      * @return The cancel
