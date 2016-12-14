@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
+import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
@@ -76,6 +78,7 @@ public class AppointmentsListFragment extends Fragment {
                     appointmentsItems.get(0).getPayload().getId());
         }
     };
+
     private View.OnClickListener positiveActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -224,6 +227,12 @@ public class AppointmentsListFragment extends Fragment {
         String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         appointmentInfo = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
 
+        // Set Title
+        ActionBar actionBar = ((AppointmentsActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(appointmentInfo.getMetadata().getLabel().getAppointmentsHeading());
+        }
+
         //Fetch appointment data
         loadAppointmentList();
 
@@ -260,6 +269,10 @@ public class AppointmentsListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent appointmentIntent = new Intent(getActivity(), AddAppointmentActivity.class);
+                Bundle bundleArg = new Bundle();
+                String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
+                bundleArg.putSerializable(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, appointmentInfoString);
+                appointmentIntent.putExtras(bundleArg);
                 startActivity(appointmentIntent);
             }
         });
@@ -458,11 +471,11 @@ public class AppointmentsListFragment extends Fragment {
         String headerText;
         if (convertedAppointmentDate.after(currentConvertedDate)
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            headerText = CarePayConstants.DAY_UPCOMING;
+            headerText = appointmentInfo.getMetadata().getLabel().getUpcomingAppointmentsHeading();
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            headerText = CarePayConstants.DAY_TODAY;
+            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
         } else {
-            headerText = CarePayConstants.DAY_TODAY;
+            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
         }
         return headerText;
     }

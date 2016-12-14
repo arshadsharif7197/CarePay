@@ -105,7 +105,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
             final boolean isCanceled = item.getAppointmentStatusModel().getId() == 4;
 
-            if (getSectionHeaderTitle(upcomingStartTime).equals(CarePayConstants.DAY_UPCOMING)) {
+            if (getSectionHeaderTitle(upcomingStartTime).equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
@@ -314,7 +314,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private String getSectionHeaderTitleByDay(String day) {
         if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
-                day.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+                day.equalsIgnoreCase(appointmentLabels.getTodayAppointmentsHeading())) {
             return appointmentLabels.getTodayAppointmentsHeading();
         } else {
             return appointmentLabels.getUpcomingAppointmentsHeading();
@@ -348,7 +348,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         if (convertedAppointmentDate.after(currentConvertedDate)
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            return CarePayConstants.DAY_UPCOMING;
+            return appointmentLabels.getUpcomingAppointmentsHeading();
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
             return CarePayConstants.DAY_OVER;
         } else {
@@ -367,7 +367,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     return CarePayConstants.DAY_OVER;
                 }
             }
-            return CarePayConstants.DAY_TODAY;
+            return appointmentLabels.getTodayAppointmentsHeading();
         }
     }
 

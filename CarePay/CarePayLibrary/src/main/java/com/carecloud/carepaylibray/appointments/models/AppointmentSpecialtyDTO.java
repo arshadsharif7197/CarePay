@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,7 +22,7 @@ public class AppointmentSpecialtyDTO {
      * @return name
      */
     public String getName() {
-        return name;
+        return StringUtil.getLabelForView(name);
     }
 
     /**
@@ -39,7 +40,7 @@ public class AppointmentSpecialtyDTO {
      * @return taxonomy
      */
     public String getTaxonomy() {
-        return taxonomy;
+        return StringUtil.getLabelForView(taxonomy);
     }
 
     /**
