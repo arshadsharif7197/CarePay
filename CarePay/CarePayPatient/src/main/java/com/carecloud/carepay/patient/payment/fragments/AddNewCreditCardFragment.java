@@ -128,7 +128,9 @@ public class AddNewCreditCardFragment extends Fragment implements
                 // Remove all spacing char
                 int pos = 0;
                 while (true) {
-                    if (pos >= str.length()) break;
+                    if (pos >= str.length()){
+                        break;
+                    }
                     if (SPACE_CHAR == str.charAt(pos) && (((pos + 1) % 5) != 0 || pos + 1 == str.length())) {
                         str.delete(pos, pos + 1);
                     } else {
@@ -139,7 +141,9 @@ public class AddNewCreditCardFragment extends Fragment implements
                 // Insert char where needed.
                 pos = 4;
                 while (true) {
-                    if (pos >= str.length()) break;
+                    if (pos >= str.length()){
+                        break;
+                    }
                     final char c = str.charAt(pos);
                     // Only if its a digit where there should be a space we insert a space
                     if ("0123456789".indexOf(c) >= 0) {
@@ -196,13 +200,30 @@ public class AddNewCreditCardFragment extends Fragment implements
         return type;
     }
 
+    /**
+     * Is valid boolean.
+     *
+     * @return the boolean
+     */
     public boolean isValid() {
-        if (getCardNumber().matches(CardPattern.VISA_VALID)) return true;
-        if (getCardNumber().matches(CardPattern.MASTERCARD_VALID)) return true;
-        if (getCardNumber().matches(CardPattern.AMERICAN_EXPRESS_VALID)) return true;
-        if (getCardNumber().matches(CardPattern.DISCOVER_VALID)) return true;
-        if (getCardNumber().matches(CardPattern.DINERS_CLUB_VALID)) return true;
-        if (getCardNumber().matches(CardPattern.JCB_VALID)) return true;
+        if (getCardNumber().matches(CardPattern.VISA_VALID)){
+            return true;
+        }
+        if (getCardNumber().matches(CardPattern.MASTERCARD_VALID)){
+            return true;
+        }
+        if (getCardNumber().matches(CardPattern.AMERICAN_EXPRESS_VALID)){
+            return true;
+        }
+        if (getCardNumber().matches(CardPattern.DISCOVER_VALID)){
+            return true;
+        }
+        if (getCardNumber().matches(CardPattern.DINERS_CLUB_VALID)){
+            return true;
+        }
+        if (getCardNumber().matches(CardPattern.JCB_VALID)){
+            return true;
+        }
         return false;
     }
 
