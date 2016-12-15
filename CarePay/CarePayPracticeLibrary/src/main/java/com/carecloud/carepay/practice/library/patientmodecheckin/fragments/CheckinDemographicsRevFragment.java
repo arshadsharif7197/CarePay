@@ -2,7 +2,6 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,8 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -225,6 +224,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (SystemUtil.isNotEmptyString(datetime)) {
+                DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT);
                 String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
                 dobTExtView.setText(dateOfBirthString);
             }
@@ -293,7 +293,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     private void initializeInsuranceFromModel() {
 
         if (insurances != null) {
-            for (int i = 0; i < insurances.size(); i++) {
+            for (int i = 0; i < insurances.size()-1; i++) {
                 DemographicInsurancePayloadDTO insurance = insurances.get(i);
 
                 String plan = insurance.getInsurancePlan();

@@ -409,8 +409,8 @@ public class AddNewCreditCardFragment extends Fragment implements
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
                 billingAddressLayout.setVisibility(View.VISIBLE);
-                useProfileAddressCheckBox.setChecked(false);
-                setAddressFiledsEnabled(true);
+                useProfileAddressCheckBox.setChecked(true);
+                setAddressFiledsEnabled(false);
             } else {
                 billingAddressLayout.setVisibility(View.GONE);
             }
