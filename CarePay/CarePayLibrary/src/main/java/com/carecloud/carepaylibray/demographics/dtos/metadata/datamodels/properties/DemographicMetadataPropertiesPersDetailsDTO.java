@@ -34,8 +34,8 @@ public class DemographicMetadataPropertiesPersDetailsDTO {
     @SerializedName("ethnicity") @Expose
     public MetadataEntityDTO ethnicity;
 
-//  @SerializedName("preferred_language") @Expose
-//  public MetadataEntityDTO preferredLanguage;
+//    @SerializedName("preferred_language") @Expose
+//    public MetadataEntityDTO preferredLanguage;
 
     @SerializedName("profile_photo") @Expose
     public MetadataEntityDTO profilePhoto;

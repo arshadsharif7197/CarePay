@@ -98,7 +98,10 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         getLabels();
         initializeViews(view);
-        setGoogleApiClient();
+        if(_GoogleApiClient == null)
+        {
+            setGoogleApiClient();
+        }
         isAndroidPayReadyToUse();
         title.setText(titlePaymentMethodString);
         toolbar.setTitle(titlePaymentMethodString);
@@ -115,6 +118,13 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 .build();
         // [END basic_google_api_client]
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        _GoogleApiClient.stopAutoManage(getActivity());
+        _GoogleApiClient.disconnect();
     }
 
     @Override
