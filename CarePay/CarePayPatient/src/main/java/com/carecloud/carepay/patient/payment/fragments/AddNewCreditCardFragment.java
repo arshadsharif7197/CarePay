@@ -374,7 +374,7 @@ public class AddNewCreditCardFragment extends Fragment implements
             @Override
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
                 if (action == EditorInfo.IME_ACTION_NEXT) {
-                    nameOnCardEditText.requestFocus();
+                    verificationCodeEditText.requestFocus();
                     return true;
                 }
                 return false;
@@ -384,7 +384,7 @@ public class AddNewCreditCardFragment extends Fragment implements
             @Override
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
                 if (action == EditorInfo.IME_ACTION_NEXT) {
-                    verificationCodeEditText.requestFocus();
+                    creditCardNoEditText.requestFocus();
                     return true;
                 }
                 return false;
