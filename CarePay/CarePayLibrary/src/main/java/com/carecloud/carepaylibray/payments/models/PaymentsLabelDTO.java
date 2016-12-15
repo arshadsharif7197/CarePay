@@ -156,6 +156,12 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_cancel_button")
     @Expose
     private String paymentCancelButton;
+    @SerializedName("payment_change_payment_label")
+    @Expose
+    private String paymentChangeMethodButton;
+    @SerializedName("payment_failed_error")
+    @Expose
+    private String paymentFailedErrorMessage;
 
     /**
      * @return The demographicsCheckinHeading
@@ -932,5 +938,37 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentCancelButton(String paymentCancelButton) {
         this.paymentCancelButton = paymentCancelButton;
+    }
+
+    /**
+     *
+     * @return paymentChangeMethodButton
+     */
+    public String getPaymentChangeMethodButton() {
+        return paymentChangeMethodButton;
+    }
+
+    /**
+     *
+     * @param paymentChangeMethodButton paymentChangeMethodButton
+     */
+    public void setPaymentChangeMethodButton(String paymentChangeMethodButton) {
+        this.paymentChangeMethodButton = paymentChangeMethodButton;
+    }
+
+    /**
+     *
+     * @return paymentFailedErrorMessage
+     */
+    public String getPaymentFailedErrorMessage() {
+        return paymentFailedErrorMessage;
+    }
+
+    /**
+     *
+     * @param paymentFailedErrorMessage paymentFailedErrorMessage
+     */
+    public void setPaymentFailedErrorMessage(String paymentFailedErrorMessage) {
+        this.paymentFailedErrorMessage = paymentFailedErrorMessage;
     }
 }
