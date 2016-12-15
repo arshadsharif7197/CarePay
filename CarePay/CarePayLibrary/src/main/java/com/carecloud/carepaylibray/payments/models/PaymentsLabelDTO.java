@@ -189,6 +189,12 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_set_as_default_credit_card")
     @Expose
     private String paymentSetAsDefaultCreditCard;
+    @SerializedName("payment_change_payment_label")
+    @Expose
+    private String paymentChangeMethodButton;
+    @SerializedName("payment_failed_error")
+    @Expose
+    private String paymentFailedErrorMessage;
 
     /**
      * @return The demographicsCheckinHeading
@@ -1163,5 +1169,37 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentSetAsDefaultCreditCard(String paymentSetAsDefaultCreditCard) {
         this.paymentSetAsDefaultCreditCard = paymentSetAsDefaultCreditCard;
+    }
+
+    /**
+     *
+     * @return paymentChangeMethodButton
+     */
+    public String getPaymentChangeMethodButton() {
+        return StringUtil.getLabelForView(paymentChangeMethodButton);
+    }
+
+    /**
+     *
+     * @param paymentChangeMethodButton paymentChangeMethodButton
+     */
+    public void setPaymentChangeMethodButton(String paymentChangeMethodButton) {
+        this.paymentChangeMethodButton = paymentChangeMethodButton;
+    }
+
+    /**
+     *
+     * @return paymentFailedErrorMessage
+     */
+    public String getPaymentFailedErrorMessage() {
+        return StringUtil.getLabelForView(paymentFailedErrorMessage);
+    }
+
+    /**
+     *
+     * @param paymentFailedErrorMessage paymentFailedErrorMessage
+     */
+    public void setPaymentFailedErrorMessage(String paymentFailedErrorMessage) {
+        this.paymentFailedErrorMessage = paymentFailedErrorMessage;
     }
 }
