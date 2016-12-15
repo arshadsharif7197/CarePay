@@ -16,56 +16,72 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AddNewCreditCardFragment extends Fragment implements
-        SimpleDatePickerDialog.OnDateSetListener{
+        SimpleDatePickerDialog.OnDateSetListener {
 
+    private TextInputLayout nameOnCardTextInputLayout;
     private TextInputLayout creditCardNoTextInput;
     private TextInputLayout verificationCodeTextInput;
+    private TextInputLayout address1TextInput;
+    private TextInputLayout address2TextInput;
+    private TextInputLayout zipCodeTextInput;
+    private TextInputLayout cityTextInput;
+    private TextInputLayout stateTextInput;
+
+    private EditText nameOnCardEditText;
     private EditText creditCardNoEditText;
+    private CarePayTextView cardTypeTextView;
     private EditText verificationCodeEditText;
     private TextView expirationDateTextView;
     private TextView pickDateTextView;
     private CheckBox saveCardOnFileCheckBox;
+    private CheckBox setAsDefaultCheckBox;
+
+    private LinearLayout billingAddressLayout;
+    private CarePayTextView billingAddressTextView;
+    private CheckBox useProfileAddressCheckBox;
+
+    private EditText address1EditText;
+    private EditText address2EditText;
+    private EditText zipCodeEditText;
+    private EditText cityEditText;
+    private EditText stateEditText;
+
     private Button nextButton;
 
     private static final char SPACE_CHAR = ' ';
-    private static final String SPACE_STRING = String.valueOf(SPACE_CHAR);
-    private static final int GROUPSIZE = 4;
-    ArrayList<String> listOfPattern=new ArrayList<>();
     private PaymentsModel paymentsModel;
-
-    /**
-     * Breakdown of this regexp:
-     * ^             - Start of the string
-     * (\\d{4}\\s)*  - A group of four digits, followed by a whitespace, e.g. "1234 ". Zero or more times.
-     * \\d{0,4}      - Up to four (optional) digits.
-     * (?<!\\s)$     - End of the string, but NOT with a whitespace just before it.
-     * Example of matching strings:
-     *  - "2304 52"
-     *  - "2304"
-     *  - ""
-     */
-    private final String regexp = "^(\\d{4}\\s)*\\d{0,4}(?<!\\s)$";
-    private boolean isUpdating = false;
-
+    private PaymentsLabelDTO paymentsLabelDTO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,13 +89,15 @@ public class AddNewCreditCardFragment extends Fragment implements
         // Inflate the layout for this fragment
         final View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout.fragment_add_new_credit_card,
                 container, false);
+        paymentsLabelDTO = new PaymentsLabelDTO();
         Bundle arguments = getArguments();
         if (arguments != null) {
             paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            paymentsLabelDTO = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         }
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
-        title.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentNewCreditCard());
+        title.setText(paymentsLabelDTO.getPaymentNewCreditCard());
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
@@ -89,24 +107,12 @@ public class AddNewCreditCardFragment extends Fragment implements
         initilizeViews(addNewCreditCardView);
         setTypefaces();
         setTextWatchers();
-
-
-        String ptVisa = "^4[0-9]{6,}$";
-        listOfPattern.add(ptVisa);
-        String ptMasterCard = "^5[1-5][0-9]{5,}$";
-        listOfPattern.add(ptMasterCard);
-        String ptAmeExp = "^3[47][0-9]{5,}$";
-        listOfPattern.add(ptAmeExp);
-
-
         return addNewCreditCardView;
     }
 
     private void setTextWatchers() {
 
         creditCardNoEditText.addTextChangedListener(new TextWatcher() {
-
-
             @Override
             public void beforeTextChanged(CharSequence str, int start, int count, int after) {
 
@@ -119,48 +125,35 @@ public class AddNewCreditCardFragment extends Fragment implements
 
             @Override
             public void afterTextChanged(Editable str) {
-                String originalString = str.toString();
-
-                if (isUpdating || originalString.matches(regexp)) {
-
-                    for(String p:listOfPattern){
-                        if(originalString.matches(p)){
-                            Log.d("DEBUG", "afterTextChanged : MC");
-                            break;
-                        }
+                // Remove all spacing char
+                int pos = 0;
+                while (true) {
+                    if (pos >= str.length()) break;
+                    if (SPACE_CHAR == str.charAt(pos) && (((pos + 1) % 5) != 0 || pos + 1 == str.length())) {
+                        str.delete(pos, pos + 1);
+                    } else {
+                        pos++;
                     }
-                    //DRAW LINE FOR MATCHING CREDIT CARD NAME
-                    return;
                 }
 
-
-                isUpdating = true;
-
-
-                LinkedList<Integer> spaceIndices = new LinkedList <>();
-                for (int index = originalString.indexOf(SPACE_CHAR); index >= 0; index = originalString.indexOf(SPACE_CHAR, index + 1)) {
-                    spaceIndices.offerLast(index);
+                // Insert char where needed.
+                pos = 4;
+                while (true) {
+                    if (pos >= str.length()) break;
+                    final char c = str.charAt(pos);
+                    // Only if its a digit where there should be a space we insert a space
+                    if ("0123456789".indexOf(c) >= 0) {
+                        str.insert(pos, "" + SPACE_CHAR);
+                    }
+                    pos += 5;
                 }
-
-
-                Integer spaceIndex;
-                while (!spaceIndices.isEmpty()) {
-                    spaceIndex = spaceIndices.removeLast();
-                    str.delete(spaceIndex, spaceIndex + 1);
+                String type = getCreditCardType(getCardNumber());
+                if (!StringUtil.isNullOrEmpty(getCardNumber()) && type != null) {
+                    cardTypeTextView.setVisibility(View.VISIBLE);
+                    cardTypeTextView.setText(type);
+                } else {
+                    cardTypeTextView.setVisibility(View.GONE);
                 }
-
-
-                for(int i = 0; ((i + 1) * GROUPSIZE + i) < str.length(); i++) {
-                    str.insert((i + 1) * GROUPSIZE + i, SPACE_STRING);
-                }
-
-                int cursorPos = creditCardNoEditText.getSelectionStart();
-                if (cursorPos > 0 && str.charAt(cursorPos - 1) == SPACE_CHAR) {
-                    creditCardNoEditText.setSelection(cursorPos - 1);
-                }
-
-                isUpdating = false;
-
             }
         });
 
@@ -181,42 +174,129 @@ public class AddNewCreditCardFragment extends Fragment implements
 
             }
         });
+    }
 
+    private String getCreditCardType(String cardNumber) {
+        String type;
+        if (cardNumber.startsWith("4") || cardNumber.matches(CardPattern.VISA)) {
+            type = "Visa";
+        } else if (cardNumber.matches(CardPattern.MASTERCARD_SHORTER) || cardNumber.matches(CardPattern.MASTERCARD_SHORT) || cardNumber.matches(CardPattern.MASTERCARD)) {
+            type = "Mastercard";
+        } else if (cardNumber.matches(CardPattern.AMERICAN_EXPRESS)) {
+            type = "American Express";
+        } else if (cardNumber.matches(CardPattern.DISCOVER_SHORT) || cardNumber.matches(CardPattern.DISCOVER)) {
+            type = "Discover";
+        } else if (cardNumber.matches(CardPattern.JCB_SHORT) || cardNumber.matches(CardPattern.JCB)) {
+            type = "JCB";
+        } else if (cardNumber.matches(CardPattern.DINERS_CLUB_SHORT) || cardNumber.matches(CardPattern.DINERS_CLUB)) {
+            type = "Diners Club";
+        } else {
+            type = null;
+        }
+        return type;
+    }
 
+    public boolean isValid() {
+        if (getCardNumber().matches(CardPattern.VISA_VALID)) return true;
+        if (getCardNumber().matches(CardPattern.MASTERCARD_VALID)) return true;
+        if (getCardNumber().matches(CardPattern.AMERICAN_EXPRESS_VALID)) return true;
+        if (getCardNumber().matches(CardPattern.DISCOVER_VALID)) return true;
+        if (getCardNumber().matches(CardPattern.DINERS_CLUB_VALID)) return true;
+        if (getCardNumber().matches(CardPattern.JCB_VALID)) return true;
+        return false;
+    }
 
+    public String getCardNumber() {
+        return creditCardNoEditText.getText().toString().replace(" ", "").trim();
     }
 
     private void initilizeViews(View view) {
-        creditCardNoTextInput = (TextInputLayout)view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
-        creditCardNoTextInput.setTag(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentCreditCardNumber());
+        creditCardNoTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
+        creditCardNoTextInput.setTag(paymentsLabelDTO.getPaymentCreditCardNumber());
         creditCardNoEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoEditText);
-        creditCardNoEditText.setHint(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentCreditCardNumber());
+        creditCardNoEditText.setHint(paymentsLabelDTO.getPaymentCreditCardNumber());
         creditCardNoEditText.setTag(creditCardNoTextInput);
 
+        cardTypeTextView = (CarePayTextView) view.findViewById(R.id.cardTypeTextView);
+
+        nameOnCardTextInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.nameOnCardTextInputLayout);
+        nameOnCardTextInputLayout.setTag(paymentsLabelDTO.getPaymentNameOnCardText());
+        nameOnCardEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.nameOnCardEditText);
+        nameOnCardEditText.setHint(paymentsLabelDTO.getPaymentNameOnCardText());
+        nameOnCardEditText.setTag(nameOnCardTextInputLayout);
+
         verificationCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeTextInputLayout);
-        verificationCodeTextInput.setTag(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentVerificationNumber());
+        verificationCodeTextInput.setTag(paymentsLabelDTO.getPaymentVerificationNumber());
         verificationCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeEditText);
-        verificationCodeEditText.setHint(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentVerificationNumber());
+        verificationCodeEditText.setHint(paymentsLabelDTO.getPaymentVerificationNumber());
         verificationCodeEditText.setTag(verificationCodeTextInput);
 
         expirationDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.expirationDateTextView);
-        expirationDateTextView.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentExpirationDate());
+        expirationDateTextView.setText(paymentsLabelDTO.getPaymentExpirationDate());
         pickDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.pickDateTextView);
-        pickDateTextView.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPickDate());
+        pickDateTextView.setText(paymentsLabelDTO.getPaymentPickDate());
         pickDateTextView.setOnClickListener(pickDateListener);
 
         saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
-        saveCardOnFileCheckBox.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentSaveCardOnFile());
+        saveCardOnFileCheckBox.setText(paymentsLabelDTO.getPaymentSaveCardOnFile());
+        saveCardOnFileCheckBox.setOnCheckedChangeListener(saveCardOnFileCheckBoxListener);
+
+        setAsDefaultCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.setAsDefaultCheckBox);
+        setAsDefaultCheckBox.setText(paymentsLabelDTO.getPaymentSetAsDefaultCreditCard());
+
+        billingAddressLayout = (LinearLayout) view.findViewById(R.id.billingInformationLayout);
+        billingAddressTextView = (CarePayTextView) view.findViewById(R.id.billingAddressTextView);
+        billingAddressTextView.setText(paymentsLabelDTO.getPaymentBillingAddressText());
+        useProfileAddressCheckBox = (CheckBox) view.findViewById(R.id.useProfileAddressCheckBox);
+        useProfileAddressCheckBox.setText(paymentsLabelDTO.getPaymentUseProfileAddress());
+        useProfileAddressCheckBox.setOnCheckedChangeListener(useProfileAddressListener);
+
+        address1TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address1TextInputLayout);
+        address1TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine1Text());
+        address1EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditTextId);
+        address1EditText.setHint(paymentsLabelDTO.getPaymentAddressLine1Text());
+        address1EditText.setTag(address1TextInput);
+
+        address2TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address2TextInputLayout);
+        address2TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine2Text());
+        address2EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText2Id);
+        address2EditText.setHint(paymentsLabelDTO.getPaymentAddressLine2Text());
+        address2EditText.setTag(address2TextInput);
+
+        zipCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeTextInputLayout);
+        zipCodeTextInput.setTag(paymentsLabelDTO.getPaymentZipcode());
+        zipCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeId);
+        zipCodeEditText.setHint(paymentsLabelDTO.getPaymentZipcode());
+        zipCodeEditText.setTag(zipCodeTextInput);
+
+        cityTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.cityTextInputLayout);
+        cityTextInput.setTag(paymentsLabelDTO.getPaymentCity());
+        cityEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.cityId);
+        cityEditText.setHint(paymentsLabelDTO.getPaymentCity());
+        cityEditText.setTag(cityTextInput);
+
+        stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
+        stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
+        stateEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView);
+        stateEditText.setHint(paymentsLabelDTO.getPaymentState());
+        stateEditText.setTag(stateTextInput);
+
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
-        nextButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentNextButton());
+        nextButton.setText(paymentsLabelDTO.getPaymentNextButton());
         nextButton.setOnClickListener(nextButtonListener);
 
         setChangeFocusListeners();
         setActionListeners();
 
         creditCardNoEditText.clearFocus();
+        nameOnCardEditText.clearFocus();
         verificationCodeEditText.clearFocus();
 
+        saveCardOnFileCheckBox.setChecked(false);
+        setAsDefaultCheckBox.setChecked(false);
+        billingAddressLayout.setVisibility(View.GONE);
+        useProfileAddressCheckBox.setChecked(true);
+        setAddressFiledsEnabled(false);
         nextButton.setEnabled(false);
         nextButton.setClickable(false);
     }
@@ -224,18 +304,31 @@ public class AddNewCreditCardFragment extends Fragment implements
     private void setTypefaces() {
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), creditCardNoEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), expirationDateTextView);
 
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), creditCardNoTextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), nameOnCardTextInputLayout);
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), verificationCodeTextInput);
 
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), nextButton);
 
         SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), saveCardOnFileCheckBox);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), setAsDefaultCheckBox);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), useProfileAddressCheckBox);
     }
 
     private void setChangeFocusListeners() {
         creditCardNoEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean flag) {
+                if (flag) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, flag);
+            }
+        });
+        nameOnCardEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean flag) {
                 if (flag) {
@@ -260,6 +353,16 @@ public class AddNewCreditCardFragment extends Fragment implements
             @Override
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
                 if (action == EditorInfo.IME_ACTION_NEXT) {
+                    nameOnCardEditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        nameOnCardEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
+                if (action == EditorInfo.IME_ACTION_NEXT) {
                     verificationCodeEditText.requestFocus();
                     return true;
                 }
@@ -280,6 +383,43 @@ public class AddNewCreditCardFragment extends Fragment implements
         });
     }
 
+    private CompoundButton.OnCheckedChangeListener saveCardOnFileCheckBoxListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                billingAddressLayout.setVisibility(View.VISIBLE);
+                useProfileAddressCheckBox.setChecked(false);
+                setAddressFiledsEnabled(true);
+            } else {
+                billingAddressLayout.setVisibility(View.GONE);
+            }
+        }
+    };
+
+    private CompoundButton.OnCheckedChangeListener useProfileAddressListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                setAddressFiledsEnabled(false);
+            } else {
+                setAddressFiledsEnabled(true);
+            }
+        }
+    };
+
+    private void setAddressFiledsEnabled(boolean isEnabled) {
+        address1EditText.setEnabled(isEnabled);
+        address1EditText.setClickable(isEnabled);
+        address2EditText.setEnabled(isEnabled);
+        address2EditText.setClickable(isEnabled);
+        zipCodeEditText.setEnabled(isEnabled);
+        zipCodeEditText.setClickable(isEnabled);
+        cityEditText.setEnabled(isEnabled);
+        cityEditText.setClickable(isEnabled);
+        stateEditText.setEnabled(isEnabled);
+        stateEditText.setClickable(isEnabled);
+    }
+
     private View.OnClickListener pickDateListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -290,18 +430,33 @@ public class AddNewCreditCardFragment extends Fragment implements
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //  Add New Credit Card details here - to be done after POST body available
-//            PaymentCreditCardsPayloadDTO creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
-//            Gson gson = new Gson();
-//            String body = gson.toJson(creditCardsPayloadDTO);
-//            Map<String, String> queryMap = new HashMap<>();
-//            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
-//            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-//            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-//            queryMap.put("patient_id", paymentsModel.getPaymentPayload().getPatientBalances().get(0).getMetadata().getPatientId());
-//            TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
-//
-//            WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body,queryMap,WorkflowServiceHelper.getPreferredLanguageHeader());
+
+            PaymentCreditCardsPayloadDTO creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
+            PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
+            creditCardsPayloadDTO.setCardNumber(getCardNumber());
+            creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
+            creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
+            creditCardsPayloadDTO.setExpireDt(pickDateTextView.getText().toString().trim());
+            creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
+            if (saveCardOnFileCheckBox.isChecked() && useProfileAddressCheckBox.isChecked()) {
+                billingInformation.setLine1(address1EditText.getText().toString().trim());
+                billingInformation.setLine2(address2EditText.getText().toString().trim());
+                billingInformation.setZip(zipCodeEditText.getText().toString().trim());
+                billingInformation.setCity(cityEditText.getText().toString().trim());
+                billingInformation.setState(stateEditText.getText().toString().trim());
+                creditCardsPayloadDTO.setBillingInformation(billingInformation);
+            }
+
+            Gson gson = new Gson();
+            String body = gson.toJson(creditCardsPayloadDTO);
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            queryMap.put("practice_mgmt", paymentsModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeMgmt());
+            queryMap.put("practice_id", paymentsModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeId());
+            queryMap.put("patient_id", paymentsModel.getPaymentPayload().getPatientBalances().get(0).getMetadata().getPatientId());
+            TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
+
+            //WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
         }
     };
 
@@ -313,7 +468,22 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            //PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            /*Gson gson = new Gson();
+            PaymentsModel paymentsModelLocal = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
+            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+            PaymentTermsFragment fragment = (PaymentTermsFragment)
+                    fragmentmanager.findFragmentByTag(PaymentTermsFragment.class.getSimpleName());
+            if (fragment == null) {
+                fragment = new PaymentTermsFragment();
+            }
+
+            Bundle args = new Bundle();
+            args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModelLocal);
+            fragment.setArguments(args);
+
+            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+            fragmentTransaction.replace(com.carecloud.carepaylibrary.R.id.payment_frag_holder, fragment);
+            fragmentTransaction.commit();*/
         }
 
         @Override
@@ -332,24 +502,31 @@ public class AddNewCreditCardFragment extends Fragment implements
     private void displaySimpleDatePickerDialogFragment() {
         SimpleDatePickerDialogFragment datePickerDialogFragment;
         DateUtil instance = DateUtil.getInstance();
-        datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance( instance.getYear(),
+        datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(instance.getYear(),
                 instance.getMonth());
         datePickerDialogFragment.setOnDateSetListener(this);
         datePickerDialogFragment.show(getChildFragmentManager(), null);
     }
 
-    private boolean validateCreditCardDetails(){
-        if(!(creditCardNoEditText.getText().toString().length()==12)){
+    private boolean validateCreditCardDetails() {
+        if (!isValid()) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
         }
-        if(!(verificationCodeEditText.getText().toString().length()>0)){
+
+        if (!(nameOnCardEditText.getText().toString().trim().length() > 0)) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
         }
-        if(!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPickDate())){
+
+        if (!(verificationCodeEditText.getText().toString().length() > 0)) {
+            nextButton.setEnabled(false);
+            nextButton.setClickable(false);
+            return false;
+        }
+        if (!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsLabelDTO.getPaymentPickDate())) {
             nextButton.setEnabled(true);
             nextButton.setClickable(true);
             return true;
