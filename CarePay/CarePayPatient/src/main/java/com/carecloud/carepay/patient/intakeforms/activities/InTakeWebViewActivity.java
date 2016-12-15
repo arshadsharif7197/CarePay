@@ -9,11 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,14 +49,20 @@ public class InTakeWebViewActivity extends BasePatientActivity {
     private LabelModel labelsModel;
     private Button nextButton;
     private StepProgressBar mStepProgressBar;
+    private ProgressBar     progressBar;
     public String TAG = InTakeWebViewActivity.class.getSimpleName();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inTakeForm = getConvertedDTO(IntakeResponseModel.class);
         setContentView(com.carecloud.carepaylibrary.R.layout.activity_in_take_web_view);
+        inTakeForm = getConvertedDTO(IntakeResponseModel.class);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        progressBar = (ProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.signupProgressBarIntake);
+        progressBar.setVisibility(View.VISIBLE);
         getIntakeFormData();
         //initForm();
     }
@@ -133,10 +142,18 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         });
 
 
+
+
+    }
+
+    /**
+     * Init web view
+     */
+    public void initWebView(){
+
         //init webview
         mWebView = (WebView) findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        mWebView.getSettings().setJavaScriptEnabled(true);
         //speed webview loading
         if (Build.VERSION.SDK_INT >= 19){
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -149,7 +166,18 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         //Interface that receive calls from javascript
         mWebView.addJavascriptInterface(new WebViewJavaScriptInterface(this), "IntakeInterface");
         mWebView.loadUrl("file:///android_asset/intake-forms-webview/web-view.html");
+        //show progress bar
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
 
+                if (progress < 100) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+                if (progress == 100) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -277,6 +305,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             inTakeForm = new Gson().fromJson(workflowDTO.toString(), IntakeResponseModel.class);
             initForm();
+            initWebView();
         }
 
         @Override
