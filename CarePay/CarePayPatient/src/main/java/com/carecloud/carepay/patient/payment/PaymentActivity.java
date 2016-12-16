@@ -10,6 +10,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 public class PaymentActivity extends BasePatientActivity {
     PaymentsModel paymentsDTO;
@@ -29,13 +30,18 @@ public class PaymentActivity extends BasePatientActivity {
         if (fragment == null) {
             fragment = new ResponsibilityFragment();
         }
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
-                    intent.getSerializableExtra(CarePayConstants.INTAKE_BUNDLE));
-            bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTO);
-            bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
-                    paymentsDTO);
-            fragment.setArguments(bundle);
+        Bundle bundle = new Bundle();
+
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsDTO);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            //fix for random crashes
+            if(fragment.getArguments() !=null){
+                fragment.getArguments().putAll(bundle);
+            }else{
+                fragment.setArguments(bundle);
+            }
+
             fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
                     ResponsibilityFragment.class.getSimpleName()).commit();
 

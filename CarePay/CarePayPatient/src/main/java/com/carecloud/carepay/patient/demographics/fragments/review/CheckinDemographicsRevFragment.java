@@ -280,9 +280,11 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
                 cityTextView.setText(city);
             }
 
-            String driversLicense = demographicIdDocPayloadDTO.getIdNumber();
-            if (SystemUtil.isNotEmptyString(driversLicense)) {
-                getDriverLicenseTextView.setText(driversLicense);
+            if(demographicIdDocPayloadDTO!=null){
+                String driversLicense = demographicIdDocPayloadDTO.getIdNumber();
+                if (SystemUtil.isNotEmptyString(driversLicense)) {
+                    getDriverLicenseTextView.setText(driversLicense);
+                }
             }
 
             // initializeInsurances from the model
