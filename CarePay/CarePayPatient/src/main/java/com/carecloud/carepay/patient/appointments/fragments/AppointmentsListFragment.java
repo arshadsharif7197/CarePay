@@ -146,67 +146,69 @@ public class AppointmentsListFragment extends Fragment {
         AppointmentDTO appointmentDataDTO = null;
         long differenceInMinutes = 0;
         String appointmentTimeStr = "";
-        try {
-            for (AppointmentDTO appointmentDTO : appointmentsItems) {
-                if (appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
+        if(appointmentsItems!=null) {
+            try {
+                for (AppointmentDTO appointmentDTO : appointmentsItems) {//null
+                    if (appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
 
-                    // Get appointment date/time in required format
-                    appointmentTimeStr = appointmentDTO.getPayload().getStartTime();
-                    DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-                    Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
+                        // Get appointment date/time in required format
+                        appointmentTimeStr = appointmentDTO.getPayload().getStartTime();
+                        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
+                        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
 
-                    // Get current date/time in required format
-                    String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
-                    Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
+                        // Get current date/time in required format
+                        String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
+                        Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
 
-                    if (appointmentTime != null && currentDate != null) {
-                        long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-                        differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+                        if (appointmentTime != null && currentDate != null) {
+                            long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
+                            differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
 
-                        if (differenceInMinutes > 0) {
-                            if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES
-                                    && appointmentInfo != null) {
-                                appointmentDataDTO = appointmentDTO;
-                                break;
-                            } else {
-                                break;
+                            if (differenceInMinutes > 0) {
+                                if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES
+                                        && appointmentInfo != null) {
+                                    appointmentDataDTO = appointmentDTO;
+                                    break;
+                                } else {
+                                    break;
+                                }
                             }
                         }
+
+                    }
+                }
+                if (appointmentDataDTO != null) {
+                    AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
+                    String doctorName = appointmentDataDTO.getPayload().getProvider().getName();
+                    String aptTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getTime12Hour();
+                    String popupNotificationMsg;
+                    if (differenceInMinutes == CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES) {
+                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
+                                aptTime, doctorName, "2" + " " + labels.getAppointmentPopupNotificationHours());
+                    } else if (differenceInMinutes == 60) {
+                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
+                                aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour());
+                    } else if (differenceInMinutes > 60) {
+                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
+                                aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour()
+                                        + " " + labels.getAppointmentPopupNotificationAnd() + " " + (differenceInMinutes - 60)
+                                        + " " + labels.getAppointmentPopupNotificationMinutes());
+                    } else {
+                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
+                                aptTime, doctorName, differenceInMinutes + " "
+                                        + labels.getAppointmentPopupNotificationMinutes());
                     }
 
+                    popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
+                            labels.getAppointmentsCheckInEarly(), labels.getDismissMessage(),
+                            popupNotificationMsg,
+                            positiveActionListener, negativeActionListener);
+                    popup.showPopWindow();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, e.getMessage());
             }
-            if (appointmentDataDTO != null) {
-                AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-                String doctorName = appointmentDataDTO.getPayload().getProvider().getName();
-                String aptTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getTime12Hour();
-                String popupNotificationMsg;
-                if (differenceInMinutes == CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES) {
-                    popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-                            aptTime, doctorName, "2" + " " + labels.getAppointmentPopupNotificationHours());
-                } else if (differenceInMinutes == 60) {
-                    popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-                            aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour());
-                } else if (differenceInMinutes > 60) {
-                    popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-                            aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour()
-                                    + " " + labels.getAppointmentPopupNotificationAnd() + " " + (differenceInMinutes - 60)
-                                    + " " + labels.getAppointmentPopupNotificationMinutes());
-                } else {
-                    popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-                            aptTime, doctorName, differenceInMinutes + " "
-                                    + labels.getAppointmentPopupNotificationMinutes());
-                }
-
-                popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
-                        labels.getAppointmentsCheckInEarly(), labels.getDismissMessage(),
-                        popupNotificationMsg,
-                        positiveActionListener, negativeActionListener);
-                popup.showPopWindow();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG, e.getMessage());
         }
     }
 
@@ -289,10 +291,9 @@ public class AppointmentsListFragment extends Fragment {
                 && appointmentInfo.getPayload().getAppointments() != null
                 && appointmentInfo.getPayload().getAppointments().size() > 0) {
 
+            appointmentsItems = appointmentInfo.getPayload().getAppointments();
             noAppointmentView.setVisibility(View.GONE);
             appointmentView.setVisibility(View.VISIBLE);
-
-            appointmentsItems = appointmentInfo.getPayload().getAppointments();
 
             // Sort appointment list as per Today and Upcoming
             appointmentListWithHeader = getAppointmentListWithHeader();
@@ -373,7 +374,8 @@ public class AppointmentsListFragment extends Fragment {
                 Gson gson = new Gson();
                 appointmentInfo = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
                 loadAppointmentList();
-                checkUpcomingAppointmentForReminder();
+                checkUpcomingAppointments();
+
             }
         }
 
@@ -486,11 +488,19 @@ public class AppointmentsListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        checkUpcomingAppointments();
+    }
+
+    /**
+     * Checks for upcoming appointments
+     * */
+    public void checkUpcomingAppointments(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 checkUpcomingAppointmentForReminder();
             }
         }, 1000);
+
     }
 }
