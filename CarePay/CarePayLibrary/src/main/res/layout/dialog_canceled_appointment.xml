@@ -14,5 +14,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/apt_dl_margin"
         android:textSize="@dimen/apt_dl_textview_size"
+        android:visibility="gone"
         android:textStyle="bold" />
+    <Button
+        android:id="@+id/cancelAppointmentButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/apt_dl_margin"
+        android:background="@drawable/button_blue_border"
+        android:textColor="@color/blue_cerulian"
+        android:visibility="gone"
+        android:textSize="@dimen/apt_dl_textview_size" />
 </LinearLayout>
