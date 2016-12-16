@@ -438,7 +438,10 @@ public class AppointmentsListFragment extends Fragment {
             appointmentListWithHeader = new ArrayList<>();
 
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
-
+                // Checked-In 2, Cancelled 4,
+                if( appointmentDTO.getPayload().getAppointmentStatusModel().getId() == 4){
+                    continue;
+                }
                 if (appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
                     String title = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
                     if (headerTitle.equalsIgnoreCase(title)) {

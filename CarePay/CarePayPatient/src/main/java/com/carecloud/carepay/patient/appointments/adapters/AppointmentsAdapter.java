@@ -150,7 +150,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             new CancelAppointmentDialog(context, item, true, appointmentInfo).show();
                         } else {
                             if (isAppointmentCancellable(item)) {
-                                new CheckInOfficeNowAppointmentDialog(context, true, item, appointmentInfo).show();
+                                new CancelAppointmentDialog(context, item, false, appointmentInfo).show();
                             } else if (isPending) {
                                 new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
                             } else {

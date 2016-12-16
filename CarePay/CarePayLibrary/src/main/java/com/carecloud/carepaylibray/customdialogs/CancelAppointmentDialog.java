@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
@@ -77,12 +78,25 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     }
 
     private void setActionButton() {
-        CarePayTextView editAppointmentTextView = (CarePayTextView)
+        /*CarePayTextView editAppointmentTextView = (CarePayTextView)
                 rootLayout.findViewById(R.id.dialogCancelAppointTextView);
         editAppointmentTextView.setVisibility(View.VISIBLE);
         editAppointmentTextView.setText(appointmentLabels.getAppointmentsCancelHeading());
         editAppointmentTextView.setTextColor(context.getResources().getColor(R.color.glitter));
-        editAppointmentTextView.setOnClickListener(this);
+        editAppointmentTextView.setOnClickListener(this);*/
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View childActionView = inflater.inflate(R.layout.dialog_canceled_appointment, null);
+        Button cancelAppointmentButton = (Button)childActionView.findViewById(R.id.cancelAppointmentButton);
+        cancelAppointmentButton.setVisibility(View.VISIBLE);
+        cancelAppointmentButton.setText(appointmentLabels.getAppointmentsCancelHeading());
+        //cancelAppointmentButton.setTextColor(context.getResources().getColor(R.color.glitter));
+        cancelAppointmentButton.setOnClickListener(this);
+
+        //findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.Feldgrau);
+        //((CarePayTextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
+        //((CarePayTextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
+        mainLayout.addView(childActionView);
+
     }
 
     private void setActionButtonCanceled() {
@@ -93,9 +107,11 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
                 childActionView.findViewById(R.id.appointmentStatusLabel);
 
         if (isMissed) {
+            appointmentStatusLabel.setVisibility(View.VISIBLE);
             appointmentStatusLabel.setText(appointmentLabels.getAppointmentsMissedHeading());
             appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.lightningyellow));
         } else {
+            appointmentStatusLabel.setVisibility(View.GONE);
             appointmentStatusLabel.setText(appointmentLabels.getAppointmentsCanceledHeading());
             appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
@@ -110,7 +126,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     public void onClick(View view) {
         super.onClick(view);
         int viewId = view.getId();
-        if (viewId == R.id.dialogCancelAppointTextView) {
+        if (viewId == R.id.cancelAppointmentButton) {
             new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo).show();
             cancel();
         }
