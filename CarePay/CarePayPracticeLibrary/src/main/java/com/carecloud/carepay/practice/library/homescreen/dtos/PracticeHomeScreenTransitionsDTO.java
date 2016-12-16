@@ -22,9 +22,6 @@ public class PracticeHomeScreenTransitionsDTO {
     @SerializedName("practice_payments")
     @Expose
     private TransitionDTO practicePayments;
-    @SerializedName("practice_appointments")
-    @Expose
-    private TransitionDTO practiceAppointments;
     @SerializedName("practice_checkout")
     @Expose
     private TransitionDTO practiceCheckout;
@@ -159,21 +156,5 @@ public class PracticeHomeScreenTransitionsDTO {
      */
     public void setOfficeNews(TransitionDTO officeNews) {
         this.officeNews = officeNews;
-    }
-
-    /**
-     *
-     * @return practiceAppointments
-     */
-    public TransitionDTO getPracticeAppointments() {
-        return practiceAppointments;
-    }
-
-    /**
-     *
-     * @param practiceAppointments practiceAppointments
-     */
-    public void setPracticeAppointments(TransitionDTO practiceAppointments) {
-        this.practiceAppointments = practiceAppointments;
     }
 }
