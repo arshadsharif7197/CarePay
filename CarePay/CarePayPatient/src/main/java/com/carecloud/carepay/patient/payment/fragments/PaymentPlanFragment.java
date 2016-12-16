@@ -109,11 +109,9 @@ public class PaymentPlanFragment extends Fragment {
         if (arguments != null) {
             Gson gson = new Gson();
             arguments = getArguments();
-            String pametsDtoString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-            paymentsModel = gson.fromJson(pametsDtoString, PaymentsModel.class);
+            String paymentsDTOString  = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         }
-        //paymentsModel = (PaymentsModel) arguments
-          //      .getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
 
         if (paymentsModel != null) {
             paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
