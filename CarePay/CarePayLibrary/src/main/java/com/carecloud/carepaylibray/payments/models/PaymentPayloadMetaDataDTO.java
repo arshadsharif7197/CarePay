@@ -7,7 +7,9 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentPayloadMetaDataDTO {
+import java.io.Serializable;
+
+public class PaymentPayloadMetaDataDTO implements Serializable {
     @SerializedName("user_id")
     @Expose
     private String userId;

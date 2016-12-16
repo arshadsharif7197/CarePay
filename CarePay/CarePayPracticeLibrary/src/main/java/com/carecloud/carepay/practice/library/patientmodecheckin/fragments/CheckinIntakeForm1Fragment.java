@@ -10,11 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,14 +67,18 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
     private int formIndex;
     private int formTotalIntakesForms;
     private int formCurrentIntakesForm;
-
+    private ProgressBar     progressBar;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
 
-
+        getActivity().getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        progressBar = (ProgressBar)view.findViewById(com.carecloud.carepaylibrary.R.id.signupProgressBarIntake);
+        progressBar.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -104,6 +111,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             inTakeForm = new Gson().fromJson(workflowDTO.toString(), IntakeResponseModel.class);
             initForm();
+            initWebView();
         }
 
         @Override
@@ -137,11 +145,22 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
                 nextIntakeFormDisplayed();
             }
         });
+
+
         if (formCurrentIntakesForm >= (formTotalIntakesForms - 1)) {
             nextButton.setText(labelsModel.getFinishQuestionsButtonText());
         }else{
             nextButton.setText(labelsModel.getNextQuestionButtonText());
         }
+
+
+
+    }
+
+    /**
+     * Initialize web view
+     */
+    public void initWebView(){
         //init webview
         mWebView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
         //speed webview loading
@@ -150,15 +169,25 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ONLY);
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         //load pages and links inside webview
         mWebView.setWebViewClient(new WebViewClient());
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+
+                if (progress < 100) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+                if (progress == 100) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
         //Interface that receive calls from javascript
         mWebView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "IntakeInterface");
         mWebView.loadUrl("file:///android_asset/intake-forms-webview/web-view.html");
-
 
     }
 

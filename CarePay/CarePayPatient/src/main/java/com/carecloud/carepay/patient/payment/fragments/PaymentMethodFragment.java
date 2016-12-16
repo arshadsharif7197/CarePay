@@ -64,6 +64,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private String titlePaymentMethodString;
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
+    private String paymentChangeMethodString;
+    private String paymentFailedErrorString;
 
     private ProgressBar _paymentMethodFragmentProgressBar;
     private GoogleApiClient _GoogleApiClient;
@@ -96,7 +98,10 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         getLabels();
         initializeViews(view);
-        setGoogleApiClient();
+        if(_GoogleApiClient == null)
+        {
+            setGoogleApiClient();
+        }
         isAndroidPayReadyToUse();
         title.setText(titlePaymentMethodString);
         toolbar.setTitle(titlePaymentMethodString);
@@ -113,6 +118,13 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 .build();
         // [END basic_google_api_client]
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        _GoogleApiClient.stopAutoManage(getActivity());
+        _GoogleApiClient.disconnect();
     }
 
     @Override
@@ -259,7 +271,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     }
                     selectedPaymentMethod = selectedRadioButton.getText().toString();
                     paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
-                    paymentChoiceButton.setTag(checkedId);
+                    paymentChoiceButton.setTag(paymentList.get(i).getType());
                 }
 
             }
@@ -331,17 +343,17 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         @Override
         public void onClick(View view) {
             getLabels();
-            int position = (Integer) view.getTag();
-            switch (position) {
-                case 0:
-                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, new LargeAlertDialog.LargeAlertInterface() {
+            String type = (String) view.getTag();
+            switch (type) {
+                case CarePayConstants.TYPE_CASH:
+                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText,R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
                         @Override
                         public void onActionButton() {
                         }
                     }).show();
                     break;
 
-                case 1:
+                case CarePayConstants.TYPE_CREDIT_CARD:
                     FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                     ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
                             .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
@@ -381,6 +393,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
                     paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
                     paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
+                    paymentChangeMethodString = paymentsLabelsDTO.getPaymentChangeMethodButton();
+                    paymentFailedErrorString = paymentsLabelsDTO.getPaymentFailedErrorMessage();
                 }
             }
         }
