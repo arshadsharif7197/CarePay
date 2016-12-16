@@ -9,6 +9,11 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
+    <!-- Enables the Android Pay API -->
+    <meta-data
+        android:name="com.google.android.gms.wallet.api.enabled"
+        android:value="true" />
+
     <application
         android:name=".base.CarePayPatientApplication"
         android:allowBackup="true"

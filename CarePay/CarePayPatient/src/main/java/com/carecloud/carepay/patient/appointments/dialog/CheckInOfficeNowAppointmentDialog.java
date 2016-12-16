@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.appointments.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,18 +37,20 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private AppointmentDTO appointmentDTO;
     private AppointmentsResultModel appointmentInfo;
+    private Boolean enableCheckin;
 
     /**
      * @param context           context
      * @param appointmentDTO    appointment dto
      * @param appointmentInfo   transition dto
      */
-    public CheckInOfficeNowAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+    public CheckInOfficeNowAppointmentDialog(Context context, Boolean enableCheckin, AppointmentDTO appointmentDTO,
                                              AppointmentsResultModel appointmentInfo) {
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
+        this.enableCheckin = enableCheckin;
     }
 
     @Override
@@ -72,6 +75,20 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         Button checkInNowButton = (Button) childActionView.findViewById(R.id.checkInNowButton);
         checkInNowButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInNow()));
         checkInNowButton.setOnClickListener(this);
+        if(enableCheckin == true){
+            checkInAtOfficeButton.setEnabled(false);
+            checkInAtOfficeButton.setClickable(false);
+            checkInNowButton.setEnabled(false);
+            checkInNowButton.setClickable(false);
+            checkInAtOfficeButton.setTextColor(Color.WHITE);
+            checkInAtOfficeButton.setBackgroundColor(getContext().getResources().getColor(R.color.silver));
+            checkInNowButton.setBackgroundColor(getContext().getResources().getColor(R.color.silver));
+        }else{
+            checkInAtOfficeButton.setEnabled(true);
+            checkInAtOfficeButton.setClickable(true);
+            checkInNowButton.setEnabled(true);
+            checkInNowButton.setClickable(true);
+        }
 
         mainLayout.addView(childActionView);
     }
@@ -84,7 +101,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             new QrCodeViewDialog(context, appointmentDTO, appointmentInfo.getMetadata()).show();
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
-            TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckin();
+            TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
             doTransition(transitionDTO, demographicsVerifyCallback);
             cancel();
         }

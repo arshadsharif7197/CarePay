@@ -56,6 +56,10 @@ configurations.all {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayLibrary')
+    compile 'com.google.android.gms:play-services:10.0.1'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-wallet:10.0.1'
+
 
     // for testing
     testCompile 'junit:junit:4.12'

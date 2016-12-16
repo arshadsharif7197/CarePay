@@ -156,6 +156,45 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_cancel_button")
     @Expose
     private String paymentCancelButton;
+    @SerializedName("payment_name_on_card_text")
+    @Expose
+    private String paymentNameOnCardText;
+    @SerializedName("payment_billing_address_text")
+    @Expose
+    private String paymentBillingAddressText;
+    @SerializedName("payment_address_line1_text")
+    @Expose
+    private String paymentAddressLine1Text;
+    @SerializedName("payment_address_line2_text")
+    @Expose
+    private String paymentAddressLine2Text;
+    @SerializedName("payment_city")
+    @Expose
+    private String paymentCity;
+    @SerializedName("payment_state")
+    @Expose
+    private String paymentState;
+    @SerializedName("payment_country")
+    @Expose
+    private String paymentCountry;
+    @SerializedName("payment_zipcode")
+    @Expose
+    private String paymentZipcode;
+    @SerializedName("demographics_pay_button_text")
+    @Expose
+    private String paymentPayText;
+    @SerializedName("payment_use_profile_address")
+    @Expose
+    private String paymentUseProfileAddress;
+    @SerializedName("payment_set_as_default_credit_card")
+    @Expose
+    private String paymentSetAsDefaultCreditCard;
+    @SerializedName("payment_change_payment_label")
+    @Expose
+    private String paymentChangeMethodButton;
+    @SerializedName("payment_failed_error")
+    @Expose
+    private String paymentFailedErrorMessage;
 
     /**
      * @return The demographicsCheckinHeading
@@ -932,5 +971,235 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentCancelButton(String paymentCancelButton) {
         this.paymentCancelButton = paymentCancelButton;
+    }
+
+    /**
+     * Gets payment name on card text.
+     *
+     * @return the payment name on card text
+     */
+    public String getPaymentNameOnCardText() {
+        return StringUtil.getLabelForView(paymentNameOnCardText);
+    }
+
+    /**
+     * Sets payment name on card text.
+     *
+     * @param paymentNameOnCardText the payment name on card text
+     */
+    public void setPaymentNameOnCardText(String paymentNameOnCardText) {
+        this.paymentNameOnCardText = paymentNameOnCardText;
+    }
+
+    /**
+     * Gets payment billing address text.
+     *
+     * @return the payment billing address text
+     */
+    public String getPaymentBillingAddressText() {
+        return StringUtil.getLabelForView(paymentBillingAddressText);
+    }
+
+    /**
+     * Sets payment billing address text.
+     *
+     * @param paymentBillingAddressText the payment billing address text
+     */
+    public void setPaymentBillingAddressText(String paymentBillingAddressText) {
+        this.paymentBillingAddressText = paymentBillingAddressText;
+    }
+
+    /**
+     * Gets payment address line 1 text.
+     *
+     * @return the payment address line 1 text
+     */
+    public String getPaymentAddressLine1Text() {
+        return StringUtil.getLabelForView(paymentAddressLine1Text);
+    }
+
+    /**
+     * Sets payment address line 1 text.
+     *
+     * @param paymentAddressLine1Text the payment address line 1 text
+     */
+    public void setPaymentAddressLine1Text(String paymentAddressLine1Text) {
+        this.paymentAddressLine1Text = paymentAddressLine1Text;
+    }
+
+    /**
+     * Gets payment address line 2 text.
+     *
+     * @return the payment address line 2 text
+     */
+    public String getPaymentAddressLine2Text() {
+        return StringUtil.getLabelForView(paymentAddressLine2Text);
+    }
+
+    /**
+     * Sets payment address line 2 text.
+     *
+     * @param paymentAddressLine2Text the payment address line 2 text
+     */
+    public void setPaymentAddressLine2Text(String paymentAddressLine2Text) {
+        this.paymentAddressLine2Text = paymentAddressLine2Text;
+    }
+
+    /**
+     * Gets payment city.
+     *
+     * @return the payment city
+     */
+    public String getPaymentCity() {
+        return StringUtil.getLabelForView(paymentCity);
+    }
+
+    /**
+     * Sets payment city.
+     *
+     * @param paymentCity the payment city
+     */
+    public void setPaymentCity(String paymentCity) {
+        this.paymentCity = paymentCity;
+    }
+
+    /**
+     * Gets payment state.
+     *
+     * @return the payment state
+     */
+    public String getPaymentState() {
+        return StringUtil.getLabelForView(paymentState);
+    }
+
+    /**
+     * Sets payment state.
+     *
+     * @param paymentState the payment state
+     */
+    public void setPaymentState(String paymentState) {
+        this.paymentState = paymentState;
+    }
+
+    /**
+     * Gets payment country.
+     *
+     * @return the payment country
+     */
+    public String getPaymentCountry() {
+        return StringUtil.getLabelForView(paymentCountry);
+    }
+
+    /**
+     * Sets payment country.
+     *
+     * @param paymentCountry the payment country
+     */
+    public void setPaymentCountry(String paymentCountry) {
+        this.paymentCountry = paymentCountry;
+    }
+
+    /**
+     * Gets payment zipcode.
+     *
+     * @return the payment zipcode
+     */
+    public String getPaymentZipcode() {
+        return StringUtil.getLabelForView(paymentZipcode);
+    }
+
+    /**
+     * Sets payment zipcode.
+     *
+     * @param paymentZipcode the payment zipcode
+     */
+    public void setPaymentZipcode(String paymentZipcode) {
+        this.paymentZipcode = paymentZipcode;
+    }
+
+    /**
+     * Gets payment pay text.
+     *
+     * @return the payment pay text
+     */
+    public String getPaymentPayText() {
+        return StringUtil.getLabelForView(paymentPayText);
+    }
+
+    /**
+     * Sets payment pay text.
+     *
+     * @param paymentPayText the payment pay text
+     */
+    public void setPaymentPayText(String paymentPayText) {
+        this.paymentPayText = paymentPayText;
+    }
+
+    /**
+     * Gets payment use profile address.
+     *
+     * @return the payment use profile address
+     */
+    public String getPaymentUseProfileAddress() {
+        return StringUtil.getLabelForView(paymentUseProfileAddress);
+    }
+
+    /**
+     * Sets payment use profile address.
+     *
+     * @param paymentUseProfileAddress the payment use profile address
+     */
+    public void setPaymentUseProfileAddress(String paymentUseProfileAddress) {
+        this.paymentUseProfileAddress = paymentUseProfileAddress;
+    }
+
+    /**
+     * Gets payment set as default credit card.
+     *
+     * @return the payment set as default credit card
+     */
+    public String getPaymentSetAsDefaultCreditCard() {
+        return StringUtil.getLabelForView(paymentSetAsDefaultCreditCard);
+    }
+
+    /**
+     * Sets payment set as default credit card.
+     *
+     * @param paymentSetAsDefaultCreditCard the payment set as default credit card
+     */
+    public void setPaymentSetAsDefaultCreditCard(String paymentSetAsDefaultCreditCard) {
+        this.paymentSetAsDefaultCreditCard = paymentSetAsDefaultCreditCard;
+    }
+
+    /**
+     *
+     * @return paymentChangeMethodButton
+     */
+    public String getPaymentChangeMethodButton() {
+        return StringUtil.getLabelForView(paymentChangeMethodButton);
+    }
+
+    /**
+     *
+     * @param paymentChangeMethodButton paymentChangeMethodButton
+     */
+    public void setPaymentChangeMethodButton(String paymentChangeMethodButton) {
+        this.paymentChangeMethodButton = paymentChangeMethodButton;
+    }
+
+    /**
+     *
+     * @return paymentFailedErrorMessage
+     */
+    public String getPaymentFailedErrorMessage() {
+        return StringUtil.getLabelForView(paymentFailedErrorMessage);
+    }
+
+    /**
+     *
+     * @param paymentFailedErrorMessage paymentFailedErrorMessage
+     */
+    public void setPaymentFailedErrorMessage(String paymentFailedErrorMessage) {
+        this.paymentFailedErrorMessage = paymentFailedErrorMessage;
     }
 }

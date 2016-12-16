@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +105,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
             final boolean isCanceled = item.getAppointmentStatusModel().getId() == 4;
 
-            if (getSectionHeaderTitle(upcomingStartTime).equals(CarePayConstants.DAY_UPCOMING)) {
+            if (getSectionHeaderTitle(upcomingStartTime).equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
@@ -142,18 +143,18 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         AppointmentsActivity.model = item;
 
                         if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
-                            new CancelAppointmentDialog(context, item, appointmentInfo).show();
+                            new CheckInOfficeNowAppointmentDialog(context, true, item, appointmentInfo).show();
                         } else if (isCheckedIn) {
                             new QueueAppointmentDialog(context, item, appointmentLabels).show();
                         } else if (isCanceled) {
                             new CancelAppointmentDialog(context, item, true, appointmentInfo).show();
                         } else {
                             if (isAppointmentCancellable(item)) {
-                                new CancelAppointmentDialog(context, item, false, appointmentInfo).show();
+                                new CheckInOfficeNowAppointmentDialog(context, true, item, appointmentInfo).show();
                             } else if (isPending) {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo).show();
+                                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
                             } else {
-                                new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo).show();
+                                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
                             }
                         }
                     }
@@ -313,7 +314,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private String getSectionHeaderTitleByDay(String day) {
         if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
-                day.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+                day.equalsIgnoreCase(appointmentLabels.getTodayAppointmentsHeading())) {
             return appointmentLabels.getTodayAppointmentsHeading();
         } else {
             return appointmentLabels.getUpcomingAppointmentsHeading();
@@ -347,7 +348,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         if (convertedAppointmentDate.after(currentConvertedDate)
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            return CarePayConstants.DAY_UPCOMING;
+            return appointmentLabels.getUpcomingAppointmentsHeading();
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
             return CarePayConstants.DAY_OVER;
         } else {
@@ -366,7 +367,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     return CarePayConstants.DAY_OVER;
                 }
             }
-            return CarePayConstants.DAY_TODAY;
+            return appointmentLabels.getTodayAppointmentsHeading();
         }
     }
 

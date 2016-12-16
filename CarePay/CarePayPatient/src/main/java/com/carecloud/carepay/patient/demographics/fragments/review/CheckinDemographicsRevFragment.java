@@ -293,7 +293,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     private void initializeInsuranceFromModel() {
 
         if (insurances != null) {
-            for (int i = 0; i < insurances.size(); i++) {
+            for (int i = 0; i < insurances.size()-1; i++) {
                 DemographicInsurancePayloadDTO insurance = insurances.get(i);
 
                 String plan = insurance.getInsurancePlan();

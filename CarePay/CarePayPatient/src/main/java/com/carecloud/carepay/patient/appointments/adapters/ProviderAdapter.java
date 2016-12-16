@@ -10,11 +10,9 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentProvidersDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
-import com.carecloud.carepaylibray.appointments.models.ProvidersScheduleDTO;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
@@ -59,13 +57,13 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
             return;
         }
 
-        if (object.getClass() == ProvidersScheduleDTO.class) {
+        if (object.getClass() == AppointmentProvidersDTO.class) {
             holder.providerSectionLinearLayout.setVisibility(View.GONE);
             holder.providerItemLinearLayout.setVisibility(View.VISIBLE);
 
-            ProvidersScheduleDTO provider = (ProvidersScheduleDTO) object;
+            AppointmentProvidersDTO provider = (AppointmentProvidersDTO) object;
             holder.doctorName.setText(provider.getName());
-            holder.doctorType.setText(provider.getSpecialty());
+            holder.doctorType.setText(provider.getSpecialty().getName());
             holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +78,8 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
                 holder.providerSectionLinearLayout.setVisibility(View.GONE);
                 holder.providerItemLinearLayout.setVisibility(View.GONE);
 
-                CustomProxyNovaSemiBoldLabel providerStickyHeaderTitle =
-                        (CustomProxyNovaSemiBoldLabel) view.findViewById(R.id.providers_sticky_header_title);
+                CarePayTextView providerStickyHeaderTitle =
+                        (CarePayTextView) view.findViewById(R.id.providers_sticky_header_title);
                 providerStickyHeaderTitle.setText(item.getAppointmentHeader());
                 providerStickyHeaderTitle.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.lightSlateGray));
@@ -102,11 +100,11 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
 
     static class ProviderViewHolder extends RecyclerView.ViewHolder {
 
-        private CustomGothamRoundedMediumLabel shortName;
-        private CustomProxyNovaSemiBoldLabel doctorName;
-        private CustomProxyNovaRegularLabel doctorType;
+        private CarePayTextView shortName;
+        private CarePayTextView doctorName;
+        private CarePayTextView doctorType;
+        private CarePayTextView providerSectionHeaderTitle;
 
-        private CustomGothamRoundedMediumLabel providerSectionHeaderTitle;
         private LinearLayout providerSectionLinearLayout;
         private LinearLayout providerItemLinearLayout;
 
@@ -114,17 +112,17 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
             super(itemView);
 
             // set doctor name
-            doctorName = (CustomProxyNovaSemiBoldLabel) itemView.findViewById(R.id.doctor_name);
+            doctorName = (CarePayTextView) itemView.findViewById(R.id.doctor_name);
             // set doctor type
-            doctorType = (CustomProxyNovaRegularLabel) itemView.findViewById(R.id.doctor_type);
+            doctorType = (CarePayTextView) itemView.findViewById(R.id.doctor_type);
             // set doctor short name
-            shortName = (CustomGothamRoundedMediumLabel) itemView.findViewById(R.id.avatarTextView);
+            shortName = (CarePayTextView) itemView.findViewById(R.id.avatarTextView);
 
             providerSectionLinearLayout = (LinearLayout)
                     itemView.findViewById(R.id.providers_section_linear_layout);
             providerItemLinearLayout = (LinearLayout)
                     itemView.findViewById(R.id.provider_item_linear_layout);
-            providerSectionHeaderTitle = (CustomGothamRoundedMediumLabel)
+            providerSectionHeaderTitle = (CarePayTextView)
                     itemView.findViewById(R.id.providers_section_header_title);
         }
     }
