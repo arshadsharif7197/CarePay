@@ -105,9 +105,13 @@ public class PaymentPlanFragment extends Fragment {
             }
         });
 
-        Bundle arguments = getArguments();
-        paymentsModel = (PaymentsModel) arguments
-                .getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+        Bundle arguments = new Bundle();
+        if (arguments != null) {
+            Gson gson = new Gson();
+            arguments = getArguments();
+            String paymentsDTOString  = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+        }
 
         if (paymentsModel != null) {
             paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();

@@ -92,7 +92,10 @@ public class AddNewCreditCardFragment extends Fragment implements
         paymentsLabelDTO = new PaymentsLabelDTO();
         Bundle arguments = getArguments();
         if (arguments != null) {
-            paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            Gson gson = new Gson();
+            String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+            //paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
             paymentsLabelDTO = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         }
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);

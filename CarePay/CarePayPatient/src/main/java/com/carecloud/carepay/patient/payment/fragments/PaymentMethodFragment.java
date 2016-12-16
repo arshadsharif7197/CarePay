@@ -40,6 +40,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wallet.IsReadyToPayRequest;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -92,7 +93,10 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            paymentsDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            Gson gson = new Gson();
+            bundle = getArguments();
+            String pametsDtoString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentsDTO = gson.fromJson(pametsDtoString, PaymentsModel.class);
         }
         paymentList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
 
@@ -323,8 +327,10 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
                     Bundle arguments = getArguments();
                     Bundle args = new Bundle();
-                    args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
-                            arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                    Gson gson = new Gson();
+                    String paymentsDTOString = gson.toJson(paymentsDTO);
+                    args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                            paymentsDTOString);
                     fragment.setArguments(args);
 
                     FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
@@ -363,8 +369,10 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
                     Bundle args = new Bundle();
                     args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-                    args.putSerializable(CarePayConstants.INTAKE_BUNDLE,
-                            paymentsDTO);
+                    
+                    Gson gson = new Gson();
+                    String paymentsDTOString = gson.toJson(paymentsDTO);
+                    args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
                     fragment.setArguments(args);
 
                     FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();

@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 
 import java.text.DecimalFormat;
@@ -225,10 +226,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
             Bundle arguments = ((PaymentActivity) context).getIntent().getBundleExtra(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             Bundle bundle = new Bundle();
+            Gson gson = new Gson();
+            String paymentsDTOString = gson.toJson(paymentsDTO);
+            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
 //            bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
 //                    arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
-            bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
-                    paymentsDTO);
+           // bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
+             //       paymentsDTO);
             fragment.setArguments(bundle);
 
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();

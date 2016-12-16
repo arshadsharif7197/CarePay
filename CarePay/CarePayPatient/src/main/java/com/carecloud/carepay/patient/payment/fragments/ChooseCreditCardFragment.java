@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPa
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadCreditCardTypesDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -51,7 +52,9 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         Bundle arguments = getArguments();
         if (arguments != null) {
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
-            paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            Gson gson = new Gson();
+            String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         }
 
         // Inflate the layout for this fragment
@@ -191,9 +194,12 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
                 fragment = new AddNewCreditCardFragment();
             }
 
-            Bundle args = new Bundle();
-            args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
-            fragment.setArguments(args);
+            Bundle bundle = new Bundle();
+            Gson gson = new Gson();
+            String paymentsDTOString = gson.toJson(paymentsModel);
+            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            //args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+            fragment.setArguments(bundle);
 
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
             fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
