@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.text.DecimalFormat;
@@ -97,7 +98,12 @@ public class ResponsibilityFragment extends Fragment {
         makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            paymentDTO = (PaymentsModel) bundle.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+
+            Gson gson = new Gson();
+            bundle = getArguments();
+            String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+
             List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
             getPaymentLabels();
             toolbar.setTitle(titleResponsibilityString);
@@ -162,11 +168,10 @@ public class ResponsibilityFragment extends Fragment {
                     fragment = new PaymentMethodFragment();
                 }
 
-                Bundle arguments = getArguments();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
-                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
-                bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentDTO);
+                Gson gson = new Gson();
+                String paymentsDTOString = gson.toJson(paymentDTO);
+                bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
                 fragment.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();

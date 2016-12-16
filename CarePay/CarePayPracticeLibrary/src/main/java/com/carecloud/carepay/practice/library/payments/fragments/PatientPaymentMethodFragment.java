@@ -54,6 +54,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private String titlePaymentMethodString;
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
+    private String paymentChangeMethodString;
+    private String paymentFailedErrorString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,12 +81,11 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
         radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
 
-        title.setText(titlePaymentMethodString);
-        toolbar.setTitle(titlePaymentMethodString);
-
         getLabels();
         initializeViews(view);
 
+        title.setText(titlePaymentMethodString);
+        toolbar.setTitle(titlePaymentMethodString);
         return view;
     }
 
@@ -159,7 +160,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentList.get(i).getLabel())) {
                 selectedPaymentMethod = selectedRadioButton.getText().toString();
                 paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
-                paymentChoiceButton.setTag(checkedId);
+                paymentChoiceButton.setTag(paymentList.get(i).getType());
             }
         }
     }
@@ -225,18 +226,18 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         public void onClick(View view) {
             getLabels();
 
-            int position = (Integer) view.getTag();
-            switch (position) {
-                case 0:
-                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText,
-                            new LargeAlertDialog.LargeAlertInterface() {
-                                @Override
-                                public void onActionButton() {
-                                }
-                            }).show();
+            String type = (String) view.getTag();
+            switch (type) {
+                case CarePayConstants.TYPE_CASH:
+                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText,R.color.lightningyellow,
+                            R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
+                        @Override
+                        public void onActionButton() {
+                        }
+                    }).show();
                     break;
 
-                case 1:
+                case CarePayConstants.TYPE_CREDIT_CARD:
                     PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
 
                     Gson gson = new Gson();
@@ -274,6 +275,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
                     paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
                     paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
+                    paymentChangeMethodString = paymentsLabelsDTO.getPaymentChangeMethodButton();
+                    paymentFailedErrorString = paymentsLabelsDTO.getPaymentFailedErrorMessage();
                 }
             }
         }
