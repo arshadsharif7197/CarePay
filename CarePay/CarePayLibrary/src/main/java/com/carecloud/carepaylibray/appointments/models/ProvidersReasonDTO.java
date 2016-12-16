@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,59 +15,47 @@ public class ProvidersReasonDTO {
     private String name;
     @SerializedName("description")
     @Expose
-    private Object description;
+    private String description;
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
-        return name;
+        return StringUtil.getLabelForView(name);
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * 
-     * @return
-     *     The description
+     * @return The description
      */
-    public Object getDescription() {
-        return description;
+    public String getDescription() {
+        return StringUtil.getLabelForView(description);
     }
 
     /**
-     * 
-     * @param description
-     *     The description
+     * @param description The description
      */
-    public void setDescription(Object description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

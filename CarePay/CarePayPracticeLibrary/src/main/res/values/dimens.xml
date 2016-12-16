@@ -49,12 +49,15 @@
     <dimen name="dimen_612dp">612dp</dimen>
 
     <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="text_size_13sp">13sp</dimen>
+    <dimen name="text_size_14sp">14sp</dimen>
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_18sp">18sp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
-
+    <dimen name="text_size_21sp">21sp</dimen>
     <dimen name="text_size_22sp">22sp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>
+    <dimen name="text_size_24sp">24sp</dimen>
     <dimen name="text_size_28sp">28sp</dimen>
     <dimen name="text_size_36sp">36sp</dimen>
 
@@ -183,5 +186,16 @@
     <dimen name="checkin_back_height">45dp</dimen>
     <dimen name="checkin_logo_width">150dp</dimen>
     <dimen name="checkin_logo_height">46dp</dimen>
+
+    <!--Provider lists-->
+    <dimen name="provider_list_title_margin">34dp</dimen>
+    <dimen name="provider_list_margin">54dp</dimen>
+    <dimen name="provider_no_list_margin">72dp</dimen>
+    <dimen name="provider_card_width">380dp</dimen>
+    <dimen name="provider_card_header_height">150dp</dimen>
+    <dimen name="provider_card_avatar_size">100dp</dimen>
+    <dimen name="provider_card_footer_height">268dp</dimen>
+    <dimen name="provider_card_address_margin">110dp</dimen>
+    <dimen name="provider_card_place_margin">19dp</dimen>
 
 </resources>
