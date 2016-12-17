@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,21 +28,35 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wallet.Cart;
+import com.google.android.gms.wallet.FullWalletRequest;
 import com.google.android.gms.wallet.IsReadyToPayRequest;
+import com.google.android.gms.wallet.LineItem;
+import com.google.android.gms.wallet.MaskedWalletRequest;
+import com.google.android.gms.wallet.PaymentMethodTokenizationParameters;
+import com.google.android.gms.wallet.PaymentMethodTokenizationType;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
+import com.google.android.gms.wallet.fragment.SupportWalletFragment;
+import com.google.android.gms.wallet.fragment.WalletFragmentInitParams;
+import com.google.android.gms.wallet.fragment.WalletFragmentMode;
+import com.google.android.gms.wallet.fragment.WalletFragmentOptions;
+import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -61,7 +76,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private PaymentsModel paymentsDTO;
     private String dialogTitle;
     private String dialogText;
-    private List<PaymentsMethodsDTO> paymentList = null;
+    private List<PaymentsMethodsDTO> paymentMethodsList = null;
     private String titlePaymentMethodString;
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
@@ -71,6 +86,9 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private ProgressBar _paymentMethodFragmentProgressBar;
     private GoogleApiClient _GoogleApiClient;
     private Boolean _isProgressBarVisible = false;
+    private SupportWalletFragment _walletFragment;
+
+    private ScrollView scrollviewChoices ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +108,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
         radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
+        ScrollView scrollviewChoices = (ScrollView) view.findViewById(R.id.scrollview_choices);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -98,7 +117,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             String pametsDtoString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(pametsDtoString, PaymentsModel.class);
         }
-        paymentList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
+        paymentMethodsList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
 
         getLabels();
         initializeViews(view);
@@ -127,6 +146,16 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     @Override
     public void onDestroy() {
         super.onDestroy();
+        disconnectGoogleApiClient();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        disconnectGoogleApiClient();
+    }
+
+    private void disconnectGoogleApiClient() {
         _GoogleApiClient.stopAutoManage(getActivity());
         _GoogleApiClient.disconnect();
     }
@@ -213,7 +242,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         paymentChoiceButton.setText(paymentChooseMethodString);
         createPaymentPlanButton.setText(paymentCreatePlanString);
 
-        for (int i = 0; i < paymentList.size(); i++) {
+
+        for (int i = 0; i < paymentMethodsList.size(); i++) {
             addPaymentMethodOptionView(i);
         }
     }
@@ -223,13 +253,13 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         PaymentsMethodsDTO androidPayPaymentMethod = new PaymentsMethodsDTO();
         androidPayPaymentMethod.setLabel(PaymentConstants.ANDROID_PAY);
         androidPayPaymentMethod.setType(CarePayConstants.TYPE_ANDROID_PAY);
-        paymentList.add(androidPayPaymentMethod);
-        addPaymentMethodOptionView(paymentList.size() - 1);
+        paymentMethodsList.add(androidPayPaymentMethod);
+        addPaymentMethodOptionView(paymentMethodsList.size() - 1);
     }
 
 
     private void addPaymentMethodOptionView(int i) {
-        paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentList.get(i).getType(), paymentList.get(i).getLabel(), i),
+        paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentMethodsList.get(i).getType(), paymentMethodsList.get(i).getLabel(), i),
                 radioGroupLayoutParam);
 
         View dividerLineView = new View(activity);
@@ -251,36 +281,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             _isProgressBarVisible = true;
         }
 
-    }
-
-    /**
-     * If user chooses Android Pay as the option then hide
-     * the paymentChoiceButton and show Android Pay button.
-     **/
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        paymentChoiceButton.setEnabled(true);
-        onSetRadioButtonRegularTypeFace();
-        RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
-        onSetRadioButtonSemiBoldTypeFace(selectedRadioButton);
-
-        for (int i = 0; i < paymentList.size(); i++) {
-            if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentList.get(i).getLabel())) {
-                if (selectedRadioButton.getText().toString().equalsIgnoreCase(PaymentConstants.ANDROID_PAY)) {
-                    paymentChoiceButton.setVisibility(View.GONE);
-                } else {
-
-                    if (paymentChoiceButton.getVisibility() == View.GONE) {
-                        paymentChoiceButton.setVisibility(View.VISIBLE);
-                    }
-                    selectedPaymentMethod = selectedRadioButton.getText().toString();
-                    paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
-                    paymentChoiceButton.setTag(paymentList.get(i).getType());
-                }
-
-            }
-
-        }
     }
 
     private void onSetRadioButtonRegularTypeFace() {
@@ -305,10 +305,10 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             if (paymentsDTO != null) {
                 double previousBalance = 0;
                 double coPay = 0;
-                List<PaymentPatientBalancesPayloadDTO> paymentList
+                List<PaymentPatientBalancesPayloadDTO> paymentMethodsList
                         = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
 
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
+                for (PaymentPatientBalancesPayloadDTO payment : paymentMethodsList) {
                     if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalance = Double.parseDouble(payment.getTotal());
                     } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
@@ -406,5 +406,145 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 }
             }
         }
+    }
+
+
+    //    Android Pay
+
+    /**
+     * If user chooses Android Pay as the option then hide
+     * the paymentChoiceButton and show Android Pay button.
+     **/
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        paymentChoiceButton.setEnabled(true);
+        onSetRadioButtonRegularTypeFace();
+        RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
+        onSetRadioButtonSemiBoldTypeFace(selectedRadioButton);
+
+        for (int i = 0; i < paymentMethodsList.size(); i++) {
+            if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentMethodsList.get(i).getLabel())) {
+                if (selectedRadioButton.getText().toString().equalsIgnoreCase(PaymentConstants.ANDROID_PAY)) {
+                    paymentChoiceButton.setVisibility(View.GONE);
+                    createAndAddWalletFragment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload());
+                    //scrollviewChoices.fullScroll(View.FOCUS_DOWN);
+                } else {
+
+                    if (paymentChoiceButton.getVisibility() == View.GONE) {
+                        paymentChoiceButton.setVisibility(View.VISIBLE);
+                    }
+
+                    if(_walletFragment != null) {
+                        removeWalletFragment();
+                    }
+                    selectedPaymentMethod = selectedRadioButton.getText().toString();
+                    paymentChoiceButton.setText(paymentMethodsList.get(i).getButtonLabel());
+                    paymentChoiceButton.setTag(paymentMethodsList.get(i).getType());
+                }
+
+            }
+
+        }
+    }
+
+    /**
+     * Create the Masked Wallet request. Note that the Tokenization Type is set to
+     * {@code NETWORK_TOKEN} and the {@code publicKey} parameter is set to the public key
+     * that was created by First Data.
+     *
+     * @param //amount    The amount the user entered
+     * @return  A Masked Wallet request object
+     */
+    private MaskedWalletRequest createMaskedWalletRequest(List<PaymentPatientBalancesPayloadDTO> balances) {
+        MaskedWalletRequest.Builder builder = MaskedWalletRequest.newBuilder()
+                .setMerchantName(PaymentConstants.MERCHANT_NAME)
+                .setPhoneNumberRequired(true)
+                .setShippingAddressRequired(true)
+                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                .setEstimatedTotalPrice(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload().get(0).getTotal())
+//                 Create a Cart with the current line items. Provide all the information
+//                 available up to this point with estimates for shipping and tax included.
+                .setCart(Cart.newBuilder()
+                        .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                        .setTotalPrice("4001")
+                        .setLineItems(buildLineItems(balances))
+                        .build());
+
+        //  Set tokenization type and First Data issued public key
+        PaymentMethodTokenizationParameters mPaymentMethodParameters = PaymentMethodTokenizationParameters.newBuilder()
+                .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.NETWORK_TOKEN)
+                .addParameter("publicKey", "BP8mWwFpnE2KeE2coF7eI92AcTPmhK4ioCmdVQluz/EiC2N14Khd3cowHgTp6HTwYG+7QO0PxxQpEJol4vmHj58=")
+                .build();
+        builder.setPaymentMethodTokenizationParameters(mPaymentMethodParameters);
+        return builder.build();
+    }
+
+    /**
+     * Create a fake line item list. Set the amount to the one received from the user.
+     * @param balances    Amount received from the user
+     * @return  List of line items
+     */
+    private List<LineItem> buildLineItems(List<PaymentPatientBalancesPayloadDTO> balances) {
+        List<LineItem> list = new ArrayList<LineItem>();
+
+
+
+        for (PaymentPatientBalancesPayloadDTO balance : balances) {
+
+        list.add(LineItem.newBuilder()
+                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                .setDescription(balance.getBalanceType())
+                .setQuantity("1")
+                .setUnitPrice(balance.getTotal())
+                .setTotalPrice(balance.getTotal())
+                .build());
+        }
+        return list;
+    }
+    /**
+     * Create the wallet fragment. This will create the "Buy with Android Pay" button.
+     *
+     * @param //env   First Data environment
+     * @param //paymentAmountString    Amount received from the user
+     */
+    private void createAndAddWalletFragment(List<PaymentPatientBalancesPayloadDTO> balances) {
+        WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
+                .setBuyButtonHeight(R.dimen.dimen_33dp)
+                .setBuyButtonText(WalletFragmentStyle.BuyButtonText.LOGO_ONLY)
+                .setBuyButtonWidth(WalletFragmentStyle.Dimension.MATCH_PARENT)
+                .setMaskedWalletDetailsBackgroundColor(R.color.android_pay_background_color);
+
+        WalletFragmentOptions walletFragmentOptions = WalletFragmentOptions.newBuilder()
+                .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
+                .setFragmentStyle(walletFragmentStyle)
+                .setTheme(WalletConstants.THEME_LIGHT)
+                .setMode(WalletFragmentMode.BUY_BUTTON)
+                .build();
+        _walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
+
+        // Now initialize the Wallet Fragment
+        MaskedWalletRequest maskedWalletRequest = createMaskedWalletRequest(balances);
+
+        String accountName = getString(com.carecloud.carepay.patient.R.string.account_name);
+
+        WalletFragmentInitParams.Builder startParamsBuilder = WalletFragmentInitParams.newBuilder()
+                .setMaskedWalletRequest(maskedWalletRequest)
+                .setMaskedWalletRequestCode(PaymentConstants.REQUEST_CODE_MASKED_WALLET)
+                .setAccountName(accountName);
+        _walletFragment.initialize(startParamsBuilder.build());
+
+        // add Wallet fragment to the UI
+        getFragmentManager().beginTransaction()
+                .replace(com.carecloud.carepay.patient.R.id.dynamic_wallet_button_fragment, _walletFragment)
+                .commit();
+    }
+
+    private void removeWalletFragment()
+    {
+        getFragmentManager().beginTransaction()
+                .remove(_walletFragment)
+                .commit();
+
+        _walletFragment = null;
     }
 }
