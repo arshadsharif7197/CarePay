@@ -4,6 +4,9 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Model for appointment resources item.
  */
@@ -48,6 +51,12 @@ public class AppointmentResourcesItemDTO {
     @SerializedName("updated_by")
     @Expose
     private Integer updatedBy;
+    @SerializedName("visit_reasons")
+    @Expose
+    private List<VisitTypeDTO>  visitReasons = new ArrayList<>();
+    @SerializedName("provider")
+    @Expose
+    private AppointmentProvidersDTO provider;
 
     /**
      * 
@@ -283,4 +292,35 @@ public class AppointmentResourcesItemDTO {
         this.updatedBy = updatedBy;
     }
 
+    /**
+     * visit reasons getter
+     * @return the visit reasons
+     */
+    public List<VisitTypeDTO> getVisitReasons() {
+        return visitReasons;
+    }
+
+    /**
+     * visit reasons setter
+     * @param visitReasons the visit reasons
+     */
+    public void setVisitReasons(List<VisitTypeDTO> visitReasons) {
+        this.visitReasons = visitReasons;
+    }
+
+    /**
+     * provider getter
+     * @return the provider
+     */
+    public AppointmentProvidersDTO getProvider() {
+        return provider;
+    }
+
+    /**
+     * provider setter
+     * @param provider the provider
+     */
+    public void setProvider(AppointmentProvidersDTO provider) {
+        this.provider = provider;
+    }
 }
