@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">CarePay</string>
+    <string name="account_name">com.google.android.gms.samples.wallet.KEY_USERNAME</string>
+    <string name="environment">Environment:</string>
+    <string-array name="env_values" >
+        <item>INT</item>
+        <item>QA</item>
+        <item>CERT</item>
+    </string-array>
 </resources>

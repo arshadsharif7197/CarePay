@@ -81,5 +81,8 @@
 
     <color name="consent_title">#ff35a5e1</color>
 
+    <!--Android Pay-->
+    <color name="android_pay_background_color">#78C257</color>
+
 
 </resources>
