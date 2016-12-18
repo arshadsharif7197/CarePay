@@ -170,10 +170,11 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         }
 
         Bundle bundle = new Bundle();
+        Gson gson = new Gson();
         AppointmentDTO appointmentDTO= new AppointmentDTO();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, selectedProvider);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, selectedVisitType);
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_BUNDLE, gson.toJson(appointmentDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedProvider));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitType));
         visitTypeFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by jorge on 17/12/16.
  */
 
-public class VisitTypeDTO implements Serializable {
+public class VisitTypeDTO {
     @SerializedName("id")
     @Expose
     private Integer id;

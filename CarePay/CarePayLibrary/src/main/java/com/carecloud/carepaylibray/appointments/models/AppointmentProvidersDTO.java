@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * Model for appointment providers.
  */
-public class AppointmentProvidersDTO implements Serializable{
+public class AppointmentProvidersDTO {
 
     @SerializedName("id")
     @Expose

@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,10 +47,12 @@ public class AvailableHoursFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Gson gson = new Gson();
+        String appointmentInfoString;
         Bundle bundle = getArguments();
         if (bundle != null) {
-            appointmentDTO = (AppointmentDTO)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
+            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
+            appointmentDTO = gson.fromJson(appointmentInfoString, AppointmentDTO.class);
             startDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
             endDate = (Date)
