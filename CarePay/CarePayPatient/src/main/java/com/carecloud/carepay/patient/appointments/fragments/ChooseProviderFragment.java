@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentProvidersDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
     private ChooseProviderFragment chooseProviderFragment;
     private List<AppointmentProvidersDTO> providersModel;
+    private AppointmentProvidersDTO selectedProvider;
 
     @Override
     public void onStart() {
@@ -143,18 +145,19 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     }
 
     private void loadVisitTypeScreen(AppointmentProvidersDTO model) {
-//        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(getActivity(), model, this);
-//        visitTypeDialog.show();
+        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this.getContext(), model, this);
+        visitTypeDialog.show();
     }
 
     @Override
     public void onProviderListItemClickListener(int position) {
         AppointmentProvidersDTO model = providersModel.get(position - 1);
-        loadVisitTypeScreen(model);
+        selectedProvider = model;
+        loadVisitTypeScreen(selectedProvider);
     }
 
-    @Override
-    public void onDialogListItemClickListener(AppointmentDTO model) {
+
+    public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         AvailableHoursFragment visitTypeFragment = (AvailableHoursFragment)
                 fragmentManager.findFragmentByTag(AvailableHoursFragment.class.getSimpleName());
@@ -164,10 +167,22 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, model);
+        AppointmentDTO appointmentDTO= new AppointmentDTO();
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, selectedProvider);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, selectedVisitType);
         visitTypeFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
                 AvailableHoursFragment.class.getSimpleName()).commit();
     }
+
+    /**
+     *
+     * @return the appointmentResultModel
+     */
+    public AppointmentsResultModel getAppointmentsResultModel() {
+        return appointmentsResultModel;
+    }
+
 }

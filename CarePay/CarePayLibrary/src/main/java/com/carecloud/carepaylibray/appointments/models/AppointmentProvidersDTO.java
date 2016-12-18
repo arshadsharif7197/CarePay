@@ -5,10 +5,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Model for appointment providers.
  */
-public class AppointmentProvidersDTO {
+public class AppointmentProvidersDTO implements Serializable{
 
     @SerializedName("id")
     @Expose

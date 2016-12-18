@@ -12,25 +12,30 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentProvidersDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class VisitTypeDialog extends Dialog {
 
     // dummy data for now till it get it from JSON file
     String[] items = {"Follow-up", "Annual Physical", "New Patient", "Existing Patient",
             "Back Pain", "Asthma", "Chest Pain"};
-
+    List<VisitTypeDTO> visitTypesModel;
     /**
      * Constructor.
      * @param context context
      * @param model appointment item
      * @param listener Onclick listener
      */
-    public VisitTypeDialog(Context context, final AppointmentDTO model, final OnDialogListItemClickListener listener) {
+    public VisitTypeDialog(Context context, final AppointmentProvidersDTO model, final OnDialogListItemClickListener listener) {
         super(context);
 
         // This is the layout XML file that describes your Dialog layout
@@ -38,9 +43,13 @@ public class VisitTypeDialog extends Dialog {
         setContentView(R.layout.activity_visit_type);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
+        //temp solution, no visitTypes asociated to provider
+        AppointmentsResultModel appointmentsResultModel = ((ChooseProviderFragment)listener).getAppointmentsResultModel();
+        visitTypesModel = searchVisitTypes(model, appointmentsResultModel.getPayload().getResources());
+
         // Load and display list
         ListView visitTypeList = (ListView) findViewById(R.id.visitTypeList);
-        VisitTypeListAdapter adapter = new VisitTypeListAdapter(context, new ArrayList<>(Arrays.asList(items)));
+        VisitTypeListAdapter adapter = new VisitTypeListAdapter(context, (ArrayList<VisitTypeDTO>) visitTypesModel);
         visitTypeList.setAdapter(adapter);
 
         findViewById(R.id.visitTypeCancelButton).setOnClickListener(new View.OnClickListener() {
@@ -53,23 +62,23 @@ public class VisitTypeDialog extends Dialog {
         visitTypeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                model.setNewAppointmentVisitType(adapterView.getItemAtPosition(position).toString());
-                listener.onDialogListItemClickListener(model);
+                VisitTypeDTO selectedVisitType = visitTypesModel.get(position - 1);
+                listener.onDialogListItemClickListener(selectedVisitType);
                 dismiss();
             }
         });
     }
 
     public interface OnDialogListItemClickListener {
-        void onDialogListItemClickListener(AppointmentDTO model);
+        void onDialogListItemClickListener(VisitTypeDTO selectedVisitType);
     }
 
     private class VisitTypeListAdapter extends BaseAdapter {
 
         private Context context;
-        private ArrayList<String> listItems;
+        private ArrayList<VisitTypeDTO> listItems;
 
-        VisitTypeListAdapter(Context context, ArrayList<String> items) {
+        VisitTypeListAdapter(Context context, ArrayList<VisitTypeDTO> items) {
             this.context = context;
             this.listItems = items;
         }
@@ -81,12 +90,12 @@ public class VisitTypeDialog extends Dialog {
 
         @Override
         public String getItem(int position) {
-            return listItems.get(position);
+            return listItems.get(position).getName();
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return listItems.get(position).getId();
         }
 
         @Override
@@ -111,4 +120,22 @@ public class VisitTypeDialog extends Dialog {
             TextView type;
         }
     }
+
+    /**
+     * tmporal search of visit types sice not asociated to provider in json
+     * @param provider the provider
+     * @param resources the resources to search visit types by provider
+     * @return the visitTypes
+     */
+    private List<VisitTypeDTO> searchVisitTypes(AppointmentProvidersDTO provider, List<AppointmentResourcesDTO> resources){
+        List<VisitTypeDTO> result = new ArrayList<>();
+        for (AppointmentResourcesDTO resource: resources){
+            if(provider.getId().intValue() == resource.getResource().getProvider().getId().intValue()){
+                result = resource.getResource().getVisitReasons();
+                break;
+            }
+        }
+        return result;
+    }
+
 }
