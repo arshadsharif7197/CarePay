@@ -29,6 +29,7 @@ public class VisitTypeDialog extends Dialog {
     String[] items = {"Follow-up", "Annual Physical", "New Patient", "Existing Patient",
             "Back Pain", "Asthma", "Chest Pain"};
     List<VisitTypeDTO> visitTypesModel;
+    
     /**
      * Constructor.
      * @param context context

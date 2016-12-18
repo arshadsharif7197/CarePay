@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- *
  * Model for Visit Type
  * Created by jorge on 17/12/16.
  */

@@ -156,7 +156,10 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         loadVisitTypeScreen(selectedProvider);
     }
 
-
+    /**
+     * what to do with the selected visit type and provider
+     * @param selectedVisitType selected visit type from dialog
+     */
     public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         AvailableHoursFragment visitTypeFragment = (AvailableHoursFragment)
