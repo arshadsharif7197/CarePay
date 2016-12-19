@@ -103,9 +103,10 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
             }
         });
 
+        Gson gson = new Gson();
         Bundle arguments = getArguments();
-        paymentsModel = (PaymentsModel) arguments
-                .getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+        String paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+        paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
 
         if (paymentsModel != null) {
             paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
@@ -518,7 +519,9 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
     private void addNewCreditCard() {
         PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
         Bundle args = new Bundle();
-        args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
         fragment.setArguments(args);
 
         ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);

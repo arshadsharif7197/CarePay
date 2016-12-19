@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -94,7 +95,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
         SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
         if (paymentsDTO != null) {
-            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(1).getPayload();
+            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
 
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
@@ -210,9 +211,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             }
 
             Bundle bundle = new Bundle();
+            Gson gson = new Gson();
+            String paymentsDTOString = gson.toJson(paymentsDTO);
+            bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                    paymentsDTOString);
             bundle.putString(CarePayConstants.PARTIAL_PAYMENT_AMOUNT, enterPartialAmountEditText.getText().toString());
-            bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
-                    paymentsDTO);
+            bundle.putString(CarePayConstants.INTAKE_BUNDLE,
+                    paymentsDTOString);
             fragment.setArguments(bundle);
 
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
