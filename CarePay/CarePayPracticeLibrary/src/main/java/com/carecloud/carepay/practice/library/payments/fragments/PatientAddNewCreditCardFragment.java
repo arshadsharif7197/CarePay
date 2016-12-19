@@ -92,7 +92,9 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         paymentsLabelDTO = new PaymentsLabelDTO();
         Bundle arguments = getArguments();
         if (arguments != null) {
-            paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            Gson gson = new Gson();
+            String paymentDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
             paymentsLabelDTO = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         }
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
