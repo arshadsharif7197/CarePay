@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by harshal_patil on 9/8/2016.
  */
-public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
+public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> implements CancelAppointmentDialog.CancelAppointmentCallback {
 
     private Context context;
     private List<Object> appointmentItems;
@@ -147,10 +147,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         } else if (isCheckedIn) {
                             new QueueAppointmentDialog(context, item, appointmentLabels).show();
                         } else if (isCanceled) {
-                            new CancelAppointmentDialog(context, item, true, appointmentInfo).show();
+                            new CancelAppointmentDialog(context, item, true, appointmentInfo,AppointmentsAdapter.this).show();
                         } else {
                             if (isAppointmentCancellable(item)) {
-                                new CancelAppointmentDialog(context, item, false, appointmentInfo).show();
+                                new CancelAppointmentDialog(context, item, false, appointmentInfo,AppointmentsAdapter.this).show();
                             } else if (isPending) {
                                 new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
                             } else {
@@ -429,5 +429,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
         }
+    }
+
+    @Override
+    public void onCancelAppointment(AppointmentDTO appointmentDTO) {
+        appointmentItems.remove(appointmentDTO);
+        notifyDataSetChanged();
     }
 }

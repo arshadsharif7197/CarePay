@@ -56,6 +56,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
     private int selectedReasonId = -1;
     private List<CancellationReasonDTO> cancellationReasons;
+    private CancelAppointmentDialog.CancelAppointmentCallback cancelAppointmentCallback;
 
     /**
      * Contractor for dialog.
@@ -64,11 +65,12 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
      * @param appointmentInfo Appointment Info data
      */
     public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo) {
+                                         AppointmentsResultModel appointmentInfo, CancelAppointmentDialog.CancelAppointmentCallback cancelAppointmentCallback) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
+        this.cancelAppointmentCallback = cancelAppointmentCallback;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -261,7 +263,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentInfo).show();
+            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentInfo,cancelAppointmentCallback).show();
         }
 
         @Override

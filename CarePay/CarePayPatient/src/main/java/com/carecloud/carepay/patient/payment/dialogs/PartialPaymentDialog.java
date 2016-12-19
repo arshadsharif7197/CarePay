@@ -148,21 +148,25 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
+    public void afterTextChanged(Editable str) {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void beforeTextChanged(CharSequence str, int start, int count, int after) {
         amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white));
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(CharSequence str, int start, int before, int count) {
         try {
             if (amountChangeFlag) {
                 // flag to avoid the onTextChanged listener call after setText manipulated number
                 amountChangeFlag = false;
                 String amountEditText = enterPartialAmountEditText.getText().toString();
+                if(amountEditText.equalsIgnoreCase(".") || Double.parseDouble(amountEditText)<1){
+                    amountEditText = "0";
+                    enterPartialAmountEditText.setText(amountEditText);
+                } else
                 // Only when user enters dot, we should show the decimal values as 00
                 if (amountEditText.endsWith(".")) {
                     amountEditText = amountEditText + "00";
@@ -175,12 +179,14 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                     // When user enters number, we should simply append the number entered
                     // Also adjusting the cursor position after removing DOT and appending number
                 } else {
-                    if (amountEditText.contains(".")) {
-                        enterPartialAmountEditText.setText(new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER).format(Double.parseDouble(amountEditText)));
+                    if (amountEditText.contains(".") && amountEditText.length()-3>amountEditText.indexOf(".")) {
+                        //enterPartialAmountEditText.setText(new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER).format(Double.parseDouble(amountEditText)));
+                        amountEditText = amountEditText.substring(0,amountEditText.indexOf(".")+3);
+                        enterPartialAmountEditText.setText(amountEditText);
                     } else {
                         enterPartialAmountEditText.setText(amountEditText);
                     }
-                    if (enterPartialAmountEditText.getText().toString().endsWith("0")) {
+                    if (enterPartialAmountEditText.getText().toString().endsWith("0") && amountEditText.contains(".")) {
                         enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length() - 1);
                     } else {
                         enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length());

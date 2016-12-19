@@ -327,10 +327,21 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), expirationDateTextView);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address1EditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address2EditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), zipCodeEditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), cityEditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), stateEditText);
+
 
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), creditCardNoTextInput);
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), nameOnCardTextInputLayout);
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), verificationCodeTextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address1TextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address2TextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), zipCodeTextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), cityTextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), stateTextInput);
 
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), nextButton);
 
