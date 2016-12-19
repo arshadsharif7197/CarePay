@@ -63,7 +63,7 @@ public class VisitTypeDialog extends Dialog {
         visitTypeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                VisitTypeDTO selectedVisitType = visitTypesModel.get(position - 1);
+                VisitTypeDTO selectedVisitType = visitTypesModel.get(position);
                 listener.onDialogListItemClickListener(selectedVisitType);
                 dismiss();
             }
