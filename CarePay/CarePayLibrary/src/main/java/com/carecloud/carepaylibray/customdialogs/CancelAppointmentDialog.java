@@ -23,6 +23,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     public interface CancelAppointmentCallback{
        void onCancelAppointment(AppointmentDTO appointmentDTO);
     }
+    
     private LinearLayout rootLayout;
     private LinearLayout mainLayout;
     private Context context;
