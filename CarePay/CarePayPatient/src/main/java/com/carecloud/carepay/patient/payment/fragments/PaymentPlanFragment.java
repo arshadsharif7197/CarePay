@@ -34,7 +34,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayload
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadCreditCardTypesDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadPlansDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -234,12 +234,12 @@ public class PaymentPlanFragment extends Fragment {
                 = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
         if (patientCreditCards != null) {
-            List<PaymentCreditCardsPayloadDTO> payload = patientCreditCards.getPayload();
+            List<PaymentsPatientsCreditCardsPayloadListDTO> payload = patientCreditCards.getPayload();
 
             if (payload != null && payload.size() > 0) {
                 // Get default credit card
-                PaymentCreditCardsPayloadDTO creditCard = payload.get(0);
-                String creditCardName = getCreditCardName(creditCard.getCardType());
+                PaymentCreditCardsPayloadDTO creditCard = payload.get(0).getPayload();
+                String creditCardName = creditCard.getCardType();
                 addedCreditCard.setText(StringUtil.getEncodedCardNumber(
                         creditCardName, creditCard.getCardNumber()));
                 addedCreditCard.setVisibility(View.VISIBLE);
@@ -263,13 +263,13 @@ public class PaymentPlanFragment extends Fragment {
 
         @Override
         public void onCreditCardSelection(int selectedIndex) {
-            List<PaymentCreditCardsPayloadDTO> payload
+            List<PaymentsPatientsCreditCardsPayloadListDTO> payload
                     = paymentsModel.getPaymentPayload().getPatientCreditCards().getPayload();
 
             if (payload != null && payload.size() > 0) {
                 // Get default credit card
-                PaymentCreditCardsPayloadDTO creditCard = payload.get(selectedIndex);
-                String creditCardName = getCreditCardName(creditCard.getCardType());
+                PaymentCreditCardsPayloadDTO creditCard = payload.get(selectedIndex).getPayload();
+                String creditCardName = creditCard.getCardType();
                 addedCreditCard.setText(StringUtil.getEncodedCardNumber(creditCardName, creditCard.getCardNumber()));
                 addedCreditCard.setVisibility(View.VISIBLE);
                 addChangeCreditCard.setText(paymentsLabel.getPaymentChangeCard());
@@ -317,22 +317,22 @@ public class PaymentPlanFragment extends Fragment {
         }
     };
 
-    private String getCreditCardName(String cardType) {
-        if (paymentsModel != null) {
-            List<PaymentsSettingsPayloadCreditCardTypesDTO> creditCardType
-                    = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getCreditCardType();
-
-            if (creditCardType != null && creditCardType.size() > 0) {
-                for (int i = 0; i < creditCardType.size(); i++) {
-                    PaymentsSettingsPayloadCreditCardTypesDTO creditCardTypesDTO = creditCardType.get(i);
-                    if (creditCardTypesDTO.getType().equalsIgnoreCase(cardType)) {
-                        return creditCardTypesDTO.getLabel();
-                    }
-                }
-            }
-        }
-        return cardType;
-    }
+//    private String getCreditCardName(String cardType) {
+//        if (paymentsModel != null) {
+//            List<PaymentsSettingsPayloadCreditCardTypesDTO> creditCardType
+//                    = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getCreditCardType();
+//
+//            if (creditCardType != null && creditCardType.size() > 0) {
+//                for (int i = 0; i < creditCardType.size(); i++) {
+//                    PaymentsSettingsPayloadCreditCardTypesDTO creditCardTypesDTO = creditCardType.get(i);
+//                    if (creditCardTypesDTO.getType().equalsIgnoreCase(cardType)) {
+//                        return creditCardTypesDTO.getLabel();
+//                    }
+//                }
+//            }
+//        }
+//        return cardType;
+//    }
 
     private void setTextListeners() {
         paymentPlanMonthNo.addTextChangedListener(new TextWatcher() {

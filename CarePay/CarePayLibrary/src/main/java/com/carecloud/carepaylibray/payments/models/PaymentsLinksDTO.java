@@ -1,6 +1,8 @@
 
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepaylibray.appointments.models.LinkDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,7 +25,7 @@ public class PaymentsLinksDTO {
     private PaymentsMethodsDTO paymentsMethods;
     @SerializedName("credit_cards")
     @Expose
-    private PaymentsCreditCardsDTO paymentsCreditCards;
+    private TransitionDTO paymentsCreditCards;
     @SerializedName("payment_plans")
     @Expose
     private PaymentsPlansDTO paymentsPlans;
@@ -126,7 +128,7 @@ public class PaymentsLinksDTO {
      * @return
      *     The paymentsCreditCardsDTO
      */
-    public PaymentsCreditCardsDTO getPaymentsCreditCards() {
+    public TransitionDTO getPaymentsCreditCards() {
         return paymentsCreditCards;
     }
 
@@ -135,7 +137,7 @@ public class PaymentsLinksDTO {
      * @param paymentsCreditCards
      *     The credit_cards
      */
-    public void setPaymentsCreditCards(PaymentsCreditCardsDTO paymentsCreditCards) {
+    public void setPaymentsCreditCards(TransitionDTO paymentsCreditCards) {
         this.paymentsCreditCards = paymentsCreditCards;
     }
 
