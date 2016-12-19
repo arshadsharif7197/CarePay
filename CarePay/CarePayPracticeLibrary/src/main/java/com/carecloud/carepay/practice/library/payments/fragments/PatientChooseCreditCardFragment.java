@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -105,10 +106,10 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
                     = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
             if (patientCreditCards != null) {
-                List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
+                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = patientCreditCards.getPayload();
 
                 for (int i = 0; i < creditCardList.size(); i++) {
-                    PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
+                    PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i).getPayload();
                     chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(StringUtil
                             .getEncodedCardNumber(creditCardItem.getCardType(), creditCardItem.getCardNumber()), i),
                             radioGroupLayoutParam);
