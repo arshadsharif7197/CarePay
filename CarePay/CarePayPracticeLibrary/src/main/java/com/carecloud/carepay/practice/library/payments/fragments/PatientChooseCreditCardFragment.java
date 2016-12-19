@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPa
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private Button nextButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
-
+    private String paymentDTOString;
     private PaymentsModel paymentsModel;
 
     @Override
@@ -51,8 +52,10 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
         String titleLabel = "";
         Bundle arguments = getArguments();
         if (arguments != null) {
+            Gson gson = new Gson();
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
-            paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
         }
 
         // Inflate the layout for this fragment
@@ -167,7 +170,9 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
         public void onClick(View view) {
             PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
             Bundle args = new Bundle();
-            args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+            Gson gson = new Gson();
+            String paymentsDTOString = gson.toJson(paymentsModel);
+            args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
             fragment.setArguments(args);
 
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);

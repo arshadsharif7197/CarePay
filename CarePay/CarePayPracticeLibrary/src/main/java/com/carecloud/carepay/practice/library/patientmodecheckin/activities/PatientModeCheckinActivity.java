@@ -349,7 +349,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void getPaymentInformation(String workflowJson) {
         ResponsibilityFragment responsibilityFragment = new ResponsibilityFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE, workflowJson);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowJson);
         bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, workflowJson);
         responsibilityFragment.setArguments(bundle);
         navigateToFragment(responsibilityFragment, true);

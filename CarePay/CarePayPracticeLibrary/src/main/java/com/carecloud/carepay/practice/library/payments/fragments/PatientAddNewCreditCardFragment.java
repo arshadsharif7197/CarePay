@@ -92,7 +92,9 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         paymentsLabelDTO = new PaymentsLabelDTO();
         Bundle arguments = getArguments();
         if (arguments != null) {
-            paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            Gson gson = new Gson();
+            String paymentDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
             paymentsLabelDTO = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         }
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
@@ -325,10 +327,21 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), expirationDateTextView);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address1EditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address2EditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), zipCodeEditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), cityEditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), stateEditText);
+
 
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), creditCardNoTextInput);
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), nameOnCardTextInputLayout);
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), verificationCodeTextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address1TextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address2TextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), zipCodeTextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), cityTextInput);
+        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), stateTextInput);
 
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), nextButton);
 
