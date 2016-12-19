@@ -58,7 +58,7 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
         holder.scheduleAppointment.setText(label.getProviderListScheduleAppointmentButton());
         holder.scheduleAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
             }
         });
