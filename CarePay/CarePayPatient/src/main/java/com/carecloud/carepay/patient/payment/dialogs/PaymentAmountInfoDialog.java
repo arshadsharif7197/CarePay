@@ -12,6 +12,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customdialogs.BaseAmountInfoDialog;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 import org.json.JSONObject;
 
@@ -30,11 +31,17 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     private CarePayTextView insuranceCoPayTitleTextView;
     private CarePayTextView insuranceCoPayAmountTextView;
     private Button payNowButton;
+    private PaymentsModel paymentsModel;
 
-    public PaymentAmountInfoDialog(Context context, JSONObject jsonObject) {
-        super(context, jsonObject);
+    /**
+     *
+     *  @param context context
+     * @param paymentsModel payment model
+     */
+    public PaymentAmountInfoDialog(Context context, PaymentsModel paymentsModel) {
+        super(context, paymentsModel);
         this.context = context;
-        this.jsonObject = jsonObject;
+        this.paymentsModel = paymentsModel;
     }
 
     @Override
