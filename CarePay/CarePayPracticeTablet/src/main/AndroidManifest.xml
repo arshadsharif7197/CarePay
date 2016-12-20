@@ -51,6 +51,7 @@
         <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity" />
         <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
             android:theme="@style/Theme.MyDialog"/>
