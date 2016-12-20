@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/provider_card_width"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/dimen_18dp"
-    android:layout_marginStart="@dimen/dimen_18dp"
-    android:background="@color/transparent_apt"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/provider_card_width"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimen_18dp"
+        android:layout_marginStart="@dimen/dimen_18dp"
         android:background="@drawable/bg_cardview"
         android:orientation="vertical">
 
@@ -39,7 +38,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/provider_card_footer_height"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -112,7 +111,9 @@
         android:layout_width="@dimen/provider_card_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="-48dp"
-        android:visibility="gone"
-        android:src="@drawable/home_shadow" />
+        android:layout_marginTop="-30dp"
+        android:paddingEnd="@dimen/dimen_18dp"
+        android:paddingStart="@dimen/dimen_18dp"
+        android:src="@drawable/home_shadow"
+        android:visibility="visible" />
 </LinearLayout>

@@ -26,6 +26,8 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonSyntaxException;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -166,6 +168,16 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
             noAppointmentView.setVisibility(View.GONE);
             List<AppointmentResourcesDTO> resources = appointmentsResultModel.getPayload().getResources();
+
+            if (resources.size() > 0) {
+                Collections.sort(resources, new Comparator<AppointmentResourcesDTO>() {
+                    @Override
+                    public int compare(final AppointmentResourcesDTO object1, final AppointmentResourcesDTO object2) {
+                        return object1.getResource().getProvider().getName()
+                                .compareTo(object2.getResource().getProvider().getName());
+                    }
+                });
+            }
 
             ProvidersListAdapter appointmentsListAdapter = new ProvidersListAdapter(
                     AppointmentsActivity.this, resources, appointmentsResultModel);

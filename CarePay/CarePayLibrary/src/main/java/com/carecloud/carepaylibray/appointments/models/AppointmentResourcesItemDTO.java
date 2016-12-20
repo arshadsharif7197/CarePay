@@ -52,7 +52,7 @@ public class AppointmentResourcesItemDTO {
     private Integer updatedBy;
     @SerializedName("visit_reasons")
     @Expose
-    private List<ProvidersReasonDTO> visitReasons = null;
+    private List<VisitTypeDTO> visitReasons = null;
     @SerializedName("provider")
     @Expose
     private AppointmentProviderDTO provider;
@@ -295,7 +295,7 @@ public class AppointmentResourcesItemDTO {
      *
      * @return visitReasons
      */
-    public List<ProvidersReasonDTO> getVisitReasons() {
+    public List<VisitTypeDTO> getVisitReasons() {
         return visitReasons;
     }
 
@@ -303,7 +303,7 @@ public class AppointmentResourcesItemDTO {
      *
      * @param visitReasons visitReasons
      */
-    public void setVisitReasons(List<ProvidersReasonDTO> visitReasons) {
+    public void setVisitReasons(List<VisitTypeDTO> visitReasons) {
         this.visitReasons = visitReasons;
     }
 
