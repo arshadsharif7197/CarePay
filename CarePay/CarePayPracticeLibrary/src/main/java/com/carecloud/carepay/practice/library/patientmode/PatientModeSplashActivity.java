@@ -80,10 +80,12 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                 int indexDefault = 0;
                 for (int i = 0; i < langaugelistsize; i++) {
                     LanguageOptionDTO languageOption = patientModePayloadDTO.getLanguages().get(i);
-                    languages.add(i, languageOption.getCode().toUpperCase());
-                    if (languageOption.getDefault() != null && languageOption.getDefault()) {
-                        defaultLangOption = languageOption;
-                        indexDefault = i;
+                    if (languageOption != null && languageOption.getCode() != null) {
+                        languages.add(i, languageOption.getCode().toUpperCase());
+                        if (languageOption.getDefault() != null && languageOption.getDefault()) {
+                            defaultLangOption = languageOption;
+                            indexDefault = i;
+                        }
                     }
                 }
                 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
