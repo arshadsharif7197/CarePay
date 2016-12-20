@@ -781,11 +781,23 @@
     <style name="TransparencyToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Support Library compability -->
-        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>zzz
     </style>
 
     <style name="AppBaseTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppBaseTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="WalletFragmentDetailsTextAppearance">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/apt_popup_button_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">proximanova_regular</item>
+    </style>
+
+    <style name="WalletFragmentDetailsHeaderTextAppearance"
+        parent="WalletFragmentDetailsTextAppearance">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">proximanova_regular</item>
+    </style>
 </resources>

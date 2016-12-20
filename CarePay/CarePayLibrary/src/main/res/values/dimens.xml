@@ -351,4 +351,15 @@
     <dimen name="payment_plan_month_day_width">55dp</dimen>
     <dimen name="payment_plan_credit_card_font">16sp</dimen>
     <dimen name="payment_plan_credit_card_button_font">14sp</dimen>
+
+    <!--Android Pay-->
+    <dimen name="padding_tiny">2dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
+    <dimen name="padding_large">10dp</dimen>
+    <dimen name="padding_xlarge">16dp</dimen>
+    <dimen name="margin_large">10dp</dimen>
+    <dimen name="margin_xlarge">30dp</dimen>
+    <dimen name="buy_button_width">300dp</dimen>
+    <dimen name="buy_button_height">48dp</dimen>
+    <dimen name="element_space">15dp</dimen>
 </resources>

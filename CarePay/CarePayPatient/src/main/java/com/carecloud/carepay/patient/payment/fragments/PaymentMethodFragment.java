@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
+import com.carecloud.carepay.patient.payment.ResponsibilityFragment;
+import com.carecloud.carepay.patient.payment.androidPay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.androidPay.EnvData;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -45,6 +50,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wallet.Cart;
 import com.google.android.gms.wallet.IsReadyToPayRequest;
 import com.google.android.gms.wallet.LineItem;
+import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.MaskedWalletRequest;
 import com.google.android.gms.wallet.PaymentMethodTokenizationParameters;
 import com.google.android.gms.wallet.PaymentMethodTokenizationType;
@@ -90,6 +96,9 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private SupportWalletFragment _walletFragment;
 
     private ScrollView scrollviewChoices ;
+
+    private List lineItems;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,22 +153,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        disconnectGoogleApiClient();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        disconnectGoogleApiClient();
-    }
-
-    private void disconnectGoogleApiClient() {
-        _GoogleApiClient.stopAutoManage(getActivity());
-        _GoogleApiClient.disconnect();
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -444,7 +437,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentMethodsList.get(i).getLabel())) {
                 if (selectedRadioButton.getText().toString().equalsIgnoreCase(PaymentConstants.ANDROID_PAY)) {
                     paymentChoiceButton.setVisibility(View.GONE);
-                    createAndAddWalletFragment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload());
+                    setLineItems(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload());
+                    createAndAddWalletFragment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload().get(0).getTotal());
                     //scrollviewChoices.fullScroll(View.FOCUS_DOWN);
                 } else {
 
@@ -466,66 +460,12 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     }
 
     /**
-     * Create the Masked Wallet request. Note that the Tokenization Type is set to
-     * {@code NETWORK_TOKEN} and the {@code publicKey} parameter is set to the public key
-     * that was created by First Data.
-     *
-     * @param //amount    The amount the user entered
-     * @return  A Masked Wallet request object
-     */
-    private MaskedWalletRequest createMaskedWalletRequest(List<PaymentPatientBalancesPayloadDTO> balances) {
-        MaskedWalletRequest.Builder builder = MaskedWalletRequest.newBuilder()
-                .setMerchantName(PaymentConstants.MERCHANT_NAME)
-                .setPhoneNumberRequired(true)
-                .setShippingAddressRequired(true)
-                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                .setEstimatedTotalPrice(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload().get(0).getTotal())
-//                 Create a Cart with the current line items. Provide all the information
-//                 available up to this point with estimates for shipping and tax included.
-                .setCart(Cart.newBuilder()
-                        .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                        .setTotalPrice("4001")
-                        .setLineItems(buildLineItems(balances))
-                        .build());
-
-        //  Set tokenization type and First Data issued public key
-        PaymentMethodTokenizationParameters mPaymentMethodParameters = PaymentMethodTokenizationParameters.newBuilder()
-                .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.NETWORK_TOKEN)
-                .addParameter("publicKey", "BP8mWwFpnE2KeE2coF7eI92AcTPmhK4ioCmdVQluz/EiC2N14Khd3cowHgTp6HTwYG+7QO0PxxQpEJol4vmHj58=")
-                .build();
-        builder.setPaymentMethodTokenizationParameters(mPaymentMethodParameters);
-        return builder.build();
-    }
-
-    /**
-     * Create a fake line item list. Set the amount to the one received from the user.
-     * @param balances    Amount received from the user
-     * @return  List of line items
-     */
-    private List<LineItem> buildLineItems(List<PaymentPatientBalancesPayloadDTO> balances) {
-        List<LineItem> list = new ArrayList<LineItem>();
-
-
-
-        for (PaymentPatientBalancesPayloadDTO balance : balances) {
-
-        list.add(LineItem.newBuilder()
-                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                .setDescription(balance.getBalanceType())
-                .setQuantity("1")
-                .setUnitPrice(balance.getTotal())
-                .setTotalPrice(balance.getTotal())
-                .build());
-        }
-        return list;
-    }
-    /**
      * Create the wallet fragment. This will create the "Buy with Android Pay" button.
      *
      * @param //env   First Data environment
      * @param //paymentAmountString    Amount received from the user
      */
-    private void createAndAddWalletFragment(List<PaymentPatientBalancesPayloadDTO> balances) {
+    private void createAndAddWalletFragment(String totalPrice) {
         WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
                 .setBuyButtonHeight(R.dimen.dimen_33dp)
                 .setBuyButtonText(WalletFragmentStyle.BuyButtonText.LOGO_ONLY)
@@ -541,7 +481,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         _walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
 
         // Now initialize the Wallet Fragment
-        MaskedWalletRequest maskedWalletRequest = createMaskedWalletRequest(balances);
+        MaskedWalletRequest maskedWalletRequest = createMaskedWalletRequest(totalPrice);
 
         String accountName = getString(com.carecloud.carepay.patient.R.string.account_name);
 
@@ -557,6 +497,71 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 .commit();
     }
 
+
+    /**
+     * Create the Masked Wallet request. Note that the Tokenization Type is set to
+     * {@code NETWORK_TOKEN} and the {@code publicKey} parameter is set to the public key
+     * that was created by First Data.
+     *
+     * @param //amount    The amount the user entered
+     * @return  A Masked Wallet request object
+     */
+    private MaskedWalletRequest createMaskedWalletRequest(String totalPrice) {
+        MaskedWalletRequest.Builder builder = MaskedWalletRequest.newBuilder()
+                .setMerchantName(PaymentConstants.MERCHANT_NAME)
+                .setPhoneNumberRequired(true)
+                .setShippingAddressRequired(true)
+                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                .setEstimatedTotalPrice(totalPrice)
+//                 Create a Cart with the current line items. Provide all the information
+//                 available up to this point with estimates for shipping and tax included.
+                .setCart(Cart.newBuilder()
+                        .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                        .setTotalPrice(totalPrice)
+                        .setLineItems(getLineItems())
+                        .build());
+
+        //  Set tokenization type and First Data issued public key
+        PaymentMethodTokenizationParameters mPaymentMethodParameters = PaymentMethodTokenizationParameters.newBuilder()
+                .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.NETWORK_TOKEN)
+                .addParameter("publicKey", EnvData.getProperties("CERT").getPublicKey())
+                .build();
+        builder.setPaymentMethodTokenizationParameters(mPaymentMethodParameters);
+        return builder.build();
+    }
+
+    /**
+     * Create a fake line item list. Set the amount to the one received from the user.
+     * @param //balance   Amount received from the user
+     * @return  List of line items
+     */
+    public List getLineItems() {
+        return lineItems;
+    }
+
+    public void setLineItems(List<PaymentPatientBalancesPayloadDTO> balances) {
+        List<LineItem> list = new ArrayList<LineItem>();
+
+        PaymentResponsibilityModel paymentModel = PaymentResponsibilityModel.getInstance();
+        paymentModel.balancesList = new ArrayList();
+
+        for (PaymentPatientBalancesPayloadDTO balance : balances) {
+            list.add(LineItem.newBuilder()
+                    .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                    .setDescription(balance.getBalanceType())
+                    .setQuantity("1")
+                    .setTotalPrice(balance.getTotal())
+                    .setUnitPrice(balance.getTotal())
+                    .build());
+            paymentModel.balance1 = balance.getTotal();
+            paymentModel.balancesList.add(paymentModel.balance1);
+
+
+        }
+
+        this.lineItems = list;
+    }
+
     private void removeWalletFragment()
     {
         getFragmentManager().beginTransaction()
@@ -565,4 +570,5 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         _walletFragment = null;
     }
+
 }
