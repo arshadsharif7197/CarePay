@@ -40,6 +40,12 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
     private LinearLayout dialogHeaderlayout;
     private Button payNowButton;
 
+    /**
+     * show custom dialog for partial mode payments.
+     *
+     * @param context the activity context to evaluate
+     * @param paymentsModel paymentsModel
+     */
     public PaymentPartialModeDialog(Context context, PaymentsModel paymentsModel) {
         super(context, paymentsModel);
         this.context = context;

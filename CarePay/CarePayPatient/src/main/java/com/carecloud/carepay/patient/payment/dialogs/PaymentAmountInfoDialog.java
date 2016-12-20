@@ -33,6 +33,11 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     private Button payNowButton;
     private PaymentsModel paymentsModel;
 
+    /**
+     *
+     *  @param context context
+     * @param paymentsModel payment model
+     */
     public PaymentAmountInfoDialog(Context context, PaymentsModel paymentsModel) {
         super(context, paymentsModel);
         this.context = context;
