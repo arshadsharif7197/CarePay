@@ -63,8 +63,9 @@ public class InTakeWebViewActivity extends BasePatientActivity {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         progressBar = (ProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.signupProgressBarIntake);
         progressBar.setVisibility(View.VISIBLE);
-        getIntakeFormData();
-        //initForm();
+        //getIntakeFormData();
+        initForm();
+        initWebView();
     }
 
 
@@ -98,7 +99,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         labelsModel = inTakeForm.getMetadata().getLabel();
 
         nextButton = (Button) findViewById(com.carecloud.carepaylibrary.R.id.intakeBtnNext);
-        nextButton.setEnabled(true);
+        nextButton.setEnabled(false);
 
 
         //dynamic step progres bar
@@ -163,9 +164,9 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         //load pages and links inside webview
         mWebView.setWebViewClient(new WebViewClient());
+        mWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         //Interface that receive calls from javascript
         mWebView.addJavascriptInterface(new WebViewJavaScriptInterface(this), "IntakeInterface");
-        mWebView.loadUrl("file:///android_asset/intake-forms-webview/web-view.html");
         //show progress bar
         mWebView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
@@ -175,9 +176,12 @@ public class InTakeWebViewActivity extends BasePatientActivity {
                 }
                 if (progress == 100) {
                     progressBar.setVisibility(View.INVISIBLE);
+                    nextButton.setEnabled(true);
                 }
             }
         });
+        mWebView.loadUrl("file:///android_asset/intake-forms-webview/web-view.html");
+
     }
 
     @Override
