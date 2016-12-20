@@ -28,8 +28,8 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreen
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -37,7 +37,6 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -324,8 +323,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(true);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
+            TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
             queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
@@ -359,6 +359,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(false);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
             Map<String, String> queryMap = new HashMap<>();

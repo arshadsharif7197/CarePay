@@ -1,16 +1,15 @@
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 
 /**
  * Model for Visit Type
  * Created by jorge on 17/12/16.
  */
-
 public class VisitTypeDTO {
+
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -23,6 +22,7 @@ public class VisitTypeDTO {
 
     /**
      * Visit type getter id
+     *
      * @return the id
      */
     public Integer getId() {
@@ -31,7 +31,8 @@ public class VisitTypeDTO {
 
     /**
      * Visit type setter id
-     * @param id  the id
+     *
+     * @param id the id
      */
     public void setId(Integer id) {
         this.id = id;
@@ -39,14 +40,16 @@ public class VisitTypeDTO {
 
     /**
      * the name getter
+     *
      * @return the name
      */
     public String getName() {
-        return name;
+        return StringUtil.getLabelForView(name);
     }
 
     /**
      * the name setter
+     *
      * @param name the name
      */
     public void setName(String name) {
@@ -55,14 +58,16 @@ public class VisitTypeDTO {
 
     /**
      * description getter
+     *
      * @return the description
      */
     public String getDescription() {
-        return description;
+        return StringUtil.getLabelForView(description);
     }
 
     /**
      * description setter
+     *
      * @param description the description
      */
     public void setDescription(String description) {

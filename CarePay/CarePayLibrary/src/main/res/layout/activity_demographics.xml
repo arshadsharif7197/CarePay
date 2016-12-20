@@ -20,7 +20,7 @@
         android:id="@+id/demogr_content_holder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+        android:layout_marginTop="@dimen/demographics_docs_section_patient_margin_top"
         android:layout_weight="1"
         android:orientation="vertical">
 
