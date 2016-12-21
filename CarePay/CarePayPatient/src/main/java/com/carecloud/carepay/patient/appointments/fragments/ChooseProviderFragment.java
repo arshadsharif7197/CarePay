@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,17 @@ import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActiv
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepay.patient.appointments.dialog.VisitTypeDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProvidersDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -37,8 +43,8 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     private AppointmentsResultModel appointmentsResultModel;
 
     private ChooseProviderFragment chooseProviderFragment;
-    private List<AppointmentProvidersDTO> providersModel;
-    private AppointmentProvidersDTO selectedProvider;
+    private List<AppointmentResourcesDTO> resources;
+    private AppointmentResourcesDTO selectedProvider;
 
     @Override
     public void onStart() {
@@ -105,53 +111,75 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         providersRecyclerView = ((RecyclerView) chooseProviderView.findViewById(R.id.providers_recycler_view));
 
         //Fetch provider data
-        getProvidersInformation();
+        getResourcesInformation();
 
         return chooseProviderView;
     }
 
-    private void getProvidersInformation() {
-        if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
-                && appointmentsResultModel.getPayload().getProviders() != null
-                && appointmentsResultModel.getPayload().getProviders().size() > 0) {
-
-            providersModel = appointmentsResultModel.getPayload().getProviders();
-            List<Object> providersListWithHeader = getProvidersListWithHeader();
-
-            if (providersListWithHeader != null && providersListWithHeader.size() > 0) {
-                ProviderAdapter providerAdapter = new ProviderAdapter(
-                        getActivity(), providersListWithHeader, ChooseProviderFragment.this,
-                        chooseProviderFragment);
-                providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                providersRecyclerView.setAdapter(providerAdapter);
-            }
-        }
+    private void getResourcesInformation() {
+        TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
+        WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback);
     }
 
-    private List<Object> getProvidersListWithHeader() {
-        List<Object> providersListWithHeader = new ArrayList<>();
-        if (providersModel != null && providersModel.size() > 0) {
+    private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Gson gson = new Gson();
+            AppointmentsResultModel appointmentsResultModel = gson.fromJson(workflowDTO.toString(),
+                    AppointmentsResultModel.class);
+
+            if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
+                    && appointmentsResultModel.getPayload().getResourcesToSchedule() != null
+                    && appointmentsResultModel.getPayload().getResourcesToSchedule().size() > 0) {
+
+                resources = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getResources();
+                List<Object> resourcesListWithHeader = getResourcesListWithHeader();
+
+                if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
+                    ProviderAdapter providerAdapter = new ProviderAdapter(
+                            getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
+                            chooseProviderFragment);
+                    providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    providersRecyclerView.setAdapter(providerAdapter);
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(getActivity());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private List<Object> getResourcesListWithHeader() {
+        List<Object> resourcesListWithHeader = new ArrayList<>();
+        if (resources != null && resources.size() > 0) {
             AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
             appointmentSectionHeaderModel.setAppointmentHeader(
                     appointmentsResultModel.getMetadata().getLabel().getChooseProviderAllHeader());
-            providersListWithHeader.add(appointmentSectionHeaderModel);
+            resourcesListWithHeader.add(appointmentSectionHeaderModel);
 
-            for (AppointmentProvidersDTO providersScheduleItem : providersModel) {
-                providersListWithHeader.add(providersScheduleItem);
+            for (AppointmentResourcesDTO resourcesScheduleItem : resources) {
+                resourcesListWithHeader.add(resourcesScheduleItem);
             }
         }
 
-        return providersListWithHeader;
+        return resourcesListWithHeader;
     }
 
-    private void loadVisitTypeScreen(AppointmentProvidersDTO model) {
-        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this.getContext(), model, this);
-        visitTypeDialog.show();
+    private void loadVisitTypeScreen(AppointmentResourcesDTO model) {
+//        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this.getContext(), model, this);
+//        visitTypeDialog.show();
     }
 
     @Override
     public void onProviderListItemClickListener(int position) {
-        AppointmentProvidersDTO model = providersModel.get(position - 1);
+        AppointmentResourcesDTO model = resources.get(position - 1);
         selectedProvider = model;
         loadVisitTypeScreen(selectedProvider);
     }
