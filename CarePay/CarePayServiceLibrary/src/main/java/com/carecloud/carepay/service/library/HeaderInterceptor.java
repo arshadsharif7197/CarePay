@@ -1,15 +1,11 @@
 package com.carecloud.carepay.service.library;
 
-import com.amazonaws.transform.MapEntry;
-
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
@@ -31,7 +27,9 @@ class HeaderInterceptor implements Interceptor {
         if (headers != null) {
             Request.Builder builder = request.newBuilder();
             for (Map.Entry<String, String> header : headers.entrySet()) {
-                builder.addHeader(header.getKey(), header.getValue());
+                if (header.getKey() != null && header.getValue() != null) {
+                    builder.addHeader(header.getKey(), header.getValue());
+                }
             }
             request = builder.build();
         }
