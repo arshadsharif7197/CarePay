@@ -182,7 +182,7 @@
 
     <dimen name="marginleftright">17dp</dimen>
     <dimen name="margintop">20dp</dimen>
-    <dimen name="consent_top">10dp</dimen>
+    <dimen name="consent_top">20dp</dimen>
     <dimen name="sig_pad">208dp</dimen>
     <dimen name="sig_txt">12sp</dimen>
     <dimen name="btn_hght">68dp</dimen>
