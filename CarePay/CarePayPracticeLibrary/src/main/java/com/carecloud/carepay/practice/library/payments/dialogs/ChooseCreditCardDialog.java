@@ -18,7 +18,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadCreditCardTypesDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -68,11 +68,11 @@ public class ChooseCreditCardDialog extends Dialog implements RadioGroup.OnCheck
                     = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
             if (patientCreditCards != null) {
-                List<PaymentCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
+                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = patientCreditCards.getPayload();
 
                 for (int i = 0; i < creditCardList.size(); i++) {
-                    PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i);
-                    String creditCardName = getCreditCardName(creditCardItem.getCardType());
+                    PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i).getPayload();
+                    String creditCardName = creditCardItem.getCardType();
                     chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
                             StringUtil.getEncodedCardNumber(creditCardName,
                                     creditCardItem.getCardNumber()), i), radioGroupLayoutParam);
@@ -100,22 +100,22 @@ public class ChooseCreditCardDialog extends Dialog implements RadioGroup.OnCheck
         });
     }
 
-    private String getCreditCardName(String cardType) {
-        if (paymentsModel != null) {
-            List<PaymentsSettingsPayloadCreditCardTypesDTO> creditCardType
-                    = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getCreditCardType();
-
-            if (creditCardType != null && creditCardType.size() > 0) {
-                for (int i = 0; i < creditCardType.size(); i++) {
-                    PaymentsSettingsPayloadCreditCardTypesDTO creditCardTypesDTO = creditCardType.get(i);
-                    if (creditCardTypesDTO.getType().equalsIgnoreCase(cardType)) {
-                        return creditCardTypesDTO.getLabel();
-                    }
-                }
-            }
-        }
-        return cardType;
-    }
+//    private String getCreditCardName(String cardType) {
+//        if (paymentsModel != null) {
+//            List<PaymentsSettingsPayloadCreditCardTypesDTO> creditCardType
+//                    = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getCreditCardType();
+//
+//            if (creditCardType != null && creditCardType.size() > 0) {
+//                for (int i = 0; i < creditCardType.size(); i++) {
+//                    PaymentsSettingsPayloadCreditCardTypesDTO creditCardTypesDTO = creditCardType.get(i);
+//                    if (creditCardTypesDTO.getType().equalsIgnoreCase(cardType)) {
+//                        return creditCardTypesDTO.getLabel();
+//                    }
+//                }
+//            }
+//        }
+//        return cardType;
+//    }
 
     private RadioButton getCreditCardRadioButton(String cardInfo, int index) {
         RadioButton radioButtonView = new RadioButton(context);

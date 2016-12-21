@@ -18,7 +18,7 @@ public class PaymentsPatientsCreditCardsPayloadDTO {
     private PaymentPatientPlansPayloadDTO metadata;
     @SerializedName("payload")
     @Expose
-    private List<PaymentCreditCardsPayloadDTO> payload = new ArrayList<PaymentCreditCardsPayloadDTO>();
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> payload = new ArrayList<>();
 
     /**
      *
@@ -43,7 +43,7 @@ public class PaymentsPatientsCreditCardsPayloadDTO {
      * @return
      * The payload
      */
-    public List<PaymentCreditCardsPayloadDTO> getPayload() {
+    public List<PaymentsPatientsCreditCardsPayloadListDTO> getPayload() {
         return payload;
     }
 
@@ -52,7 +52,7 @@ public class PaymentsPatientsCreditCardsPayloadDTO {
      * @param payload
      * The payload
      */
-    public void setPayload(List<PaymentCreditCardsPayloadDTO> payload) {
+    public void setPayload(List<PaymentsPatientsCreditCardsPayloadListDTO> payload) {
         this.payload = payload;
     }
 }

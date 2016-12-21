@@ -3,10 +3,12 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -22,6 +25,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLab
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import org.json.JSONObject;
@@ -46,7 +50,7 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
     private ImageView dialogCloseHeader;
     private ImageView paymentLocationImageView;
     private ImageView paymentDialImageView;
-    private JSONObject paymentModel;
+    private PaymentsModel paymentModel;
     private View rootLayout;
 
     /**
@@ -54,7 +58,7 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
      * @param context context
      * @param paymentModel payment model
      */
-    public BaseAmountInfoDialog(Context context, JSONObject paymentModel) {
+    public BaseAmountInfoDialog(Context context, PaymentsModel paymentModel) {
         super(context);
         this.context = context;
         this.paymentModel = paymentModel;
@@ -91,7 +95,6 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
         addressAmountLevel = (CarePayTextView) findViewById(R.id.addressAmountLevel);
         paymentLocationImageView = (ImageView) findViewById(R.id.paymentLocationImageView);
         paymentDialImageView = (ImageView) findViewById(R.id.paymentDailImageView);
-
         if (TextUtils.isEmpty("")) {
             Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_call);
             ((ImageView) findViewById(R.id.paymentDailImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
@@ -101,8 +104,14 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
             Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_directions);
             ((ImageView) findViewById(R.id.paymentLocationImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
         }
-
         rootLayout = findViewById(R.id.rootDialogPaymentLayout);
+        Resources res = context.getResources();
+        Drawable drawable = res.getDrawable(R.drawable.circular);
+        final ProgressBar mProgress = (ProgressBar) findViewById(R.id.circularProgressbar);
+        //mProgress.setProgress(40);   // Main Progress
+        //mProgress.setSecondaryProgress(100); // Secondary Progress
+        //mProgress.setMax(100); // Maximum Progress
+        //mProgress.setProgressDrawable(drawable);
     }
 
     private void onSettingStyle() {

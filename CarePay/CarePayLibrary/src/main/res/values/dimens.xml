@@ -88,6 +88,7 @@
     <dimen name="demographics_docs_text_right_margin">14dp</dimen>
     <dimen name="demographics_docs_header_top_margin">17dp</dimen>
     <dimen name="demographics_docs_section_margin_top">36dp</dimen>
+    <dimen name="demographics_docs_section_patient_margin_top">12dp</dimen>
     <dimen name="demographics_docs_image_button_container_height">60dp</dimen>
     <dimen name="demographics_docs_image_button_container_margin_top">30dp</dimen>
     <dimen name="demographics_docs_header_title_text_size" format="float" type="dimen">21.0sp

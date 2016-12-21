@@ -86,14 +86,16 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                 getPaymentInformation();
                 PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
-                Bundle arguments = getArguments();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
-                        arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
+                Gson gson = new Gson();
+                String paymentsDTOString = gson.toJson(paymentsModel);
+                bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        paymentsDTOString);
+                bundle.putString(CarePayConstants.INTAKE_BUNDLE,
+                        paymentsDTOString);
                 fragment.setArguments(bundle);
 
                 ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-
             }
         });
 

@@ -338,26 +338,28 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                     }
                 }
             }
+
+            String insProvider = insuranceDTO.getInsuranceProvider();
+            if (!StringUtil.isNullOrEmpty(insProvider)) {
+                providerTextView.setText(insuranceDTO.getInsuranceProvider());
+            }
+            String insPlan = insuranceDTO.getInsurancePlan();
+            if (!StringUtil.isNullOrEmpty(insPlan)) {
+                planTextView.setText(insPlan);
+            }
+            String insNum = insuranceDTO.getInsuranceMemberId();
+            if (!StringUtil.isNullOrEmpty(insNum)) {
+                insuranceCardNumEditText.setText(insNum);
+                insuranceCardNumEditText.requestFocus(); // required for CAPS hint
+                view.requestFocus();
+            }
+            String insCardType = insuranceDTO.getInsuranceType();
+            if (!StringUtil.isNullOrEmpty(insCardType)) {
+                cardTypeTextView.setText(insCardType);
+            }
         }
 
-        String insProvider = insuranceDTO.getInsuranceProvider();
-        if (!StringUtil.isNullOrEmpty(insProvider)) {
-            providerTextView.setText(insuranceDTO.getInsuranceProvider());
-        }
-        String insPlan = insuranceDTO.getInsurancePlan();
-        if (!StringUtil.isNullOrEmpty(insPlan)) {
-            planTextView.setText(insPlan);
-        }
-        String insNum = insuranceDTO.getInsuranceMemberId();
-        if (!StringUtil.isNullOrEmpty(insNum)) {
-            insuranceCardNumEditText.setText(insNum);
-            insuranceCardNumEditText.requestFocus(); // required for CAPS hint
-            view.requestFocus();
-        }
-        String insCardType = insuranceDTO.getInsuranceType();
-        if (!StringUtil.isNullOrEmpty(insCardType)) {
-            cardTypeTextView.setText(insCardType);
-        }
+
     }
 
     private void setEditTexts(final View view) {

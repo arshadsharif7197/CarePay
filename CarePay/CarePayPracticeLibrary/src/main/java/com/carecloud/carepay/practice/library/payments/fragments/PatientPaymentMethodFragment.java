@@ -209,7 +209,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     PaymentsModel paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
 
                     Bundle args = new Bundle();
-                    args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsModel);
+                    args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentInfo);
                     fragment.setArguments(args);
 
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
@@ -247,7 +247,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
 
                     Bundle args = new Bundle();
                     args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-                    args.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsModel);
+                    args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentInfo);
                     fragment.setArguments(args);
 
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);

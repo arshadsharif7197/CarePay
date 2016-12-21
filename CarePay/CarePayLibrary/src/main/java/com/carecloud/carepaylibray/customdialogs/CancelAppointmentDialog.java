@@ -20,6 +20,10 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
 public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
+    public interface CancelAppointmentCallback{
+       void onCancelAppointment(AppointmentDTO appointmentDTO);
+    }
+    
     private LinearLayout rootLayout;
     private LinearLayout mainLayout;
     private Context context;
@@ -29,6 +33,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
     private boolean isCanceled = false;
     private boolean isMissed = false;
+    private CancelAppointmentCallback cancelAppointmentCallback;
 
     /**
      * Contractor for   dialog.
@@ -53,7 +58,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
      * @param appointmentInfo Appointment info data
      */
     public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                   boolean isCanceled, AppointmentsResultModel appointmentInfo) {
+                                   boolean isCanceled, AppointmentsResultModel appointmentInfo, CancelAppointmentCallback cancelAppointmentCallback) {
 
         super(context, appointmentDTO);
         this.isMissed = false;
@@ -61,6 +66,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         this.isCanceled = isCanceled;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
+        this.cancelAppointmentCallback = cancelAppointmentCallback;
     }
 
     @Override
@@ -111,7 +117,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
             appointmentStatusLabel.setText(appointmentLabels.getAppointmentsMissedHeading());
             appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.lightningyellow));
         } else {
-            appointmentStatusLabel.setVisibility(View.GONE);
+            appointmentStatusLabel.setVisibility(View.VISIBLE);
             appointmentStatusLabel.setText(appointmentLabels.getAppointmentsCanceledHeading());
             appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
@@ -127,8 +133,12 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.cancelAppointmentButton) {
-            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo).show();
+            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo, cancelAppointmentCallback).show();
             cancel();
+        }
+
+        if(viewId == R.id.dialogAppointHeaderTextView && isCanceled){
+            cancelAppointmentCallback.onCancelAppointment(appointmentDTO);
         }
     }
 }

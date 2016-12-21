@@ -26,22 +26,23 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
-import com.carecloud.carepaylibray.keyboard.Constants;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wallet.Cart;
-import com.google.android.gms.wallet.FullWalletRequest;
 import com.google.android.gms.wallet.IsReadyToPayRequest;
 import com.google.android.gms.wallet.LineItem;
 import com.google.android.gms.wallet.MaskedWalletRequest;
@@ -49,12 +50,12 @@ import com.google.android.gms.wallet.PaymentMethodTokenizationParameters;
 import com.google.android.gms.wallet.PaymentMethodTokenizationType;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
-import com.google.gson.Gson;
 import com.google.android.gms.wallet.fragment.SupportWalletFragment;
 import com.google.android.gms.wallet.fragment.WalletFragmentInitParams;
 import com.google.android.gms.wallet.fragment.WalletFragmentMode;
 import com.google.android.gms.wallet.fragment.WalletFragmentOptions;
 import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -360,30 +361,47 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     break;
 
                 case CarePayConstants.TYPE_CREDIT_CARD:
-                    FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-                    ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
-                            .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
-                    if (fragment == null) {
-                        fragment = new ChooseCreditCardFragment();
-                    }
 
-                    Bundle args = new Bundle();
-                    args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-                    
-                    Gson gson = new Gson();
-                    String paymentsDTOString = gson.toJson(paymentsDTO);
-                    args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-                    fragment.setArguments(args);
-
-                    FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-                    fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-                    fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
-                    fragmentTransaction.commit();
+                    TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata()
+                            .getPaymentsLinks().getPaymentsCreditCards();
+                    WorkflowServiceHelper.getInstance().execute(transitionDTO, getCreditCardsCallback);
                     break;
 
                 default:
                     break;
             }
+        }
+    };
+
+    WorkflowServiceCallback getCreditCardsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+            ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
+                    .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
+            if (fragment == null) {
+                fragment = new ChooseCreditCardFragment();
+            }
+
+            Bundle args = new Bundle();
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
+            fragment.setArguments(args);
+
+            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+            fragmentTransaction.addToBackStack(ChooseCreditCardFragment.class.getSimpleName());
+            fragmentTransaction.commit();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(getActivity());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
+import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
@@ -28,6 +29,13 @@ public class PracticeNavigationHelper {
     private static PracticeNavigationHelper instance;
     private static Context context;
 
+    /**
+     * Getting same state form 2 endpoints hence added this flag to differentiate app flow,
+     * whether call is from Check-in or Appointments on Home screen.
+     * Remove this flag dependency once two separate state received.
+     */
+    private static boolean isPatientModeAppointments;
+
     private PracticeNavigationHelper() {
 
     }
@@ -46,6 +54,10 @@ public class PracticeNavigationHelper {
 
     public static PracticeNavigationHelper getInstance() {
         return instance;
+    }
+
+    public void setIsPatientModeAppointments(boolean isPatientModeAppointments) {
+        PracticeNavigationHelper.isPatientModeAppointments = isPatientModeAppointments;
     }
 
     /**
@@ -77,7 +89,8 @@ public class PracticeNavigationHelper {
                 break;
             }
             case PracticeNavigationStateConstants.PRACTICE_APPOINTMENTS: {
-                intent = new Intent(context, AppointmentsActivity.class);
+                intent = new Intent(context, isPatientModeAppointments
+                        ? ScheduleAppointmentActivity.class : AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
