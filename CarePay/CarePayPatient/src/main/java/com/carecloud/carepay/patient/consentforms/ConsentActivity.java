@@ -139,6 +139,8 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
         } else {
             intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
+            intent.putExtra("Subtitle",consentFormLabelsDTO.getConsentReadCarefullyWarning());
+
         }
 
         startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
