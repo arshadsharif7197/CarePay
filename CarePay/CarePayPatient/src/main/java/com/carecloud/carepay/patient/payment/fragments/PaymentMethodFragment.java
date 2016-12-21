@@ -153,6 +153,26 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disconnectGoogleAPI() ;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        disconnectGoogleAPI() ;
+    }
+
+    private void disconnectGoogleAPI()
+    {
+
+        _GoogleApiClient.stopAutoManage(getActivity());
+        _GoogleApiClient.disconnect();
+
+    }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -418,7 +438,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             }
         }
     }
-
 
     //    Android Pay
 
