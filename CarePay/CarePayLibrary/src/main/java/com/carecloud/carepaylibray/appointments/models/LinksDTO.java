@@ -22,6 +22,9 @@ public class LinksDTO {
     @SerializedName("patient_balances")
     @Expose
     private LinkDTO patientBalances;
+    @SerializedName("resources_to_schedule")
+    @Expose
+    private TransitionDTO resourcesToSchedule;
     @SerializedName("providers_schedule")
     @Expose
     private LinkDTO providersSchedule;
@@ -116,4 +119,19 @@ public class LinksDTO {
         this.providersSchedule = providersSchedule;
     }
 
+    /**
+     *
+     * @return resourcesToSchedule
+     */
+    public TransitionDTO getResourcesToSchedule() {
+        return resourcesToSchedule;
+    }
+
+    /**
+     *
+     * @param resourcesToSchedule resourcesToSchedule
+     */
+    public void setResourcesToSchedule(TransitionDTO resourcesToSchedule) {
+        this.resourcesToSchedule = resourcesToSchedule;
+    }
 }
