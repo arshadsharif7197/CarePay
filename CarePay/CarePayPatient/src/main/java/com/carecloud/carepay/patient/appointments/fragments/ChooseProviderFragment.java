@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
@@ -40,6 +41,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         VisitTypeDialog.OnDialogListItemClickListener {
 
     private RecyclerView providersRecyclerView;
+    private ProgressBar appointmentProgressBar;
     private AppointmentsResultModel appointmentsResultModel;
 
     private ChooseProviderFragment chooseProviderFragment;
@@ -109,6 +111,8 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         });
 
         providersRecyclerView = ((RecyclerView) chooseProviderView.findViewById(R.id.providers_recycler_view));
+        appointmentProgressBar = (ProgressBar) chooseProviderView.findViewById(R.id.providers_progress_bar);
+        appointmentProgressBar.setVisibility(View.GONE);
 
         //Fetch provider data
         getResourcesInformation();
@@ -124,6 +128,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -147,11 +152,14 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
                     providersRecyclerView.setAdapter(providerAdapter);
                 }
             }
+
+            appointmentProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             SystemUtil.showFaultDialog(getActivity());
+            appointmentProgressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
