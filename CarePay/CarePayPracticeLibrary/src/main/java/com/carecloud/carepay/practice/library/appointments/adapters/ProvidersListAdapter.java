@@ -19,6 +19,7 @@ import java.util.List;
 public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdapter.ProvidersListViewHolder> {
 
     private Context context;
+    private OnProviderListItemClickListener listener;
     private List<AppointmentResourcesDTO> providersArrayList;
     private AppointmentsResultModel appointmentsResultModel;
 
@@ -26,11 +27,14 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
      * This will create a list of appointments
      * @param context context
      * @param providersArrayList providersArrayList
+     * @param listener listener
      */
     public ProvidersListAdapter(Context context, List<AppointmentResourcesDTO> providersArrayList,
-                                AppointmentsResultModel appointmentInfo) {
+                                AppointmentsResultModel appointmentInfo,
+                                OnProviderListItemClickListener listener) {
 
         this.context = context;
+        this.listener = listener;
         this.providersArrayList = providersArrayList;
         this.appointmentsResultModel = appointmentInfo;
     }
@@ -59,7 +63,7 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
         holder.scheduleAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                listener.onProviderListItemClickListener(holder.getAdapterPosition());
             }
         });
     }
@@ -89,5 +93,9 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
 
             scheduleAppointment = (Button) itemView.findViewById(R.id.provider_schedule_appointment);
         }
+    }
+
+    public interface OnProviderListItemClickListener {
+        void onProviderListItemClickListener(int position);
     }
 }
