@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
+import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -227,6 +228,24 @@ public class AppointmentsActivity extends BasePatientActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //SystemUtil.showFaultDialog(InTakeWebViewActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -236,10 +255,14 @@ public class AppointmentsActivity extends BasePatientActivity implements
         if (id == R.id.nav_appointments) {
             Log.v(LOG_TAG, "Appointments");
         } else if (id == R.id.nav_payments) {
-            Intent intent = new Intent(this, PaymentActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            AppointmentsActivity.model = null; // appointment clicked item is cleared.
+
+            Map<String, String> queryString = new HashMap<>();
+            queryString.put("practice_id",  appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId() );
+            queryString.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
+            queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
+            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getPatientBalances(), paymentsCallBack, queryString);
+
+
         } else if (id == R.id.nav_settings) {
             Intent demographicActivityIntent = new Intent(AppointmentsActivity.this,
                     DemographicsActivity.class);
