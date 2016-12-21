@@ -158,11 +158,12 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     @Override
     public void onTextChanged(CharSequence str, int start, int before, int count) {
+        String amountEditText = enterPartialAmountEditText.getText().toString();
         try {
             if (amountChangeFlag) {
                 // flag to avoid the onTextChanged listener call after setText manipulated number
                 amountChangeFlag = false;
-                String amountEditText = enterPartialAmountEditText.getText().toString();
+
                 if(amountEditText.equalsIgnoreCase(".") || Double.parseDouble(amountEditText)<1){
                     amountEditText = "0";
                     enterPartialAmountEditText.setText(amountEditText);
@@ -192,14 +193,14 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                         enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length());
                     }
                 }
-                // Calculating the remaining amount after entering partial payment amount
-                onPendingAmountValidation(amountEditText);
             } else {
                 amountChangeFlag = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // Calculating the remaining amount after entering partial payment amount
+        onPendingAmountValidation(amountEditText);
     }
 
     private void onPendingAmountValidation(String amountEditText) {

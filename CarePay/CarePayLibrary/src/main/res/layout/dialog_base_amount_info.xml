@@ -118,8 +118,8 @@
                     <ProgressBar
                         android:id="@+id/circularProgressbar"
                         style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="@dimen/dimen_220dp"
-                        android:layout_height="@dimen/dimen_220dp"
+                        android:layout_width="@dimen/apt_dl_image_ht_wdh"
+                        android:layout_height="@dimen/apt_dl_image_ht_wdh"
                         android:indeterminate="false"
                         android:layout_centerInParent="true"
                         android:progressDrawable="@drawable/circular"
