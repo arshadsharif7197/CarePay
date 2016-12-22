@@ -11,7 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 
 public class ProgressDialogUtil {
 
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog progressDialog;
     private static ProgressDialogUtil mProgressDialogUtil;
     private static Context mContext;
 
@@ -33,22 +33,22 @@ public class ProgressDialogUtil {
      * Show.
      */
     public void show(){
-        mProgressDialog = new ProgressDialog(mContext);
-        mProgressDialog.setMessage("Loading");
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage("Loading");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
     }
 
     /**
      * Dismiss.
      */
     public void dismiss(){
-        if(mProgressDialog!=null && mProgressDialog.isShowing()){
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
+        if(progressDialog!=null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+            progressDialog = null;
         }
     }
 }

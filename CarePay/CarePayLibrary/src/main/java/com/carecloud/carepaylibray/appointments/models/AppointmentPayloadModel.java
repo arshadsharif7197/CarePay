@@ -36,7 +36,7 @@ public class AppointmentPayloadModel implements Serializable {
     private List<CancellationReasonDTO> cancellationReasons = new ArrayList<CancellationReasonDTO>();
     @SerializedName("appointment_availability")
     @Expose
-    private AppointmentAvailabilityDataDTO appointment_availability;
+    private AppointmentAvailabilityDataDTO appointmentAvailability;
     @SerializedName("resources_to_schedule")
     @Expose
     private List<ResourcesToScheduleDTO> resourcesToSchedule = null;
@@ -140,21 +140,21 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     * Gets appointment availability.
+     * Gets appointmentAvailability.
      *
-     * @return the appointment availability
+     * @return the appointmentAvailability
      */
-    public AppointmentAvailabilityDataDTO getAppointment_availability() {
-        return appointment_availability;
+    public AppointmentAvailabilityDataDTO getAppointmentAvailability() {
+        return appointmentAvailability;
     }
 
     /**
-     * Sets appointment availability.
+     * Sets appointmentAvailability.
      *
-     * @param appointment_availability the appointment availability
+     * @param appointmentAvailability the appointmentAvailability
      */
-    public void setAppointment_availability(AppointmentAvailabilityDataDTO appointment_availability) {
-        this.appointment_availability = appointment_availability;
+    public void setAppointmentAvailability(AppointmentAvailabilityDataDTO appointmentAvailability) {
+        this.appointmentAvailability = appointmentAvailability;
     }
 
     /**

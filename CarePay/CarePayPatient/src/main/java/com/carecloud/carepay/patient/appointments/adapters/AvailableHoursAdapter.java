@@ -73,13 +73,13 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final Object object = items.get(position);
+        final Object appointmentSlotItem = items.get(position);
         if (viewHolder.getItemViewType() == sectionHeader) {
             ViewHolderSectionHeader vhSectionHeader = (ViewHolderSectionHeader) viewHolder;
-            vhSectionHeader.getTextView().setText(object.toString());
+            vhSectionHeader.getTextView().setText(appointmentSlotItem.toString());
         } else {
             ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
-            final AppointmentsSlotsDTO appointmentsSlotsDTO = ((AppointmentsSlotsDTO) object);
+            final AppointmentsSlotsDTO appointmentsSlotsDTO = ((AppointmentsSlotsDTO) appointmentSlotItem);
 
             String upcomingStartTime = appointmentsSlotsDTO.getStartTime();
             DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
@@ -92,8 +92,8 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onClick(View view) {
 
                     // Restricted the appointment list item click if it is appointment header type.
-                    if (object.getClass() == AppointmentsSlotsDTO.class) {
-                        selectSlotCallback.onSelectAppointmentTimeSlot((AppointmentsSlotsDTO)object);
+                    if (appointmentSlotItem.getClass() == AppointmentsSlotsDTO.class) {
+                        selectSlotCallback.onSelectAppointmentTimeSlot((AppointmentsSlotsDTO)appointmentSlotItem);
                     }
                 }
             });

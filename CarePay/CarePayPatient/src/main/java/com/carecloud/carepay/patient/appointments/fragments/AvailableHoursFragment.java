@@ -249,7 +249,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         ArrayList<Object> timeSlotsListWithHeaders = new ArrayList<>();
 
         if(availabilityDTO!=null){
-            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = availabilityDTO.getPayload().getAppointment_availability().getPayload().get(0).getSlots();
+            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots();
             if(appointmentsSlotsDTOList!=null && appointmentsSlotsDTOList.size()>0){
                 // To sort appointment time slots list based on time
                 Collections.sort(appointmentsSlotsDTOList, new Comparator<AppointmentsSlotsDTO>() {
@@ -317,18 +317,18 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         // Current date
         String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
-        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
+        final Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // day after tomorrow date
         String dayAfterTomorrowDate = DateUtil.getInstance().setToDayAfterTomorrow().getDateAsMMddyyyy();
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
-        Date dayAfterTomorrowConvertedDate = DateUtil.getInstance().setDateRaw(dayAfterTomorrowDate).getDate();
+        final Date dayAfterTomorrowConvertedDate = DateUtil.getInstance().setDateRaw(dayAfterTomorrowDate).getDate();
 
         // Appointment time slot date
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         String appointmentDate = DateUtil.getInstance().setDateRaw(timeSlotRawDate).getDateAsMMddyyyy();
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
-        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
+        final Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         String headerText;
         if (convertedAppointmentDate.after(dayAfterTomorrowConvertedDate) ||
