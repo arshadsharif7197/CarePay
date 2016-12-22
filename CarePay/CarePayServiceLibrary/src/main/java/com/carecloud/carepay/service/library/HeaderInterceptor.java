@@ -13,7 +13,7 @@ import okhttp3.Response;
  *
  */
 
-class HeaderInterceptor implements Interceptor {
+public class HeaderInterceptor implements Interceptor {
 
     private Map<String, String> headers = null;
 

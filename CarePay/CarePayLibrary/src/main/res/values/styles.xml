@@ -788,4 +788,16 @@
 
     <style name="AppBaseTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="WalletFragmentDetailsTextAppearance">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/apt_popup_button_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">proximanova_regular</item>
+    </style>
+
+    <style name="WalletFragmentDetailsHeaderTextAppearance"
+        parent="WalletFragmentDetailsTextAppearance">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">proximanova_regular</item>
+    </style>
 </resources>
