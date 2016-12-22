@@ -101,10 +101,10 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     // No. of times to retry loadFullWallet on receiving a ConnectionResult.INTERNAL_ERROR
     private static final int MAX_FULL_WALLET_RETRIES = 1;
     private static final String KEY_RETRY_FULL_WALLET_COUNTER = "KEY_RETRY_FULL_WALLET_COUNTER";
-    protected GoogleApiClient mGoogleApiClient;
+    protected GoogleApiClient googleApiClient;
     protected ProgressDialog progressDialog;
     // whether the user tried to do an action that requires a full wallet (i.e.: loadFullWallet)
-    // before a full wallet was acquired (i.e.: still waiting for mGoogleApiClient to connect)
+    // before a full wallet was acquired (i.e.: still waiting for googleApiClient to connect)
     protected boolean handleFullWalletWhenReady = false;
     protected int itemId;
     // Cached connection result for resolving connection failures on user action.
@@ -113,7 +113,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     // handler for processing retry attempts
     private RetryHandler retryHandler;
     //    private ItemInfo mItemInfo;
-    private Button mConfirmButton;
+    private Button confirmButton;
     private MaskedWallet maskedWallet;
     private int retryLoadFullWalletCount = 0;
     private Intent activityLaunchIntent;
@@ -159,7 +159,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         String accountName = getString(R.string.account_name);
 
         // Set up an API client;
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .setAccountName(accountName)
@@ -177,7 +177,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         super.onStart();
 
         // Connect to Google Play Services
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
     }
 
     @Override
@@ -187,7 +187,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     }
 
     private void disconnectGoogleApiClient() {
-        mGoogleApiClient.disconnect();
+        googleApiClient.disconnect();
     }
 
     @Override
@@ -206,8 +206,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_full_wallet_confirmation_button, container, false);
         //mItemInfo = PaymentConstants.ITEMS_FOR_SALE[itemId];
 
-        mConfirmButton = (Button) view.findViewById(R.id.button_place_order);
-        mConfirmButton.setOnClickListener(new OnClickListener() {
+        confirmButton = (Button) view.findViewById(R.id.button_place_order);
+        confirmButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View targetView) {
                 confirmPurchase();
@@ -282,7 +282,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                             @Override
                             public void onCancel(DialogInterface dialog) {
                                 // get a new connection result
-                                mGoogleApiClient.connect();
+                                googleApiClient.connect();
                             }
                         });
 
@@ -325,7 +325,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         switch (requestCode) {
             case REQUEST_CODE_RESOLVE_ERR:
                 if (resultCode == Activity.RESULT_OK) {
-                    mGoogleApiClient.connect();
+                    googleApiClient.connect();
                 } else {
                     handleUnrecoverableGoogleWalletError(errorCode);
                 }
@@ -472,7 +472,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         FullWalletRequest fullWalletRequest = createFullWalletRequest(
                 maskedWallet.getGoogleTransactionId());
 
-        Wallet.Payments.loadFullWallet(mGoogleApiClient,
+        Wallet.Payments.loadFullWallet(googleApiClient,
                 fullWalletRequest,
                 REQUEST_CODE_RESOLVE_LOAD_FULL_WALLET);
     }
@@ -797,7 +797,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 case MESSAGE_RETRY_CONNECTION:
                     FullWalletConfirmationButtonFragment fragment = mWeakReference.get();
                     if (fragment != null) {
-                        fragment.mGoogleApiClient.connect();
+                        fragment.googleApiClient.connect();
                     }
                     break;
                 default:
