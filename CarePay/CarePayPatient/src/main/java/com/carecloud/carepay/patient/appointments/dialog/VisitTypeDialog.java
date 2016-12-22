@@ -12,10 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProvidersDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -25,9 +22,6 @@ import java.util.List;
 
 public class VisitTypeDialog extends Dialog {
 
-    // dummy data for now till it get it from JSON file
-    String[] items = {"Follow-up", "Annual Physical", "New Patient", "Existing Patient",
-            "Back Pain", "Asthma", "Chest Pain"};
     List<VisitTypeDTO> visitTypesModel;
     
     /**
@@ -36,17 +30,17 @@ public class VisitTypeDialog extends Dialog {
      * @param model appointment item
      * @param listener Onclick listener
      */
-    public VisitTypeDialog(Context context, final AppointmentProvidersDTO model, final OnDialogListItemClickListener listener) {
+    public VisitTypeDialog(Context context, final AppointmentResourcesDTO model, final OnDialogListItemClickListener listener, AppointmentsResultModel appointmentsResultModel) {
         super(context);
 
         // This is the layout XML file that describes your Dialog layout
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_visit_type);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        TextView titleView = (TextView) findViewById(R.id.visit_type_header_title);
+        titleView.setText(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
 
-        //temp solution, no visitTypes asociated to provider
-        AppointmentsResultModel appointmentsResultModel = ((ChooseProviderFragment)listener).getAppointmentsResultModel();
-        visitTypesModel = searchVisitTypes(model, appointmentsResultModel.getPayload().getResources());
+        visitTypesModel = model.getResource().getVisitReasons();
 
         // Load and display list
         ListView visitTypeList = (ListView) findViewById(R.id.visitTypeList);
@@ -122,21 +116,5 @@ public class VisitTypeDialog extends Dialog {
         }
     }
 
-    /**
-     * tmporal search of visit types sice not asociated to provider in json
-     * @param provider the provider
-     * @param resources the resources to search visit types by provider
-     * @return the visitTypes
-     */
-    private List<VisitTypeDTO> searchVisitTypes(AppointmentProvidersDTO provider, List<AppointmentResourcesDTO> resources){
-        List<VisitTypeDTO> result = new ArrayList<>();
-        for (AppointmentResourcesDTO resource: resources){
-            if(provider.getId().intValue() == resource.getResource().getProvider().getId().intValue()){
-                result = resource.getResource().getVisitReasons();
-                break;
-            }
-        }
-        return result;
-    }
 
 }
