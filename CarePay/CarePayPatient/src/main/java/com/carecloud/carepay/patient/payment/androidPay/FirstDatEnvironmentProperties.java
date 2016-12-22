@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.androidPay;
+package com.carecloud.carepay.patient.payment.androidpay;
 
 /**
  * Created by kkannan on 12/17/16.

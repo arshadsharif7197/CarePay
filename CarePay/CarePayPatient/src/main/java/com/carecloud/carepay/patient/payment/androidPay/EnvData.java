@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.androidPay;
+package com.carecloud.carepay.patient.payment.androidpay;
 
 import java.util.HashMap;
 import java.util.Map;

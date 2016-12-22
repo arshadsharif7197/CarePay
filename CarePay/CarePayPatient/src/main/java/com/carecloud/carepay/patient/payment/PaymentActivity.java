@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.payment.androidPay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;

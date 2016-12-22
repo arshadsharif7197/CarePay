@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -27,9 +26,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
-import com.carecloud.carepay.patient.payment.ResponsibilityFragment;
-import com.carecloud.carepay.patient.payment.androidPay.ConfirmationActivity;
-import com.carecloud.carepay.patient.payment.androidPay.EnvData;
+import com.carecloud.carepay.patient.payment.androidpay.EnvData;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -50,7 +47,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wallet.Cart;
 import com.google.android.gms.wallet.IsReadyToPayRequest;
 import com.google.android.gms.wallet.LineItem;
-import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.MaskedWalletRequest;
 import com.google.android.gms.wallet.PaymentMethodTokenizationParameters;
 import com.google.android.gms.wallet.PaymentMethodTokenizationType;

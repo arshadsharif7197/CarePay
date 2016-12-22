@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.androidPay;
+package com.carecloud.carepay.patient.payment.androidpay;
 
 /**
  * Created by kkannan on 12/17/16.
@@ -109,7 +109,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     protected int itemId;
     // Cached connection result for resolving connection failures on user action.
     protected ConnectionResult connectionResult;
-    private int mRetryCounter = 0;
+    private int retryCounter = 0;
     // handler for processing retry attempts
     private RetryHandler retryHandler;
     //    private ItemInfo mItemInfo;
@@ -144,7 +144,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mRetryCounter = savedInstanceState.getInt(KEY_RETRY_COUNTER);
+            retryCounter = savedInstanceState.getInt(KEY_RETRY_COUNTER);
             retryLoadFullWalletCount = savedInstanceState.getInt(KEY_RETRY_FULL_WALLET_COUNTER);
             handleFullWalletWhenReady =
                     savedInstanceState.getBoolean(KEY_HANDLE_FULL_WALLET_WHEN_READY);
@@ -193,7 +193,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_RETRY_COUNTER, mRetryCounter);
+        outState.putInt(KEY_RETRY_COUNTER, retryCounter);
         outState.putBoolean(KEY_HANDLE_FULL_WALLET_WHEN_READY, handleFullWalletWhenReady);
         outState.putInt(KEY_RETRY_FULL_WALLET_COUNTER, retryLoadFullWalletCount);
     }
@@ -369,13 +369,13 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     }
 
     private void reconnect() {
-        if (mRetryCounter < MAX_RETRIES) {
+        if (retryCounter < MAX_RETRIES) {
             progressDialog.show();
             Message message = retryHandler.obtainMessage(MESSAGE_RETRY_CONNECTION);
             // back off exponentially
-            long delay = (long) (INITIAL_RETRY_DELAY_MILLISECONDS * Math.pow(2, mRetryCounter));
+            long delay = (long) (INITIAL_RETRY_DELAY_MILLISECONDS * Math.pow(2, retryCounter));
             retryHandler.sendMessageDelayed(message, delay);
-            mRetryCounter++;
+            retryCounter++;
         } else {
             handleError(WalletConstants.ERROR_CODE_SERVICE_UNAVAILABLE);
         }

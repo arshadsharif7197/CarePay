@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.androidPay;
+package com.carecloud.carepay.patient.payment.androidpay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,13 +26,13 @@ import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
  */
 public class ConfirmationActivity extends FragmentActivity {
 
-    private SupportWalletFragment mWalletFragment;
-    private MaskedWallet mMaskedWallet;
+    private SupportWalletFragment walletFragment;
+    private MaskedWallet maskedWallet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMaskedWallet = getIntent().getParcelableExtra(PaymentConstants.EXTRA_MASKED_WALLET);
+        maskedWallet = getIntent().getParcelableExtra(PaymentConstants.EXTRA_MASKED_WALLET);
 
         setContentView(R.layout.activity_confirmation);
 
@@ -61,19 +61,19 @@ public class ConfirmationActivity extends FragmentActivity {
                 .setTheme(WalletConstants.THEME_LIGHT)
                 .setMode(WalletFragmentMode.SELECTION_DETAILS)
                 .build();
-        mWalletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
+        walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
 
         // Now initialize the Wallet Fragment
         String accountName = getString(R.string.account_name);
         WalletFragmentInitParams.Builder startParamsBuilder = WalletFragmentInitParams.newBuilder()
-                .setMaskedWallet(mMaskedWallet)
+                .setMaskedWallet(maskedWallet)
                 .setMaskedWalletRequestCode(PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET)
                 .setAccountName(accountName);
-        mWalletFragment.initialize(startParamsBuilder.build());
+        walletFragment.initialize(startParamsBuilder.build());
 
         // add Wallet fragment to the UI
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.dynamic_wallet_masked_wallet_fragment, mWalletFragment)
+                .replace(R.id.dynamic_wallet_masked_wallet_fragment, walletFragment)
                 .commit();
     }
 
@@ -94,10 +94,10 @@ public class ConfirmationActivity extends FragmentActivity {
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
                 if (resultCode == Activity.RESULT_OK &&
                         data.hasExtra(WalletConstants.EXTRA_MASKED_WALLET)) {
-                    mMaskedWallet = data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
+                    maskedWallet = data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
                     FullWalletConfirmationButtonFragment resultTargetFragment =
                             (FullWalletConfirmationButtonFragment) getResultTargetFragment();
-                    resultTargetFragment.updateMaskedWallet(mMaskedWallet);
+                    resultTargetFragment.updateMaskedWallet(maskedWallet);
 
                 }
                 // you may also want to use the new masked wallet data here, say to recalculate
@@ -146,9 +146,9 @@ public class ConfirmationActivity extends FragmentActivity {
         return getSupportFragmentManager().findFragmentById(
                 R.id.full_wallet_confirmation_button_fragment);
     }
-    
-    public static Intent newIntent(Context ctx, MaskedWallet maskedWallet, String amount, String env) {
-        Intent intent = new Intent(ctx, ConfirmationActivity.class);
+
+    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env) {
+        Intent intent = new Intent(context, ConfirmationActivity.class);
         intent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET, maskedWallet);
         intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
         intent.putExtra(PaymentConstants.EXTRA_ENV, env);
