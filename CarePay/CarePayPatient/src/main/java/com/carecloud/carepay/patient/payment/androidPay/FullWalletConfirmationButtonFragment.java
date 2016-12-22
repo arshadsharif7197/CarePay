@@ -54,9 +54,6 @@ import com.google.android.gms.wallet.PaymentMethodToken;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
@@ -68,6 +65,9 @@ import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * This is a fragment that handles the creating and sending of a {@link FullWalletRequest} using
@@ -96,31 +96,30 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     private static final long INITIAL_RETRY_DELAY_MILLISECONDS = 3000;
     private static final int MESSAGE_RETRY_CONNECTION = 1010;
     private static final String KEY_RETRY_COUNTER = "KEY_RETRY_COUNTER";
-    private static final String KEY_HANDLE_FULL_WALLET_WHEN_READY =
-            "KEY_HANDLE_FULL_WALLET_WHEN_READY";
+    private static final String KEY_HANDLE_FULL_WALLET_WHEN_READY = "KEY_HANDLE_FULL_WALLET_WHEN_READY";
 
     // No. of times to retry loadFullWallet on receiving a ConnectionResult.INTERNAL_ERROR
     private static final int MAX_FULL_WALLET_RETRIES = 1;
     private static final String KEY_RETRY_FULL_WALLET_COUNTER = "KEY_RETRY_FULL_WALLET_COUNTER";
     protected GoogleApiClient mGoogleApiClient;
-    protected ProgressDialog mProgressDialog;
+    protected ProgressDialog progressDialog;
     // whether the user tried to do an action that requires a full wallet (i.e.: loadFullWallet)
     // before a full wallet was acquired (i.e.: still waiting for mGoogleApiClient to connect)
-    protected boolean mHandleFullWalletWhenReady = false;
-    protected int mItemId;
+    protected boolean handleFullWalletWhenReady = false;
+    protected int itemId;
     // Cached connection result for resolving connection failures on user action.
-    protected ConnectionResult mConnectionResult;
+    protected ConnectionResult connectionResult;
     private int mRetryCounter = 0;
     // handler for processing retry attempts
-    private RetryHandler mRetryHandler;
+    private RetryHandler retryHandler;
     //    private ItemInfo mItemInfo;
     private Button mConfirmButton;
-    private MaskedWallet mMaskedWallet;
-    private int mRetryLoadFullWalletCount = 0;
-    private Intent mActivityLaunchIntent;
+    private MaskedWallet maskedWallet;
+    private int retryLoadFullWalletCount = 0;
+    private Intent activityLaunchIntent;
 
-    private String mEnv;
-    private String mAmount;
+    private String payeezyEnvironment;
+    private String totalAmount;
 
     /**
      * Select the appropriate First Data server for the environment.
@@ -146,16 +145,16 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
         if (savedInstanceState != null) {
             mRetryCounter = savedInstanceState.getInt(KEY_RETRY_COUNTER);
-            mRetryLoadFullWalletCount = savedInstanceState.getInt(KEY_RETRY_FULL_WALLET_COUNTER);
-            mHandleFullWalletWhenReady =
+            retryLoadFullWalletCount = savedInstanceState.getInt(KEY_RETRY_FULL_WALLET_COUNTER);
+            handleFullWalletWhenReady =
                     savedInstanceState.getBoolean(KEY_HANDLE_FULL_WALLET_WHEN_READY);
         }
-        mActivityLaunchIntent = getActivity().getIntent();
-        mItemId = mActivityLaunchIntent.getIntExtra(PaymentConstants.EXTRA_ITEM_ID, 0);
-        mMaskedWallet = mActivityLaunchIntent.getParcelableExtra(PaymentConstants.EXTRA_MASKED_WALLET);
+        activityLaunchIntent = getActivity().getIntent();
+        itemId = activityLaunchIntent.getIntExtra(PaymentConstants.EXTRA_ITEM_ID, 0);
+        maskedWallet = activityLaunchIntent.getParcelableExtra(PaymentConstants.EXTRA_MASKED_WALLET);
 
-        mAmount = mActivityLaunchIntent.getStringExtra(PaymentConstants.EXTRA_AMOUNT);
-        mEnv = mActivityLaunchIntent.getStringExtra(PaymentConstants.EXTRA_ENV);
+        totalAmount = activityLaunchIntent.getStringExtra(PaymentConstants.EXTRA_AMOUNT);
+        payeezyEnvironment = activityLaunchIntent.getStringExtra(PaymentConstants.EXTRA_ENV);
 
         String accountName = getString(R.string.account_name);
 
@@ -170,7 +169,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                         .build())
                 .build();
 
-        mRetryHandler = new RetryHandler(this);
+        retryHandler = new RetryHandler(this);
     }
 
     @Override
@@ -195,8 +194,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_RETRY_COUNTER, mRetryCounter);
-        outState.putBoolean(KEY_HANDLE_FULL_WALLET_WHEN_READY, mHandleFullWalletWhenReady);
-        outState.putInt(KEY_RETRY_FULL_WALLET_COUNTER, mRetryLoadFullWalletCount);
+        outState.putBoolean(KEY_HANDLE_FULL_WALLET_WHEN_READY, handleFullWalletWhenReady);
+        outState.putInt(KEY_RETRY_FULL_WALLET_COUNTER, retryLoadFullWalletCount);
     }
 
     @Override
@@ -205,12 +204,12 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
         initializeProgressDialog();
         View view = inflater.inflate(R.layout.fragment_full_wallet_confirmation_button, container, false);
-        //mItemInfo = PaymentConstants.ITEMS_FOR_SALE[mItemId];
+        //mItemInfo = PaymentConstants.ITEMS_FOR_SALE[itemId];
 
         mConfirmButton = (Button) view.findViewById(R.id.button_place_order);
         mConfirmButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View targetView) {
                 confirmPurchase();
             }
         });
@@ -231,11 +230,11 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
         disconnectGoogleApiClient();
 
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
         }
 
-        mRetryHandler.removeMessages(MESSAGE_RETRY_CONNECTION);
+        retryHandler.removeMessages(MESSAGE_RETRY_CONNECTION);
     }
 
     @Override
@@ -250,12 +249,12 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
-        mConnectionResult = result;
+        connectionResult = result;
 
         // Handle the user's tap by dismissing the progress dialog and attempting to resolve the
         // connection result.
-        if (mHandleFullWalletWhenReady) {
-            mProgressDialog.dismiss();
+        if (handleFullWalletWhenReady) {
+            progressDialog.dismiss();
             resolveUnsuccessfulConnectionResult();
         }
     }
@@ -268,14 +267,14 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      */
     protected void resolveUnsuccessfulConnectionResult() {
         // Additional user input is needed
-        if (mConnectionResult.hasResolution()) {
+        if (connectionResult.hasResolution()) {
             try {
-                mConnectionResult.startResolutionForResult(getActivity(), REQUEST_CODE_RESOLVE_ERR);
+                connectionResult.startResolutionForResult(getActivity(), REQUEST_CODE_RESOLVE_ERR);
             } catch (IntentSender.SendIntentException e) {
                 reconnect();
             }
         } else {
-            int errorCode = mConnectionResult.getErrorCode();
+            int errorCode = connectionResult.getErrorCode();
             if (GooglePlayServicesUtil.isUserRecoverableError(errorCode)) {
                 Dialog dialog = GooglePlayServicesUtil.getErrorDialog(errorCode, getActivity(),
                         REQUEST_CODE_RESOLVE_ERR, new OnCancelListener() {
@@ -303,7 +302,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             }
         }
 
-        mConnectionResult = null;
+        connectionResult = null;
     }
 
     /**
@@ -315,7 +314,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mProgressDialog.hide();
+        progressDialog.hide();
 
         // retrieve the error code, if available
         int errorCode = -1;
@@ -344,11 +343,11 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                             fetchTransactionStatus(fullWallet);
                         } else if (data.hasExtra(WalletConstants.EXTRA_MASKED_WALLET)) {
                             // re-launch the activity with new masked wallet information
-                            mMaskedWallet =
+                            maskedWallet =
                                     data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                            mActivityLaunchIntent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET,
-                                    mMaskedWallet);
-                            startActivity(mActivityLaunchIntent);
+                            activityLaunchIntent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET,
+                                    maskedWallet);
+                            startActivity(activityLaunchIntent);
                         }
                         break;
                     case Activity.RESULT_CANCELED:
@@ -366,16 +365,16 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     }
 
     /*package*/ void updateMaskedWallet(MaskedWallet maskedWallet) {
-        mMaskedWallet = maskedWallet;
+        maskedWallet = maskedWallet;
     }
 
     private void reconnect() {
         if (mRetryCounter < MAX_RETRIES) {
-            mProgressDialog.show();
-            Message m = mRetryHandler.obtainMessage(MESSAGE_RETRY_CONNECTION);
+            progressDialog.show();
+            Message message = retryHandler.obtainMessage(MESSAGE_RETRY_CONNECTION);
             // back off exponentially
             long delay = (long) (INITIAL_RETRY_DELAY_MILLISECONDS * Math.pow(2, mRetryCounter));
-            mRetryHandler.sendMessageDelayed(m, delay);
+            retryHandler.sendMessageDelayed(message, delay);
             mRetryCounter++;
         } else {
             handleError(WalletConstants.ERROR_CODE_SERVICE_UNAVAILABLE);
@@ -422,14 +421,14 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      * starts the progress dialog.
      */
     private void confirmPurchase() {
-        if (mConnectionResult != null) {
+        if (connectionResult != null) {
             // The user needs to resolve an issue before GoogleApiClient can connect
             resolveUnsuccessfulConnectionResult();
         } else {
             getFullWallet();
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
-            mHandleFullWalletWhenReady = true;
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            handleFullWalletWhenReady = true;
         }
     }
 
@@ -454,13 +453,13 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      */
     public FullWalletRequest createFullWalletRequest(String googleTransactionId) {
 
-        List<LineItem> lineItems = buildLineItems(mAmount);
+        List<LineItem> lineItems = buildLineItems(totalAmount);
 
         return FullWalletRequest.newBuilder()
                 .setGoogleTransactionId(googleTransactionId)
                 .setCart(Cart.newBuilder()
                         .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                        .setTotalPrice(mAmount)
+                        .setTotalPrice(totalAmount)
                         .setLineItems(lineItems)
                         .build())
                 .build();
@@ -471,7 +470,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      */
     private void getFullWallet() {
         FullWalletRequest fullWalletRequest = createFullWalletRequest(
-                mMaskedWallet.getGoogleTransactionId());
+                maskedWallet.getGoogleTransactionId());
 
         Wallet.Payments.loadFullWallet(mGoogleApiClient,
                 fullWalletRequest,
@@ -537,9 +536,9 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 //    public Map<String, String> getHeaders() {
 //        Map<String, String> headerMap = new HashMap<>(HMACMap);
 //        //  First data issued APIKey identifies the developer
-//        headerMap.put("apikey", EnvData.getProperties(mEnv).getApiKey());
+//        headerMap.put("apikey", EnvData.getProperties(payeezyEnvironment).getApiKey());
 //        //  First data issued token identifies the merchant
-//        headerMap.put("token", EnvData.getProperties(mEnv).getToken());
+//        headerMap.put("token", EnvData.getProperties(payeezyEnvironment).getToken());
 //
 //        return headerMap;
 //    }
@@ -549,8 +548,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      * and get back a status indicating whether charging the card was successful or not
      */
     private void fetchTransactionStatus(FullWallet fullWallet) {
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
 
         // Log payment method token, if it exists
@@ -561,8 +560,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             Log.d(TAG, "PaymentMethodToken:" + token.getToken().replace('\n', ' '));
         }
 
-        sendRequestToFirstData(fullWallet, mEnv);
-        //sendFirstDataRequestWithRetroFit(fullWallet, mEnv);
+        sendRequestToFirstData(fullWallet, payeezyEnvironment);
+        //sendFirstDataRequestWithRetroFit(fullWallet, payeezyEnvironment);
     }
 
     /**
@@ -647,9 +646,9 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headerMap = new HashMap<>(HMACMap);
                     //  First data issued APIKey identifies the developer
-                    headerMap.put("apikey", EnvData.getProperties(mEnv).getApiKey());
+                    headerMap.put("apikey", EnvData.getProperties(payeezyEnvironment).getApiKey());
                     //  First data issued token identifies the merchant
-                    headerMap.put("token", EnvData.getProperties(mEnv).getToken());
+                    headerMap.put("token", EnvData.getProperties(payeezyEnvironment).getToken());
 
                     return headerMap;
                 }
@@ -671,8 +670,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      * @return Amount without the decimal point
      */
     private String formatAmount(String amount) {
-        BigDecimal a = new BigDecimal(amount);
-        BigDecimal scaled = a.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal bigDecimalAmount = new BigDecimal(amount);
+        BigDecimal scaled = bigDecimalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
         return scaled.toString().replace(".", "");
     }
 
@@ -689,13 +688,13 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         pm.put("merchant_ref", "orderid");
         pm.put("transaction_type", "purchase");
         pm.put("method", "3DS");
-        pm.put("amount", formatAmount(mAmount));
+        pm.put("amount", formatAmount(totalAmount));
         pm.put("currency_code", "USD");
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("ephemeralPublicKey", ephemeralPublicKey);
         //  First data issued Public Key Hash identifies the public key used to encrypt the data
-        headerMap.put("publicKeyHash", EnvData.getProperties(mEnv).getPublicKeyHash());
+        headerMap.put("publicKeyHash", EnvData.getProperties(payeezyEnvironment).getPublicKeyHash());
 
         Map<String, Object> ccmap = new HashMap<>();
         ccmap.put("type", "G");             //  Identify the request as Android Pay request
@@ -717,7 +716,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      */
     private Map<String, String> computeHMAC(String payload) {
 
-        FirstDatEnvironmentProperties ep = EnvData.getProperties(mEnv);
+        FirstDatEnvironmentProperties ep = EnvData.getProperties(payeezyEnvironment);
         String apiSecret = ep.getApiSecret();
         String apiKey = ep.getApiKey();
         String token = ep.getToken();
@@ -763,8 +762,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     private boolean checkAndRetryFullWallet(int errorCode) {
         if ((errorCode == WalletConstants.ERROR_CODE_SERVICE_UNAVAILABLE ||
                 errorCode == WalletConstants.ERROR_CODE_UNKNOWN) &&
-                mRetryLoadFullWalletCount < MAX_FULL_WALLET_RETRIES) {
-            mRetryLoadFullWalletCount++;
+                retryLoadFullWalletCount < MAX_FULL_WALLET_RETRIES) {
+            retryLoadFullWalletCount++;
             getFullWallet();
             return true;
         }
@@ -772,14 +771,14 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     }
 
     protected void initializeProgressDialog() {
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage("Loading");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setOnDismissListener(new OnDismissListener() {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setOnDismissListener(new OnDismissListener() {
 
             @Override
             public void onDismiss(DialogInterface dialog) {
-                mHandleFullWalletWhenReady = false;
+                handleFullWalletWhenReady = false;
             }
         });
     }
