@@ -46,7 +46,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
     private ChooseProviderFragment chooseProviderFragment;
     private List<AppointmentResourcesDTO> resources;
-    private AppointmentResourcesDTO selectedProvider;
+    private AppointmentResourcesDTO selectedResource;
 
     @Override
     public void onStart() {
@@ -181,15 +181,15 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     }
 
     private void loadVisitTypeScreen(AppointmentResourcesDTO model) {
-//        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this.getContext(), model, this);
-//        visitTypeDialog.show();
+        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this.getContext(), model, this, appointmentsResultModel);
+        visitTypeDialog.show();
     }
 
     @Override
     public void onProviderListItemClickListener(int position) {
         AppointmentResourcesDTO model = resources.get(position - 1);
-        selectedProvider = model;
-        loadVisitTypeScreen(selectedProvider);
+        selectedResource = model;
+        loadVisitTypeScreen(selectedResource);
     }
 
     /**
@@ -209,7 +209,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         Gson gson = new Gson();
         AppointmentDTO appointmentDTO= new AppointmentDTO();
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_BUNDLE, gson.toJson(appointmentDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedProvider));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitType));
         visitTypeFragment.setArguments(bundle);
 
@@ -217,12 +217,5 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
                 AvailableHoursFragment.class.getSimpleName()).commit();
     }
 
-    /**
-     *
-     * @return the appointmentResultModel
-     */
-    public AppointmentsResultModel getAppointmentsResultModel() {
-        return appointmentsResultModel;
-    }
 
 }
