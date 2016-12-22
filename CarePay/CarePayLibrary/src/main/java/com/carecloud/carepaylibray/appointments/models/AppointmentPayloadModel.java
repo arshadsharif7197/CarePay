@@ -42,7 +42,6 @@ public class AppointmentPayloadModel implements Serializable {
     private List<ResourcesToScheduleDTO> resourcesToSchedule = null;
 
     /**
-     *
      * @return languages
      */
     public List<ResourceLanguageDTO> getLanguages() {
@@ -50,115 +49,91 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     *
      * @param languages languages
      */
     public void setLanguages(List<ResourceLanguageDTO> languages) {
         this.languages = languages;
     }
+
     /**
-     *
-     * @return
-     *     The appointments
+     * @return The appointments
      */
     public List<AppointmentDTO> getAppointments() {
         return appointments;
     }
 
     /**
-     *
-     * @param appointments
-     *     The appointments
+     * @param appointments The appointments
      */
     public void setAppointments(List<AppointmentDTO> appointments) {
         this.appointments = appointments;
     }
 
     /**
-     *
-     * @return
-     *     The providers
+     * @return The providers
      */
     public List<AppointmentProvidersDTO> getProviders() {
         return providers;
     }
 
     /**
-     *
-     * @param providers
-     *     The providers
+     * @param providers The providers
      */
     public void setProviders(List<AppointmentProvidersDTO> providers) {
         this.providers = providers;
     }
 
     /**
-     *
-     * @return
-     *     The locations
+     * @return The locations
      */
     public List<AppointmentLocationsDTO> getLocations() {
         return locations;
     }
 
     /**
-     *
-     * @param locations
-     *     The locations
+     * @param locations The locations
      */
     public void setLocations(List<AppointmentLocationsDTO> locations) {
         this.locations = locations;
     }
 
     /**
-     *
-     * @return
-     *     The resources
+     * @return The resources
      */
     public List<AppointmentResourcesDTO> getResources() {
         return resources;
     }
 
     /**
-     *
-     * @param resources
-     *     The resources
+     * @param resources The resources
      */
     public void setResources(List<AppointmentResourcesDTO> resources) {
         this.resources = resources;
     }
 
     /**
-     *
-     * @return
-     *     The providersSchedule
+     * @return The providersSchedule
      */
     public List<ProvidersScheduleDTO> getProvidersSchedule() {
         return providersSchedule;
     }
 
     /**
-     *
-     * @param providersSchedule
-     *     The providers_schedule
+     * @param providersSchedule The providers_schedule
      */
     public void setProvidersSchedule(List<ProvidersScheduleDTO> providersSchedule) {
         this.providersSchedule = providersSchedule;
     }
 
     /**
-     *
-     * @return
-     *     The cancellationReasons
+     * @return The cancellationReasons
      */
     public List<CancellationReasonDTO> getCancellationReasons() {
         return cancellationReasons;
     }
 
     /**
-     *
-     * @param cancellationReasons
-     *     The cancellation_reasons
+     * @param cancellationReasons The cancellation_reasons
      */
     public void setCancellationReasons(List<CancellationReasonDTO> cancellationReasons) {
         this.cancellationReasons = cancellationReasons;
@@ -182,16 +157,14 @@ public class AppointmentPayloadModel implements Serializable {
         this.appointment_availability = appointment_availability;
     }
 
-   /**
-    *
-    * @return resourcesToSchedule
-    */
+    /**
+     * @return resourcesToSchedule
+     */
     public List<ResourcesToScheduleDTO> getResourcesToSchedule() {
         return resourcesToSchedule;
     }
 
     /**
-     *
      * @param resourcesToSchedule resourcesToSchedule
      */
     public void setResourcesToSchedule(List<ResourcesToScheduleDTO> resourcesToSchedule) {

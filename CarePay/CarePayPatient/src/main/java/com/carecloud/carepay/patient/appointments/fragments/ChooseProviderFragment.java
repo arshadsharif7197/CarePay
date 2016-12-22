@@ -25,11 +25,9 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -143,18 +141,27 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
                     && appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
                     && appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
                 resources = appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
-                List<Object> resourcesListWithHeader = getResourcesListWithHeader();
+                AppointmentsResultModel appointmentsResultModel = gson.fromJson(workflowDTO.toString(),
+                        AppointmentsResultModel.class);
 
-                if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
-                    ProviderAdapter providerAdapter = new ProviderAdapter(
-                            getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
-                            chooseProviderFragment);
-                    providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    providersRecyclerView.setAdapter(providerAdapter);
+                if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
+                        && appointmentsResultModel.getPayload().getResourcesToSchedule() != null
+                        && appointmentsResultModel.getPayload().getResourcesToSchedule().size() > 0) {
+
+                    resources = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getResources();
+                    List<Object> resourcesListWithHeader = getResourcesListWithHeader();
+
+                    if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
+                        ProviderAdapter providerAdapter = new ProviderAdapter(
+                                getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
+                                chooseProviderFragment);
+                        providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        providersRecyclerView.setAdapter(providerAdapter);
+                    }
                 }
-            }
 
-            appointmentProgressBar.setVisibility(View.GONE);
+                appointmentProgressBar.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -216,6 +223,4 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
                 AvailableHoursFragment.class.getSimpleName()).commit();
     }
-
-
 }
