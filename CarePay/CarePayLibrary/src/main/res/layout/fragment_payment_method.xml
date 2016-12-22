@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/paymentMethodsRadioGroup"
         android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-        android:background="@drawable/button_selector"
+        android:background="@drawable/button_selector_green"
         android:layout_margin="@dimen/dimen_5dp"/>
     <FrameLayout
         android:id="@+id/dynamic_wallet_button_fragment"
