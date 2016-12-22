@@ -5,75 +5,69 @@ package com.carecloud.carepay.patient.payment.androidPay;
  */
 
 
-        import android.app.Activity;
-        import android.app.Dialog;
-        import android.app.ProgressDialog;
-        import android.content.DialogInterface;
-        import android.content.DialogInterface.OnCancelListener;
-        import android.content.DialogInterface.OnDismissListener;
-        import android.content.Intent;
-        import android.content.IntentSender;
-        import android.os.Bundle;
-        import android.os.Handler;
-        import android.os.Message;
-        import android.support.annotation.NonNull;
-        import android.support.v4.app.Fragment;
-        import android.util.Base64;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.View.OnClickListener;
-        import android.view.ViewGroup;
-        import android.widget.Button;
-        import android.widget.TextView;
-        import android.widget.Toast;
-//
-//        import com.android.volley.AuthFailureError;
-//        import com.android.volley.DefaultRetryPolicy;
-//        import com.android.volley.Request;
-//        import com.android.volley.RequestQueue;
-//        import com.android.volley.Response;
-//        import com.android.volley.VolleyError;
-//        import com.android.volley.toolbox.StringRequest;
-//        import com.android.volley.toolbox.Volley;
-        import com.carecloud.carepay.patient.R;
-        import com.carecloud.carepay.patient.payment.PaymentConstants;
-        import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
-        import com.carecloud.carepay.service.library.CarePayConstants;
-        import com.google.android.gms.common.ConnectionResult;
-        import com.google.android.gms.common.GooglePlayServicesUtil;
-        import com.google.android.gms.common.api.GoogleApiClient;
-        import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-        import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-        import com.google.android.gms.wallet.Cart;
-        import com.google.android.gms.wallet.FullWallet;
-        import com.google.android.gms.wallet.FullWalletRequest;
-        import com.google.android.gms.wallet.LineItem;
-        import com.google.android.gms.wallet.MaskedWallet;
-        import com.google.android.gms.wallet.MaskedWalletRequest;
-        import com.google.android.gms.wallet.PaymentMethodToken;
-        import com.google.android.gms.wallet.PaymentMethodTokenizationParameters;
-        import com.google.android.gms.wallet.PaymentMethodTokenizationType;
-        import com.google.android.gms.wallet.Wallet;
-        import com.google.android.gms.wallet.WalletConstants;
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.wallet.Cart;
+import com.google.android.gms.wallet.FullWallet;
+import com.google.android.gms.wallet.FullWalletRequest;
+import com.google.android.gms.wallet.LineItem;
+import com.google.android.gms.wallet.MaskedWallet;
+import com.google.android.gms.wallet.PaymentMethodToken;
+import com.google.android.gms.wallet.Wallet;
+import com.google.android.gms.wallet.WalletConstants;
 
-        import java.io.UnsupportedEncodingException;
-        import java.lang.ref.WeakReference;
-        import java.math.BigDecimal;
-        import java.security.SecureRandom;
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import javax.crypto.Mac;
-        import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
+import java.math.BigDecimal;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-        import retrofit2.Call;
-        import retrofit2.Callback;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * This is a fragment that handles the creating and sending of a {@link FullWalletRequest} using
@@ -462,8 +456,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 .build();
     }
 
-
-
     /**
      * Issue a request to load the full wallet.
      */
@@ -471,82 +463,10 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         FullWalletRequest fullWalletRequest = createFullWalletRequest(
                 mMaskedWallet.getGoogleTransactionId());
 
-//        MaskedWalletRequest maskedWalletRequest = createMaskedWalletRequest("4001");
-//
-//        Wallet.Payments.loadMaskedWallet(mGoogleApiClient,
-//                maskedWalletRequest,
-//                REQUEST_CODE_RESOLVE_LOAD_FULL_WALLET);
-
         Wallet.Payments.loadFullWallet(mGoogleApiClient,
                 fullWalletRequest,
                 REQUEST_CODE_RESOLVE_LOAD_FULL_WALLET);
     }
-
-    /**
-     * Create the Masked Wallet request. Note that the Tokenization Type is set to
-     * {@code NETWORK_TOKEN} and the {@code publicKey} parameter is set to the public key
-     * that was created by First Data.
-     *
-     * @param //amount    The amount the user entered
-     * @return  A Masked Wallet request object
-     */
-    private MaskedWalletRequest createMaskedWalletRequest(String totalPrice) {
-        MaskedWalletRequest.Builder builder = MaskedWalletRequest.newBuilder()
-                .setMerchantName(PaymentConstants.MERCHANT_NAME)
-                .setPhoneNumberRequired(true)
-                .setShippingAddressRequired(true)
-                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                .setEstimatedTotalPrice(totalPrice)
-//                 Create a Cart with the current line items. Provide all the information
-//                 available up to this point with estimates for shipping and tax included.
-                .setCart(Cart.newBuilder()
-                        .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                        .setTotalPrice(totalPrice)
-                        .setLineItems(getLineItems())
-                        .build());
-
-        //  Set tokenization type and First Data issued public key
-        PaymentMethodTokenizationParameters mPaymentMethodParameters = PaymentMethodTokenizationParameters.newBuilder()
-                .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.NETWORK_TOKEN)
-                .addParameter("publicKey", EnvData.getProperties("CERT").getPublicKey())
-                .build();
-        builder.setPaymentMethodTokenizationParameters(mPaymentMethodParameters);
-        return builder.build();
-    }
-
-    /**
-     * Create a fake line item list. Set the amount to the one received from the user.
-     * @param //balance   Amount received from the user
-     * @return  List of line items
-     */
-    public List getLineItems() {
-        List<LineItem> list = new ArrayList<LineItem>();
-
-        list.add(LineItem.newBuilder()
-                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                .setDescription("aa")
-                .setQuantity("1")
-                .setTotalPrice("4001")
-                .setUnitPrice("456")
-                .build());
-
-        return list ;
-    }
-
-
-//    private void loadMaskedWallet() {
-//        if (mGoogleApiClient.isConnected()) {
-//            mProgressDialog.show();
-//            Wallet.Payments.loadMaskedWallet(mGoogleApiClient, createMaskedWalletRequest(),
-//                    REQUEST_CODE_RESOLVE_LOAD_MASKED_WALLET);
-//        } else {
-//            if (!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()) {
-//                mGoogleApiClient.connect();
-//            }
-//            mHandleMaskedWalletWhenReady = true;
-//        }
-//    }
-
 
     /**
      * Here the client should connect to First Data, process the credit card/instrument
@@ -565,8 +485,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             Log.d(TAG, "PaymentMethodToken:" + token.getToken().replace('\n', ' '));
         }
 
-        //sendRequestToFirstData(fullWallet, mEnv);
-        sendFirstDataRequestWithRetroFit(fullWallet, mEnv);
+        sendRequestToFirstData(fullWallet, mEnv);
+        //sendFirstDataRequestWithRetroFit(fullWallet, mEnv);
     }
 
     /**
@@ -596,85 +516,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
      * @param env        First Data environment to be used
      */
     public void sendRequestToFirstData(final FullWallet fullWallet, String env) {
-//        try {
-//            //  Parse the Json token retrieved from the Full Wallet.
-//            String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
-//            final JSONObject jsonObject = new JSONObject(tokenJSON);
-//
-//            String encryptedMessage = jsonObject.getString("encryptedMessage");
-//            String publicKey = jsonObject.getString("ephemeralPublicKey");
-//            String signature = jsonObject.getString("tag");
-//
-//            //  Create a First Data Json request
-//            JSONObject requestPayload = getRequestPayload(encryptedMessage, signature, publicKey);
-//            final String payloadString = requestPayload.toString();
-//            final Map<String, String> HMACMap = computeHMAC(payloadString);
-
-
-
-//            StringRequest request = new StringRequest(
-//                    Request.Method.POST,
-//                    getUrl(env),
-//                    new Response.Listener<String>() {
-//                        @Override
-//                        public void onResponse(String response) {
-//                            //   request completed - launch the response activity
-//                            try {
-//                                JSONObject obj = new JSONObject(response);
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                            startResponseActivity("SUCCESS", response);
-//                        }
-//                    },
-//                    new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            startResponseActivity("ERROR", formatErrorResponse(error));
-//                        }
-//                    }) {
-//
-//                @Override
-//                public String getBodyContentType() {
-//                    return "application/json";
-//                }
-//
-//                @Override
-//                public byte[] getBody() {
-//                    try {
-//                        return payloadString.getBytes("UTF-8");
-//                    } catch (UnsupportedEncodingException e) {
-//                        return null;
-//                    }
-//                }
-//
-//                @Override
-//                public Map<String, String> getHeaders() throws AuthFailureError {
-//                    Map<String, String> headerMap = new HashMap<>(HMACMap);
-//                    //  First data issued APIKey identifies the developer
-//                    headerMap.put("apikey", EnvData.getProperties(mEnv).getApiKey());
-//                    //  First data issued token identifies the merchant
-//                    headerMap.put("token", EnvData.getProperties(mEnv).getToken());
-//
-//                    return headerMap;
-//                }
-//            };
-//
-//            request.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//            RequestQueue queue = Volley.newRequestQueue(getActivity());
-//            queue.add(request);
-//        } catch (JSONException e) {
-//            Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
-//       }
-    }
-
-
-    private Map<String, String> HMACMap ;
-
-    private void sendFirstDataRequestWithRetroFit(final FullWallet fullWallet, String env)
-    {
         try {
-
+            //  Parse the Json token retrieved from the Full Wallet.
             String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
             final JSONObject jsonObject = new JSONObject(tokenJSON);
 
@@ -685,41 +528,131 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             //  Create a First Data Json request
             JSONObject requestPayload = getRequestPayload(encryptedMessage, signature, publicKey);
             final String payloadString = requestPayload.toString();
-            HMACMap = computeHMAC(payloadString) ;
+            final Map<String, String> HMACMap = computeHMAC(payloadString);
 
 
-            FirstDataService paymentService = FirstDataServiceGenerator.createService(FirstDataService.class, getHeaders() ); //, String token, String searchString
-            Call<String> call = paymentService.postPayment(payloadString);
-            call.enqueue(new Callback<String>() {
+
+            StringRequest request = new StringRequest(
+                    Request.Method.POST,
+                    getUrl(env),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //   request completed - launch the response activity
+                            try {
+                                JSONObject obj = new JSONObject(response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                           // startResponseActivity("SUCCESS", response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                      //      startResponseActivity("ERROR", formatErrorResponse(error));
+                        }
+                    }) {
+
                 @Override
-                public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-
-                    response.body();
-
+                public String getBodyContentType() {
+                    return "application/json";
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
-
+                public byte[] getBody() {
+                    try {
+                        return payloadString.getBytes("UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        return null;
+                    }
                 }
-            });
 
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headerMap = new HashMap<>(HMACMap);
+                    //  First data issued APIKey identifies the developer
+                    headerMap.put("apikey", EnvData.getProperties(mEnv).getApiKey());
+                    //  First data issued token identifies the merchant
+                    headerMap.put("token", EnvData.getProperties(mEnv).getToken());
 
-        }
-        catch (JSONException e) {
+                    return headerMap;
+                }
+            };
+
+            request.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            RequestQueue queue = Volley.newRequestQueue(getActivity());
+            queue.add(request);
+        } catch (JSONException e) {
             Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
-        }
+       }
     }
 
-    public Map<String, String> getHeaders() {
-        Map<String, String> headerMap = new HashMap<>(HMACMap);
-        //  First data issued APIKey identifies the developer
-        headerMap.put("apikey", EnvData.getProperties(mEnv).getApiKey());
-        //  First data issued token identifies the merchant
-        headerMap.put("token", EnvData.getProperties(mEnv).getToken());
 
-        return headerMap;
-    }
+//   private Map<String, String> HMACMap ;
+//
+//    private void sendFirstDataRequestWithRetroFit(final FullWallet fullWallet, String env)
+//    {
+//        try {
+//
+//            String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
+//            final JSONObject jsonObject = new JSONObject(tokenJSON);
+//
+//            String encryptedMessage = jsonObject.getString("encryptedMessage");
+//            String publicKey = jsonObject.getString("ephemeralPublicKey");
+//            String signature = jsonObject.getString("tag");
+//
+//            //  Create a First Data Json request
+//            JSONObject requestPayload = getRequestPayload(encryptedMessage, signature, publicKey);
+//            final String payloadString = requestPayload.toString();
+//
+//            getUTFEncodePayload(payloadString);
+//            HMACMap = computeHMAC(payloadString) ;
+//
+//
+//            FirstDataService paymentService = FirstDataServiceGenerator.createService(FirstDataService.class, getHeaders() ); //, String token, String searchString
+//            Call<String> call = paymentService.postPayment(payloadString);
+//            call.enqueue(new Callback<String>() {
+//                @Override
+//                public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+//
+//                    response.body();
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Call<String> call, Throwable t) {
+//                    Log.e("Payeezy Android Pay", t.getMessage());
+//
+//                }
+//
+//            });
+//
+//
+//        }
+//        catch (JSONException e) {
+//            Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
+//        }
+//    }
+//
+//    private byte[] getUTFEncodePayload(String payloadString)
+//    {
+//        try {
+//                        return payloadString.getBytes("UTF-8");
+//                    } catch (UnsupportedEncodingException e) {
+//                        return null;
+//                    }
+//    }
+//
+//    public Map<String, String> getHeaders() {
+//        Map<String, String> headerMap = new HashMap<>(HMACMap);
+//        //  First data issued APIKey identifies the developer
+//        headerMap.put("apikey", EnvData.getProperties(mEnv).getApiKey());
+//        //  First data issued token identifies the merchant
+//        headerMap.put("token", EnvData.getProperties(mEnv).getToken());
+//
+//        return headerMap;
+//    }
 
     /**
      * Select the appropriate First Data server for the environment.

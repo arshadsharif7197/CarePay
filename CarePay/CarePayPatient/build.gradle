@@ -67,6 +67,7 @@ dependencies {
     // Android Pay
     compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.google.android.gms:play-services-wallet:10.0.1'
+    compile 'com.android.volley:volley:1.0.0'
 
 
     // for testing
