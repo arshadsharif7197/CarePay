@@ -76,6 +76,20 @@ public class DateUtil {
     }
 
     /**
+     * Reset the current reference to the tomorrow date
+     *
+     * @return The instance
+     */
+    public DateUtil setToTomorrow() {
+        //date = Calendar.getInstance().getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        date = calendar.getTime();
+        updateFields();
+        return this;
+    }
+
+    /**
      * Set the format of the in-coming date
      * By default this is "yyyy-MM-dd'T'HH:mm:ssZ".
      *
@@ -134,6 +148,15 @@ public class DateUtil {
      */
     public String getDateAsMMddyyyy() {
         return String.format(Locale.getDefault(), "%02d-%02d-%4d", month + 1, day, year);
+    }
+
+    /**
+     * Format date as yyyy-MM-dd
+     *
+     * @return The formatted date as string
+     */
+    public String getDateAsyyyyMMdd() {
+        return String.format(Locale.getDefault(), "%04d-%02d-%2d", year, month + 1, day);
     }
 
     /**

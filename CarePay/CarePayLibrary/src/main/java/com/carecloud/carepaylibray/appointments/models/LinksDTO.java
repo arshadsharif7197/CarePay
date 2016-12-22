@@ -25,9 +25,11 @@ public class LinksDTO {
     @SerializedName("providers_schedule")
     @Expose
     private LinkDTO providersSchedule;
-
+    @SerializedName("appointment_availability")
+    @Expose
+    private TransitionDTO appointmentAvailability;
     /**
-     * 
+     *
      * @return
      *     The self
      */
@@ -36,7 +38,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @param self
      *     The self
      */
@@ -45,7 +47,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @return
      *     The demographics
      */
@@ -54,7 +56,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @param demographics
      *     The demographics
      */
@@ -63,7 +65,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @return
      *     The appointments
      */
@@ -72,7 +74,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @param appointments
      *     The appointments
      */
@@ -81,7 +83,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @return
      *     The patientBalances
      */
@@ -90,7 +92,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @param patientBalances
      *     The patient_balances
      */
@@ -99,7 +101,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @return
      *     The providersSchedule
      */
@@ -108,7 +110,7 @@ public class LinksDTO {
     }
 
     /**
-     * 
+     *
      * @param providersSchedule
      *     The providers_schedule
      */
@@ -116,4 +118,21 @@ public class LinksDTO {
         this.providersSchedule = providersSchedule;
     }
 
+    /**
+     * Gets appointment availability.
+     *
+     * @return the appointment availability
+     */
+    public TransitionDTO getAppointmentAvailability() {
+        return appointmentAvailability;
+    }
+
+    /**
+     * Sets appointment availability.
+     *
+     * @param appointmentAvailability the appointment availability
+     */
+    public void setAppointmentAvailability(TransitionDTO appointmentAvailability) {
+        this.appointmentAvailability = appointmentAvailability;
+    }
 }

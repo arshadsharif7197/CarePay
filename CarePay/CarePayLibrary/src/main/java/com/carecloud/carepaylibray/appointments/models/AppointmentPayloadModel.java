@@ -31,9 +31,12 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("cancellation_reasons")
     @Expose
     private List<CancellationReasonDTO> cancellationReasons = new ArrayList<CancellationReasonDTO>();
+    @SerializedName("appointment_availability")
+    @Expose
+    private AppointmentAvailabilityDataDTO appointment_availability;
 
     /**
-     * 
+     *
      * @return
      *     The appointments
      */
@@ -42,7 +45,7 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param appointments
      *     The appointments
      */
@@ -51,7 +54,7 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The providers
      */
@@ -60,7 +63,7 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param providers
      *     The providers
      */
@@ -69,7 +72,7 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The locations
      */
@@ -78,7 +81,7 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param locations
      *     The locations
      */
@@ -87,7 +90,7 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The resources
      */
@@ -96,7 +99,7 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param resources
      *     The resources
      */
@@ -140,4 +143,21 @@ public class AppointmentPayloadModel implements Serializable {
         this.cancellationReasons = cancellationReasons;
     }
 
+    /**
+     * Gets appointment availability.
+     *
+     * @return the appointment availability
+     */
+    public AppointmentAvailabilityDataDTO getAppointment_availability() {
+        return appointment_availability;
+    }
+
+    /**
+     * Sets appointment availability.
+     *
+     * @param appointment_availability the appointment availability
+     */
+    public void setAppointment_availability(AppointmentAvailabilityDataDTO appointment_availability) {
+        this.appointment_availability = appointment_availability;
+    }
 }
