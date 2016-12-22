@@ -79,21 +79,18 @@ import javax.crypto.spec.SecretKeySpec;
 public class FullWalletConfirmationButtonFragment extends Fragment
         implements ConnectionCallbacks, OnConnectionFailedListener {
 
-    private static final String TAG = "FullWallet";
-
     /**
      * Request code used when attempting to resolve issues with connecting to Google Play Services.
      * Only use this request code when calling {@link ConnectionResult#startResolutionForResult(
      *Activity, int)}.
      */
     public static final int REQUEST_CODE_RESOLVE_ERR = 1003;
-
     /**
      * Request code used when loading a full wallet. Only use this request code when calling
      * {@link Wallet#loadFullWallet(GoogleApiClient, FullWalletRequest, int)}.
      */
     public static final int REQUEST_CODE_RESOLVE_LOAD_FULL_WALLET = 1004;
-
+    private static final String TAG = "FullWallet";
     // Maximum number of times to try to connect to GoogleApiClient if the connection is failing
     private static final int MAX_RETRIES = 3;
     private static final long INITIAL_RETRY_DELAY_MILLISECONDS = 3000;
@@ -105,21 +102,17 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     // No. of times to retry loadFullWallet on receiving a ConnectionResult.INTERNAL_ERROR
     private static final int MAX_FULL_WALLET_RETRIES = 1;
     private static final String KEY_RETRY_FULL_WALLET_COUNTER = "KEY_RETRY_FULL_WALLET_COUNTER";
-
-    private int mRetryCounter = 0;
-    // handler for processing retry attempts
-    private RetryHandler mRetryHandler;
-
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
     // whether the user tried to do an action that requires a full wallet (i.e.: loadFullWallet)
     // before a full wallet was acquired (i.e.: still waiting for mGoogleApiClient to connect)
     protected boolean mHandleFullWalletWhenReady = false;
     protected int mItemId;
-
     // Cached connection result for resolving connection failures on user action.
     protected ConnectionResult mConnectionResult;
-
+    private int mRetryCounter = 0;
+    // handler for processing retry attempts
+    private RetryHandler mRetryHandler;
     //    private ItemInfo mItemInfo;
     private Button mConfirmButton;
     private MaskedWallet mMaskedWallet;
@@ -129,8 +122,23 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     private String mEnv;
     private String mAmount;
 
-    public String copayStr = "0.00";
-    public String previousBalanceStr = "0.00";
+    /**
+     * Select the appropriate First Data server for the environment.
+     *
+     * @param env Environment
+     * @return URL
+     */
+    private static String getUrl(String env) {
+        return EnvData.getProperties(env).getUrl();
+    }
+
+    private static String bytesToHex(byte[] byteArray) {
+        StringBuilder sb = new StringBuilder(byteArray.length * 2);
+        for (byte b : byteArray) {
+            sb.append(String.format("%02x", b & 0xff));
+        }
+        return sb.toString();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -196,7 +204,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         initializeProgressDialog();
-          View view = inflater.inflate(R.layout.fragment_full_wallet_confirmation_button, container, false);
+        View view = inflater.inflate(R.layout.fragment_full_wallet_confirmation_button, container, false);
         //mItemInfo = PaymentConstants.ITEMS_FOR_SALE[mItemId];
 
         mConfirmButton = (Button) view.findViewById(R.id.button_place_order);
@@ -207,7 +215,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             }
         });
 
-        //TextView responseCopay = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.respons_copay);
         TextView responsePreviousBalance = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.respons_prev_balance);
 
         PaymentResponsibilityModel paymentModel = PaymentResponsibilityModel.getInstance();
@@ -352,6 +359,9 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                         break;
                 }
                 break;
+            default:
+                handleError(errorCode);
+                break;
         }
     }
 
@@ -468,126 +478,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 REQUEST_CODE_RESOLVE_LOAD_FULL_WALLET);
     }
 
-    /**
-     * Here the client should connect to First Data, process the credit card/instrument
-     * and get back a status indicating whether charging the card was successful or not
-     */
-    private void fetchTransactionStatus(FullWallet fullWallet) {
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-
-        // Log payment method token, if it exists
-        PaymentMethodToken token = fullWallet.getPaymentMethodToken();
-        if (token != null) {
-            // getToken returns a JSON object as a String.  Replace newlines to make LogCat output
-            // nicer.  The 'id' field of the object contains the Stripe token we are interested in.
-            Log.d(TAG, "PaymentMethodToken:" + token.getToken().replace('\n', ' '));
-        }
-
-        sendRequestToFirstData(fullWallet, mEnv);
-        //sendFirstDataRequestWithRetroFit(fullWallet, mEnv);
-    }
-
-    /**
-     * Send a request to the First Data server to process the payment. The REST request
-     * includes HTTP headers that identify the developer and the merchant issuing the request:
-     * <ul>
-     * <li>{@code apikey} - identifies the developer</li>
-     * <li>{@code token} - identifies the merchant</li>
-     * </ul>
-     * The values for the two headers are provided by First Data.
-     * <p>
-     * The token created by Android Pay is extracted from the FullWallet object. The token
-     * is in JSON format and consists of the following fields:
-     * <ul>
-     * <li>{@code encryptedMessage} - the encrypted details of the transaction</li>
-     * <li>{@code ephemeralPublicKey} - the key used, together with the key pair issued
-     * by First Data, to decrypt of the transaction detail</li>
-     * <li>{@code tag} - a signature field</li>
-     * </ul>
-     * These items, along with a {@code PublicKeyHash} that is used to identify the
-     * key pair provided by First data, are used
-     * to create the transaction payload. The payload is sent to the First Data servers
-     * for execution.
-     * </p>
-     *
-     * @param fullWallet Full wallet object
-     * @param env        First Data environment to be used
-     */
-    public void sendRequestToFirstData(final FullWallet fullWallet, String env) {
-        try {
-            //  Parse the Json token retrieved from the Full Wallet.
-            String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
-            final JSONObject jsonObject = new JSONObject(tokenJSON);
-
-            String encryptedMessage = jsonObject.getString("encryptedMessage");
-            String publicKey = jsonObject.getString("ephemeralPublicKey");
-            String signature = jsonObject.getString("tag");
-
-            //  Create a First Data Json request
-            JSONObject requestPayload = getRequestPayload(encryptedMessage, signature, publicKey);
-            final String payloadString = requestPayload.toString();
-            final Map<String, String> HMACMap = computeHMAC(payloadString);
-
-
-
-            StringRequest request = new StringRequest(
-                    Request.Method.POST,
-                    getUrl(env),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            //   request completed - launch the response activity
-                            try {
-                                JSONObject obj = new JSONObject(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                           // startResponseActivity("SUCCESS", response);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                      //      startResponseActivity("ERROR", formatErrorResponse(error));
-                        }
-                    }) {
-
-                @Override
-                public String getBodyContentType() {
-                    return "application/json";
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return payloadString.getBytes("UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        return null;
-                    }
-                }
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> headerMap = new HashMap<>(HMACMap);
-                    //  First data issued APIKey identifies the developer
-                    headerMap.put("apikey", EnvData.getProperties(mEnv).getApiKey());
-                    //  First data issued token identifies the merchant
-                    headerMap.put("token", EnvData.getProperties(mEnv).getToken());
-
-                    return headerMap;
-                }
-            };
-
-            request.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQueue queue = Volley.newRequestQueue(getActivity());
-            queue.add(request);
-        } catch (JSONException e) {
-            Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
-       }
-    }
-
 
 //   private Map<String, String> HMACMap ;
 //
@@ -655,13 +545,122 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 //    }
 
     /**
-     * Select the appropriate First Data server for the environment.
-     *
-     * @param env Environment
-     * @return URL
+     * Here the client should connect to First Data, process the credit card/instrument
+     * and get back a status indicating whether charging the card was successful or not
      */
-    private static String getUrl(String env) {
-        return EnvData.getProperties(env).getUrl();
+    private void fetchTransactionStatus(FullWallet fullWallet) {
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+
+        // Log payment method token, if it exists
+        PaymentMethodToken token = fullWallet.getPaymentMethodToken();
+        if (token != null) {
+            // getToken returns a JSON object as a String.  Replace newlines to make LogCat output
+            // nicer.  The 'id' field of the object contains the Stripe token we are interested in.
+            Log.d(TAG, "PaymentMethodToken:" + token.getToken().replace('\n', ' '));
+        }
+
+        sendRequestToFirstData(fullWallet, mEnv);
+        //sendFirstDataRequestWithRetroFit(fullWallet, mEnv);
+    }
+
+    /**
+     * Send a request to the First Data server to process the payment. The REST request
+     * includes HTTP headers that identify the developer and the merchant issuing the request:
+     * <ul>
+     * <li>{@code apikey} - identifies the developer</li>
+     * <li>{@code token} - identifies the merchant</li>
+     * </ul>
+     * The values for the two headers are provided by First Data.
+     * <p>
+     * The token created by Android Pay is extracted from the FullWallet object. The token
+     * is in JSON format and consists of the following fields:
+     * <ul>
+     * <li>{@code encryptedMessage} - the encrypted details of the transaction</li>
+     * <li>{@code ephemeralPublicKey} - the key used, together with the key pair issued
+     * by First Data, to decrypt of the transaction detail</li>
+     * <li>{@code tag} - a signature field</li>
+     * </ul>
+     * These items, along with a {@code PublicKeyHash} that is used to identify the
+     * key pair provided by First data, are used
+     * to create the transaction payload. The payload is sent to the First Data servers
+     * for execution.
+     * </p>
+     *
+     * @param fullWallet Full wallet object
+     * @param env        First Data environment to be used
+     */
+    public void sendRequestToFirstData(final FullWallet fullWallet, String env) {
+        try {
+            //  Parse the Json token retrieved from the Full Wallet.
+            String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
+            final JSONObject jsonObject = new JSONObject(tokenJSON);
+
+            String encryptedMessage = jsonObject.getString("encryptedMessage");
+            String publicKey = jsonObject.getString("ephemeralPublicKey");
+            String signature = jsonObject.getString("tag");
+
+            //  Create a First Data Json request
+            JSONObject requestPayload = getRequestPayload(encryptedMessage, signature, publicKey);
+            final String payloadString = requestPayload.toString();
+            final Map<String, String> HMACMap = computeHMAC(payloadString);
+
+
+            StringRequest request = new StringRequest(
+                    Request.Method.POST,
+                    getUrl(env),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //   request completed - launch the response activity
+                            try {
+                                JSONObject obj = new JSONObject(response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            // startResponseActivity("SUCCESS", response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //      startResponseActivity("ERROR", formatErrorResponse(error));
+                        }
+                    }) {
+
+                @Override
+                public String getBodyContentType() {
+                    return "application/json";
+                }
+
+                @Override
+                public byte[] getBody() {
+                    try {
+                        return payloadString.getBytes("UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        return null;
+                    }
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headerMap = new HashMap<>(HMACMap);
+                    //  First data issued APIKey identifies the developer
+                    headerMap.put("apikey", EnvData.getProperties(mEnv).getApiKey());
+                    //  First data issued token identifies the merchant
+                    headerMap.put("token", EnvData.getProperties(mEnv).getToken());
+
+                    return headerMap;
+                }
+            };
+
+            request.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            RequestQueue queue = Volley.newRequestQueue(getActivity());
+            queue.add(request);
+        } catch (JSONException e) {
+            Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -754,13 +753,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         return headerMap;
     }
 
-    private static String bytesToHex(byte[] a) {
-        StringBuilder sb = new StringBuilder(a.length * 2);
-        for (byte b : a)
-            sb.append(String.format("%02x", b & 0xff));
-        return sb.toString();
-    }
-
     /**
      * Retries {@link Wallet#loadFullWallet(GoogleApiClient, FullWalletRequest, int)} if
      * {@link #MAX_FULL_WALLET_RETRIES} has not been reached.
@@ -808,6 +800,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                     if (fragment != null) {
                         fragment.mGoogleApiClient.connect();
                     }
+                    break;
+                default:
                     break;
             }
         }

@@ -4,11 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  Prepare for support of multiple environments
+ * Prepare for support of multiple environments
  */
 public class EnvData {
 
     private static Map<String, FirstDatEnvironmentProperties> envMap = new HashMap<>();
+
+    static {
+        envMap.put("CERT", new EnvPropertiesImpl(
+                        "CERT",
+                        "https://api-cert.payeezy.com/v1/transactions",
+                        "y6pWAJNyJyjGv66IsVuWnklkKUPFbb0a",
+                        "fdoa-a480ce8951daa73262734cf102641994c1e55e7cdf4c02b6",
+                        "BAcuCtcmGXqVrVUUmyFbsAoC4+MZ80V5AVmm4rm/tj+7lV3KxYAe9xOWASR13nJZf9CxLenkBAdMz8I5EKefCPk=",
+                        "9FpDBkszQZrwrFjdh9agu2FLIpNYcyn6OjsfomDoxMg=",
+                        "86fbae7030253af3cd15faef2a1f4b67353e41fb6799f576b5093ae52901e6f7"
+                )
+        );
+    }
+
+    public static FirstDatEnvironmentProperties getProperties(String envName) {
+        return envMap.get(envName);
+    }
 
     private static class EnvPropertiesImpl implements FirstDatEnvironmentProperties {
 
@@ -65,22 +82,5 @@ public class EnvData {
         public String getApiSecret() {
             return apiSecret;
         }
-    }
-
-    static {
-        envMap.put("CERT", new EnvPropertiesImpl(
-                        "CERT",
-                        "https://api-cert.payeezy.com/v1/transactions",
-                        "y6pWAJNyJyjGv66IsVuWnklkKUPFbb0a",
-                        "fdoa-a480ce8951daa73262734cf102641994c1e55e7cdf4c02b6",
-                        "BAcuCtcmGXqVrVUUmyFbsAoC4+MZ80V5AVmm4rm/tj+7lV3KxYAe9xOWASR13nJZf9CxLenkBAdMz8I5EKefCPk=",
-                        "9FpDBkszQZrwrFjdh9agu2FLIpNYcyn6OjsfomDoxMg=",
-                        "86fbae7030253af3cd15faef2a1f4b67353e41fb6799f576b5093ae52901e6f7"
-                )
-        );
-    }
-
-    public static FirstDatEnvironmentProperties getProperties(String envName) {
-        return envMap.get(envName);
     }
 }

@@ -50,7 +50,7 @@ public class ConfirmationActivity extends FragmentActivity {
                 .setMaskedWalletDetailsHeaderTextAppearance(
                         R.style.WalletFragmentDetailsHeaderTextAppearance)
                 .setMaskedWalletDetailsBackgroundColor(
-                R.color.blue_cerulian)
+                        R.color.blue_cerulian)
                 .setMaskedWalletDetailsButtonTextAppearance(R.drawable.cell_checkbox_on)
                 .setMaskedWalletDetailsButtonBackgroundResource(R.drawable.button_blue)
                 .setMaskedWalletDetailsBackgroundResource(R.color.blue_cerulian);
@@ -85,7 +85,7 @@ public class ConfirmationActivity extends FragmentActivity {
      *
      * @param requestCode The request code
      * @param resultCode  The result of the request execution
-     * @param data  Intent carrying the results
+     * @param data        Intent carrying the results
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -146,7 +146,7 @@ public class ConfirmationActivity extends FragmentActivity {
         return getSupportFragmentManager().findFragmentById(
                 R.id.full_wallet_confirmation_button_fragment);
     }
-
+    
     public static Intent newIntent(Context ctx, MaskedWallet maskedWallet, String amount, String env) {
         Intent intent = new Intent(ctx, ConfirmationActivity.class);
         intent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET, maskedWallet);

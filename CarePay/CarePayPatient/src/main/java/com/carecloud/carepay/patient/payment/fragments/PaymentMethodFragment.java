@@ -478,11 +478,11 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         }
     }
 
+
     /**
      * Create the wallet fragment. This will create the "Buy with Android Pay" button.
      *
-     * @param //env   First Data environment
-     * @param //paymentAmountString    Amount received from the user
+     * @param totalPrice  Amount received from the user
      */
     private void createAndAddWalletFragment(String totalPrice) {
         WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
@@ -522,7 +522,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
      * {@code NETWORK_TOKEN} and the {@code publicKey} parameter is set to the public key
      * that was created by First Data.
      *
-     * @param //amount    The amount the user entered
+     * @param totalPrice    The amount the user entered
      * @return  A Masked Wallet request object
      */
     private MaskedWalletRequest createMaskedWalletRequest(String totalPrice) {
@@ -551,7 +551,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
     /**
      * Create a fake line item list. Set the amount to the one received from the user.
-     * @param //balance   Amount received from the user
+     *
      * @return  List of line items
      */
     public List getLineItems() {

@@ -9,10 +9,16 @@ package com.carecloud.carepay.patient.payment.androidPay;
  */
 public interface FirstDatEnvironmentProperties {
     String getEnvName();
+
     String getUrl();
+
     String getApiKey();
+
     String getToken();
+
     String getPublicKey();
+
     String getPublicKeyHash();
+
     String getApiSecret();
 }
