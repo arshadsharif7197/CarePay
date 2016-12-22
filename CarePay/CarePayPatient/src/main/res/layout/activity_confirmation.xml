@@ -27,7 +27,7 @@
 
         <fragment
             android:id="@+id/full_wallet_confirmation_button_fragment"
-            android:name="com.carecloud.carepay.patient.payment.androidPay.FullWalletConfirmationButtonFragment"
+            android:name="com.carecloud.carepay.patient.payment.androidpay.FullWalletConfirmationButtonFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
