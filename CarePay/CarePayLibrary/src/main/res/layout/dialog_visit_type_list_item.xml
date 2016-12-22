@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:textColor="#37474f"
-        android:textSize="17sp" />
+        android:textSize="17sp"
+        android:gravity="left"/>
 
     <View
         android:layout_width="match_parent"

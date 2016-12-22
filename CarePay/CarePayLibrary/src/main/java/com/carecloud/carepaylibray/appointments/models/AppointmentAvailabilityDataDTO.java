@@ -5,6 +5,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Model for GET appointment availability data.
@@ -16,7 +18,7 @@ public class AppointmentAvailabilityDataDTO implements Serializable {
     private AppointmentAvailabilityMetadataDTO metadata;
     @SerializedName("payload")
     @Expose
-    private AppointmentAvailabilityPayloadDTO payload;
+    private List<AppointmentAvailabilityPayloadDTO> payload = new ArrayList<AppointmentAvailabilityPayloadDTO>();
 
     /**
      * Gets metadata.
@@ -41,7 +43,7 @@ public class AppointmentAvailabilityDataDTO implements Serializable {
      *
      * @return the payload
      */
-    public AppointmentAvailabilityPayloadDTO getPayload() {
+    public List<AppointmentAvailabilityPayloadDTO> getPayload() {
         return payload;
     }
 
@@ -50,7 +52,7 @@ public class AppointmentAvailabilityDataDTO implements Serializable {
      *
      * @param payload the payload
      */
-    public void setPayload(AppointmentAvailabilityPayloadDTO payload) {
+    public void setPayload(List<AppointmentAvailabilityPayloadDTO> payload) {
         this.payload = payload;
     }
 }

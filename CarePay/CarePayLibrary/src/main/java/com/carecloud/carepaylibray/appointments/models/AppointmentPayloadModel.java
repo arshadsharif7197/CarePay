@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class AppointmentPayloadModel implements Serializable {
 
+    @SerializedName("languages")
+    @Expose
+    private List<ResourceLanguageDTO> languages = null;
     @SerializedName("appointments")
     @Expose
     private List<AppointmentDTO> appointments = new ArrayList<>();
@@ -34,7 +37,25 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("appointment_availability")
     @Expose
     private AppointmentAvailabilityDataDTO appointment_availability;
+    @SerializedName("resources_to_schedule")
+    @Expose
+    private List<ResourcesToScheduleDTO> resourcesToSchedule = null;
 
+    /**
+     *
+     * @return languages
+     */
+    public List<ResourceLanguageDTO> getLanguages() {
+        return languages;
+    }
+
+    /**
+     *
+     * @param languages languages
+     */
+    public void setLanguages(List<ResourceLanguageDTO> languages) {
+        this.languages = languages;
+    }
     /**
      *
      * @return
@@ -159,5 +180,21 @@ public class AppointmentPayloadModel implements Serializable {
      */
     public void setAppointment_availability(AppointmentAvailabilityDataDTO appointment_availability) {
         this.appointment_availability = appointment_availability;
+    }
+
+   /**
+    *
+    * @return resourcesToSchedule
+    */
+    public List<ResourcesToScheduleDTO> getResourcesToSchedule() {
+        return resourcesToSchedule;
+    }
+
+    /**
+     *
+     * @param resourcesToSchedule resourcesToSchedule
+     */
+    public void setResourcesToSchedule(List<ResourcesToScheduleDTO> resourcesToSchedule) {
+        this.resourcesToSchedule = resourcesToSchedule;
     }
 }

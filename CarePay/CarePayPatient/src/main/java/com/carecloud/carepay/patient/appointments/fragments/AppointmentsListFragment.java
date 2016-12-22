@@ -335,6 +335,10 @@ public class AppointmentsListFragment extends Fragment {
         appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if(popup!=null){
+                    popup.dismiss();
+                }
+
                 if (appointmentsItems != null) {
                     appointmentsItems.clear();
                 }

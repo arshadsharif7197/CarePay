@@ -80,10 +80,10 @@ public class DateUtil {
      *
      * @return The instance
      */
-    public DateUtil setToTomorrow() {
+    public DateUtil setToDayAfterTomorrow() {
         //date = Calendar.getInstance().getTime();
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
         date = calendar.getTime();
         updateFields();
         return this;
@@ -156,7 +156,7 @@ public class DateUtil {
      * @return The formatted date as string
      */
     public String getDateAsyyyyMMdd() {
-        return String.format(Locale.getDefault(), "%04d-%02d-%2d", year, month + 1, day);
+        return String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, day);
     }
 
     /**

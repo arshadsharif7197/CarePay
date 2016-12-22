@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/dimen_40dp"
     android:orientation="vertical">
 
     <ScrollView
@@ -38,6 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/titleTv"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:text="@string/consentdescrption" />
             </RelativeLayout>
 
