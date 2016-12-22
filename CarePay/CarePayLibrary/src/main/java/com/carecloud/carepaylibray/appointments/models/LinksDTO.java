@@ -21,7 +21,7 @@ public class LinksDTO {
     private TransitionDTO appointments;
     @SerializedName("patient_balances")
     @Expose
-    private LinkDTO patientBalances;
+    private TransitionDTO patientBalances;
     @SerializedName("resources_to_schedule")
     @Expose
     private TransitionDTO resourcesToSchedule;
@@ -88,7 +88,7 @@ public class LinksDTO {
      * @return
      *     The patientBalances
      */
-    public LinkDTO getPatientBalances() {
+    public TransitionDTO getPatientBalances() {
         return patientBalances;
     }
 
@@ -97,7 +97,7 @@ public class LinksDTO {
      * @param patientBalances
      *     The patient_balances
      */
-    public void setPatientBalances(LinkDTO patientBalances) {
+    public void setPatientBalances(TransitionDTO patientBalances) {
         this.patientBalances = patientBalances;
     }
 
