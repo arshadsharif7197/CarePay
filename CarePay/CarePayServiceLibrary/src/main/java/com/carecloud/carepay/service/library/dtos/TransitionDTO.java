@@ -22,6 +22,10 @@ public class TransitionDTO {
     @SerializedName("data")
     @Expose
     private DataDTO data;
+    @SerializedName("post_model")
+    @Expose
+    private JsonObject postModel;
+
 
     /**
      *
@@ -93,5 +97,23 @@ public class TransitionDTO {
      */
     public void setData(DataDTO data) {
         this.data = data;
+    }
+
+    /**
+     * Gets post model.
+     *
+     * @return the post model
+     */
+    public JsonObject getPostModel() {
+        return postModel;
+    }
+
+    /**
+     * Sets post model.
+     *
+     * @param postModel the post model
+     */
+    public void setPostModel(JsonObject postModel) {
+        this.postModel = postModel;
     }
 }

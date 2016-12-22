@@ -25,7 +25,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -47,6 +46,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     private ChooseProviderFragment chooseProviderFragment;
     private List<AppointmentResourcesDTO> resources;
     private AppointmentResourcesDTO selectedResource;
+    private AppointmentsResultModel appointmentsresourcesToScheduleModel;
 
     @Override
     public void onStart() {
@@ -134,26 +134,34 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Gson gson = new Gson();
-            AppointmentsResultModel appointmentsResultModel = gson.fromJson(workflowDTO.toString(),
+            appointmentsresourcesToScheduleModel = gson.fromJson(workflowDTO.toString(),
                     AppointmentsResultModel.class);
 
-            if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
-                    && appointmentsResultModel.getPayload().getResourcesToSchedule() != null
-                    && appointmentsResultModel.getPayload().getResourcesToSchedule().size() > 0) {
+            if (appointmentsresourcesToScheduleModel != null && appointmentsresourcesToScheduleModel.getPayload() != null
+                    && appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
+                    && appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
+                resources = appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
+                AppointmentsResultModel appointmentsResultModel = gson.fromJson(workflowDTO.toString(),
+                        AppointmentsResultModel.class);
 
-                resources = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getResources();
-                List<Object> resourcesListWithHeader = getResourcesListWithHeader();
+                if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
+                        && appointmentsResultModel.getPayload().getResourcesToSchedule() != null
+                        && appointmentsResultModel.getPayload().getResourcesToSchedule().size() > 0) {
 
-                if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
-                    ProviderAdapter providerAdapter = new ProviderAdapter(
-                            getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
-                            chooseProviderFragment);
-                    providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    providersRecyclerView.setAdapter(providerAdapter);
+                    resources = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getResources();
+                    List<Object> resourcesListWithHeader = getResourcesListWithHeader();
+
+                    if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
+                        ProviderAdapter providerAdapter = new ProviderAdapter(
+                                getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
+                                chooseProviderFragment);
+                        providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        providersRecyclerView.setAdapter(providerAdapter);
+                    }
                 }
-            }
 
-            appointmentProgressBar.setVisibility(View.GONE);
+                appointmentProgressBar.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -207,15 +215,12 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
-        AppointmentDTO appointmentDTO= new AppointmentDTO();
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_BUNDLE, gson.toJson(appointmentDTO));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitType));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsresourcesToScheduleModel));
         visitTypeFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
                 AvailableHoursFragment.class.getSimpleName()).commit();
     }
-
-
 }
