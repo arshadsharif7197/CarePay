@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.dialog;
+package com.carecloud.carepaylibray.customdialogs;
 
 import android.app.Dialog;
 import android.content.Context;

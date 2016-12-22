@@ -15,6 +15,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProvidersListAdapter;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -24,6 +25,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -34,13 +37,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ScheduleAppointmentActivity extends BasePracticeActivity implements View.OnClickListener,
-        ProvidersListAdapter.OnProviderListItemClickListener {
+        ProvidersListAdapter.OnProviderListItemClickListener, VisitTypeDialog.OnDialogListItemClickListener  {
 
     private RecyclerView appointmentsRecyclerView;
     private AppointmentsResultModel scheduleResourcesModel;
 
     private ProgressBar appointmentProgressBar;
     private LinearLayout noAppointmentView;
+
+    private AppointmentResourcesDTO selectedResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,8 +207,22 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     @Override
     public void onProviderListItemClickListener(int position) {
         List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload().getResources();
-        AppointmentResourcesDTO resourcesDTO = resources.get(position);
+        selectedResource = resources.get(position);
+        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this, selectedResource, this, scheduleResourcesModel);
+        visitTypeDialog.show();
+    }
 
-        Toast.makeText(this, resourcesDTO.getResource().getProvider().getName() + " selected...", Toast.LENGTH_SHORT).show();
+    /**
+     * what to do with the selected visit type and provider
+     * @param selectedVisitType selected visit type from dialog
+     */
+    public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
+
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitType));
+        Toast.makeText(this, "call AvailableHoursFragment...", Toast.LENGTH_SHORT).show();
+        //call AvailableHoursFragment
     }
 }
