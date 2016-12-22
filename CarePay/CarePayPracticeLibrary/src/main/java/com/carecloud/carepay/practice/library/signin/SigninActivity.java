@@ -212,6 +212,11 @@ public class SigninActivity extends BasePracticeActivity {
         // TODO: 11/17/2016
         emailEditText.setText("practice@cc.com");
         passwordEditText.setText("Practice123!");
+
+        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            emailEditText.setText("srios@carecloud.com");
+            passwordEditText.setText("Nirvanax1!");
+        }
     }
 
     /**

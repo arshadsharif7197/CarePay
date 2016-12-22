@@ -19,6 +19,8 @@
     <string name="home_logo">Home Logo</string>
     <string name="home_icon_check_in">Check-in</string>
     <string name="checked_in">Checked-In</string>
+    <string name="pending">Pending</string>
+    <string name="checking_in">Checking-In</string>
     <string name="unauthorized">Unauthorized</string>
     <string name="unauthorized_practice_user">Unauthorized practice user.</string>
     <string name="qr_code_scanner">QR Code Scanner</string>
