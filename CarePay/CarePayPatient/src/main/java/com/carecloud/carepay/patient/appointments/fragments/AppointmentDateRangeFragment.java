@@ -58,14 +58,13 @@ public class AppointmentDateRangeFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            Gson gson = new Gson();
-            String appointmentInfoString;
-
             previousStartDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
             previousEndDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
 
+            Gson gson = new Gson();
+            String appointmentInfoString;
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE);
             selectedVisitTypeDTO = gson.fromJson(appointmentInfoString, VisitTypeDTO.class);
 
