@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
-import com.carecloud.carepay.patient.appointments.dialog.VisitTypeDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -31,6 +30,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
