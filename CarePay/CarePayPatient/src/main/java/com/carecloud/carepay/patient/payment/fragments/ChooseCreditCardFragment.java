@@ -44,6 +44,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
     private RadioGroup.LayoutParams radioGroupLayoutParam;
 
     private PaymentsModel paymentsModel;
+    private PaymentsModel intakePaymentModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +56,9 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+
+            paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         }
 
         // Inflate the layout for this fragment
@@ -198,6 +202,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsModel);
             bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            bundle.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
             //args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
             fragment.setArguments(bundle);
 
