@@ -35,6 +35,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnProviderListItemClickListener,
@@ -142,8 +144,17 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
                     && appointmentsResultModel.getPayload().getResourcesToSchedule().size() > 0) {
 
                 resources = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getResources();
-                List<Object> resourcesListWithHeader = getResourcesListWithHeader();
+                if (resources.size() > 0) {
+                    Collections.sort(resources, new Comparator<AppointmentResourcesDTO>() {
+                        @Override
+                        public int compare(final AppointmentResourcesDTO object1, final AppointmentResourcesDTO object2) {
+                            return object1.getResource().getProvider().getName()
+                                    .compareTo(object2.getResource().getProvider().getName());
+                        }
+                    });
+                }
 
+                List<Object> resourcesListWithHeader = getResourcesListWithHeader();
                 if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
                     ProviderAdapter providerAdapter = new ProviderAdapter(
                             getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,

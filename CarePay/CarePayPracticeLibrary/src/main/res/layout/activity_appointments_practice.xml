@@ -31,8 +31,7 @@
             android:id="@+id/titleHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dimen_22dp"
-            android:paddingTop="@dimen/dimen_22dp"
+            android:paddingTop="@dimen/dimen_34dp"
             android:scaleType="fitXY"
             android:src="@drawable/cp_logo" />
     </LinearLayout>
@@ -43,10 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/titleLayout"
         android:layout_centerHorizontal="true"
-        android:includeFontPadding="false"
-        android:paddingBottom="@dimen/dimen_8dp"
+        android:layout_marginTop="@dimen/dimen_46dp"
         android:textColor="@color/white"
-        android:textSize="36sp"
+        android:textSize="@dimen/text_size_36sp"
         app:customAssetFont="gotham_rounded_medium" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -55,10 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/titleSelectappointmentcheckin"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dimen_22dp"
-        android:includeFontPadding="false"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_size_22sp"
         app:customAssetFont="proxima_nova_regular" />
 
     <ProgressBar
@@ -72,10 +68,10 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/appointments_recycler_view"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dimen_500dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/titleSelectappointmentsubheader"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_22dp"
+        android:layout_marginTop="@dimen/provider_list_margin"
         android:orientation="horizontal"
         android:scrollbars="horizontal" />
 
@@ -85,7 +81,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/titleSelectappointmentsubheader"
         android:orientation="vertical"
-
         android:visibility="gone">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -93,11 +88,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="@dimen/provider_no_list_margin"
             android:background="@drawable/circle_shape"
             android:gravity="center"
             android:textColor="@color/pastel_blue"
-            android:textSize="13sp"
+            android:textSize="@dimen/text_size_13sp"
             app:customAssetFont="proxima_nova_regular" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -107,7 +102,7 @@
             android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
             android:gravity="center"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="21sp"
+            android:textSize="@dimen/text_size_21sp"
             app:customAssetFont="gotham_rounded_medium" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -119,9 +114,8 @@
             android:layout_marginTop="@dimen/consent_top"
             android:gravity="center"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_size_18sp"
             app:customAssetFont="proxima_nova_regular" />
-
     </LinearLayout>
 
     <ImageView
@@ -133,5 +127,4 @@
         android:paddingEnd="0dp"
         android:paddingStart="@dimen/dimen_24dp"
         android:src="@drawable/icn_home" />
-
 </RelativeLayout>

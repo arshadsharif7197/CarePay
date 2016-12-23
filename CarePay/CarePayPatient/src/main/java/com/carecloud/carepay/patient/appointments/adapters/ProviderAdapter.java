@@ -62,9 +62,11 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
             holder.providerItemLinearLayout.setVisibility(View.VISIBLE);
 
             AppointmentResourcesDTO resources = (AppointmentResourcesDTO) object;
-            holder.doctorName.setText(resources.getResource().getName());
+            String providerName = resources.getResource().getProvider().getName();
+
+            holder.shortName.setText(StringUtil.onShortDrName(providerName));
+            holder.doctorName.setText(providerName);
             holder.doctorType.setText(resources.getResource().getProvider().getSpecialty().getName());
-            holder.shortName.setText(StringUtil.onShortDrName(resources.getResource().getName()));
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
