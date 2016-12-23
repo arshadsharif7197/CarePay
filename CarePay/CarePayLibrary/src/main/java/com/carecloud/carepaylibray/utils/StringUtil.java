@@ -4,8 +4,8 @@ import android.content.Context;
 import android.text.Editable;
 import android.util.Log;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
@@ -233,14 +233,23 @@ public class StringUtil {
     public static String onShortDrName(String fullName) {
         if (fullName != null && fullName.length() > 1) {
             String stringSplitArr[] = fullName.split(" ");
-            if (stringSplitArr.length >= 3)
-                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase() + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
-            else if (stringSplitArr.length == 2)
-                return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
-            else
-                return "";
-        } else
-            return "";
+            if (fullName.contains(".")) {
+                if (stringSplitArr.length >= 3) {
+                    return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase()
+                            + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
+                } else if (stringSplitArr.length == 2) {
+                    return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
+                }
+            } else {
+                if (stringSplitArr.length == 2) {
+                    return String.valueOf(stringSplitArr[0].charAt(0)).toUpperCase()
+                            + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
+                } else {
+                    return String.valueOf(stringSplitArr[0].charAt(0)).toUpperCase();
+                }
+            }
+        }
+        return "";
     }
 
     /**

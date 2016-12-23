@@ -128,6 +128,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointments_missed_heading")
     @Expose
     private String appointmentsMissedHeading;
+    @SerializedName("appointments_web_today_heading")
+    @Expose
+    private String appointmentsTodayHeadingSmall;
     @SerializedName("no_appointments_placeholder_label")
     @Expose
     private String noAppointmentsPlaceholderLabel;
@@ -988,5 +991,21 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setProviderListScheduleAppointmentButton(String providerListScheduleAppointmentButton) {
         this.providerListScheduleAppointmentButton = providerListScheduleAppointmentButton;
+    }
+
+    /**
+     *
+     * @return appointmentsTodayHeadingSmall
+     */
+    public String getAppointmentsTodayHeadingSmall() {
+        return StringUtil.getLabelForView(appointmentsTodayHeadingSmall);
+    }
+
+    /**
+     *
+     * @param appointmentsTodayHeadingSmall appointmentsTodayHeadingSmall
+     */
+    public void setAppointmentsTodayHeadingSmall(String appointmentsTodayHeadingSmall) {
+        this.appointmentsTodayHeadingSmall = appointmentsTodayHeadingSmall;
     }
 }
