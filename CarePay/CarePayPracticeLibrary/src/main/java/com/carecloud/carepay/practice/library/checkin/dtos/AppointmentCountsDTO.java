@@ -13,6 +13,59 @@ public class AppointmentCountsDTO {
     @SerializedName("Checked-In")
     @Expose
     private Integer checkedIn;
+    @SerializedName("Cancelled")
+    @Expose
+    private Integer cancelled;
+    @SerializedName("Requested")
+    @Expose
+    private Integer requested;
+    @SerializedName("Checking-In")
+    @Expose
+    private Integer checkingIn;
+
+    public Integer getCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(Integer cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    /**
+     *
+     * @return
+     * The requested
+     */
+    public Integer getRequested() {
+        return requested;
+    }
+
+    /**
+     *
+     * @param requested
+     * The Requested
+     */
+    public void setRequested(Integer requested) {
+        this.requested = requested;
+    }
+
+    /**
+     *
+     * @return
+     * The checkingIn
+     */
+    public Integer getCheckingIn() {
+        return checkingIn;
+    }
+
+    /**
+     *
+     * @param checkingIn
+     * The checkingIn
+     */
+    public void setCheckingIn(Integer checkingIn) {
+        this.checkingIn = checkingIn;
+    }
 
     /**
      *

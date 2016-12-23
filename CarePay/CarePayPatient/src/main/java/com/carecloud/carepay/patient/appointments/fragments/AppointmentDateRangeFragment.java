@@ -13,12 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.ArrayList;
@@ -33,7 +36,6 @@ import java.util.List;
  */
 public class AppointmentDateRangeFragment extends Fragment {
 
-    private AppointmentDTO appointmentDTO;
     private CalendarPickerView calendarPickerView;
     private CustomGothamRoundedMediumButton applyDateRangeButton;
     private List<Date> dateList;
@@ -41,6 +43,9 @@ public class AppointmentDateRangeFragment extends Fragment {
     private Date previousEndDate;
     private Date newStartDate;
     private Date newEndDate;
+    private VisitTypeDTO selectedVisitTypeDTO;
+    private AppointmentResourcesDTO selectedResourcesDTO;
+    private AppointmentsResultModel resourcesToScheduleDTO;
 
     @Override
     public void onStart() {
@@ -53,12 +58,21 @@ public class AppointmentDateRangeFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            appointmentDTO = (AppointmentDTO)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE);
             previousStartDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
             previousEndDate = (Date)
                 bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
+
+            Gson gson = new Gson();
+            String appointmentInfoString;
+            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE);
+            selectedVisitTypeDTO = gson.fromJson(appointmentInfoString, VisitTypeDTO.class);
+
+            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
+            selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesDTO.class);
+
+            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
+            resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
         }
     }
 
@@ -197,11 +211,13 @@ public class AppointmentDateRangeFragment extends Fragment {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
-                previousStartDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
-                previousEndDate);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, previousStartDate);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, previousEndDate);
+
+        Gson gson = new Gson();
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
         availableHoursFragment.setArguments(bundle);
 
         fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
@@ -277,11 +293,14 @@ public class AppointmentDateRangeFragment extends Fragment {
                 }
 
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_BUNDLE, appointmentDTO);
+                Gson gson = new Gson();
                 bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
                         newStartDate);
                 bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
                         newEndDate);
+                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
+                bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
+                bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
 
                 availableHoursFragment.setArguments(bundle);
 
