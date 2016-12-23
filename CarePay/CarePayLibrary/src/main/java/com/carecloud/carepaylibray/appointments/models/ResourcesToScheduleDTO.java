@@ -13,7 +13,7 @@ public class ResourcesToScheduleDTO {
     private ResourcesPracticeDTO practice;
     @SerializedName("locations")
     @Expose
-    private List<ResourceLanguageDTO> locations = null;
+    private List<AppointmentLocationDTO> locations = null;
     @SerializedName("resources")
     @Expose
     private List<AppointmentResourcesDTO> resources = null;
@@ -38,7 +38,7 @@ public class ResourcesToScheduleDTO {
      *
      * @return locations
      */
-    public List<ResourceLanguageDTO> getLocations() {
+    public List<AppointmentLocationDTO> getLocations() {
         return locations;
     }
 
@@ -46,7 +46,7 @@ public class ResourcesToScheduleDTO {
      *
      * @param locations locations
      */
-    public void setLocations(List<ResourceLanguageDTO> locations) {
+    public void setLocations(List<AppointmentLocationDTO> locations) {
         this.locations = locations;
     }
 

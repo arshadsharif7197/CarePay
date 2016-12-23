@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLocationDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -55,8 +56,11 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
         holder.doctorName.setText(providerName);
         holder.doctorType.setText(resource.getResource().getProvider().getSpecialty().getName());
 
-        holder.placeName.setText(StringUtil.getLabelForView(""));
-        holder.address.setText(StringUtil.getLabelForView(""));
+        //Endpoint not support location for individual resource,
+        //Hence used 0th item from location array
+        AppointmentLocationDTO location = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getLocations().get(0);
+        holder.placeName.setText(location.getName());
+        holder.address.setText(location.getAddress().getPlaceAddressString());
 
         AppointmentLabelDTO label = appointmentsResultModel.getMetadata().getLabel();
         holder.scheduleAppointment.setText(label.getProviderListScheduleAppointmentButton());
