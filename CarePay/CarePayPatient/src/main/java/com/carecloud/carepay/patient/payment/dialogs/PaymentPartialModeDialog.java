@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.payment.dialogs;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -77,6 +80,7 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
         onSettingStyle();
         onSetListener();
         onSetValuesView();
+        updatePaymentsProgress(25);//Need to pass actual progress here
         this.addChildDyanmicLayout.addView(childActionView);
     }
 
@@ -120,5 +124,15 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
 
     private void onPayNow() {
 
+    }
+
+    private void updatePaymentsProgress(int paymentsProgress){
+        Resources res = getContext().getResources();
+        Drawable drawable = res.getDrawable((R.drawable.circular));
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.circularProgressbar);
+        progressBar.setProgress(paymentsProgress);
+        progressBar.setSecondaryProgress(100);
+        progressBar.setMax(100);
+        progressBar.setProgressDrawable(drawable);
     }
 }
