@@ -80,7 +80,7 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
         onSettingStyle();
         onSetListener();
         onSetValuesView();
-        updatePaymentsProgress(25);//TODO pass actual progress
+        updatePaymentsProgress(25);//Need to pass actual progress here
         this.addChildDyanmicLayout.addView(childActionView);
     }
 
@@ -130,7 +130,7 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
         Resources res = getContext().getResources();
         Drawable drawable = res.getDrawable((R.drawable.circular));
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.circularProgressbar);
-        progressBar.setProgress(paymentsProgress);//TODO Need to show progreass base
+        progressBar.setProgress(paymentsProgress);
         progressBar.setSecondaryProgress(100);
         progressBar.setMax(100);
         progressBar.setProgressDrawable(drawable);
