@@ -8,6 +8,14 @@
 
     <include layout="@layout/add_appointment_toolbar" />
 
+    <ProgressBar
+        android:id="@+id/providers_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true" />
+
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/providers_sticky_header_title"
         android:layout_width="match_parent"

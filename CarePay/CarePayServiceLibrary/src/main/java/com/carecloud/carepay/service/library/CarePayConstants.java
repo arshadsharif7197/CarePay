@@ -53,6 +53,9 @@ public class CarePayConstants {
     public static final String APPOINTMENT_INFO_BUNDLE = "appointment_info_bundle";
     public static final String ADD_APPOINTMENT_BUNDLE = "add_appointment_bundle";
     public static final String ADD_APPOINTMENT_PROVIDERS_BUNDLE = "providers_info_bundle";
+    public static final String ADD_APPOINTMENT_VISIT_TYPE_BUNDLE = "visit_type_info_bundle";
+    public static final String ADD_APPOINTMENT_AVAILABILITY_BUNDLE = "appointment_availability_bundle";
+    public static final String ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE = "appointment_resource_to_schedule_bundle";
     public static final String ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE = "add_appointment_calendar_start_date_bundle";
     public static final String ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE = "add_appointment_calendar_end_date_bundle";
     public static final String PAYMENT_CREDIT_CARD_INFO = "payment_credit_card_info";

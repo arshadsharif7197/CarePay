@@ -128,6 +128,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointments_missed_heading")
     @Expose
     private String appointmentsMissedHeading;
+    @SerializedName("appointments_web_today_heading")
+    @Expose
+    private String appointmentsTodayHeadingSmall;
     @SerializedName("no_appointments_placeholder_label")
     @Expose
     private String noAppointmentsPlaceholderLabel;
@@ -170,6 +173,15 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("choose_provider_recent_header")
     @Expose
     private String chooseProviderRecentHeader;
+    @SerializedName("provider_list_header")
+    @Expose
+    private String providerListHeader;
+    @SerializedName("provider_list_sub_header")
+    @Expose
+    private String providerListSubHeader;
+    @SerializedName("provider_list_schedule_appointment_button")
+    @Expose
+    private String providerListScheduleAppointmentButton;
 
     /**
      * @return The appointmentsHeading
@@ -931,5 +943,69 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setChooseProviderRecentHeader(String chooseProviderRecentHeader) {
         this.chooseProviderRecentHeader = chooseProviderRecentHeader;
+    }
+
+    /**
+     *
+     * @return providerListHeader
+     */
+    public String getProviderListHeader() {
+        return StringUtil.getLabelForView(providerListHeader);
+    }
+
+    /**
+     *
+     * @param providerListHeader providerListHeader
+     */
+    public void setProviderListHeader(String providerListHeader) {
+        this.providerListHeader = providerListHeader;
+    }
+
+    /**
+     *
+     * @return providerListSubHeader
+     */
+    public String getProviderListSubHeader() {
+        return StringUtil.getLabelForView(providerListSubHeader);
+    }
+
+    /**
+     *
+     * @param providerListSubHeader providerListSubHeader
+     */
+    public void setProviderListSubHeader(String providerListSubHeader) {
+        this.providerListSubHeader = providerListSubHeader;
+    }
+
+    /**
+     *
+     * @return providerListScheduleAppointmentButton
+     */
+    public String getProviderListScheduleAppointmentButton() {
+        return StringUtil.getLabelForView(providerListScheduleAppointmentButton);
+    }
+
+    /**
+     *
+     * @param providerListScheduleAppointmentButton providerListScheduleAppointmentButton
+     */
+    public void setProviderListScheduleAppointmentButton(String providerListScheduleAppointmentButton) {
+        this.providerListScheduleAppointmentButton = providerListScheduleAppointmentButton;
+    }
+
+    /**
+     *
+     * @return appointmentsTodayHeadingSmall
+     */
+    public String getAppointmentsTodayHeadingSmall() {
+        return StringUtil.getLabelForView(appointmentsTodayHeadingSmall);
+    }
+
+    /**
+     *
+     * @param appointmentsTodayHeadingSmall appointmentsTodayHeadingSmall
+     */
+    public void setAppointmentsTodayHeadingSmall(String appointmentsTodayHeadingSmall) {
+        this.appointmentsTodayHeadingSmall = appointmentsTodayHeadingSmall;
     }
 }

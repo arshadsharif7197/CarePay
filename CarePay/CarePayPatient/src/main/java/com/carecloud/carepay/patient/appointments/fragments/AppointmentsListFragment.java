@@ -335,6 +335,10 @@ public class AppointmentsListFragment extends Fragment {
         appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if(popup!=null){
+                    popup.dismiss();
+                }
+
                 if (appointmentsItems != null) {
                     appointmentsItems.clear();
                 }
@@ -438,7 +442,10 @@ public class AppointmentsListFragment extends Fragment {
             appointmentListWithHeader = new ArrayList<>();
 
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
-
+                // Checked-In 2, Cancelled 4,
+                if( appointmentDTO.getPayload().getAppointmentStatusModel().getId() == 4){
+                    continue;
+                }
                 if (appointmentDTO.getPayload().getAppointmentStatusModel().getId() != 2) {
                     String title = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
                     if (headerTitle.equalsIgnoreCase(title)) {

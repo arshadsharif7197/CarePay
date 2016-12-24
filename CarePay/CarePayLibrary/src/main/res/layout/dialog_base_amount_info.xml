@@ -115,13 +115,15 @@
                     android:visibility="gone"
                     app:cardCornerRadius="@dimen/apt_dl_image_radius">
 
-                    <ImageView
-                        android:id="@+id/paymentPartialModeImageView"
-                        android:layout_width="wrap_content"
+                    <ProgressBar
+                        android:id="@+id/circularProgressbar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="@dimen/apt_dl_image_ht_wdh"
                         android:layout_height="@dimen/apt_dl_image_ht_wdh"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/icn_signup_step_2_user_on" />
+                        android:indeterminate="false"
+                        android:layout_centerInParent="true"
+                        android:progressDrawable="@drawable/circular"
+                        />
                 </android.support.v7.widget.CardView>
             </LinearLayout>
 
@@ -213,6 +215,7 @@
                             android:ellipsize="none"
                             android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
                             android:maxLines="2"
+                            android:gravity="left"
                             android:text="067 Gulgowski Coves Suite 523, Miami, FL, 33156"
                             android:textColor="@color/bermudagrey"
                             android:textSize="@dimen/textview_textsize" />

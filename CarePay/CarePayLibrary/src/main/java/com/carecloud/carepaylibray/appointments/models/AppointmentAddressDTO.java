@@ -205,20 +205,12 @@ public class AppointmentAddressDTO {
      * @return Full address
      */
     public String getPlaceAddressString() {
-        StringBuilder address = new StringBuilder();
-        address.append(StringUtil.isNullOrEmpty(line1) ? "" : line1);
-        address.append(" ");
-        address.append(StringUtil.isNullOrEmpty(line2) ? "" : line2);
-        address.append(" ");
-        address.append(line3 == null ? "" : line3);
-        address.append(" ");
-        address.append(StringUtil.isNullOrEmpty(city) ? "" : city);
-        address.append(" ");
-        address.append(StringUtil.isNullOrEmpty(stateName) ? "" : stateName);
-        address.append(" ");
-        address.append(StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode);
-        address.append(" ");
-        address.append(countyName == null ? "" : countyName);
-        return address.toString();
+        return (StringUtil.isNullOrEmpty(line1) ? "" : line1 + " ")
+                + (StringUtil.isNullOrEmpty(line2) ? "" : line2 + " ")
+                + (StringUtil.isNullOrEmpty(city) ? "" : city + " ")
+                + (line3 == null ? "" : line3 + " ")
+                + (StringUtil.isNullOrEmpty(stateName) ? "" : stateName + " ")
+                + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode + " ")
+                + (countyName == null ? "" : countyName);
     }
 }

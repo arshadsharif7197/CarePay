@@ -10,22 +10,26 @@ import com.google.gson.annotations.SerializedName;
 
 public class PatientHomeScreenTransitionsDTO {
 
-    @SerializedName("practice_mode") @Expose
+    @SerializedName("practice_mode")
+    @Expose
     private TransitionDTO practiceMode;
-
-    @SerializedName("patient_checkin")  @Expose
+    @SerializedName("patient_checkin")
+    @Expose
     private TransitionDTO patientCheckin;
-
-    @SerializedName("patient_checkout") @Expose
-    private TransitionDTO patientCheckout;
-
-    @SerializedName("patient_payments") @Expose
+    @SerializedName("patient_appointments")
+    @Expose
+    private TransitionDTO patientAppointments;
+    @SerializedName("patient_payments")
+    @Expose
     private TransitionDTO patientPayments;
-
-    @SerializedName("shop") @Expose
+    @SerializedName("patient_checkout")
+    @Expose
+    private TransitionDTO patientCheckout;
+    @SerializedName("shop")
+    @Expose
     private TransitionDTO shop;
-
-    @SerializedName("office_news") @Expose
+    @SerializedName("office_news")
+    @Expose
     private TransitionDTO officeNews;
 
     public TransitionDTO getPracticeMode() {
@@ -74,5 +78,13 @@ public class PatientHomeScreenTransitionsDTO {
 
     public void setOfficeNews(TransitionDTO officeNews) {
         this.officeNews = officeNews;
+    }
+
+    public TransitionDTO getPatientAppointments() {
+        return patientAppointments;
+    }
+
+    public void setPatientAppointments(TransitionDTO patientAppointments) {
+        this.patientAppointments = patientAppointments;
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CarePay</string>
+    <string name="account_name">com.google.android.gms.samples.wallet.KEY_USERNAME</string>
 </resources>

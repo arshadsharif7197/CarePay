@@ -7,31 +7,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
 public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public interface SelectAppointmentTimeSlotCallback{
+        void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO);
+    }
+
     // The items to display in your RecyclerView
     private List<Object> items;
     private Context context;
-    private AppointmentDTO appointmentDTO;
     private final int sectionHeader = 0;
+    private SelectAppointmentTimeSlotCallback selectSlotCallback;
 
     /**
      * Constructor.
      * @param context context
      * @param items list of occurrence
-     * @param appointmentDTO selected appointment item
+     * @param callback callback on select time slot
      */
-    public AvailableHoursAdapter(Context context, List<Object> items, AppointmentDTO appointmentDTO) {
+    public AvailableHoursAdapter(Context context, List<Object> items, SelectAppointmentTimeSlotCallback callback) {
         this.context = context;
         this.items = items;
-        this.appointmentDTO = appointmentDTO;
+        this.selectSlotCallback = callback;
     }
 
     // Return the size of your data set (invoked by the layout manager)
@@ -67,31 +73,31 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        final Object appointmentSlotItem = items.get(position);
         if (viewHolder.getItemViewType() == sectionHeader) {
             ViewHolderSectionHeader vhSectionHeader = (ViewHolderSectionHeader) viewHolder;
-            vhSectionHeader.getTextView().setText(items.get(position).toString());
+            vhSectionHeader.getTextView().setText(appointmentSlotItem.toString());
         } else {
             ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
-            vhTimeSlot.getTextView().setText(((AppointmentAvailableHoursDTO) items.get(position)).getAppointmentTimeSlot());
-        }
+            final AppointmentsSlotsDTO appointmentsSlotsDTO = ((AppointmentsSlotsDTO) appointmentSlotItem);
 
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView selectedTimeSlot = (TextView) view.findViewById(R.id.textview_timeslot);
+            String upcomingStartTime = appointmentsSlotsDTO.getStartTime();
+            DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
+            DateUtil.getInstance().setDateRaw(upcomingStartTime);
+            String time12Hour = DateUtil.getInstance().getTime12Hour();
+            vhTimeSlot.getTextView().setText(time12Hour);
 
-                if (selectedTimeSlot != null) {
-                    /**
-                     * Need Select time slot and pass to next screen.
-                     */
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                    // Launch dialog of appointment request
-                  /*  AppointmentsActivity baseActivity = new AppointmentsActivity();
-                    baseActivity.setAppointmentModel(appointmentDTO);
-                    new RequestAppointmentDialog(context, appointmentDTO,appointmentDTO).show();*/
+                    // Restricted the appointment list item click if it is appointment header type.
+                    if (appointmentSlotItem.getClass() == AppointmentsSlotsDTO.class) {
+                        selectSlotCallback.onSelectAppointmentTimeSlot((AppointmentsSlotsDTO)appointmentSlotItem);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private class ViewHolderTimeSlot extends RecyclerView.ViewHolder {

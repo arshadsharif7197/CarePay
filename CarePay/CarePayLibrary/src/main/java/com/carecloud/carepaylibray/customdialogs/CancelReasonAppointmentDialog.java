@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.util.Log;
@@ -51,9 +52,11 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     private RadioGroup cancelReasonRadioGroup;
     private Button cancelAppointmentButton;
     private EditText reasonEditText;
+    private TextInputLayout reasonTextInputLayout;
 
     private int selectedReasonId = -1;
     private List<CancellationReasonDTO> cancellationReasons;
+    private CancelAppointmentDialog.CancelAppointmentCallback cancelAppointmentCallback;
 
     /**
      * Contractor for dialog.
@@ -62,11 +65,12 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
      * @param appointmentInfo Appointment Info data
      */
     public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo) {
+                                         AppointmentsResultModel appointmentInfo, CancelAppointmentDialog.CancelAppointmentCallback cancelAppointmentCallback) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
+        this.cancelAppointmentCallback = cancelAppointmentCallback;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -91,7 +95,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     private void onInitialization() {
         AppointmentLabelDTO label = appointmentInfo.getMetadata().getLabel();
         ((CarePayTextView) findViewById(R.id.heading_text)).setText(label.getCancelAppointmentReasonsTitle());
-
+        reasonTextInputLayout = (TextInputLayout)findViewById(R.id.reasonTextInputLayout);
         reasonEditText = (EditText) findViewById(R.id.reasonEditText);
         reasonEditText.setHint(label.getCancelAppointmentOtherReasonHint());
         reasonEditText.setHintTextColor(context.getResources().getColor(R.color.Munsell));
@@ -180,11 +184,12 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         }
 
         // Check for other cancellation reason
-        int selectedIndex = getSelectedCancellationIndex();
-        if (selectedIndex == -1) {
+        if (cancellationReasons.get(cancellationReasons.size()-1).getAppointmentCancellationReason().getId()==selectedReasonId) {
+            reasonTextInputLayout.setVisibility(View.VISIBLE);
             reasonEditText.setEnabled(true);
             reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
         } else {
+            reasonTextInputLayout.setVisibility(View.GONE);
             reasonEditText.setEnabled(false);
             reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.Munsell));
         }
@@ -235,18 +240,17 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         int selectedIndex = getSelectedCancellationIndex();
         DataDTO data = appointmentInfo.getMetadata().getTransitions().getCancel().getData();
+        JsonObject postBodyObj = new JsonObject();
+        postBodyObj.addProperty(data.getCancellationComments().getName(),reasonEditText.getText().toString());
         if (selectedIndex == -1) {
-            data.getCancellationComments().setLabel(reasonEditText.getText().toString());
-            data.getCancellationReasonId().setLabel(null);
+            postBodyObj.addProperty(data.getCancellationReasonId().getName(),-1);
         } else {
             AppointmentCancellationReasonDTO selectedReason
                     = cancellationReasons.get(selectedIndex).getAppointmentCancellationReason();
-            data.getCancellationComments().setLabel(selectedReason.getName());
-            data.getCancellationReasonId().setLabel("" + selectedReason.getId());
+            postBodyObj.addProperty(data.getCancellationReasonId().getName(),selectedReason.getId());
         }
 
-        Gson gsonBody = new Gson();
-        String body = gsonBody.toJson(data);
+        String body = postBodyObj.toString();
 
         TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
         WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToCancelCallback, body, queries);
@@ -259,7 +263,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentInfo).show();
+            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentInfo,cancelAppointmentCallback).show();
         }
 
         @Override

@@ -21,99 +21,117 @@ public class LinksDTO {
     private TransitionDTO appointments;
     @SerializedName("patient_balances")
     @Expose
-    private LinkDTO patientBalances;
+    private TransitionDTO patientBalances;
+    @SerializedName("resources_to_schedule")
+    @Expose
+    private TransitionDTO resourcesToSchedule;
     @SerializedName("providers_schedule")
     @Expose
     private LinkDTO providersSchedule;
+    @SerializedName("appointment_availability")
+    @Expose
+    private TransitionDTO appointmentAvailability;
 
     /**
-     * 
-     * @return
-     *     The self
+     * @return The self
      */
     public LinkDTO getSelf() {
         return self;
     }
 
     /**
-     * 
-     * @param self
-     *     The self
+     * @param self The self
      */
     public void setSelf(LinkDTO self) {
         this.self = self;
     }
 
     /**
-     * 
-     * @return
-     *     The demographics
+     * @return The demographics
      */
     public LinkDTO getDemographics() {
         return demographics;
     }
 
     /**
-     * 
-     * @param demographics
-     *     The demographics
+     * @param demographics The demographics
      */
     public void setDemographics(LinkDTO demographics) {
         this.demographics = demographics;
     }
 
     /**
-     * 
-     * @return
-     *     The appointments
+     * @return The appointments
      */
     public TransitionDTO getAppointments() {
         return appointments;
     }
 
     /**
-     * 
-     * @param appointments
-     *     The appointments
+     * @param appointments The appointments
      */
     public void setAppointments(TransitionDTO appointments) {
         this.appointments = appointments;
     }
 
     /**
-     * 
-     * @return
-     *     The patientBalances
+     * @return The patientBalances
      */
-    public LinkDTO getPatientBalances() {
+    public TransitionDTO getPatientBalances() {
         return patientBalances;
     }
 
     /**
-     * 
-     * @param patientBalances
-     *     The patient_balances
+     * @param patientBalances The patient_balances
      */
-    public void setPatientBalances(LinkDTO patientBalances) {
+    public void setPatientBalances(TransitionDTO patientBalances) {
         this.patientBalances = patientBalances;
     }
 
     /**
-     * 
-     * @return
-     *     The providersSchedule
+     * @return The providersSchedule
      */
     public LinkDTO getProvidersSchedule() {
         return providersSchedule;
     }
 
     /**
-     * 
-     * @param providersSchedule
-     *     The providers_schedule
+     * @param providersSchedule The providers_schedule
      */
     public void setProvidersSchedule(LinkDTO providersSchedule) {
         this.providersSchedule = providersSchedule;
     }
 
+    /**
+     * Gets appointment availability.
+     *
+     * @return the appointment availability
+     */
+    public TransitionDTO getAppointmentAvailability() {
+        return appointmentAvailability;
+    }
+
+    /**
+     * Sets appointment availability.
+     *
+     * @param appointmentAvailability the appointment availability
+     */
+    public void setAppointmentAvailability(TransitionDTO appointmentAvailability) {
+        this.appointmentAvailability = appointmentAvailability;
+    }
+
+    /*
+    *
+    * @return resourcesToSchedule
+    */
+    public TransitionDTO getResourcesToSchedule() {
+        return resourcesToSchedule;
+    }
+
+    /**
+     * @param resourcesToSchedule resourcesToSchedule
+     */
+    public void setResourcesToSchedule(TransitionDTO resourcesToSchedule) {
+        this.resourcesToSchedule = resourcesToSchedule;
+    }
 }

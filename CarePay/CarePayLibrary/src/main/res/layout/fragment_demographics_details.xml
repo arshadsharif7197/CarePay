@@ -15,7 +15,9 @@
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        >
 
         <TextView
             android:id="@+id/detailsHeading"

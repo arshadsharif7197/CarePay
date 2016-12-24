@@ -28,6 +28,9 @@ public class TransitionsDTO {
     @SerializedName("checking_in") @Expose
     private TransitionDTO checkingIn;
 
+    @SerializedName("make_appointment") @Expose
+    private TransitionDTO makeAppointment;
+
     /**
      * @return The checkingIn
      */
@@ -105,5 +108,23 @@ public class TransitionsDTO {
 
     public void setLogout(TransitionDTO logout) {
         this.logout = logout;
+    }
+
+    /**
+     * Gets make appointment.
+     *
+     * @return the make appointment
+     */
+    public TransitionDTO getMakeAppointment() {
+        return makeAppointment;
+    }
+
+    /**
+     * Sets make appointment.
+     *
+     * @param makeAppointment the make appointment
+     */
+    public void setMakeAppointment(TransitionDTO makeAppointment) {
+        this.makeAppointment = makeAppointment;
     }
 }

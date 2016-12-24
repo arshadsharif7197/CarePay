@@ -88,6 +88,7 @@
     <dimen name="demographics_docs_text_right_margin">14dp</dimen>
     <dimen name="demographics_docs_header_top_margin">17dp</dimen>
     <dimen name="demographics_docs_section_margin_top">36dp</dimen>
+    <dimen name="demographics_docs_section_patient_margin_top">12dp</dimen>
     <dimen name="demographics_docs_image_button_container_height">60dp</dimen>
     <dimen name="demographics_docs_image_button_container_margin_top">30dp</dimen>
     <dimen name="demographics_docs_header_title_text_size" format="float" type="dimen">21.0sp
@@ -181,7 +182,7 @@
 
     <dimen name="marginleftright">17dp</dimen>
     <dimen name="margintop">20dp</dimen>
-    <dimen name="consent_top">10dp</dimen>
+    <dimen name="consent_top">20dp</dimen>
     <dimen name="sig_pad">208dp</dimen>
     <dimen name="sig_txt">12sp</dimen>
     <dimen name="btn_hght">68dp</dimen>
@@ -351,4 +352,15 @@
     <dimen name="payment_plan_month_day_width">55dp</dimen>
     <dimen name="payment_plan_credit_card_font">16sp</dimen>
     <dimen name="payment_plan_credit_card_button_font">14sp</dimen>
+
+    <!--Android Pay-->
+    <dimen name="padding_tiny">2dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
+    <dimen name="padding_large">10dp</dimen>
+    <dimen name="padding_xlarge">16dp</dimen>
+    <dimen name="margin_large">10dp</dimen>
+    <dimen name="margin_xlarge">30dp</dimen>
+    <dimen name="buy_button_width">300dp</dimen>
+    <dimen name="buy_button_height">48dp</dimen>
+    <dimen name="element_space">15dp</dimen>
 </resources>

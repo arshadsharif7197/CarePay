@@ -113,4 +113,6 @@
     <color name="black_opacity_70">#3c000000</color>
     <color name="white_30opacity">#4Dffffff</color>
 
+    <color name="cardview_header_bg">#253C48</color>
+
 </resources>

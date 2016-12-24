@@ -1,13 +1,11 @@
 package com.carecloud.carepay.practice.library.appointments;
 
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -15,62 +13,39 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonSyntaxException;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AppointmentsActivity extends BasePracticeActivity implements View.OnClickListener {
-    private RecyclerView appointmentsRecyclerView;
-    private RecyclerView.LayoutManager appointmentsLayoutManager;
-    private AppointmentsListAdapter appointmentsListAdapter;
-    private AppointmentsResultModel appointmentsResultModel;
-    private ProgressBar appointmentProgressBar;
-    private static final String TAG = "AppointmentsActivity";
 
-    private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentsItems;
-    private TextView logOutTextview;
-    private CarePayTextView appointmentForTextview;
-    private CarePayTextView selectAppointmentTextview;
-    private CarePayTextView noAppointmentsLabel;
-    private CarePayTextView noAppointmentsDescription;
-    private Bundle bundle;
-    private LinearLayout noAppointmentView;
-    private List<com.carecloud.carepaylibray.appointments.models.AppointmentDTO> appointmentListWithToday;
+    private RecyclerView appointmentsRecyclerView;
+    private AppointmentsResultModel appointmentsResultModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointments_practice);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         appointmentsRecyclerView = (RecyclerView) findViewById(R.id.appointments_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
-        appointmentsItems = new ArrayList<AppointmentDTO>();
-        appointmentForTextview = (CarePayTextView) findViewById(R.id.titleSelectappointmentsubheader);
-        appointmentForTextview.setTextColor(Color.WHITE);
-        logOutTextview = (TextView) findViewById(R.id.logoutTextview);
-        selectAppointmentTextview = (CarePayTextView) findViewById(R.id.titleSelectappointmentcheckin);
-        appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
+
+        ProgressBar appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
-        noAppointmentView = (LinearLayout) findViewById(R.id.no_appointment_layout);
-        noAppointmentsLabel = (CarePayTextView) findViewById(R.id.no_apt_message_title);
-        noAppointmentsDescription = (CarePayTextView) findViewById(R.id.no_apt_message_desc);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
 
@@ -83,7 +58,6 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             ex.printStackTrace();
         }
     }
-
 
     private String getToday(String appointmentRawDate) {
         // Current date
@@ -120,9 +94,11 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             Map<String, String> headers = new HashMap<>();
             headers.put("x-api-key", HttpConstants.getApiStartKey());
             query.put("transition", "true");
-            WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getLogout(), logOutCall, query, headers);
+            WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
+                    .getTransitions().getLogout(), logOutCall, query, headers);
         } else if (viewId == R.id.btnHome) {
-            //WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata().getTransitions().getAuthenticate(), homeCall);
+            //WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
+            // .getTransitions().getAuthenticate(), homeCall);
         }
     }
 
@@ -166,11 +142,13 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
     private void populateWithLabels() {
         AppointmentLabelDTO labels = appointmentsResultModel.getMetadata().getLabel();
-        logOutTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsBtnLogout()));
-        appointmentForTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsSubHeading()));
-        selectAppointmentTextview.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsMainHeading()));
-        noAppointmentsLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getNoAppointmentsMessageTitle()));
-        noAppointmentsDescription.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getNoAppointmentsMessageText()));
+        if (labels != null) {
+            ((TextView) findViewById(R.id.logoutTextview)).setText(labels.getAppointmentsBtnLogout());
+            ((TextView) findViewById(R.id.titleSelectappointmentsubheader)).setText(labels.getAppointmentsSubHeading());
+            ((TextView) findViewById(R.id.titleSelectappointmentcheckin)).setText(labels.getAppointmentsMainHeading());
+            ((TextView) findViewById(R.id.no_apt_message_desc)).setText(labels.getNoAppointmentsMessageText());
+            ((TextView) findViewById(R.id.no_apt_message_title)).setText(labels.getNoAppointmentsMessageTitle());
+        }
     }
 
     /**
@@ -182,29 +160,29 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                 && appointmentsResultModel.getPayload().getAppointments() != null
                 && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
 
-            noAppointmentView.setVisibility(View.GONE);
-            appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
+            findViewById(R.id.no_appointment_layout).setVisibility(View.GONE);
+            List<AppointmentDTO> appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
 
-            appointmentListWithToday = new ArrayList<>();
+//            List<AppointmentDTO> appointmentListWithToday = new ArrayList<>();
+//            for (AppointmentDTO appointmentDTO : appointmentsItems) {
+//                String title = getToday(appointmentDTO.getPayload().getStartTime());
+//                if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
+//                    appointmentListWithToday.add(appointmentDTO);
+//                }
+//            }
 
-            for (AppointmentDTO appointmentDTO : appointmentsItems) {
-                String title = getToday(appointmentDTO.getPayload().getStartTime());
-                if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-                    appointmentListWithToday.add(appointmentDTO);
-                }
-            }
-            if (appointmentListWithToday != null) {
-                appointmentsListAdapter = new AppointmentsListAdapter(AppointmentsActivity.this, appointmentsItems, appointmentsResultModel);
-                appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
-            }
+            AppointmentsListAdapter appointmentsListAdapter = new AppointmentsListAdapter(
+                    AppointmentsActivity.this, appointmentsItems, appointmentsResultModel);
+            appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
 
             //Layout manager for the Recycler View
-            appointmentsLayoutManager = new LinearLayoutManager(AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
+            RecyclerView.LayoutManager appointmentsLayoutManager = new LinearLayoutManager(
+                    AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
             appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
         } else {
-            appointmentForTextview.setVisibility(View.INVISIBLE);
-            selectAppointmentTextview.setVisibility(View.INVISIBLE);
-            noAppointmentView.setVisibility(View.VISIBLE);
+            findViewById(R.id.titleSelectappointmentsubheader).setVisibility(View.INVISIBLE);
+            findViewById(R.id.titleSelectappointmentcheckin).setVisibility(View.INVISIBLE);
+            findViewById(R.id.no_appointment_layout).setVisibility(View.VISIBLE);
         }
     }
 }

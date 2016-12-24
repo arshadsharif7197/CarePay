@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProvidersDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -57,14 +57,16 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
             return;
         }
 
-        if (object.getClass() == AppointmentProvidersDTO.class) {
+        if (object.getClass() == AppointmentResourcesDTO.class) {
             holder.providerSectionLinearLayout.setVisibility(View.GONE);
             holder.providerItemLinearLayout.setVisibility(View.VISIBLE);
 
-            AppointmentProvidersDTO provider = (AppointmentProvidersDTO) object;
-            holder.doctorName.setText(provider.getName());
-            holder.doctorType.setText(provider.getSpecialty().getName());
-            holder.shortName.setText(StringUtil.onShortDrName(provider.getName()));
+            AppointmentResourcesDTO resources = (AppointmentResourcesDTO) object;
+            String providerName = resources.getResource().getProvider().getName();
+
+            holder.shortName.setText(StringUtil.onShortDrName(providerName));
+            holder.doctorName.setText(providerName);
+            holder.doctorType.setText(resources.getResource().getProvider().getSpecialty().getName());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
