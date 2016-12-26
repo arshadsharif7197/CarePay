@@ -78,7 +78,7 @@
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/text_size_16sp"
                 android:textStyle="bold"
-                app:customAssetFont="proxima_nova_regular" />
+                app:customAssetFont="proxima_nova_extra_bold" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/provider_place_address"

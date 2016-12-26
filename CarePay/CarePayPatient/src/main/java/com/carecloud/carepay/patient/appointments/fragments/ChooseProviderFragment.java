@@ -34,6 +34,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnProviderListItemClickListener,
@@ -42,11 +44,11 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     private RecyclerView providersRecyclerView;
     private ProgressBar appointmentProgressBar;
     private AppointmentsResultModel appointmentsResultModel;
+    private AppointmentsResultModel resourcesToScheduleModel;
 
     private ChooseProviderFragment chooseProviderFragment;
     private List<AppointmentResourcesDTO> resources;
     private AppointmentResourcesDTO selectedResource;
-    private AppointmentsResultModel appointmentsresourcesToScheduleModel;
 
     @Override
     public void onStart() {
@@ -134,34 +136,34 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Gson gson = new Gson();
-            appointmentsresourcesToScheduleModel = gson.fromJson(workflowDTO.toString(),
-                    AppointmentsResultModel.class);
+            resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
-            if (appointmentsresourcesToScheduleModel != null && appointmentsresourcesToScheduleModel.getPayload() != null
-                    && appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
-                    && appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
-                resources = appointmentsresourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
-                AppointmentsResultModel appointmentsResultModel = gson.fromJson(workflowDTO.toString(),
-                        AppointmentsResultModel.class);
+            if (resourcesToScheduleModel != null && resourcesToScheduleModel.getPayload() != null
+                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
+                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
 
-                if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
-                        && appointmentsResultModel.getPayload().getResourcesToSchedule() != null
-                        && appointmentsResultModel.getPayload().getResourcesToSchedule().size() > 0) {
-
-                    resources = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getResources();
-                    List<Object> resourcesListWithHeader = getResourcesListWithHeader();
-
-                    if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
-                        ProviderAdapter providerAdapter = new ProviderAdapter(
-                                getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
-                                chooseProviderFragment);
-                        providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        providersRecyclerView.setAdapter(providerAdapter);
-                    }
+                resources = resourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
+                if (resources.size() > 0) {
+                    Collections.sort(resources, new Comparator<AppointmentResourcesDTO>() {
+                        @Override
+                        public int compare(final AppointmentResourcesDTO object1, final AppointmentResourcesDTO object2) {
+                            return object1.getResource().getProvider().getName()
+                                    .compareTo(object2.getResource().getProvider().getName());
+                        }
+                    });
                 }
 
-                appointmentProgressBar.setVisibility(View.GONE);
+                List<Object> resourcesListWithHeader = getResourcesListWithHeader();
+                if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
+                    ProviderAdapter providerAdapter = new ProviderAdapter(
+                            getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
+                            chooseProviderFragment);
+                    providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    providersRecyclerView.setAdapter(providerAdapter);
+                }
             }
+
+            appointmentProgressBar.setVisibility(View.GONE);
         }
 
         @Override
@@ -217,10 +219,12 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         Gson gson = new Gson();
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitType));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsresourcesToScheduleModel));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleModel));
         visitTypeFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
                 AvailableHoursFragment.class.getSimpleName()).commit();
     }
+
+
 }

@@ -161,11 +161,12 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
             scheduleResourcesModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
             if (scheduleResourcesModel != null && scheduleResourcesModel.getPayload() != null
-                    && scheduleResourcesModel.getPayload().getResources() != null
-                    && scheduleResourcesModel.getPayload().getResources().size() > 0) {
+                    && scheduleResourcesModel.getPayload().getResourcesToSchedule() != null
+                    && scheduleResourcesModel.getPayload().getResourcesToSchedule().size() > 0) {
 
                 noAppointmentView.setVisibility(View.GONE);
-                List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload().getResources();
+                List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload()
+                        .getResourcesToSchedule().get(0).getResources();
 
                 if (resources.size() > 0) {
                     Collections.sort(resources, new Comparator<AppointmentResourcesDTO>() {
