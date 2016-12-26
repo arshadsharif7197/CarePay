@@ -9,11 +9,6 @@ import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.Transaction
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Address;
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Card;
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Level2;
-import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Level3;
-import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Line_item;
-import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Ship_to_address;
-import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.SoftDescriptor;
-import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.ThreeDomainSecureToken;
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Token;
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.TransactionRequest;
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.TransactionResponse;
@@ -69,6 +64,7 @@ public class RequestTask extends AsyncTask<String, String, String> {
 	}
 
 	private Context context = null;
+	public static String urlCert = "https://api-cert.payeezy.com/v1";
 
 	CardType cardtype ;
 	CardType cardtypeSecondary = CardType.CARD_VISA;
@@ -218,7 +214,7 @@ public class RequestTask extends AsyncTask<String, String, String> {
 		clientHelper.setAppId("E66y09GJ71wdjc84q6EvA955qtMqYNAM");
 		clientHelper.setSecuredSecret("7d5b00c61b300c4ef7ee16e249169652e490696069ecb0ff588e31df34724d93");
 		clientHelper.setToken("fdoa-daad1ac2944ca1d97c16bf762ac12604daad1ac2944ca1d9");
-		clientHelper.setUrl(TransactionDataProvider.urlCert);
+		clientHelper.setUrl(urlCert);
 	}
 
     private void AuthorizePurchase(TransactionTypePrimarySecondary transactionType,String[] uri)
@@ -496,7 +492,7 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 
 	public TransactionRequest getPrimaryTransactionForTransType(String[] uri) {
 		TransactionRequest request = new TransactionRequest();
-		TransactionDataProviderL3 tdpl3 = new TransactionDataProviderL3();
+		//TransactionDataProviderL3 tdpl3 = new TransactionDataProviderL3();
 
 		request.setAmount(uri[1]);
 
@@ -583,7 +579,7 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 
 
 		// category specific
-		if (category == TransactionCategory.CATEGORY_3DS) {
+		/*if (category == TransactionCategory.CATEGORY_3DS) {
 			request.setPaymentMethod("3DS");
 			card.setCavv(tdpl3.ThreeDS_cavv);
 			card.setXid(tdpl3.ThreeDS_xid);
@@ -616,7 +612,7 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 			request.setCard(null);
 
 
-		}
+		}*/
 
 		//category specific
 /*		if(category == TransactionCategory.CATEGORY_TRANSARMOR)
@@ -650,7 +646,7 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 			request.setTo(card);
 		}*/
 
-		if(category == TransactionCategory.CATEGORY_SOFTDESCRIPTORS)
+		/*if(category == TransactionCategory.CATEGORY_SOFTDESCRIPTORS)
 		{
 			//request.setDescriptor(descriptor);
 			SoftDescriptor descriptor = new SoftDescriptor();
@@ -664,7 +660,7 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 			descriptor.setRegion(tdpl3.sdescriptor_region);
 			descriptor.setStreet(tdpl3.sdescriptor_street);
 			request.setDescriptor(descriptor);
-		}
+		}*/
 		//level2
 		if(category == TransactionCategory.CATEGORY_LEVEL2)
 		{
@@ -680,7 +676,7 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 			request.setLevel2(l2);
 		}
 
-		if(category == TransactionCategory.CATEGORY_LEVEL3)
+		/*if(category == TransactionCategory.CATEGORY_LEVEL3)
 
 
 		{
@@ -817,9 +813,9 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 			request.setReferenceNo(tdpl3.referenceNo);
 			request.setBilling(null);
 
-		}
+		}*/
 
-		if((category == TransactionCategory.CATEGORY_NAKEDREFUNDS )||(category == TransactionCategory.CATEGORY_NAKEDVOIDS ))
+		/*if((category == TransactionCategory.CATEGORY_NAKEDREFUNDS )||(category == TransactionCategory.CATEGORY_NAKEDVOIDS ))
 		{
 			//request.setDescriptor(descriptor);
 			request.setEciindicator(tdpl3.eci_indicator);
@@ -834,7 +830,7 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 
 			request.setCard(card);
 			request.setBilling(null);
-		}
+		}*/
 		if(category == TransactionCategory.CATEGORY_NAKEDVOIDS )
 		{
 			//request.setBilling(null);
@@ -849,11 +845,11 @@ trans.setTransactionId(TransactionResponse.getTransactionId());
 
 		}
 
-		if(category == TransactionCategory.CATEGORY_CVV2)
+		/*if(category == TransactionCategory.CATEGORY_CVV2)
 		{
 			card.setCvv2(tdpl3.Cvv2);
 			request.setCard(card);
-		}
+		}*/
 		//request.setAmount(tdpl3.Amount);
 		if(cardtype == CardType.CARD_VALUELINK)
 		{
