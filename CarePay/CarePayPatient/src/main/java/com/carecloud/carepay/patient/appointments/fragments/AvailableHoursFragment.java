@@ -396,13 +396,8 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-        AppointmentDTO appointmentDTO = new AppointmentDTO();
-        AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
-        AppointmentProviderDTO providersDTO;
-        AppointmentLocationDTO locationDTO = new AppointmentLocationDTO();
-        AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
-        AppointmentPatientDTO patientDTO = new AppointmentPatientDTO();
 
+        AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
         payloadDTO.setStartTime(appointmentsSlotsDTO.getStartTime());
         payloadDTO.setEndTime(appointmentsSlotsDTO.getEndTime());
         payloadDTO.setProviderId(selectedResourcesDTO.getResource().getProvider().getId().toString());
@@ -410,13 +405,21 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         payloadDTO.setResourceId(selectedResourcesDTO.getResource().getId());
         payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
 
+        AppointmentPatientDTO patientDTO = new AppointmentPatientDTO();
         patientDTO.setId(addAppointmentPatientId);
         payloadDTO.setPatient(patientDTO);
 
+        AppointmentProviderDTO providersDTO;
         providersDTO = selectedResourcesDTO.getResource().getProvider();
+
+        AppointmentLocationDTO locationDTO = new AppointmentLocationDTO();
+
+        AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
         locationDTO.setAddress(addressDTO);
         payloadDTO.setLocation(locationDTO);
         payloadDTO.setProvider(providersDTO);
+
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
 
         new RequestAppointmentDialog(getActivity(),appointmentDTO,resourcesToScheduleDTO).show();

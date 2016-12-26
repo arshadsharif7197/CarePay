@@ -109,7 +109,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
         queryMap.put("practice_id", appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
 
-        JsonObject makeAppointmentJSONObj = new JsonObject();
         JsonObject appointmentJSONObj = new JsonObject();
         JsonObject patientJSONObj = new JsonObject();
 
@@ -124,6 +123,8 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         appointmentJSONObj.addProperty("chief_complaint", appointmentDTO.getPayload().getChiefComplaint().toString());
         appointmentJSONObj.addProperty("comments", reasonEditText.getText().toString().trim());
         appointmentJSONObj.add("patient", patientJSONObj);
+
+        JsonObject makeAppointmentJSONObj = new JsonObject();
         makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
 
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
