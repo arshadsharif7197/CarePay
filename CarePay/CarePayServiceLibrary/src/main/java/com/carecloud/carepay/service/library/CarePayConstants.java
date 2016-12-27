@@ -50,6 +50,7 @@ public class CarePayConstants {
     public static final long CUSTOM_POPUP_AUTO_DISMISS_DURATION = 5000;
 
     public static final String PAYMENT_METHOD_BUNDLE = "payment_method";
+    public static final String PAYMENT_PAYLOAD_BUNDLE = "payment_payload_bundle";
     public static final String APPOINTMENT_INFO_BUNDLE = "appointment_info_bundle";
     public static final String ADD_APPOINTMENT_BUNDLE = "add_appointment_bundle";
     public static final String ADD_APPOINTMENT_PROVIDERS_BUNDLE = "providers_info_bundle";
