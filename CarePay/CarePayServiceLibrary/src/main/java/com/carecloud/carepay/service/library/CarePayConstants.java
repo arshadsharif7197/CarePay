@@ -37,7 +37,7 @@ public class CarePayConstants {
     public static final String FORM_DATA  = "formdata";
     public static final String CHECKED_IN_APPOINTMENT_BUNDLE  = "Checked_in_appointment_bundle";
     public static final String INTAKE_BUNDLE  = "intake_bundle";
-    public static final String COPAY  = "Copay";
+    public static final String COPAY  = "Insurance";
     public static final String ACCOUNT  = "Account";
     public static final String PREVIOUS_BALANCE  = "Patient";
     public static final String DOLLAR  = "$";
