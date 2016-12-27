@@ -63,6 +63,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private String copayStr = "";
     private String previousBalanceStr = "";
     private boolean amountChangeFlag = true;
+    private String balanceBeforeTextChange;
 
     /**
      *
@@ -154,6 +155,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     @Override
     public void beforeTextChanged(CharSequence str, int start, int count, int after) {
         amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white));
+        balanceBeforeTextChange = str.toString();
     }
 
     @Override
@@ -163,7 +165,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             if (amountChangeFlag) {
                 // flag to avoid the onTextChanged listener call after setText manipulated number
                 amountChangeFlag = false;
-
+                //when deleting a decimal point, delete any non-integral portion of the number
+                if(balanceBeforeTextChange.contains(".") && !amountEditText.contains(".")) {
+                    amountEditText = balanceBeforeTextChange.substring(0,balanceBeforeTextChange.indexOf("."));
+                    enterPartialAmountEditText.setText(amountEditText);
+                    enterPartialAmountEditText.setSelection(amountEditText.length());
+                } else
+                // user cannot enter amount less than 1
                 if(amountEditText.equalsIgnoreCase(".") || Double.parseDouble(amountEditText)<1){
                     amountEditText = "0";
                     enterPartialAmountEditText.setText(amountEditText);
