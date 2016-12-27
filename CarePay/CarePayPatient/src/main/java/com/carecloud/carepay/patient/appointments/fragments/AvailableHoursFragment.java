@@ -26,9 +26,11 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAddressDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentPatientDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -36,6 +38,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -60,6 +63,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     private AppointmentResourcesDTO selectedResourcesDTO;
     private RecyclerView availableHoursRecycleView;
     private AppointmentsResultModel resourcesToScheduleDTO;
+    private String addAppointmentPatientId;
 
     @Override
     public void onStart() {
@@ -85,6 +89,8 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
             resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
+
+            addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
         }
 
         getAvailableHoursTimeSlots();
@@ -390,30 +396,32 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-        AppointmentDTO appointmentDTO = new AppointmentDTO();
+
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
-        AppointmentProviderDTO providersDTO = new AppointmentProviderDTO();
+        payloadDTO.setStartTime(appointmentsSlotsDTO.getStartTime());
+        payloadDTO.setEndTime(appointmentsSlotsDTO.getEndTime());
+        payloadDTO.setProviderId(selectedResourcesDTO.getResource().getProvider().getId().toString());
+        payloadDTO.setVisitReasonId(selectedVisitTypeDTO.getId());
+        payloadDTO.setResourceId(selectedResourcesDTO.getResource().getId());
+        payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
+
+        AppointmentPatientDTO patientDTO = new AppointmentPatientDTO();
+        patientDTO.setId(addAppointmentPatientId);
+        payloadDTO.setPatient(patientDTO);
+
+        AppointmentProviderDTO providersDTO;
+        providersDTO = selectedResourcesDTO.getResource().getProvider();
+
         AppointmentLocationDTO locationDTO = new AppointmentLocationDTO();
 
-//        payload.getStartTime()
-//        payload.getProvider().getName()
-//        payload.getProvider().getPhone()
-//        payload.getProvider().getSpecialty().getName()
-//        payload.getLocation().getName()
-//        payload.getLocation().getAddress()
-//        payload.getLocation().getAddress().getPlaceAddressString()
+        AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
+        locationDTO.setAddress(addressDTO);
+        payloadDTO.setLocation(locationDTO);
+        payloadDTO.setProvider(providersDTO);
 
-//        start_time": "2016-12-19T15:15:00-05:00",
-//        o	   "end_time": "2016-12-19T15:20:00-05:00",
-//                o	   "location_id": 8775,
-//                o	   "provider_id": 130,
-//                o	   "visit_reason_id": 47128,
-//                o	   "resource_id": 162,
-//                o	   "patient": {
-//            o	     "id": "000f50a8-f04f-4f3f-8a81-6e546c8e32d4"
-//            o	   }
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
+        appointmentDTO.setPayload(payloadDTO);
 
-
-        //new RequestAppointmentDialog(getActivity(),appointmentDTO,new AppointmentLabelDTO()).show();
+        new RequestAppointmentDialog(getActivity(),appointmentDTO,resourcesToScheduleDTO).show();
     }
 }

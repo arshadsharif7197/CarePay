@@ -220,6 +220,8 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitType));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleModel));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,
+                appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPatientId());
         visitTypeFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
