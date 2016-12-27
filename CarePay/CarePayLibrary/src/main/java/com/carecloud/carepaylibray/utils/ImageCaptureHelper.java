@@ -137,7 +137,7 @@ public class ImageCaptureHelper {
     public int orientationToQuadrantDegrees(int orientation) {
         int degrees = 0;
 
-        if (orientation < 140 & orientation > 40) {
+        if (orientation < 140 & orientation > 30) {
             degrees = 180;
         }
 
