@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,14 +20,8 @@ import android.widget.ProgressBar;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import org.json.JSONObject;
 
 /**
  * Created by prem_mourya on 10/5/2016.
@@ -84,7 +77,7 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
     }
 
     private void onInitialization() {
-        dialogCloseHeader = (ImageView) findViewById(R.id.dialogCloseHeader);
+        dialogCloseHeader = (ImageView) findViewById(R.id.dialog_close_header);
         paymentAmountTextView = (CarePayTextView) findViewById(R.id.paymentAmountTextView);
         ImageView paymentUserPicImageView = (ImageView) findViewById(R.id.paymentUserPicImageView);
         userShortnameTextView = (CarePayTextView) findViewById(R.id.userShortnameTextView);
@@ -133,7 +126,7 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == R.id.dialogCloseHeader) {
+        if (viewId == R.id.dialog_close_header) {
             cancel();
         } else if (viewId == R.id.paymentLocationImageView) {
             //address will add after model come
