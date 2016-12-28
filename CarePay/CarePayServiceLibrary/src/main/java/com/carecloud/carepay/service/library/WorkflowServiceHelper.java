@@ -200,6 +200,8 @@ public class WorkflowServiceHelper {
                         callback.onFailure(response.errorBody().string());
                     } catch (IOException exection) {
                         callback.onFailure(exection.getMessage());
+                    }catch (NullPointerException exection) {
+                        callback.onFailure(exection.toString());
                     }
                 }
             }
