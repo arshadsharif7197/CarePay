@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -181,11 +182,13 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
                     PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
 
                     JSONObject payload = new JSONObject();
+                    double totalAmountToPay = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+
                     try {
-                        payload.put("amount", 25);
+                        payload.put("amount", totalAmountToPay);
 
                         JSONObject paymentMethod = new JSONObject();
-                        paymentMethod.put("amount", 25);
+                        paymentMethod.put("amount", totalAmountToPay);
 
                         JSONObject creditCard = new JSONObject();
                         creditCard.put("save", false);
@@ -236,7 +239,10 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            System.out.print(workflowDTO.toString());
+            Gson gson = new Gson();
+            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            receiptDialog.show();
         }
 
         @Override

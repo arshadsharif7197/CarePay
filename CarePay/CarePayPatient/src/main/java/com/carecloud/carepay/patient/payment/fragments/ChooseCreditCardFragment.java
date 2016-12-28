@@ -206,11 +206,13 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
                     PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
 
                     JSONObject payload = new JSONObject();
+                    double totalAmountToPay = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+
                     try {
-                        payload.put("amount", 25);
+                        payload.put("amount", totalAmountToPay);
 
                         JSONObject paymentMethod = new JSONObject();
-                        paymentMethod.put("amount", 25);
+                        paymentMethod.put("amount", totalAmountToPay);
 
                         JSONObject creditCard = new JSONObject();
                         creditCard.put("save", false);
@@ -261,8 +263,9 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            System.out.print(workflowDTO.toString());
-            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(), null);
+            Gson gson = new Gson();
+            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
             receiptDialog.show();
         }
 
