@@ -396,8 +396,10 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 fragment = new ChooseCreditCardFragment();
             }
 
+            Gson gson = new Gson();
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsDTO));
             args.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
             fragment.setArguments(args);
 

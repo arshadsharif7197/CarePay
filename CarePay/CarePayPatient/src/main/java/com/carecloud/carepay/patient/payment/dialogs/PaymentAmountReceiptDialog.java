@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,43 +17,40 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaExtraBold;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import org.json.JSONObject;
 
-/**
- * Created by prem_mourya on 10/7/2016.
- */
-
-public class PaymentAmountReceiptDialog extends Dialog implements
-        View.OnClickListener {
+public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
     private JSONObject paymentReceiptModel;
+
     private ImageView dialogCloseHeader;
     private ImageView paymentReceiptLocationImageView;
-    private ImageView  paymentReceiptDialImageView;
-    private CarePayTextView receiptAmountValueLabel ;
-    private CarePayTextView receiptPaymenttypeLabel ;
-    private CarePayTextView receiptPaymentDateLabel ;
+    private ImageView paymentReceiptDialImageView;
+
+    private CarePayTextView receiptAmountValueLabel;
+    private CarePayTextView receiptPaymentTypeLabel;
+    private CarePayTextView receiptPaymentDateLabel;
     private CarePayTextView receiptUserNameLabel;
-    private CarePayTextView receiptUsertypeLabel ;
+    private CarePayTextView receiptUserTypeLabel;
     private CarePayTextView addressReceiptLevel;
-    private CarePayTextView  receiptPreviousTitlelabel;
-    private CarePayTextView  receiptPreviousValuelabel;
-    private CarePayTextView  receiptInsuranceTitleLabel;
-    private CarePayTextView   receiptInsuranceValueLabel;
-    private CarePayTextView totalPaymentReceiptTitleLabel ;
+    private CarePayTextView receiptPreviousTitleLabel;
+    private CarePayTextView receiptPreviousValueLabel;
+    private CarePayTextView receiptInsuranceTitleLabel;
+    private CarePayTextView receiptInsuranceValueLabel;
+    private CarePayTextView totalPaymentReceiptTitleLabel;
     private CarePayTextView totalPaymentReceiptValueLabel;
     private CarePayTextView paymentReceiptHeaderTextView;
-    private Button saveOrSharereceiptButton;
+
+    private Button saveReceiptButton;
+    private Button shareReceiptButton;
 
     /**
      * Constructor.
-     * @param context context
+     *
+     * @param context             context
      * @param paymentReceiptModel model
      */
     public PaymentAmountReceiptDialog(Context context, JSONObject paymentReceiptModel) {
@@ -61,6 +59,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements
         this.paymentReceiptModel = paymentReceiptModel;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,10 +67,12 @@ public class PaymentAmountReceiptDialog extends Dialog implements
         setContentView(R.layout.dialog_payment_amount_receipt);
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
+
         onInitialization();
         onSettingStyle();
         onSetListener();
@@ -80,61 +81,66 @@ public class PaymentAmountReceiptDialog extends Dialog implements
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-        if (viewId == R.id.dialogCloseHeader) {
+        if (viewId == R.id.dialog_close_header) {
             cancel();
-        } else if(viewId == R.id.paymentReceiptLocationImageView){
+        } else if (viewId == R.id.payment_receipt_location) {
             //address will add after model come
-            onMapView("","");
-        }else if(viewId == R.id.paymentReceiptDialImageView){
+            onMapView("", "");
+        } else if (viewId == R.id.payment_receipt_call) {
             //phoneCall will add after model come
             onPhoneCall("");
-        }else if (viewId == R.id.saveOrSharereceiptButton) {
-            onSaveShareButton();
+        } else if (viewId == R.id.payment_receipt_save) {
+            onSaveButton();
+        } else if (viewId == R.id.payment_receipt_share) {
+            onShareButton();
         }
     }
 
-    private void onInitialization(){
-        dialogCloseHeader= (ImageView)findViewById(R.id.dialogCloseHeader);
-        paymentReceiptLocationImageView= (ImageView)findViewById(R.id.paymentReceiptLocationImageView);
-        paymentReceiptDialImageView = (ImageView)findViewById(R.id.paymentReceiptDialImageView);
-        receiptAmountValueLabel = (CarePayTextView)findViewById(R.id.receiptAmountValueLabel);
-        receiptPaymenttypeLabel = (CarePayTextView)findViewById(R.id.receiptPaymenttypeLabel);
-        receiptPaymentDateLabel = (CarePayTextView)findViewById(R.id.receiptPaymentDateLabel);
-        receiptUserNameLabel = (CarePayTextView)findViewById(R.id.receiptUserNameLabel);
+    private void onInitialization() {
+        dialogCloseHeader = (ImageView) findViewById(R.id.dialog_close_header);
+        paymentReceiptLocationImageView = (ImageView) findViewById(R.id.payment_receipt_location);
+        paymentReceiptDialImageView = (ImageView) findViewById(R.id.payment_receipt_call);
+        receiptAmountValueLabel = (CarePayTextView) findViewById(R.id.receipt_no_label);
+        receiptPaymentTypeLabel = (CarePayTextView) findViewById(R.id.payment_receipt_type_label);
+        receiptPaymentDateLabel = (CarePayTextView) findViewById(R.id.payment_receipt_date_label);
+        receiptUserNameLabel = (CarePayTextView) findViewById(R.id.payment_receipt_doctor_name);
 
-        receiptUsertypeLabel=(CarePayTextView)findViewById(R.id.receiptUsertypeLabel);
-        addressReceiptLevel=(CarePayTextView)findViewById(R.id.addressReceiptLevel);
-        receiptPreviousTitlelabel=(CarePayTextView)findViewById(R.id.receiptPreviousTitlelabel);
-        receiptPreviousValuelabel=(CarePayTextView)findViewById(R.id.receiptPreviousValuelabel);
-        receiptInsuranceTitleLabel=(CarePayTextView)findViewById(R.id.receiptInsuranceTitleLabel);
-        receiptInsuranceValueLabel=(CarePayTextView)findViewById(R.id.receiptInsuranceValueLabel);
-        totalPaymentReceiptTitleLabel=(CarePayTextView)findViewById(R.id.totalPaymentReceiptTitleLabel);
-        totalPaymentReceiptValueLabel=(CarePayTextView)findViewById(R.id.totalPaymentReceiptValueLabel);
-        paymentReceiptHeaderTextView = (CarePayTextView)findViewById(R.id.paymentReceiptHeaderTextView);
-        saveOrSharereceiptButton = (Button)findViewById(R.id.saveOrSharereceiptButton);
+        receiptUserTypeLabel = (CarePayTextView) findViewById(R.id.payment_receipt_speciality);
+        addressReceiptLevel = (CarePayTextView) findViewById(R.id.payment_receipt_address);
+        receiptPreviousTitleLabel = (CarePayTextView) findViewById(R.id.payment_receipt_pre_balance_label);
+        receiptPreviousValueLabel = (CarePayTextView) findViewById(R.id.payment_receipt_pre_value);
+        receiptInsuranceTitleLabel = (CarePayTextView) findViewById(R.id.payment_receipt_copay_label);
+        receiptInsuranceValueLabel = (CarePayTextView) findViewById(R.id.payment_receipt_copay_value);
+        totalPaymentReceiptTitleLabel = (CarePayTextView) findViewById(R.id.payment_receipt_total_payment_label);
+        totalPaymentReceiptValueLabel = (CarePayTextView) findViewById(R.id.payment_receipt_total_payment_value);
+        paymentReceiptHeaderTextView = (CarePayTextView) findViewById(R.id.payment_receipt_place_name);
+
+        saveReceiptButton = (Button) findViewById(R.id.payment_receipt_save);
+        shareReceiptButton = (Button) findViewById(R.id.payment_receipt_share);
 
     }
 
-    private void onSettingStyle(){
-        receiptAmountValueLabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        receiptPaymenttypeLabel.setTextColor(ContextCompat.getColor(context,R.color.manatee));
-        receiptPaymentDateLabel.setTextColor(ContextCompat.getColor(context,R.color.textview_default_textcolor));
-        receiptUserNameLabel.setTextColor(ContextCompat.getColor(context,R.color.blue_cerulian));
+    private void onSettingStyle() {
+        receiptAmountValueLabel.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+        receiptPaymentTypeLabel.setTextColor(ContextCompat.getColor(context, R.color.manatee));
+        receiptPaymentDateLabel.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+        receiptUserNameLabel.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
 
-        receiptUsertypeLabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
-        addressReceiptLevel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
-        receiptPreviousTitlelabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
-        receiptPreviousValuelabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
-        receiptInsuranceTitleLabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
-        receiptInsuranceValueLabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
-        totalPaymentReceiptTitleLabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
-        totalPaymentReceiptValueLabel.setTextColor(ContextCompat.getColor(context,R.color.bermudagrey));
-        paymentReceiptHeaderTextView.setTextColor(ContextCompat.getColor(context,R.color.payne_gray));
+        receiptUserTypeLabel.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+        addressReceiptLevel.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+        receiptPreviousTitleLabel.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+        receiptPreviousValueLabel.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+        receiptInsuranceTitleLabel.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+        receiptInsuranceValueLabel.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+        totalPaymentReceiptTitleLabel.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+        totalPaymentReceiptValueLabel.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+        paymentReceiptHeaderTextView.setTextColor(ContextCompat.getColor(context, R.color.payne_gray));
     }
 
-    private void onSetListener(){
+    private void onSetListener() {
         dialogCloseHeader.setOnClickListener(this);
-        saveOrSharereceiptButton.setOnClickListener(this);
+        saveReceiptButton.setOnClickListener(this);
+        shareReceiptButton.setOnClickListener(this);
         paymentReceiptDialImageView.setOnClickListener(this);
         paymentReceiptLocationImageView.setOnClickListener(this);
     }
@@ -159,15 +165,20 @@ public class PaymentAmountReceiptDialog extends Dialog implements
      * @param phoneNumber the String to evaluate
      */
     private void onPhoneCall(final String phoneNumber) {
-        if(phoneNumber !=null && phoneNumber.length() > 0)
+        if (phoneNumber != null && phoneNumber.length() > 0) {
             try {
                 context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
             } catch (android.content.ActivityNotFoundException ex) {
-
+                Log.e("TAG", ex.getMessage());
             }
+        }
     }
 
-    private void onSaveShareButton(){
+    private void onSaveButton() {
+
+    }
+
+    private void onShareButton() {
 
     }
 }
