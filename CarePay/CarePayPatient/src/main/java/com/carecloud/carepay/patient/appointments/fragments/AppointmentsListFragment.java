@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -134,6 +135,10 @@ public class AppointmentsListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(RequestAppointmentDialog.isAppointmentAdded){
+            refreshAppointmentList();
+            RequestAppointmentDialog.isAppointmentAdded = false;
+        }
     }
 
     /**
@@ -335,34 +340,38 @@ public class AppointmentsListFragment extends Fragment {
         appointmentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(popup!=null){
-                    popup.dismiss();
-                }
-
-                if (appointmentsItems != null) {
-                    appointmentsItems.clear();
-                }
-                appointmentRefresh.setRefreshing(false);
-
-                if (appointmentInfo != (new AppointmentsResultModel())) {
-                    AppointmentSectionHeaderModel appointmentSectionHeaderModel
-                            = new AppointmentSectionHeaderModel();
-
-                    if (appointmentListWithHeader != null) {
-                        appointmentListWithHeader.remove(appointmentSectionHeaderModel);
-                        appointmentListWithHeader.clear();
-                    }
-
-                    if (appointmentsAdapter != null) {
-                        appointmentsAdapter.hideHeaderView();
-                    }
-                }
-
-                // API call to fetch latest appointments
-                TransitionDTO transitionDTO = appointmentInfo.getMetadata().getLinks().getAppointments();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, pageRefreshCallback);
+                refreshAppointmentList();
             }
         });
+    }
+
+    private void refreshAppointmentList(){
+        if(popup!=null){
+            popup.dismiss();
+        }
+
+        if (appointmentsItems != null) {
+            appointmentsItems.clear();
+        }
+        appointmentRefresh.setRefreshing(false);
+
+        if (appointmentInfo != (new AppointmentsResultModel())) {
+            AppointmentSectionHeaderModel appointmentSectionHeaderModel
+                    = new AppointmentSectionHeaderModel();
+
+            if (appointmentListWithHeader != null) {
+                appointmentListWithHeader.remove(appointmentSectionHeaderModel);
+                appointmentListWithHeader.clear();
+            }
+
+            if (appointmentsAdapter != null) {
+                appointmentsAdapter.hideHeaderView();
+            }
+        }
+
+        // API call to fetch latest appointments
+        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getLinks().getAppointments();
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, pageRefreshCallback);
     }
 
     WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {

@@ -286,6 +286,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsModel);
             bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            bundle.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
             //args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
             fragment.setArguments(bundle);
 

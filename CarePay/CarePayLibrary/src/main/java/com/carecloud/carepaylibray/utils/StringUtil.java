@@ -28,7 +28,7 @@ public class StringUtil {
      * an empty string; false otherwise
      */
     public static boolean isNullOrEmpty(String string) {
-        return (string == null || string.equals(""));
+        return (string == null || string.trim().equals(""));
     }
 
     public static boolean isValidmail(String email) {

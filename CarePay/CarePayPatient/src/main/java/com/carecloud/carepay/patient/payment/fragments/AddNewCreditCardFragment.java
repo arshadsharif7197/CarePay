@@ -20,11 +20,13 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -38,6 +40,7 @@ import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -47,7 +50,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class AddNewCreditCardFragment extends Fragment implements
-        SimpleDatePickerDialog.OnDateSetListener {
+        SimpleDatePickerDialog.OnDateSetListener, RequestTask.AuthorizeCreditCardCallback {
 
     private TextInputLayout nameOnCardTextInputLayout;
     private TextInputLayout creditCardNoTextInput;
@@ -82,6 +85,7 @@ public class AddNewCreditCardFragment extends Fragment implements
     private static final char SPACE_CHAR = ' ';
     private PaymentsModel paymentsModel;
     private PaymentsLabelDTO paymentsLabelDTO;
+    private PaymentsModel intakePaymentModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,8 +99,11 @@ public class AddNewCreditCardFragment extends Fragment implements
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+
+            paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             //paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
-            paymentsLabelDTO = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
+            paymentsLabelDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsLabel();
         }
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
@@ -465,33 +472,7 @@ public class AddNewCreditCardFragment extends Fragment implements
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
-            PaymentCreditCardsPayloadDTO creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
-            PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
-            creditCardsPayloadDTO.setCardNumber(getCardNumber());
-            creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
-            creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
-            creditCardsPayloadDTO.setExpireDt(pickDateTextView.getText().toString().trim());
-            creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
-            if (saveCardOnFileCheckBox.isChecked() && useProfileAddressCheckBox.isChecked()) {
-                billingInformation.setLine1(address1EditText.getText().toString().trim());
-                billingInformation.setLine2(address2EditText.getText().toString().trim());
-                billingInformation.setZip(zipCodeEditText.getText().toString().trim());
-                billingInformation.setCity(cityEditText.getText().toString().trim());
-                billingInformation.setState(stateEditText.getText().toString().trim());
-                creditCardsPayloadDTO.setBillingInformation(billingInformation);
-            }
-
-            Gson gson = new Gson();
-            String body = gson.toJson(creditCardsPayloadDTO);
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
-            queryMap.put("practice_mgmt", paymentsModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeMgmt());
-            queryMap.put("practice_id", paymentsModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeId());
-            queryMap.put("patient_id", paymentsModel.getPaymentPayload().getPatientBalances().get(0).getMetadata().getPatientId());
-            TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
-
-            //WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
+            authorizeCreditCard();
         }
     };
 
@@ -503,6 +484,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            Log.d("addNewCreditCardk","=========================>\nworkflowDTO="+workflowDTO.toString());
             /*Gson gson = new Gson();
             PaymentsModel paymentsModelLocal = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
             FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
@@ -569,6 +551,82 @@ public class AddNewCreditCardFragment extends Fragment implements
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
+        }
+    }
+
+    private void authorizeCreditCard()
+    {
+        String amount="1";
+        String currency="USD";
+        String paymentMethod="credit_card";
+        String cvv=verificationCodeEditText.getText().toString();
+        String expiryDate=pickDateTextView.getText().toString();
+        expiryDate=expiryDate.substring(0,2)+expiryDate.substring(expiryDate.length()-2);
+        String Name=nameOnCardEditText.getText().toString();
+        String Type=getCreditCardType(creditCardNoEditText.getText().toString());
+        String number=creditCardNoEditText.getText().toString().trim().replaceAll(" ","");
+        String state=stateEditText.getText().toString();
+        String addressline1=address1EditText.getText().toString();
+        String zip=zipCodeEditText.getText().toString();
+        String country="US";
+        String city=cityEditText.getText().toString();
+
+        try
+        {
+            RequestTask rTask = new RequestTask(getActivity(),AddNewCreditCardFragment.this);
+            rTask.execute("authorize",amount,currency,paymentMethod,cvv,expiryDate,Name,Type,number,state,addressline1,zip,country,city);
+            System.out.println("first authorize call end");
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("authorize call end");
+    }
+
+    @Override
+    public void onAuthorizeCreditCard(String resString) {
+
+        if(resString!=null && resString.length()>800){
+            int startIndex = resString.indexOf("value");
+            startIndex=resString.indexOf("=",startIndex+1);
+            int endIndex = resString.indexOf(",", startIndex);
+            String token_value = resString.substring(startIndex, endIndex);
+            token_value=token_value.replace(" ", "");
+            token_value=token_value.replace(":", "");
+            token_value=token_value.replace("=", "");
+            token_value=token_value.replace("}", "");
+
+            PaymentCreditCardsPayloadDTO creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
+            PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
+            creditCardsPayloadDTO.setCardNumber(getCardNumber());
+            creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
+            creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
+            creditCardsPayloadDTO.setExpireDt(pickDateTextView.getText().toString().trim());
+            creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
+            creditCardsPayloadDTO.setToken(token_value);
+            if (saveCardOnFileCheckBox.isChecked() && useProfileAddressCheckBox.isChecked()) {
+                billingInformation.setLine1(address1EditText.getText().toString().trim());
+                billingInformation.setLine2(address2EditText.getText().toString().trim());
+                billingInformation.setZip(zipCodeEditText.getText().toString().trim());
+                billingInformation.setCity(cityEditText.getText().toString().trim());
+                billingInformation.setState(stateEditText.getText().toString().trim());
+                creditCardsPayloadDTO.setBillingInformation(billingInformation);
+            }
+
+            Gson gson = new Gson();
+            String body = gson.toJson(creditCardsPayloadDTO);
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            queryMap.put("practice_mgmt", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeMgmt());
+            queryMap.put("practice_id", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeId());
+            queryMap.put("patient_id", intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getMetadata().getPatientId());
+            TransitionDTO transitionDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
+
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
+
+        } else {
+            Toast.makeText(getActivity(), "Invalid Credit Card details!", Toast.LENGTH_SHORT).show();
         }
     }
 }

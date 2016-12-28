@@ -230,6 +230,7 @@
                     <EditText
                         android:id="@+id/demogrDetailsAllergyAddUnlisted"
                         style="@style/SigninSignupEditStyle"
+                        android:maxLength="100"
                         android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
 
@@ -310,6 +311,7 @@
                     <EditText
                         android:id="@+id/demogrDetailsMedAddUnlisted"
                         style="@style/SigninSignupEditStyle"
+                        android:maxLength="100"
                         android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
 
