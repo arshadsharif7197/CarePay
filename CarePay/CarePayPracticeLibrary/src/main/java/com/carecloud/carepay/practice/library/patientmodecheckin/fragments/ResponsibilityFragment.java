@@ -82,7 +82,6 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
             @Override
             public void onClick(View view) {
                 getPaymentInformation();
-                PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
                 Bundle bundle = new Bundle();
                 Gson gson = new Gson();
@@ -90,8 +89,9 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                 bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
                 bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
                 bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-                fragment.setArguments(bundle);
 
+                PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+                fragment.setArguments(bundle);
                 ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
             }
         });

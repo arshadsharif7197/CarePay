@@ -238,8 +238,6 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     break;
 
                 case CarePayConstants.TYPE_CREDIT_CARD:
-                    PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
-
                     Bundle arguments = getArguments();
                     String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
 
@@ -248,8 +246,9 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentInfo);
                     args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, arguments
                             .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
-                    fragment.setArguments(args);
 
+                    PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
+                    fragment.setArguments(args);
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
                     break;
 

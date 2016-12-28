@@ -56,8 +56,8 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
+    public void onClick(View view) {
+        int viewId = view.getId();
         if (viewId == R.id.dialog_close_header) {
             cancel();
         } else if (viewId == R.id.payment_receipt_location) {
