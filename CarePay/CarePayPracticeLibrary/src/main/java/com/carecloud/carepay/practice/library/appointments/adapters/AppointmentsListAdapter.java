@@ -103,8 +103,6 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             holder.startCheckIn.setClickable(true);
             holder.startCheckIn.setEnabled(true);
         }
-        holder.startCheckIn.setClickable(true);
-        holder.startCheckIn.setEnabled(true);
 
 //        GradientDrawable bgShape = (GradientDrawable) holder.headerView.getBackground();
 //        bgShape.setColor(context.getResources().getColor(R.color.cardview_header_bg));
