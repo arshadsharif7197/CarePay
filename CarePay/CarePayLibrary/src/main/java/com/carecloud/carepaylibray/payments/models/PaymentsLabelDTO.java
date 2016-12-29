@@ -195,6 +195,21 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_failed_error")
     @Expose
     private String paymentFailedErrorMessage;
+    @SerializedName("payment_receipt_total_amount")
+    @Expose
+    private String paymentReceiptTotalAmount;
+    @SerializedName("payment_receipt_save_receipt")
+    @Expose
+    private String paymentReceiptSaveReceipt;
+    @SerializedName("payment_receipt_share_receipt")
+    @Expose
+    private String paymentReceiptShareReceipt;
+    @SerializedName("payment_receipt_payment_type")
+    @Expose
+    private String paymentReceiptPaymentType;
+    @SerializedName("payment_receipt_no_label")
+    @Expose
+    private String paymentReceiptNoLabel;
 
     /**
      * @return The demographicsCheckinHeading
@@ -1201,5 +1216,85 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentFailedErrorMessage(String paymentFailedErrorMessage) {
         this.paymentFailedErrorMessage = paymentFailedErrorMessage;
+    }
+
+    /**
+     *
+     * @return paymentReceiptTotalAmount
+     */
+    public String getPaymentReceiptTotalAmount() {
+        return StringUtil.getLabelForView(paymentReceiptTotalAmount);
+    }
+
+    /**
+     *
+      * @param paymentReceiptTotalAmount paymentReceiptTotalAmount
+     */
+    public void setPaymentReceiptTotalAmount(String paymentReceiptTotalAmount) {
+        this.paymentReceiptTotalAmount = paymentReceiptTotalAmount;
+    }
+
+    /**
+     *
+     * @return paymentReceiptSaveReceipt
+     */
+    public String getPaymentReceiptSaveReceipt() {
+        return StringUtil.getLabelForView(paymentReceiptSaveReceipt);
+    }
+
+    /**
+     *
+     * @param paymentReceiptSaveReceipt paymentReceiptSaveReceipt
+     */
+    public void setPaymentReceiptSaveReceipt(String paymentReceiptSaveReceipt) {
+        this.paymentReceiptSaveReceipt = paymentReceiptSaveReceipt;
+    }
+
+    /**
+     *
+     * @return paymentReceiptShareReceipt
+     */
+    public String getPaymentReceiptShareReceipt() {
+        return StringUtil.getLabelForView(paymentReceiptShareReceipt);
+    }
+
+    /**
+     *
+     * @param paymentReceiptShareReceipt paymentReceiptShareReceipt
+     */
+    public void setPaymentReceiptShareReceipt(String paymentReceiptShareReceipt) {
+        this.paymentReceiptShareReceipt = paymentReceiptShareReceipt;
+    }
+
+    /**
+     *
+     * @return paymentReceiptPaymentType
+     */
+    public String getPaymentReceiptPaymentType() {
+        return StringUtil.getLabelForView(paymentReceiptPaymentType);
+    }
+
+    /**
+     *
+     * @param paymentReceiptPaymentType paymentReceiptPaymentType
+     */
+    public void setPaymentReceiptPaymentType(String paymentReceiptPaymentType) {
+        this.paymentReceiptPaymentType = paymentReceiptPaymentType;
+    }
+
+    /**
+     *
+     * @return paymentReceiptNoLabel
+     */
+    public String getPaymentReceiptNoLabel() {
+        return StringUtil.getLabelForView(paymentReceiptNoLabel);
+    }
+
+    /**
+     *
+     * @param paymentReceiptNoLabel paymentReceiptNoLabel
+     */
+    public void setPaymentReceiptNoLabel(String paymentReceiptNoLabel) {
+        this.paymentReceiptNoLabel = paymentReceiptNoLabel;
     }
 }

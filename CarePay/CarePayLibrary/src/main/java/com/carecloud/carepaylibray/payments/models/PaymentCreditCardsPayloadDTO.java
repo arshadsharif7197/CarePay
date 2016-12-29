@@ -24,6 +24,9 @@ public class PaymentCreditCardsPayloadDTO {
     @SerializedName("cvv")
     @Expose
     private String cvv;
+    @SerializedName("hash_credit_cards_id")
+    @Expose
+    private String creditCardsId;
     @SerializedName("token")
     @Expose
     private String token;
@@ -157,4 +160,19 @@ public class PaymentCreditCardsPayloadDTO {
         this.billingInformation = billingInformation;
     }
 
+    /**
+     *
+     * @return creditCardsId
+     */
+    public String getCreditCardsId() {
+        return creditCardsId;
+    }
+
+    /**
+     *
+     * @param creditCardsId creditCardsId
+     */
+    public void setCreditCardsId(String creditCardsId) {
+        this.creditCardsId = creditCardsId;
+    }
 }

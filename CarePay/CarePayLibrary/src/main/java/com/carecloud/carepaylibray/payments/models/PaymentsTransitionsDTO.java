@@ -9,7 +9,7 @@ public class PaymentsTransitionsDTO {
 
     @SerializedName("make_payment")
     @Expose
-    private PaymentsMakePaymentDTO makePayment;
+    private TransitionDTO makePayment;
     @SerializedName("add_credit_card")
     @Expose
     private TransitionDTO addCreditCard;
@@ -31,7 +31,7 @@ public class PaymentsTransitionsDTO {
      * @return
      * The makePayment
      */
-    public PaymentsMakePaymentDTO getMakePayment() {
+    public TransitionDTO getMakePayment() {
         return makePayment;
     }
 
@@ -40,7 +40,7 @@ public class PaymentsTransitionsDTO {
      * @param makePayment
      * The make_payment
      */
-    public void setMakePayment(PaymentsMakePaymentDTO makePayment) {
+    public void setMakePayment(TransitionDTO makePayment) {
         this.makePayment = makePayment;
     }
 

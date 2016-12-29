@@ -65,8 +65,7 @@ public class ResponsibilityFragment extends Fragment {
     private String payTotalAmountString;
     private String payPartialAmountString;
     private String titleResponsibilityString;
-    private Button payTotalAmountButton;
-    private Button makePartialPaymentButton;
+    private double total;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +78,7 @@ public class ResponsibilityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_responsibility, container, false);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
+        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
 
         setGothamRoundedMediumTypeface(appCompatActivity, title);
@@ -94,11 +93,11 @@ public class ResponsibilityFragment extends Fragment {
         TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
         TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
         TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
-        payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
-        makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
+        Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
+        Button makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
+
         Bundle bundle = getArguments();
         if (bundle != null) {
-
             Gson gson = new Gson();
             bundle = getArguments();
             String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
@@ -119,15 +118,15 @@ public class ResponsibilityFragment extends Fragment {
                 try {
                     double copay = Double.parseDouble(copayStr);
                     double previousBalance = Double.parseDouble(previousBalanceStr);
-                    double total = copay + previousBalance;
-                    if(total == 0){
+                    total = copay + previousBalance;
+                    if (total == 0) {
                         payTotalAmountButton.setClickable(false);
                         payTotalAmountButton.setEnabled(false);
                         makePartialPaymentButton.setClickable(false);
                         makePartialPaymentButton.setEnabled(false);
                         payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
                         makePartialPaymentButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                    }else{
+                    } else {
                         payTotalAmountButton.setClickable(true);
                         payTotalAmountButton.setEnabled(true);
                         makePartialPaymentButton.setEnabled(true);
@@ -141,6 +140,7 @@ public class ResponsibilityFragment extends Fragment {
                         border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
                         makePartialPaymentButton.setBackground(border);
                     }
+
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
                     responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
                     responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
@@ -171,6 +171,7 @@ public class ResponsibilityFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 Gson gson = new Gson();
                 String paymentsDTOString = gson.toJson(paymentDTO);
+                bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
                 bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
                 fragment.setArguments(bundle);
 

@@ -28,14 +28,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
@@ -54,7 +46,6 @@ import com.google.android.gms.wallet.PaymentMethodToken;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
@@ -68,6 +59,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * This is a fragment that handles the creating and sending of a {@link FullWalletRequest} using
@@ -120,6 +119,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
     private String payeezyEnvironment;
     private String totalAmount;
+
+    private FirstDataService service;
 
     /**
      * Select the appropriate First Data server for the environment.
@@ -605,7 +606,39 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             final String payloadString = requestPayload.toString();
             final Map<String, String> HMACMap = computeHMAC(payloadString);
 
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(getUrl(env))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            service = retrofit.create(FirstDataService.class);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),payloadString);
 
+            Call<ResponseBody> response = service.performRequest(EnvData.getProperties(payeezyEnvironment).getApiKey(),
+                    HMACMap.get("Authorization"),
+                    HMACMap.get("nonce"),
+                    HMACMap.get("timestamp"),
+                    EnvData.getProperties(payeezyEnvironment).getToken(),
+                    body);
+
+            response.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> rawResponse) {
+                    try {
+                        Log.d(TAG, "response... " + rawResponse.body().string());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            });
+
+
+/*
             StringRequest request = new StringRequest(
                     Request.Method.POST,
                     getUrl(env),
@@ -657,10 +690,14 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             request.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             RequestQueue queue = Volley.newRequestQueue(getActivity());
             queue.add(request);
+            */
+
+
         } catch (JSONException e) {
             Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
         }
     }
+
 
     /**
      * Format the amount to decimal without the decimal point as required by First Data servers.

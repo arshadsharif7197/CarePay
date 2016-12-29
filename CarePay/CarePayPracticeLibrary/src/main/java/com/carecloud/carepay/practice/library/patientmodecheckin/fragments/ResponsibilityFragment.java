@@ -1,13 +1,9 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -53,7 +49,8 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
     private String insuranceCopayString;
     private String payTotalAmountString;
     private String payPartialAmountString;
-    private String totalResponsibilityAmount;
+
+    private double total;
 
     public ResponsibilityFragment() {
     }
@@ -85,7 +82,6 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
             @Override
             public void onClick(View view) {
                 getPaymentInformation();
-                PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
                 Bundle bundle = new Bundle();
                 Gson gson = new Gson();
@@ -94,9 +90,10 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                         paymentsDTOString);
                 bundle.putString(CarePayConstants.INTAKE_BUNDLE,
                         paymentsDTOString);
-                bundle.putString(CarePayConstants.PAYMENT_AMOUNT_TO_MAKE_PAYMENT,totalResponsibilityAmount);
-                fragment.setArguments(bundle);
+                bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
 
+                PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+                fragment.setArguments(bundle);
                 ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
             }
         });
@@ -133,15 +130,15 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                 try {
                     double copay = Double.parseDouble(copayStr);
                     double previousBalance = Double.parseDouble(previousBalanceStr);
-                    double total = copay + previousBalance;
-                    if(total == 0){
+                    total = copay + previousBalance;
+                    if (total == 0) {
                         payTotalButton.setClickable(false);
                         payTotalButton.setEnabled(false);
                         payPartialButton.setClickable(false);
                         payPartialButton.setEnabled(false);
                         payTotalButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
                         payPartialButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                    }else{
+                    } else {
                         payTotalButton.setClickable(true);
                         payTotalButton.setEnabled(true);
                         payPartialButton.setEnabled(true);
@@ -157,8 +154,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                     }
 
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                    totalResponsibilityAmount = formatter.format(total);
-                    responseTotal.setText(CarePayConstants.DOLLAR.concat(totalResponsibilityAmount));
+                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
                     responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
                     responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
 

@@ -54,10 +54,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private String titlePaymentMethodString;
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
-    private String paymentChangeMethodString;
-    private String paymentFailedErrorString;
     private PaymentsModel paymentsDTO;
-    private String amountToMakePayment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,7 +71,6 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
 
             paymentInfo = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(paymentInfo, PaymentsModel.class);
-            amountToMakePayment = bundle.getString(CarePayConstants.PAYMENT_AMOUNT_TO_MAKE_PAYMENT);
         }
         View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
@@ -210,10 +206,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
                     PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
 
-                    Gson gson = new Gson();
                     Bundle arguments = getArguments();
                     String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-                    PaymentsModel paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
 
                     Bundle args = new Bundle();
                     args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentInfo);
@@ -245,17 +239,17 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     break;
 
                 case CarePayConstants.TYPE_CREDIT_CARD:
-                    PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
 
                     Gson gson = new Gson();
-
                     Bundle args = new Bundle();
                     args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
                     args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsDTO));
                     args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, gson.toJson(paymentsModel));
-                    args.putString(CarePayConstants.PAYMENT_AMOUNT_TO_MAKE_PAYMENT,amountToMakePayment);
-                    fragment.setArguments(args);
+                    args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments()
+                            .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
 
+                    PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
+                    fragment.setArguments(args);
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
                     break;
 
@@ -281,8 +275,6 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
                     paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
                     paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
-                    paymentChangeMethodString = paymentsLabelsDTO.getPaymentChangeMethodButton();
-                    paymentFailedErrorString = paymentsLabelsDTO.getPaymentFailedErrorMessage();
                 }
             }
         }

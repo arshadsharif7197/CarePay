@@ -230,7 +230,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             String paymentsDTOString = gson.toJson(paymentsDTO);
             bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
                     paymentsDTOString);
-            bundle.putString(CarePayConstants.PAYMENT_AMOUNT_TO_MAKE_PAYMENT, enterPartialAmountEditText.getText().toString());
+            bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, Double.parseDouble(enterPartialAmountEditText.getText().toString()));
             bundle.putString(CarePayConstants.INTAKE_BUNDLE,
                     paymentsDTOString);
             fragment.setArguments(bundle);

@@ -90,7 +90,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private PaymentsModel paymentsModel;
     private PaymentsLabelDTO paymentsLabelDTO;
     private PaymentsModel intakePaymentModel;
-    private String amountToMakePayment;
+    private double amountToMakePayment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,7 +109,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             intakePaymentModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
             //paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
             paymentsLabelDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsLabel();
-            amountToMakePayment = arguments.getString(CarePayConstants.PAYMENT_AMOUNT_TO_MAKE_PAYMENT);
+            amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         }
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
@@ -653,9 +653,9 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         JSONObject payload = new JSONObject();
         try {
-            payload.put("amount", Double.parseDouble(amountToMakePayment));
+            payload.put("amount", amountToMakePayment);
             JSONObject paymentMethod = new JSONObject();
-            paymentMethod.put("amount", Double.parseDouble(amountToMakePayment));
+            paymentMethod.put("amount", amountToMakePayment);
             JSONObject creditCard = new JSONObject();
             creditCard.put("save", saveCardOnFileCheckBox.isChecked());
             //creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
