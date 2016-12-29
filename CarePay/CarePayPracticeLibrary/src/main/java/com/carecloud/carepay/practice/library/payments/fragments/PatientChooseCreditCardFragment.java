@@ -260,13 +260,15 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
+
             Bundle args = new Bundle();
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsModel);
             args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amountToMakePayment);
+
+            PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
             fragment.setArguments(args);
 
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
