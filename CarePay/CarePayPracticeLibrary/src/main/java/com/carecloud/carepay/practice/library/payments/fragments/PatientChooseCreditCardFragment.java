@@ -45,6 +45,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private RadioGroup.LayoutParams radioGroupLayoutParam;
     private String paymentDTOString;
     private PaymentsModel paymentsModel;
+    private PaymentsModel intakePaymentModel;
+    private String amountToMakePayment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +58,10 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
             paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
+
+            paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            intakePaymentModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
+            amountToMakePayment = arguments.getString(CarePayConstants.PAYMENT_AMOUNT_TO_MAKE_PAYMENT);
         }
 
         // Inflate the layout for this fragment
@@ -173,6 +179,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsModel);
             args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
+            args.putString(CarePayConstants.PAYMENT_AMOUNT_TO_MAKE_PAYMENT, amountToMakePayment);
             fragment.setArguments(args);
 
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);

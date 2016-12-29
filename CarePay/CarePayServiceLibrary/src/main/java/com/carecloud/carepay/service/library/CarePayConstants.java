@@ -83,7 +83,7 @@ public class CarePayConstants {
 
     public static final int PAYMENT_PLAN_REQUIRED_BALANCE = 20;
     public static final String APPOINTMENTS_STATUS_COMPLETED = "completed";
-    public static final String PARTIAL_PAYMENT_AMOUNT = "partial_payment_amount";
+    public static final String PAYMENT_AMOUNT_TO_MAKE_PAYMENT = "payment_amount_to_make_payment";
 
     public static final String CLOVER_DEVICE = "Clover";
 

@@ -53,6 +53,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
     private String insuranceCopayString;
     private String payTotalAmountString;
     private String payPartialAmountString;
+    private String totalResponsibilityAmount;
 
     public ResponsibilityFragment() {
     }
@@ -93,6 +94,7 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                         paymentsDTOString);
                 bundle.putString(CarePayConstants.INTAKE_BUNDLE,
                         paymentsDTOString);
+                bundle.putString(CarePayConstants.PAYMENT_AMOUNT_TO_MAKE_PAYMENT,totalResponsibilityAmount);
                 fragment.setArguments(bundle);
 
                 ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
@@ -155,7 +157,8 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                     }
 
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                    totalResponsibilityAmount = formatter.format(total);
+                    responseTotal.setText(CarePayConstants.DOLLAR.concat(totalResponsibilityAmount));
                     responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
                     responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
 
