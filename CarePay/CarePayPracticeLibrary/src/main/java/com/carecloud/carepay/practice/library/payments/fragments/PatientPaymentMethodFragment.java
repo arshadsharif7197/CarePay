@@ -54,8 +54,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private String titlePaymentMethodString;
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
-    private String paymentChangeMethodString;
-    private String paymentFailedErrorString;
+    private PaymentsModel paymentsDTO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,12 +62,16 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
 
         activity = getActivity();
 
-        Gson gson = new Gson();
-        Bundle arguments = getArguments();
-        String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-        paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-        paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Gson gson = new Gson();
+            String paymentInfo = bundle.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
+            paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
 
+            paymentInfo = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentsDTO = gson.fromJson(paymentInfo, PaymentsModel.class);
+        }
         View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
@@ -203,10 +206,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
                     PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
 
-                    Gson gson = new Gson();
                     Bundle arguments = getArguments();
                     String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-                    PaymentsModel paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
 
                     Bundle args = new Bundle();
                     args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentInfo);
@@ -238,13 +239,13 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     break;
 
                 case CarePayConstants.TYPE_CREDIT_CARD:
-                    Bundle arguments = getArguments();
-                    String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
 
+                    Gson gson = new Gson();
                     Bundle args = new Bundle();
                     args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-                    args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentInfo);
-                    args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, arguments
+                    args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsDTO));
+                    args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, gson.toJson(paymentsModel));
+                    args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments()
                             .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
 
                     PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
@@ -274,11 +275,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
                     paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
                     paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
-                    paymentChangeMethodString = paymentsLabelsDTO.getPaymentChangeMethodButton();
-                    paymentFailedErrorString = paymentsLabelsDTO.getPaymentFailedErrorMessage();
                 }
             }
         }
     }
 }
-

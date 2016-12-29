@@ -186,7 +186,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_use_profile_address")
     @Expose
     private String paymentUseProfileAddress;
-    @SerializedName("payment_set_as_default_credit_card")
+    @SerializedName("payment_set_as_default_credit_card_label")
     @Expose
     private String paymentSetAsDefaultCreditCard;
     @SerializedName("payment_change_payment_label")
