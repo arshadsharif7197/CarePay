@@ -8,10 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentDetailsListAdapter;
@@ -19,9 +17,10 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickListener {
@@ -50,11 +49,6 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-//        WindowManager.LayoutParams params = getWindow().getAttributes();
-//        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-//        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-//        getWindow().setAttributes(params);
-
         onInitialization();
     }
 
@@ -79,7 +73,9 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
         if (paymentsLabel != null) {
             ((TextView) findViewById(R.id.receipt_no_label)).setText(paymentsLabel.getPaymentReceiptNoLabel());
             ((TextView) findViewById(R.id.payment_receipt_type_label)).setText(paymentsLabel.getPaymentReceiptPaymentType());
-            ((TextView) findViewById(R.id.payment_receipt_date_label)).setText("");
+
+            String receiptDate = DateUtil.getInstance().setDateRaw(new Date().toString()).getDateAsMMddyyyyWithSlash();
+            ((TextView) findViewById(R.id.payment_receipt_date_label)).setText(receiptDate);
 
             ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());
             ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(paymentsLabel.getPaymentReceiptTotalPaidLabel());

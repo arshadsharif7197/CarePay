@@ -22,8 +22,8 @@
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="1"
-            android:textColor="#78909C"
-            android:textSize="15sp"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/text_size_15"
             app:customAssetFont="proxima_nova_regular" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
             android:gravity="end"
-            android:textColor="#78909C"
+            android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/text_size_14"
             app:customAssetFont="proxima_nova_regular" />
     </LinearLayout>
