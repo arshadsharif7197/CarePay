@@ -317,7 +317,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         stateEditText.setTag(stateTextInput);
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
-        nextButton.setText(paymentsLabelDTO.getPaymentNextButton());
+        nextButton.setText(paymentsLabelDTO.getPaymentPayText());
         nextButton.setOnClickListener(nextButtonListener);
 
         setChangeFocusListeners();
@@ -327,6 +327,12 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         creditCardNoEditText.clearFocus();
         nameOnCardEditText.clearFocus();
         verificationCodeEditText.clearFocus();
+
+        address1EditText.clearFocus();
+        address2EditText.clearFocus();
+        zipCodeEditText.clearFocus();
+        cityEditText.clearFocus();
+        stateEditText.clearFocus();
 
         saveCardOnFileCheckBox.setChecked(false);
         setAsDefaultCheckBox.setChecked(false);
@@ -385,6 +391,51 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             }
         });
         verificationCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean flag) {
+                if (flag) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, flag);
+            }
+        });
+        address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean flag) {
+                if (flag) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, flag);
+            }
+        });
+        address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean flag) {
+                if (flag) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, flag);
+            }
+        });
+        zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean flag) {
+                if (flag) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, flag);
+            }
+        });
+        cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean flag) {
+                if (flag) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, flag);
+            }
+        });
+        stateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean flag) {
                 if (flag) {
