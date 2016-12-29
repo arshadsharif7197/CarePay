@@ -18,6 +18,7 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFrag
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -262,9 +263,10 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
 
         } else if (id == R.id.nav_settings) {
-            Intent demographicActivityIntent = new Intent(AppointmentsActivity.this,
-                    DemographicsActivity.class);
-            startActivity(demographicActivityIntent);
+            //Remove after endpoint integration
+            Intent demographicSettingsActivityIntent = new Intent(AppointmentsActivity.this,
+                    DemographicsSettingsActivity.class);
+            startActivity(demographicSettingsActivityIntent);
 
         } else if (id == R.id.nav_logout) {
             // perform log out, of course
