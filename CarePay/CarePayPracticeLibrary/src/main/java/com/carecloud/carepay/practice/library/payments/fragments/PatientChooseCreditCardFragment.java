@@ -146,7 +146,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
             }
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-            nextButton.setText(paymentsLabel.getPaymentNextButton());
+            nextButton.setText(paymentsLabel.getPaymentPayText());
             addNewCardButton.setText(paymentsLabel.getPaymentAddNewCreditCardButton());
         }
     }

@@ -147,7 +147,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             }
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-            nextButton.setText(paymentsLabel.getPaymentNextButton());
+            nextButton.setText(paymentsLabel.getPaymentPayText());
             addNewCardButton.setText(paymentsLabel.getPaymentAddNewCreditCardButton());
         }
     }
