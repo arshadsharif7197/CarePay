@@ -63,7 +63,7 @@ public class CarePayConstants {
     public static final String ADD_APPOINTMENT_PATIENT_ID = "add_appointment_patient_id";
     public static final String PAYMENT_CREDIT_CARD_INFO = "payment_credit_card_info";
 
-    public static final String APPOINTMENT_DATE_TIME_FORMAT            = "yyyy-MM-dd'T'HH:mm:ss'z'";
+    public static final String APPOINTMENT_DATE_TIME_FORMAT            = "yyyy-MM-dd'T'HH:mm:ssz";
     public static final String RAW_DATE_FORMAT_FOR_TESTS               = "yyyy-MM-dd'T'HH:mm:ssX";
     public static final String RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE = "EEE, MMM d, ''yy";
     public static final String NOT_DEFINED                             = "Not Defined";
