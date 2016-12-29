@@ -119,7 +119,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         Bundle bundle = getArguments();
         if (bundle != null) {
             Gson gson = new Gson();
-            bundle = getArguments();
             String pametsDtoString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(pametsDtoString, PaymentsModel.class);
         }
@@ -335,7 +334,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                         fragment = new PaymentPlanFragment();
                     }
 
-                    Bundle arguments = getArguments();
                     Bundle args = new Bundle();
                     Gson gson = new Gson();
                     String paymentsDTOString = gson.toJson(paymentsDTO);
