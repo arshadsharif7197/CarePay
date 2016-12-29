@@ -49,6 +49,7 @@ public class CarePayConstants {
     public static final long APPOINTMENT_REMINDER_TIME_IN_MINUTES = 120;
     public static final long CUSTOM_POPUP_AUTO_DISMISS_DURATION = 5000;
 
+    public static final String PAYMENT_AMOUNT_BUNDLE = "total_amount_pay";
     public static final String PAYMENT_METHOD_BUNDLE = "payment_method";
     public static final String PAYMENT_PAYLOAD_BUNDLE = "payment_payload_bundle";
     public static final String APPOINTMENT_INFO_BUNDLE = "appointment_info_bundle";
@@ -62,7 +63,7 @@ public class CarePayConstants {
     public static final String ADD_APPOINTMENT_PATIENT_ID = "add_appointment_patient_id";
     public static final String PAYMENT_CREDIT_CARD_INFO = "payment_credit_card_info";
 
-    public static final String APPOINTMENT_DATE_TIME_FORMAT            = "yyyy-MM-dd'T'HH:mm:ss'z'";
+    public static final String APPOINTMENT_DATE_TIME_FORMAT            = "yyyy-MM-dd'T'HH:mm:ssz";
     public static final String RAW_DATE_FORMAT_FOR_TESTS               = "yyyy-MM-dd'T'HH:mm:ssX";
     public static final String RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE = "EEE, MMM d, ''yy";
     public static final String NOT_DEFINED                             = "Not Defined";

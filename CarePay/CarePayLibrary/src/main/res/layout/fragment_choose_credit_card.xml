@@ -18,12 +18,19 @@
             android:layout_below="@id/toolbar_layout"
             android:padding="@dimen/payment_method_parent_layout_padding">
 
-            <RadioGroup
-                android:id="@+id/chooseCreditCardRadioGroup"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="vertical" />
+                android:layout_height="match_parent"
+                android:layout_above="@+id/nextButton"
+                android:scrollbars="none">
+
+                <RadioGroup
+                    android:id="@+id/chooseCreditCardRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+            </ScrollView>
 
             <Button
                 android:id="@+id/addNewCardButton"

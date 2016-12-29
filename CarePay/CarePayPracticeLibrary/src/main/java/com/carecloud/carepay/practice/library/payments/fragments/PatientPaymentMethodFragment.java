@@ -238,18 +238,17 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     break;
 
                 case CarePayConstants.TYPE_CREDIT_CARD:
-                    PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
-
-                    Gson gson = new Gson();
                     Bundle arguments = getArguments();
                     String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-                    PaymentsModel paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
 
                     Bundle args = new Bundle();
                     args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
                     args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentInfo);
-                    fragment.setArguments(args);
+                    args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, arguments
+                            .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
 
+                    PatientChooseCreditCardFragment fragment = new PatientChooseCreditCardFragment();
+                    fragment.setArguments(args);
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
                     break;
 

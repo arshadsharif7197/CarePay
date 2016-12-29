@@ -39,7 +39,7 @@ dependencies {
     compile files('libs/jackson-mapper-asl-1.8.8.jar')
     compile files('libs/jackson-core-asl-1.8.8.jar')
     compile files('libs/jackson-annotations-2.5.1.jar')
-    compile files('libs/com.fasterxml.jackson.core.jar')
+    //compile files('libs/com.fasterxml.jackson.core.jar')
     compile files('libs/jxl-2.6.12.jar')
     compile files('libs/org.apache.httpclient.jar')
     compile files('libs/spring-android-core-1.0.0.RELEASE.jar')

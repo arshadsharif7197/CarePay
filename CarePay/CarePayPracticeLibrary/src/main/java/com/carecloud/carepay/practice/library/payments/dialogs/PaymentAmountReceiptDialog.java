@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.dialogs;
+package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;

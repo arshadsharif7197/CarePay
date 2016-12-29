@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,9 +19,15 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
@@ -31,7 +36,13 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +54,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private Button nextButton;
     private Activity activity;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
-    private String paymentDTOString;
+    private int selectedCreditCard;
     private PaymentsModel paymentsModel;
 
     @Override
@@ -54,7 +65,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
         if (arguments != null) {
             Gson gson = new Gson();
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
-            paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            String paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
         }
 
@@ -138,6 +149,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         nextButton.setVisibility(View.VISIBLE);
         onSetRadioButtonRegularTypeFace();
+
+        selectedCreditCard = checkedId;
         RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
         onSetRadioButtonSemiBoldTypeFace(selectedRadioButton);
     }
@@ -161,7 +174,80 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // ToDo : Make payment using selected Credit Card action here - to be done
+            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
+            if (patientCreditCards != null) {
+                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = patientCreditCards.getPayload();
+
+                if (creditCardList != null) {
+                    PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
+
+                    JSONObject payload = new JSONObject();
+                    double totalAmountToPay = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+
+                    try {
+                        payload.put("amount", totalAmountToPay);
+
+                        JSONObject paymentMethod = new JSONObject();
+                        paymentMethod.put("amount", totalAmountToPay);
+
+                        JSONObject creditCard = new JSONObject();
+                        creditCard.put("save", false);
+                        creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
+                        creditCard.put("card_type", creditCardPayload.getCardType());
+                        creditCard.put("card_number", creditCardPayload.getCardNumber());
+                        creditCard.put("name_on_card", creditCardPayload.getNameOnCard());
+                        creditCard.put("expire_dt", creditCardPayload.getExpireDt());
+                        creditCard.put("cvv", creditCardPayload.getCvv());
+                        creditCard.put("papi_pay", true);
+
+                        JSONObject billingInformation = new JSONObject();
+                        billingInformation.put("same_as_patient", true);
+                        creditCard.put("billing_information", billingInformation);
+
+                        paymentMethod.put("credit_card", creditCard);
+                        paymentMethod.put("type", "credit_card");
+
+                        JSONArray paymentMethods = new JSONArray();
+                        paymentMethods.put(paymentMethod);
+                        payload.put("payment_methods", paymentMethods);
+
+                        PaymentPayloadMetaDataDTO metadata = paymentsModel.getPaymentPayload()
+                                .getPatientBalances().get(0).getMetadata();
+
+                        Map<String, String> queries = new HashMap<>();
+                        queries.put("practice_mgmt", metadata.getPracticeMgmt());
+                        queries.put("practice_id", metadata.getPracticeId());
+                        queries.put("patient_id", metadata.getPatientId());
+
+                        Map<String, String> header = new HashMap<>();
+                        header.put("transition", "true");
+
+                        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
+                        WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    };
+
+    WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Gson gson = new Gson();
+            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            receiptDialog.show();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            System.out.print(exceptionMessage);
         }
     };
 
