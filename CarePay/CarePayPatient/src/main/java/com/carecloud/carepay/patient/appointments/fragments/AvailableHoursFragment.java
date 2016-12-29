@@ -389,6 +389,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getActivity()).dismiss();
             SystemUtil.showFaultDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
