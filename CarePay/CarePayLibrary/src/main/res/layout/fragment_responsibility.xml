@@ -18,7 +18,7 @@
             android:layout_height="?actionBarSize"
             android:gravity="center"
             android:orientation="vertical"
-            android:weightSum="8">
+            android:weightSum="9">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,7 +31,6 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/respons_total_label"
                     style="@style/ResponsTotalLabelStyle"
-                    android:text="@string/respons_total_label"
                     app:customAssetFont="gotham_rounded_book" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -54,23 +53,34 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/respons_detail_margin_bottom"
                     android:layout_marginTop="@dimen/respons_detail_margin_bottom"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:orientation="horizontal">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/respons_prev_balance_label"
                         style="@style/ResponsDetailLabelStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.65"
+                        android:gravity="start"
                         app:customAssetFont="proxima_nova_regular" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/response_payment_details"
+                        style="@style/ResponsDetailStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.15"
+                        android:gravity="end"
+                        android:text="Details"
+                        android:textColor="@color/colorPrimary"
+                        app:customAssetFont="proxima_nova_semi_bold" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/respons_prev_balance"
                         style="@style/ResponsDetailStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.2"
                         android:gravity="end"
                         app:customAssetFont="proxima_nova_semi_bold" />
                 </LinearLayout>
@@ -94,7 +104,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/respons_copay_label"
+                        android:gravity="start"
                         app:customAssetFont="proxima_nova_regular" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -117,7 +127,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:orientation="vertical">
 
                 <Button
@@ -126,6 +136,13 @@
 
                 <Button
                     android:id="@+id/make_partial_payment_button"
+                    style="@style/ResponsButtonStyle"
+                    android:layout_marginTop="@dimen/apt_popup_parent_padding"
+                    android:background="@drawable/button_blue_border"
+                    android:textColor="@color/bright_cerulean" />
+
+                <Button
+                    android:id="@+id/pay_later_button"
                     style="@style/ResponsButtonStyle"
                     android:layout_marginTop="@dimen/apt_popup_parent_padding"
                     android:background="@drawable/button_blue_border"
