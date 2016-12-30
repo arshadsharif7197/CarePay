@@ -3,12 +3,9 @@ package com.carecloud.carepay.patient.demographics.fragments.viewpager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,39 +18,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
-import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepay.patient.demographics.adapters.DemographicsDetailsAllergiesAdapter;
-import com.carecloud.carepay.patient.demographics.adapters.DemographicsDetailsMedicationsAdapter;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataValidationDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
-import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
 /**
@@ -73,13 +62,7 @@ public class DemographicsDetailsFragment extends Fragment
     private TextView        ethnicityTextView;
     private TextView        genderTextView;
     private EditText        dobEdit;
-    private EditText        addUnlistedAllergyTextView;
-    private EditText        addUnlistedMedTextView;
-    private TextView        addAnotherAllergyTextView;
-    private TextView        addAnotherMedTextView;
     private Button          nextButton;
-    private RecyclerView    allergiesRecyclerView;
-    private RecyclerView    medicRecyclerView;
     private TextInputLayout dobInputText;
     private TextView        header;
     private TextView        subheader;
@@ -87,12 +70,6 @@ public class DemographicsDetailsFragment extends Fragment
     private TextView        ethnicityLabel;
     private TextView        genderLabel;
     private TextView        dobHint;
-    private TextView        allergiesOptionalHint;
-    private TextView        allergiesSectionHeader;
-    private TextView        medicationsSectionHeader;
-    private TextView        medicationsOptionalHint;
-    private TextView        addAllergyLabel;
-    private TextView        addMedLabel;
 
     private DemographicPersDetailsPayloadDTO        persDetailsDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
@@ -243,47 +220,6 @@ public class DemographicsDetailsFragment extends Fragment
         return isValidFormat;
     }
 
-    private void setupRecyclerViews() {
-        // set up the allergies recycler view
-        allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsAllergiesRecView);
-        allergiesRecyclerView.setHasFixedSize(true);
-        allergiesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // for now generate dummy data
-        List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> allergies = getAllergies();
-        allergiesRecyclerView.setAdapter(new DemographicsDetailsAllergiesAdapter(allergies));
-
-        // set up the medications recycler view
-        medicRecyclerView = (RecyclerView) view.findViewById(R.id.demogrDetailsMedRecView);
-        medicRecyclerView.setHasFixedSize(true);
-        medicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // dummy meds for now
-        List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> meds = createMeds();
-        medicRecyclerView.setAdapter(new DemographicsDetailsMedicationsAdapter(meds));
-    }
-
-    // for test
-    private List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> createMeds() {
-        List<DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO> meds = new ArrayList<>();
-        meds.add(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication 111", "33mg"));
-        meds.add(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication 222", "333mg"));
-        meds.add(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication 333", "23mg"));
-        return meds;
-    }
-
-    // for test
-    private List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> getAllergies() {
-        List<DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO> allergies = new ArrayList<>();
-        allergies.add(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category Alpha",
-                                                                                "Allergy A",
-                                                                                "Mild",
-                                                                                "Reaction #01"));
-        allergies.add(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category Alpha",
-                                                                                "Allergy B",
-                                                                                "Benign",
-                                                                                "Reaction #001"));
-        return allergies;
-    }
-
     private void initialiseUIFields() {
         String label;
 
@@ -328,68 +264,10 @@ public class DemographicsDetailsFragment extends Fragment
 
         setupEdit();
 
-        allergiesOptionalHint = (TextView) view.findViewById(R.id.demogrDetailsAllergiesHint);
-        medicationsOptionalHint = (TextView) view.findViewById(R.id.demogrDetailsMedHint);
-        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsOptionalHint();
-        allergiesOptionalHint.setText(label);
-        medicationsOptionalHint.setText(label);
-
-        allergiesSectionHeader = (TextView) view.findViewById(R.id.demogrDetailsAllergiesLabel);
-        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsAllergiesSection();
-        allergiesSectionHeader.setText(label);
-
-        addAllergyLabel = (TextView) view.findViewById(R.id.demogrDetailsAddAllergyLabel);
-        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailAllergyLabel();
-        addAllergyLabel.setText(label);
-
-        medicationsSectionHeader = (TextView) view.findViewById(R.id.demogrDetailsMedLabel);
-        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsMedicationsSection();
-        medicationsSectionHeader.setText(label);
-
-        addMedLabel = (TextView) view.findViewById(R.id.demogrDetailsMedAddLabel);
-        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailMedicationLabel();
-        addMedLabel.setText(label);
-
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsNext();
         nextButton.setText(label);
         nextButton.setOnClickListener(this);
-
-        addUnlistedAllergyTextView = (EditText) view.findViewById(R.id.demogrDetailsAllergyAddUnlisted);
-        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsAllergyAddUnlistedLabel();
-        //addUnlistedAllergyTextView.setText(label);
-        //addUnlistedAllergyTextView.setOnClickListener(this);
-
-        addUnlistedMedTextView = (EditText) view.findViewById(R.id.demogrDetailsMedAddUnlisted);
-        label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsDetailsMedAddUnlistedLabel();
-        //addUnlistedMedTextView.setText(label);
-        //addUnlistedMedTextView.setOnClickListener(this);
-
-        // rec views
-        setupRecyclerViews();
-
-        // add click listener for 'Add Another' (allergy)
-        addAnotherAllergyTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAllergyClickable);
-        addAnotherAllergyTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((DemographicsDetailsAllergiesAdapter) allergiesRecyclerView.getAdapter()) // for now add the same dummy allergy
-                        .addAtFront(new DemographicsDetailsAllergiesAdapter.AllergyPayloadDTO("Category C",
-                                                                                              "Allergy 8",
-                                                                                              "Severe",
-                                                                                              "Reaction #22"));
-            }
-        });
-
-        addAnotherMedTextView = (TextView) view.findViewById(R.id.demogrDetailsAddAnotherMedClickable);
-        addAnotherMedTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((DemographicsDetailsMedicationsAdapter) medicRecyclerView.getAdapter())
-                        .addAtFront(new DemographicsDetailsMedicationsAdapter.MedicationPayloadDTO("Medication Z122",
-                                                                                                   "11 mg"));
-            }
-        });
 
         // add capture picture fragment
         FragmentManager fm = getChildFragmentManager();
@@ -467,10 +345,6 @@ public class DemographicsDetailsFragment extends Fragment
             selectedArray = 3;
             final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectGender();
             showAlertDialogWithListview(genderArray, title, cancelLabel, genderTextView);
-        } else if (view == addUnlistedAllergyTextView) {
-            Snackbar.make(view, "In progress", Snackbar.LENGTH_SHORT).show();
-        } else if (view == addUnlistedMedTextView) {
-            Snackbar.make(view, "In progress", Snackbar.LENGTH_SHORT).show();
         } else if (view == nextButton) {
             onNextButtonClick();
         }
@@ -507,15 +381,6 @@ public class DemographicsDetailsFragment extends Fragment
             persDetailsDTO.setDateOfBirth(DateUtil.getDateRaw(dob));
         }
 
-        String addUnlistedAllergies = addUnlistedAllergyTextView.getText().toString();
-        if (!StringUtil.isNullOrEmpty(addUnlistedAllergies)) {
-            persDetailsDTO.setAddUnlistedAllergies(addUnlistedAllergies);
-        }
-
-        String addUnlistedMedications = addUnlistedMedTextView.getText().toString();
-        if (!StringUtil.isNullOrEmpty(addUnlistedMedications)) {
-            persDetailsDTO.setAddUnlistedMedications(addUnlistedMedications);
-        }
         ((DemographicsActivity) getActivity()).setDetailsModel(persDetailsDTO); // save the updated persDetailsDTO in the activity
     }
 
@@ -538,14 +403,14 @@ public class DemographicsDetailsFragment extends Fragment
     private void showAlertDialogWithListview(final String[] dataArray, String title, String cancelLabel,
                                              final TextView selectionDestination) {
         SystemUtil.showChooseDialog(getActivity(),
-                                    dataArray, title, cancelLabel,
-                                    selectionDestination,
-                                    new SystemUtil.OnClickItemCallback() {
-                                        @Override
-                                        public void executeOnClick(TextView destination, String selectedOption) {
-                                            updateModelWithSelectedOption(selectedOption);
-                                        }
-                                    });
+                dataArray, title, cancelLabel,
+                selectionDestination,
+                new SystemUtil.OnClickItemCallback() {
+                    @Override
+                    public void executeOnClick(TextView destination, String selectedOption) {
+                        updateModelWithSelectedOption(selectedOption);
+                    }
+                });
     }
 
     private void setTypefaces() {
@@ -568,23 +433,6 @@ public class DemographicsDetailsFragment extends Fragment
 
         setProximaNovaSemiboldTypeface(context, dobHint);
         setProximaNovaRegularTypeface(context, dobEdit);
-
-        setProximaNovaSemiboldTypeface(context, allergiesOptionalHint);
-
-        setProximaNovaSemiboldTypeface(context, allergiesSectionHeader);
-
-        setProximaNovaRegularTypeface(context, addAllergyLabel);
-        setProximaNovaSemiboldTypeface(context, addAnotherAllergyTextView);
-
-        setProximaNovaRegularTypeface(context, addUnlistedAllergyTextView);
-
-        setProximaNovaSemiboldTypeface(context, medicationsSectionHeader);
-        setProximaNovaSemiboldTypeface(context, medicationsOptionalHint);
-
-        setProximaNovaRegularTypeface(context, addMedLabel);
-        setProximaNovaSemiboldTypeface(context, addAnotherMedTextView);
-
-        setProximaNovaRegularTypeface(context, addUnlistedMedTextView);
 
         setGothamRoundedMediumTypeface(context, nextButton);
     }
