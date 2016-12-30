@@ -248,6 +248,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 //                    arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
            // bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,
              //       paymentsDTO);
+            bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, Double.parseDouble(enterPartialAmountEditText.getText().toString()));
             fragment.setArguments(bundle);
 
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();

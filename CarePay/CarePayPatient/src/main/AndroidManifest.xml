@@ -15,8 +15,6 @@
         tools:node="remove" />
 
     <!-- Enables the Android Pay API -->
-
-
     <application
         android:name=".base.CarePayPatientApplication"
         android:allowBackup="true"
@@ -24,10 +22,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme">
-
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
+
         <activity
             android:name=".patientsplash.SplashActivity"
             android:theme="@style/Theme.AppCompat.Translucent">
@@ -61,8 +59,11 @@
         </activity>
         <activity android:name=".appointments.activities.AppointmentsActivity" />
         <activity android:name=".appointments.activities.AddAppointmentActivity" />
-        <activity android:name=".eligibility.activities.EligibilityActivity"></activity>
-        <activity android:name=".payment.androidpay.ConfirmationActivity"></activity>
+        <activity android:name=".eligibility.activities.EligibilityActivity" />
+        <activity android:name=".payment.androidpay.ConfirmationActivity" />
+        <activity
+            android:name=".demographics.activities.DemographicsSettingsActivity"
+            android:label="@string/title_activity_demographics_settings"></activity>
     </application>
 
 </manifest>
