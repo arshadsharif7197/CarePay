@@ -106,7 +106,7 @@ public class ResponsibilityFragment extends Fragment {
             List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
             getPaymentLabels();
             toolbar.setTitle(titleResponsibilityString);
-            if (paymentList != null && paymentList.size() > 1) {
+            if (paymentList != null && paymentList.size() > 0) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
                     if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalanceStr = payment.getTotal();
@@ -116,7 +116,7 @@ public class ResponsibilityFragment extends Fragment {
                 }
 
                 try {
-                    double copay = Double.parseDouble(copayStr);
+                    double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
                     double previousBalance = Double.parseDouble(previousBalanceStr);
                     total = copay + previousBalance;
                     if (total == 0) {
