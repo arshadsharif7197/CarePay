@@ -10,12 +10,14 @@
 
     <Button
         android:id="@+id/nextButton"
-        style="@style/PaymentButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/payment_method_parent_layout_padding"
-        android:background="@drawable/button_selector" />
+        android:background="@drawable/button_selector_green"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/respons_button_text_size" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -257,21 +259,30 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/address1TextInputLayout"
-                        style="@style/SigninSignupTextInputStyle"
+                        style="@style/PaymentEditTextHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
+                        android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
+                        android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
                         android:layout_weight="1"
-                        app:hintTextAppearance="@style/FloatingLabelStyle">
+                        android:textColorHint="@color/payne_gray">
 
                         <EditText
                             android:id="@+id/addressEditTextId"
-                            style="@style/SigninSignupEditStyle"
+                            style="@style/PaymentEditTextStyle"
                             android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
                             android:maxLength="50"
-                            android:nextFocusForward="@+id/addressEditText2Id"
-                            app:hintTextAppearance="@style/FloatingLabelStyle" />
+                            android:nextFocusForward="@+id/addressEditText2Id" />
 
                     </android.support.design.widget.TextInputLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/cadet_gray" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -279,18 +290,24 @@
 
                         <android.support.design.widget.TextInputLayout
                             android:id="@+id/address2TextInputLayout"
-                            style="@style/SigninSignupTextInputStyle"
+                            style="@style/PaymentEditTextHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
+                            android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
+                            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_weight="1"
-                            app:hintTextAppearance="@style/FloatingLabelStyle">
+                            android:textColorHint="@color/payne_gray">
 
                             <EditText
                                 android:id="@+id/addressEditText2Id"
-                                style="@style/SigninSignupEditStyle"
+                                style="@style/PaymentEditTextStyle"
                                 android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                                 android:imeOptions="actionNext"
                                 android:inputType="textPostalAddress"
                                 android:maxLength="50"
                                 android:nextFocusForward="@+id/zipCodeId" />
+
                         </android.support.design.widget.TextInputLayout>
 
                         <TextView
@@ -299,21 +316,36 @@
 
                     </FrameLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/cadet_gray" />
+
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/zipCodeTextInputLayout"
-                        style="@style/SigninSignupTextInputStyle"
+                        style="@style/PaymentEditTextHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
+                        android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
+                        android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
                         android:layout_weight="1"
-                        app:hintTextAppearance="@style/FloatingLabelStyle">
+                        android:textColorHint="@color/payne_gray">
 
                         <EditText
                             android:id="@+id/zipCodeId"
-                            style="@style/SigninSignupEditStyle"
+                            style="@style/PaymentEditTextStyle"
                             android:digits="0123456789-"
                             android:imeOptions="actionNext"
                             android:maxLength="10"
                             android:nextFocusForward="@+id/cityId" />
 
                     </android.support.design.widget.TextInputLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/cadet_gray" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -322,34 +354,51 @@
 
                         <android.support.design.widget.TextInputLayout
                             android:id="@+id/cityTextInputLayout"
-                            style="@style/SigninSignupTextInputStyle"
+                            style="@style/PaymentEditTextHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
+                            android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
+                            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_weight="1"
-                            app:hintTextAppearance="@style/FloatingLabelStyle">
+                            android:textColorHint="@color/payne_gray">
 
                             <EditText
                                 android:id="@+id/cityId"
-                                style="@style/SigninSignupEditStyle"
+                                style="@style/PaymentEditTextStyle"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapCharacters"
+                                android:maxLines="1"
                                 android:nextFocusRight="@+id/stateAutoCompleteTextView" />
 
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
                             android:id="@+id/stateTextInputLayout"
-                            style="@style/SigninSignupTextInputStyle"
+                            style="@style/PaymentEditTextHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
+                            android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
+                            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_weight="1"
-                            app:hintTextAppearance="@style/FloatingLabelStyle">
+                            android:textColorHint="@color/payne_gray">
 
                             <EditText
                                 android:id="@+id/stateAutoCompleteTextView"
-                                style="@style/SigninSignupEditStyle"
+                                style="@style/PaymentEditTextStyle"
                                 android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
-                                android:imeOptions="actionNext"
+                                android:imeOptions="actionDone"
                                 android:inputType="textCapCharacters"
-                                android:maxLength="2"
-                                android:nextFocusForward="@+id/countryId" />
+                                android:maxLength="2" />
 
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/cadet_gray" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

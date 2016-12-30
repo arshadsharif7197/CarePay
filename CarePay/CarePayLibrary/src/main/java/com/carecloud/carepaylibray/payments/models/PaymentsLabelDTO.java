@@ -186,7 +186,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_use_profile_address")
     @Expose
     private String paymentUseProfileAddress;
-    @SerializedName("payment_set_as_default_credit_card")
+    @SerializedName("payment_set_as_default_credit_card_label")
     @Expose
     private String paymentSetAsDefaultCreditCard;
     @SerializedName("payment_change_payment_label")
@@ -210,6 +210,12 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_receipt_no_label")
     @Expose
     private String paymentReceiptNoLabel;
+    @SerializedName("payment_receipt_title")
+    @Expose
+    private String paymentReceiptTitle;
+    @SerializedName("payment_receipt_total_paid_label")
+    @Expose
+    private String paymentReceiptTotalPaidLabel;
 
     /**
      * @return The demographicsCheckinHeading
@@ -1296,5 +1302,37 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentReceiptNoLabel(String paymentReceiptNoLabel) {
         this.paymentReceiptNoLabel = paymentReceiptNoLabel;
+    }
+
+    /**
+     *
+     * @return paymentReceiptTitle
+     */
+    public String getPaymentReceiptTitle() {
+        return StringUtil.getLabelForView(paymentReceiptTitle);
+    }
+
+    /**
+     *
+     * @param paymentReceiptTitle paymentReceiptTitle
+     */
+    public void setPaymentReceiptTitle(String paymentReceiptTitle) {
+        this.paymentReceiptTitle = paymentReceiptTitle;
+    }
+
+    /**
+     *
+     * @return paymentReceiptTotalPaidLabel
+     */
+    public String getPaymentReceiptTotalPaidLabel() {
+        return StringUtil.getLabelForView(paymentReceiptTotalPaidLabel);
+    }
+
+    /**
+     *
+     * @param paymentReceiptTotalPaidLabel paymentReceiptTotalPaidLabel
+     */
+    public void setPaymentReceiptTotalPaidLabel(String paymentReceiptTotalPaidLabel) {
+        this.paymentReceiptTotalPaidLabel = paymentReceiptTotalPaidLabel;
     }
 }

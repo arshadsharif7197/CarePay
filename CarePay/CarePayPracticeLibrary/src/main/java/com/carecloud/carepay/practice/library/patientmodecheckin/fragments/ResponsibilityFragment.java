@@ -86,8 +86,10 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
                 Bundle bundle = new Bundle();
                 Gson gson = new Gson();
                 String paymentsDTOString = gson.toJson(paymentsModel);
-                bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-                bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+                bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                        paymentsDTOString);
+                bundle.putString(CarePayConstants.INTAKE_BUNDLE,
+                        paymentsDTOString);
                 bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
 
                 PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();

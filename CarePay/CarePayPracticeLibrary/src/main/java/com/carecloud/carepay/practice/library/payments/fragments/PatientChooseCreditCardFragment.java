@@ -56,6 +56,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private RadioGroup.LayoutParams radioGroupLayoutParam;
     private int selectedCreditCard;
     private PaymentsModel paymentsModel;
+    private PaymentsModel intakePaymentModel;
+    private double amountToMakePayment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +69,10 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
             String paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
+
+            paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            intakePaymentModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
+            amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         }
 
         // Inflate the layout for this fragment
@@ -140,7 +146,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
             }
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-            nextButton.setText(paymentsLabel.getPaymentNextButton());
+            nextButton.setText(paymentsLabel.getPaymentPayText());
             addNewCardButton.setText(paymentsLabel.getPaymentAddNewCreditCardButton());
         }
     }
@@ -254,11 +260,15 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
+
             Bundle args = new Bundle();
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsModel);
             args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amountToMakePayment);
+
+            PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
             fragment.setArguments(args);
 
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
