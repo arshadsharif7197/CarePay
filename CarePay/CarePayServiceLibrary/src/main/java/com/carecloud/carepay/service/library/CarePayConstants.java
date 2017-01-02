@@ -86,5 +86,6 @@ public class CarePayConstants {
     public static final String APPOINTMENTS_STATUS_COMPLETED = "completed";
 
     public static final String CLOVER_DEVICE = "Clover";
+    public static final String DEMOGRAPHICS_SETTINGS_BUNDLE  = "demographics_settings_bundle";
 
 }

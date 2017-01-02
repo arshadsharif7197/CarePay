@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
@@ -95,6 +96,11 @@ public class PatientNavigationHelper {
             }
             case PatientNavigationStateConstants.PAYMENTS: {
                 intent = new Intent(context, PaymentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            }
+            case PatientNavigationStateConstants.PROFILE_UPDATE: {
+                intent = new Intent(context, DemographicsSettingsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }

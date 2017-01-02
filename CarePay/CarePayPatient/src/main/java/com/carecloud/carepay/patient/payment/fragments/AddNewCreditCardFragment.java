@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +30,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -92,6 +94,7 @@ public class AddNewCreditCardFragment extends Fragment implements
     private PaymentsModel intakePaymentModel;
 
     private double amountToMakePayment;
+    private String paymentsDTOString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,7 +106,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         Bundle arguments = getArguments();
         if (arguments != null) {
             Gson gson = new Gson();
-            String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
 
             paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
@@ -664,7 +667,32 @@ public class AddNewCreditCardFragment extends Fragment implements
             }
 
         } else {
-            SystemUtil.showDialogMessage(getActivity(),paymentsLabelDTO.getPaymentFailedErrorMessage(),"Failed to authorize Credit Card");
+            new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(),R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
+                @Override
+                public void onActionButton() {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    PaymentMethodFragment fragment = (PaymentMethodFragment)
+                            fm.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
+                    if (fragment == null) {
+                        fragment = new PaymentMethodFragment();
+                    }
+                    Bundle bundle = new Bundle();
+
+                    Gson gson = new Gson();
+                    bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+                    //fix for random crashes
+                    if(fragment.getArguments() !=null){
+                        fragment.getArguments().putAll(bundle);
+                    }else{
+                        fragment.setArguments(bundle);
+                    }
+
+                    fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
+                            PaymentMethodFragment.class.getSimpleName()).commit();
+
+                }
+            }).show();
+            //SystemUtil.showDialogMessage(getActivity(),paymentsLabelDTO.getPaymentFailedErrorMessage(),"Failed to authorize Credit Card");
         }
     }
 
