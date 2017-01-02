@@ -222,6 +222,12 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_responsibility_pay_later")
     @Expose
     private String paymentResponsibilityPayLater;
+    @SerializedName("payment_details_pay_now")
+    @Expose
+    private String paymentDetailsPayNow;
+    @SerializedName("payment_details_patient_balance_label")
+    @Expose
+    private String paymentDetailsPatientBalanceLabel;
 
     /**
      * @return The demographicsCheckinHeading
@@ -1372,5 +1378,37 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentResponsibilityPayLater(String paymentResponsibilityPayLater) {
         this.paymentResponsibilityPayLater = paymentResponsibilityPayLater;
+    }
+
+    /**
+     *
+     * @return paymentDetailsPayNow
+     */
+    public String getPaymentDetailsPayNow() {
+        return StringUtil.getLabelForView(paymentDetailsPayNow);
+    }
+
+    /**
+     *
+     * @param paymentDetailsPayNow paymentDetailsPayNow
+     */
+    public void setPaymentDetailsPayNow(String paymentDetailsPayNow) {
+        this.paymentDetailsPayNow = paymentDetailsPayNow;
+    }
+
+    /**
+     *
+     * @return paymentDetailsPatientBalanceLabel
+     */
+    public String getPaymentDetailsPatientBalanceLabel() {
+        return StringUtil.getLabelForView(paymentDetailsPatientBalanceLabel);
+    }
+
+    /**
+     *
+     * @param paymentDetailsPatientBalanceLabel paymentDetailsPatientBalanceLabel
+     */
+    public void setPaymentDetailsPatientBalanceLabel(String paymentDetailsPatientBalanceLabel) {
+        this.paymentDetailsPatientBalanceLabel = paymentDetailsPatientBalanceLabel;
     }
 }

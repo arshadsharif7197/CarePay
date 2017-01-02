@@ -40,6 +40,7 @@
     <dimen name="text_size_15">15sp</dimen>
     <dimen name="text_size_17">17sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_38">38sp</dimen>
 
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
@@ -366,6 +367,11 @@
     <dimen name="payment_receipt_dialog_width">326dp</dimen>
     <dimen name="payment_receipt_dialog_height">388dp</dimen>
     <dimen name="payment_receipt_label_padding">14.5dp</dimen>
+
+    <!--Payment Details-->
+    <dimen name="payment_details_dialog_header_height">139dp</dimen>
+    <dimen name="payment_details_dialog_total_paid_view_height">110dp</dimen>
+    <dimen name="payment_details_dialog_icon_size">58dp</dimen>
 
     <!--Android Pay-->
     <dimen name="padding_tiny">2dp</dimen>

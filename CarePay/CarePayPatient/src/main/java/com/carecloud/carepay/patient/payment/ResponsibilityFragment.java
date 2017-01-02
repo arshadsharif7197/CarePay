@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.dialogs.PartialPaymentDialog;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsDialog;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -45,7 +46,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
  * Created by lsoco_user on 9/2/2016.
  * Responsibility screen
  */
-public class ResponsibilityFragment extends Fragment {
+public class ResponsibilityFragment extends Fragment implements PaymentDetailsDialog.PayNowClickListener {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
@@ -105,7 +106,8 @@ public class ResponsibilityFragment extends Fragment {
             String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
 
-            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
+            List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload()
+                    .getPatientBalances().get(0).getPayload();
             getPaymentLabels();
 
             if (paymentList != null && paymentList.size() > 1) {
@@ -149,6 +151,10 @@ public class ResponsibilityFragment extends Fragment {
                         border.setColor(Color.WHITE);
                         border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
                         makePartialPaymentButton.setBackground(border);
+
+                        payLaterButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                        payLaterButton.setBackgroundColor(Color.WHITE);
+                        payLaterButton.setBackground(border);
                     }
 
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
@@ -163,7 +169,7 @@ public class ResponsibilityFragment extends Fragment {
 
                     payTotalAmountButton.setText(payTotalAmountString);
                     makePartialPaymentButton.setText(payPartialAmountString);
-//                    payLaterButton.setText(payLaterString);
+                    payLaterButton.setText(payLaterString);
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
                     Log.e(LOG_TAG, ex.getMessage());
@@ -175,6 +181,9 @@ public class ResponsibilityFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Call for payment details dialog
+                PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getActivity(),
+                        null, ResponsibilityFragment.this);
+                detailsDialog.show();
             }
         });
 
@@ -182,25 +191,7 @@ public class ResponsibilityFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getPaymentInformation();
-                FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-                PaymentMethodFragment fragment = (PaymentMethodFragment)
-                        fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
-
-                if (fragment == null) {
-                    fragment = new PaymentMethodFragment();
-                }
-
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                String paymentsDTOString = gson.toJson(paymentDTO);
-                bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-                bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-                fragment.setArguments(bundle);
-
-                FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-                fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-                fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
-                fragmentTransaction.commit();
+                doPayment();
             }
         });
 
@@ -219,6 +210,28 @@ public class ResponsibilityFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void doPayment() {
+        FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+        PaymentMethodFragment fragment = (PaymentMethodFragment)
+                fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
+
+        if (fragment == null) {
+            fragment = new PaymentMethodFragment();
+        }
+
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentDTO);
+        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        fragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+        fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+        fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -274,5 +287,10 @@ public class ResponsibilityFragment extends Fragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void onPayNowButtonClicked() {
+        doPayment();
     }
 }
