@@ -164,6 +164,21 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 selectedPaymentMethod = selectedRadioButton.getText().toString();
                 paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
                 paymentChoiceButton.setTag(paymentList.get(i).getType());
+                if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)){
+                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_green));
+                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)){
+                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
+                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
+                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
+                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_green));
+                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)){
+                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)){
+                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                }
             }
         }
     }

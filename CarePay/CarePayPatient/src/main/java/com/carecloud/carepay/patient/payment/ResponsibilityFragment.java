@@ -120,7 +120,7 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
                 }
 
                 try {
-                    double copay = Double.parseDouble(copayStr);
+                    double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
                     double previousBalance = Double.parseDouble(previousBalanceStr);
                     total = copay + previousBalance;
 

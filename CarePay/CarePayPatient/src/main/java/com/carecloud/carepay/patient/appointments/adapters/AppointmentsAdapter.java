@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,23 +141,21 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         AppointmentDTO item = ((AppointmentDTO) object);
                         AppointmentsActivity.model = item;
 
-//                        if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
-//                            new CheckInOfficeNowAppointmentDialog(context, true, item, appointmentInfo).show();
-//                        } else if (isCheckedIn) {
-//                            new QueueAppointmentDialog(context, item, appointmentLabels).show();
-//                        } else if (isCanceled) {
-//                            new CancelAppointmentDialog(context, item, true, appointmentInfo,AppointmentsAdapter.this).show();
-//                        } else {
-//                            if (isAppointmentCancellable(item)) {
-//                                new CancelAppointmentDialog(context, item, false, appointmentInfo,AppointmentsAdapter.this).show();
-//                            } else if (isPending) {
-//                                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-//                            } else {
-//                                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-//                            }
-//                        }
-
-                        new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+                        if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
+                            new CheckInOfficeNowAppointmentDialog(context, true, item, appointmentInfo).show();
+                        } else if (isCheckedIn) {
+                            new QueueAppointmentDialog(context, item, appointmentLabels).show();
+                        } else if (isCanceled) {
+                            new CancelAppointmentDialog(context, item, true, appointmentInfo,AppointmentsAdapter.this).show();
+                        } else {
+                            if (isAppointmentCancellable(item)) {
+                                new CancelAppointmentDialog(context, item, false, appointmentInfo,AppointmentsAdapter.this).show();
+                            } else if (isPending) {
+                                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+                            } else {
+                                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+                            }
+                        }
                     }
                 }
             });

@@ -107,6 +107,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
             cancel();
         } else if (viewId == com.carecloud.carepaylibrary.R.id.payment_details_pay_now_button) {
             listener.onPayNowButtonClicked();
+            dismiss();
         }
     }
 
