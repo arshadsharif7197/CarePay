@@ -108,8 +108,13 @@ public class ResponsibilityFragment extends BaseCheckinFragment implements Payme
             getPaymentLabels();
 
             if (paymentsModel != null) {
+/*
+                List<PaymentPatientBalancesPayloadDTO> paymentList2 =
+                        paymentsModel.getPaymentPayload().getPatientBalances().get(0) .getPayload();
+*/
                 List<PaymentPatientBalancesPayloadDTO> paymentList =
-                        paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload();
+                        paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
+                                .getPayload().getSummaryBalance();
 
                 if (paymentList != null && paymentList.size() > 0) {
                     for (PaymentPatientBalancesPayloadDTO payment : paymentList) {

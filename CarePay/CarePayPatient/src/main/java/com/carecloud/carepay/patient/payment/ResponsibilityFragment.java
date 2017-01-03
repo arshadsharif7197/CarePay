@@ -112,10 +112,15 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
 
             getPaymentLabels();
 
+/*
             List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload()
                     .getPatientBalances().get(0).getPayload();
+*/
+            List<PaymentPatientBalancesPayloadDTO> paymentList =
+                    paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
+                            .getPayload().getSummaryBalance();
 
-            if (paymentList != null && paymentList.size() > 1) {
+            if (paymentList != null && paymentList.size() > 0) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
                     if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalanceStr = payment.getTotal();
