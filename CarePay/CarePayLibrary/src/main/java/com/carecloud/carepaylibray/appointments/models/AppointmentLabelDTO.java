@@ -182,6 +182,15 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("provider_list_schedule_appointment_button")
     @Expose
     private String providerListScheduleAppointmentButton;
+    @SerializedName("available_hours_back")
+    @Expose
+    private String availableHoursBack;
+    @SerializedName("request_appointment_new_patient")
+    @Expose
+    private String requestAppointmentNewPatient;
+    @SerializedName("add_appointment_from_to_text")
+    @Expose
+    private String addAppointmentFromToText;
 
     /**
      * @return The appointmentsHeading
@@ -1007,5 +1016,59 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAppointmentsTodayHeadingSmall(String appointmentsTodayHeadingSmall) {
         this.appointmentsTodayHeadingSmall = appointmentsTodayHeadingSmall;
+    }
+
+    /**
+     * Gets available hours back.
+     *
+     * @return the available hours back
+     */
+    public String getAvailableHoursBack() {
+        return StringUtil.getLabelForView(availableHoursBack);
+    }
+
+    /**
+     * Sets available hours back.
+     *
+     * @param availableHoursBack the available hours back
+     */
+    public void setAvailableHoursBack(String availableHoursBack) {
+        this.availableHoursBack = availableHoursBack;
+    }
+
+    /**
+     * Gets request appointment new patient.
+     *
+     * @return the request appointment new patient
+     */
+    public String getRequestAppointmentNewPatient() {
+        return StringUtil.getLabelForView(requestAppointmentNewPatient);
+    }
+
+    /**
+     * Sets request appointment new patient.
+     *
+     * @param requestAppointmentNewPatient the request appointment new patient
+     */
+    public void setRequestAppointmentNewPatient(String requestAppointmentNewPatient) {
+        this.requestAppointmentNewPatient = requestAppointmentNewPatient;
+    }
+
+    /**
+     * Gets add appointment from to text.
+     *
+     * @return the add appointment from to text
+     */
+    public String getAddAppointmentFromToText() {
+        return StringUtil.getLabelForView(addAppointmentFromToText);
+    }
+
+    /**
+     * Sets add appointment from to text.
+     *
+     * @param addAppointmentFromToText the add appointment from to text
+     */
+    public void setAddAppointmentFromToText(String addAppointmentFromToText) {
+        this.addAppointmentFromToText = addAppointmentFromToText;
     }
 }
