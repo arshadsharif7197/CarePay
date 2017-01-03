@@ -51,6 +51,12 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private AppointmentAvailabilityDTO availabilityDTO;
     private RecyclerView availableHoursRecycleView;
 
+    /**
+     * Instantiates a new Practice available hours dialog.
+     *
+     * @param context      the context
+     * @param cancelString the cancel string
+     */
     public PracticeAvailableHoursDialog(Context context, String cancelString){
         super(context,cancelString,false);
         this.context = context;
@@ -84,11 +90,12 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         availableHoursRecycleView = (RecyclerView)
                 view.findViewById(com.carecloud.carepaylibrary.R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
-        setDialogTitle(((ScheduleAppointmentActivity)context).getResourcesToSchedule().getMetadata().getLabel().
-                getAvailableHoursHeading());
+        setDialogTitle(((ScheduleAppointmentActivity)context).getResourcesToSchedule().getMetadata().getLabel()
+                .getAvailableHoursHeading());
         setCancelImage(R.drawable.icn_arrow_up);
         setCancelable(false);
     }
+    
     /**
      *Click listener for edit range and edit date range button
      */
