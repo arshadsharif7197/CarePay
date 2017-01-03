@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PartialPaymentDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -36,24 +37,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ResponsibilityFragment extends BaseCheckinFragment {
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
+public class ResponsibilityFragment extends BaseCheckinFragment implements PaymentDetailsDialog.PayNowClickListener {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
     private String copayStr = "";
     private String previousBalanceStr = "";
-    private PaymentsModel paymentsModel;
 
+    private PaymentsModel paymentsModel;
     private String totalResponsibilityString;
+    private String paymentDetailsString;
     private String previousBalanceString;
     private String insuranceCopayString;
     private String payTotalAmountString;
     private String payPartialAmountString;
-
+    private String payLaterString;
     private double total;
-
-    public ResponsibilityFragment() {
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,43 +63,129 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
         flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(PatientModeCheckinActivity.SUBFLOW_PAYMENTS, 0, 0);
     }
 
+    @SuppressWarnings("deprecation")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_responsibility, container, false);
 
-        Gson gson = new Gson();
-        Bundle arguments = getArguments();
-        String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-        paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-        getPaymentLabels();
-
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         toolbar.setTitle("");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        TextView paymentDetails = (TextView) view.findViewById(R.id.response_payment_details);
+        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
+        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
+        TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
+        TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
+        TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
+
         Button payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
+        payTotalButton.setClickable(false);
+        payTotalButton.setEnabled(false);
+        setGothamRoundedMediumTypeface(appCompatActivity, payTotalButton);
+        payTotalButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+
+        Button payPartialButton = (Button) view.findViewById(R.id.make_partial_payment_button);
+        payPartialButton.setClickable(false);
+        payPartialButton.setEnabled(false);
+        setGothamRoundedMediumTypeface(appCompatActivity, payPartialButton);
+        payPartialButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+
+        Button payLaterButton = (Button) view.findViewById(R.id.pay_later_button);
+        payLaterButton.setClickable(false);
+        payLaterButton.setEnabled(false);
+        setGothamRoundedMediumTypeface(appCompatActivity, payLaterButton);
+        payLaterButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            Gson gson = new Gson();
+            String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
+
+            getPaymentLabels();
+
+            if (paymentsModel != null) {
+                List<PaymentPatientBalancesPayloadDTO> paymentList =
+                        paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload();
+
+                if (paymentList != null && paymentList.size() > 0) {
+                    for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
+                        if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
+                            previousBalanceStr = payment.getTotal();
+                        } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                            copayStr = payment.getTotal();
+                        }
+                    }
+
+                    try {
+                        double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
+                        double previousBalance = Double.parseDouble(previousBalanceStr);
+                        total = copay + previousBalance;
+
+                        if (total > 0) {
+                            payTotalButton.setClickable(true);
+                            payTotalButton.setEnabled(true);
+                            payPartialButton.setEnabled(true);
+                            payPartialButton.setEnabled(true);
+                            payLaterButton.setEnabled(true);
+                            payLaterButton.setEnabled(true);
+
+                            payTotalButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+                            payTotalButton.setTextColor(Color.WHITE);
+                            payPartialButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                            payPartialButton.setBackgroundColor(Color.WHITE);
+                            GradientDrawable border = new GradientDrawable();
+                            border.setColor(Color.WHITE);
+                            border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
+                            payPartialButton.setBackground(border);
+
+                            payLaterButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                            payLaterButton.setBackgroundColor(Color.WHITE);
+                            payLaterButton.setBackground(border);
+                        }
+
+                        NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+                        responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                        responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
+                        responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
+                    } catch (NumberFormatException ex) {
+                        ex.printStackTrace();
+                        Log.e(LOG_TAG, ex.getMessage());
+                    }
+                }
+            }
+
+            paymentDetails.setText(paymentDetailsString);
+            totalResponsibility.setText(totalResponsibilityString);
+            prevBalanceResponsibility.setText(previousBalanceString);
+            coPayResponsibility.setText(insuranceCopayString);
+
+            payTotalButton.setText(payTotalAmountString);
+            payPartialButton.setText(payPartialAmountString);
+            payLaterButton.setText(payLaterString);
+        }
+
+        paymentDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Call for payment details dialog
+                PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getActivity(),
+                        paymentsModel, ResponsibilityFragment.this);
+                detailsDialog.show();
+            }
+        });
+
         payTotalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getPaymentInformation();
-
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                String paymentsDTOString = gson.toJson(paymentsModel);
-                bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
-                        paymentsDTOString);
-                bundle.putString(CarePayConstants.INTAKE_BUNDLE,
-                        paymentsDTOString);
-                bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-
-                PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
-                fragment.setArguments(bundle);
-                ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+                doPayment();
             }
         });
 
-        Button payPartialButton = (Button) view.findViewById(R.id.make_partial_payment_button);
         payPartialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,71 +193,29 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
             }
         });
 
-        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
-        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
-
-        TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
-        TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
-        TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
-
-        if (paymentsModel != null) {
-            List<PaymentPatientBalancesPayloadDTO> paymentList =
-                    paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload();
-
-            if (paymentList != null && paymentList.size() > 0) {
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
-                        previousBalanceStr = payment.getTotal();
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                        copayStr = payment.getTotal();
-                    }
-                }
-
-                try {
-                    double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
-                    double previousBalance = Double.parseDouble(previousBalanceStr);
-                    total = copay + previousBalance;
-                    if (total == 0) {
-                        payTotalButton.setClickable(false);
-                        payTotalButton.setEnabled(false);
-                        payPartialButton.setClickable(false);
-                        payPartialButton.setEnabled(false);
-                        payTotalButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                        payPartialButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                    } else {
-                        payTotalButton.setClickable(true);
-                        payTotalButton.setEnabled(true);
-                        payPartialButton.setEnabled(true);
-                        payPartialButton.setEnabled(true);
-                        payTotalButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
-                        payTotalButton.setTextColor(Color.WHITE);
-                        payPartialButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
-                        payPartialButton.setBackgroundColor(Color.WHITE);
-                        GradientDrawable border = new GradientDrawable();
-                        border.setColor(Color.WHITE);
-                        border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
-                        payPartialButton.setBackground(border);
-                    }
-
-                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-                    responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
-                    responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
-
-                    totalResponsibility.setText(totalResponsibilityString);
-                    prevBalanceResponsibility.setText(previousBalanceString);
-                    coPayResponsibility.setText(insuranceCopayString);
-                    payTotalButton.setText(payTotalAmountString);
-                    payPartialButton.setText(payPartialAmountString);
-
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                    Log.e(LOG_TAG, ex.getMessage());
-                }
+        payLaterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Add code to pay later
             }
-        }
+        });
+
         return view;
+    }
+
+    private void doPayment() {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
+                paymentsDTOString);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE,
+                paymentsDTOString);
+        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
+
+        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+        fragment.setArguments(bundle);
+        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
     }
 
     private void getPaymentInformation() {
@@ -197,11 +242,14 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
             if (paymentsMetadataDTO != null) {
                 PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataDTO.getPaymentsLabel();
                 if (paymentsLabelsDTO != null) {
+                    paymentDetailsString = paymentsLabelsDTO.getPaymentResponsibilityDetails();
                     totalResponsibilityString = paymentsLabelsDTO.getPaymentTotalResponsibility();
                     previousBalanceString = paymentsLabelsDTO.getPaymentPreviousBalance();
                     insuranceCopayString = paymentsLabelsDTO.getPaymentInsuranceCopay();
+
                     payTotalAmountString = paymentsLabelsDTO.getPaymentPayTotalAmountButton();
                     payPartialAmountString = paymentsLabelsDTO.getPaymentPartialAmountButton();
+                    payLaterString = paymentsLabelsDTO.getPaymentResponsibilityPayLater();
                 }
             }
         }
@@ -220,5 +268,10 @@ public class ResponsibilityFragment extends BaseCheckinFragment {
     public void onStart() {
         super.onStart();
         ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
+    }
+
+    @Override
+    public void onPayNowButtonClicked() {
+        doPayment();
     }
 }
