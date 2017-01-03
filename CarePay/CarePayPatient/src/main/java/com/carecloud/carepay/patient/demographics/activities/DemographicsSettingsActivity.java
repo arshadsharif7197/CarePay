@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -15,6 +17,7 @@ import com.google.gson.Gson;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity {
+    DemographicsSettingsDTO demographicsSettingsDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,12 @@ public class DemographicsSettingsActivity extends BasePatientActivity {
         setContentView(R.layout.activity_demographics_settings);
 
         Intent intent = getIntent();
+        demographicsSettingsDTO = getConvertedDTO(DemographicsSettingsDTO.class);
+        Bundle bundle = new Bundle();
+
+        Gson gson = new Gson();
+        String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
 
         FragmentManager fm = getSupportFragmentManager();
         DemographicsSettingsFragment fragment = (DemographicsSettingsFragment)
@@ -29,9 +38,11 @@ public class DemographicsSettingsActivity extends BasePatientActivity {
         if (fragment == null) {
             fragment = new DemographicsSettingsFragment();
         }
-        Bundle bundle = new Bundle();
-
-        Gson gson = new Gson();
+        if(fragment.getArguments() !=null){
+            fragment.getArguments().putAll(bundle);
+        }else{
+            fragment.setArguments(bundle);
+        }
 
         fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                 DemographicsSettingsFragment.class.getSimpleName()).commit();

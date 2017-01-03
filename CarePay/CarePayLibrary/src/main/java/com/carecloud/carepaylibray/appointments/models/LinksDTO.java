@@ -31,6 +31,9 @@ public class LinksDTO {
     @SerializedName("appointment_availability")
     @Expose
     private TransitionDTO appointmentAvailability;
+    @SerializedName("profile_update")
+    @Expose
+    private TransitionDTO profileUpdate;
 
     /**
      * @return The self
@@ -134,4 +137,19 @@ public class LinksDTO {
     public void setResourcesToSchedule(TransitionDTO resourcesToSchedule) {
         this.resourcesToSchedule = resourcesToSchedule;
     }
+
+    /**
+     * @return The profileUpdate
+     */
+    public TransitionDTO getProfileUpdate() {
+        return profileUpdate;
+    }
+
+    /**
+     * @param profileUpdate The profileUpdate
+     */
+    public void setProfileUpdate(TransitionDTO profileUpdate) {
+        this.profileUpdate = profileUpdate;
+    }
+
 }

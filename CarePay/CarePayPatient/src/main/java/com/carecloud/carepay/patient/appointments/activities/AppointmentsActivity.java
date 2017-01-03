@@ -263,10 +263,11 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
 
         } else if (id == R.id.nav_settings) {
-            //Remove after endpoint integration
-            Intent demographicSettingsActivityIntent = new Intent(AppointmentsActivity.this,
-                    DemographicsSettingsActivity.class);
-            startActivity(demographicSettingsActivityIntent);
+            Map<String, String> queryString = new HashMap<>();
+            queryString.put("practice_id",  appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId() );
+            queryString.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
+            queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
+            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getProfileUpdate(), demographicsSettingsCallBack, queryString);
 
         } else if (id == R.id.nav_logout) {
             // perform log out, of course
@@ -291,6 +292,23 @@ public class AppointmentsActivity extends BasePatientActivity implements
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
 
     public void setAppointmentModel(AppointmentDTO model) {
         AppointmentsActivity.model = model;
