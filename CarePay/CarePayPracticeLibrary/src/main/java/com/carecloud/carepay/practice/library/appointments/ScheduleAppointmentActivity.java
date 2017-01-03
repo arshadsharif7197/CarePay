@@ -9,13 +9,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProvidersListAdapter;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialog;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -32,6 +31,7 @@ import com.google.gson.Gson;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +46,9 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     private LinearLayout noAppointmentView;
 
     private AppointmentResourcesDTO selectedResource;
+    private VisitTypeDTO selectedVisitTypeDTO;
+    private Date startDate;
+    private Date endDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,7 +210,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
 
     @Override
     public void onProviderListItemClickListener(int position) {
-        List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload().getResources();
+        List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload().getResourcesToSchedule().get(0).getResources();
         selectedResource = resources.get(position);
         VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this, selectedResource, this, scheduleResourcesModel);
         visitTypeDialog.show();
@@ -219,11 +222,36 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
      */
     public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
 
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitType));
-        Toast.makeText(this, "call AvailableHoursFragment...", Toast.LENGTH_SHORT).show();
-        //call AvailableHoursFragment
+        this.selectedVisitTypeDTO = selectedVisitType;
+        new PracticeAvailableHoursDialog(ScheduleAppointmentActivity.this,scheduleResourcesModel.getMetadata().getLabel().getAvailableHoursBack()).show();
     }
+
+    public Date getStartDate(){
+        return startDate;
+    }
+
+    public void setStartDate(Date date){
+        this.startDate = date;
+    }
+
+    public Date getEndDate(){
+        return endDate;
+    }
+
+    public void setEndDate(Date date){
+        this.endDate = date;
+    }
+
+    public AppointmentsResultModel getResourcesToSchedule(){
+        return scheduleResourcesModel;
+    }
+
+    public AppointmentResourcesDTO getSelectedResource(){
+        return selectedResource;
+    }
+
+    public VisitTypeDTO getSelectedVisitTypeDTO(){
+        return selectedVisitTypeDTO;
+    }
+
 }
