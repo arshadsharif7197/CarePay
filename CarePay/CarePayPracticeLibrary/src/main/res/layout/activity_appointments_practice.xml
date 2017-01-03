@@ -5,6 +5,7 @@
     android:id="@+id/activity_appointments"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/dimen_25dp"
     android:background="@drawable/background_default"
     tools:context=".appointments.AppointmentsActivity">
 
@@ -42,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/titleLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_46dp"
+        android:layout_marginTop="@dimen/dimen_36dp"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_36sp"
         app:customAssetFont="gotham_rounded_medium" />
@@ -71,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/titleSelectappointmentsubheader"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/provider_list_margin"
+        android:layout_marginTop="@dimen/dimen_34dp"
         android:orientation="horizontal"
         android:scrollbars="horizontal" />
 
