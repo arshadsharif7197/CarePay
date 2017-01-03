@@ -8,16 +8,16 @@ public class PatienceBalanceDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PatienceBalanceMetadataDTO metadata;
+    private PaymentPayloadMetaDataDTO metadata;
     @SerializedName("payload")
     @Expose
     private PatienceBalancePayloadDTO payload;
 
-    public PatienceBalanceMetadataDTO getMetadata() {
+    public PaymentPayloadMetaDataDTO getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(PatienceBalanceMetadataDTO metadata) {
+    public void setMetadata(PaymentPayloadMetaDataDTO metadata) {
         this.metadata = metadata;
     }
 
