@@ -42,10 +42,6 @@ import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
-/**
- * Created by lsoco_user on 9/2/2016.
- * Responsibility screen
- */
 public class ResponsibilityFragment extends Fragment implements PaymentDetailsDialog.PayNowClickListener {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
@@ -91,24 +87,33 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
         TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
 
         Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
+        payTotalAmountButton.setClickable(false);
+        payTotalAmountButton.setEnabled(false);
         setGothamRoundedMediumTypeface(appCompatActivity, payTotalAmountButton);
+        payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
         Button makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
+        makePartialPaymentButton.setClickable(false);
+        makePartialPaymentButton.setEnabled(false);
         setGothamRoundedMediumTypeface(appCompatActivity, makePartialPaymentButton);
+        makePartialPaymentButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
         Button payLaterButton = (Button) view.findViewById(R.id.pay_later_button);
+        payLaterButton.setClickable(false);
+        payLaterButton.setEnabled(false);
         setGothamRoundedMediumTypeface(appCompatActivity, payLaterButton);
+        payLaterButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
         Bundle bundle = getArguments();
         if (bundle != null) {
             Gson gson = new Gson();
-            bundle = getArguments();
             String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
 
+            getPaymentLabels();
+
             List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload()
                     .getPatientBalances().get(0).getPayload();
-            getPaymentLabels();
 
             if (paymentList != null && paymentList.size() > 1) {
                 for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
@@ -124,18 +129,7 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
                     double previousBalance = Double.parseDouble(previousBalanceStr);
                     total = copay + previousBalance;
 
-                    if (total == 0) {
-                        payTotalAmountButton.setClickable(false);
-                        payTotalAmountButton.setEnabled(false);
-                        makePartialPaymentButton.setClickable(false);
-                        makePartialPaymentButton.setEnabled(false);
-                        payLaterButton.setClickable(false);
-                        payLaterButton.setEnabled(false);
-
-                        payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                        makePartialPaymentButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                        payLaterButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                    } else {
+                    if (total > 0) {
                         payTotalAmountButton.setClickable(true);
                         payTotalAmountButton.setEnabled(true);
                         makePartialPaymentButton.setEnabled(true);
@@ -161,20 +155,20 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
                     responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
                     responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
                     responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
-
-                    paymentDetails.setText(paymentDetailsString);
-                    totalResponsibility.setText(totalResponsibilityString);
-                    prevBalanceResponsibility.setText(previousBalanceString);
-                    coPayResponsibility.setText(insuranceCopayString);
-
-                    payTotalAmountButton.setText(payTotalAmountString);
-                    makePartialPaymentButton.setText(payPartialAmountString);
-                    payLaterButton.setText(payLaterString);
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
                     Log.e(LOG_TAG, ex.getMessage());
                 }
             }
+
+            paymentDetails.setText(paymentDetailsString);
+            totalResponsibility.setText(totalResponsibilityString);
+            prevBalanceResponsibility.setText(previousBalanceString);
+            coPayResponsibility.setText(insuranceCopayString);
+
+            payTotalAmountButton.setText(payTotalAmountString);
+            makePartialPaymentButton.setText(payPartialAmountString);
+            payLaterButton.setText(payLaterString);
         }
 
         paymentDetails.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +176,7 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
             public void onClick(View view) {
                 // Call for payment details dialog
                 PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getActivity(),
-                        null, ResponsibilityFragment.this);
+                        paymentDTO, ResponsibilityFragment.this);
                 detailsDialog.show();
             }
         });
@@ -276,7 +270,6 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
                 PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataDTO.getPaymentsLabel();
                 if (paymentsLabelsDTO != null) {
                     paymentDetailsString = paymentsLabelsDTO.getPaymentResponsibilityDetails();
-                    totalResponsibilityString = paymentsLabelsDTO.getPaymentTotalResponsibility();
                     totalResponsibilityString = paymentsLabelsDTO.getPaymentTotalResponsibility();
                     previousBalanceString = paymentsLabelsDTO.getPaymentPreviousBalance();
                     insuranceCopayString = paymentsLabelsDTO.getPaymentInsuranceCopay();

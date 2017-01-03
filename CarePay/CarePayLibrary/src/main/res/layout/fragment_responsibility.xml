@@ -71,7 +71,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.15"
                         android:gravity="end"
-                        android:text="Details"
                         android:textColor="@color/colorPrimary"
                         app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -138,15 +137,13 @@
                     android:id="@+id/make_partial_payment_button"
                     style="@style/ResponsButtonStyle"
                     android:layout_marginTop="@dimen/apt_popup_parent_padding"
-                    android:background="@drawable/button_blue_border"
-                    android:textColor="@color/bright_cerulean" />
+                    android:background="@drawable/button_blue_border" />
 
                 <Button
                     android:id="@+id/pay_later_button"
                     style="@style/ResponsButtonStyle"
                     android:layout_marginTop="@dimen/apt_popup_parent_padding"
-                    android:background="@drawable/button_blue_border"
-                    android:textColor="@color/bright_cerulean" />
+                    android:background="@drawable/button_blue_border" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
