@@ -216,6 +216,18 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_receipt_total_paid_label")
     @Expose
     private String paymentReceiptTotalPaidLabel;
+    @SerializedName("payment_responsibility_details")
+    @Expose
+    private String paymentResponsibilityDetails;
+    @SerializedName("payment_responsibility_pay_later")
+    @Expose
+    private String paymentResponsibilityPayLater;
+    @SerializedName("payment_details_pay_now")
+    @Expose
+    private String paymentDetailsPayNow;
+    @SerializedName("payment_details_patient_balance_label")
+    @Expose
+    private String paymentDetailsPatientBalanceLabel;
 
     /**
      * @return The demographicsCheckinHeading
@@ -1334,5 +1346,69 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentReceiptTotalPaidLabel(String paymentReceiptTotalPaidLabel) {
         this.paymentReceiptTotalPaidLabel = paymentReceiptTotalPaidLabel;
+    }
+
+    /**
+     *
+     * @return paymentResponsibilityDetails
+     */
+    public String getPaymentResponsibilityDetails() {
+        return StringUtil.getLabelForView(paymentResponsibilityDetails);
+    }
+
+    /**
+     *
+     * @param paymentResponsibilityDetails paymentResponsibilityDetails
+     */
+    public void setPaymentResponsibilityDetails(String paymentResponsibilityDetails) {
+        this.paymentResponsibilityDetails = paymentResponsibilityDetails;
+    }
+
+    /**
+     *
+     * @return paymentResponsibilityPayLater
+     */
+    public String getPaymentResponsibilityPayLater() {
+        return StringUtil.getLabelForView(paymentResponsibilityPayLater);
+    }
+
+    /**
+     *
+     * @param paymentResponsibilityPayLater paymentResponsibilityPayLater
+     */
+    public void setPaymentResponsibilityPayLater(String paymentResponsibilityPayLater) {
+        this.paymentResponsibilityPayLater = paymentResponsibilityPayLater;
+    }
+
+    /**
+     *
+     * @return paymentDetailsPayNow
+     */
+    public String getPaymentDetailsPayNow() {
+        return StringUtil.getLabelForView(paymentDetailsPayNow);
+    }
+
+    /**
+     *
+     * @param paymentDetailsPayNow paymentDetailsPayNow
+     */
+    public void setPaymentDetailsPayNow(String paymentDetailsPayNow) {
+        this.paymentDetailsPayNow = paymentDetailsPayNow;
+    }
+
+    /**
+     *
+     * @return paymentDetailsPatientBalanceLabel
+     */
+    public String getPaymentDetailsPatientBalanceLabel() {
+        return StringUtil.getLabelForView(paymentDetailsPatientBalanceLabel);
+    }
+
+    /**
+     *
+     * @param paymentDetailsPatientBalanceLabel paymentDetailsPatientBalanceLabel
+     */
+    public void setPaymentDetailsPatientBalanceLabel(String paymentDetailsPatientBalanceLabel) {
+        this.paymentDetailsPatientBalanceLabel = paymentDetailsPatientBalanceLabel;
     }
 }

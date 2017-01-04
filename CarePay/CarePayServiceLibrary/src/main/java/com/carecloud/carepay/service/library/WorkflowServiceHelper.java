@@ -8,7 +8,6 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -198,8 +197,8 @@ public class WorkflowServiceHelper {
                 } else {
                     try {
                         callback.onFailure(response.errorBody().string());
-                    } catch (Exception exection) {
-                        callback.onFailure(exection.getMessage());
+                    } catch (Exception exception) {
+                        callback.onFailure(exception.getMessage());
                     }
                 }
             }

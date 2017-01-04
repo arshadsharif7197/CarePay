@@ -24,6 +24,7 @@
                 android:src="@drawable/dialog_button_bg" />
 
             <ImageView
+                android:id="@+id/cancel_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -47,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/dimen_26dp"
-        android:background="@android:color/white"
+        android:background="@android:color/transparent"
         android:gravity="center"
         android:orientation="vertical">
 
