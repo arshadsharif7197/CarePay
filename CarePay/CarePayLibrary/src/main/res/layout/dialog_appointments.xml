@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:background="@color/white"
+        android:background="@drawable/bg_cardview"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/apt_dl_header_ht"
             android:layout_gravity="center"
-            android:background="@color/light_gray_dialog"
+            android:background="@drawable/appointment_dialog_gray_bg"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
