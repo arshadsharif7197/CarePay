@@ -148,39 +148,35 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
                             new CancelAppointmentDialog(context, item, appointmentInfo,
                                     BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, null).show();
-                        }
 
-                        // Checked-In Appointment
-                        else if (isCheckedIn) {
+                        } else if (isCheckedIn) {
+                            // Checked-In Appointment
                             new QueueAppointmentDialog(context, item, appointmentLabels).show();
-                        }
 
-                        // Cancelled Appointment
-                        else if (isCanceled) {
+                        } else if (isCanceled) {
+                            // Cancelled Appointment
                             new CancelAppointmentDialog(context, item, appointmentInfo,
                                     BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, AppointmentsAdapter.this).show();
-                        }
 
-                        // Appointment as long as it's 24 hours or more in the future
-                        else if (isAppointmentCancellable(item)) {
+                        } else if (isAppointmentCancellable(item)) {
+                            // Appointment as long as it's 24 hours or more in the future
                             new CancelAppointmentDialog(context, item, appointmentInfo,
                                     BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT, AppointmentsAdapter.this).show();
-                        }
 
-                        // Requested Appointment
-                        else if (isRequested) {
+                        } else if (isRequested) {
+                            // Requested Appointment
                             new CancelAppointmentDialog(context, item, appointmentInfo,
                                     BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, null).show();
-                        }
 
-                        // Pending Appointment
-                        else if (isPending) {
-                            // Appointments for the current business day
+                        } else if (isPending) {
                             if (getSectionHeaderTitle(item.getPayload().getStartTime())
                                     .equals(appointmentLabels.getTodayAppointmentsHeading())) {
+
+                                // Pending Appointment && Appointments for the current business day
                                 new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+
                             } else {
-                                // Appointment in the future that is not today
+                                // Pending Appointment && Appointment in the future that is not today
                                 new CancelAppointmentDialog(context, item, appointmentInfo,
                                         BaseDoctorInfoDialog.AppointmentType.UPCOMING_APPOINTMENT, null).show();
                             }

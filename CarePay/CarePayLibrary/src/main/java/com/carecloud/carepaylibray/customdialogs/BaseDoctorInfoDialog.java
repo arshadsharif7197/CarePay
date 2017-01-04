@@ -35,6 +35,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         CANCEL_APPOINTMENT,
         CANCELLED_APPOINTMENT
     }
+
     private Context context;
     private AppointmentsPayloadDTO payload;
     private View addActionLayout;
