@@ -19,6 +19,27 @@ public class PaymentsPatientBalancessDTO implements Serializable {
     @SerializedName("payload")
     @Expose
     private List<PaymentPatientBalancesPayloadDTO> payload = new ArrayList<PaymentPatientBalancesPayloadDTO>();
+    @SerializedName("balances")
+    @Expose
+    private List<PatienceBalanceDTO> balances;
+
+    /**
+     *
+     * @return
+     * The balances
+     */
+    public List<PatienceBalanceDTO> getBalances() {
+        return balances;
+    }
+
+    /**
+     *
+     * @param balances
+     * The balances
+     */
+    public void setBalances(List<PatienceBalanceDTO> balances) {
+        this.balances = balances;
+    }
 
     /**
      *

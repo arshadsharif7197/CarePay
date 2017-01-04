@@ -13,6 +13,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 
@@ -72,6 +73,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getStartTime()).getDate().getTime());
         holder.appointmentStatusCartView.setTag(appointmentItem);
+        holder.appointmentStatusCartView.setShortName(StringUtil.onShortDrName(patientModel.getFirstName() + " " + patientModel.getLastName()));
         /*Picasso.with(context).load(patientModel.getPhoto()).transform(
                 new CircleImageTransform()).resize(160, 160).into(holder.patientPicImageView);
         holder.paymentTextview.setTag(patientModel);

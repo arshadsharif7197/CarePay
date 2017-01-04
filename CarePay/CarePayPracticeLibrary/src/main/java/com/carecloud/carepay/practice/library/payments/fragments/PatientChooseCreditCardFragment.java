@@ -218,7 +218,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
                         payload.put("payment_methods", paymentMethods);
 
                         PaymentPayloadMetaDataDTO metadata = paymentsModel.getPaymentPayload()
-                                .getPatientBalances().get(0).getMetadata();
+                                .getPatientBalances().get(0).getBalances().get(0).getMetadata();
 
                         Map<String, String> queries = new HashMap<>();
                         queries.put("practice_mgmt", metadata.getPracticeMgmt());

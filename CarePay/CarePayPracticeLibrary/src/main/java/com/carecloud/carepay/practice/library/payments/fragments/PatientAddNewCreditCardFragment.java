@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -29,6 +30,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -91,6 +93,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private PaymentsLabelDTO paymentsLabelDTO;
     private PaymentsModel intakePaymentModel;
     private double amountToMakePayment;
+    private String paymentDTOString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,7 +105,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         Bundle arguments = getArguments();
         if (arguments != null) {
             Gson gson = new Gson();
-            String paymentDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
 
             paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
@@ -662,7 +665,32 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             }
 
         } else {
-            SystemUtil.showDialogMessage(getActivity(),paymentsLabelDTO.getPaymentFailedErrorMessage(),"Failed to authorize Credit Card");
+            new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(),R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
+                @Override
+                public void onActionButton() {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    PatientPaymentMethodFragment fragment = (PatientPaymentMethodFragment)
+                            fm.findFragmentByTag(PatientPaymentMethodFragment.class.getSimpleName());
+                    if (fragment == null) {
+                        fragment = new PatientPaymentMethodFragment();
+                    }
+                    Bundle bundle = new Bundle();
+
+                    Gson gson = new Gson();
+                    bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentDTOString);
+                    //fix for random crashes
+                    if(fragment.getArguments() !=null){
+                        fragment.getArguments().putAll(bundle);
+                    }else{
+                        fragment.setArguments(bundle);
+                    }
+
+                    fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
+                            PatientPaymentMethodFragment.class.getSimpleName()).commit();
+
+                }
+            }).show();
+            //SystemUtil.showDialogMessage(getActivity(),paymentsLabelDTO.getPaymentFailedErrorMessage(),"Failed to authorize Credit Card");
         }
     }
 
@@ -720,7 +748,8 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             JSONArray paymentMethods = new JSONArray();
             paymentMethods.put(paymentMethod);
             payload.put("payment_methods", paymentMethods);
-            PaymentPayloadMetaDataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getMetadata();
+            //PaymentPayloadMetaDataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getMetadata();
+            PaymentPayloadMetaDataDTO metadata = intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             Map<String, String> queries = new HashMap<>();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
