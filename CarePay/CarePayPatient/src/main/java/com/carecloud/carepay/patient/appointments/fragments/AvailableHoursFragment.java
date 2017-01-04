@@ -171,15 +171,14 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         dateRangeCustomTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.glitter));
 
         DateUtil.getInstance().setFormat(CarePayConstants.RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE);
-
+        String selectedRangeLabel = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentFromToText();
         if (startDate != null && endDate != null) {
             DateUtil.getInstance().setDate(startDate);
             String formattedStartDate = DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear();
             DateUtil.getInstance().setDate(endDate);
             String formattedEndDate = DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear();
 
-            dateRangeCustomTextView.setText(formattedStartDate + " " +
-                    getResources().getString(R.string.to) + " " + formattedEndDate);
+            dateRangeCustomTextView.setText(String.format(selectedRangeLabel,formattedStartDate,formattedEndDate));
         } else {
             /*To show by default one week as range from today*/
             Calendar rangeStart = Calendar.getInstance();
@@ -191,9 +190,9 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
             endDate = rangeEnd.getTime();
 
             DateUtil.getInstance().setDate(endDate);
-            dateRangeCustomTextView.setText(
-                    getResources().getString(R.string.date_range_from_today_to)
-                    + " " + DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
+            dateRangeCustomTextView.setText(String.format(selectedRangeLabel,resourcesToScheduleDTO
+                            .getMetadata().getLabel().getTodayAppointmentsHeading(),
+                    DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear()));
         }
     }
 
@@ -219,31 +218,31 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     };
 
     /**
-    *Click listener for edit range and edit date range button
-    */
+     *Click listener for edit range and edit date range button
+     */
     View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        AppointmentDateRangeFragment appointmentDateRangeFragment = (AppointmentDateRangeFragment)
-            fragmentManager.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            AppointmentDateRangeFragment appointmentDateRangeFragment = (AppointmentDateRangeFragment)
+                    fragmentManager.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
 
-        if (appointmentDateRangeFragment == null) {
-            appointmentDateRangeFragment = new AppointmentDateRangeFragment();
-        }
+            if (appointmentDateRangeFragment == null) {
+                appointmentDateRangeFragment = new AppointmentDateRangeFragment();
+            }
 
-        Bundle bundle = new Bundle();
+            Bundle bundle = new Bundle();
             Gson gson = new Gson();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
-        appointmentDateRangeFragment.setArguments(bundle);
+            appointmentDateRangeFragment.setArguments(bundle);
 
-        fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder,
-            appointmentDateRangeFragment,
-            AvailableHoursFragment.class.getSimpleName()).commit();
+            fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder,
+                    appointmentDateRangeFragment,
+                    AvailableHoursFragment.class.getSimpleName()).commit();
         }
     };
 
@@ -342,11 +341,11 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
             headerText = DateUtil.getInstance().getDateAsDayMonthDayOrdinal();
         } else if (convertedAppointmentDate.after(currentConvertedDate) && convertedAppointmentDate.before(dayAfterTomorrowConvertedDate)
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            headerText = "TOMORROW";
+            headerText = availabilityDTO.getMetadata().getLabel().getAddAppointmentTomorrow();
         } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            headerText = "TODAY";
+            headerText = availabilityDTO.getMetadata().getLabel().getTodayAppointmentsHeading();
         } else {
-            headerText = "TODAY";
+            headerText = availabilityDTO.getMetadata().getLabel().getTodayAppointmentsHeading();
         }
         return headerText;
     }

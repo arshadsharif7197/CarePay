@@ -49,6 +49,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     private VisitTypeDTO selectedVisitTypeDTO;
     private Date startDate;
     private Date endDate;
+    private String patientId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +149,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
 
         AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+        setPatientId(appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPatientId());
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
         WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
@@ -254,4 +256,11 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         return selectedVisitTypeDTO;
     }
 
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
 }
