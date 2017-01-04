@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 
 /**
  * Created by prem_mourya on 11/21/2016.
@@ -42,7 +42,14 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_base_practice);
+
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+
+        params.height = (int) (context.getResources().getDisplayMetrics().heightPixels * 0.88);
+        params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        getWindow().setAttributes(params);
+
         onInitialization();
         setDialogCancelText(cancelString);
     }
@@ -63,6 +70,10 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
 
     protected void setDialogTitle(String title){
         ((CarePayTextView) findViewById(R.id.content_view_header_title)).setText(title);
+    }
+
+    protected void setCancelImage(int resourceId){
+        ((ImageView) findViewById(R.id.cancel_img)).setImageResource(resourceId);
     }
 
     private void setDialogCancelText(String title){

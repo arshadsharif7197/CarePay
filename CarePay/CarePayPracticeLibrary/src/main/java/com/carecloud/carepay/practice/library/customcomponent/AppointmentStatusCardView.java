@@ -47,6 +47,7 @@ public class AppointmentStatusCardView extends LinearLayout {
     private RelativeLayout containerLayout;
     private String appointmentId;
     private String appointmentListType;
+    private CarePayTextView shortNameTextView;
 
     /**
      * AppointmentStatusCardView with context
@@ -84,12 +85,13 @@ public class AppointmentStatusCardView extends LinearLayout {
      */
     private void addViews(AttributeSet attrs) {
         inflate(context, R.layout.cardview_appointment_status, this);
-        patientPicImageView = (ImageView) findViewById(R.id.patientPicImageView);
+        //patientPicImageView = (ImageView) findViewById(R.id.patientPicImageView);
         patientNameTextView = (CarePayTextView) findViewById(R.id.patientNameTextView);
         providerNameTextView = (CarePayTextView) findViewById(R.id.providerNameTextView);
         amountTextView = (CarePayTextView) findViewById(R.id.amountTextView);
         timeTextView = (CarePayTextView) findViewById(R.id.timeTextView);
         containerLayout = (RelativeLayout) findViewById(R.id.containerLayout);
+        shortNameTextView =(CarePayTextView) findViewById(R.id.appointmentShortName);
         this.setOnLongClickListener(onLongClickListener);
         //this.setOnDragListener(onDragListener);
         try {
@@ -157,6 +159,10 @@ public class AppointmentStatusCardView extends LinearLayout {
         return appointmentListType;
     }
 
+    public void setShortName(String shortName){
+        this.shortNameTextView.setText(shortName);
+    }
+
     /**
      * Appointment time set
      * @param appointmentTime appointment Time
@@ -167,17 +173,11 @@ public class AppointmentStatusCardView extends LinearLayout {
         if (appointmentDateTime.isBeforeNow()) {
             timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
         } else {
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
                     if (appointmentDateTime.isBeforeNow()) {
                         timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
                     } else {
                         timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
-                        handler.postDelayed(this, 60000);
                     }
-                }
-            }, 60000);
         }
     }
 
