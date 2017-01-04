@@ -89,24 +89,20 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         requestAppointmentButton.requestFocus();
         SystemUtil.setGothamRoundedBoldTypeface(context,requestAppointmentButton);
 
-        CarePayTextView appointmentDateTextView = (CarePayTextView)view.findViewById(R.id.appointment_date);
-        CarePayTextView appointmentTimeTextView = (CarePayTextView)view.findViewById(R.id.appointment_time);
-        CarePayTextView providerImageTextView = (CarePayTextView)view.findViewById(R.id.provider_short_name);
-        CarePayTextView appointmentDoctorNameTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_name);
-        CarePayTextView appointmentDoctorSpecialityTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_speciality);
-        CarePayTextView appointmentPlaceNameTextView = (CarePayTextView)view.findViewById(R.id.provider_place_name);
-        CarePayTextView appointmentAddressTextView = (CarePayTextView)view.findViewById(R.id.provider_place_address);
-        CarePayTextView appointmentNewPatientTextView = (CarePayTextView)view.findViewById(R.id.optionalTextView);
-
         DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
+        CarePayTextView appointmentDateTextView = (CarePayTextView)view.findViewById(R.id.appointment_date);
         appointmentDateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+        CarePayTextView appointmentTimeTextView = (CarePayTextView)view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(DateUtil.getInstance().getTime12Hour());
 
+        CarePayTextView providerImageTextView = (CarePayTextView)view.findViewById(R.id.provider_short_name);
         providerImageTextView.setText(StringUtil.onShortDrName(((ScheduleAppointmentActivity)context)
                 .getSelectedResource().getResource().getProvider().getName()));
+        CarePayTextView appointmentDoctorNameTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_name);
         appointmentDoctorNameTextView.setText(((ScheduleAppointmentActivity)context).getSelectedResource()
                 .getResource().getProvider().getName());
+        CarePayTextView appointmentDoctorSpecialityTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_speciality);
         appointmentDoctorSpecialityTextView.setText(((ScheduleAppointmentActivity)context).getSelectedResource()
                 .getResource().getProvider().getSpecialty().getName());
 
@@ -114,8 +110,11 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         //Hence used 0th item from location array
         AppointmentLocationDTO location = appointmentsResultModel.getPayload().getResourcesToSchedule()
                 .get(0).getLocations().get(0);
+        CarePayTextView appointmentPlaceNameTextView = (CarePayTextView)view.findViewById(R.id.provider_place_name);
         appointmentPlaceNameTextView.setText(location.getName());
+        CarePayTextView appointmentAddressTextView = (CarePayTextView)view.findViewById(R.id.provider_place_address);
         appointmentAddressTextView.setText(location.getAddress().getPlaceAddressString());
+        CarePayTextView appointmentNewPatientTextView = (CarePayTextView)view.findViewById(R.id.optionalTextView);
         appointmentNewPatientTextView.setText(appointmentsResultModel.getMetadata().getLabel().getRequestAppointmentNewPatient());
 
         visitTypeEditText = (EditText)view.findViewById(R.id.reasonEditText);
