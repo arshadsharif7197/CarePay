@@ -65,7 +65,9 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
      * @param appointmentInfo Appointment Info data
      */
     public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo, CancelAppointmentDialog.CancelAppointmentCallback cancelAppointmentCallback) {
+                                         AppointmentsResultModel appointmentInfo,
+                                         CancelAppointmentDialog.CancelAppointmentCallback cancelAppointmentCallback) {
+
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
@@ -263,7 +265,8 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            new CancelAppointmentDialog(context, appointmentDTO, true, appointmentInfo,cancelAppointmentCallback).show();
+            new CancelAppointmentDialog(context, appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, cancelAppointmentCallback).show();
         }
 
         @Override
