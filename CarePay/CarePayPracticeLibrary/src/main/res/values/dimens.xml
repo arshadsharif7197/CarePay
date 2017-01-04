@@ -208,4 +208,5 @@
     <dimen name="appointment_card_footer_height">208dp</dimen>
     <dimen name="appointment_card_checked_in_button_margin">56dp</dimen>
 
+    <dimen name="appointment_summary_provider_image_margin">-50dp</dimen>
 </resources>
