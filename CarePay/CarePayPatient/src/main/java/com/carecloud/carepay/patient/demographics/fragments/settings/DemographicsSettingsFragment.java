@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
@@ -35,6 +37,9 @@ public class DemographicsSettingsFragment extends Fragment {
     private String signOutString = null;
     private String editString = null;
     private String settingsString = null;
+    private CarePayTextView editTextview = null;
+    private Button signOutButton = null;
+    private CarePayTextView demographicsTextview = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,12 +69,15 @@ public class DemographicsSettingsFragment extends Fragment {
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
         getSettingsLabels();
+        String userId = CognitoAppHelper.getCurrUser();
         //setTypefaces(view);
-        CarePayTextView demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
+        demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         CarePayTextView documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
-        CarePayTextView editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
-        Button signOutButton = (Button) view.findViewById(R.id.signOutButton);
+        editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
+        signOutButton = (Button) view.findViewById(R.id.signOutButton);
+        CarePayTextView patientNameTextview = (CarePayTextView) view.findViewById(R.id.patient_name);
+        CarePayTextView patientIdTextview = (CarePayTextView) view.findViewById(R.id.patient_id);
 
         demographicsTextview.setText(demographicsString);
         documentsTextview.setText(documentsString);
@@ -77,6 +85,9 @@ public class DemographicsSettingsFragment extends Fragment {
         editTextview.setText(editString);
         signOutButton.setText(signOutString);
         title.setText(settingsString);
+        patientNameTextview.setText("");//fetch details/name from cognito
+        patientIdTextview.setText(userId);
+        setClickables(view);
 
         return view;
 
@@ -101,4 +112,68 @@ public class DemographicsSettingsFragment extends Fragment {
         }
     }
 
+    private void setClickables(View view) {
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(CognitoAppHelper.getPool().getUser() != null){
+                    CognitoAppHelper.getPool().getUser().signOut();
+                    CognitoAppHelper.setUser(null);
+                }
+
+            }
+        });
+        editTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                EditProfileFragment fragment = (EditProfileFragment)
+                        fm.findFragmentByTag(EditProfileFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new EditProfileFragment();
+                }
+                Bundle bundle = new Bundle();
+
+                //fix for random crashes
+                if(fragment.getArguments() !=null){
+                    fragment.getArguments().putAll(bundle);
+                }else{
+                    fragment.setArguments(bundle);
+                }
+
+                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                        EditProfileFragment.class.getSimpleName()).commit();
+
+
+
+            }
+        });
+        demographicsTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DemographicsInformationFragment fragment = (DemographicsInformationFragment)
+                        fm.findFragmentByTag(DemographicsInformationFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new DemographicsInformationFragment();
+                }
+                Bundle bundle = new Bundle();
+
+                //fix for random crashes
+                if(fragment.getArguments() !=null){
+                    fragment.getArguments().putAll(bundle);
+                }else{
+                    fragment.setArguments(bundle);
+                }
+
+                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                        DemographicsInformationFragment.class.getSimpleName()).commit();
+
+
+
+            }
+        });
+    }
 }
