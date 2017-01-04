@@ -62,7 +62,7 @@
             android:orientation="vertical">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/doctor_name"
+                android:id="@+id/patient_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/button_bright_cerulean"
@@ -72,7 +72,7 @@
                 app:customAssetFont="proxima_nova_semi_bold" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/doctor_type"
+                android:id="@+id/patient_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/lightSlateGray"
