@@ -214,6 +214,9 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         if (visitTypeFragment == null) {
             visitTypeFragment = new AvailableHoursFragment();
         }
+        if(appointmentsResultModel.getPayload().getAppointments().size()<1){
+            return;
+        }
 
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
@@ -227,6 +230,5 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
                 AvailableHoursFragment.class.getSimpleName()).commit();
     }
-
 
 }

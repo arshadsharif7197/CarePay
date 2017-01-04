@@ -191,6 +191,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("add_appointment_from_to_text")
     @Expose
     private String addAppointmentFromToText;
+    @SerializedName("add_appointment_tomorrow")
+    @Expose
+    private String addAppointmentTomorrow;
 
     /**
      * @return The appointmentsHeading
@@ -1070,5 +1073,23 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAddAppointmentFromToText(String addAppointmentFromToText) {
         this.addAppointmentFromToText = addAppointmentFromToText;
+    }
+
+    /**
+     * Gets add appointment tomorrow.
+     *
+     * @return the add appointment tomorrow
+     */
+    public String getAddAppointmentTomorrow() {
+        return StringUtil.getLabelForView(addAppointmentTomorrow);
+    }
+
+    /**
+     * Sets add appointment tomorrow.
+     *
+     * @param addAppointmentTomorrow the add appointment tomorrow
+     */
+    public void setAddAppointmentTomorrow(String addAppointmentTomorrow) {
+        this.addAppointmentTomorrow = addAppointmentTomorrow;
     }
 }
