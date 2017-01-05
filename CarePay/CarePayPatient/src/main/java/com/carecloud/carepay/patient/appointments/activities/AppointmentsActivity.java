@@ -255,24 +255,21 @@ public class AppointmentsActivity extends BasePatientActivity implements
         if (id == R.id.nav_appointments) {
             Log.v(LOG_TAG, "Appointments");
         } else if (id == R.id.nav_payments) {
-
-            Map<String, String> queryString = new HashMap<>();
-            queryString.put("practice_id",  appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId() );
-            queryString.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-            queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
-            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getPatientBalances(), paymentsCallBack, queryString);
-
-            /*Intent paymentBalanceHistoryActivity = new Intent(AppointmentsActivity.this,
-                    ViewPaymentBalanceHistoryActivity.class);
-            startActivity(paymentBalanceHistoryActivity);*/
-
-        } else if (id == R.id.nav_settings) {
-            Map<String, String> queryString = new HashMap<>();
-            queryString.put("practice_id",  appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId() );
-            queryString.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-            queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
-            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getProfileUpdate(), demographicsSettingsCallBack, queryString);
-
+            if(appointmentsDTO.getPayload().getAppointments().size()>0) {
+                Map<String, String> queryString = new HashMap<>();
+                queryString.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
+                queryString.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
+                queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
+                WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getPatientBalances(), paymentsCallBack, queryString);
+            }
+      } else if (id == R.id.nav_settings) {
+            if(appointmentsDTO.getPayload().getAppointments().size()>0) {
+                Map<String, String> queryString = new HashMap<>();
+                queryString.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
+                queryString.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
+                queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
+                WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getProfileUpdate(), demographicsSettingsCallBack, queryString);
+            }
         } else if (id == R.id.nav_logout) {
             // perform log out, of course
             String userName = CognitoAppHelper.getCurrUser();

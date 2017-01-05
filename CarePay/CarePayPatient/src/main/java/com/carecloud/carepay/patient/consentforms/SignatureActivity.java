@@ -416,8 +416,7 @@ public class SignatureActivity extends AppCompatActivity {
             String upToFirstspaceSubstring = leagalrepresentative.substring(0, indexFirstPercent);
             String fromSecSpaceOnSubstring = leagalrepresentative.substring(indexFirstPercent + 1, indexFirstPercent + 15);
             String uptothirdSpace = leagalrepresentative.substring(leagalrepresentative.indexOf(' ', indexFirstPercent + 2), leagalrepresentative.length());
-            String signature = String.format(Locale.getDefault(), "%s %s %s%s", upToFirstspaceSubstring, fromSecSpaceOnSubstring, "\n", uptothirdSpace);
-            signatureHelpTextView.setText(signature);
+            String signature = String.format(Locale.getDefault(), "%s %s%s%s", upToFirstspaceSubstring, fromSecSpaceOnSubstring, "", uptothirdSpace);            signatureHelpTextView.setText(signature);
             legalFirstName.setVisibility(View.VISIBLE);
             legalLastName.setVisibility(View.VISIBLE);
             legalFirstNameET.setVisibility(View.VISIBLE);

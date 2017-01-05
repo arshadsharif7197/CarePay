@@ -236,7 +236,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
                         payload.put("payment_methods", paymentMethods);
 
                         PaymentPayloadMetaDataDTO metadata = intakePaymentModel.getPaymentPayload()
-                                .getPatientBalances().get(0).getMetadata();
+                                .getPatientBalances().get(0).getBalances().get(0).getMetadata();
 
                         Map<String, String> queries = new HashMap<>();
                         queries.put("practice_mgmt", metadata.getPracticeMgmt());
