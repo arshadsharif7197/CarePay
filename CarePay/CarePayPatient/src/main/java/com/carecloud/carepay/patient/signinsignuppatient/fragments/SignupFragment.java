@@ -167,7 +167,7 @@ public class SignupFragment extends Fragment {
 
     private void setClickables(View view) {
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
-        submitButton.setText(signInLablesDTO.getSignUp());
+        submitButton.setText(signInLablesDTO.getSignupButton());
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
