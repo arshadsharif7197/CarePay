@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.CancelAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -39,7 +40,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by harshal_patil on 9/8/2016.
  */
-public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> implements CancelAppointmentDialog.CancelAppointmentCallback {
+public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder>
+        implements CancelAppointmentDialog.CancelAppointmentCallback {
 
     private Context context;
     private List<Object> appointmentItems;
@@ -103,6 +105,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             final boolean isPending = item.getAppointmentStatusModel().getId() == 1;
             final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
             final boolean isCanceled = item.getAppointmentStatusModel().getId() == 4;
+            final boolean isRequested = item.getAppointmentStatusModel().getId() == 5;
 
             if (getSectionHeaderTitle(upcomingStartTime).equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {
@@ -141,20 +144,45 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         AppointmentDTO item = ((AppointmentDTO) object);
                         AppointmentsActivity.model = item;
 
+                        // Missed Appointment
                         if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
-                            new CheckInOfficeNowAppointmentDialog(context, true, item, appointmentInfo).show();
+                            new CancelAppointmentDialog(context, item, appointmentInfo,
+                                    BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, null).show();
+
                         } else if (isCheckedIn) {
+                            // Checked-In Appointment
                             new QueueAppointmentDialog(context, item, appointmentLabels).show();
+
                         } else if (isCanceled) {
-                            new CancelAppointmentDialog(context, item, true, appointmentInfo,AppointmentsAdapter.this).show();
-                        } else {
-                            if (isAppointmentCancellable(item)) {
-                                new CancelAppointmentDialog(context, item, false, appointmentInfo,AppointmentsAdapter.this).show();
-                            } else if (isPending) {
+                            // Cancelled Appointment
+                            new CancelAppointmentDialog(context, item, appointmentInfo,
+                                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, AppointmentsAdapter.this).show();
+
+                        } else if (isAppointmentCancellable(item)) {
+                            // Appointment as long as it's 24 hours or more in the future
+                            new CancelAppointmentDialog(context, item, appointmentInfo,
+                                    BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT, AppointmentsAdapter.this).show();
+
+                        } else if (isRequested) {
+                            // Requested Appointment
+                            new CancelAppointmentDialog(context, item, appointmentInfo,
+                                    BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, null).show();
+
+                        } else if (isPending) {
+                            if (getSectionHeaderTitle(item.getPayload().getStartTime())
+                                    .equals(appointmentLabels.getTodayAppointmentsHeading())) {
+
+                                // Pending Appointment && Appointments for the current business day
                                 new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+
                             } else {
-                                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+                                // Pending Appointment && Appointment in the future that is not today
+                                new CancelAppointmentDialog(context, item, appointmentInfo,
+                                        BaseDoctorInfoDialog.AppointmentType.UPCOMING_APPOINTMENT, null).show();
                             }
+                        } else {
+                            // Other
+                            new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
                         }
                     }
                 }

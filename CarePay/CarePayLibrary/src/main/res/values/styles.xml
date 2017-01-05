@@ -800,4 +800,11 @@
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">proximanova_regular</item>
     </style>
+
+    <style name="settingsProfilelabel." parent="android:Widget.TextView">
+        <item name="android:textColor">@color/grayRound</item>
+        <item name="android:textSize">@dimen/review_textlable_textsize</item>
+        <item name="android:layout_marginTop">@dimen/review_lablemargintop</item>
+        <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
+    </style>
 </resources>
