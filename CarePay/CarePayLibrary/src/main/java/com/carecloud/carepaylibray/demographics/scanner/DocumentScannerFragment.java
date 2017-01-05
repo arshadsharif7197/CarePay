@@ -51,52 +51,30 @@ public abstract class DocumentScannerFragment extends Fragment {
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
-        if(cameraType==ImageCaptureHelper.CameraType.DEFAULT_CAMERA){
-            builder.setItems(ImageCaptureHelper.chooseActionDlOptions,dialogOnClickListener);
-        } else {
-            builder.setItems(ImageCaptureHelper.chooseActionDocumentDlOptions,dialogDocumentScanOnClickListener);
-        }
-
+        builder.setItems(ImageCaptureHelper.chooseActionDlOptions,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (item == 0) { // "Take picture" chosen
+                            imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
+                            boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
+                            if (result) {
+                                // uncomment when camera activity
+                                startActivityForResult(imageCaptureHelper.getCameraIntent(cameraType), ImageCaptureHelper.REQUEST_CAMERA);
+                            }
+                        } else if (item == 1) {  // "Select from Gallery" chosen
+                            imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
+                            boolean result = PermissionsUtil.checkPermission(getActivity());
+                            if (result) {
+                                startActivityForResult(imageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
+                            }
+                        } else if (item == 3) { // "Cancel"
+                            dialog.dismiss();
+                        }
+                    }
+                });
         builder.show();
     }
-
-    private DialogInterface.OnClickListener dialogDocumentScanOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int item) {
-            if (item == 0) { // "Take picture" chosen
-                imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
-                boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
-                if (result) {
-                    // uncomment when camera activity
-                    startActivityForResult(imageCaptureHelper.getCameraIntent(cameraType), ImageCaptureHelper.REQUEST_CAMERA);
-                }
-            } else if (item == 1) { // "Cancel"
-                dialog.dismiss();
-            }
-        }
-    };
-
-    private DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int item) {
-            if (item == 0) { // "Take picture" chosen
-                imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
-                boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
-                if (result) {
-                    // uncomment when camera activity
-                    startActivityForResult(imageCaptureHelper.getCameraIntent(cameraType), ImageCaptureHelper.REQUEST_CAMERA);
-                }
-            } else if (item == 1) {  // "Select from Gallery" chosen
-                imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
-                boolean result = PermissionsUtil.checkPermission(getActivity());
-                if (result) {
-                    startActivityForResult(imageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
-                }
-            } else if (item == 2) { // "Cancel"
-                dialog.dismiss();
-            }
-        }
-    };
 
     /**
      * Creates a generic dialog that contains a list of choices
