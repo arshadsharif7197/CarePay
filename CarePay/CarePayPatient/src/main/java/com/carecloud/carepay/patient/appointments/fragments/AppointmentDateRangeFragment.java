@@ -46,6 +46,7 @@ public class AppointmentDateRangeFragment extends Fragment {
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentResourcesDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
+    private String addAppointmentPatientId;
 
     @Override
     public void onStart() {
@@ -73,6 +74,8 @@ public class AppointmentDateRangeFragment extends Fragment {
 
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
             resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
+
+            addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
         }
     }
 
@@ -218,6 +221,7 @@ public class AppointmentDateRangeFragment extends Fragment {
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
         availableHoursFragment.setArguments(bundle);
 
         fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
@@ -301,7 +305,7 @@ public class AppointmentDateRangeFragment extends Fragment {
                 bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
                 bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
                 bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
-
+                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
                 availableHoursFragment.setArguments(bundle);
 
                 fm.beginTransaction().replace(R.id.add_appointments_frag_holder,
