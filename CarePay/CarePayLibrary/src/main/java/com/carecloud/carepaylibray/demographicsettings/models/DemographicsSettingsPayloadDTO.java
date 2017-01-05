@@ -10,18 +10,12 @@ public class DemographicsSettingsPayloadDTO {
     @SerializedName("languages")
     @Expose
     private List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs = null;
-    @SerializedName("payment_distributions")
+    @SerializedName("patient_credit_cards")
     @Expose
-    private List<DemographicsSettingsPaymentDistributionDTO> demographicsSettingsPaymentDistributionDTOs = null;
-    @SerializedName("payment_methods")
+    private DemographicsSettingsPatientCreditCardsDTO patientCreditCards;
+    @SerializedName("demographics")
     @Expose
-    private List<DemographicsSettingsPaymentMethodDTO> demographicsSettingsPaymentMethodDTOs = null;
-    @SerializedName("credit_card_types")
-    @Expose
-    private List<DemographicsSetiingsCreditCardTypeDTO> demographicsSetiingsCreditCardTypeDTOs = null;
-    @SerializedName("payment_settings")
-    @Expose
-    private DemographicsSettingsPaymentSettingsDTO demographicsSettingsPaymentSettingsDTO;
+    private DemographicsSettingsDemographicsDTO demographics;
 
     public List<DemographicsSettingsLanguageDTO> getLanguages() {
         return demographicsSettingsLanguageDTOs;
@@ -31,36 +25,22 @@ public class DemographicsSettingsPayloadDTO {
         this.demographicsSettingsLanguageDTOs = demographicsSettingsLanguageDTOs;
     }
 
-    public List<DemographicsSettingsPaymentDistributionDTO> getPaymentDistributions() {
-        return demographicsSettingsPaymentDistributionDTOs;
+
+    public DemographicsSettingsDemographicsDTO getDemographics() {
+        return demographics;
     }
 
-    public void setPaymentDistributions(List<DemographicsSettingsPaymentDistributionDTO> demographicsSettingsPaymentDistributionDTOs) {
-        this.demographicsSettingsPaymentDistributionDTOs = demographicsSettingsPaymentDistributionDTOs;
+    public void setDemographics(DemographicsSettingsDemographicsDTO demographics) {
+        this.demographics = demographics;
     }
 
-    public List<DemographicsSettingsPaymentMethodDTO> getPaymentMethods() {
-        return demographicsSettingsPaymentMethodDTOs;
+    public DemographicsSettingsPatientCreditCardsDTO getPatientCreditCards() {
+        return patientCreditCards;
     }
 
-    public void setPaymentMethods(List<DemographicsSettingsPaymentMethodDTO> demographicsSettingsPaymentMethodDTOs) {
-        this.demographicsSettingsPaymentMethodDTOs = demographicsSettingsPaymentMethodDTOs;
+    public void setPatientCreditCards(DemographicsSettingsPatientCreditCardsDTO patientCreditCards) {
+        this.patientCreditCards = patientCreditCards;
     }
 
-    public List<DemographicsSetiingsCreditCardTypeDTO> getCreditCardTypes() {
-        return demographicsSetiingsCreditCardTypeDTOs;
-    }
-
-    public void setCreditCardTypes(List<DemographicsSetiingsCreditCardTypeDTO> demographicsSetiingsCreditCardTypeDTOs) {
-        this.demographicsSetiingsCreditCardTypeDTOs = demographicsSetiingsCreditCardTypeDTOs;
-    }
-
-    public DemographicsSettingsPaymentSettingsDTO getPaymentSettings() {
-        return demographicsSettingsPaymentSettingsDTO;
-    }
-
-    public void setPaymentSettings(DemographicsSettingsPaymentSettingsDTO demographicsSettingsPaymentSettingsDTO) {
-        this.demographicsSettingsPaymentSettingsDTO = demographicsSettingsPaymentSettingsDTO;
-    }
 
 }

@@ -15,7 +15,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="@dimen/dimen_17dp"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:text="@string/hello_blank_fragment" >
+        >
         <RelativeLayout
             android:layout_width="@dimen/signup_clickable_textview_height"
             android:layout_height="@dimen/signup_clickable_textview_height"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:elevation="@dimen/apt_lst_img_elevation"
-                 />
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -68,7 +68,6 @@
                 android:textColor="@color/button_bright_cerulean"
                 android:textSize="@dimen/textview_default_textsize"
                 android:textStyle="bold"
-                android:text="Bruno OliVeira Barros"
                 app:customAssetFont="proxima_nova_semi_bold" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -77,7 +76,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/textview_textsize"
-                android:text="bruno@apptheory.co"
                 app:customAssetFont="proxima_nova_regular" />
         </LinearLayout>
         <LinearLayout
@@ -124,19 +122,18 @@
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-             />
+            />
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/demographicsTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
             android:textStyle="bold"
-            android:text="Demographics"
             app:customAssetFont="proxima_nova_regular" />
 
-   </LinearLayout>
+    </LinearLayout>
     <View
         android:id="@+id/demoItemDivider"
         android:layout_width="match_parent"
@@ -164,11 +161,10 @@
             android:id="@+id/documentsTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
             android:textStyle="bold"
-            android:text="Documents"
             app:customAssetFont="proxima_nova_regular" />
 
     </LinearLayout>
@@ -199,11 +195,10 @@
             android:id="@+id/creditCardsTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
             android:textStyle="bold"
-            android:text="Credit Cards"
             app:customAssetFont="proxima_nova_regular" />
 
     </LinearLayout>
@@ -222,7 +217,6 @@
         android:layout_marginTop="@dimen/review_default_heaight"
         android:textColor="@color/textview_default_textcolor"
         android:textSize="14sp"
-        android:text="NOTIFICATIONS"
         android:layout_marginStart="@dimen/dimen_30dp"
         app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -247,17 +241,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_5dp"
         >
-    <Button
-        android:id="@+id/signOutButton"
-        style="@style/PaymentButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SIGN-OUT"
-        android:background="@drawable/button_blue_border"
-        android:textColor="@color/bright_cerulean"
-        android:layout_marginBottom="@dimen/dimen_5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/dimen_5dp"/>
+        <Button
+            android:id="@+id/signOutButton"
+            style="@style/PaymentButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_blue_border"
+            android:textColor="@color/bright_cerulean"
+            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/dimen_5dp"/>
     </RelativeLayout>
 
 
