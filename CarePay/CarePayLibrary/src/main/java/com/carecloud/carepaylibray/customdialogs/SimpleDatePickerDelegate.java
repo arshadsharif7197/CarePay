@@ -60,6 +60,13 @@ public class SimpleDatePickerDelegate {
 
         setCurrentLocale(Locale.getDefault());
 
+        // month
+        monthSpinner = (NumberPicker) parent.findViewById(R.id.month);
+        monthSpinner.setMinValue(0);
+        monthSpinner.setMaxValue(numberOfMonths - 1);
+        monthSpinner.setDisplayedValues(shortMonths);
+        monthSpinner.setOnLongPressUpdateInterval(200);
+
         final NumberPicker.OnValueChangeListener onChangeListener = new NumberPicker
                 .OnValueChangeListener() {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -88,12 +95,6 @@ public class SimpleDatePickerDelegate {
             }
         };
 
-        // month
-        monthSpinner = (NumberPicker) parent.findViewById(R.id.month);
-        monthSpinner.setMinValue(0);
-        monthSpinner.setMaxValue(numberOfMonths - 1);
-        monthSpinner.setDisplayedValues(shortMonths);
-        monthSpinner.setOnLongPressUpdateInterval(200);
         monthSpinner.setOnValueChangedListener(onChangeListener);
 
         // year
@@ -131,7 +132,7 @@ public class SimpleDatePickerDelegate {
 
     /**
      * Set the min date
-     * @param date        The date that is to set.
+     * @param date The date that is to set.
      */
     public void setMinDate(long date) {
         tempDate.setTimeInMillis(date);
@@ -148,7 +149,7 @@ public class SimpleDatePickerDelegate {
 
     /**
      * Set the max date
-     * @param date        The date that is to set.
+     * @param date The date that is to set.
      */
     public void setMaxDate(long date) {
         tempDate.setTimeInMillis(date);
@@ -163,10 +164,20 @@ public class SimpleDatePickerDelegate {
         updateSpinners();
     }
 
+    /**
+     * Gets year.
+     *
+     * @return the year
+     */
     public int getYear() {
         return currentDate.get(Calendar.YEAR);
     }
 
+    /**
+     * Gets month.
+     *
+     * @return the month
+     */
     public int getMonth() {
         return currentDate.get(Calendar.MONTH);
     }
