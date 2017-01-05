@@ -41,14 +41,7 @@ public class SimpleDatePickerDelegate {
 
         setCurrentLocale(Locale.getDefault());
 
-        // month
-        monthSpinner = (NumberPicker) parent.findViewById(R.id.month);
-        monthSpinner.setMinValue(0);
-        monthSpinner.setMaxValue(numberOfMonths - 1);
-        monthSpinner.setDisplayedValues(shortMonths);
-        monthSpinner.setOnLongPressUpdateInterval(200);
-
-        final NumberPicker.OnValueChangeListener onChangeListener = new NumberPicker
+        NumberPicker.OnValueChangeListener onChangeListener = new NumberPicker
                 .OnValueChangeListener() {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
@@ -84,7 +77,6 @@ public class SimpleDatePickerDelegate {
         mMonthSpinner.setOnLongPressUpdateInterval(200);
         mMonthSpinner.setOnValueChangedListener(onChangeListener);
 
-
         // year
         mYearSpinner = (NumberPicker) parent.findViewById(R.id.year);
         mYearSpinner.setOnLongPressUpdateInterval(100);
@@ -111,14 +103,10 @@ public class SimpleDatePickerDelegate {
         mOnDateChangedListener = onDateChangedListener;
     }
 
-    /**
-     * Set the min date
-     * @param date The date that is to set.
-     */
-    public void setMinDate(long date) {
-        tempDate.setTimeInMillis(date);
-        if (tempDate.get(Calendar.YEAR) == minDate.get(Calendar.YEAR)
-                && tempDate.get(Calendar.DAY_OF_YEAR) != minDate.get(Calendar.DAY_OF_YEAR)) {
+    public void setMinDate(long minDate) {
+        mTempDate.setTimeInMillis(minDate);
+        if (mTempDate.get(Calendar.YEAR) == mMinDate.get(Calendar.YEAR)
+                && mTempDate.get(Calendar.DAY_OF_YEAR) != mMinDate.get(Calendar.DAY_OF_YEAR)) {
             return;
         }
         mMinDate.setTimeInMillis(minDate);
@@ -128,14 +116,10 @@ public class SimpleDatePickerDelegate {
         updateSpinners();
     }
 
-    /**
-     * Set the max date
-     * @param date The date that is to set.
-     */
-    public void setMaxDate(long date) {
-        tempDate.setTimeInMillis(date);
-        if (tempDate.get(Calendar.YEAR) == maxDate.get(Calendar.YEAR)
-                && tempDate.get(Calendar.DAY_OF_YEAR) != maxDate.get(Calendar.DAY_OF_YEAR)) {
+    public void setMaxDate(long maxDate) {
+        mTempDate.setTimeInMillis(maxDate);
+        if (mTempDate.get(Calendar.YEAR) == mMaxDate.get(Calendar.YEAR)
+                && mTempDate.get(Calendar.DAY_OF_YEAR) != mMaxDate.get(Calendar.DAY_OF_YEAR)) {
             return;
         }
         mMaxDate.setTimeInMillis(maxDate);
@@ -145,20 +129,10 @@ public class SimpleDatePickerDelegate {
         updateSpinners();
     }
 
-    /**
-     * Gets year.
-     *
-     * @return the year
-     */
     public int getYear() {
         return mCurrentDate.get(Calendar.YEAR);
     }
 
-    /**
-     * Gets month.
-     *
-     * @return the month
-     */
     public int getMonth() {
         return mCurrentDate.get(Calendar.MONTH);
     }

@@ -73,7 +73,6 @@ public class CarePayCameraView extends RelativeLayout {
     OnClickListener onCaptureClick = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            buttonCapture.setClickable(false);
             if (carePayCameraPreview != null) {
                 carePayCameraPreview.takePicture();
             }
