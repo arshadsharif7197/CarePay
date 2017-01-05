@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -565,8 +566,10 @@ public class AddNewCreditCardFragment extends Fragment implements
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Log.d("makePaymentCallback","=========================>\nworkflowDTO="+workflowDTO.toString());
-            //((BasePracticeActivity)getActivity()).finish();
-            // ToDo : Call for the payment receipt here
+            Gson gson = new Gson();
+            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            receiptDialog.show();
         }
 
         @Override
@@ -584,9 +587,16 @@ public class AddNewCreditCardFragment extends Fragment implements
 
     private void displaySimpleDatePickerDialogFragment() {
         SimpleDatePickerDialogFragment datePickerDialogFragment;
-        DateUtil instance = DateUtil.getInstance();
-        datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(instance.getYear(),
-                instance.getMonth());
+        if (!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsLabelDTO.getPaymentPickDate())) {
+            String [] selectedDate = pickDateTextView.getText().toString().split("/");
+            int month = Integer.parseInt(selectedDate[0]);
+            int year = Integer.parseInt(selectedDate[1]);
+            datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(year,month-1);
+        } else {
+            DateUtil instance = DateUtil.getInstance();
+            datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(instance.getYear(),
+                    instance.getMonth());
+        }
         datePickerDialogFragment.setOnDateSetListener(this);
         datePickerDialogFragment.show(getChildFragmentManager(), null);
     }
@@ -720,7 +730,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
         queryMap.put("practice_mgmt", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeId());
-        queryMap.put("patient_id", intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getMetadata().getPatientId());
+        queryMap.put("patient_id", intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId());
         TransitionDTO transitionDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
         WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
