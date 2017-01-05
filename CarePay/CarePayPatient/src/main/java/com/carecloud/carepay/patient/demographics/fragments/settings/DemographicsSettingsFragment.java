@@ -18,8 +18,12 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
 import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -69,8 +73,7 @@ public class DemographicsSettingsFragment extends Fragment {
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
         getSettingsLabels();
-        String userId = CognitoAppHelper.getCurrUser();
-        //setTypefaces(view);
+        String userId = CognitoAppHelper.getCurrUser();//setTypefaces(view);
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         CarePayTextView documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
@@ -85,10 +88,9 @@ public class DemographicsSettingsFragment extends Fragment {
         editTextview.setText(editString);
         signOutButton.setText(signOutString);
         title.setText(settingsString);
-        patientNameTextview.setText("");//fetch details/name from cognito
+        patientNameTextview.setText(getUserName());
         patientIdTextview.setText(userId);
         setClickables(view);
-
         return view;
 
     }
@@ -126,6 +128,10 @@ public class DemographicsSettingsFragment extends Fragment {
         editTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 EditProfileFragment fragment = (EditProfileFragment)
@@ -133,7 +139,6 @@ public class DemographicsSettingsFragment extends Fragment {
                 if (fragment == null) {
                     fragment = new EditProfileFragment();
                 }
-                Bundle bundle = new Bundle();
 
                 //fix for random crashes
                 if(fragment.getArguments() !=null){
@@ -153,13 +158,17 @@ public class DemographicsSettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 DemographicsInformationFragment fragment = (DemographicsInformationFragment)
                         fm.findFragmentByTag(DemographicsInformationFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = new DemographicsInformationFragment();
                 }
-                Bundle bundle = new Bundle();
 
                 //fix for random crashes
                 if(fragment.getArguments() !=null){
@@ -176,4 +185,16 @@ public class DemographicsSettingsFragment extends Fragment {
             }
         });
     }
+
+    private String getUserName(){
+        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+        DemographicsSettingsPersonalDetailsDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+        String firstName = demographicsPersonalDetails.getFirstName();
+        String lastName = demographicsPersonalDetails.getLastName();
+        String userName = firstName +" " +lastName;
+        return userName;
+    }
 }
+

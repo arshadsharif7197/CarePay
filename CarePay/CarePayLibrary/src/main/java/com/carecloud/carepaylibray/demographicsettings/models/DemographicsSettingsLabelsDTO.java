@@ -39,6 +39,9 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("credit_cards_label")
     @Expose
     private String creditCardsLabel;
+    @SerializedName("profile_heading")
+    @Expose
+    private String profileHeadingLabel;
 
     /**
      *
@@ -198,5 +201,21 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      */
     public void setCreditCardsLabel(String creditCardsLabel) {
         this.creditCardsLabel = creditCardsLabel;
+    }
+
+    /**
+     *
+     * @return profileHeadingLabel
+     */
+    public String getProfileHeadingLabel() {
+        return StringUtil.getLabelForView(profileHeadingLabel);
+    }
+
+    /**
+     *
+     * @param profileHeadingLabel The profileHeadingLabel
+     */
+    public void setProfileHeadingLabel(String profileHeadingLabel) {
+        this.profileHeadingLabel = profileHeadingLabel;
     }
 }

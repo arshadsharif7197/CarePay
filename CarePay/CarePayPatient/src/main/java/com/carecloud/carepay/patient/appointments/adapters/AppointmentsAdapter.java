@@ -102,10 +102,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             int day = DateUtil.getInstance().getDay();
 
             final String sectionHeaderTitle = getSectionHeaderTitle(upcomingStartTime);
-            final boolean isPending = item.getAppointmentStatusModel().getId() == 1;
-            final boolean isCheckedIn = item.getAppointmentStatusModel().getId() == 2;
-            final boolean isCanceled = item.getAppointmentStatusModel().getId() == 4;
-            final boolean isRequested = item.getAppointmentStatusModel().getId() == 5;
+            final boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase("P");
+            final boolean isCheckedIn = item.getAppointmentStatusModel().getCode().equalsIgnoreCase("I");
+            final boolean isCanceled = item.getAppointmentStatusModel().getCode().equalsIgnoreCase("C");
+            final boolean isRequested = item.getAppointmentStatusModel().getCode().equalsIgnoreCase("R");
 
             if (getSectionHeaderTitle(upcomingStartTime).equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {
@@ -301,7 +301,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             CarePayTextView appointmentStickyHeaderTitle =
                                     (CarePayTextView) view.findViewById(R.id.appointments_sticky_header_title);
 
-                            boolean isCheckedIn = item.getPayload().getAppointmentStatusModel().getId() == 2;
+                            boolean isCheckedIn = item.getPayload().getAppointmentStatusModel()
+                                    .getCode().equalsIgnoreCase("I");
                             if (isCheckedIn) {
                                 appointmentStickyHeaderTitle.setVisibility(View.GONE);
                             } else {
@@ -310,7 +311,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
                                 appointmentStickyHeaderTitle.setText(sectionHeaderTitle);
                                 appointmentStickyHeaderTitle.setVisibility(View.VISIBLE);
-                                appointmentStickyHeaderTitle.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+                                appointmentStickyHeaderTitle.setTextColor(ContextCompat
+                                        .getColor(context, R.color.lightSlateGray));
                             }
                         }
                     }

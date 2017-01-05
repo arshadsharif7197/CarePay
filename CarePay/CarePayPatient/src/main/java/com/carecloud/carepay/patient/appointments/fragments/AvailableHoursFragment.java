@@ -238,6 +238,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
+            bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
             appointmentDateRangeFragment.setArguments(bundle);
 
             fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder,

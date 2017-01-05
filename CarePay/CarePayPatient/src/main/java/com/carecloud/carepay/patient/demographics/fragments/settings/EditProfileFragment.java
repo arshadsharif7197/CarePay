@@ -13,7 +13,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -25,6 +28,7 @@ public class EditProfileFragment extends Fragment {
     private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
+    private String profileString = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,10 +53,30 @@ public class EditProfileFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             Gson gson = new Gson();
+            bundle = getArguments();
+            String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
+            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
-        title.setText("Profile");
+        getEditProfileLabels();
+        title.setText(profileString);
         return view;
 
+    }
+
+    /**
+     * demographics Edit Profile labels
+     */
+    public void getEditProfileLabels() {
+        if (demographicsSettingsDTO != null) {
+            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+            if (demographicsSettingsMetadataDTO != null) {
+                DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
+                if (demographicsSettingsLabelsDTO != null) {
+                    profileString = demographicsSettingsLabelsDTO.getProfileHeadingLabel();
+
+                }
+            }
+        }
     }
 
 }

@@ -22,40 +22,21 @@ public class SimpleDatePickerDelegate {
     private static final int DEFAULT_START_YEAR = 1900;
     private static final int DEFAULT_END_YEAR = 2100;
 
-    private final NumberPicker monthSpinner;
-    private final NumberPicker yearSpinner;
+    private final NumberPicker mMonthSpinner;
+    private final NumberPicker mYearSpinner;
 
-    private Calendar tempDate;
-    private Calendar currentDate;
-    private Calendar minDate;
-    private Calendar maxDate;
+    private Calendar mTempDate;
+    private Calendar mCurrentDate;
+    private Calendar mMinDate;
+    private Calendar mMaxDate;
 
-    private String[] shortMonths;
-    private int numberOfMonths;
+    private String[] mShortMonths;
+    private int mNumberOfMonths;
 
-    private Locale currentLocale;
+    private Locale mCurrentLocale;
 
-    private OnDateChangedListener onDateChangedListener;
+    private OnDateChangedListener mOnDateChangedListener;
 
-    /**
-     * The callback used to indicate the user changed the date.
-     */
-    public interface OnDateChangedListener {
-
-        /**
-         * Called upon a date change.
-         *
-         * @param year        The year that was set.
-         * @param monthOfYear The month that was set (0-11) for compatibility with {@link
-         *                    Calendar}.
-         */
-        void onDateChanged(int year, int monthOfYear);
-    }
-
-    /**
-     * Returns the instance of this SimpleDatePickerDelegate
-     * @param parent Parent view of delegate
-     */
     public SimpleDatePickerDelegate(View parent) {
 
         setCurrentLocale(Locale.getDefault());
@@ -71,63 +52,63 @@ public class SimpleDatePickerDelegate {
                 .OnValueChangeListener() {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
-                tempDate.setTimeInMillis(currentDate.getTimeInMillis());
+                mTempDate.setTimeInMillis(mCurrentDate.getTimeInMillis());
 
                 // take care of wrapping of days and months to update greater fields
-                if (picker == monthSpinner) {
+                if (picker == mMonthSpinner) {
                     if (oldVal == 11 && newVal == 0) {
-                        tempDate.add(Calendar.MONTH, 1);
+                        mTempDate.add(Calendar.MONTH, 1);
                     } else if (oldVal == 0 && newVal == 11) {
-                        tempDate.add(Calendar.MONTH, -1);
+                        mTempDate.add(Calendar.MONTH, -1);
                     } else {
-                        tempDate.add(Calendar.MONTH, newVal - oldVal);
+                        mTempDate.add(Calendar.MONTH, newVal - oldVal);
                     }
-                } else if (picker == yearSpinner) {
-                    tempDate.set(Calendar.YEAR, newVal);
+                } else if (picker == mYearSpinner) {
+                    mTempDate.set(Calendar.YEAR, newVal);
                 } else {
                     throw new IllegalArgumentException();
                 }
 
                 // now set the date to the adjusted one
-                setDate(tempDate.get(Calendar.YEAR), tempDate.get(Calendar.MONTH));
+                setDate(mTempDate.get(Calendar.YEAR), mTempDate.get(Calendar.MONTH));
                 updateSpinners();
                 notifyDateChanged();
             }
         };
 
-        monthSpinner.setOnValueChangedListener(onChangeListener);
+        // month
+        mMonthSpinner = (NumberPicker) parent.findViewById(R.id.month);
+        mMonthSpinner.setMinValue(0);
+        mMonthSpinner.setMaxValue(mNumberOfMonths - 1);
+        mMonthSpinner.setDisplayedValues(mShortMonths);
+        mMonthSpinner.setOnLongPressUpdateInterval(200);
+        mMonthSpinner.setOnValueChangedListener(onChangeListener);
+
 
         // year
-        yearSpinner = (NumberPicker) parent.findViewById(R.id.year);
-        yearSpinner.setOnLongPressUpdateInterval(100);
-        yearSpinner.setOnValueChangedListener(onChangeListener);
+        mYearSpinner = (NumberPicker) parent.findViewById(R.id.year);
+        mYearSpinner.setOnLongPressUpdateInterval(100);
+        mYearSpinner.setOnValueChangedListener(onChangeListener);
 
         // set the min date giving priority of the minDate over startYear
-        tempDate.clear();
-        tempDate.set(DEFAULT_START_YEAR, 0, 1);
-        setMinDate(tempDate.getTimeInMillis());
+        mTempDate.clear();
+        mTempDate.set(DEFAULT_START_YEAR, 0, 1);
+        setMinDate(mTempDate.getTimeInMillis());
 
         // set the max date giving priority of the maxDate over endYear
-        tempDate.clear();
-        tempDate.set(DEFAULT_END_YEAR, 11, 31);
-        setMaxDate(tempDate.getTimeInMillis());
+        mTempDate.clear();
+        mTempDate.set(DEFAULT_END_YEAR, 11, 31);
+        setMaxDate(mTempDate.getTimeInMillis());
 
         // initialize to current date
-        currentDate.setTimeInMillis(System.currentTimeMillis());
-        init(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), null);
+        mCurrentDate.setTimeInMillis(System.currentTimeMillis());
+        init(mCurrentDate.get(Calendar.YEAR), mCurrentDate.get(Calendar.MONTH), null);
     }
 
-    /**
-     * Initialise the SimpleDatePickerDelegate
-     * @param year        The year that was set.
-     * @param monthOfYear The month that was set (0-11) for compatibility with {@link
-     *                    Calendar}.
-     * @param onDateChangedListener onDateChangedListener as a DateChangedListener
-     */
     public void init(int year, int monthOfYear, OnDateChangedListener onDateChangedListener) {
         setDate(year, monthOfYear);
         updateSpinners();
-        onDateChangedListener = onDateChangedListener;
+        mOnDateChangedListener = onDateChangedListener;
     }
 
     /**
@@ -140,9 +121,9 @@ public class SimpleDatePickerDelegate {
                 && tempDate.get(Calendar.DAY_OF_YEAR) != minDate.get(Calendar.DAY_OF_YEAR)) {
             return;
         }
-        minDate.setTimeInMillis(date);
-        if (currentDate.before(minDate)) {
-            currentDate.setTimeInMillis(minDate.getTimeInMillis());
+        mMinDate.setTimeInMillis(minDate);
+        if (mCurrentDate.before(mMinDate)) {
+            mCurrentDate.setTimeInMillis(mMinDate.getTimeInMillis());
         }
         updateSpinners();
     }
@@ -157,9 +138,9 @@ public class SimpleDatePickerDelegate {
                 && tempDate.get(Calendar.DAY_OF_YEAR) != maxDate.get(Calendar.DAY_OF_YEAR)) {
             return;
         }
-        maxDate.setTimeInMillis(date);
-        if (currentDate.after(maxDate)) {
-            currentDate.setTimeInMillis(maxDate.getTimeInMillis());
+        mMaxDate.setTimeInMillis(maxDate);
+        if (mCurrentDate.after(mMaxDate)) {
+            mCurrentDate.setTimeInMillis(mMaxDate.getTimeInMillis());
         }
         updateSpinners();
     }
@@ -170,7 +151,7 @@ public class SimpleDatePickerDelegate {
      * @return the year
      */
     public int getYear() {
-        return currentDate.get(Calendar.YEAR);
+        return mCurrentDate.get(Calendar.YEAR);
     }
 
     /**
@@ -179,7 +160,7 @@ public class SimpleDatePickerDelegate {
      * @return the month
      */
     public int getMonth() {
-        return currentDate.get(Calendar.MONTH);
+        return mCurrentDate.get(Calendar.MONTH);
     }
 
     /**
@@ -188,75 +169,75 @@ public class SimpleDatePickerDelegate {
      * @param locale The current locale.
      */
     protected void setCurrentLocale(Locale locale) {
-        if (!locale.equals(currentLocale)) {
-            currentLocale = locale;
+        if (!locale.equals(mCurrentLocale)) {
+            mCurrentLocale = locale;
         }
 
-        tempDate = getCalendarForLocale(tempDate, locale);
-        minDate = getCalendarForLocale(minDate, locale);
-        maxDate = getCalendarForLocale(maxDate, locale);
-        currentDate = getCalendarForLocale(currentDate, locale);
+        mTempDate = getCalendarForLocale(mTempDate, locale);
+        mMinDate = getCalendarForLocale(mMinDate, locale);
+        mMaxDate = getCalendarForLocale(mMaxDate, locale);
+        mCurrentDate = getCalendarForLocale(mCurrentDate, locale);
 
-        numberOfMonths = tempDate.getActualMaximum(Calendar.MONTH) + 1;
-        shortMonths = new DateFormatSymbols().getShortMonths();
+        mNumberOfMonths = mTempDate.getActualMaximum(Calendar.MONTH) + 1;
+        mShortMonths = new DateFormatSymbols().getShortMonths();
 
         if (usingNumericMonths()) {
             // We're in a locale where a date should either be all-numeric, or all-text.
             // All-text would require custom NumberPicker formatters for day and year.
-            shortMonths = new String[numberOfMonths];
-            for (int i = 0; i < numberOfMonths; ++i) {
-                shortMonths[i] = String.format("%d", i + 1);
+            mShortMonths = new String[mNumberOfMonths];
+            for (int i = 0; i < mNumberOfMonths; ++i) {
+                mShortMonths[i] = String.format("%d", i + 1);
             }
         }
     }
 
     private void setDate(int year, int month) {
-        currentDate.set(Calendar.YEAR, year);
-        currentDate.set(Calendar.MONTH, month);
-        if (currentDate.before(minDate)) {
-            currentDate.setTimeInMillis(minDate.getTimeInMillis());
-        } else if (currentDate.after(maxDate)) {
-            currentDate.setTimeInMillis(maxDate.getTimeInMillis());
+        mCurrentDate.set(Calendar.YEAR, year);
+        mCurrentDate.set(Calendar.MONTH, month);
+        if (mCurrentDate.before(mMinDate)) {
+            mCurrentDate.setTimeInMillis(mMinDate.getTimeInMillis());
+        } else if (mCurrentDate.after(mMaxDate)) {
+            mCurrentDate.setTimeInMillis(mMaxDate.getTimeInMillis());
         }
     }
 
     private void updateSpinners() {
         // set the spinner ranges respecting the min and max dates
-        if (currentDate.equals(minDate)) {
-            monthSpinner.setDisplayedValues(null);
-            monthSpinner.setMinValue(currentDate.get(Calendar.MONTH));
-            monthSpinner.setMaxValue(currentDate.getActualMaximum(Calendar.MONTH));
-            monthSpinner.setWrapSelectorWheel(false);
-        } else if (currentDate.equals(maxDate)) {
-            monthSpinner.setDisplayedValues(null);
-            monthSpinner.setMinValue(currentDate.getActualMinimum(Calendar.MONTH));
-            monthSpinner.setMaxValue(currentDate.get(Calendar.MONTH));
-            monthSpinner.setWrapSelectorWheel(false);
+        if (mCurrentDate.equals(mMinDate)) {
+            mMonthSpinner.setDisplayedValues(null);
+            mMonthSpinner.setMinValue(mCurrentDate.get(Calendar.MONTH));
+            mMonthSpinner.setMaxValue(mCurrentDate.getActualMaximum(Calendar.MONTH));
+            mMonthSpinner.setWrapSelectorWheel(false);
+        } else if (mCurrentDate.equals(mMaxDate)) {
+            mMonthSpinner.setDisplayedValues(null);
+            mMonthSpinner.setMinValue(mCurrentDate.getActualMinimum(Calendar.MONTH));
+            mMonthSpinner.setMaxValue(mCurrentDate.get(Calendar.MONTH));
+            mMonthSpinner.setWrapSelectorWheel(false);
         } else {
-            monthSpinner.setDisplayedValues(null);
-            monthSpinner.setMinValue(0);
-            monthSpinner.setMaxValue(11);
-            monthSpinner.setWrapSelectorWheel(true);
+            mMonthSpinner.setDisplayedValues(null);
+            mMonthSpinner.setMinValue(0);
+            mMonthSpinner.setMaxValue(11);
+            mMonthSpinner.setWrapSelectorWheel(true);
         }
 
         // make sure the month names are a zero based array
         // with the months in the month spinner
         String[] displayedValues = Arrays.copyOfRange(
-                shortMonths, monthSpinner.getMinValue(), monthSpinner.getMaxValue() + 1);
-        monthSpinner.setDisplayedValues(displayedValues);
+                mShortMonths, mMonthSpinner.getMinValue(), mMonthSpinner.getMaxValue() + 1);
+        mMonthSpinner.setDisplayedValues(displayedValues);
 
         // year spinner range does not change based on the current date
-        yearSpinner.setMinValue(minDate.get(Calendar.YEAR));
-        yearSpinner.setMaxValue(maxDate.get(Calendar.YEAR));
-        yearSpinner.setWrapSelectorWheel(false);
+        mYearSpinner.setMinValue(mMinDate.get(Calendar.YEAR));
+        mYearSpinner.setMaxValue(mMaxDate.get(Calendar.YEAR));
+        mYearSpinner.setWrapSelectorWheel(false);
 
         // set the spinner values
-        yearSpinner.setValue(currentDate.get(Calendar.YEAR));
-        monthSpinner.setValue(currentDate.get(Calendar.MONTH));
+        mYearSpinner.setValue(mCurrentDate.get(Calendar.YEAR));
+        mMonthSpinner.setValue(mCurrentDate.get(Calendar.MONTH));
     }
 
     private boolean usingNumericMonths() {
-        return Character.isDigit(shortMonths[Calendar.JANUARY].charAt(0));
+        return Character.isDigit(mShortMonths[Calendar.JANUARY].charAt(0));
     }
 
     /**
@@ -280,8 +261,23 @@ public class SimpleDatePickerDelegate {
      * Notifies the listener, if such, for a change in the selected date.
      */
     private void notifyDateChanged() {
-        if (onDateChangedListener != null) {
-            onDateChangedListener.onDateChanged(getYear(), getMonth());
+        if (mOnDateChangedListener != null) {
+            mOnDateChangedListener.onDateChanged(getYear(), getMonth());
         }
+    }
+
+    /**
+     * The callback used to indicate the user changed the date.
+     */
+    public interface OnDateChangedListener {
+
+        /**
+         * Called upon a date change.
+         *
+         * @param year        The year that was set.
+         * @param monthOfYear The month that was set (0-11) for compatibility with {@link
+         *                    java.util.Calendar}.
+         */
+        void onDateChanged(int year, int monthOfYear);
     }
 }
