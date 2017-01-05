@@ -19,7 +19,7 @@ public class PaymentsLinksDTO {
     private PaymentsAppointmentsDTO appointments;
     @SerializedName("patient_balances")
     @Expose
-    private PaymentsPatientBalancesDTO paymentsPatientBalances;
+    private TransitionDTO paymentsPatientBalances;
     @SerializedName("payment_methods")
     @Expose
     private PaymentsMethodsDTO paymentsMethods;
@@ -92,7 +92,7 @@ public class PaymentsLinksDTO {
      * @return
      *     The paymentsPatientBalancesDTO
      */
-    public PaymentsPatientBalancesDTO getPaymentsPatientBalances() {
+    public TransitionDTO getPaymentsPatientBalances() {
         return paymentsPatientBalances;
     }
 
@@ -101,7 +101,7 @@ public class PaymentsLinksDTO {
      * @param paymentsPatientBalances
      *     The patient_balances
      */
-    public void setPaymentsPatientBalances(PaymentsPatientBalancesDTO paymentsPatientBalances) {
+    public void setPaymentsPatientBalances(TransitionDTO paymentsPatientBalances) {
         this.paymentsPatientBalances = paymentsPatientBalances;
     }
 

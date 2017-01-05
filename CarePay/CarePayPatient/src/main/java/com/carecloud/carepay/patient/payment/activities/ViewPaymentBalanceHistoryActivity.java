@@ -1,16 +1,17 @@
 package com.carecloud.carepay.patient.payment.activities;
 
-import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.gson.Gson;
 
@@ -26,6 +27,19 @@ public class ViewPaymentBalanceHistoryActivity extends BasePatientActivity {
         setContentView(R.layout.activity_view_balance_history);
 
         PaymentsModel paymentsDTO = getConvertedDTO(PaymentsModel.class);
+
+        Toolbar toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
+
+
+        Drawable closeIcon = ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_close);
+        toolbar.setNavigationIcon(closeIcon);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewPaymentBalanceHistoryActivity.this.finish();
+            }
+        });
 
         TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
         toolbarText.setText("PAYMENTS");//no label in end point yet

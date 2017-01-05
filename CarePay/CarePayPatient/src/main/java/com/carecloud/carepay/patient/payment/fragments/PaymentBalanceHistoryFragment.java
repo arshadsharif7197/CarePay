@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -10,7 +11,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,7 @@ import java.util.List;
  * Created by jorge on 29/12/16.
  */
 
-public class PaymentBalanceHistoryFragment  extends Fragment {
+public class PaymentBalanceHistoryFragment  extends Fragment  {
 
     private FragmentActivity context;
     @Nullable
@@ -44,6 +44,7 @@ public class PaymentBalanceHistoryFragment  extends Fragment {
         setupViewPager(viewPager, paymentDTO);
 
         TabLayout tabs = (TabLayout) balanceHistoryView.findViewById (R.id.balance_history_tabs);
+        tabs.setSelectedTabIndicatorColor(Color.WHITE);
         tabs.setupWithViewPager(viewPager);
 
         return balanceHistoryView;

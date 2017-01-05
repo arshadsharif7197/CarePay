@@ -20,6 +20,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.BaseAmountInfoDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 
 import org.json.JSONObject;
 
@@ -29,7 +30,6 @@ import org.json.JSONObject;
 
 public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
 
-    private PaymentsModel paymentsModel;
     private Context context;
     private View rootView;
     private CardView paymentPartialModeCardView;
@@ -49,10 +49,9 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
      * @param context the activity context to evaluate
      * @param paymentsModel paymentsModel
      */
-    public PaymentPartialModeDialog(Context context, PaymentsModel paymentsModel) {
+    public PaymentPartialModeDialog(Context context, PaymentsPatientBalancessDTO paymentsModel) {
         super(context, paymentsModel);
         this.context = context;
-        this.paymentsModel = paymentsModel;
     }
 
     @Override
