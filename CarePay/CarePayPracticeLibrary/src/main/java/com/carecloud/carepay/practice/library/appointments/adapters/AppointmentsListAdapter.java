@@ -95,7 +95,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckIn.setText(appointmentLabels.getAppointmentsPracticeCheckin());
 
-        boolean isPending = item.getAppointmentStatusModel().getId() == 1;
+        boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase("P");
         if (!isPending) {
             holder.startCheckIn.setClickable(false);
             holder.startCheckIn.setEnabled(false);
