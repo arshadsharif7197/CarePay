@@ -62,13 +62,13 @@ public abstract class DocumentScannerFragment extends Fragment {
                                 // uncomment when camera activity
                                 startActivityForResult(imageCaptureHelper.getCameraIntent(cameraType), ImageCaptureHelper.REQUEST_CAMERA);
                             }
-                        } else if (item == 1) {  // "Select from Gallery" chosen
+                        } /*else if (item == 1) {  // "Select from Gallery" chosen
                             imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
                             boolean result = PermissionsUtil.checkPermission(getActivity());
                             if (result) {
                                 startActivityForResult(imageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
                             }
-                        } else if (item == 3) { // "Cancel"
+                        }*/ else if (item == 1) { // "Cancel"
                             dialog.dismiss();
                         }
                     }
