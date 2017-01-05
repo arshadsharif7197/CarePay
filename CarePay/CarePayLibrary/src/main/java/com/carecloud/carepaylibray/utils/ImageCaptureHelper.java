@@ -36,6 +36,7 @@ public class ImageCaptureHelper {
     public static final int            RECTANGULAR_IMAGE     = 22;
     public static final String         CHOOSER_NAME          = "Select File";
     public static final CharSequence[] chooseActionDlOptions = new CharSequence[3];
+    public static final CharSequence[] chooseActionDocumentDlOptions = new CharSequence[2];
     public static String chooseActionDlgTitle;
 
     private static int           orientation                 = 0;
@@ -59,10 +60,14 @@ public class ImageCaptureHelper {
     public ImageCaptureHelper(Activity activity, ImageView targetImageView, DemographicLabelsDTO demographicLabelsDTO) {
         this.context = activity;
         this.imageViewTarget = targetImageView;
-
+        // dialog options 1. Capture, 2.Library, 3. Cancel
         chooseActionDlOptions[0] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsTakePhotoOption() : CarePayConstants.NOT_DEFINED);
         chooseActionDlOptions[1] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsChooseFromLibraryOption() : CarePayConstants.NOT_DEFINED);
         chooseActionDlOptions[2] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCancelLabel() : CarePayConstants.NOT_DEFINED);
+
+        // dialog options 1. Capture, 2. Cancel
+        chooseActionDocumentDlOptions[0] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsTakePhotoOption() : CarePayConstants.NOT_DEFINED);
+        chooseActionDocumentDlOptions[1] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCancelLabel() : CarePayConstants.NOT_DEFINED);
 
         chooseActionDlgTitle = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCaptureOptionsTitle() : CarePayConstants.NOT_DEFINED);
 
