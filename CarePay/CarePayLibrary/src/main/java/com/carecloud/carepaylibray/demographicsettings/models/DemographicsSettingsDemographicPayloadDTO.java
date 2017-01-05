@@ -1,8 +1,9 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
+
 
 /**
  * Created by harshal_patil on 1/5/2017.
