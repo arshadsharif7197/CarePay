@@ -12,7 +12,9 @@ public class DemographicsSettingsValidationDTO {
     @SerializedName("value")
     @Expose
     private Boolean value;
-
+    @SerializedName("error_message")
+    @Expose
+    private String errorMessage;
     public String getType() {
         return type;
     }
@@ -27,6 +29,14 @@ public class DemographicsSettingsValidationDTO {
 
     public void setValue(Boolean value) {
         this.value = value;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
 }

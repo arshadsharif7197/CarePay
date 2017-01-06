@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -73,7 +74,7 @@ public class DemographicsSettingsFragment extends Fragment {
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
         getSettingsLabels();
-        String userId = CognitoAppHelper.getCurrUser();//setTypefaces(view);
+        String userId = CognitoAppHelper.getCurrUser();
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         CarePayTextView documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
@@ -121,6 +122,7 @@ public class DemographicsSettingsFragment extends Fragment {
                 if(CognitoAppHelper.getPool().getUser() != null){
                     CognitoAppHelper.getPool().getUser().signOut();
                     CognitoAppHelper.setUser(null);
+                    getActivity().finish();
                 }
 
             }
@@ -190,7 +192,7 @@ public class DemographicsSettingsFragment extends Fragment {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-        DemographicsSettingsPersonalDetailsDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
         String firstName = demographicsPersonalDetails.getFirstName();
         String lastName = demographicsPersonalDetails.getLastName();
         String userName = firstName +" " +lastName;
