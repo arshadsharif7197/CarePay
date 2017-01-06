@@ -28,6 +28,11 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private PaymentsModel paymentsModel;
     private List<AppointmentChargeDTO> historyList;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param paymentsModel payment model
+     */
     public PaymentHistoryAdapter(Context context, PaymentsModel paymentsModel) {
 
         this.context = context;
