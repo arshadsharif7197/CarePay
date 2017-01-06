@@ -17,12 +17,14 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.Date;
@@ -34,6 +36,15 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
     private RecyclerView appointmentsRecyclerView;
     private AppointmentsResultModel appointmentsResultModel;
+    private ProgressBar appointmentProgressBar;
+    private List<AppointmentDTO> appointmentsItems;
+    /**
+     * Getting single appointment from make_appointment endpoint
+     * hence added this flag to differentiate app flow,
+     * whether call is from Check-in or Schedule Appointments screen.
+     * Remove this flag dependency once all appointments received from endpoint.
+     */
+    private static boolean isNewAppointmentScheduled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +55,29 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         appointmentsRecyclerView = (RecyclerView) findViewById(R.id.appointments_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
 
-        ProgressBar appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
+        appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
-
+        appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
+        appointmentProgressBar.setVisibility(View.GONE);
         try {
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-            getAppointmentList();
+            if(isNewAppointmentScheduled){
+                isNewAppointmentScheduled = false;
+                refreshAppointmentList();
+            } else {
+                getAppointmentList();
+            }
         } catch (JsonSyntaxException ex) {
             SystemUtil.showDialogMessage(this, getString(R.string.alert_title_server_error),
                     getString(R.string.alert_title_server_error));
             ex.printStackTrace();
         }
+    }
+
+    public static void setIsNewAppointmentScheduled(boolean isNewAppointmentScheduled) {
+        AppointmentsActivity.isNewAppointmentScheduled = isNewAppointmentScheduled;
     }
 
     private String getToday(String appointmentRawDate) {
@@ -161,7 +182,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                 && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
 
             findViewById(R.id.no_appointment_layout).setVisibility(View.GONE);
-            List<AppointmentDTO> appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
+            appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
 
 //            List<AppointmentDTO> appointmentListWithToday = new ArrayList<>();
 //            for (AppointmentDTO appointmentDTO : appointmentsItems) {
@@ -185,4 +206,39 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             findViewById(R.id.no_appointment_layout).setVisibility(View.VISIBLE);
         }
     }
+
+    private void refreshAppointmentList(){
+
+        if (appointmentsItems != null) {
+            appointmentsItems.clear();
+        }
+
+        // API call to fetch latest appointments
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getAppointments();
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, pageRefreshCallback);
+    }
+
+    WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            appointmentProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            appointmentProgressBar.setVisibility(View.GONE);
+            if (appointmentsResultModel != null) {
+                Gson gson = new Gson();
+                appointmentsResultModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
+                getAppointmentList();
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            appointmentProgressBar.setVisibility(View.GONE);
+            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }
