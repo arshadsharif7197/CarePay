@@ -4,14 +4,17 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class PatienceBalanceDTO {
 
     @SerializedName("metadata")
     @Expose
     private PaymentPayloadMetaDataDTO metadata;
+
     @SerializedName("payload")
     @Expose
-    private PatienceBalancePayloadDTO payload;
+    private List<PatiencePayloadDTO> payload = null;
 
     public PaymentPayloadMetaDataDTO getMetadata() {
         return metadata;
@@ -21,12 +24,13 @@ public class PatienceBalanceDTO {
         this.metadata = metadata;
     }
 
-    public PatienceBalancePayloadDTO getPayload() {
+    public List<PatiencePayloadDTO> getPayload() {
         return payload;
     }
 
-    public void setPayload(PatienceBalancePayloadDTO payload) {
+    public void setPayload(List<PatiencePayloadDTO> payload) {
         this.payload = payload;
     }
+
 
 }
