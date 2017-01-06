@@ -31,7 +31,7 @@ public class PaymentsLinksDTO {
     private PaymentsPlansDTO paymentsPlans;
     @SerializedName("payment_history")
     @Expose
-    private PaymentsHistoryDTO paymentsHistory;
+    private TransitionDTO paymentsHistory;
 
     /**
      * 
@@ -164,7 +164,7 @@ public class PaymentsLinksDTO {
      * @return
      *     The paymentsHistory
      */
-    public PaymentsHistoryDTO getPaymentsHistory() {
+    public TransitionDTO getPaymentsHistory() {
         return paymentsHistory;
     }
 
@@ -173,7 +173,7 @@ public class PaymentsLinksDTO {
      * @param paymentsHistory
      *     The payment_history
      */
-    public void setPaymentsHistory(PaymentsHistoryDTO paymentsHistory) {
+    public void setPaymentsHistory(TransitionDTO paymentsHistory) {
         this.paymentsHistory = paymentsHistory;
     }
 

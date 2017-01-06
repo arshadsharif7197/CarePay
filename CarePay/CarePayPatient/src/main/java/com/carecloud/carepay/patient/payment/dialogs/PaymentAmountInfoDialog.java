@@ -59,8 +59,10 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
         previousTitleTextView = (CarePayTextView) childActionView.findViewById(R.id.patientTitleTextView);
         previousBalanceAmountTextView = (CarePayTextView) childActionView.findViewById(R.id.patientBalanceAmountTextView);
         payNowButton = (Button) childActionView.findViewById(R.id.payNowButton);
+
         onSettingStyle();
         onSetListener();
+        //payNowButton.setText(model.getPaymentsMetadata().getPaymentsLabel().getPaymentDetailsPayNow());
         this.addChildDynamicLayout.addView(childActionView);
         String amount= StringUtil.getFormattedBalanceAmount(Double.parseDouble(model.getPendingRepsonsibility()));
         paymentAmountTextView.setText(amount);

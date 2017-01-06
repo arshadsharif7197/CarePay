@@ -13,6 +13,7 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 /**
@@ -42,7 +43,8 @@ public class ViewPaymentBalanceHistoryActivity extends BasePatientActivity {
         });
 
         TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
-        toolbarText.setText("PAYMENTS");//no label in end point yet
+        String toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
+        toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle)? CarePayConstants.NOT_DEFINED : toolBarTitle);
         FragmentManager fm = getSupportFragmentManager();
         PaymentBalanceHistoryFragment paymentBalanceHistoryFragment = (PaymentBalanceHistoryFragment)
                 fm.findFragmentByTag(PaymentBalanceHistoryFragment.class.getSimpleName());

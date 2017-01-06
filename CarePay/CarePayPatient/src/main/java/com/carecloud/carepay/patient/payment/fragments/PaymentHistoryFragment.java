@@ -25,7 +25,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,37 +70,22 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
 
     private void setUpReciclerView() {
         int section_number = getArguments().getInt(SECTION_NUMBER);
+        Map<String, String> queryString = new HashMap<>();
         switch (section_number) {
             case 1:
-                Map<String, String> queryString = new HashMap<>();
                 queryString.put("practice_id",  paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId() );
                 queryString.put("practice_mgmt", paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt());
                 queryString.put("patient_id", paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId());
                 WorkflowServiceHelper.getInstance().execute(paymentDTO.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances(), balancesCallback, queryString);
                 break;
             case 2:
-                progressBar.setVisibility(View.VISIBLE);
-                List<AppointmentChargeDTO> historyList = new ArrayList<>();
-                //dummy data
-                AppointmentChargeDTO one= new AppointmentChargeDTO();
-                one.setAmount("123.45");
-                one.setPostingDate("2016-12-04T23:39:12.837UTC");
-                AppointmentLocationDTO lone= new AppointmentLocationDTO();
-                lone.setName(CarePayConstants.NOT_DEFINED);
-                one.setLocation(lone);
-                historyList.add(one);
-                one= new AppointmentChargeDTO();
-                one.setAmount("168.00");
-                one.setPostingDate("2016-12-22T23:39:12.837UTC");
-                lone= new AppointmentLocationDTO();
-                lone.setName(CarePayConstants.NOT_DEFINED);
-                one.setLocation(lone);
-                historyList.add(one);
-                //end dummy data
-                PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), historyList);
-                historyReciclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                historyReciclerView.setAdapter(historyAdapter );
-                progressBar.setVisibility(View.GONE);
+                queryString.put("practice_id",  paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId() );
+                queryString.put("practice_mgmt", paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt());
+                queryString.put("patient_id", paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId());
+                queryString.put("start_date", "2015-01-01");
+                queryString.put("end_date", "2030-01-01");
+                WorkflowServiceHelper.getInstance().execute(paymentDTO.getPaymentsMetadata().getPaymentsLinks().getPaymentsHistory(), historyCallback, queryString);
+
                 break;
         }
     }
@@ -120,6 +104,42 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
             PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(getActivity(), paymentDTO, PaymentHistoryFragment.this);
             historyReciclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             historyReciclerView.setAdapter(paymentBalancesAdapter);
+
+            progressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(getActivity());
+            progressBar.setVisibility(View.GONE);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private WorkflowServiceCallback historyCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Gson gson = new Gson();
+            paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
+            List<AppointmentChargeDTO> historyList = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getCharges();
+
+            //dummy data for test
+            AppointmentChargeDTO one= new AppointmentChargeDTO();
+            one.setAmount("123.45");
+            one.setPostingDate("2016-12-04T23:39:12.837");
+            AppointmentLocationDTO lone= new AppointmentLocationDTO();
+            lone.setName(CarePayConstants.NOT_DEFINED);
+            one.setLocation(lone);
+            historyList.add(one);
+            //
+            PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), historyList);
+            historyReciclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            historyReciclerView.setAdapter(historyAdapter);
 
             progressBar.setVisibility(View.GONE);
         }

@@ -23,9 +23,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     private Context context;
     private List<PaymentsPatientBalancessDTO> paymentsPatientBalances;
     OnBalanceListItemClickListener listener;
+    PaymentsModel paymentDTO;
 
     public PaymentBalancesAdapter(Context context, PaymentsModel paymentDTO, OnBalanceListItemClickListener listener) {
-
+        this.paymentDTO = paymentDTO;
         this.context = context;
         this.paymentsPatientBalances = paymentDTO.getPaymentPayload().getPatientBalances();
         this.listener = listener;
@@ -45,7 +46,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         holder.shortName.setText(StringUtil.onShortDrName(locationName));
         holder.locationName.setText(locationName);
         holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(charge.getPendingRepsonsibility())));
-        holder.payNow.setText("Pay Now");//no label yet
+        holder.payNow.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentDetailsPayNow());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

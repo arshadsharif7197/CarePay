@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -38,7 +39,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     @Override
     public void onBindViewHolder(final PaymentHistoryAdapter.PaymentHistoryViewHolder holder, int position) {
         final AppointmentChargeDTO charge = historyList.get(position);
-            String locationName = charge.getLocation().getName();
+            String locationName = CarePayConstants.NOT_DEFINED;//charge.getLocation().getName();
 
             holder.shortName.setText(StringUtil.onShortDrName(locationName));
             holder.locationName.setText(locationName);

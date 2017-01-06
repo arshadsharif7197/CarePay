@@ -114,6 +114,15 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_agree_to_pay_terms")
     @Expose
     private String paymentAgreeToPayTerms;
+    @SerializedName("payment_patient_balance_toolbar")
+    @Expose
+    private String paymentPatientBalanceToolbar;
+    @SerializedName("payment_patient_balance_tab")
+    @Expose
+    private String paymentPatientBalanceTab;
+    @SerializedName("payment_patient_history_tab")
+    @Expose
+    private String paymentPatientHistoryTab;
     @SerializedName("payment_plan_create_condition_error")
     @Expose
     private String paymentPlanCreateConditionError;
@@ -1394,6 +1403,30 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentDetailsPayNow(String paymentDetailsPayNow) {
         this.paymentDetailsPayNow = paymentDetailsPayNow;
+    }
+
+    public String getPaymentPatientBalanceToolbar() {
+        return paymentPatientBalanceToolbar;
+    }
+
+    public void setPaymentPatientBalanceToolbar(String paymentPatientBalanceToolbar) {
+        this.paymentPatientBalanceToolbar = paymentPatientBalanceToolbar;
+    }
+
+    public String getPaymentPatientBalanceTab() {
+        return paymentPatientBalanceTab;
+    }
+
+    public void setPaymentPatientBalanceTab(String paymentPatientBalanceTab) {
+        this.paymentPatientBalanceTab = paymentPatientBalanceTab;
+    }
+
+    public String getPaymentPatientHistoryTab() {
+        return paymentPatientHistoryTab;
+    }
+
+    public void setPaymentPatientHistoryTab(String paymentPatientHistoryTab) {
+        this.paymentPatientHistoryTab = paymentPatientHistoryTab;
     }
 
     /**

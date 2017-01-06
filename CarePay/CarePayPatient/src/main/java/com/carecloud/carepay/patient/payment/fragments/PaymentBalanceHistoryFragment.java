@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
 
         TabLayout tabs = (TabLayout) balanceHistoryView.findViewById (R.id.balance_history_tabs);
         tabs.setSelectedTabIndicatorColor(Color.WHITE);
+        tabs.setTabTextColors(Color.WHITE, Color.LTGRAY);
         tabs.setupWithViewPager(viewPager);
 
         return balanceHistoryView;
@@ -52,8 +54,12 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
 
     private void setupViewPager(ViewPager viewPager, PaymentsModel paymentDTO) {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(context.getSupportFragmentManager());
-        adapter.addFragment(PaymentHistoryFragment.newInstance(1, paymentDTO), "PENDING");
-        adapter.addFragment(PaymentHistoryFragment.newInstance(2, paymentDTO), "HISTORY");
+        String pendingTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceTab();
+        String historyTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientHistoryTab();
+        adapter.addFragment(PaymentHistoryFragment.newInstance(1, paymentDTO), StringUtil.isNullOrEmpty(pendingTabTitle)?
+                CarePayConstants.NOT_DEFINED : pendingTabTitle);
+        adapter.addFragment(PaymentHistoryFragment.newInstance(2, paymentDTO), StringUtil.isNullOrEmpty(historyTabTitle)?
+                CarePayConstants.NOT_DEFINED : historyTabTitle);
         viewPager.setAdapter(adapter);
     }
 
