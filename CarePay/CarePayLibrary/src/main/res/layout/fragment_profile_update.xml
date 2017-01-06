@@ -41,6 +41,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dimen_5dp"
                 android:gravity="center">
 
                 <ImageView
@@ -102,7 +103,6 @@
                         style="@style/settingsProfilelabel."
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="FIRST NAME"
                         app:customAssetFont="proxima_nova_semi_bold" />
 
                     <EditText
@@ -132,7 +132,6 @@
                         style="@style/settingsProfilelabel."
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="MIDDLE NAME"
                         app:customAssetFont="proxima_nova_semi_bold" />
 
 
@@ -165,7 +164,6 @@
                         style="@style/settingsProfilelabel."
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="LAST NAME"
                         app:customAssetFont="proxima_nova_semi_bold" />
 
 
@@ -198,7 +196,6 @@
                         style="@style/settingsProfilelabel."
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Email"
                         app:customAssetFont="proxima_nova_semi_bold" />
 
 

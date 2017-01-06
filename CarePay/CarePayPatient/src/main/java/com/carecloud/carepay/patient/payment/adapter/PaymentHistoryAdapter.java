@@ -7,9 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLocationDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -20,13 +23,32 @@ import java.util.List;
  */
 
 public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAdapter.PaymentHistoryViewHolder> {
+
     private Context context;
+    private PaymentsModel paymentsModel;
     private List<AppointmentChargeDTO> historyList;
 
-    public PaymentHistoryAdapter(Context context, List<AppointmentChargeDTO> historyList) {
+    /**
+     * Constructor
+     * @param context context
+     * @param paymentsModel payment model
+     */
+    public PaymentHistoryAdapter(Context context, PaymentsModel paymentsModel) {
 
         this.context = context;
-        this.historyList = historyList;
+        this.paymentsModel = paymentsModel;
+        this.historyList = paymentsModel.getPaymentPayload().getPatientHistory()
+                .getPaymentsPatientCharges().getCharges();
+
+        //dummy data for test
+        // TODO: Remove when using real data.
+        AppointmentChargeDTO one= new AppointmentChargeDTO();
+        one.setAmount("123.45");
+        one.setPostingDate("2016-12-04T23:39:12.837");
+        AppointmentLocationDTO lone= new AppointmentLocationDTO();
+        lone.setName(CarePayConstants.NOT_DEFINED);
+        one.setLocation(lone);
+        historyList.add(one);
     }
 
     @Override
@@ -39,12 +61,21 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     @Override
     public void onBindViewHolder(final PaymentHistoryAdapter.PaymentHistoryViewHolder holder, int position) {
         final AppointmentChargeDTO charge = historyList.get(position);
-            String locationName = CarePayConstants.NOT_DEFINED;//charge.getLocation().getName();
+        String locationName = CarePayConstants.NOT_DEFINED;//charge.getLocation().getName();
 
-            holder.shortName.setText(StringUtil.onShortDrName(locationName));
-            holder.locationName.setText(locationName);
-            holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(charge.getAmount())));
-            holder.paymentDate.setText(DateUtil.getInstance().setDateRaw(charge.getPostingDate()).getDateAsMonthLiteralDayOrdinalYear());
+        holder.shortName.setText(StringUtil.onShortDrName(locationName));
+        holder.locationName.setText(locationName);
+        holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(charge.getAmount())));
+        holder.paymentDate.setText(DateUtil.getInstance().setDateRaw(charge.getPostingDate())
+                .getDateAsMonthLiteralDayOrdinalYear());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(context, paymentsModel);
+                receiptDialog.show();
+            }
+        });
     }
 
     @Override
@@ -66,8 +97,6 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             amount = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.historyTotalAmount);
             paymentDate = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.historyDateTextView);
             shortName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.historyAvatarTextView);
-
         }
     }
-
 }

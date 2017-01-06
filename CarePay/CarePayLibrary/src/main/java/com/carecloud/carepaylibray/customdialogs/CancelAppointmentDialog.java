@@ -15,24 +15,14 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
-/**
- * Created by prem_mourya on 10/12/2016.
- */
-
 public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
-    public interface CancelAppointmentCallback {
-        void onCancelAppointment(AppointmentDTO appointmentDTO);
-    }
-
-    private LinearLayout mainLayout;
     private Context context;
+    private LinearLayout mainLayout;
     private AppointmentDTO appointmentDTO;
     private AppointmentLabelDTO appointmentLabels;
     private AppointmentsResultModel appointmentInfo;
-
     private AppointmentType appointmentType;
-    private CancelAppointmentCallback cancelAppointmentCallback;
 
     /**
      * Contractor for   dialog.
@@ -40,15 +30,14 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
      * @param appointmentDTO the DTO to evaluate
      */
     public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                   AppointmentsResultModel appointmentInfo, AppointmentType appointmentType,
-                                   CancelAppointmentCallback cancelAppointmentCallback) {
+                                   AppointmentsResultModel appointmentInfo,
+                                   AppointmentType appointmentType) {
 
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
         this.appointmentType = appointmentType;
-        this.cancelAppointmentCallback = cancelAppointmentCallback;
     }
 
     @Override
@@ -122,14 +111,8 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.cancelAppointmentButton) {
-            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo, cancelAppointmentCallback).show();
+            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo).show();
             cancel();
-        }
-
-        if (viewId == R.id.dialogAppointHeaderTextView
-                && appointmentType == AppointmentType.CANCELLED_APPOINTMENT
-                && cancelAppointmentCallback != null) {
-            cancelAppointmentCallback.onCancelAppointment(appointmentDTO);
         }
     }
 }
