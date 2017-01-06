@@ -147,7 +147,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     };
 
     private void loadPaymentAmountScreen(PaymentsPatientBalancessDTO model) {
-        PaymentAmountInfoDialog dialog= new PaymentAmountInfoDialog(getActivity(), model);
+        PaymentAmountInfoDialog dialog= new PaymentAmountInfoDialog(getActivity(), model,paymentDTO);
         dialog.show();
     }
 
