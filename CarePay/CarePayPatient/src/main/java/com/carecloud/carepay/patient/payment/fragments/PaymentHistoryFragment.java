@@ -18,15 +18,14 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsLinksDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +37,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private static final String SECTION_NUMBER = "section_number";
     private PaymentsModel paymentDTO;
     private ProgressBar progressBar;
-    private RecyclerView historyReciclerView;
+    private RecyclerView historyRecyclerView;
 
     public static PaymentHistoryFragment newInstance(int sectionNumber, PaymentsModel paymentDTO) {
         PaymentHistoryFragment fragment = new PaymentHistoryFragment();
@@ -56,36 +55,40 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_balance_history, container, false);
         progressBar = (ProgressBar)rootView.findViewById(R.id.history_progress_bar);
+
         Gson gson = new Gson();
         String paymentsDTOString = getArguments().getString(CarePayConstants.INTAKE_BUNDLE);
         paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-        historyReciclerView =
-                (RecyclerView) rootView.findViewById(R.id.history_recycler_view);
+        historyRecyclerView = (RecyclerView) rootView.findViewById(R.id.history_recycler_view);
 
-        setUpReciclerView();
+        setUpRecyclerView();
 
         return rootView;
     }
 
-
-    private void setUpReciclerView() {
+    private void setUpRecyclerView() {
         int section_number = getArguments().getInt(SECTION_NUMBER);
         Map<String, String> queryString = new HashMap<>();
+        PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
+        PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata();
+
         switch (section_number) {
             case 1:
-                queryString.put("practice_id",  paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId() );
-                queryString.put("practice_mgmt", paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt());
-                queryString.put("patient_id", paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId());
-                WorkflowServiceHelper.getInstance().execute(paymentDTO.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances(), balancesCallback, queryString);
+                queryString.put("practice_id",  metadata.getPracticeId() );
+                queryString.put("practice_mgmt", metadata.getPracticeMgmt());
+                queryString.put("patient_id", metadata.getPatientId());
+                WorkflowServiceHelper.getInstance().execute(
+                        paymentsLinks.getPaymentsPatientBalances(), balancesCallback, queryString);
                 break;
+
             case 2:
-                queryString.put("practice_id",  paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId() );
-                queryString.put("practice_mgmt", paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt());
-                queryString.put("patient_id", paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId());
+                queryString.put("practice_id",  metadata.getPracticeId() );
+                queryString.put("practice_mgmt", metadata.getPracticeMgmt());
+                queryString.put("patient_id", metadata.getPatientId());
                 queryString.put("start_date", "2015-01-01");
                 queryString.put("end_date", "2030-01-01");
-                WorkflowServiceHelper.getInstance().execute(paymentDTO.getPaymentsMetadata().getPaymentsLinks().getPaymentsHistory(), historyCallback, queryString);
-
+                WorkflowServiceHelper.getInstance().execute(
+                        paymentsLinks.getPaymentsHistory(), historyCallback, queryString);
                 break;
         }
     }
@@ -101,9 +104,10 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
             Gson gson = new Gson();
             paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
 
-            PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(getActivity(), paymentDTO, PaymentHistoryFragment.this);
-            historyReciclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            historyReciclerView.setAdapter(paymentBalancesAdapter);
+            PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
+                    getActivity(), paymentDTO, PaymentHistoryFragment.this);
+            historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            historyRecyclerView.setAdapter(paymentBalancesAdapter);
 
             progressBar.setVisibility(View.GONE);
         }
@@ -126,20 +130,10 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Gson gson = new Gson();
             paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
-            List<AppointmentChargeDTO> historyList = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getCharges();
 
-            //dummy data for test
-            AppointmentChargeDTO one= new AppointmentChargeDTO();
-            one.setAmount("123.45");
-            one.setPostingDate("2016-12-04T23:39:12.837");
-            AppointmentLocationDTO lone= new AppointmentLocationDTO();
-            lone.setName(CarePayConstants.NOT_DEFINED);
-            one.setLocation(lone);
-            historyList.add(one);
-            //
-            PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), historyList);
-            historyReciclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            historyReciclerView.setAdapter(historyAdapter);
+            PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), paymentDTO);
+            historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            historyRecyclerView.setAdapter(historyAdapter);
 
             progressBar.setVisibility(View.GONE);
         }
@@ -152,7 +146,6 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         }
     };
 
-
     private void loadPaymentAmountScreen(PaymentsPatientBalancessDTO model) {
         PaymentAmountInfoDialog dialog= new PaymentAmountInfoDialog(getActivity(), model);
         dialog.show();
@@ -163,5 +156,4 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         PaymentsPatientBalancessDTO model = paymentDTO.getPaymentPayload().getPatientBalances().get(position);
         loadPaymentAmountScreen(model);
     }
-
 }
