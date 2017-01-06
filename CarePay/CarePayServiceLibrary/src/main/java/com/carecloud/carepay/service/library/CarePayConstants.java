@@ -18,10 +18,11 @@ public class CarePayConstants {
     public static final String DEFAULT_LANGUAGE = "English";
 
     //Appointments Constants
-    public static final String ASSETS_JSON = "workflow.json";
-    public static final String APPOINTMENT_JSON = "appointments.json";
-    public static final String ATTR_RESPONSE = "response";
-    public static final String ATTR_CAPTURE = "capture";
+    public static final String PENDING      = "P";
+    public static final String CHECKED_IN   = "I";
+    public static final String CANCELLED    = "C";
+    public static final String REQUESTED    = "R";
+
     public static final String ATTR_APPOINTMENTS = "appointments";
     public static final String ATTR_APPT_ID= "appointment_id";
     public static final String ATTR_TIME = "time";
