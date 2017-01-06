@@ -13,7 +13,7 @@ public class DemographicsSettingsDetailsDTO {
     private DemographicsSettingsAddressDTO address;
     @SerializedName("personal_details")
     @Expose
-    private DemographicsSettingsPersonalDetailsDTO personalDetails;
+    private DemographicsSettingsPersonalDetailsPropertiesDTO personalDetails;
     @SerializedName("identity_documents")
     @Expose
     private DemographicsSettingsIdentityDocumentsDTO identityDocuments;
@@ -32,11 +32,11 @@ public class DemographicsSettingsDetailsDTO {
         this.address = address;
     }
 
-    public DemographicsSettingsPersonalDetailsDTO getPersonalDetails() {
+    public DemographicsSettingsPersonalDetailsPropertiesDTO getPersonalDetails() {
         return personalDetails;
     }
 
-    public void setPersonalDetails(DemographicsSettingsPersonalDetailsDTO personalDetails) {
+    public void setPersonalDetails(DemographicsSettingsPersonalDetailsPropertiesDTO personalDetails) {
         this.personalDetails = personalDetails;
     }
 

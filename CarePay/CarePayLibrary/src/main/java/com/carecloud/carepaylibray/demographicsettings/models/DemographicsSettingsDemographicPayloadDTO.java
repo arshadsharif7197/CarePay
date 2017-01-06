@@ -18,7 +18,7 @@ public class DemographicsSettingsDemographicPayloadDTO {
     private List<DemographicsSettingsPayloadInsurancesDTO> insurances = null;
     @SerializedName("personal_details")
     @Expose
-    private DemographicsSettingsPersonalDetailsDTO personalDetails;
+    private DemographicsSettingsPersonalDetailsPayloadDTO personalDetails;
     @SerializedName("address")
     @Expose
     private DemographicsSettingsPayloadAddressDTO address;
@@ -42,11 +42,11 @@ public class DemographicsSettingsDemographicPayloadDTO {
         this.insurances = insurances;
     }
 
-    public DemographicsSettingsPersonalDetailsDTO getPersonalDetails() {
+    public DemographicsSettingsPersonalDetailsPayloadDTO getPersonalDetails() {
         return personalDetails;
     }
 
-    public void setPersonalDetails(DemographicsSettingsPersonalDetailsDTO personalDetails) {
+    public void setPersonalDetails(DemographicsSettingsPersonalDetailsPayloadDTO personalDetails) {
         this.personalDetails = personalDetails;
     }
 
