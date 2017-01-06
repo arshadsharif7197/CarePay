@@ -36,6 +36,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
                 .getPaymentsPatientCharges().getCharges();
 
         //dummy data for test
+        // TODO: Remove when using real data.
         AppointmentChargeDTO one= new AppointmentChargeDTO();
         one.setAmount("123.45");
         one.setPostingDate("2016-12-04T23:39:12.837");
