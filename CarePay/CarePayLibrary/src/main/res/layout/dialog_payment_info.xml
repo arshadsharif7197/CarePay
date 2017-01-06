@@ -12,28 +12,29 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             app:customAssetFont="proxima_nova_regular"
-            android:id="@+id/previousTitleTextView"
+            android:id="@+id/patientTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/payment_option_section_margin"
             android:ellipsize="none"
             android:gravity="center_vertical|left"
             android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
             android:paddingLeft="@dimen/apt_dl_margin"
-            android:text="Previous Balance "
+            android:textStyle="bold"
+            android:text="Patient Balance "
             android:textColor="@color/bermudagrey"
             android:textSize="@dimen/payment_text_balance_size" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             app:customAssetFont="proxima_nova_regular"
-            android:id="@+id/previousBalanceAmountTextView"
+            android:id="@+id/patientBalanceAmountTextView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/payment_option_section_margin"
             android:layout_gravity="right"
             android:ellipsize="none"
             android:gravity="center_vertical|right"
+            android:textStyle="bold"
             android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
             android:paddingRight="@dimen/apt_dl_margin"
-            android:text="$5896"
             android:textColor="@color/bermudagrey"
             android:textSize="@dimen/payment_text_balance_size" />
     </LinearLayout>
@@ -43,43 +44,10 @@
         android:layout_height="@dimen/apt_dl_boader_ht"
         android:background="@color/light_gray_dialog" />
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/detailBalanceRecView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            app:customAssetFont="proxima_nova_regular"
-            android:id="@+id/insuranceCoPayTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/payment_option_section_margin"
-            android:ellipsize="none"
-            android:gravity="center_vertical|left"
-            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
-            android:paddingLeft="@dimen/apt_dl_margin"
-            android:text="Insurance CoPay "
-            android:textColor="@color/bermudagrey"
-            android:textSize="@dimen/payment_text_balance_size" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            app:customAssetFont="proxima_nova_regular"
-            android:id="@+id/insuranceCoPayAmountTextView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/payment_option_section_margin"
-            android:layout_gravity="right"
-            android:ellipsize="none"
-            android:gravity="center_vertical|right"
-            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
-            android:paddingRight="@dimen/apt_dl_margin"
-            android:text="$569"
-            android:textColor="@color/bermudagrey"
-            android:textSize="@dimen/payment_text_balance_size" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/apt_dl_boader_ht"
-        android:background="@color/light_gray_dialog" />
+        android:layout_height="match_parent" />
 
     <Button
         android:id="@+id/payNowButton"

@@ -20,6 +20,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
+import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -261,8 +262,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
                 queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
                 WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getPatientBalances(), paymentsCallBack, queryString);
             }
-
-        } else if (id == R.id.nav_settings) {
+      } else if (id == R.id.nav_settings) {
             if(appointmentsDTO.getPayload().getAppointments().size()>0) {
                 Map<String, String> queryString = new HashMap<>();
                 queryString.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());

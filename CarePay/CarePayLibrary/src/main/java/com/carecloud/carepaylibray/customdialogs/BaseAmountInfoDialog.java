@@ -18,9 +18,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -35,15 +37,9 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
     protected CarePayTextView paymentAmountTextView;
     private CarePayTextView userShortnameTextView;
     private CarePayTextView userNameTextView;
-    private CarePayTextView userTypeTextView;
-    private CarePayTextView paymentDatetextView;
-    private CarePayTextView paymentAddressHeaderTextView;
-    private CarePayTextView addressAmountLevel;
 
     private ImageView dialogCloseHeader;
-    private ImageView paymentLocationImageView;
-    private ImageView paymentDialImageView;
-    private PaymentsModel paymentModel;
+    protected PaymentsPatientBalancessDTO model;
     private View rootLayout;
 
     /**
@@ -51,10 +47,10 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
      * @param context context
      * @param paymentModel payment model
      */
-    public BaseAmountInfoDialog(Context context, PaymentsModel paymentModel) {
+    public BaseAmountInfoDialog(Context context, PaymentsPatientBalancessDTO paymentModel) {
         super(context);
         this.context = context;
-        this.paymentModel = paymentModel;
+        this.model = paymentModel;
     }
 
     @Override
@@ -73,6 +69,8 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
 
         onInitialization();
         onSettingStyle();
+
+        userNameTextView.setText(CarePayConstants.NOT_DEFINED);
         onSetListener();
     }
 
@@ -82,21 +80,7 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
         ImageView paymentUserPicImageView = (ImageView) findViewById(R.id.paymentUserPicImageView);
         userShortnameTextView = (CarePayTextView) findViewById(R.id.userShortnameTextView);
         userNameTextView = (CarePayTextView) findViewById(R.id.userNameTextView);
-        userTypeTextView = (CarePayTextView) findViewById(R.id.userTypeTextView);
-        paymentDatetextView = (CarePayTextView) findViewById(R.id.paymentDatetextView);
-        paymentAddressHeaderTextView = (CarePayTextView) findViewById(R.id.paymentAddressHeaderTextView);
-        addressAmountLevel = (CarePayTextView) findViewById(R.id.addressAmountLevel);
-        paymentLocationImageView = (ImageView) findViewById(R.id.paymentLocationImageView);
-        paymentDialImageView = (ImageView) findViewById(R.id.paymentDailImageView);
-        if (TextUtils.isEmpty("")) {
-            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_call);
-            ((ImageView) findViewById(R.id.paymentDailImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
-        }
-
-        if (!SystemUtil.isNotEmptyString(addressAmountLevel.getText().toString())) {
-            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_directions);
-            ((ImageView) findViewById(R.id.paymentLocationImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
-        }
+        
         rootLayout = findViewById(R.id.rootDialogPaymentLayout);
         Resources res = context.getResources();
         Drawable drawable = res.getDrawable(R.drawable.circular);
@@ -111,16 +95,10 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
         paymentAmountTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
         userShortnameTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
         userNameTextView.setTextColor(ContextCompat.getColor(context, R.color.button_bright_cerulean));
-        userTypeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
-        paymentDatetextView.setTextColor(ContextCompat.getColor(context, R.color.payne_gray));
-        paymentAddressHeaderTextView.setTextColor(ContextCompat.getColor(context, R.color.payne_gray));
-        addressAmountLevel.setTextColor(ContextCompat.getColor(context, R.color.optionl_gray));
     }
 
     private void onSetListener() {
         dialogCloseHeader.setOnClickListener(this);
-        paymentLocationImageView.setOnClickListener(this);
-        paymentDialImageView.setOnClickListener(this);
     }
 
     @Override
@@ -128,12 +106,6 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
         int viewId = view.getId();
         if (viewId == R.id.dialog_close_header) {
             cancel();
-        } else if (viewId == R.id.paymentLocationImageView) {
-            //address will add after model come
-            onMapView("", "");
-        } else if (viewId == R.id.paymentDailImageView) {
-            //phoneCall will add after model come
-            onPhoneCall("");
         }
     }
 

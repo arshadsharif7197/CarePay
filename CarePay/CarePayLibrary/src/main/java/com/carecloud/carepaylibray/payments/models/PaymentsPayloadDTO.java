@@ -25,6 +25,9 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_payment_plans")
     @Expose
     private PaymentsPatientsPlansDTO patientPaymentPlans;
+    @SerializedName("patient_history")
+    @Expose
+    private PaymentsPatientHistoryDTO patientHistory;
     @SerializedName("patient_credit_cards")
     @Expose
     private PaymentsPatientsCreditCardsPayloadDTO patientCreditCards;
@@ -99,6 +102,14 @@ public class PaymentsPayloadDTO implements Serializable {
      */
     public void setPatientCreditCards(PaymentsPatientsCreditCardsPayloadDTO patientCreditCards) {
         this.patientCreditCards = patientCreditCards;
+    }
+
+    public PaymentsPatientHistoryDTO getPatientHistory() {
+        return patientHistory;
+    }
+
+    public void setPatientHistory(PaymentsPatientHistoryDTO patientHistory) {
+        this.patientHistory = patientHistory;
     }
 
     /**

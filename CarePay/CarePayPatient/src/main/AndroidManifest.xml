@@ -59,6 +59,7 @@
         </activity>
         <activity android:name=".appointments.activities.AppointmentsActivity" />
         <activity android:name=".appointments.activities.AddAppointmentActivity" />
+        <activity android:name=".payment.activities.ViewPaymentBalanceHistoryActivity" />
         <activity android:name=".eligibility.activities.EligibilityActivity" />
         <activity android:name=".payment.androidpay.ConfirmationActivity" />
         <activity

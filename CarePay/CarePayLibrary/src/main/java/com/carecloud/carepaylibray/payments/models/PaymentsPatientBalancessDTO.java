@@ -22,6 +22,9 @@ public class PaymentsPatientBalancessDTO implements Serializable {
     @SerializedName("balances")
     @Expose
     private List<PatienceBalanceDTO> balances;
+    @SerializedName("pending_repsonsibility")
+    @Expose
+    private String pendingRepsonsibility;
 
     /**
      *
@@ -75,5 +78,13 @@ public class PaymentsPatientBalancessDTO implements Serializable {
      */
     public void setPayload(List<PaymentPatientBalancesPayloadDTO> payload) {
         this.payload = payload;
+    }
+
+    public String getPendingRepsonsibility() {
+        return pendingRepsonsibility;
+    }
+
+    public void setPendingRepsonsibility(String pendingRepsonsibility) {
+        this.pendingRepsonsibility = pendingRepsonsibility;
     }
 }
