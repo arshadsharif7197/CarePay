@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -563,8 +564,10 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Log.d("makePaymentCallback","=========================>\nworkflowDTO="+workflowDTO.toString());
-            //((BasePracticeActivity)getActivity()).finish();
-            // ToDo : Call for the payment receipt here
+            Gson gson = new Gson();
+            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            receiptDialog.show();
         }
 
         @Override

@@ -25,7 +25,7 @@ public class PaymentDetailsListAdapter extends RecyclerView.Adapter<PaymentDetai
     @Override
     public PaymentDetailsListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View paymentDetailsListItemView = LayoutInflater.from(context).inflate(
-                R.layout.payment_details_list_item, parent, false);
+                R.layout.practice_payment_details_list_item, parent, false);
         return new PaymentDetailsListViewHolder(paymentDetailsListItemView);
     }
 
