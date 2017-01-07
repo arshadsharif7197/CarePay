@@ -41,7 +41,10 @@ public class PaymentAmountInfoDialog extends BaseAmountInfoDialog {
     private CarePayTextView previousTitleTextView;
     private CarePayTextView previousBalanceAmountTextView;
     private Button payNowButton;
+    PaymentsPatientBalancessDTO paymentsPatientBalancessDTO;
+    private PaymentsModel paymentDTO;
     PaymentsModel pmodel;
+
 
     /**
      *

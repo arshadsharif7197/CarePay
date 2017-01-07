@@ -40,8 +40,9 @@ public class PaymentHistoryDetailAdapter extends RecyclerView.Adapter<PaymentHis
             String locationName = CarePayConstants.NOT_DEFINED;
             holder.description.setText(locationName);
             //mock model not final
-            if(charge.getPayload().getSummaryBalance().size()>0)
-               holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(charge.getPayload().getSummaryBalance().get(0).getTotal())));
+            if(charge.getPayload().size() >0 )// getSummaryBalance().size()>0)
+               holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(
+                       charge.getPayload().get(0).getAmount().toString())));//    getSummaryBalance().get(0).getTotal())));
     }
 
     @Override

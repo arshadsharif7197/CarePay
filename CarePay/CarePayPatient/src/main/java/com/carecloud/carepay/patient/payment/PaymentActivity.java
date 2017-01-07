@@ -120,7 +120,8 @@ public class PaymentActivity extends BasePatientActivity {
 
     private void launchConfirmationPage(MaskedWallet maskedWallet) {
         //setTitle("");
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload().get(0).getTotal(), "CERT");
+        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT");// .getPayload().get(0).getTotal(), "CERT");
+
         startActivity(intent);
     }
 
