@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -52,13 +53,15 @@ import com.google.android.gms.wallet.PaymentMethodTokenizationParameters;
 import com.google.android.gms.wallet.PaymentMethodTokenizationType;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
+import com.google.gson.Gson;
 import com.google.android.gms.wallet.fragment.SupportWalletFragment;
 import com.google.android.gms.wallet.fragment.WalletFragmentInitParams;
 import com.google.android.gms.wallet.fragment.WalletFragmentMode;
 import com.google.android.gms.wallet.fragment.WalletFragmentOptions;
 import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
-import com.google.gson.Gson;
 
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -454,7 +457,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 if (selectedRadioButton.getText().toString().equalsIgnoreCase(PaymentConstants.ANDROID_PAY)) {
                     paymentChoiceButton.setVisibility(View.GONE);
                     setLineItems(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload());
-                    createAndAddWalletFragment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload().get(0).getTotal());
+                    createAndAddWalletFragment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility());// getPayload().get(0).getTotal());
                     //scrollviewChoices.fullScroll(View.FOCUS_DOWN);
                 } else {
 

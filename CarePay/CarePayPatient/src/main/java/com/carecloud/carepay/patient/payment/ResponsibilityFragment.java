@@ -24,7 +24,7 @@ import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -116,16 +116,21 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
             List<PaymentPatientBalancesPayloadDTO> paymentList = paymentDTO.getPaymentPayload()
                     .getPatientBalances().get(0).getPayload();
 */
+/*
             List<PaymentPatientBalancesPayloadDTO> paymentList =
                     paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
                             .getPayload().getSummaryBalance();
+*/
+            List<PatiencePayloadDTO> paymentList =       paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
+
+
 
             if (paymentList != null && paymentList.size() > 0) {
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
-                        previousBalanceStr = payment.getTotal();
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                        copayStr = payment.getTotal();
+                for (PatiencePayloadDTO payment : paymentList) {
+                    if (payment.getType().equalsIgnoreCase("Patient Balance")) {
+                        previousBalanceStr = payment.getAmount().toString();  //.getTotal();
+                    } else if (payment.getType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+                        copayStr = payment.getAmount().toString();  //.getTotal();
                     }
                 }
 

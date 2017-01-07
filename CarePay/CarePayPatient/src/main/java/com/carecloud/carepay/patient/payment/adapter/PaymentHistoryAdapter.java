@@ -44,7 +44,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         // TODO: Remove when using real data.
         AppointmentChargeDTO one= new AppointmentChargeDTO();
         one.setAmount("123.45");
-        one.setPostingDate("2016-12-04T23:39:12.837");
+        one.setPostingDate("2016-08-21T12:00:00-04:00");
         AppointmentLocationDTO lone= new AppointmentLocationDTO();
         lone.setName(CarePayConstants.NOT_DEFINED);
         one.setLocation(lone);
