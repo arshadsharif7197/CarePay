@@ -146,7 +146,11 @@
                         android:layout_marginTop="@dimen/dimen_24dp"
                         android:maxLines="1"
                         />
-
+                    <TextView
+                        android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
+                        style="@style/SignupRequireHintStyle"
+                        android:text="Optional"
+                        android:textColor="@color/cadet_gray" />
                 </FrameLayout>
 
                 <View

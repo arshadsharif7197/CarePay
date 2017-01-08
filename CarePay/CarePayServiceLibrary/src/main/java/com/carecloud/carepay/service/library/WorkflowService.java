@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
@@ -41,5 +42,19 @@ interface WorkflowService {
 
     @POST
     Call<WorkflowDTO> executePost(@Url String url, @Body String jsonString, @QueryMap Map<String,String> queryMap);
+    
+
+    @PUT
+    Call<WorkflowDTO> executePut(@Url String url);
+
+    @PUT
+    Call<WorkflowDTO> executePut(@Url String url, @Body String jsonString);
+
+    @PUT
+    Call<WorkflowDTO> executePut(@Url String url, @QueryMap Map<String,String> queryMap);
+
+    @PUT
+    Call<WorkflowDTO> executePut(@Url String url, @Body String jsonString, @QueryMap Map<String,String> queryMap);
+
 
 }

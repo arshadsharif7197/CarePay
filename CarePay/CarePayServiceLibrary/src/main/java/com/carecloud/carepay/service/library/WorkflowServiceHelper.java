@@ -169,7 +169,7 @@ public class WorkflowServiceHelper {
             } else {
                 call = workflowService.executeGet(transitionDTO.getUrl());
             }
-        } else {
+        } else if (transitionDTO.getMethod().equalsIgnoreCase("POST")){
             if (jsonBody != null && queryMap == null) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody);
             } else if (jsonBody == null && queryMap != null) {
@@ -182,6 +182,20 @@ public class WorkflowServiceHelper {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
             } else {
                 call = workflowService.executePost(transitionDTO.getUrl());
+            }
+        }else{
+            if (jsonBody != null && queryMap == null) {
+                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody);
+            } else if (jsonBody == null && queryMap != null) {
+                call = workflowService.executePut(transitionDTO.getUrl(), queryMap);
+            } else if (jsonBody != null && queryMap.size() > 0) {
+                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
+            } else if (jsonBody != null) {
+                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
+            } else if (jsonBody != null) {
+                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
+            } else {
+                call = workflowService.executePut(transitionDTO.getUrl());
             }
         }
         executeCallback(callback, call);

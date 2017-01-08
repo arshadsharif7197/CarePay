@@ -7,17 +7,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -34,7 +44,17 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPropertiesDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsUpdateDemographicsDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.gson.internal.Excluder;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -54,6 +74,12 @@ public class EditProfileFragment extends Fragment {
     private String lastNameValString = null;
     private String middleNameValString = null;
     private Button changeProfileButton = null;
+    private EditText firstNameEditText = null;
+    private EditText middleNameEditText = null;
+    private EditText lastNameEditText = null;
+    private EditText emailEditText = null;
+    private Button updateProfileButton = null;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,16 +123,18 @@ public class EditProfileFragment extends Fragment {
         lastNameTextView.setText(lastNameString);
         emailTextView.setText(emailString);
 
-        EditText firstNameEditText = (EditText) view.findViewById(R.id.reviewFirstNameTextView);
-        EditText middleNameEditText = (EditText) view.findViewById(R.id.reviewMiddleNameTextView);
-        EditText lastNameEditText = (EditText) view.findViewById(R.id.reviewLastNameTextView);
-        EditText emailEditText = (EditText) view.findViewById(R.id.reviewEmailTextView);
+        firstNameEditText = (EditText) view.findViewById(R.id.reviewFirstNameTextView);
+        middleNameEditText = (EditText) view.findViewById(R.id.reviewMiddleNameTextView);
+        lastNameEditText = (EditText) view.findViewById(R.id.reviewLastNameTextView);
+        emailEditText = (EditText) view.findViewById(R.id.reviewEmailTextView);
 
         firstNameEditText.setText(firstNameValString);
         middleNameEditText.setText(middleNameValString);
         lastNameEditText.setText(lastNameValString);
         emailEditText.setText(userId);
         changeProfileButton =  (Button) view.findViewById(R.id.changeCurrentPhotoButton);
+        updateProfileButton =  (Button) view.findViewById(R.id.YesCorrectButton);
+
         setClickables(view);
 
         return view;
@@ -179,6 +207,62 @@ public class EditProfileFragment extends Fragment {
 
         });
 
+        updateProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (demographicsSettingsDTO != null) {
+                    DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                    if (demographicsSettingsMetadataDTO != null) {
+                        DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                        TransitionDTO demographicsSettingsUpdateDemographicsDTO =demographicsSettingsTransitionsDTO.getUpdateDemographics();
+                        JSONObject payload = new JSONObject();
+                        Map<String, String> queries = null;
+                        Map<String, String> header = null;
+                        try {
+                            if (demographicsSettingsDTO != null) {
+                                DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                                if(demographicsSettingsPayloadDTO!=null){
+                                    DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                                    DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                                    DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                    demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());
+                                    demographicsPersonalDetails.setLastName(lastNameEditText.getText().toString());
+                                    demographicsPersonalDetails.setMiddleName(middleNameEditText.getText().toString());
+
+                                    Gson gson = new Gson();
+                                    String jsonInString = gson.toJson(demographicPayload);
+                                    WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback,  jsonInString,header);
+                                }}
+                            header = new HashMap<>();
+                            header.put("transition", "true");
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+        });
+
     }
+
+    WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(getActivity());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
 
 }
