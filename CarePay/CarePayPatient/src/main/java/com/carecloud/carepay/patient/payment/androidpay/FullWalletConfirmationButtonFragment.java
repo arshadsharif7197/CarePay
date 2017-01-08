@@ -219,7 +219,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
         PaymentResponsibilityModel paymentModel = PaymentResponsibilityModel.getInstance();
 
-        responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(paymentModel.getBalancesList().get(0).toString()));
+        //responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(paymentModel.getBalancesList().get(0).toString()));
         return view;
     }
 

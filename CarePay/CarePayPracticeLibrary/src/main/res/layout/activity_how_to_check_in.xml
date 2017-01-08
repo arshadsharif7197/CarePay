@@ -111,16 +111,6 @@
             android:layout_marginTop="@dimen/dimen_10dp"
             android:background="@color/white_30opacity"/>
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
-            android:id="@+id/createCarePayAccountButton"
-            android:layout_width="@dimen/dimen_450dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_blue_overlay"
-            android:textColor="@color/white"
-            android:layout_marginTop="@dimen/dimen_46dp"
-            android:textSize="@dimen/text_size_22sp"
-            android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"/>
 
     </LinearLayout>
 
