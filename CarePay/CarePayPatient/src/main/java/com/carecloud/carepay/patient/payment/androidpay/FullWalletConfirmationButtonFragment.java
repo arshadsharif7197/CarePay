@@ -53,7 +53,11 @@ import com.google.android.gms.wallet.PaymentMethodToken;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
@@ -75,6 +79,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+//import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
 /**
@@ -501,7 +506,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         if (token != null) {
             // getToken returns a JSON object as a String.  Replace newlines to make LogCat output
             // nicer.  The 'id' field of the object contains the Stripe token we are interested in.
-            Log.d(TAG, "PaymentMethodToken:" + token.getToken().replace('\n', ' '));
+            //Log.d(TAG, "PaymentMethodToken:" + token.getToken().replace('\n', ' '));
         }
 
         sendRequestToFirstData(fullWallet, payeezyEnvironment);
@@ -552,6 +557,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(getUrl(env))
                     .addConverterFactory(GsonConverterFactory.create())
+                    //.addConverterFactory(ScalarsConverterFactory.create())
                     .build();
             service = retrofit.create(FirstDataService.class);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),payloadString);
@@ -567,9 +573,23 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> rawResponse) {
                     try {
-                        Log.d(TAG, "response... " + rawResponse.body().string());
-                        JSONObject responseJSON = new JSONObject(rawResponse.body().string());
-                        postPaymentConfirmation(responseJSON);
+                       // Log.d(TAG, "response... " + rawResponse.body().string());
+                        //JSONObject responseJSON =new JSONObject("");
+                        String rawResponsse= rawResponse.body().string();
+
+                        Gson gson=new GsonBuilder().create();
+
+                        ResponseBody decodedResponse = rawResponse.body();
+
+                        AndroidPayResponseDTO fromJson =gson.fromJson(rawResponsse,AndroidPayResponseDTO.class);
+
+                        if(null != fromJson){
+                            Log.d(TAG, "sucess... ");
+                        }
+
+
+
+                        //postPaymentConfirmation(responseJSON);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
