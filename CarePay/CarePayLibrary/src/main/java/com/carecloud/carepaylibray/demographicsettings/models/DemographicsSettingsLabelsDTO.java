@@ -42,6 +42,12 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("profile_heading")
     @Expose
     private String profileHeadingLabel;
+    @SerializedName("demographics_personal_info_label")
+    @Expose
+    private String demographics_personal_info_Label;
+    @SerializedName("demographics_drivers_license_label")
+    @Expose
+    private String demographics_driver_license_Label;
 
     /**
      *
@@ -217,5 +223,37 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      */
     public void setProfileHeadingLabel(String profileHeadingLabel) {
         this.profileHeadingLabel = profileHeadingLabel;
+    }
+
+    /**
+     *
+     * @return demographics_personal_info_Label
+     */
+    public String getDemographics_personal_info_Label() {
+        return StringUtil.getLabelForView(demographics_personal_info_Label);
+    }
+
+    /**
+     *
+     * @param demographics_personal_info_Label The demographics_personal_info_Label
+     */
+    public void setDemographics_personal_info_Label(String demographics_personal_info_Label) {
+        this.demographics_personal_info_Label = demographics_personal_info_Label;
+    }
+
+    /**
+     *
+     * @return demographics_driver_license_Label
+     */
+    public String getDemographics_driver_license_Label() {
+        return demographics_driver_license_Label;
+    }
+
+    /**
+     *
+     * @param demographics_driver_license_Label The demographics_driver_license_Label
+     */
+    public void setDemographics_driver_license_Label(String demographics_driver_license_Label) {
+        this.demographics_driver_license_Label = demographics_driver_license_Label;
     }
 }
