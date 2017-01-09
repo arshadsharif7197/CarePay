@@ -48,6 +48,19 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("demographics_drivers_license_label")
     @Expose
     private String demographics_driver_license_Label;
+    @SerializedName("demographics_take_pic_option")
+    @Expose
+    private String demographicsTakePhotoOption;
+    @SerializedName("demographics_select_gallery_option")
+    @Expose
+    private String demographicsChooseFromLibraryOption;
+    @SerializedName("demographics_select_capture_option_title")
+    @Expose
+    private String demographicsCaptureOptionsTitle;
+    @SerializedName("demographics_cancel_label")
+    @Expose
+    private String demographicsCancelLabel;
+
 
     /**
      *
@@ -246,7 +259,7 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      * @return demographics_driver_license_Label
      */
     public String getDemographics_driver_license_Label() {
-        return demographics_driver_license_Label;
+        return StringUtil.getLabelForView(demographics_driver_license_Label);
     }
 
     /**
@@ -256,4 +269,70 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     public void setDemographics_driver_license_Label(String demographics_driver_license_Label) {
         this.demographics_driver_license_Label = demographics_driver_license_Label;
     }
+
+    /**
+     *
+     * @return demographicsCaptureOptionsTitle
+     */
+    public String getDemographicsCaptureOptionsTitle() {
+        return StringUtil.getLabelForView(demographicsCaptureOptionsTitle);
+    }
+
+    /**
+     *
+     * @param demographicsCaptureOptionsTitle The demographicsCaptureOptionsTitle
+     */
+    public void setDemographicsCaptureOptionsTitle(String demographicsCaptureOptionsTitle) {
+        this.demographicsCaptureOptionsTitle = demographicsCaptureOptionsTitle;
+    }
+
+    /**
+     *
+     * @return demographicsTakePhotoOption
+     */
+    public String getDemographicsTakePhotoOption() {
+        return StringUtil.getLabelForView(demographicsTakePhotoOption);
+    }
+
+    /**
+     *
+     * @param demographicsTakePhotoOption The demographicsTakePhotoOption
+     */
+    public void setDemographicsTakePhotoOption(String demographicsTakePhotoOption) {
+        this.demographicsTakePhotoOption = demographicsTakePhotoOption;
+    }
+
+    /**
+     *
+     * @return demographicsChooseFromLibraryOption
+     */
+    public String getDemographicsChooseFromLibraryOption() {
+        return StringUtil.getLabelForView(demographicsChooseFromLibraryOption);
+    }
+
+    /**
+     *
+     * @param demographicsChooseFromLibraryOption The demographicsChooseFromLibraryOption
+     */
+    public void setDemographicsChooseFromLibraryOption(String demographicsChooseFromLibraryOption) {
+        this.demographicsChooseFromLibraryOption = demographicsChooseFromLibraryOption;
+    }
+
+    /**
+     *
+     * @return demographicsCancelLabel
+     */
+    public String getDemographicsCancelLabel() {
+        return StringUtil.getLabelForView(demographicsCancelLabel);
+
+    }
+
+    /**
+     *
+     * @param demographicsCancelLabel The demographicsCancelLabel
+     */
+    public void setDemographicsCancelLabel(String demographicsCancelLabel) {
+        this.demographicsCancelLabel = demographicsCancelLabel;
+    }
+
 }
