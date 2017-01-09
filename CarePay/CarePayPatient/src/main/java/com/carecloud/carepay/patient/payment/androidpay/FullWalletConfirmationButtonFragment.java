@@ -38,6 +38,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -153,6 +154,16 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         }
         return sb.toString();
     }
+    private PaymentsLabelDTO paymentsLabelDTO;
+
+    private double amountToMakePayment;
+    private String paymentsDTOString;
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -185,6 +196,21 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 .build();
 
         retryHandler = new RetryHandler(this);
+
+
+        Bundle arguments = activityLaunchIntent.getParcelableExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+        if (arguments != null) {
+            Gson gson = new Gson();
+            paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+
+            paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+            //paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
+            //paymentsLabelDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsLabel();
+            amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            Log.i("Arguments", arguments.toString());
+        }
     }
 
     @Override
@@ -578,18 +604,13 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                         String rawResponsse= rawResponse.body().string();
 
                         Gson gson=new GsonBuilder().create();
+                        AndroidPayResponseDTO androidPayResponseDTO =gson.fromJson(rawResponsse,AndroidPayResponseDTO.class);
 
-                        ResponseBody decodedResponse = rawResponse.body();
-
-                        AndroidPayResponseDTO fromJson =gson.fromJson(rawResponsse,AndroidPayResponseDTO.class);
-
-                        if(null != fromJson){
-                            Log.d(TAG, "sucess... ");
+                        if(androidPayResponseDTO != null){
+                            postPaymentConfirmation(androidPayResponseDTO);
                         }
 
 
-
-                        //postPaymentConfirmation(responseJSON);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -665,7 +686,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     private PaymentsModel paymentsModel;
     private PaymentsModel intakePaymentModel;
 
-    private void postPaymentConfirmation(JSONObject androidPayResponse)
+    private void postPaymentConfirmation(AndroidPayResponseDTO androidPayResponse)
     {
         JSONObject payload = new JSONObject();
       //  double totalAmountToPay = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
@@ -681,12 +702,13 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         }
 
         try {
-
+            Gson gson = new Gson();
+            String jsonInString = gson.toJson(androidPayResponse);
 
             JSONObject paymentMethod = new JSONObject();
 
            // JSONObject creditCard = new JSONObject();
-            JSONObject creditCard = androidPayResponse;
+            JSONObject creditCard = new JSONObject(jsonInString);
 //            creditCard.put("save", false);
 //            creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
 //            creditCard.put("card_type", creditCardPayload.getCardType());
@@ -696,8 +718,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 //            creditCard.put("cvv", creditCardPayload.getCvv());
 //            creditCard.put("papi_pay", true);
 
-//            paymentMethod.put("amount", creditCard.get("amount"));
-  //          payload.put("amount", creditCard.get("amount"));
+            paymentMethod.put("amount", creditCard.get("amount"));
+            payload.put("amount", creditCard.get("amount"));
 
             JSONObject billingInformation = new JSONObject();
             billingInformation.put("same_as_patient", true);
@@ -717,6 +739,10 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
+//            queries.put("practice_mgmt", "carecloud");
+//            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
+//            queries.put("patient_id", "000f50a8-f04f-4f3f-8a81-6e546c8e32d4");
+
 
             Map<String, String> header = new HashMap<>();
             header.put("transition", "true");

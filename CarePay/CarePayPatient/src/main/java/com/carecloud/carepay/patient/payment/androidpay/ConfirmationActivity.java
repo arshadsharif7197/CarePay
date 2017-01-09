@@ -6,10 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.android.gms.wallet.fragment.SupportWalletFragment;
@@ -17,6 +22,8 @@ import com.google.android.gms.wallet.fragment.WalletFragmentInitParams;
 import com.google.android.gms.wallet.fragment.WalletFragmentMode;
 import com.google.android.gms.wallet.fragment.WalletFragmentOptions;
 import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
+
+import static android.R.attr.fragment;
 
 /**
  * Activity that displays the user's Google Wallet checkout confirmation page. It displays
@@ -28,12 +35,14 @@ public class ConfirmationActivity extends FragmentActivity {
 
     private SupportWalletFragment walletFragment;
     private MaskedWallet maskedWallet;
+    public Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         maskedWallet = getIntent().getParcelableExtra(PaymentConstants.EXTRA_MASKED_WALLET);
 
+        bundle = getIntent().getExtras();
         setContentView(R.layout.activity_confirmation);
 
         createAndAddWalletFragment();
@@ -97,6 +106,7 @@ public class ConfirmationActivity extends FragmentActivity {
                     maskedWallet = data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
                     FullWalletConfirmationButtonFragment resultTargetFragment =
                             (FullWalletConfirmationButtonFragment) getResultTargetFragment();
+                    resultTargetFragment.setArguments(bundle);
                     resultTargetFragment.updateMaskedWallet(maskedWallet);
 
                 }
@@ -147,11 +157,13 @@ public class ConfirmationActivity extends FragmentActivity {
                 R.id.full_wallet_confirmation_button_fragment);
     }
 
-    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env) {
+    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env, Bundle bundle) {
         Intent intent = new Intent(context, ConfirmationActivity.class);
         intent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET, maskedWallet);
         intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
         intent.putExtra(PaymentConstants.EXTRA_ENV, env);
+        intent.putExtra(PaymentConstants.EXTRA_ENV, env);
+        intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, bundle);
         return intent;
     }
 }
