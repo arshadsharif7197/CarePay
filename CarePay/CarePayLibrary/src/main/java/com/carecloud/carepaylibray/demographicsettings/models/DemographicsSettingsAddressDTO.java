@@ -19,7 +19,7 @@ public class DemographicsSettingsAddressDTO {
     private String type;
     @SerializedName("properties")
     @Expose
-    private DemographicsSettingsPropertiesDTO properties;
+    private DemographicsSettingsMetadataPropertiesDTO properties;
 
     public String getLabel() {
         return label;
@@ -45,11 +45,11 @@ public class DemographicsSettingsAddressDTO {
         this.type = type;
     }
 
-    public DemographicsSettingsPropertiesDTO getProperties() {
+    public DemographicsSettingsMetadataPropertiesDTO getProperties() {
         return properties;
     }
 
-    public void setProperties(DemographicsSettingsPropertiesDTO properties) {
+    public void setProperties(DemographicsSettingsMetadataPropertiesDTO properties) {
         this.properties = properties;
     }
 

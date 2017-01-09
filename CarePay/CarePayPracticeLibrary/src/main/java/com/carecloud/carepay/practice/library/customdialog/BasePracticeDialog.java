@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -71,6 +72,12 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
     protected void setDialogTitle(String title){
         ((CarePayTextView) findViewById(R.id.content_view_header_title)).setText(title);
     }
+
+    protected void removeHeader(){
+        CarePayTextView carePayTextView = (CarePayTextView) findViewById(R.id.content_view_header_title);
+        ((ViewGroup) carePayTextView.getParent()).removeView(carePayTextView);
+    }
+
 
     protected void setCancelImage(int resourceId){
         ((ImageView) findViewById(R.id.cancel_img)).setImageResource(resourceId);
