@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -65,12 +66,14 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog im
     private void inflateToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.add_appointment_toolbar);
         TextView titleView = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.add_appointment_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(context, titleView);
-        toolbar.setTitle("");
+         SystemUtil.setGothamRoundedMediumTypeface(context, titleView);
+         toolbar.setTitle("");
+
 
         CustomGothamRoundedMediumButton todayButton = (CustomGothamRoundedMediumButton)
                 toolbar.findViewById(com.carecloud.carepaylibrary.R.id.today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
+
         //toolbar.setNavigationOnClickListener(navigationOnClickListener);
     }
 
@@ -99,10 +102,13 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog im
     protected void onAddContentView(LayoutInflater inflater) {
         view = inflater.inflate(R.layout.dialog_edit_date_range, null);
         ((FrameLayout) findViewById(R.id.base_dialog_content_layout)).addView(view);
+
         inflateUIComponents(view);
     }
 
     private void inflateUIComponents(View view) {
+
+        removeHeader();
 
         Button editRangeButton = (Button)
                 view.findViewById(R.id.applyDateRangeButton);

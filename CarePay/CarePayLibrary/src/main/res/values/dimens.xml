@@ -305,6 +305,7 @@
     <dimen name="add_apt_calendar_today_date_stroke">3dp</dimen>
     <dimen name="add_apt_calendar_day_title_padding_top">10dp</dimen>
     <dimen name="add_apt_calendar_day_title_padding_left">22dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_left_pract">10dp</dimen>
     <dimen name="add_apt_calendar_day_title_padding_right">10dp</dimen>
     <dimen name="add_apt_calendar_day_title_padding_bottom">20dp</dimen>
     <dimen name="add_apt_calendar_day_title_text_size">15sp</dimen>
