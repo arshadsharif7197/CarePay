@@ -140,14 +140,14 @@
                     style="@style/TextInputLayoutStyle"
                     android:layout_weight="1"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    android:maxLength="30"
-                    android:digits="@string/restrict_letters_space">
+                    android:maxLength="30">
 
                     <EditText
                         android:id="@+id/cityId"
                         style="@style/CityEditTextStyle"
                         android:nextFocusRight="@+id/stateAutoCompleteTextView"
-                        android:labelFor="@+id/cityId"/>
+                        android:labelFor="@+id/cityId"
+                        android:digits="@string/restrict_letters_space"/>
 
                 </android.support.design.widget.TextInputLayout>
 
