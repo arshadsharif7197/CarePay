@@ -280,7 +280,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
                 cityTextView.setText(city);
             }
 
-            String driversLicense = demographicIdDocPayloadDTO.getIdNumber();
+            String driversLicense =  demographicIdDocPayloadDTO==null?"":demographicIdDocPayloadDTO.getIdNumber();
             if (SystemUtil.isNotEmptyString(driversLicense)) {
                 getDriverLicenseTextView.setText(driversLicense);
             }
