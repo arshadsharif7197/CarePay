@@ -56,7 +56,6 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
     private int selectedReasonId = -1;
     private List<CancellationReasonDTO> cancellationReasons;
-    private CancelAppointmentDialog.CancelAppointmentCallback cancelAppointmentCallback;
 
     /**
      * Contractor for dialog.
@@ -65,14 +64,12 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
      * @param appointmentInfo Appointment Info data
      */
     public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo,
-                                         CancelAppointmentDialog.CancelAppointmentCallback cancelAppointmentCallback) {
+                                         AppointmentsResultModel appointmentInfo) {
 
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
-        this.cancelAppointmentCallback = cancelAppointmentCallback;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -120,6 +117,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         //addCancelReason(label.getCancelAppointmentOtherReasonLabel(), 100);
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("InflateParams")
     private void addCancelReason(String cancelReason, int id) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -178,6 +176,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void onSelectionRadioCancel(boolean isSelected) {
         if (isSelected) {
             cancelAppointmentButton.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button_red_border));
@@ -266,7 +265,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             new CancelAppointmentDialog(context, appointmentDTO, appointmentInfo,
-                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, cancelAppointmentCallback).show();
+                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT).show();
         }
 
         @Override

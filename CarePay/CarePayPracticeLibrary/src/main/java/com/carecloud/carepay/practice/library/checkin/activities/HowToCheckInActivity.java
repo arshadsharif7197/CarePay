@@ -52,7 +52,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     private CustomGothamRoundedMediumLabel  howToCheckInTextView;
     private CustomGothamRoundedBookButton   carePayLoginButton;
     private CustomGothamRoundedBookButton   scanQRCodeButton;
-    private CustomGothamRoundedMediumButton createCarePayAccountButton;
     private CustomGothamRoundedBookButton   manualSearchButton;
     private ProgressDialog                  dialog;
 
@@ -98,10 +97,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         manualSearchButton = (CustomGothamRoundedBookButton)
                 findViewById(R.id.manualSearchButton);
         manualSearchButton.setOnClickListener(manualSearchButtonListener);
-
-        createCarePayAccountButton =
-                (CustomGothamRoundedMediumButton) findViewById(R.id.createCarePayAccountButton);
-        createCarePayAccountButton.setOnClickListener(createCarePayAccountButtonListener);
 
         ImageView homeImageView = (ImageView) findViewById(R.id.homeImageView);
         homeImageView.setOnClickListener(homeImageViewListener);
@@ -194,7 +189,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         carePayLoginButton.setText(signinPatientModeLabels.getSigninHowCheckInCarepayLogin());
         scanQRCodeButton.setText(signinPatientModeLabels.getSiginHowCheckInScanQrCode());
         manualSearchButton.setText(signinPatientModeLabels.getSiginHowCheckInManualSearch());
-        createCarePayAccountButton.setText(signinPatientModeLabels.getSiginHowCheckInCreateCarepayAccount());
     }
 
     WorkflowServiceCallback patientModeSignInCallback = new WorkflowServiceCallback() {

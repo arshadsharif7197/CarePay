@@ -2,7 +2,6 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,6 +12,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonObject;
@@ -187,19 +188,21 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(context).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-
+            ProgressDialogUtil.getInstance(context).dismiss();
             ((ScheduleAppointmentActivity) context).finish();
+            AppointmentsActivity.setIsNewAppointmentScheduled(true);
             PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(false);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(context, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(context).dismiss();
             SystemUtil.showFaultDialog(context);
             Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }

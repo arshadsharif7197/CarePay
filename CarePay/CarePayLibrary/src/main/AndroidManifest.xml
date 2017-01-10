@@ -16,7 +16,7 @@
         android:theme="@style/AppBaseTheme">
         <activity
             android:name="com.carecloud.carepay.patient.demographics.activities.DemographicsActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity android:name="com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity" />
         <activity android:name="com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity" />
         <activity

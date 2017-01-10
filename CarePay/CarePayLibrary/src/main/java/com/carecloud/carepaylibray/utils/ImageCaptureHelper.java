@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class ImageCaptureHelper {
     public static final int            RECTANGULAR_IMAGE     = 22;
     public static final String         CHOOSER_NAME          = "Select File";
     public static final CharSequence[] chooseActionDlOptions = new CharSequence[3];
+    public static final CharSequence[] chooseActionDocumentDlOptions = new CharSequence[2];
     public static String chooseActionDlgTitle;
 
     private static int           orientation                 = 0;
@@ -59,12 +61,40 @@ public class ImageCaptureHelper {
     public ImageCaptureHelper(Activity activity, ImageView targetImageView, DemographicLabelsDTO demographicLabelsDTO) {
         this.context = activity;
         this.imageViewTarget = targetImageView;
-
+        // dialog options 1. Capture, 2.Library, 3. Cancel
         chooseActionDlOptions[0] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsTakePhotoOption() : CarePayConstants.NOT_DEFINED);
         chooseActionDlOptions[1] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsChooseFromLibraryOption() : CarePayConstants.NOT_DEFINED);
         chooseActionDlOptions[2] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCancelLabel() : CarePayConstants.NOT_DEFINED);
 
+        // dialog options 1. Capture, 2. Cancel
+        chooseActionDocumentDlOptions[0] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsTakePhotoOption() : CarePayConstants.NOT_DEFINED);
+        chooseActionDocumentDlOptions[1] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCancelLabel() : CarePayConstants.NOT_DEFINED);
+
         chooseActionDlgTitle = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCaptureOptionsTitle() : CarePayConstants.NOT_DEFINED);
+
+        imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
+        imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
+        resetTargetView();
+    }
+
+    /**
+     * C-Tor
+     * @param activity The activity using the helper
+     * @param targetImageView The target view where the captured image will be placed
+     */
+    public ImageCaptureHelper(Activity activity, ImageView targetImageView, DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO) {
+        this.context = activity;
+        this.imageViewTarget = targetImageView;
+        // dialog options 1. Capture, 2.Library, 3. Cancel
+        chooseActionDlOptions[0] = demographicsSettingsLabelsDTO.getDemographicsTakePhotoOption();
+        chooseActionDlOptions[1] = demographicsSettingsLabelsDTO.getDemographicsChooseFromLibraryOption();
+        chooseActionDlOptions[2] = demographicsSettingsLabelsDTO.getDemographicsCancelLabel();
+
+        // dialog options 1. Capture, 2. Cancel
+        chooseActionDocumentDlOptions[0] = demographicsSettingsLabelsDTO.getDemographicsTakePhotoOption();
+        chooseActionDocumentDlOptions[1] = demographicsSettingsLabelsDTO.getDemographicsCancelLabel();
+
+        chooseActionDlgTitle = demographicsSettingsLabelsDTO.getDemographicsCaptureOptionsTitle();
 
         imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
         imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);

@@ -154,7 +154,8 @@ public class AppointmentsListFragment extends Fragment {
         if(appointmentsItems!=null) {
             try {
                 for (AppointmentDTO appointmentDTO : appointmentsItems) {//null
-                    if (!appointmentDTO.getPayload().getAppointmentStatusModel().getCode().equalsIgnoreCase("I")) {
+                    if (!appointmentDTO.getPayload().getAppointmentStatusModel().getCode()
+                            .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) {
 
                         // Get appointment date/time in required format
                         appointmentTimeStr = appointmentDTO.getPayload().getStartTime();
@@ -451,12 +452,9 @@ public class AppointmentsListFragment extends Fragment {
             appointmentListWithHeader = new ArrayList<>();
 
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
-                // Checked-In 2, Cancelled 4,
-                if (appointmentDTO.getPayload().getAppointmentStatusModel().getCode().equalsIgnoreCase("C")) {
-                    continue;
-                }
+                if (!appointmentDTO.getPayload().getAppointmentStatusModel().getCode()
+                        .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) {
 
-                if (!appointmentDTO.getPayload().getAppointmentStatusModel().getCode().equalsIgnoreCase("I")) {
                     String title = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
                     if (headerTitle.equalsIgnoreCase(title)) {
                         appointmentListWithHeader.add(appointmentDTO);

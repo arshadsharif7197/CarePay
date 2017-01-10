@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -24,7 +26,11 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -44,6 +50,7 @@ public class DemographicsSettingsFragment extends Fragment {
     private CarePayTextView editTextview = null;
     private Button signOutButton = null;
     private CarePayTextView demographicsTextview = null;
+    private ImageView profileImageview = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +80,7 @@ public class DemographicsSettingsFragment extends Fragment {
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
         getSettingsLabels();
-        String userId = CognitoAppHelper.getCurrUser();//setTypefaces(view);
+        String userId = CognitoAppHelper.getCurrUser();
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         CarePayTextView documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
@@ -81,6 +88,7 @@ public class DemographicsSettingsFragment extends Fragment {
         signOutButton = (Button) view.findViewById(R.id.signOutButton);
         CarePayTextView patientNameTextview = (CarePayTextView) view.findViewById(R.id.patient_name);
         CarePayTextView patientIdTextview = (CarePayTextView) view.findViewById(R.id.patient_id);
+        profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
 
         demographicsTextview.setText(demographicsString);
         documentsTextview.setText(documentsString);
@@ -90,6 +98,16 @@ public class DemographicsSettingsFragment extends Fragment {
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
         patientIdTextview.setText(userId);
+
+        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+        String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+        if (!StringUtil.isNullOrEmpty(imageUrl)) {
+            Picasso.with(getActivity()).load(imageUrl).transform(
+                    new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+        }
         setClickables(view);
         return view;
 
@@ -121,6 +139,7 @@ public class DemographicsSettingsFragment extends Fragment {
                 if(CognitoAppHelper.getPool().getUser() != null){
                     CognitoAppHelper.getPool().getUser().signOut();
                     CognitoAppHelper.setUser(null);
+                    getActivity().finish();
                 }
 
             }
@@ -190,11 +209,24 @@ public class DemographicsSettingsFragment extends Fragment {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-        DemographicsSettingsPersonalDetailsDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
         String firstName = demographicsPersonalDetails.getFirstName();
         String lastName = demographicsPersonalDetails.getLastName();
         String userName = firstName +" " +lastName;
         return userName;
+    }
+
+    private void getProfilePicture(String patientImageURL){
+        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+        String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+        if (!StringUtil.isNullOrEmpty(imageUrl)) {
+            Picasso.with(getActivity()).load(imageUrl).transform(
+                    new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+        }
+
     }
 }
 
