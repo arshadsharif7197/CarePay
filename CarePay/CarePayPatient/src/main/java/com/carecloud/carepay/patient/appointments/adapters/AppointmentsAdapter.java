@@ -40,13 +40,20 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by harshal_patil on 9/8/2016.
  */
-public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
+public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder>
+        implements CancelAppointmentDialog.RefreshAppointmentListCallback {
 
     private Context context;
     private List<Object> appointmentItems;
     private AppointmentLabelDTO appointmentLabels;
     private AppointmentsResultModel appointmentInfo;
     private AppointmentsListFragment appointmentsListFragment;
+
+    public interface ListRefreshCallBack {
+        void refreshList();
+    }
+
+    private ListRefreshCallBack refreshCallBack;
 
     /**
      * Constructor.
@@ -57,13 +64,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
                                AppointmentsListFragment appointmentsListFragment,
-                               AppointmentsResultModel appointmentInfo) {
+                               AppointmentsResultModel appointmentInfo,
+                               ListRefreshCallBack refreshCallBack) {
 
         this.context = context;
         this.appointmentItems = appointmentItems;
         this.appointmentsListFragment = appointmentsListFragment;
         this.appointmentInfo = appointmentInfo;
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
+        this.refreshCallBack = refreshCallBack;
     }
 
     @Override
@@ -148,7 +157,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         // Missed Appointment
                         if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
                             new CancelAppointmentDialog(context, item, appointmentInfo,
-                                    BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT).show();
+                                    BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, null).show();
 
                         } else if (isCheckedIn) {
                             // Checked-In Appointment
@@ -157,17 +166,18 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         } else if (isCanceled) {
                             // Cancelled Appointment
                             new CancelAppointmentDialog(context, item, appointmentInfo,
-                                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT).show();
+                                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, null).show();
 
                         } else if (isAppointmentCancellable(item)) {
                             // Appointment as long as it's 24 hours or more in the future
                             new CancelAppointmentDialog(context, item, appointmentInfo,
-                                    BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT).show();
+                                    BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
+                                    AppointmentsAdapter.this).show();
 
                         } else if (isRequested) {
                             // Requested Appointment
                             new CancelAppointmentDialog(context, item, appointmentInfo,
-                                    BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT).show();
+                                    BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, null).show();
 
                         } else if (isPending) {
                             if (getSectionHeaderTitle(item.getPayload().getStartTime(), item.getPayload().getEndTime())
@@ -179,7 +189,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             } else {
                                 // Pending Appointment && Appointment in the future that is not today
                                 new CancelAppointmentDialog(context, item, appointmentInfo,
-                                        BaseDoctorInfoDialog.AppointmentType.UPCOMING_APPOINTMENT).show();
+                                        BaseDoctorInfoDialog.AppointmentType.UPCOMING_APPOINTMENT, null).show();
                             }
                         } else {
                             // Other
@@ -407,6 +417,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     @Override
     public int getItemCount() {
         return appointmentItems.size();
+    }
+
+    @Override
+    public void onRefreshAppointmentList() {
+        refreshCallBack.refreshList();
     }
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {
