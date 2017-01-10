@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.demographicsettings.models;
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -20,7 +21,7 @@ public class DemographicsSettingsTransitionsDTO {
     private DemographicsSettingsUpdateDocumentsDTO demographicsSettingsUpdateDocumentsDTO;
     @SerializedName("update_demographics")
     @Expose
-    private DemographicsSettingsUpdateDemographicsDTO demographicsSettingsUpdateDemographicsDTO;
+    private TransitionDTO demographicsSettingsUpdateDemographicsDTO;
     @SerializedName("update_notifications")
     @Expose
     private DemographicsSettingsUpdateNotificationsDTO demographicsSettingsUpdateNotificationsDTO;
@@ -57,11 +58,11 @@ public class DemographicsSettingsTransitionsDTO {
         this.demographicsSettingsUpdateDocumentsDTO = demographicsSettingsUpdateDocumentsDTO;
     }
 
-    public DemographicsSettingsUpdateDemographicsDTO getUpdateDemographics() {
+    public TransitionDTO getUpdateDemographics() {
         return demographicsSettingsUpdateDemographicsDTO;
     }
 
-    public void setUpdateDemographics(DemographicsSettingsUpdateDemographicsDTO demographicsSettingsUpdateDemographicsDTO) {
+    public void setUpdateDemographics(TransitionDTO demographicsSettingsUpdateDemographicsDTO) {
         this.demographicsSettingsUpdateDemographicsDTO = demographicsSettingsUpdateDemographicsDTO;
     }
 
