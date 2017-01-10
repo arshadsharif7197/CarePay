@@ -6,10 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
@@ -23,8 +19,6 @@ import com.google.android.gms.wallet.fragment.WalletFragmentMode;
 import com.google.android.gms.wallet.fragment.WalletFragmentOptions;
 import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
 
-import static android.R.attr.fragment;
-
 /**
  * Activity that displays the user's Google Wallet checkout confirmation page. It displays
  * the MaskedWallet fragment as well as a confirmation button.
@@ -35,6 +29,9 @@ public class ConfirmationActivity extends FragmentActivity {
 
     private SupportWalletFragment walletFragment;
     private MaskedWallet maskedWallet;
+    /**
+     * The Bundle.
+     */
     public Bundle bundle;
 
     @Override
@@ -131,6 +128,11 @@ public class ConfirmationActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * Handle error.
+     *
+     * @param errorCode the error code
+     */
     protected void handleError(int errorCode) {
         switch (errorCode) {
             case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
@@ -152,11 +154,26 @@ public class ConfirmationActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * Gets result target fragment.
+     *
+     * @return the result target fragment
+     */
     public Fragment getResultTargetFragment() {
         return getSupportFragmentManager().findFragmentById(
                 R.id.full_wallet_confirmation_button_fragment);
     }
 
+    /**
+     * New intent intent.
+     *
+     * @param context      the context
+     * @param maskedWallet the masked wallet
+     * @param amount       the amount
+     * @param env          the env
+     * @param bundle       the bundle
+     * @return the intent
+     */
     public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env, Bundle bundle) {
         Intent intent = new Intent(context, ConfirmationActivity.class);
         intent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET, maskedWallet);

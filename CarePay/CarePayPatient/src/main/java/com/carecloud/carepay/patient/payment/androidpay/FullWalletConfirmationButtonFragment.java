@@ -19,6 +19,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,8 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
@@ -39,7 +38,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -78,7 +76,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-//import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
 /**
@@ -593,18 +590,15 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> rawResponse) {
                     try {
-                       // Log.d(TAG, "response... " + rawResponse.body().string());
-                        //JSONObject responseJSON =new JSONObject("");
+                        Log.d(TAG, "response... " + rawResponse.body().string());
                         String rawResponsse= rawResponse.body().string();
 
                         Gson gson=new GsonBuilder().create();
                         AndroidPayResponseDTO androidPayResponseDTO =gson.fromJson(rawResponsse,AndroidPayResponseDTO.class);
 
-
                         if(androidPayResponseDTO != null){
                             postPaymentConfirmation(androidPayResponseDTO);
                         }
-
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -617,67 +611,10 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 }
             });
 
-
-/*
-            StringRequest request = new StringRequest(
-                    Request.Method.POST,
-                    getUrl(env),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            //   request completed - launch the response activity
-                            try {
-                                JSONObject obj = new JSONObject(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            // startResponseActivity("SUCCESS", response);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //      startResponseActivity("ERROR", formatErrorResponse(error));
-                        }
-                    }) {
-
-                @Override
-                public String getBodyContentType() {
-                    return "application/json";
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return payloadString.getBytes("UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        return null;
-                    }
-                }
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> headerMap = new HashMap<>(HMACMap);
-                    //  First data issued APIKey identifies the developer
-                    headerMap.put("apikey", EnvData.getProperties(payeezyEnvironment).getApiKey());
-                    //  First data issued token identifies the merchant
-                    headerMap.put("token", EnvData.getProperties(payeezyEnvironment).getToken());
-
-                    return headerMap;
-                }
-            };
-
-            request.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQueue queue = Volley.newRequestQueue(getActivity());
-            queue.add(request);
-            */
-
-
         } catch (JSONException e) {
             Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
         }
     }
-
 
 
     private void postPaymentConfirmation(AndroidPayResponseDTO androidPayResponse)
