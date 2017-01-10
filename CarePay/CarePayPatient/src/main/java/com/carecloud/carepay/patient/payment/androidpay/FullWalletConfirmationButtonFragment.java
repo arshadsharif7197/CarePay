@@ -19,7 +19,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
@@ -56,9 +56,10 @@ import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
@@ -69,10 +70,6 @@ import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -136,6 +133,11 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     private String totalAmount;
 
     private FirstDataService service;
+    private PaymentsModel paymentsModel;
+    private PaymentsModel intakePaymentModel;
+
+    private double amountToMakePayment;
+    private String paymentsDTOString;
 
     /**
      * Select the appropriate First Data server for the environment.
@@ -154,10 +156,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         }
         return sb.toString();
     }
-    private PaymentsLabelDTO paymentsLabelDTO;
 
-    private double amountToMakePayment;
-    private String paymentsDTOString;
 
     @Override
     public void onAttachFragment(Fragment childFragment) {
@@ -197,19 +196,13 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
         retryHandler = new RetryHandler(this);
 
-
         Bundle arguments = activityLaunchIntent.getParcelableExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         if (arguments != null) {
             Gson gson = new Gson();
-            paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-
-            paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
             intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-            //paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
-            //paymentsLabelDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsLabel();
+            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-            Log.i("Arguments", arguments.toString());
         }
     }
 
@@ -606,6 +599,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                         Gson gson=new GsonBuilder().create();
                         AndroidPayResponseDTO androidPayResponseDTO =gson.fromJson(rawResponsse,AndroidPayResponseDTO.class);
 
+
                         if(androidPayResponseDTO != null){
                             postPaymentConfirmation(androidPayResponseDTO);
                         }
@@ -683,40 +677,18 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         }
     }
 
-    private PaymentsModel paymentsModel;
-    private PaymentsModel intakePaymentModel;
+
 
     private void postPaymentConfirmation(AndroidPayResponseDTO androidPayResponse)
     {
         JSONObject payload = new JSONObject();
-      //  double totalAmountToPay = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            Gson gson = new Gson();
-            String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
-            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-
-            paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-            intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-        }
-
         try {
             Gson gson = new Gson();
             String jsonInString = gson.toJson(androidPayResponse);
 
             JSONObject paymentMethod = new JSONObject();
 
-           // JSONObject creditCard = new JSONObject();
             JSONObject creditCard = new JSONObject(jsonInString);
-//            creditCard.put("save", false);
-//            creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
-//            creditCard.put("card_type", creditCardPayload.getCardType());
-//            creditCard.put("card_number", creditCardPayload.getCardNumber());
-//            creditCard.put("name_on_card", creditCardPayload.getNameOnCard());
-//            creditCard.put("expire_dt", creditCardPayload.getExpireDt());
-//            creditCard.put("cvv", creditCardPayload.getCvv());
-//            creditCard.put("papi_pay", true);
 
             paymentMethod.put("amount", creditCard.get("amount"));
             payload.put("amount", creditCard.get("amount"));
@@ -727,6 +699,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
             paymentMethod.put("credit_card", creditCard);
             paymentMethod.put("type", "credit_card");
+            paymentMethod.put("execution", "android_pay");
 
             JSONArray paymentMethods = new JSONArray();
             paymentMethods.put(paymentMethod);
@@ -739,10 +712,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
-//            queries.put("practice_mgmt", "carecloud");
-//            queries.put("practice_id", "77b81aa8-1155-4da7-9fd9-2f6967b09a93");
-//            queries.put("patient_id", "000f50a8-f04f-4f3f-8a81-6e546c8e32d4");
-
 
             Map<String, String> header = new HashMap<>();
             header.put("transition", "true");
@@ -764,6 +733,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
                     gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
             receiptDialog.show();
+
+            launchAppointments(workflowDTO) ;
         }
 
         @Override
@@ -773,6 +744,16 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     };
 
 
+    private void launchAppointments(WorkflowDTO workflowDTO) {
+        // do to Demographics
+        Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
+        // pass the object into the gson
+        Gson gson = new Gson();
+        intent.putExtra("demographics_model", gson.toJson(workflowDTO, WorkflowDTO.class));
+
+        startActivity(intent);
+        getActivity().finish();
+    }
 
     /**
      * Format the amount to decimal without the decimal point as required by First Data servers.
