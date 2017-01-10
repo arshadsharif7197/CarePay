@@ -346,8 +346,8 @@ public class AppointmentsListFragment extends Fragment {
         });
     }
 
-    private void refreshAppointmentList(){
-        if(popup!=null){
+    private void refreshAppointmentList() {
+        if (popup != null) {
             popup.dismiss();
         }
 

@@ -56,6 +56,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
     private int selectedReasonId = -1;
     private List<CancellationReasonDTO> cancellationReasons;
+    private CancelAppointmentDialog.RefreshAppointmentListCallback listCallback;
 
     /**
      * Contractor for dialog.
@@ -63,13 +64,14 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
      * @param appointmentDTO appointment Item
      * @param appointmentInfo Appointment Info data
      */
-    public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo) {
-
+    CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                  AppointmentsResultModel appointmentInfo,
+                                  CancelAppointmentDialog.RefreshAppointmentListCallback listCallback) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
+        this.listCallback = listCallback;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -90,6 +92,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         onSetListener();
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("InflateParams")
     private void onInitialization() {
         AppointmentLabelDTO label = appointmentInfo.getMetadata().getLabel();
@@ -185,7 +188,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         }
 
         // Check for other cancellation reason
-        if (cancellationReasons.get(cancellationReasons.size()-1).getAppointmentCancellationReason().getId()==selectedReasonId) {
+        if (cancellationReasons.get(cancellationReasons.size() - 1).getAppointmentCancellationReason().getId() == selectedReasonId) {
             reasonTextInputLayout.setVisibility(View.VISIBLE);
             reasonEditText.setEnabled(true);
             reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
@@ -264,8 +267,10 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            new CancelAppointmentDialog(context, appointmentDTO, appointmentInfo,
-                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT).show();
+            CancelAppointmentDialog cancelAppointmentDialog = new CancelAppointmentDialog(context, appointmentDTO,
+                    appointmentInfo, BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, listCallback);
+            cancelAppointmentDialog.setCancelledSuccess(true);
+            cancelAppointmentDialog.show();
         }
 
         @Override
