@@ -20,13 +20,15 @@ import com.google.gson.Gson;
 
 public class PaymentActivity extends BasePatientActivity {
     PaymentsModel paymentsDTO;
+    private String paymentsDTOString;
+    public Bundle bundle ;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
 
 
@@ -36,10 +38,10 @@ public class PaymentActivity extends BasePatientActivity {
         if (fragment == null) {
             fragment = new ResponsibilityFragment();
         }
-        Bundle bundle = new Bundle();
+        bundle = new Bundle();
 
         Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsDTO);
+        paymentsDTOString = gson.toJson(paymentsDTO);
         bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
             //fix for random crashes
             if(fragment.getArguments() !=null){
@@ -120,8 +122,8 @@ public class PaymentActivity extends BasePatientActivity {
 
     private void launchConfirmationPage(MaskedWallet maskedWallet) {
         //setTitle("");
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT");// .getPayload().get(0).getTotal(), "CERT");
-
+        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle);// .getPayload().get(0).getTotal(), "CERT");
+       // intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentsDTOString);
         startActivity(intent);
     }
 
