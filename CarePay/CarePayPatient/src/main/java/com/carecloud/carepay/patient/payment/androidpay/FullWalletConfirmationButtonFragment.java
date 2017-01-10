@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
@@ -729,12 +730,11 @@ public class FullWalletConfirmationButtonFragment extends Fragment
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
                     gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
             receiptDialog.show();
-
-            launchAppointments(workflowDTO) ;
         }
 
         @Override
@@ -743,17 +743,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         }
     };
 
-
-    private void launchAppointments(WorkflowDTO workflowDTO) {
-        // do to Demographics
-        Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
-        // pass the object into the gson
-        Gson gson = new Gson();
-        intent.putExtra("demographics_model", gson.toJson(workflowDTO, WorkflowDTO.class));
-
-        startActivity(intent);
-        getActivity().finish();
-    }
 
     /**
      * Format the amount to decimal without the decimal point as required by First Data servers.
