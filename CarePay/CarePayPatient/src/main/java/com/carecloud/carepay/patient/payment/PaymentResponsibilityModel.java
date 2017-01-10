@@ -1,5 +1,7 @@
 package com.carecloud.carepay.patient.payment;
 
+import android.os.Bundle;
+
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
@@ -11,6 +13,16 @@ import java.util.List;
 public class PaymentResponsibilityModel {
 
     private static PaymentResponsibilityModel instance;
+
+    public Bundle getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(Bundle arguments) {
+        this.arguments = arguments;
+    }
+
+    private Bundle arguments ;
 
     public List getBalancesList() {
         return balancesList;

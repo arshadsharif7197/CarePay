@@ -31,7 +31,14 @@ import android.widget.Toast;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,6 +52,12 @@ import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.PaymentMethodToken;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
@@ -56,9 +69,6 @@ import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -121,6 +131,11 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     private String totalAmount;
 
     private FirstDataService service;
+    private PaymentsModel paymentsModel;
+    private PaymentsModel intakePaymentModel;
+
+    private double amountToMakePayment;
+    private String paymentsDTOString;
 
     /**
      * Select the appropriate First Data server for the environment.
@@ -138,6 +153,13 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             sb.append(String.format("%02x", b & 0xff));
         }
         return sb.toString();
+    }
+
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+
     }
 
     @Override
@@ -171,6 +193,15 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 .build();
 
         retryHandler = new RetryHandler(this);
+
+        Bundle arguments = activityLaunchIntent.getParcelableExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+        if (arguments != null) {
+            Gson gson = new Gson();
+            paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+            amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+        }
     }
 
     @Override
@@ -478,72 +509,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 REQUEST_CODE_RESOLVE_LOAD_FULL_WALLET);
     }
 
-
-//   private Map<String, String> HMACMap ;
-//
-//    private void sendFirstDataRequestWithRetroFit(final FullWallet fullWallet, String env)
-//    {
-//        try {
-//
-//            String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
-//            final JSONObject jsonObject = new JSONObject(tokenJSON);
-//
-//            String encryptedMessage = jsonObject.getString("encryptedMessage");
-//            String publicKey = jsonObject.getString("ephemeralPublicKey");
-//            String signature = jsonObject.getString("tag");
-//
-//            //  Create a First Data Json request
-//            JSONObject requestPayload = getRequestPayload(encryptedMessage, signature, publicKey);
-//            final String payloadString = requestPayload.toString();
-//
-//            getUTFEncodePayload(payloadString);
-//            HMACMap = computeHMAC(payloadString) ;
-//
-//
-//            FirstDataService paymentService = FirstDataServiceGenerator.createService(FirstDataService.class, getHeaders() ); //, String token, String searchString
-//            Call<String> call = paymentService.postPayment(payloadString);
-//            call.enqueue(new Callback<String>() {
-//                @Override
-//                public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-//
-//                    response.body();
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Call<String> call, Throwable t) {
-//                    Log.e("Payeezy Android Pay", t.getMessage());
-//
-//                }
-//
-//            });
-//
-//
-//        }
-//        catch (JSONException e) {
-//            Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
-//        }
-//    }
-//
-//    private byte[] getUTFEncodePayload(String payloadString)
-//    {
-//        try {
-//                        return payloadString.getBytes("UTF-8");
-//                    } catch (UnsupportedEncodingException e) {
-//                        return null;
-//                    }
-//    }
-//
-//    public Map<String, String> getHeaders() {
-//        Map<String, String> headerMap = new HashMap<>(HMACMap);
-//        //  First data issued APIKey identifies the developer
-//        headerMap.put("apikey", EnvData.getProperties(payeezyEnvironment).getApiKey());
-//        //  First data issued token identifies the merchant
-//        headerMap.put("token", EnvData.getProperties(payeezyEnvironment).getToken());
-//
-//        return headerMap;
-//    }
-
     /**
      * Here the client should connect to First Data, process the credit card/instrument
      * and get back a status indicating whether charging the card was successful or not
@@ -558,7 +523,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         if (token != null) {
             // getToken returns a JSON object as a String.  Replace newlines to make LogCat output
             // nicer.  The 'id' field of the object contains the Stripe token we are interested in.
-            Log.d(TAG, "PaymentMethodToken:" + token.getToken().replace('\n', ' '));
+            //Log.d(TAG, "PaymentMethodToken:" + token.getToken().replace('\n', ' '));
         }
 
         sendRequestToFirstData(fullWallet, payeezyEnvironment);
@@ -609,6 +574,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(getUrl(env))
                     .addConverterFactory(GsonConverterFactory.create())
+                    //.addConverterFactory(ScalarsConverterFactory.create())
                     .build();
             service = retrofit.create(FirstDataService.class);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),payloadString);
@@ -625,6 +591,14 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> rawResponse) {
                     try {
                         Log.d(TAG, "response... " + rawResponse.body().string());
+                        String rawResponsse= rawResponse.body().string();
+
+                        Gson gson=new GsonBuilder().create();
+                        AndroidPayResponseDTO androidPayResponseDTO =gson.fromJson(rawResponsse,AndroidPayResponseDTO.class);
+
+                        if(androidPayResponseDTO != null){
+                            postPaymentConfirmation(androidPayResponseDTO);
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -637,66 +611,74 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 }
             });
 
-
-/*
-            StringRequest request = new StringRequest(
-                    Request.Method.POST,
-                    getUrl(env),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            //   request completed - launch the response activity
-                            try {
-                                JSONObject obj = new JSONObject(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            // startResponseActivity("SUCCESS", response);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //      startResponseActivity("ERROR", formatErrorResponse(error));
-                        }
-                    }) {
-
-                @Override
-                public String getBodyContentType() {
-                    return "application/json";
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return payloadString.getBytes("UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        return null;
-                    }
-                }
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> headerMap = new HashMap<>(HMACMap);
-                    //  First data issued APIKey identifies the developer
-                    headerMap.put("apikey", EnvData.getProperties(payeezyEnvironment).getApiKey());
-                    //  First data issued token identifies the merchant
-                    headerMap.put("token", EnvData.getProperties(payeezyEnvironment).getToken());
-
-                    return headerMap;
-                }
-            };
-
-            request.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQueue queue = Volley.newRequestQueue(getActivity());
-            queue.add(request);
-            */
-
-
         } catch (JSONException e) {
             Toast.makeText(getActivity(), "Error parsing JSON payload", Toast.LENGTH_LONG).show();
         }
     }
+
+
+    private void postPaymentConfirmation(AndroidPayResponseDTO androidPayResponse)
+    {
+        JSONObject payload = new JSONObject();
+        try {
+            Gson gson = new Gson();
+            String jsonInString = gson.toJson(androidPayResponse);
+
+            JSONObject paymentMethod = new JSONObject();
+
+            JSONObject creditCard = new JSONObject(jsonInString);
+
+            paymentMethod.put("amount", creditCard.get("amount"));
+            payload.put("amount", creditCard.get("amount"));
+
+            JSONObject billingInformation = new JSONObject();
+            billingInformation.put("same_as_patient", true);
+            creditCard.put("billing_information", billingInformation);
+
+            paymentMethod.put("credit_card", creditCard);
+            paymentMethod.put("type", "credit_card");
+            paymentMethod.put("execution", "android_pay");
+
+            JSONArray paymentMethods = new JSONArray();
+            paymentMethods.put(paymentMethod);
+            payload.put("payment_methods", paymentMethods);
+
+            PaymentPayloadMetaDataDTO metadata = intakePaymentModel.getPaymentPayload()
+                    .getPatientBalances().get(0).getBalances().get(0).getMetadata();
+
+            Map<String, String> queries = new HashMap<>();
+            queries.put("practice_mgmt", metadata.getPracticeMgmt());
+            queries.put("practice_id", metadata.getPracticeId());
+            queries.put("patient_id", metadata.getPatientId());
+
+            Map<String, String> header = new HashMap<>();
+            header.put("transition", "true");
+
+            TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+
+            Gson gson = new Gson();
+            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            receiptDialog.show();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            System.out.print(exceptionMessage);
+        }
+    };
 
 
     /**
