@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class AppointmentsListFragment extends Fragment implements AppointmentsAdapter.ListRefreshCallBack {
+public class AppointmentsListFragment extends Fragment {
 
     private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
 
@@ -318,7 +318,7 @@ public class AppointmentsListFragment extends Fragment implements AppointmentsAd
                 }
 
                 appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo, this);
+                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo);
                 appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 appointmentRecyclerView.setAdapter(appointmentsAdapter);
             } else {
@@ -514,10 +514,5 @@ public class AppointmentsListFragment extends Fragment implements AppointmentsAd
             }
         }, 1000);
 
-    }
-
-    @Override
-    public void refreshList() {
-        refreshAppointmentList();
     }
 }

@@ -49,12 +49,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     private AppointmentsResultModel appointmentInfo;
     private AppointmentsListFragment appointmentsListFragment;
 
-    public interface ListRefreshCallBack {
-        void refreshList();
-    }
-
-    private ListRefreshCallBack refreshCallBack;
-
     /**
      * Constructor.
      *
@@ -64,15 +58,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
                                AppointmentsListFragment appointmentsListFragment,
-                               AppointmentsResultModel appointmentInfo,
-                               ListRefreshCallBack refreshCallBack) {
+                               AppointmentsResultModel appointmentInfo) {
 
         this.context = context;
         this.appointmentItems = appointmentItems;
         this.appointmentsListFragment = appointmentsListFragment;
         this.appointmentInfo = appointmentInfo;
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
-        this.refreshCallBack = refreshCallBack;
     }
 
     @Override
@@ -420,8 +412,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     @Override
-    public void onRefreshAppointmentList() {
-        refreshCallBack.refreshList();
+    public void onRefreshAppointmentList(AppointmentDTO appointmentDTO) {
+        int index = appointmentItems.indexOf(appointmentDTO);
+        appointmentItems.remove(appointmentDTO);
+        appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
+        appointmentItems.set(index, appointmentDTO);
+        notifyDataSetChanged();
     }
 
     static class AppointmentViewHolder extends RecyclerView.ViewHolder {

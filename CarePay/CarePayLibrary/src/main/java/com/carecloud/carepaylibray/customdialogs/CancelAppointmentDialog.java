@@ -26,7 +26,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     private boolean isCancelSuccess;
 
     public interface RefreshAppointmentListCallback {
-        void onRefreshAppointmentList();
+        void onRefreshAppointmentList(AppointmentDTO appointmentDTO);
     }
 
     private RefreshAppointmentListCallback listCallback;
@@ -128,7 +128,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
             cancel();
         } else if (viewId == R.id.dialogAppointHeaderTextView) {
             if (isCancelSuccess && listCallback != null) {
-                listCallback.onRefreshAppointmentList();
+                listCallback.onRefreshAppointmentList(appointmentDTO);
             }
         }
     }
