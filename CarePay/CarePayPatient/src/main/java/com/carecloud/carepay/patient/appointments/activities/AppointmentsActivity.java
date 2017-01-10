@@ -235,6 +235,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.setAccessPaymentsBalances(true);
             PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
         }
 
