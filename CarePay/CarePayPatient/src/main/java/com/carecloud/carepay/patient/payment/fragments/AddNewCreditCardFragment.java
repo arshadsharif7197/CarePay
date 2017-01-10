@@ -192,12 +192,12 @@ public class AddNewCreditCardFragment extends Fragment implements
 
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
         }
 
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
             validateCreditCardDetails();
         }
 
@@ -628,16 +628,14 @@ public class AddNewCreditCardFragment extends Fragment implements
             return false;
         }
 
-        if (saveCardOnFileCheckBox.isChecked()) {
-            if (!useProfileAddressCheckBox.isChecked()) {
-                if (!(address1EditText.getText().toString().trim().length() > 0) ||
-                        !(zipCodeEditText.getText().toString().trim().length() > 0) ||
-                        !(cityEditText.getText().toString().trim().length() > 0) ||
-                        !(stateEditText.getText().toString().trim().length() > 0)) {
-                    nextButton.setEnabled(false);
-                    nextButton.setClickable(false);
-                    return false;
-                }
+        if (saveCardOnFileCheckBox.isChecked() && !useProfileAddressCheckBox.isChecked()) {
+            if (!(address1EditText.getText().toString().trim().length() > 0) ||
+                    !(zipCodeEditText.getText().toString().trim().length() > 0) ||
+                    !(cityEditText.getText().toString().trim().length() > 0) ||
+                    !(stateEditText.getText().toString().trim().length() > 0)) {
+                nextButton.setEnabled(false);
+                nextButton.setClickable(false);
+                return false;
             }
         }
 
@@ -652,27 +650,28 @@ public class AddNewCreditCardFragment extends Fragment implements
         }
     }
 
-    private void authorizeCreditCard() {
-        String amount = "1";
-        String currency = "USD";
-        String paymentMethod = "credit_card";
-        String cvv = verificationCodeEditText.getText().toString();
-        String expiryDate = pickDateTextView.getText().toString();
-        expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
-        String name = nameOnCardEditText.getText().toString();
-        String type = getCreditCardType(creditCardNoEditText.getText().toString());
-        String number = creditCardNoEditText.getText().toString().trim().replaceAll(" ", "");
-        String state = stateEditText.getText().toString();
-        String addressline1 = address1EditText.getText().toString();
-        String zip = zipCodeEditText.getText().toString();
-        String country = "US";
-        String city = cityEditText.getText().toString();
+    private void authorizeCreditCard()
+    {
+        String amount="1";
+        String currency="USD";
+        String paymentMethod="credit_card";
+        String cvv=verificationCodeEditText.getText().toString();
+        String expiryDate=pickDateTextView.getText().toString();
+        expiryDate=expiryDate.substring(0,2)+expiryDate.substring(expiryDate.length()-2);
+        String name=nameOnCardEditText.getText().toString();
+        String type=getCreditCardType(creditCardNoEditText.getText().toString());
+        String number=creditCardNoEditText.getText().toString().trim().replaceAll(" ","");
+        String state=stateEditText.getText().toString();
+        String addressline1=address1EditText.getText().toString();
+        String zip=zipCodeEditText.getText().toString();
+        String country="US";
+        String city=cityEditText.getText().toString();
 
         try {
-            RequestTask requestTask = new RequestTask(getActivity(), AddNewCreditCardFragment.this);
-            requestTask.execute("authorize", amount, currency, paymentMethod, cvv, expiryDate, name, type, number, state, addressline1, zip, country, city);
+            RequestTask requestTask = new RequestTask(getActivity(),AddNewCreditCardFragment.this);
+            requestTask.execute("authorize",amount,currency,paymentMethod,cvv,expiryDate,name,type,number,state,addressline1,zip,country,city);
             System.out.println("first authorize call end");
-        } catch (Exception e) {
+        } catch(Exception e) {
             System.out.println(e.getMessage());
         }
         System.out.println("authorize call end");
@@ -681,24 +680,24 @@ public class AddNewCreditCardFragment extends Fragment implements
     @Override
     public void onAuthorizeCreditCard(String resString) {
 
-        if (resString != null && resString.length() > 800) {
+        if(resString!=null && resString.length()>800){
             int startIndex = resString.indexOf("value");
-            startIndex = resString.indexOf("=", startIndex + 1);
+            startIndex=resString.indexOf("=",startIndex+1);
             int endIndex = resString.indexOf(",", startIndex);
             String tokenValue = resString.substring(startIndex, endIndex);
-            tokenValue = tokenValue.replace(" ", "");
-            tokenValue = tokenValue.replace(":", "");
-            tokenValue = tokenValue.replace("=", "");
-            tokenValue = tokenValue.replace("}", "");
+            tokenValue=tokenValue.replace(" ", "");
+            tokenValue=tokenValue.replace(":", "");
+            tokenValue=tokenValue.replace("=", "");
+            tokenValue=tokenValue.replace("}", "");
 
-            if (saveCardOnFileCheckBox.isChecked()) {
+            if(saveCardOnFileCheckBox.isChecked()){
                 makePaymentCall(tokenValue);
             } else {
                 addNewCreditCardCall(tokenValue);
             }
 
         } else {
-            new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(), R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
+            new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(),R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
                 @Override
                 public void onActionButton() {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -712,9 +711,9 @@ public class AddNewCreditCardFragment extends Fragment implements
                     Gson gson = new Gson();
                     bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
                     //fix for random crashes
-                    if (fragment.getArguments() != null) {
+                    if(fragment.getArguments() !=null){
                         fragment.getArguments().putAll(bundle);
-                    } else {
+                    }else{
                         fragment.setArguments(bundle);
                     }
 
@@ -727,7 +726,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         }
     }
 
-    private void addNewCreditCardCall(String tokenValue) {
+    private void addNewCreditCardCall(String tokenValue){
 
         PaymentCreditCardsPayloadDTO creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
         PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
