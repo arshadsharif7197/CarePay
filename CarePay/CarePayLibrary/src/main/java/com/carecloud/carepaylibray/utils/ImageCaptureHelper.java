@@ -47,6 +47,7 @@ public class ImageCaptureHelper {
     private int                  imgWidth;
     private int                  imgHeight;
     private Activity             context;
+    private CameraType           cameraType;
 
     public enum CameraType {
         DEFAULT_CAMERA, CUSTOM_CAMERA;
@@ -173,7 +174,7 @@ public class ImageCaptureHelper {
 
         return degrees;
     }
-    
+
     /**
      * Rotate a bitmap from center point
      *
@@ -284,8 +285,10 @@ public class ImageCaptureHelper {
      */
     public Intent getCameraIntent(CameraType cameraType) {
         if (cameraType == CameraType.CUSTOM_CAMERA) {
+            this.cameraType=CameraType.CUSTOM_CAMERA;
             return cameraIntent(context);
         }
+        this.cameraType=CameraType.DEFAULT_CAMERA;
         return cameraIntent(); // launch default
     }
 
@@ -384,10 +387,18 @@ public class ImageCaptureHelper {
 
         // compress
         Bitmap bitmap = null;
-        if (shape == ROUND_IMAGE) {
-            bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgWidth, false));
-        } else if (shape == RECTANGULAR_IMAGE) {
-            bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgHeight, true));
+        if (cameraType == CameraType.CUSTOM_CAMERA && !SystemUtil.isTablet(context)) {
+            if (shape == ROUND_IMAGE) {
+                bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, false));
+            } else if (shape == RECTANGULAR_IMAGE) {
+                bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgHeight, true));
+            }
+        } else {
+            if (shape == ROUND_IMAGE) {
+                bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgWidth, false));
+            } else if (shape == RECTANGULAR_IMAGE) {
+                bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgHeight, true));
+            }
         }
         imageViewTarget.setImageBitmap(bitmap);
         return bitmap;
