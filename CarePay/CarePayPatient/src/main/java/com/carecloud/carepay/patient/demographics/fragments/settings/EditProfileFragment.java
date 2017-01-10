@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
@@ -28,7 +30,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
@@ -59,6 +60,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
@@ -81,8 +83,24 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private EditText middleNameEditText = null;
     private EditText lastNameEditText = null;
     private EditText emailEditText = null;
+    private EditText createPasswordEditText = null;
+    private EditText repeatPasswordEditText = null;
+
     private Button updateProfileButton = null;
     private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
+    private TextInputLayout firstNameLabel = null;
+    private TextInputLayout middleNameLabel = null;
+    private TextInputLayout lastNameLabel = null;
+    private TextInputLayout emailLabel = null;
+    private TextInputLayout createPasswordLabel = null;
+    private TextInputLayout repeatPasswordLabel = null;
+    private LinearLayout rootview;
+    private boolean isFirstNameEmpty;
+    private boolean isLastNameEmpty;
+    private DemographicsSettingsPersonalDetailsDTO demographicsSettingsDetailsDTO = null;
+    private DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = null;
+    private DemographicsSettingsLastNameDTO demographicsSettingsLastNameDTO = null;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +115,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_update, container, false);
+        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
@@ -111,32 +130,15 @@ public class EditProfileFragment extends DocumentScannerFragment {
             String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
-        getEditProfileLabels();
-        title.setText(profileString);
-        CarePayTextView firstNameTextView = (CarePayTextView) view.findViewById(R.id.reviewFirstNameLabel);
-        CarePayTextView middleNameTextView = (CarePayTextView) view.findViewById(R.id.reviewMiddleNameLabel);
-        CarePayTextView lastNameTextView = (CarePayTextView) view.findViewById(R.id.reviewLastNameLabel);
-        CarePayTextView emailTextView = (CarePayTextView) view.findViewById(R.id.reviewEmailLabel);
-        String userId = CognitoAppHelper.getCurrUser();
-        getProfileProperties();
-        getPersonalDetails();
+        firstNameEditText = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
+        middleNameEditText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
+        lastNameEditText = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
+        emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
+        createPasswordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+        repeatPasswordEditText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
 
-        firstNameTextView.setText(firstNameString);
-        middleNameTextView.setText(middleNameString);
-        lastNameTextView.setText(lastNameString);
-        emailTextView.setText(emailString);
-
-        firstNameEditText = (EditText) view.findViewById(R.id.reviewFirstNameTextView);
-        middleNameEditText = (EditText) view.findViewById(R.id.reviewMiddleNameTextView);
-        lastNameEditText = (EditText) view.findViewById(R.id.reviewLastNameTextView);
-        emailEditText = (EditText) view.findViewById(R.id.reviewEmailTextView);
-
-        firstNameEditText.setText(firstNameValString);
-        middleNameEditText.setText(middleNameValString);
-        lastNameEditText.setText(lastNameValString);
-        emailEditText.setText(userId);
-        changeProfilePictureButton =  (Button) view.findViewById(R.id.changeCurrentPhotoButton);
-        updateProfileButton =  (Button) view.findViewById(R.id.YesCorrectButton);
+        changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
+        updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.providerPicImageView);
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
@@ -147,9 +149,115 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 }
             }
         }
+        getEditProfileLabels();
+
+        initialiseUIFields(view);
+        getProfileProperties();
+        setEditTexts(view);
+
+        getPersonalDetails();
+        title.setText(profileString);
+
         setClickables(view);
+        formatEditText();
 
         return view;
+
+    }
+
+    private void initialiseUIFields(View view) {
+
+        firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
+        middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
+        lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
+        emailLabel = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
+        createPasswordLabel = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
+        repeatPasswordLabel = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
+
+    }
+
+    private void setEditTexts(View view) {
+
+        firstNameLabel.setTag(firstNameString);
+        firstNameEditText.setTag(firstNameLabel);
+
+        middleNameLabel.setTag(middleNameString);
+        middleNameEditText.setTag(middleNameLabel);
+
+        lastNameLabel.setTag(lastNameString);
+        lastNameEditText.setTag(lastNameLabel);
+
+        emailLabel.setTag(emailString);
+        emailEditText.setTag(emailLabel);
+
+        createPasswordLabel.setTag("Create Password");
+        createPasswordEditText.setTag(createPasswordLabel);
+
+        repeatPasswordLabel.setTag("Repeat Password");
+        repeatPasswordEditText.setTag(repeatPasswordLabel);
+
+        setChangeFocusListeners();
+    }
+
+    private void setChangeFocusListeners() {
+        firstNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+        middleNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+
+        lastNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+
+        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+
+        createPasswordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+
+        repeatPasswordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
 
     }
 
@@ -170,14 +278,14 @@ public class EditProfileFragment extends DocumentScannerFragment {
         }
     }
 
-    public void getProfileProperties(){
+    public void getProfileProperties() {
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
             if (demographicsSettingsMetadataDTO != null) {
                 DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
                 if (demographicsSettingsDataModelsDTO != null) {
                     DemographicsSettingsDetailsDTO demographicsSettingsDetailsDTO = demographicsSettingsDataModelsDTO.getDemographic();
-                    if(demographicsSettingsDetailsDTO !=null) {
+                    if (demographicsSettingsDetailsDTO != null) {
                         DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsPreopertiesDTO = demographicsSettingsDetailsDTO.getPersonalDetails();
                         DemographicsSettingsPersonalDetailsDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsPersonalDetailsPreopertiesDTO.getProperties();
                         DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = demographicsSettingsPersonalDetailsDTO.getFirstName();
@@ -187,6 +295,13 @@ public class EditProfileFragment extends DocumentScannerFragment {
                         firstNameString = demographicsSettingsFirstNameDTO.getLabel();
                         lastNameString = demographicsSettingsLastNameDTO.getLabel();
                         middleNameString = demographicsSettingsMiddleNameDTO.getLabel();
+
+                        firstNameEditText.setHint(firstNameString);
+                        lastNameEditText.setHint(lastNameString);
+                        middleNameEditText.setHint(middleNameString);
+                        createPasswordEditText.setHint("Create Password");
+                        repeatPasswordEditText.setHint("Repeat Password");
+
                     }
                 }
             }
@@ -194,19 +309,118 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
     }
 
-    private void getPersonalDetails(){
+    private void getPersonalDetails() {
+        String userId = CognitoAppHelper.getCurrUser();
+
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-            if(demographicsSettingsPayloadDTO!=null){
+            if (demographicsSettingsPayloadDTO != null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                 DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                 DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                 firstNameValString = demographicsPersonalDetails.getFirstName();
                 lastNameValString = demographicsPersonalDetails.getLastName();
                 middleNameValString = demographicsPersonalDetails.getMiddleName();
+                if (SystemUtil.isNotEmptyString(firstNameValString)) {
+                    firstNameEditText.setText(firstNameValString);
+                    firstNameEditText.requestFocus();
+                }
+
+                if (SystemUtil.isNotEmptyString(lastNameValString)) {
+                    lastNameEditText.setText(lastNameValString);
+                    lastNameEditText.requestFocus();
+                }
+
+                if (SystemUtil.isNotEmptyString(middleNameValString)) {
+                    middleNameEditText.setText(middleNameValString);
+                    middleNameEditText.requestFocus();
+
+                }
+                if (SystemUtil.isNotEmptyString(userId)) {
+                    emailEditText.setText(userId);
+                    emailEditText.requestFocus();
+                } else {
+                    Log.v(LOG_TAG, "middle name field is empty");
+                }
+                rootview.requestFocus();
+                hideSoftKeyboard(getActivity());
 
             }
         }
+
+    }
+
+    private boolean isAllFieldsValid() {
+
+        return !isFirstNameEmpty && !isLastNameEmpty;
+
+    }
+
+
+    private void formatEditText() {
+
+        if (demographicsSettingsDTO != null) {
+            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+            if (demographicsSettingsMetadataDTO != null) {
+                DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
+                DemographicsSettingsDetailsDTO demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
+                DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsDemographicsDTO.getPersonalDetails();
+                demographicsSettingsDetailsDTO = demographicsSettingsPersonalDetailsDTO.getProperties();
+
+            }
+        }
+        firstNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isFirstNameEmpty = StringUtil.isNullOrEmpty(firstNameEditText.getText().toString());
+                if (!isFirstNameEmpty) {
+                    firstNameLabel.setError(null);
+                    firstNameLabel.setErrorEnabled(false);
+                } else {
+                    demographicsSettingsFirstNameDTO = demographicsSettingsDetailsDTO.getFirstName();
+                    final String firstNameError = demographicsSettingsFirstNameDTO.getValidations().get(0).getErrorMessage();
+                    firstNameLabel.setError(firstNameError);
+                    firstNameLabel.setErrorEnabled(true);
+                }
+            }
+        });
+
+        lastNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isLastNameEmpty = StringUtil.isNullOrEmpty(lastNameEditText.getText().toString());
+                if (!isLastNameEmpty) {
+                    lastNameLabel.setError(null);
+                    lastNameLabel.setErrorEnabled(false);
+                } else {
+                    demographicsSettingsLastNameDTO = demographicsSettingsDetailsDTO.getLastName();
+                    final String lastNameError = demographicsSettingsLastNameDTO.getValidations().get(0).getErrorMessage();
+                    lastNameLabel.setError(lastNameError);
+                    lastNameLabel.setErrorEnabled(true);
+                }
+
+            }
+        });
 
     }
 
@@ -222,40 +436,41 @@ public class EditProfileFragment extends DocumentScannerFragment {
         updateProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (demographicsSettingsDTO != null) {
-                    DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                    if (demographicsSettingsMetadataDTO != null) {
-                        DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                        TransitionDTO demographicsSettingsUpdateDemographicsDTO =demographicsSettingsTransitionsDTO.getUpdateDemographics();
-                        JSONObject payload = new JSONObject();
-                        Map<String, String> queries = null;
-                        Map<String, String> header = null;
-                        try {
-                            if (demographicsSettingsDTO != null) {
-                                DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                                if(demographicsSettingsPayloadDTO!=null){
-                                    DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                    DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                                    DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-                                    demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());
-                                    demographicsPersonalDetails.setLastName(lastNameEditText.getText().toString());
-                                    demographicsPersonalDetails.setMiddleName(middleNameEditText.getText().toString());
+                if (isAllFieldsValid()) {
+                    if (demographicsSettingsDTO != null) {
+                        DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                        if (demographicsSettingsMetadataDTO != null) {
+                            DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                            TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
+                            JSONObject payload = new JSONObject();
+                            Map<String, String> queries = null;
+                            Map<String, String> header = null;
+                            try {
+                                if (demographicsSettingsDTO != null) {
+                                    DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                                    if (demographicsSettingsPayloadDTO != null) {
+                                        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                                        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                                        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                        demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());
+                                        demographicsPersonalDetails.setLastName(lastNameEditText.getText().toString());
+                                        demographicsPersonalDetails.setMiddleName(middleNameEditText.getText().toString());
 
-                                    Gson gson = new Gson();
-                                    String jsonInString = gson.toJson(demographicPayload);
-                                    WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback,  jsonInString,header);
-                                }}
-                            header = new HashMap<>();
-                            header.put("transition", "true");
-                        }catch(Exception e){
-                            e.printStackTrace();
+                                        Gson gson = new Gson();
+                                        String jsonInString = gson.toJson(demographicPayload);
+                                        WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
+                                    }
+                                }
+                                header = new HashMap<>();
+                                header.put("transition", "true");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
             }
-
         });
-
     }
 
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {

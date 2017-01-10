@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
@@ -27,6 +32,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
+import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -132,15 +138,25 @@ public class DemographicsSettingsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    /**
+     * For tests
+     *
+     * @param activity The activity
+     */
+    public void setActivity(KeyboardHolderActivity activity) {
+        appCompatActivity = activity;
+    }
+
     private void setClickables(View view) {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(CognitoAppHelper.getPool().getUser() != null){
-                    CognitoAppHelper.getPool().getUser().signOut();
-                    CognitoAppHelper.setUser(null);
-                    getActivity().finish();
-                }
+                WorkflowServiceHelper.getInstance().executeApplicationStartRequest(logOutCall);
 
             }
         });
@@ -167,7 +183,8 @@ public class DemographicsSettingsFragment extends Fragment {
                 }
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                        EditProfileFragment.class.getSimpleName()).commit();
+                        EditProfileFragment.class.getSimpleName()).addToBackStack(null).commit();
+
 
 
 
@@ -197,9 +214,7 @@ public class DemographicsSettingsFragment extends Fragment {
                 }
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                        DemographicsInformationFragment.class.getSimpleName()).commit();
-
-
+                        DemographicsInformationFragment.class.getSimpleName()).addToBackStack(null).commit();
 
             }
         });
@@ -216,17 +231,26 @@ public class DemographicsSettingsFragment extends Fragment {
         return userName;
     }
 
-    private void getProfilePicture(String patientImageURL){
-        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-        String imageUrl = demographicsPersonalDetails.getProfilePhoto();
-        if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            Picasso.with(getActivity()).load(imageUrl).transform(
-                    new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+    WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
         }
 
-    }
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            // log out previous user from Cognito
+            CognitoAppHelper.getPool().getUser().signOut();
+            CognitoAppHelper.setUser(null);
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+
 }
 
