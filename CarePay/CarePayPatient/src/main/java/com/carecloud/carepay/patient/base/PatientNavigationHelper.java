@@ -25,6 +25,8 @@ public class PatientNavigationHelper {
 
     private Context context;
 
+    private static boolean accessPaymentsBalances;
+
     private PatientNavigationHelper() {
 
     }
@@ -42,6 +44,15 @@ public class PatientNavigationHelper {
 
     public void navigateToWorkflow(String state) {
         navigateToWorkflow(state, null);
+    }
+
+    /**
+     * Access pending payments and history payments from menu.
+     * We got same state on json to responsibility and pending payments and need to
+     * handle it manually
+     * */
+    public static void setAccessPaymentsBalances(boolean accessPaymentsBalances) {
+        PatientNavigationHelper.accessPaymentsBalances = accessPaymentsBalances;
     }
 
     /**
@@ -96,7 +107,7 @@ public class PatientNavigationHelper {
                 break;
             }
             case PatientNavigationStateConstants.PAYMENTS: {
-                intent = new Intent(context, ViewPaymentBalanceHistoryActivity.class);
+                intent = new Intent(context, accessPaymentsBalances?ViewPaymentBalanceHistoryActivity.class:PaymentActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }

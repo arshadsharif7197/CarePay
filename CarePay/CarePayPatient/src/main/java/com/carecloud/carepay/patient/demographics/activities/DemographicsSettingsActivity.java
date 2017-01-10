@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.demographics.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 
@@ -44,8 +45,13 @@ public class DemographicsSettingsActivity extends BasePatientActivity {
             fragment.setArguments(bundle);
         }
 
-        fm.beginTransaction().add(R.id.activity_demographics_settings, fragment,
-                DemographicsSettingsFragment.class.getSimpleName()).commit();
+        Fragment demographicsSettingsFragment = fm.findFragmentByTag(DemographicsSettingsFragment.class.getSimpleName());
+        if(!(null!= demographicsSettingsFragment && demographicsSettingsFragment instanceof DemographicsSettingsFragment)) {
+            fm.beginTransaction().add(R.id.activity_demographics_settings, fragment,
+                    DemographicsSettingsFragment.class.getSimpleName()).commit();
+        }
+
+
     }
 
     @Override
