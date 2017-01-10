@@ -590,14 +590,10 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> rawResponse) {
                     try {
-                        Log.d(TAG, "response... " + rawResponse.body().string());
                         String rawResponsse= rawResponse.body().string();
 
-                        Gson gson=new GsonBuilder().create();
-                        AndroidPayResponseDTO androidPayResponseDTO =gson.fromJson(rawResponsse,AndroidPayResponseDTO.class);
-
-                        if(androidPayResponseDTO != null){
-                            postPaymentConfirmation(androidPayResponseDTO);
+                        if(rawResponsse != null){
+                            postPaymentConfirmation(rawResponsse);
                         }
 
                     } catch (Exception e) {
@@ -617,12 +613,10 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     }
 
 
-    private void postPaymentConfirmation(AndroidPayResponseDTO androidPayResponse)
+    private void postPaymentConfirmation(String jsonInString)
     {
         JSONObject payload = new JSONObject();
         try {
-            Gson gson = new Gson();
-            String jsonInString = gson.toJson(androidPayResponse);
 
             JSONObject paymentMethod = new JSONObject();
 
