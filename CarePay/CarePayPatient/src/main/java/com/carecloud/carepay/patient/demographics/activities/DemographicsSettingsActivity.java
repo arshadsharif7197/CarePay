@@ -37,7 +37,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity {
                 fm.findFragmentByTag(DemographicsSettingsFragment.class.getSimpleName());
         if (fragment == null) {
             fragment = new DemographicsSettingsFragment();
-        }
+       }
         if(fragment.getArguments() !=null){
             fragment.getArguments().putAll(bundle);
         }else{
@@ -61,8 +61,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity {
     public void onBackPressed() {
         if(getFragmentManager().getBackStackEntryCount() == 0) {
             super.onBackPressed();
-        }
-        else {
+        }else {
             getFragmentManager().popBackStack();
         }
     }

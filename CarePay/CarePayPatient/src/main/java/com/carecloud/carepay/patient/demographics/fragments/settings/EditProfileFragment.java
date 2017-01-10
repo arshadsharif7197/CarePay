@@ -53,6 +53,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -60,7 +62,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
@@ -140,14 +141,10 @@ public class EditProfileFragment extends DocumentScannerFragment {
         changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.providerPicImageView);
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
+        if (demographicsSettingsDTO != null && demographicsSettingsLabelsDTO!=null ) {
+                DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                 demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                if (demographicsSettingsLabelsDTO != null) {
-                    imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, demographicsSettingsLabelsDTO);
-                }
-            }
+                imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, demographicsSettingsLabelsDTO);
         }
         getEditProfileLabels();
 
