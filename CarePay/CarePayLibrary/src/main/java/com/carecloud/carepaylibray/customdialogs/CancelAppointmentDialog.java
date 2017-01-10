@@ -126,10 +126,9 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         if (viewId == R.id.cancelAppointmentButton) {
             new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo, listCallback).show();
             cancel();
-        } else if (viewId == R.id.dialogAppointHeaderTextView) {
-            if (isCancelSuccess && listCallback != null) {
-                listCallback.onRefreshAppointmentList(appointmentDTO);
-            }
+        } else if (viewId == R.id.dialogAppointHeaderTextView
+                && isCancelSuccess && listCallback != null) {
+            listCallback.onRefreshAppointmentList(appointmentDTO);
         }
     }
 }
