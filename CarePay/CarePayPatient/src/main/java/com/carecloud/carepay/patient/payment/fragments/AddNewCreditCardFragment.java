@@ -149,7 +149,7 @@ public class AddNewCreditCardFragment extends Fragment implements
                 // Remove all spacing char
                 int pos = 0;
                 while (true) {
-                    if (pos >= str.length()){
+                    if (pos >= str.length()) {
                         break;
                     }
                     if (SPACE_CHAR == str.charAt(pos) && (((pos + 1) % 5) != 0 || pos + 1 == str.length())) {
@@ -162,7 +162,7 @@ public class AddNewCreditCardFragment extends Fragment implements
                 // Insert char where needed.
                 pos = 4;
                 while (true) {
-                    if (pos >= str.length()){
+                    if (pos >= str.length()) {
                         break;
                     }
                     final char c = str.charAt(pos);
@@ -183,23 +183,29 @@ public class AddNewCreditCardFragment extends Fragment implements
         });
 
 
-        verificationCodeEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence str, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence str, int start, int before, int count) {
-                validateCreditCardDetails();
-            }
-
-            @Override
-            public void afterTextChanged(Editable str) {
-
-            }
-        });
+        verificationCodeEditText.addTextChangedListener(textWatcher);
+        address1EditText.addTextChangedListener(textWatcher);
+        zipCodeEditText.addTextChangedListener(textWatcher);
+        cityEditText.addTextChangedListener(textWatcher);
+        stateEditText.addTextChangedListener(textWatcher);
     }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            validateCreditCardDetails();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
 
     private String getCreditCardType(String cardNumber) {
         String type;
@@ -227,22 +233,22 @@ public class AddNewCreditCardFragment extends Fragment implements
      * @return the boolean
      */
     public boolean isValid() {
-        if (getCardNumber().matches(CardPattern.VISA_VALID)){
+        if (getCardNumber().matches(CardPattern.VISA_VALID)) {
             return true;
         }
-        if (getCardNumber().matches(CardPattern.MASTERCARD_VALID)){
+        if (getCardNumber().matches(CardPattern.MASTERCARD_VALID)) {
             return true;
         }
-        if (getCardNumber().matches(CardPattern.AMERICAN_EXPRESS_VALID)){
+        if (getCardNumber().matches(CardPattern.AMERICAN_EXPRESS_VALID)) {
             return true;
         }
-        if (getCardNumber().matches(CardPattern.DISCOVER_VALID)){
+        if (getCardNumber().matches(CardPattern.DISCOVER_VALID)) {
             return true;
         }
-        if (getCardNumber().matches(CardPattern.DINERS_CLUB_VALID)){
+        if (getCardNumber().matches(CardPattern.DINERS_CLUB_VALID)) {
             return true;
         }
-        if (getCardNumber().matches(CardPattern.JCB_VALID)){
+        if (getCardNumber().matches(CardPattern.JCB_VALID)) {
             return true;
         }
         return false;
@@ -490,6 +496,7 @@ public class AddNewCreditCardFragment extends Fragment implements
     private CompoundButton.OnCheckedChangeListener saveCardOnFileCheckBoxListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            validateCreditCardDetails();
             if (isChecked) {
                 billingAddressLayout.setVisibility(View.VISIBLE);
                 useProfileAddressCheckBox.setChecked(true);
@@ -503,6 +510,7 @@ public class AddNewCreditCardFragment extends Fragment implements
     private CompoundButton.OnCheckedChangeListener useProfileAddressListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            validateCreditCardDetails();
             if (isChecked) {
                 setAddressFiledsEnabled(false);
             } else {
@@ -546,7 +554,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            Log.d("addNewCreditCardk","=========================>\nworkflowDTO="+workflowDTO.toString());
+            Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall("");
         }
 
@@ -565,7 +573,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            Log.d("makePaymentCallback","=========================>\nworkflowDTO="+workflowDTO.toString());
+            Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
                     gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
@@ -588,10 +596,10 @@ public class AddNewCreditCardFragment extends Fragment implements
     private void displaySimpleDatePickerDialogFragment() {
         SimpleDatePickerDialogFragment datePickerDialogFragment;
         if (!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsLabelDTO.getPaymentPickDate())) {
-            String [] selectedDate = pickDateTextView.getText().toString().split("/");
+            String[] selectedDate = pickDateTextView.getText().toString().split("/");
             int month = Integer.parseInt(selectedDate[0]);
             int year = Integer.parseInt(selectedDate[1]);
-            datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(year,month-1);
+            datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(year, month - 1);
         } else {
             DateUtil instance = DateUtil.getInstance();
             datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(instance.getYear(),
@@ -619,6 +627,18 @@ public class AddNewCreditCardFragment extends Fragment implements
             nextButton.setClickable(false);
             return false;
         }
+
+        if (saveCardOnFileCheckBox.isChecked() && !useProfileAddressCheckBox.isChecked()) {
+            if (!(address1EditText.getText().toString().trim().length() > 0) ||
+                    !(zipCodeEditText.getText().toString().trim().length() > 0) ||
+                    !(cityEditText.getText().toString().trim().length() > 0) ||
+                    !(stateEditText.getText().toString().trim().length() > 0)) {
+                nextButton.setEnabled(false);
+                nextButton.setClickable(false);
+                return false;
+            }
+        }
+
         if (!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsLabelDTO.getPaymentPickDate())) {
             nextButton.setEnabled(true);
             nextButton.setClickable(true);

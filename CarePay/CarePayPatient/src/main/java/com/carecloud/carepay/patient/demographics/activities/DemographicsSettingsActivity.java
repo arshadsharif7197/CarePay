@@ -37,14 +37,14 @@ public class DemographicsSettingsActivity extends BasePatientActivity {
                 fm.findFragmentByTag(DemographicsSettingsFragment.class.getSimpleName());
         if (fragment == null) {
             fragment = new DemographicsSettingsFragment();
-        }
+       }
         if(fragment.getArguments() !=null){
             fragment.getArguments().putAll(bundle);
         }else{
             fragment.setArguments(bundle);
         }
 
-        fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+        fm.beginTransaction().add(R.id.activity_demographics_settings, fragment,
                 DemographicsSettingsFragment.class.getSimpleName()).commit();
     }
 
@@ -59,7 +59,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(getFragmentManager().getBackStackEntryCount() == 0) {
+            super.onBackPressed();
+        }else {
+            getFragmentManager().popBackStack();
+        }
     }
-
 }
