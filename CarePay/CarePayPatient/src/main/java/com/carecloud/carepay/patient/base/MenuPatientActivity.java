@@ -119,6 +119,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.setAccessPaymentsBalances(true);
             PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
         }
 

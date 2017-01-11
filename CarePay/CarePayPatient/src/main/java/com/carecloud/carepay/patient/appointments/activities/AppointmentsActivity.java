@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -15,18 +14,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
-import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -204,8 +197,6 @@ public class AppointmentsActivity extends MenuPatientActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
     public void setAppointmentModel(AppointmentDTO model) {
