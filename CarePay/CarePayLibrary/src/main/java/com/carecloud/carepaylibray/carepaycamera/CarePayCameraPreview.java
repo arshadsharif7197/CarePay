@@ -25,6 +25,7 @@ import android.view.SurfaceView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -420,6 +421,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
             if(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)){
                 capturedBitmap = rotateBitmap(capturedBitmap, 270);
+            }
+            if(cameraType == CameraType.SCAN_DOC && !SystemUtil.isTablet(context)){
+                capturedBitmap = rotateBitmap(capturedBitmap, 180);
             }
             Rect rectFrame = shadowRect;
 

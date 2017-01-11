@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class PaymentHistoryFragment extends Fragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener{
 
-    private static final String SECTION_NUMBER = "section_number";
+
     private PaymentsModel paymentDTO;
     private ProgressBar progressBar;
     private RecyclerView historyRecyclerView;
@@ -43,7 +43,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         PaymentHistoryFragment fragment = new PaymentHistoryFragment();
         Gson gson = new Gson();
         Bundle args = new Bundle();
-        args.putInt(SECTION_NUMBER, sectionNumber);
+        args.putInt(CarePayConstants.TAB_SECTION_NUMBER, sectionNumber);
         String paymentsDTOString = gson.toJson(paymentDTO);
         args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
         fragment.setArguments(args);
@@ -67,10 +67,10 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     }
 
     private void setUpRecyclerView() {
-        int section_number = getArguments().getInt(SECTION_NUMBER);
+        int section_number = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
-        PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata();
+        PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
 
         switch (section_number) {
             case 1:

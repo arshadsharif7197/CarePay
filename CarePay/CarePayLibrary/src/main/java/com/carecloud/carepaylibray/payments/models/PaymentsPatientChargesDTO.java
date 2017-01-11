@@ -12,6 +12,9 @@ import java.util.List;
  */
 
 public class PaymentsPatientChargesDTO {
+    @SerializedName("metadata")
+    @Expose
+    PaymentPayloadMetaDataDTO metadata;
     @SerializedName("payload")
     @Expose
     List<AppointmentChargeDTO> charges = new ArrayList<>();
@@ -22,5 +25,13 @@ public class PaymentsPatientChargesDTO {
 
     public void setCharges(List<AppointmentChargeDTO> charges) {
         this.charges = charges;
+    }
+
+    public PaymentPayloadMetaDataDTO getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(PaymentPayloadMetaDataDTO metadata) {
+        this.metadata = metadata;
     }
 }

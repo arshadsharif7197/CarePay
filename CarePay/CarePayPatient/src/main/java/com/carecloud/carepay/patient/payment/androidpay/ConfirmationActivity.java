@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.android.gms.wallet.fragment.SupportWalletFragment;
@@ -28,12 +29,17 @@ public class ConfirmationActivity extends FragmentActivity {
 
     private SupportWalletFragment walletFragment;
     private MaskedWallet maskedWallet;
+    /**
+     * The Bundle.
+     */
+    public Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         maskedWallet = getIntent().getParcelableExtra(PaymentConstants.EXTRA_MASKED_WALLET);
 
+        bundle = getIntent().getExtras();
         setContentView(R.layout.activity_confirmation);
 
         createAndAddWalletFragment();
@@ -97,6 +103,7 @@ public class ConfirmationActivity extends FragmentActivity {
                     maskedWallet = data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
                     FullWalletConfirmationButtonFragment resultTargetFragment =
                             (FullWalletConfirmationButtonFragment) getResultTargetFragment();
+                    resultTargetFragment.setArguments(bundle);
                     resultTargetFragment.updateMaskedWallet(maskedWallet);
 
                 }
@@ -121,6 +128,11 @@ public class ConfirmationActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * Handle error.
+     *
+     * @param errorCode the error code
+     */
     protected void handleError(int errorCode) {
         switch (errorCode) {
             case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
@@ -142,16 +154,33 @@ public class ConfirmationActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * Gets result target fragment.
+     *
+     * @return the result target fragment
+     */
     public Fragment getResultTargetFragment() {
         return getSupportFragmentManager().findFragmentById(
                 R.id.full_wallet_confirmation_button_fragment);
     }
 
-    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env) {
+    /**
+     * New intent intent.
+     *
+     * @param context      the context
+     * @param maskedWallet the masked wallet
+     * @param amount       the amount
+     * @param env          the env
+     * @param bundle       the bundle
+     * @return the intent
+     */
+    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env, Bundle bundle) {
         Intent intent = new Intent(context, ConfirmationActivity.class);
         intent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET, maskedWallet);
         intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
         intent.putExtra(PaymentConstants.EXTRA_ENV, env);
+        intent.putExtra(PaymentConstants.EXTRA_ENV, env);
+        intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, bundle);
         return intent;
     }
 }

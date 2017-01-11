@@ -19,10 +19,10 @@ public class PaymentsPatientBalancessDTO implements Serializable {
     private PaymentPayloadMetaDataDTO metadata;
     @SerializedName("payload")
     @Expose
-    private List<PaymentPatientBalancesPayloadDTO> payload = new ArrayList<PaymentPatientBalancesPayloadDTO>();
+    private List<PaymentPatientBalancesPayloadDTO> payload = new ArrayList<>();
     @SerializedName("pending_balances")
     @Expose
-    private List<PatienceBalanceDTO> balances;
+    private List<PatienceBalanceDTO> balances = new ArrayList<>();
     @SerializedName("demographics")
     @Expose
     private DemographicsSettingsDemographicsDTO demographics;
