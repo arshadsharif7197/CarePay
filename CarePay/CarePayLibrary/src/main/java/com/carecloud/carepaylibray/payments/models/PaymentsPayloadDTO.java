@@ -16,9 +16,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("intake_forms")
     @Expose
     private PaymentsPayloadIntakeFormsDTO intakeForms;
-    @SerializedName("patient_balances")
-    @Expose
-    private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();
     @SerializedName("payment_settings")
     @Expose
     private PaymentsPayloadSettingsDTO paymentSettings;
@@ -31,6 +28,19 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_credit_cards")
     @Expose
     private PaymentsPatientsCreditCardsPayloadDTO patientCreditCards;
+
+    @SerializedName("provider_index")
+    @Expose
+    private ProviderIndexDTO providerIndex;
+    @SerializedName("location_index")
+    @Expose
+    private LocationIndexDTO locationIndex;
+    @SerializedName("in_office_counts")
+    @Expose
+    private Integer inOfficeCounts;
+    @SerializedName("patient_balances")
+    @Expose
+    private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();
 
     /**
      *
@@ -128,4 +138,27 @@ public class PaymentsPayloadDTO implements Serializable {
         this.patientBalances = patientBalances;
     }
 
+    public ProviderIndexDTO getProviderIndex() {
+        return providerIndex;
+    }
+
+    public void setProviderIndex(ProviderIndexDTO providerIndex) {
+        this.providerIndex = providerIndex;
+    }
+
+    public LocationIndexDTO getLocationIndex() {
+        return locationIndex;
+    }
+
+    public void setLocationIndex(LocationIndexDTO locationIndex) {
+        this.locationIndex = locationIndex;
+    }
+
+    public Integer getInOfficeCounts() {
+        return inOfficeCounts;
+    }
+
+    public void setInOfficeCounts(Integer inOfficeCounts) {
+        this.inOfficeCounts = inOfficeCounts;
+    }
 }

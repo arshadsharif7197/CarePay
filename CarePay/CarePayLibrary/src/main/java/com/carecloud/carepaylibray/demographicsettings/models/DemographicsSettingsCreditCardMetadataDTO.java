@@ -20,6 +20,15 @@ public class DemographicsSettingsCreditCardMetadataDTO {
     @SerializedName("updated_dt")
     @Expose
     private String updatedDt;
+    @SerializedName("practice_mgmt")
+    @Expose
+    private String practiceMgmt;
+    @SerializedName("practice_id")
+    @Expose
+    private String practiceId;
+    @SerializedName("patient_id")
+    @Expose
+    private String patientId;
 
     public String getUserId() {
         return userId;
@@ -53,4 +62,27 @@ public class DemographicsSettingsCreditCardMetadataDTO {
         this.updatedDt = updatedDt;
     }
 
+    public String getPracticeMgmt() {
+        return practiceMgmt;
+    }
+
+    public void setPracticeMgmt(String practiceMgmt) {
+        this.practiceMgmt = practiceMgmt;
+    }
+
+    public String getPracticeId() {
+        return practiceId;
+    }
+
+    public void setPracticeId(String practiceId) {
+        this.practiceId = practiceId;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
 }

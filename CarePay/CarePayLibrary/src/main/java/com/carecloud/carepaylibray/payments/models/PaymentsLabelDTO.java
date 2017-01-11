@@ -237,6 +237,21 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_details_patient_balance_label")
     @Expose
     private String paymentDetailsPatientBalanceLabel;
+    @SerializedName("practice_payments_back_label")
+    @Expose
+    private String practicePaymentsBackLabel;
+    @SerializedName("practice_payments_header")
+    @Expose
+    private String practicePaymentsHeader;
+    @SerializedName("practice_payments_findPatient_label")
+    @Expose
+    private String practicePaymentsFindPatientLabel;
+    @SerializedName("practice_payments_filter")
+    @Expose
+    private String practicePaymentsFilter;
+    @SerializedName("practice_payments_inoffice")
+    @Expose
+    private String practicePaymentsInOffice;
 
     /**
      * @return The demographicsCheckinHeading
@@ -1443,5 +1458,85 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentDetailsPatientBalanceLabel(String paymentDetailsPatientBalanceLabel) {
         this.paymentDetailsPatientBalanceLabel = paymentDetailsPatientBalanceLabel;
+    }
+
+    /**
+     *
+     * @return practicePaymentsBackLabel
+     */
+    public String getPracticePaymentsBackLabel() {
+        return StringUtil.getLabelForView(practicePaymentsBackLabel);
+    }
+
+    /**
+     *
+     * @param practicePaymentsBackLabel practicePaymentsBackLabel
+     */
+    public void setPracticePaymentsBackLabel(String practicePaymentsBackLabel) {
+        this.practicePaymentsBackLabel = practicePaymentsBackLabel;
+    }
+
+    /**
+     *
+     * @return practicePaymentsHeader
+     */
+    public String getPracticePaymentsHeader() {
+        return StringUtil.getLabelForView(practicePaymentsHeader);
+    }
+
+    /**
+     *
+     * @param practicePaymentsHeader practicePaymentsHeader
+     */
+    public void setPracticePaymentsHeader(String practicePaymentsHeader) {
+        this.practicePaymentsHeader = practicePaymentsHeader;
+    }
+
+    /**
+     *
+     * @return practicePaymentsFindPatientLabel
+     */
+    public String getPracticePaymentsFindPatientLabel() {
+        return StringUtil.getLabelForView(practicePaymentsFindPatientLabel);
+    }
+
+    /**
+     *
+     * @param practicePaymentsFindPatientLabel practicePaymentsFindPatientLabel
+     */
+    public void setPracticePaymentsFindPatientLabel(String practicePaymentsFindPatientLabel) {
+        this.practicePaymentsFindPatientLabel = practicePaymentsFindPatientLabel;
+    }
+
+    /**
+     *
+     * @return practicePaymentsFilter
+     */
+    public String getPracticePaymentsFilter() {
+        return StringUtil.getLabelForView(practicePaymentsFilter);
+    }
+
+    /**
+     *
+     * @param practicePaymentsFilter practicePaymentsFilter
+     */
+    public void setPracticePaymentsFilter(String practicePaymentsFilter) {
+        this.practicePaymentsFilter = practicePaymentsFilter;
+    }
+
+    /**
+     *
+     * @return practicePaymentsInOffice
+     */
+    public String getPracticePaymentsInOffice() {
+        return StringUtil.getLabelForView(practicePaymentsInOffice);
+    }
+
+    /**
+     *
+     * @param practicePaymentsInOffice practicePaymentsInOffice
+     */
+    public void setPracticePaymentsInOffice(String practicePaymentsInOffice) {
+        this.practicePaymentsInOffice = practicePaymentsInOffice;
     }
 }
