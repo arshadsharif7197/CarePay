@@ -15,6 +15,18 @@ public class HomeScreenAppointmentCountsDTO {
     @Expose
     private Integer checkedInCount;
 
+    @SerializedName("Cancelled")
+    @Expose
+    private Integer cancelledCount;
+    @SerializedName("Requested")
+    @Expose
+    private Integer requestedCount;
+    @SerializedName("Checking-In")
+    @Expose
+    private Integer checkingInCount;
+
+
+
     /**
      *
      * @return
@@ -51,4 +63,27 @@ public class HomeScreenAppointmentCountsDTO {
         this.checkedInCount = checkedInCount;
     }
 
+    public Integer getCancelledCount() {
+        return cancelledCount;
+    }
+
+    public void setCancelledCount(Integer cancelledCount) {
+        this.cancelledCount = cancelledCount;
+    }
+
+    public Integer getRequestedCount() {
+        return requestedCount;
+    }
+
+    public void setRequestedCount(Integer requestedCount) {
+        this.requestedCount = requestedCount;
+    }
+
+    public Integer getCheckingInCount() {
+        return checkingInCount;
+    }
+
+    public void setCheckingInCount(Integer checkingInCount) {
+        this.checkingInCount = checkingInCount;
+    }
 }
