@@ -65,7 +65,11 @@
         <activity
             android:name=".demographics.activities.DemographicsSettingsActivity"
             android:label="@string/title_activity_demographics_settings"
-            android:windowSoftInputMode="stateVisible|adjustPan"></activity>
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:parentActivityName=".appointments.activities.AppointmentsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" /></activity>
     </application>
 
 </manifest>

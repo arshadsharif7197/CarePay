@@ -342,6 +342,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
                             paymentsDTOString);
                     fragment.setArguments(args);
+                    PaymentResponsibilityModel paymentModel =  PaymentResponsibilityModel.getInstance();
+                    paymentModel.setArguments(args);
 
                     FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
                     fragmentTransaction.replace(R.id.payment_frag_holder, fragment);

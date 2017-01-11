@@ -4,6 +4,7 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatienceBalanceDTO {
@@ -14,7 +15,7 @@ public class PatienceBalanceDTO {
 
     @SerializedName("payload")
     @Expose
-    private List<PatiencePayloadDTO> payload = null;
+    private List<PatiencePayloadDTO> payload = new ArrayList<PatiencePayloadDTO>();
 
     public PaymentPayloadMetaDataDTO getMetadata() {
         return metadata;
