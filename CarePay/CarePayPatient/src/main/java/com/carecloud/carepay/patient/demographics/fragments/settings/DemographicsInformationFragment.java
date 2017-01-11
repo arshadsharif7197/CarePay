@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -67,8 +68,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -76,6 +75,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+
+import org.json.JSONObject;
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
@@ -173,6 +175,8 @@ public class DemographicsInformationFragment extends Fragment {
 
     private View view;
     private DemographicsSettingsMetadataPropertiesDTO demographicsSettingsDetailsDTO = null;
+    private ProgressBar progressBar = null;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -190,7 +194,8 @@ public class DemographicsInformationFragment extends Fragment {
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
 
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
-
+        progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
+        progressBar.setVisibility(View.GONE);
         setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -565,7 +570,6 @@ public class DemographicsInformationFragment extends Fragment {
                 DemographicsSettingsDetailsDTO demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
                 DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsDemographicsDTO.getPersonalDetails();
                 DemographicsSettingsPersonalDetailsDTO demographicsSettingsPropertiesDTO = demographicsSettingsPersonalDetailsDTO.getProperties();
-                DemographicsSettingsGenderDTO demographicsSettingsGenderDTO = demographicsSettingsPropertiesDTO.getGender();
                 DemographicsSettingsEthnicityDTO demographicsSettingsEthnityDTO = demographicsSettingsPropertiesDTO.getEthnicity();
                 DemographicsSettingsPrimaryRaceDTO demographicsSettingsRaceDTO = demographicsSettingsPropertiesDTO.getPrimaryRace();
 
@@ -581,6 +585,7 @@ public class DemographicsInformationFragment extends Fragment {
                     ethnicities.add(o.getLabel());
                 }
                 ethnicity = ethnicities.toArray(new String[0]);
+                DemographicsSettingsGenderDTO demographicsSettingsGenderDTO = demographicsSettingsPropertiesDTO.getGender();
 
                 options = demographicsSettingsGenderDTO.getOptions();
                 List<String> genders = new ArrayList<>();
@@ -806,6 +811,7 @@ public class DemographicsInformationFragment extends Fragment {
 
         }.execute(zipcode);
     }
+
     public void getProfileProperties(){
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
@@ -820,6 +826,7 @@ public class DemographicsInformationFragment extends Fragment {
                         DemographicsSettingsDateOfBirthDTO demographicsSettingsDOBDTO = demographicsSettingsPersonalDetailsDTO.getDateOfBirth();
                         DemographicsSettingsPhoneDTO demographicsPhoneNumberDTO = demographicsSettingsAddressDTO.getProperties().getPhone();
                         DemographicsSettingsGenderDTO demographicsSettingsGenderDTO = demographicsSettingsPersonalDetailsDTO.getGender();
+                        genderString = demographicsSettingsGenderDTO.getLabel();
                         DemographicsSettingsPrimaryRaceDTO demographicsSettingsRaceDTO = demographicsSettingsPersonalDetailsDTO.getPrimaryRace();
                         DemographicsSettingsEthnicityDTO demographicsSettingsEthnityDTO = demographicsSettingsPersonalDetailsDTO.getEthnicity();
                         DemographicsSettingsPreferredLanguageDTO demographicsSettingsPreferredLanguageDTO = demographicsSettingsPersonalDetailsDTO.getPreferredLanguage();
@@ -832,7 +839,6 @@ public class DemographicsInformationFragment extends Fragment {
                         addressString = demographicsSettingsAddressDTO.getLabel();
                         doBString = demographicsSettingsDOBDTO.getLabel();
                         phoneNumberString = demographicsPhoneNumberDTO.getLabel();
-                        genderString = demographicsSettingsGenderDTO.getLabel();
                         raceString = demographicsSettingsRaceDTO.getLabel();
                         ethnityString = demographicsSettingsEthnityDTO.getLabel();
                         languageString = demographicsSettingsPreferredLanguageDTO.getLabel();
@@ -927,16 +933,19 @@ public class DemographicsInformationFragment extends Fragment {
     WorkflowServiceCallback updateDemographicsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            progressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            progressBar.setVisibility(View.GONE);
+
             SystemUtil.showFaultDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
