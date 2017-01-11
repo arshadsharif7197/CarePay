@@ -74,7 +74,6 @@ public class DemographicsSettingsFragment extends Fragment {
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-
         setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -118,6 +117,7 @@ public class DemographicsSettingsFragment extends Fragment {
         return view;
 
     }
+
     /**
      * demographics settings labels
      */

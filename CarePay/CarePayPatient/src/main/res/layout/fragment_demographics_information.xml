@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/reviewlayout"
+    android:id="@+id/demographicsReviewRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_review" />
+
+    <include layout="@layout/toolbar_demographics_review" />
 
     <ProgressBar
         android:id="@+id/demographicReviewProgressBar"
@@ -16,495 +21,321 @@
         android:layout_marginTop="-8dp"
         android:indeterminate="true" />
 
+
     <ScrollView
-        android:layout_width="fill_parent"
+        android:id="@+id/adddemoScrollview"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:fillViewport="true">
+        android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
+        android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/adddemoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/review_screen_right_margin"
-            android:layout_marginStart="@dimen/review_screen_left_margin"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
             android:orientation="vertical">
 
+
+            <TextView
+                android:id="@+id/reviewdemogrPersonalInfoLabel"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginBottom="@dimen/dimen_25dp"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/reviewdemogrDOBTextInput"
+                    style="@style/SigninSignupTextInputStyle"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/revewidemogrDOBEdit"
+                        style="@style/SigninSignupEditStyle"
+                        android:digits="0123456789/"
+                        android:imeOptions="actionNext"
+                        android:inputType="date"
+                        android:maxLength="10"
+                        android:nextFocusForward="@+id/revewidemoPhoneNumberEdit" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/dobformatlabel"
+                    style="@style/SignupRequireHintStyle"
+                    android:textColor="@color/cadet_gray" />
+            </FrameLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/reviewdemogrPhoneNumberTextInput"
+                style="@style/SigninSignupTextInputStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <EditText
+                    android:id="@+id/reviewgrdemoPhoneNumberEdit"
+                    style="@style/SigninSignupEditStyle"
+                    android:digits="0123456789-"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLength="12"
+                    android:nextFocusForward="@+id/driverLicenseEditText" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/demographicsSectionLabel"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_36dp"
+                android:layout_marginBottom="@dimen/dimen_36dp"/>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/reviewpersonalInformationLabel"
-                    style="@style/reviewDemographicBlue."
-                    android:layout_width="wrap_content"
+                    android:id="@+id/genderTextView"
+                    style="@style/DemographicsDocsLabelStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/chooseGenderTextView"
+                    style="@style/DemographicsDocsClickableTextStyle"
+                    android:layout_width="wrap_content" />
+            </LinearLayout>
+
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
+                android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/raceDataTextView"
+                    style="@style/DemographicsDocsLabelStyle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    />
+                    android:layout_weight=".30"/>
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/review_default_heaight"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    >
-
-                    <TextView
-                        android:id="@+id/reviewDOBLabel"
-                        style="@style/reviewDemographiclabel."
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/reviewdemogrDOBTextInput"
-                        style="@style/TextInputLayoutStyle"
-                        android:layout_marginTop="18dp"
-                        app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                        <EditText
-                            android:id="@+id/reviewdemogrDOBEdit"
-                            style="@style/PaymentEditTextStyle"
-                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
-                            android:inputType="textPersonName"
-                            android:maxLength="100"
-                            android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"
-                            android:layout_marginLeft="@dimen/dimen_12dp"
-                            android:text="09/09/1982"/>
-                    </android.support.design.widget.TextInputLayout>
-
-                </FrameLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/review_default_heaight">
-
-                    <TextView
-                        android:id="@+id/reviewPhoneNumberLabel"
-                        style="@style/reviewDemographiclabel."
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/reviewdemogrPhoneNumberTextInput"
-                        style="@style/SigninSignupTextInputStyle"
-                        android:layout_marginTop="18dp"
-                        app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                        <EditText
-                            android:id="@+id/reviewgrdemoPhoneNumberEdit"
-                            style="@style/PaymentEditTextStyle"
-                            android:digits="0123456789-"
-                            android:imeOptions="actionNext"
-                            android:inputType="phone"
-                            android:maxLength="12"
-                            android:layout_marginLeft="@dimen/dimen_12dp"
-                            android:text="+1-000-111-222"
-                            android:nextFocusForward="@+id/driverLicenseEditText" />
-                    </android.support.design.widget.TextInputLayout>
-
-                </FrameLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
-
+                <TextView
+                    android:id="@+id/raceListDataTextView"
+                    style="@style/DemographicsDocsClickableTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:layout_weight=".70"/>
             </LinearLayout>
+
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
+                android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/demographicSectionLabel"
-                    style="@style/reviewDemographicBlue."
-                    android:text="DEMOGRAPHIC"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:id="@+id/ethnicityDataTextView"
+                    style="@style/DemographicsDocsLabelStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".35" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/reviewGenderLabel"
-                        style="@style/reviewDemographicrelativelayout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Gender"
-                        android:textAlignment="textStart"
-                        android:layout_weight=".65" />
-
-                    <TextView
-                        android:id="@+id/reviewGenderTextView"
-                        style="@style/ConsentActivityDoctornameTextStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="textEnd"
-                        android:layout_weight=".65"
-                        android:layout_marginTop="@dimen/dimen_15dp"
-                        android:text="Male" />
-                </LinearLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/reviewRaceLabel"
-                        style="@style/reviewDemographicrelativelayout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Race"
-                        android:textAlignment="textStart"
-                        android:layout_weight=".65" />
-
-                    <TextView
-                        android:id="@+id/reviewRaceTextView"
-                        style="@style/ConsentActivityDoctornameTextStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="textEnd"
-                        android:layout_weight=".65"
-                        android:layout_marginTop="@dimen/dimen_15dp"
-                        android:text="@string/Other" />
-                </LinearLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/reviewEthnicityLabel"
-                        style="@style/reviewDemographicrelativelayout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Ethnicity"
-                        android:textAlignment="textStart"
-                        android:layout_weight=".65" />
-
-                    <TextView
-                        android:id="@+id/reviewEthnicityTextView"
-                        style="@style/ConsentActivityDoctornameTextStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="textEnd"
-                        android:layout_weight=".65"
-                        android:layout_marginTop="@dimen/dimen_15dp"
-                        android:text="Hispanic" />
-                </LinearLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/reviewLanguageLabel"
-                        style="@style/reviewDemographicrelativelayout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Preferred Language"
-                        android:textAlignment="textStart"
-                        android:layout_weight=".65" />
-
-                    <TextView
-                        android:id="@+id/reviewLanguageTextView"
-                        style="@style/ConsentActivityDoctornameTextStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="textEnd"
-                        android:layout_weight=".65"
-                        android:layout_marginTop="@dimen/dimen_15dp"
-                        android:text="@string/English" />
-                </LinearLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/review_default_heaight">
-
-                    <TextView
-                        android:id="@+id/reviewDriverLicenseLabel"
-                        style="@style/reviewDemographiclabel."
-                        android:text="DRIVER'S LICENSE"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/reviewDriverLicenseView"
-                        style="@style/SigninSignupTextInputStyle"
-                        android:layout_weight="1"
-                        android:layout_marginTop="18dp"
-                        app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                        <EditText
-                            android:id="@+id/driverLicenseEditText"
-                            style="@style/PaymentEditTextStyle"
-                            android:imeOptions="actionNext"
-                            android:layout_marginLeft="@dimen/dimen_12dp"
-                            android:text="12345"
-                            android:nextFocusForward="@+id/addressEditTextId" />
-                    </android.support.design.widget.TextInputLayout>
-
-                </FrameLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
+                <TextView
+                    android:id="@+id/ethnicityListDataTextView"
+                    style="@style/DemographicsDocsClickableTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:layout_weight=".65" />
 
             </LinearLayout>
+
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
+                android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/languageDataTextView"
+                    style="@style/DemographicsDocsLabelStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".30"/>
+
+                <TextView
+                    android:id="@+id/languageTextView"
+                    style="@style/DemographicsDocsClickableTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:layout_weight=".70"/>
+            </LinearLayout>
+
+            <View
+                style="@style/Review_Screen_View_Style"
+                android:layout_width="match_parent" />
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/reviewDriverLicenseLabel"
+                style="@style/SigninSignupTextInputStyle"
+                android:layout_weight="1"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <EditText
+                    android:id="@+id/driverLicenseEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/addressEditTextId" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/demographicsAddressSectionLabel"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_36dp"
+                android:layout_marginBottom="@dimen/dimen_36dp"/>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/reviewAddress"
-                    style="@style/reviewDemographicBlue."
-                    android:text="ADDRESS"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/address1TextInputLayout"
+                    style="@style/SigninSignupTextInputStyle"
+                    android:layout_weight="1"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/addressEditTextId"
+                        style="@style/SigninSignupEditStyle"
+                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
+                        android:imeOptions="actionNext"
+                        android:inputType="textPostalAddress"
+                        android:maxLength="50"
+                        android:nextFocusForward="@+id/addressEditText2Id"
+                        app:hintTextAppearance="@style/FloatingLabelStyle" />
+
+                </android.support.design.widget.TextInputLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/review_default_heaight"
-                    android:layout_marginTop="@dimen/review_header_lablemargin_top">
-
-                    <TextView
-                        android:id="@+id/reviewAddress1label"
-                        style="@style/reviewDemographiclabel."
-                        android:text="ADDRESS LINE 1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/address1TextInputLayout"
-                        style="@style/SigninSignupTextInputStyle"
-                        android:layout_weight="1"
-                        android:layout_marginTop="18dp"
-                        app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                        <EditText
-                            android:id="@+id/addressEditTextId"
-                            style="@style/PaymentEditTextStyle"
-                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
-                            android:imeOptions="actionNext"
-                            android:inputType="textPostalAddress"
-                            android:maxLength="50"
-                            android:layout_marginLeft="@dimen/dimen_12dp"
-                            android:text="22700 SW"
-                            android:nextFocusForward="@+id/addressEditText2Id"
-                            app:hintTextAppearance="@style/FloatingLabelStyle" />
-
-                    </android.support.design.widget.TextInputLayout>
-                </FrameLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
-                <FrameLayout
-                    android:id="@+id/address2layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/review_default_heaight">
-
-                    <TextView
-                        android:id="@+id/reviewAddress2label"
-                        style="@style/reviewDemographiclabel."
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/address2TextInputLayout"
                         style="@style/SigninSignupTextInputStyle"
                         android:layout_weight="1"
-                        android:layout_marginTop="18dp"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <EditText
                             android:id="@+id/addressEditText2Id"
-                            style="@style/PaymentEditTextStyle"
+                            style="@style/SigninSignupEditStyle"
                             android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
                             android:maxLength="50"
-                            android:layout_marginLeft="@dimen/dimen_12dp"
-                            android:text="22700 SW"
                             android:nextFocusForward="@+id/zipCodeId" />
                     </android.support.design.widget.TextInputLayout>
+
                     <TextView
-                        android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
-                        style="@style/SignupRequireHintStyle"
+                        android:id="@+id/demogrAddressOptionalLabel"
                         android:text="Optional"
-                        android:textColor="@color/cadet_gray" />
+                        style="@style/SignupRequireHintStyle" />
 
                 </FrameLayout>
 
-                <View
-                    android:id="@+id/address2labelview"
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/zipCodeTextInputLayout"
+                    style="@style/SigninSignupTextInputStyle"
+                    android:layout_weight="1"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/review_default_heaight">
+                    <EditText
+                        android:id="@+id/zipCodeId"
+                        style="@style/SigninSignupEditStyle"
+                        android:digits="0123456789-"
+                        android:imeOptions="actionNext"
+                        android:maxLength="10"
+                        android:nextFocusForward="@+id/cityId" />
 
-                    <TextView
-                        android:id="@+id/reviewZipcodeLabel"
-                        style="@style/reviewDemographiclabel."
-                        android:text="ZIP CODE"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/zipCodeTextInputLayout"
-                        style="@style/SigninSignupTextInputStyle"
-                        android:layout_weight="1"
-                        android:layout_marginTop="18dp"
-                        app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                        <EditText
-                            android:id="@+id/zipCodeEditText"
-                            style="@style/PaymentEditTextStyle"
-                            android:digits="0123456789-"
-                            android:imeOptions="actionNext"
-                            android:maxLength="10"
-                            android:layout_marginLeft="@dimen/dimen_12dp"
-                            android:text="33190"
-                            android:nextFocusForward="@+id/cityId" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-
-                </FrameLayout>
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
+                </android.support.design.widget.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/review_default_heaight"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/review_default_heaight">
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/cityTextInputLayout"
+                        style="@style/SigninSignupTextInputStyle"
+                        android:layout_weight="1"
+                        app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                        <TextView
-                            android:id="@+id/reviewCityLabel"
-                            style="@style/reviewDemographiclabel."
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="CITY"
-                            android:gravity="start" />
+                        <EditText
+                            android:id="@+id/cityId"
+                            style="@style/SigninSignupEditStyle"
+                            android:nextFocusRight="@+id/stateAutoCompleteTextView" />
 
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/cityTextInputLayout"
-                            style="@style/SigninSignupTextInputStyle"
-                            android:layout_weight="1"
-                            android:layout_marginTop="18dp"
-                            app:hintTextAppearance="@style/FloatingLabelStyle">
+                    </android.support.design.widget.TextInputLayout>
 
-                            <EditText
-                                android:id="@+id/cityEditText"
-                                style="@style/PaymentEditTextStyle"
-                                android:layout_marginLeft="@dimen/dimen_12dp"
-                                android:text="Miami"
-                                android:nextFocusRight="@+id/stateAutoCompleteTextView" />
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/stateTextInputLayout"
+                        style="@style/SigninSignupTextInputStyle"
+                        android:layout_weight="1"
+                        app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                        </android.support.design.widget.TextInputLayout>
+                        <EditText
+                            android:id="@+id/stateAutoCompleteTextView"
+                            style="@style/SigninSignupEditStyle"
+                            android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapCharacters"
+                            android:maxLength="2" />
 
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/review_default_heaight"
-                            android:layout_gravity="end"
-                            android:layout_marginStart="150dp">
-
-                            <TextView
-                                android:id="@+id/reviewStateLabel"
-                                style="@style/reviewDemographiclabel."
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="STATE"
-                                android:layout_marginStart="100dp"/>
-
-                            <android.support.design.widget.TextInputLayout
-                                android:id="@+id/stateTextInputLayout"
-                                style="@style/SigninSignupTextInputStyle"
-                                android:layout_weight="1"
-                                android:layout_marginTop="18dp"
-                                app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                                <EditText
-                                    android:id="@+id/stateEditText"
-                                    style="@style/PaymentEditTextStyle"
-                                    android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
-                                    android:imeOptions="actionDone"
-                                    android:inputType="textCapCharacters"
-                                    android:layout_marginLeft="100dp"
-                                    android:text="FL"
-                                    android:maxLength="2" />
-
-                            </android.support.design.widget.TextInputLayout>
-
-                        </FrameLayout>
-
-                    </FrameLayout>
-
+                    </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
-
-
-                <View
-                    style="@style/Review_Screen_View_Style"
-                    android:layout_width="match_parent" />
-
 
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/buttonAddDemographicInfo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/YesCorrectButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:text="SAVE CHANGES"
-            android:background="@drawable/button_selector"
-            android:textColor="@color/white" />
-    </LinearLayout>
-
+        android:layout_height="52dp"
+        android:background="@drawable/language_button_selector"
+        android:gravity="center"
+        android:text="SAVE CHANGES"
+        android:textColor="@color/white" />
 </LinearLayout>

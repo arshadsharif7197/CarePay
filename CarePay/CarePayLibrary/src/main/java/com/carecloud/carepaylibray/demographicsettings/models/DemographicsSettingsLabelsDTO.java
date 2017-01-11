@@ -60,6 +60,24 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("demographics_cancel_label")
     @Expose
     private String demographicsCancelLabel;
+    @SerializedName("demographics_address_label")
+    @Expose
+    private String demographicsAddressLabel;
+    @SerializedName("demographics_demographics_label")
+    @Expose
+    private String demographicssectionLabel;
+    @SerializedName("demographics_gender_label")
+    @Expose
+    private String demographicsGenderLabel;
+    @SerializedName("demographics_race_label")
+    @Expose
+    private String demographicsRaceLabel;
+    @SerializedName("demographics_ethnicity_label")
+    @Expose
+    private String demographicsEthnicityLabel;
+    @SerializedName("demographics_preferred_language_label")
+    @Expose
+    private String demographicsLanguageLabel;
 
 
     /**
@@ -335,4 +353,99 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
         this.demographicsCancelLabel = demographicsCancelLabel;
     }
 
+    /**
+     *
+     * @return demographicssectionLabel
+     */
+    public String getDemographicSctionLabel() {
+        return StringUtil.getLabelForView(demographicssectionLabel);
+    }
+
+    /**
+     *
+     * @param demographicssectionLabel demographicssectionLabel
+     */
+    public void setDemographicssectionLabel(String demographicssectionLabel) {
+        this.demographicssectionLabel = demographicssectionLabel;
+    }
+
+    /**
+     *
+     * @return demographicsAddressLabel
+     */
+    public String getDemographicsAddressLabel() {
+        return StringUtil.getLabelForView(demographicsAddressLabel);
+    }
+
+    /**
+     *
+     * @param demographicsAddressLabel demographicsAddressLabel
+     */
+    public void setDemographicsAddressLabel(String demographicsAddressLabel) {
+        this.demographicsAddressLabel = demographicsAddressLabel;
+    }
+
+    /**
+     *
+     * @return demographicsGenderLabel
+     */
+    public String getDemographicsGenderLabel() {
+        return StringUtil.getLabelForView(demographicsGenderLabel);
+    }
+
+    /**
+     *
+     * @param demographicsGenderLabel demographicsGenderLabel
+     */
+    public void setDemographicsGenderLabel(String demographicsGenderLabel) {
+        this.demographicsGenderLabel = demographicsGenderLabel;
+    }
+
+    /**
+     *
+     * @return demographicsRaceLabel
+     */
+    public String getDemographicsRaceLabel() {
+        return StringUtil.getLabelForView(demographicsRaceLabel);
+    }
+
+    /**
+     *
+     * @param demographicsRaceLabel demographicsRaceLabel
+     */
+    public void setDemographicsRaceLabel(String demographicsRaceLabel) {
+        this.demographicsRaceLabel = demographicsRaceLabel;
+    }
+
+    /**
+     *
+     * @return demographicsEthnicityLabel
+     */
+    public String getDemographicsEthnicityLabel() {
+        return StringUtil.getLabelForView(demographicsEthnicityLabel);
+    }
+
+    /**
+     *
+     * @param demographicsEthnicityLabel demographicsEthnicityLabel
+     */
+    public void setDemographicsEthnicityLabel(String demographicsEthnicityLabel) {
+        this.demographicsEthnicityLabel = demographicsEthnicityLabel;
+    }
+
+    /**
+     *
+     * @return demographicsLanguageLabel
+     */
+    public String getDemographicsLanguageLabel() {
+        return StringUtil.getLabelForView(demographicsLanguageLabel);
+    }
+
+    /**
+     *
+     * @param demographicsLanguageLabel demographicsLanguageLabel
+     */
+    public void setDemographicsLanguageLabel(String demographicsLanguageLabel) {
+        this.demographicsLanguageLabel = demographicsLanguageLabel;
+    }
 }
