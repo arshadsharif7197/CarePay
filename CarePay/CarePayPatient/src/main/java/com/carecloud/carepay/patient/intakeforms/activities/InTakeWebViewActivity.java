@@ -63,7 +63,6 @@ public class InTakeWebViewActivity extends BasePatientActivity {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         progressBar = (ProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.signupProgressBarIntake);
         progressBar.setVisibility(View.VISIBLE);
-        //getIntakeFormData();
         initForm();
         initWebView();
     }
@@ -283,10 +282,8 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.setAccessPaymentsBalances(false);
             PatientNavigationHelper.getInstance(InTakeWebViewActivity.this).navigateToWorkflow(workflowDTO);
-
-            //Intent intent = new Intent(InTakeWebViewActivity.this, EligibilityActivity.class);
-            //startActivity(intent);
         }
 
         @Override
