@@ -20,6 +20,14 @@ public class PaymentDetailsListAdapter extends RecyclerView.Adapter<PaymentDetai
     private PaymentsLabelDTO paymentsLabelDTO;
     private boolean isPaymentReceiptData;
 
+    /**
+     * Instantiates a new Payment details list adapter.
+     *
+     * @param context              the context
+     * @param isPaymentReceiptData the is payment receipt data
+     * @param detailsList          the details list
+     * @param paymentsLabelDTO     the payments label dto
+     */
     public PaymentDetailsListAdapter(Context context, boolean isPaymentReceiptData, List<PaymentDetailsItemDTO> detailsList, PaymentsLabelDTO paymentsLabelDTO) {
         this.context = context;
         this.isPaymentReceiptData = isPaymentReceiptData;
