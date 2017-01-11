@@ -210,7 +210,11 @@ public class WorkflowServiceHelper {
                     callback.onPostExecute(response.body());
                 } else {
                     try {
-                        callback.onFailure(response.errorBody().string());
+                        if(response!=null && response.errorBody()!=null) {
+                            callback.onFailure(response.errorBody().string());
+                        } else {
+                            callback.onFailure("");
+                        }
                     } catch (Exception exception) {
                         callback.onFailure(exception.getMessage());
                     }

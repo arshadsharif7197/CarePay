@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 
 import java.util.List;
 
@@ -16,10 +17,14 @@ public class PaymentDetailsListAdapter extends RecyclerView.Adapter<PaymentDetai
 
     private Context context;
     private List<PaymentDetailsItemDTO> detailsList;
+    private PaymentsLabelDTO paymentsLabelDTO;
+    private boolean isPaymentReceiptData;
 
-    public PaymentDetailsListAdapter(Context context, List<PaymentDetailsItemDTO> detailsList) {
+    public PaymentDetailsListAdapter(Context context, boolean isPaymentReceiptData, List<PaymentDetailsItemDTO> detailsList, PaymentsLabelDTO paymentsLabelDTO) {
         this.context = context;
+        this.isPaymentReceiptData = isPaymentReceiptData;
         this.detailsList = detailsList;
+        this.paymentsLabelDTO = paymentsLabelDTO;
     }
 
     @Override
@@ -34,6 +39,11 @@ public class PaymentDetailsListAdapter extends RecyclerView.Adapter<PaymentDetai
         PaymentDetailsItemDTO paymentDetailsItem = detailsList.get(position);
         holder.paymentDetailLabel.setText(paymentDetailsItem.getLabel());
         holder.paymentDetailAmount.setText(paymentDetailsItem.getValue());
+        if(position==0 && isPaymentReceiptData){
+            holder.paymentDetail.setText(paymentsLabelDTO.getPaymentResponsibilityDetails());
+        } else {
+            holder.paymentDetail.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -45,12 +55,14 @@ public class PaymentDetailsListAdapter extends RecyclerView.Adapter<PaymentDetai
 
         private CarePayTextView paymentDetailLabel;
         private CarePayTextView paymentDetailAmount;
+        private CarePayTextView paymentDetail;
 
         PaymentDetailsListViewHolder(View itemView) {
             super(itemView);
 
             paymentDetailLabel = (CarePayTextView) itemView.findViewById(R.id.payment_details_label);
             paymentDetailAmount = (CarePayTextView) itemView.findViewById(R.id.payment_details_value);
+            paymentDetail = (CarePayTextView)itemView.findViewById(R.id.payment_details_view);
         }
     }
 }
