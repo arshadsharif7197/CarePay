@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -101,6 +102,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private DemographicsSettingsPersonalDetailsDTO demographicsSettingsDetailsDTO = null;
     private DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = null;
     private DemographicsSettingsLastNameDTO demographicsSettingsLastNameDTO = null;
+    private ProgressBar progressBar = null;
 
 
     @Override
@@ -120,7 +122,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-
+        progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
+        progressBar.setVisibility(View.GONE);
         setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -141,7 +144,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.providerPicImageView);
-        if (demographicsSettingsDTO != null && demographicsSettingsLabelsDTO!=null ) {
+        if (demographicsSettingsDTO != null) {
                 DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                 demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
                 imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, demographicsSettingsLabelsDTO);
@@ -473,16 +476,20 @@ public class EditProfileFragment extends DocumentScannerFragment {
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            progressBar.setVisibility(View.GONE);
+
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            progressBar.setVisibility(View.GONE);
+
             SystemUtil.showFaultDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
