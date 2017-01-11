@@ -8,6 +8,7 @@
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
     <dimen name="dimen_5dp">5dp</dimen>
+    <dimen name="dimen_6dp">6dp</dimen>
     <dimen name="dimen_7dp">7dp</dimen>
     <dimen name="dimen_8dp">8dp</dimen>
     <dimen name="dimen_10dp">10dp</dimen>
@@ -18,11 +19,13 @@
     <dimen name="dimen_15dp">15dp</dimen>
     <dimen name="dimen_17dp">17dp</dimen>
     <dimen name="dimen_18dp">18dp</dimen>
+    <dimen name="dimen_19dp">19dp</dimen>
     <dimen name="dimen_20dp">20dp</dimen>
     <dimen name="dimen_21dp">21dp</dimen>
     <dimen name="dimen_22dp">22dp</dimen>
     <dimen name="dimen_25dp">25dp</dimen>
     <dimen name="dimen_26dp">26dp</dimen>
+    <dimen name="dimen_27dp">27dp</dimen>
     <dimen name="dimen_28dp">28dp</dimen>
     <dimen name="dimen_30dp">30dp</dimen>
     <dimen name="dimen_34dp">34dp</dimen>
@@ -209,4 +212,9 @@
     <dimen name="appointment_card_checked_in_button_margin">56dp</dimen>
 
     <dimen name="appointment_summary_provider_image_margin">-50dp</dimen>
+
+    <!--Practice Payment-->
+    <dimen name="patient_list_margin">185dp</dimen>
+    <dimen name="profile_pic_size">60dp</dimen>
+
 </resources>

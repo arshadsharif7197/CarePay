@@ -115,4 +115,8 @@
 
     <color name="cardview_header_bg">#253C48</color>
 
+    <!--Payments-->
+    <color name="screen_header">#056DA3</color>
+    <color name="filter_on">#34590C</color>
+
 </resources>

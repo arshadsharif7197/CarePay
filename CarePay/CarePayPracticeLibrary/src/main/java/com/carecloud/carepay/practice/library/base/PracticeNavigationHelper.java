@@ -12,6 +12,7 @@ import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity;
+import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -83,25 +84,30 @@ public class PracticeNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
+
             case PracticeNavigationStateConstants.PATIENT_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
+
             case PracticeNavigationStateConstants.PRACTICE_APPOINTMENTS: {
                 intent = new Intent(context, isPatientModeAppointments
                         ? ScheduleAppointmentActivity.class : AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
+
             case PracticeNavigationStateConstants.PATIENT_MODE_SPLASH: {
                 intent = new Intent(context, PatientModeSplashActivity.class);
                 break;
             }
+
             case PracticeNavigationStateConstants.PRACTICE_CHECKIN: {
                 intent = new Intent(context, CheckInActivity.class);
                 break;
             }
+
             case PracticeNavigationStateConstants.PATIENT_MODE_SIGNIN: {
                 intent = new Intent(context, HowToCheckInActivity.class);
                 break;
@@ -112,6 +118,7 @@ public class PracticeNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
+
             case PracticeNavigationStateConstants.CONSENT_FORMS: {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).getConsentFormInformation(workflowDTO.toString());
@@ -119,6 +126,7 @@ public class PracticeNavigationHelper {
                 }
                 break;
             }
+
             case PracticeNavigationStateConstants.INTAKE_FORMS: {
                 if (context instanceof PracticeAppSignatureActivity) {
                     ((PracticeAppSignatureActivity) context).launchIntake(workflowDTO.toString());
@@ -127,6 +135,7 @@ public class PracticeNavigationHelper {
                 }
                 break;
             }
+
             case PracticeNavigationStateConstants.PAYMENTS: {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).getPaymentInformation(workflowDTO.toString());
@@ -134,6 +143,12 @@ public class PracticeNavigationHelper {
                 }
                 break;
             }
+
+            case PracticeNavigationStateConstants.PRACTICE_PAYMENT: {
+                intent = new Intent(context, PaymentsActivity.class);
+                break;
+            }
+
             default: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -141,11 +156,14 @@ public class PracticeNavigationHelper {
 
             }
         }
+
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         Bundle bundle = new Bundle();
         bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
-        intent.putExtras(bundle);
-        context.startActivity(intent);
+        if (intent != null) {
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }
     }
 
     /**

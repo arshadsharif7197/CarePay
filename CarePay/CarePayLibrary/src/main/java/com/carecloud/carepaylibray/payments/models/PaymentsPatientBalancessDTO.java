@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -22,7 +23,9 @@ public class PaymentsPatientBalancessDTO implements Serializable {
     @SerializedName("pending_balances")
     @Expose
     private List<PatienceBalanceDTO> balances;
-
+    @SerializedName("demographics")
+    @Expose
+    private DemographicsSettingsDemographicsDTO demographics;
     @SerializedName("responsibility")
     @Expose
     private String pendingRepsonsibility;
@@ -87,5 +90,13 @@ public class PaymentsPatientBalancessDTO implements Serializable {
 
     public void setPendingRepsonsibility(String pendingRepsonsibility) {
         this.pendingRepsonsibility = pendingRepsonsibility;
+    }
+
+    public DemographicsSettingsDemographicsDTO getDemographics() {
+        return demographics;
+    }
+
+    public void setDemographics(DemographicsSettingsDemographicsDTO demographics) {
+        this.demographics = demographics;
     }
 }
