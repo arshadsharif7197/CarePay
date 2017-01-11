@@ -23,6 +23,13 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     private AppointmentLabelDTO appointmentLabels;
     private AppointmentsResultModel appointmentInfo;
     private AppointmentType appointmentType;
+    private boolean isCancelSuccess;
+
+    public interface RefreshAppointmentListCallback {
+        void onRefreshAppointmentList(AppointmentDTO appointmentDTO);
+    }
+
+    private RefreshAppointmentListCallback listCallback;
 
     /**
      * Contractor for   dialog.
@@ -31,13 +38,15 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
      */
     public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                    AppointmentsResultModel appointmentInfo,
-                                   AppointmentType appointmentType) {
+                                   AppointmentType appointmentType,
+                                   RefreshAppointmentListCallback listCallback) {
 
         super(context, appointmentDTO);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
         this.appointmentType = appointmentType;
+        this.listCallback = listCallback;
     }
 
     @Override
@@ -106,13 +115,20 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         mainLayout.addView(childActionView);
     }
 
+    void setCancelledSuccess(boolean cancelSuccess) {
+        isCancelSuccess = cancelSuccess;
+    }
+
     @Override
     public void onClick(View view) {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.cancelAppointmentButton) {
-            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo).show();
+            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo, listCallback).show();
             cancel();
+        } else if (viewId == R.id.dialogAppointHeaderTextView
+                && isCancelSuccess && listCallback != null) {
+            listCallback.onRefreshAppointmentList(appointmentDTO);
         }
     }
 }
