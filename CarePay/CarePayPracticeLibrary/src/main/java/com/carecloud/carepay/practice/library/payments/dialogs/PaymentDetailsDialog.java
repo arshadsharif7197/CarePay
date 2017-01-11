@@ -58,20 +58,17 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
 
         Button payNowButton = (Button) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_pay_now_button);
         payNowButton.setOnClickListener(this);
+        PaymentsLabelDTO paymentsLabel = paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel();
+        if (paymentsLabel != null) {
+            ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_total_paid)).setText("");
 
-        if (paymentReceiptModel != null) {
-            PaymentsLabelDTO paymentsLabel = paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel();
-            if (paymentsLabel != null) {
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_total_paid)).setText("");
+            ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_title))
+                    .setText(paymentsLabel.getPaymentReceiptTitle());
+            ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_label))
+                    .setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
+            ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_value)).setText("");
 
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_title))
-                        .setText(paymentsLabel.getPaymentReceiptTitle());
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_label))
-                        .setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_value)).setText("");
-
-                payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
-            }
+            payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
         }
 
         // Temporary added till endpoint gets ready
@@ -89,7 +86,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         RecyclerView paymentDetailsRecyclerView = ((RecyclerView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        PaymentDetailsListAdapter adapter = new PaymentDetailsListAdapter(context, detailsList);
+        PaymentDetailsListAdapter adapter = new PaymentDetailsListAdapter(context, false, detailsList,paymentsLabel);
         paymentDetailsRecyclerView.setAdapter(adapter);
     }
 

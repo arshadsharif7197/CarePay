@@ -247,7 +247,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
-                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class),paymentsModel);
             receiptDialog.show();
         }
 

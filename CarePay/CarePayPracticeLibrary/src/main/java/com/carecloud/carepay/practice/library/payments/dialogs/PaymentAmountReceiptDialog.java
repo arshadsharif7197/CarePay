@@ -9,15 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentDetailsListAdapter;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
 
     private Context context;
     private PaymentsModel paymentReceiptModel;
+    private PaymentsModel intakeBundle;
 
     /**
      * Constructor.
@@ -34,10 +36,11 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
      * @param context             context
      * @param paymentReceiptModel model
      */
-    public PaymentAmountReceiptDialog(Context context, PaymentsModel paymentReceiptModel) {
+    public PaymentAmountReceiptDialog(Context context, PaymentsModel paymentReceiptModel, PaymentsModel intakeBundle) {
         super(context);
         this.context = context;
         this.paymentReceiptModel = paymentReceiptModel;
+        this.intakeBundle = intakeBundle;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -45,7 +48,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_payment_amount_receipt);
+        setContentView(R.layout.dialog_practice_payment_receipt);
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
@@ -55,19 +58,14 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == R.id.dialog_close_header) {
-            cancel();
-        } else if (viewId == R.id.payment_receipt_save_button) {
+        if (viewId == R.id.payment_receipt_share_button) {
             onSaveButton();
         }
     }
 
     private void onInitialization() {
-        ImageView dialogCloseHeader = (ImageView) findViewById(R.id.dialog_close_header);
-        dialogCloseHeader.setOnClickListener(this);
-
-        Button saveReceiptButton = (Button) findViewById(R.id.payment_receipt_save_button);
-        saveReceiptButton.setOnClickListener(this);
+        Button shareReceiptButton = (Button) findViewById(R.id.payment_receipt_share_button);
+        shareReceiptButton.setOnClickListener(this);
 
         PaymentsLabelDTO paymentsLabel = paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel();
         if (paymentsLabel != null) {
@@ -76,12 +74,9 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
 
             String receiptDate = DateUtil.getInstance().setDateRaw(new Date().toString()).getDateAsMMddyyyyWithSlash();
             ((TextView) findViewById(R.id.payment_receipt_date_label)).setText(receiptDate);
+            ((TextView) findViewById(R.id.payment_receipt_practice_title)).setText(paymentsLabel.getPaymentReceiptTitle());
 
-            ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());
-            ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(paymentsLabel.getPaymentReceiptTotalPaidLabel());
-            ((TextView) findViewById(R.id.payment_receipt_total_value)).setText("");
-
-            saveReceiptButton.setText(paymentsLabel.getPaymentReceiptSaveReceipt());
+            shareReceiptButton.setText(paymentsLabel.getPaymentReceiptSaveReceipt());
         }
 
         // Temporary added till endpoint gets ready
@@ -99,11 +94,14 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
         RecyclerView paymentDetailsRecyclerView = ((RecyclerView) findViewById(R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        PaymentDetailsListAdapter adapter = new PaymentDetailsListAdapter(context, detailsList);
+        PaymentDetailsListAdapter adapter = new PaymentDetailsListAdapter(context, true, detailsList, paymentsLabel);
         paymentDetailsRecyclerView.setAdapter(adapter);
     }
 
     private void onSaveButton() {
-
+        cancel();
+        if(context instanceof PatientModeCheckinActivity){
+            ((PatientModeCheckinActivity)context).getPaymentInformation(new Gson().toJson(intakeBundle,PaymentsModel.class));
+        }
     }
 }

@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -179,23 +180,29 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         });
 
 
-        verificationCodeEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence str, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence str, int start, int before, int count) {
-                validateCreditCardDetails();
-            }
-
-            @Override
-            public void afterTextChanged(Editable str) {
-
-            }
-        });
+        verificationCodeEditText.addTextChangedListener(textWatcher);
+        address1EditText.addTextChangedListener(textWatcher);
+        zipCodeEditText.addTextChangedListener(textWatcher);
+        cityEditText.addTextChangedListener(textWatcher);
+        stateEditText.addTextChangedListener(textWatcher);
     }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            validateCreditCardDetails();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
 
     private String getCreditCardType(String cardNumber) {
         String type;
@@ -325,7 +332,6 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         setChangeFocusListeners();
         setActionListeners();
-
 
         creditCardNoEditText.clearFocus();
         nameOnCardEditText.clearFocus();
@@ -487,6 +493,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private CompoundButton.OnCheckedChangeListener saveCardOnFileCheckBoxListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            validateCreditCardDetails();
             if (isChecked) {
                 billingAddressLayout.setVisibility(View.VISIBLE);
                 useProfileAddressCheckBox.setChecked(true);
@@ -500,6 +507,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private CompoundButton.OnCheckedChangeListener useProfileAddressListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            validateCreditCardDetails();
             if (isChecked) {
                 setAddressFiledsEnabled(false);
             } else {
@@ -543,7 +551,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            Log.d("addNewCreditCardk","=========================>\nworkflowDTO="+workflowDTO.toString());
+            Log.d("addNewCreditCard","=========================>\nworkflowDTO="+workflowDTO.toString());
             makePaymentCall("");
         }
 
@@ -563,8 +571,10 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Log.d("makePaymentCallback","=========================>\nworkflowDTO="+workflowDTO.toString());
-            //((BasePracticeActivity)getActivity()).finish();
-            // ToDo : Call for the payment receipt here
+            Gson gson = new Gson();
+            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class),paymentsModel);
+            receiptDialog.show();
         }
 
         @Override
@@ -582,9 +592,16 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
     private void displaySimpleDatePickerDialogFragment() {
         SimpleDatePickerDialogFragment datePickerDialogFragment;
-        DateUtil instance = DateUtil.getInstance();
-        datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(instance.getYear(),
-                instance.getMonth());
+        if (!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsLabelDTO.getPaymentPickDate())) {
+            String[] selectedDate = pickDateTextView.getText().toString().split("/");
+            int month = Integer.parseInt(selectedDate[0]);
+            int year = Integer.parseInt(selectedDate[1]);
+            datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(year, month - 1);
+        } else {
+            DateUtil instance = DateUtil.getInstance();
+            datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(instance.getYear(),
+                    instance.getMonth());
+        }
         datePickerDialogFragment.setOnDateSetListener(this);
         datePickerDialogFragment.show(getChildFragmentManager(), null);
     }
@@ -607,6 +624,17 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             nextButton.setClickable(false);
             return false;
         }
+
+        if (saveCardOnFileCheckBox.isChecked() && !useProfileAddressCheckBox.isChecked() &&
+            (!(address1EditText.getText().toString().trim().length() > 0) ||
+            !(zipCodeEditText.getText().toString().trim().length() > 0) ||
+            !(cityEditText.getText().toString().trim().length() > 0) ||
+            !(stateEditText.getText().toString().trim().length() > 0))) {
+                nextButton.setEnabled(false);
+                nextButton.setClickable(false);
+                return false;
+        }
+
         if (!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsLabelDTO.getPaymentPickDate())) {
             nextButton.setEnabled(true);
             nextButton.setClickable(true);
@@ -718,7 +746,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
         queryMap.put("practice_mgmt", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeId());
-        queryMap.put("patient_id", intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getMetadata().getPatientId());
+        queryMap.put("patient_id", intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId());
         TransitionDTO transitionDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
         WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
