@@ -21,7 +21,7 @@ public class PaymentsPatientBalancessDTO implements Serializable {
     private List<PaymentPatientBalancesPayloadDTO> payload = new ArrayList<PaymentPatientBalancesPayloadDTO>();
     @SerializedName("pending_balances")
     @Expose
-    private List<PatienceBalanceDTO> balances;
+    private List<PatienceBalanceDTO> balances = new ArrayList<PatienceBalanceDTO>();
 
     @SerializedName("responsibility")
     @Expose

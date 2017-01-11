@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -15,17 +14,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
-import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
-import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -39,32 +33,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class AppointmentsActivity extends BasePatientActivity implements
-        NavigationView.OnNavigationItemSelectedListener {
+public class AppointmentsActivity extends MenuPatientActivity {
 
     private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
 
     public static AppointmentDTO model;
-    private TextView appointmentsDrawerUserIdTextView;
+
     private AppointmentsResultModel appointmentsDTO;
     private AppointmentDTO appointmentDTO;
-    private WorkflowServiceCallback appointmentsWorkflowCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
 
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
     private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -86,17 +63,28 @@ public class AppointmentsActivity extends BasePatientActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation);
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(com.carecloud.carepaylibrary.R.layout.activity_navigation);
+        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
+        drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view);
+        // get handler to navigation drawer's user id text view
+        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
+                .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
         if(appointmentsDTO.getPayload() != null
                 && appointmentsDTO.getPayload().getAppointments() != null
                 && appointmentsDTO.getPayload().getAppointments().size() > 0) {
             appointmentDTO = appointmentsDTO.getPayload().getAppointments().get(0);
-        }
+
+                practiceId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId();
+                practiceMgmt = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt();
+                patientId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId();
+
+                transitionBalance = appointmentsDTO.getMetadata().getLinks().getPatientBalances();
+                transitionLogout = appointmentsDTO.getMetadata().getTransitions().getLogout();
+                transitionProfile = appointmentsDTO.getMetadata().getLinks().getProfileUpdate();
+            }
 
         // Get appointment information data
 //        AppointmentService aptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class);
@@ -119,25 +107,7 @@ public class AppointmentsActivity extends BasePatientActivity implements
 //            }
 //        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        // get handler to navigation drawer's user id text view
-        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
-                .findViewById(R.id.appointmentsDrawerIdTextView);
-        String userId = CognitoAppHelper.getCurrUser();
-        if (userId != null) {
-            appointmentsDrawerUserIdTextView.setText(userId);
-        } else {
-            appointmentsDrawerUserIdTextView.setText("");
-        }
-
+        inflateDrawer();
         gotoAppointmentFragment();
     }
 
@@ -227,89 +197,6 @@ public class AppointmentsActivity extends BasePatientActivity implements
 
         return super.onOptionsItemSelected(item);
     }
-
-    private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.setAccessPaymentsBalances(true);
-            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            //SystemUtil.showFaultDialog(InTakeWebViewActivity.this);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_appointments) {
-            Log.v(LOG_TAG, "Appointments");
-        } else if (id == R.id.nav_payments) {
-            if(appointmentsDTO.getPayload().getAppointments().size()>0) {
-                Map<String, String> queryString = new HashMap<>();
-                queryString.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
-                queryString.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-                queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
-                WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getPatientBalances(), paymentsCallBack, queryString);
-            }
-      } else if (id == R.id.nav_settings) {
-            if(appointmentsDTO.getPayload().getAppointments().size()>0) {
-                Map<String, String> queryString = new HashMap<>();
-                queryString.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
-                queryString.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-                queryString.put("patient_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId());
-                WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getLinks().getProfileUpdate(), demographicsSettingsCallBack, queryString);
-            }
-        } else if (id == R.id.nav_logout) {
-            // perform log out, of course
-            String userName = CognitoAppHelper.getCurrUser();
-            if (userName != null) {
-                Log.v(LOG_TAG, "sign out");
-                Map<String, String> headersMap = new HashMap<>();
-                headersMap.put("x-api-key", HttpConstants.getApiStartKey());
-                headersMap.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-                headersMap.put("transition", "true");
-                Map<String, String> queryMap = new HashMap<>();
-                TransitionDTO transitionDTO = appointmentsDTO.getMetadata().getTransitions().getLogout();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, appointmentsWorkflowCallback, queryMap, headersMap);
-            }
-        } else if (id == R.id.nav_purchase) {
-            Log.v(LOG_TAG, "Purchase");
-        } else if (id == R.id.nav_notification) {
-            Log.v(LOG_TAG, "Notification");
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
 
     public void setAppointmentModel(AppointmentDTO model) {
