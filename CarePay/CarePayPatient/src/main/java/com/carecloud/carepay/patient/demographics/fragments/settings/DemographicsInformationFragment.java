@@ -74,12 +74,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-
 import org.json.JSONObject;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -192,11 +188,11 @@ public class DemographicsInformationFragment extends Fragment {
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
+        SystemUtil.setGothamRoundedMediumTypeface(appCompatActivity, title);
 
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
         progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         progressBar.setVisibility(View.GONE);
-        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         Bundle bundle = getArguments();
@@ -273,7 +269,7 @@ public class DemographicsInformationFragment extends Fragment {
         stateEditText.requestFocus();
         rootview.requestFocus();
 
-        hideSoftKeyboard(getActivity());
+        SystemUtil.hideSoftKeyboard(getActivity());
         selectGender.setText(genderValString);
 
         ethnicityDataTextView.setText(ethnityValString);
@@ -284,9 +280,9 @@ public class DemographicsInformationFragment extends Fragment {
         languageLabelTextView.setText(languageString);
         languageDataTextView.setText("Prefered Language");
 
-        setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
-        setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
-        setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
         demographicSectionTextView.setTextSize(14);
         peronalInfoSectionTextview.setTextSize(14);
         addressSectionTextView.setTextSize(14);
@@ -822,30 +818,29 @@ public class DemographicsInformationFragment extends Fragment {
                     if(demographicsSettingsDetailsDTO !=null) {
                         DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsPreopertiesDTO = demographicsSettingsDetailsDTO.getPersonalDetails();
                         DemographicsSettingsAddressDTO demographicsSettingsAddressDTO = demographicsSettingsDetailsDTO.getAddress();
+                        addressString = demographicsSettingsAddressDTO.getLabel();
                         DemographicsSettingsPersonalDetailsDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsPersonalDetailsPreopertiesDTO.getProperties();
                         DemographicsSettingsDateOfBirthDTO demographicsSettingsDOBDTO = demographicsSettingsPersonalDetailsDTO.getDateOfBirth();
+                        doBString = demographicsSettingsDOBDTO.getLabel();
                         DemographicsSettingsPhoneDTO demographicsPhoneNumberDTO = demographicsSettingsAddressDTO.getProperties().getPhone();
+                        phoneNumberString = demographicsPhoneNumberDTO.getLabel();
                         DemographicsSettingsGenderDTO demographicsSettingsGenderDTO = demographicsSettingsPersonalDetailsDTO.getGender();
                         genderString = demographicsSettingsGenderDTO.getLabel();
                         DemographicsSettingsPrimaryRaceDTO demographicsSettingsRaceDTO = demographicsSettingsPersonalDetailsDTO.getPrimaryRace();
-                        DemographicsSettingsEthnicityDTO demographicsSettingsEthnityDTO = demographicsSettingsPersonalDetailsDTO.getEthnicity();
-                        DemographicsSettingsPreferredLanguageDTO demographicsSettingsPreferredLanguageDTO = demographicsSettingsPersonalDetailsDTO.getPreferredLanguage();
-                        DemographicsSettingsAddressDTO demographicsSettingsAddressDTO1 = demographicsSettingsAddressDTO.getProperties().getAddress1();
-                        DemographicsSettingsAddressDTO demographicsSettingsAddressDTO2 = demographicsSettingsAddressDTO.getProperties().getAddress2();
-                        DemographicsSettingsZipDTO  demographicsSettingsZipDTO= demographicsSettingsAddressDTO.getProperties().getZipcode();
-                        DemographicsSettingsCityDTO demographicsSettingsCityDTO = demographicsSettingsAddressDTO.getProperties().getCity();
-                        DemographicsSettingsStateDTO demographicsSettingsStateDTO = demographicsSettingsAddressDTO.getProperties().getState();
-
-                        addressString = demographicsSettingsAddressDTO.getLabel();
-                        doBString = demographicsSettingsDOBDTO.getLabel();
-                        phoneNumberString = demographicsPhoneNumberDTO.getLabel();
                         raceString = demographicsSettingsRaceDTO.getLabel();
+                        DemographicsSettingsEthnicityDTO demographicsSettingsEthnityDTO = demographicsSettingsPersonalDetailsDTO.getEthnicity();
                         ethnityString = demographicsSettingsEthnityDTO.getLabel();
+                        DemographicsSettingsPreferredLanguageDTO demographicsSettingsPreferredLanguageDTO = demographicsSettingsPersonalDetailsDTO.getPreferredLanguage();
                         languageString = demographicsSettingsPreferredLanguageDTO.getLabel();
+                        DemographicsSettingsAddressDTO demographicsSettingsAddressDTO1 = demographicsSettingsAddressDTO.getProperties().getAddress1();
                         address1String = demographicsSettingsAddressDTO1.getLabel();
+                        DemographicsSettingsAddressDTO demographicsSettingsAddressDTO2 = demographicsSettingsAddressDTO.getProperties().getAddress2();
                         address2String = demographicsSettingsAddressDTO2.getLabel();
+                        DemographicsSettingsZipDTO  demographicsSettingsZipDTO= demographicsSettingsAddressDTO.getProperties().getZipcode();
                         zipString = demographicsSettingsZipDTO.getLabel();
+                        DemographicsSettingsCityDTO demographicsSettingsCityDTO = demographicsSettingsAddressDTO.getProperties().getCity();
                         cityString = demographicsSettingsCityDTO.getLabel();
+                        DemographicsSettingsStateDTO demographicsSettingsStateDTO = demographicsSettingsAddressDTO.getProperties().getState();
                         stateString = demographicsSettingsStateDTO.getLabel();
                     }
                 }
