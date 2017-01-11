@@ -13,10 +13,10 @@ public class PaymentsLinksDTO {
     private PaymentsSelfRefreshDTO paymentsSelfRefresh;
     @SerializedName("demographics")
     @Expose
-    private PaymentsLinksDTO paymentsDemographics;
+    private TransitionDTO paymentsDemographics;
     @SerializedName("appointments")
     @Expose
-    private PaymentsAppointmentsDTO appointments;
+    private TransitionDTO appointments;
     @SerializedName("patient_balances")
     @Expose
     private TransitionDTO paymentsPatientBalances;
@@ -56,7 +56,7 @@ public class PaymentsLinksDTO {
      * @return
      *     The paymentsDemographics
      */
-    public PaymentsLinksDTO getPaymentsDemographics() {
+    public TransitionDTO getPaymentsDemographics() {
         return paymentsDemographics;
     }
 
@@ -65,7 +65,7 @@ public class PaymentsLinksDTO {
      * @param paymentsDemographics
      *     The paymentsDemographics
      */
-    public void setPaymentsDemographics(PaymentsLinksDTO paymentsDemographics) {
+    public void setPaymentsDemographics(TransitionDTO paymentsDemographics) {
         this.paymentsDemographics = paymentsDemographics;
     }
 
@@ -74,7 +74,7 @@ public class PaymentsLinksDTO {
      * @return
      *     The appointments
      */
-    public PaymentsAppointmentsDTO getAppointments() {
+    public TransitionDTO getAppointments() {
         return appointments;
     }
 
@@ -83,7 +83,7 @@ public class PaymentsLinksDTO {
      * @param appointments
      *     The appointments
      */
-    public void setAppointments(PaymentsAppointmentsDTO appointments) {
+    public void setAppointments(TransitionDTO appointments) {
         this.appointments = appointments;
     }
 
