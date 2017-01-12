@@ -41,6 +41,7 @@ public class CarePayConstants {
     public static final String COPAY  = "Insurance";
     public static final String ACCOUNT  = "Account";
     public static final String PREVIOUS_BALANCE  = "Patient";
+    public static final String PATIENT_BALANCE  = "Patient Balance";
     public static final String DOLLAR  = "$";
     public static final String RESPONSIBILITY_FORMATTER  = "#0.00";
 

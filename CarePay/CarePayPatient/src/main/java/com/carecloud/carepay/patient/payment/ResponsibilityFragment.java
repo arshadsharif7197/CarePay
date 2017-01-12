@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.payment.adapter.PaymentLineItemsListAdapter;
 import com.carecloud.carepay.patient.payment.dialogs.PartialPaymentDialog;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsDialog;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
@@ -46,8 +49,8 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
-    private String copayStr = "";
-    private String previousBalanceStr = "";
+//    private String copayStr = "";
+//    private String previousBalanceStr = "";
 
     private PaymentsModel paymentDTO = null;
     private String totalResponsibilityString;
@@ -79,12 +82,12 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
         toolbar.setTitle("");
 
         TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        TextView paymentDetails = (TextView) view.findViewById(R.id.response_payment_details);
-        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
-        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
+        //TextView paymentDetails = (TextView) view.findViewById(R.id.response_payment_details);
+        //TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
+        //TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
         TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
-        TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
-        TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
+        //TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
+        //TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
 
         Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
         payTotalAmountButton.setClickable(false);
@@ -126,18 +129,25 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
 
 
             if (paymentList != null && paymentList.size() > 0) {
+                RecyclerView PaymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
+                PaymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+                PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentList);
+                PaymentDetailsListRecyclerView.setAdapter(adapter);
                 for (PatiencePayloadDTO payment : paymentList) {
-                    if (payment.getType().equalsIgnoreCase("Patient Balance")) {
-                        previousBalanceStr = payment.getAmount().toString();  //.getTotal();
-                    } else if (payment.getType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                        copayStr = payment.getAmount().toString();  //.getTotal();
-                    }
+                    total+= payment.getAmount();
+
+//                    if (payment.getType().equalsIgnoreCase("Patient Balance")) {
+//                        previousBalanceStr = payment.getAmount().toString();  //.getTotal();
+//                    } else if (payment.getType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+//                        copayStr = payment.getAmount().toString();  //.getTotal();
+//                    }
                 }
 
                 try {
-                    double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
-                    double previousBalance = Double.parseDouble(previousBalanceStr);
-                    total = copay + previousBalance;
+//                    double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
+//                    double previousBalance = Double.parseDouble(previousBalanceStr);
+                    //total = copay + previousBalance;
 
                     if (total > 0) {
                         payTotalAmountButton.setClickable(true);
@@ -163,33 +173,33 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
 
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
                     responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-                    responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
-                    responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
+//                    responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
+//                    responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
                     Log.e(LOG_TAG, ex.getMessage());
                 }
             }
 
-            paymentDetails.setText(paymentDetailsString);
+            //paymentDetails.setText(paymentDetailsString);
             totalResponsibility.setText(totalResponsibilityString);
-            prevBalanceResponsibility.setText(previousBalanceString);
-            coPayResponsibility.setText(insuranceCopayString);
+            //prevBalanceResponsibility.setText(previousBalanceString);
+            //coPayResponsibility.setText(insuranceCopayString);
 
             payTotalAmountButton.setText(payTotalAmountString);
             makePartialPaymentButton.setText(payPartialAmountString);
             payLaterButton.setText(payLaterString);
         }
 
-        paymentDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Call for payment details dialog
-                PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getActivity(),
-                        paymentDTO, ResponsibilityFragment.this);
-                detailsDialog.show();
-            }
-        });
+//        paymentDetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Call for payment details dialog
+//                PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getActivity(),
+//                        paymentDTO, ResponsibilityFragment.this);
+//                detailsDialog.show();
+//            }
+//        });
 
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -12,7 +12,7 @@ public class PatiencePayloadDTO {
     private String type;
     @SerializedName("amount")
     @Expose
-    private Integer amount;
+    private Double amount;
     @SerializedName("details")
     @Expose
     private List<Object> details = null;
@@ -25,11 +25,11 @@ public class PatiencePayloadDTO {
         this.type = type;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
