@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.payments.adapter.PracticePaymentsAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -20,6 +21,7 @@ import java.util.Locale;
 public class PaymentsActivity extends BasePracticeActivity {
 
     private PaymentsModel paymentsModel;
+    private List<PaymentsPatientBalancessDTO> patientBalancesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class PaymentsActivity extends BasePracticeActivity {
         if (paymentsModel != null) {
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
             if (paymentsLabel != null) {
+                ((CarePayTextView) findViewById(R.id.practice_payment_title)).setText(paymentsLabel.getPracticePaymentsHeader());
                 ((CarePayTextView) findViewById(R.id.practice_payment_go_back)).setText(paymentsLabel.getPracticePaymentsBackLabel());
                 ((CarePayTextView) findViewById(R.id.practice_payment_find_patient)).setText(paymentsLabel.getPracticePaymentsFindPatientLabel());
                 ((CarePayTextView) findViewById(R.id.practice_payment_filter_label)).setText(paymentsLabel.getPracticePaymentsFilter());
@@ -52,7 +55,7 @@ public class PaymentsActivity extends BasePracticeActivity {
         if (paymentsModel != null && paymentsModel.getPaymentPayload().getPatientBalances() != null
                 && paymentsModel.getPaymentPayload().getPatientBalances().size() > 0) {
 
-            List<PaymentsPatientBalancessDTO> patientBalances = paymentsModel.getPaymentPayload().getPatientBalances();
+            patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
             PracticePaymentsAdapter paymentsAdapter = new PracticePaymentsAdapter(this, paymentsModel);
 
             RecyclerView inOfficeList = (RecyclerView) findViewById(R.id.practice_payment_in_office_list);
@@ -61,11 +64,12 @@ public class PaymentsActivity extends BasePracticeActivity {
             inOfficeList.setAdapter(paymentsAdapter);
 
             ((CarePayTextView) findViewById(R.id.practice_payment_in_office_count))
-                    .setText(String.format(Locale.getDefault(), "%1s", patientBalances.size()));
+                    .setText(String.format(Locale.getDefault(), "%1s", patientBalancesList.size()));
         }
     }
 
     public void onPatientItemClick(int selectedIndex) {
-
+        ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(this, paymentsModel, selectedIndex);
+        responsibilityDialog.show();
     }
 }
