@@ -404,6 +404,17 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return null;
     }
 
+    private AppointmentDTO getPatientBalanceDTOs(String patientId) {
+        List<AppointmentDTO>allApps =  checkInDTO.getPayload().getAppointments();
+        for (AppointmentDTO ap:allApps)
+              {
+                  if(ap.getPayload().getPatient().getId().equalsIgnoreCase(patientId)){
+                      return ap;
+                  }
+        }
+        return null;
+    }
+
     /**
      * On check in item click.
      *
@@ -411,7 +422,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
      */
     public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
-                checkInDTO, getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
+                checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getId()),
                 appointmentPayloadDTO);
         dialog.show();
     }
