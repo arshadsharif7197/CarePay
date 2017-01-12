@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentDetailsListAdapter;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -45,7 +46,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(com.carecloud.carepaylibrary.R.layout.dialog_payment_details);
+        setContentView(R.layout.dialog_payment_details);
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
@@ -53,20 +54,20 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
     }
 
     private void onInitialization() {
-        ImageView dialogCloseHeader = (ImageView) findViewById(com.carecloud.carepaylibrary.R.id.dialog_close_header);
+        ImageView dialogCloseHeader = (ImageView) findViewById(R.id.dialog_close_header);
         dialogCloseHeader.setOnClickListener(this);
 
-        Button payNowButton = (Button) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_pay_now_button);
+        Button payNowButton = (Button) findViewById(R.id.payment_details_pay_now_button);
         payNowButton.setOnClickListener(this);
         PaymentsLabelDTO paymentsLabel = paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel();
         if (paymentsLabel != null) {
-            ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_total_paid)).setText("");
+            ((TextView) findViewById(R.id.payment_details_total_paid)).setText("");
 
-            ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_title))
+            ((TextView) findViewById(R.id.payment_receipt_title))
                     .setText(paymentsLabel.getPaymentReceiptTitle());
-            ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_label))
+            ((TextView) findViewById(R.id.payment_receipt_total_label))
                     .setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
-            ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_value)).setText("");
+            ((TextView) findViewById(R.id.payment_receipt_total_value)).setText("");
 
             payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
         }
@@ -83,7 +84,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
             detailsList.add(paymentDetails);
         }
 
-        RecyclerView paymentDetailsRecyclerView = ((RecyclerView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_details_view));
+        RecyclerView paymentDetailsRecyclerView = ((RecyclerView) findViewById(R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         PaymentDetailsListAdapter adapter = new PaymentDetailsListAdapter(context, false, detailsList,paymentsLabel);
@@ -93,9 +94,9 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == com.carecloud.carepaylibrary.R.id.dialog_close_header) {
+        if (viewId == R.id.dialog_close_header) {
             cancel();
-        } else if (viewId == com.carecloud.carepaylibrary.R.id.payment_details_pay_now_button) {
+        } else if (viewId == R.id.payment_details_pay_now_button) {
             listener.onPayNowButtonClicked();
             dismiss();
         }

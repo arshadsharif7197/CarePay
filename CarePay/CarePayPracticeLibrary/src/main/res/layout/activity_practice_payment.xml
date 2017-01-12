@@ -29,6 +29,17 @@
             android:textSize="@dimen/text_size_20sp"
             app:customAssetFont="gotham_rounded_medium" />
 
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/practice_payment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingEnd="0dp"
+            android:paddingStart="@dimen/dimen_10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20sp"
+            app:customAssetFont="gotham_rounded_medium" />
+
         <LinearLayout
             android:id="@+id/practice_payment_filter_layout"
             android:layout_width="wrap_content"

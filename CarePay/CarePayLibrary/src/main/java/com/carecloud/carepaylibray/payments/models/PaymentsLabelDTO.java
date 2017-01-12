@@ -252,6 +252,21 @@ public class PaymentsLabelDTO {
     @SerializedName("practice_payments_inoffice")
     @Expose
     private String practicePaymentsInOffice;
+    @SerializedName("practice_payments_detail_dialog_balance")
+    @Expose
+    private String practicePaymentsDetailDialogBalance;
+    @SerializedName("practice_payments_detail_dialog_payment_plan")
+    @Expose
+    private String practicePaymentsDetailDialogPaymentPlan;
+    @SerializedName("practice_payments_detail_dialog_pay")
+    @Expose
+    private String practicePaymentsDetailDialogPay;
+    @SerializedName("practice_payments_detail_dialog_label")
+    @Expose
+    private String practicePaymentsDetailDialogLabel;
+    @SerializedName("practice_payments_detail_dialog_close_button")
+    @Expose
+    private String practicePaymentsDetailDialogCloseButton;
 
     /**
      * @return The demographicsCheckinHeading
@@ -1538,5 +1553,85 @@ public class PaymentsLabelDTO {
      */
     public void setPracticePaymentsInOffice(String practicePaymentsInOffice) {
         this.practicePaymentsInOffice = practicePaymentsInOffice;
+    }
+
+    /**
+     *
+     * @return practicePaymentsDetailDialogBalance
+     */
+    public String getPracticePaymentsDetailDialogBalance() {
+        return StringUtil.getLabelForView(practicePaymentsDetailDialogBalance);
+    }
+
+    /**
+     *
+     * @return practicePaymentsDetailDialogPaymentPlan
+     */
+    public String getPracticePaymentsDetailDialogPaymentPlan() {
+        return StringUtil.getLabelForView(practicePaymentsDetailDialogPaymentPlan);
+    }
+
+    /**
+     *
+     * @return practicePaymentsDetailDialogPay
+     */
+    public String getPracticePaymentsDetailDialogPay() {
+        return StringUtil.getLabelForView(practicePaymentsDetailDialogPay);
+    }
+
+    /**
+     *
+     * @param practicePaymentsDetailDialogBalance practicePaymentsDetailDialogBalance
+     */
+    public void setPracticePaymentsDetailDialogBalance(String practicePaymentsDetailDialogBalance) {
+        this.practicePaymentsDetailDialogBalance = practicePaymentsDetailDialogBalance;
+    }
+
+    /**
+     *
+     * @param practicePaymentsDetailDialogPaymentPlan practicePaymentsDetailDialogPaymentPlan
+     */
+    public void setPracticePaymentsDetailDialogPaymentPlan(String practicePaymentsDetailDialogPaymentPlan) {
+        this.practicePaymentsDetailDialogPaymentPlan = practicePaymentsDetailDialogPaymentPlan;
+    }
+
+    /**
+     *
+     * @param practicePaymentsDetailDialogPay practicePaymentsDetailDialogPay
+     */
+    public void setPracticePaymentsDetailDialogPay(String practicePaymentsDetailDialogPay) {
+        this.practicePaymentsDetailDialogPay = practicePaymentsDetailDialogPay;
+    }
+
+    /**
+     *
+     * @param practicePaymentsDetailDialogLabel practicePaymentsDetailDialogLabel
+     */
+    public void setPracticePaymentsDetailDialogLabel(String practicePaymentsDetailDialogLabel) {
+        this.practicePaymentsDetailDialogLabel = practicePaymentsDetailDialogLabel;
+    }
+
+    /**
+     *
+     * @return practicePaymentsDetailDialogLabel
+     */
+    public String getPracticePaymentsDetailDialogLabel() {
+        return StringUtil.getLabelForView(practicePaymentsDetailDialogLabel);
+    }
+
+    /**
+     *
+     * @return practicePaymentsDetailDialogCloseButton
+     */
+    public String getPracticePaymentsDetailDialogCloseButton() {
+        return StringUtil.getLabelForView(practicePaymentsDetailDialogCloseButton);
+    }
+
+    /**
+     *
+     * @param practicePaymentsDetailDialogCloseButton practicePaymentsDetailDialogCloseButton
+     */
+    public void setPracticePaymentsDetailDialogCloseButton(String practicePaymentsDetailDialogCloseButton) {
+        this.practicePaymentsDetailDialogCloseButton = practicePaymentsDetailDialogCloseButton;
     }
 }
