@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
@@ -58,6 +59,7 @@ public class AppointmentDetailDialog extends Dialog {
     private CarePayButton assistButton;
     private CarePayButton pageButton;
     private ImageView patientImageView;
+    private AppointmentDTO appointmentDTO;
 
     /**
      * Constructor.
@@ -70,6 +72,20 @@ public class AppointmentDetailDialog extends Dialog {
         this.context = context;
         this.checkInDTO = checkInDTO;
         this.patientBalanceDTO = patientBalanceDTO;
+        this.appointmentPayloadDTO = payloadDTO;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param context context
+     */
+    public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, AppointmentDTO patientBalanceDTO,
+                                   AppointmentPayloadDTO payloadDTO) {
+        super(context);
+        this.context = context;
+        this.checkInDTO = checkInDTO;
+        this.appointmentDTO = patientBalanceDTO;
         this.appointmentPayloadDTO = payloadDTO;
     }
 
@@ -201,9 +217,9 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private Map<String, String> getQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<String, String>();
-        queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-        queryMap.put(queryStrings.getPracticeManagement().getName(), patientBalanceDTO.getMetadata().getPracticeMgmt());
-        queryMap.put(queryStrings.getPracticeId().getName(), patientBalanceDTO.getMetadata().getPracticeId());
+        queryMap.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+        queryMap.put(queryStrings.getPracticeManagement().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
 
         return queryMap;
     }
@@ -249,10 +265,12 @@ public class AppointmentDetailDialog extends Dialog {
     }
 
     private String getPatientBalance(){
-        double totalBalance=0;
+        double totalBalance=100;
+/*
         for(PatientBalancePayloadDTO balancePayloadDTO : patientBalanceDTO.getPayload()){
             totalBalance+=balancePayloadDTO.getTotal();
         }
+*/
         return " "+StringUtil.getFormattedBalanceAmount(totalBalance);
     }
 }
