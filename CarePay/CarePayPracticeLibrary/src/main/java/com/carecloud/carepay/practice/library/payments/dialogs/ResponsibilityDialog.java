@@ -1,16 +1,18 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -23,8 +25,11 @@ import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.List;
 
@@ -33,7 +38,6 @@ public class ResponsibilityDialog extends Dialog {
     private Context context;
     private PaymentsModel paymentsModel;
     private int selectedIndex;
-
 
     /**
      * Constructor
@@ -46,7 +50,6 @@ public class ResponsibilityDialog extends Dialog {
         this.context = context;
         this.paymentsModel = paymentsModel;
         this.selectedIndex = selectedIndex;
-
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -70,11 +73,32 @@ public class ResponsibilityDialog extends Dialog {
     private void onInitialization() {
         PaymentsPatientBalancessDTO paymentsPatient = paymentsModel.getPaymentPayload().getPatientBalances().get(selectedIndex);
 
-        DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = paymentsPatient.getDemographics().getPayload().getPersonalDetails();
+        final DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = paymentsPatient.getDemographics().getPayload().getPersonalDetails();
         ((TextView) findViewById(R.id.patient_full_name)).setText(personalDetails.getFirstName() + " " + personalDetails.getLastName());
-//        ((TextView) findViewById(R.id.patient_profile_photo)).setText(StringUtil
-//                .onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
         ((TextView) findViewById(R.id.patient_provider_name)).setText(StringUtil.getLabelForView(""));
+
+        ImageView profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
+        final TextView shortName = (TextView) findViewById(R.id.patient_profile_short_name);
+        shortName.setText(StringUtil.onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
+
+        String photoUrl = personalDetails.getProfilePhoto();
+        if (!TextUtils.isEmpty(photoUrl)) {
+            Picasso.Builder builder = new Picasso.Builder(context);
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                    shortName.setText(StringUtil.onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
+                }
+            });
+
+            builder.build().load(photoUrl).transform(new CircleImageTransform()).resize(88, 88).into(profilePhoto);
+
+            RequestCreator load = builder.build().load(photoUrl);
+            ImageView bgImage = (ImageView) findViewById(R.id.profile_bg_image);
+            load.fit().into(bgImage);
+
+            profilePhoto.setVisibility(View.VISIBLE);
+        }
 
         PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         List<PatienceBalanceDTO> balances = paymentsPatient.getBalances();
@@ -128,8 +152,6 @@ public class ResponsibilityDialog extends Dialog {
                 @Override
                 public void onClick(View view) {
                     if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
-
-
                         Intent intent = new Intent();
                         intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
                         getContext().startActivity(intent, new Bundle());
@@ -137,7 +159,7 @@ public class ResponsibilityDialog extends Dialog {
                 }
             });
 
-            (findViewById(R.id.payment_responsibility_close_button)).setOnClickListener(new View.OnClickListener() {
+            findViewById(R.id.payment_responsibility_close_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dismiss();

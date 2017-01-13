@@ -1,10 +1,13 @@
 package com.carecloud.carepay.practice.library.payments.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
@@ -15,8 +18,9 @@ import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
-import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Locale;
@@ -24,7 +28,6 @@ import java.util.Locale;
 public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymentsAdapter.CartViewHolder> {
 
     private Context context;
-    private PaymentsModel paymentsModel;
     private List<PaymentsPatientBalancessDTO> patientBalances;
 
     /**
@@ -35,7 +38,6 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
      */
     public PracticePaymentsAdapter(Context context, PaymentsModel paymentsModel) {
         this.context = context;
-        this.paymentsModel = paymentsModel;
         this.patientBalances = paymentsModel.getPaymentPayload().getPatientBalances();
     }
 
@@ -52,11 +54,27 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
     }
 
     @Override
-    public void onBindViewHolder(PracticePaymentsAdapter.CartViewHolder holder, final int position) {
+    public void onBindViewHolder(final PracticePaymentsAdapter.CartViewHolder holder, final int position) {
         DemographicsSettingsDemographicsDTO demographics = patientBalances.get(position).getDemographics();
-        DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = demographics.getPayload().getPersonalDetails();
-
+        final DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = demographics.getPayload().getPersonalDetails();
         holder.shortName.setText(StringUtil.onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
+
+        String photoUrl = personalDetails.getProfilePhoto();
+        if (!TextUtils.isEmpty(photoUrl)) {
+            Picasso.Builder builder = new Picasso.Builder(context);
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                    holder.shortName.setText(StringUtil.onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
+                }
+            });
+
+            builder.build().load(photoUrl).transform(new CircleImageTransform())
+                    .resize(60, 60).into(holder.profilePicture);
+
+            holder.profilePicture.setVisibility(View.VISIBLE);
+        }
+
         holder.patientName.setText(personalDetails.getFirstName() + " " + personalDetails.getLastName());
         holder.providerName.setText(StringUtil.getLabelForView(""));
 
@@ -85,6 +103,7 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
         CarePayTextView patientName;
         CarePayTextView providerName;
         CarePayTextView amount;
+        ImageView profilePicture;
 
         /**
          * Constructor.
@@ -97,6 +116,7 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
             patientName = (CarePayTextView) view.findViewById(R.id.patient_name_text_view);
             providerName = (CarePayTextView) view.findViewById(R.id.provider_name_text_view);
             amount = (CarePayTextView) view.findViewById(R.id.amount_text_view);
+            profilePicture = (ImageView) view.findViewById(R.id.patient_pic_image_view);
             view.setOnClickListener(this);
         }
 

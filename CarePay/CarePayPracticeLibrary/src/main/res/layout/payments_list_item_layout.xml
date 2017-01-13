@@ -9,18 +9,31 @@
     android:background="@drawable/background_rounded_border"
     android:gravity="center_vertical">
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/patient_short_name"
+    <RelativeLayout
         android:layout_width="@dimen/profile_pic_size"
         android:layout_height="@dimen/profile_pic_size"
         android:layout_marginBottom="@dimen/dimen_15dp"
         android:layout_marginStart="@dimen/dimen_19dp"
-        android:layout_marginTop="@dimen/dimen_15dp"
-        android:background="@drawable/round_list_tv"
-        android:src="@drawable/icn_placeholder_user_profile_png"
-        android:textColor="@color/lightSlateGray"
-        android:textSize="@dimen/text_size_24sp"
-        app:customAssetFont="gotham_rounded_medium" />
+        android:layout_marginTop="@dimen/dimen_15dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/patient_short_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/round_list_tv"
+            android:src="@drawable/icn_placeholder_user_profile_png"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/text_size_24sp"
+            app:customAssetFont="gotham_rounded_medium" />
+
+        <ImageView
+            android:id="@+id/patient_pic_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
