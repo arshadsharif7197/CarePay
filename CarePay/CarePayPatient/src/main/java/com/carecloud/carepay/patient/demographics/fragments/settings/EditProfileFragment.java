@@ -97,8 +97,11 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private TextInputLayout createPasswordLabel = null;
     private TextInputLayout repeatPasswordLabel = null;
     private LinearLayout rootview;
+
     private boolean isFirstNameEmpty;
     private boolean isLastNameEmpty;
+    private boolean isEmptyEmail;
+
     private DemographicsSettingsPersonalDetailsDTO demographicsSettingsDetailsDTO = null;
     private DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = null;
     private DemographicsSettingsLastNameDTO demographicsSettingsLastNameDTO = null;
@@ -143,6 +146,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.providerPicImageView);
         if (demographicsSettingsDTO != null) {
                 DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
@@ -350,12 +354,43 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
     }
 
+    private boolean isFirstNameAvailable () {
+        String firstName = firstNameEditText.getText().toString();
+        isFirstNameEmpty = StringUtil.isNullOrEmpty(firstName);
+        firstNameLabel.setErrorEnabled(isFirstNameEmpty); // enable for error if either empty or invalid first name
+        if (isFirstNameEmpty) {
+            firstNameLabel.setError("");
+        } else {
+            firstNameLabel.setError(null);
+        }
+        return !isFirstNameEmpty;
+    }
+
+    private boolean isLastNameAvailable () {
+        String lastName = lastNameEditText.getText().toString();
+        isLastNameEmpty = StringUtil.isNullOrEmpty(lastName);
+        lastNameLabel.setErrorEnabled(isLastNameEmpty); // enable for error if either empty or invalid last name
+        if (isLastNameEmpty) {
+            lastNameLabel.setError("");
+        } else {
+            lastNameLabel.setError(null);
+        }
+        return !isLastNameEmpty ;
+    }
+
     private boolean isAllFieldsValid() {
+        boolean isFirstNameValid = isFirstNameAvailable();
+        if (!isFirstNameValid) {
+            firstNameEditText.requestFocus();
+        }
+        boolean isLastNameValid = isLastNameAvailable();
+        if (!isLastNameValid) {
+            lastNameEditText.requestFocus();
+        }
 
         return !isFirstNameEmpty && !isLastNameEmpty;
 
     }
-
 
     private void formatEditText() {
 
@@ -418,7 +453,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
                     lastNameLabel.setError(lastNameError);
                     lastNameLabel.setErrorEnabled(true);
                 }
-
             }
         });
 
