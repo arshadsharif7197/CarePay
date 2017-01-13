@@ -66,14 +66,14 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
         if (paymentsModel != null && paymentsModel.getPaymentPayload().getPatientBalances() != null
                 && paymentsModel.getPaymentPayload().getPatientBalances().size() > 0) {
 
-            patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
-            PracticePaymentsAdapter paymentsAdapter = new PracticePaymentsAdapter(this, paymentsModel);
-
             patientList = new ArrayList<>();
+            patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
 
             RecyclerView inOfficeList = (RecyclerView) findViewById(R.id.practice_payment_in_office_list);
             inOfficeList.setHasFixedSize(true);
             inOfficeList.setLayoutManager(new GridLayoutManager(this, 2));
+
+            PracticePaymentsAdapter paymentsAdapter = new PracticePaymentsAdapter(this, paymentsModel);
             inOfficeList.setAdapter(paymentsAdapter);
 
             ((CarePayTextView) findViewById(R.id.practice_payment_in_office_count))
