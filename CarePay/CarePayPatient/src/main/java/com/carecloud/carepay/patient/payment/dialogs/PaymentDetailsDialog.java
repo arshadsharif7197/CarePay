@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.adapter.PaymentDetailsListAdapter;
-import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
+import com.carecloud.carepay.patient.payment.adapter.PaymentItemsListAdapter;
+import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
@@ -26,19 +26,21 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
 
     private Context context;
     private PaymentsModel paymentReceiptModel;
+    private List<AppointmentChargeDTO> details;
     private PayNowClickListener listener;
 
     /**
      * Constructor.
      *
      * @param context             context
-     * @param paymentReceiptModel model
+     * @param details model
      * @param listener listener
      */
-    public PaymentDetailsDialog(Context context, PaymentsModel paymentReceiptModel, PayNowClickListener listener) {
+    public PaymentDetailsDialog(Context context, PaymentsModel paymentReceiptModel, List<AppointmentChargeDTO> details, PayNowClickListener listener) {
         super(context);
         this.context = context;
         this.paymentReceiptModel = paymentReceiptModel;
+        this.details = details;
         this.listener = listener;
     }
 
@@ -81,22 +83,11 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
             }
         }
 
-        // Temporary added till endpoint gets ready
-        String[] labels = {"Deluxe Frame", "Sph Cyl Bif Pl To 400", "Eye Exam. New Patient", "Refraction"};
-        String[] values = {"$69.00", "$99.00", "$77.01", "$49.00"};
-
-        List<PaymentDetailsItemDTO> detailsList = new ArrayList<>();
-        for (int i = 0; i < labels.length; i++) {
-            PaymentDetailsItemDTO paymentDetails = new PaymentDetailsItemDTO();
-            paymentDetails.setLabel(labels[i]);
-            paymentDetails.setValue(values[i]);
-            detailsList.add(paymentDetails);
-        }
 
         RecyclerView paymentDetailsRecyclerView = ((RecyclerView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        PaymentDetailsListAdapter adapter = new PaymentDetailsListAdapter(context, detailsList);
+        PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(context, details);
         paymentDetailsRecyclerView.setAdapter(adapter);
     }
 

@@ -11,6 +11,8 @@ import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
 
@@ -18,10 +20,14 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
     private Context context;
     private List<PatiencePayloadDTO> detailsList;
+    private PaymentsModel paymentReceiptModel;
+    private PaymentDetailsDialog.PayNowClickListener payListener;
 
-    public PaymentLineItemsListAdapter(Context context, List<PatiencePayloadDTO> detailsList) {
+    public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel, List<PatiencePayloadDTO> detailsList, PaymentDetailsDialog.PayNowClickListener payListener) {
         this.context = context;
         this.detailsList = detailsList;
+        this.payListener = payListener;
+        this.paymentReceiptModel = paymentReceiptModel;
     }
 
     @Override
@@ -56,9 +62,9 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
     @Override
     public void onBindViewHolder(final PaymentDetailsListViewHolder holder, int position) {
-        PatiencePayloadDTO paymentLineItem = detailsList.get(position);
+        final PatiencePayloadDTO paymentLineItem = detailsList.get(position);
         holder.paymentDetailLabel.setText(paymentLineItem.getType());
-        holder.paymentDetailAmount.setText(paymentLineItem.getAmount().toString());
+        holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
 
         if (paymentLineItem.getDetails() != null && paymentLineItem.getDetails().size() > 0) {
             holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
@@ -68,9 +74,9 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
                 @Override
                 public void onClick(View view) {
                     // Call for payment details dialog
-//                    PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context ,
-//                            PatiencePayloadDTO.getDetails(), ResponsibilityFragment.this);
-//                    detailsDialog.show();
+                    PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context ,
+                            paymentReceiptModel, paymentLineItem.getDetails(), payListener);
+                   detailsDialog.show();
                 }
             });
         }

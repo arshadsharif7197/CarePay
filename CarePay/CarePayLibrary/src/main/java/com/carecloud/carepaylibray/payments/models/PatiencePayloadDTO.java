@@ -1,7 +1,10 @@
 
 package com.carecloud.carepaylibray.payments.models;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,7 +18,7 @@ public class PatiencePayloadDTO {
     private Double amount;
     @SerializedName("details")
     @Expose
-    private List<Object> details = null;
+    private List<AppointmentChargeDTO> details = new ArrayList<>();
 
     public String getType() {
         return type;
@@ -33,11 +36,11 @@ public class PatiencePayloadDTO {
         this.amount = amount;
     }
 
-    public List<Object> getDetails() {
+    public List<AppointmentChargeDTO> getDetails() {
         return details;
     }
 
-    public void setDetails(List<Object> details) {
+    public void setDetails(List<AppointmentChargeDTO> details) {
         this.details = details;
     }
 

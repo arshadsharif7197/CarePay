@@ -2,43 +2,66 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/review_default_heaight"
-    android:layout_marginBottom="@dimen/respons_detail_margin_bottom"
-    android:layout_marginTop="@dimen/respons_detail_margin_bottom"
-    android:paddingEnd="@dimen/dimen_14dp"
-    android:paddingStart="@dimen/dimen_14dp"
-    android:orientation="horizontal"
-    android:background="@drawable/border_set">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/list_apt_padding_right"
+    android:paddingRight="@dimen/list_apt_padding_right">
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/lineItemNameLabel"
-        style="@style/ResponsDetailLabelStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.65"
-        android:gravity="start"
-        android:layout_gravity="center"
-        app:customAssetFont="proxima_nova_regular" />
+    <LinearLayout
+        android:id="@+id/history_item_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/lineItemNameLabelDetails"
-        style="@style/ResponsDetailStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.15"
-        android:gravity="end"
-        android:layout_gravity="center"
-        android:textColor="@color/colorPrimary"
-        app:customAssetFont="proxima_nova_semi_bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/apt_dl_image_elevation"
+            android:layout_marginTop="@dimen/apt_dl_image_elevation"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/lineItemAmountLabel"
-        style="@style/ResponsDetailStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.2"
-        android:gravity="end"
-        android:layout_gravity="center"
-        app:customAssetFont="proxima_nova_semi_bold" />
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/lineItemNameLabel"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:gravity="center"
+                android:paddingEnd="@dimen/default_title_indicator_title_padding"
+                android:paddingStart="0dp"
+                android:textColor="@color/cadet_gray"
+                android:textSize="@dimen/apt_list_upcoming_month_txt_size"
+                app:customAssetFont="proxima_nova_regular" />
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/lineItemNameLabelDetails"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:textColor="@color/bright_cerulean"
+                android:textSize="@dimen/textview_textsize"
+                app:customAssetFont="proxima_nova_regular" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/lineItemAmountLabel"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/textview_default_textsize"
+                android:textStyle="bold"
+                app:customAssetFont="proxima_nova_semi_bold" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="3dp"
+            android:background="@color/divider_color" />
+
+    </LinearLayout>
 </LinearLayout>

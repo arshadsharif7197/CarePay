@@ -127,12 +127,36 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
             List<PatiencePayloadDTO> paymentList =       paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
 
+            PatiencePayloadDTO b= new PatiencePayloadDTO();
+            b.setAmount(2332.0);
+            b.setType("ddz");
+            paymentList.add(b);
+            b= new PatiencePayloadDTO();
+            b.setAmount(2331.0);
+            b.setType("ddt");
+            paymentList.add(b);
+            b= new PatiencePayloadDTO();
+            b.setAmount(2330.0);
+            b.setType("ddk");
+            paymentList.add(b);
+            b= new PatiencePayloadDTO();
+            b.setAmount(231.0);
+            b.setType("ddg");
+            paymentList.add(b);
+            b= new PatiencePayloadDTO();
+            b.setAmount(233.0);
+            b.setType("ddd");
+            paymentList.add(b);
+            b= new PatiencePayloadDTO();
+            b.setAmount(238.0);
+            b.setType("dda");
+            paymentList.add(b);
 
             if (paymentList != null && paymentList.size() > 0) {
                 RecyclerView PaymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
                 PaymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-                PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentList);
+                PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentDTO, paymentList, this);
                 PaymentDetailsListRecyclerView.setAdapter(adapter);
                 for (PatiencePayloadDTO payment : paymentList) {
                     total+= payment.getAmount();
