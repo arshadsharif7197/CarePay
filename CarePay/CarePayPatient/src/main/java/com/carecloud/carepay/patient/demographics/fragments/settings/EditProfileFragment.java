@@ -354,7 +354,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
     }
 
-    private boolean checkFirstName() {
+    private boolean isFirstNameAvailable () {
         String firstName = firstNameEditText.getText().toString();
         isFirstNameEmpty = StringUtil.isNullOrEmpty(firstName);
         firstNameLabel.setErrorEnabled(isFirstNameEmpty); // enable for error if either empty or invalid first name
@@ -366,7 +366,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         return !isFirstNameEmpty;
     }
 
-    private boolean checkLastName() {
+    private boolean isLastNameAvailable () {
         String lastName = lastNameEditText.getText().toString();
         isLastNameEmpty = StringUtil.isNullOrEmpty(lastName);
         lastNameLabel.setErrorEnabled(isLastNameEmpty); // enable for error if either empty or invalid last name
@@ -379,11 +379,11 @@ public class EditProfileFragment extends DocumentScannerFragment {
     }
 
     private boolean isAllFieldsValid() {
-        boolean isFirstNameValid = checkFirstName();
+        boolean isFirstNameValid = isFirstNameAvailable();
         if (!isFirstNameValid) {
             firstNameEditText.requestFocus();
         }
-        boolean isLastNameValid = checkLastName();
+        boolean isLastNameValid = isLastNameAvailable();
         if (!isLastNameValid) {
             lastNameEditText.requestFocus();
         }
