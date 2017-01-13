@@ -42,6 +42,13 @@ public class PaymentsPayloadDTO implements Serializable {
     @Expose
     private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();
 
+    @SerializedName("providers")
+    @Expose
+    private List<ProviderDTO> providers = null;
+    @SerializedName("locations")
+    @Expose
+    private List<LocationDTO> locations = null;
+
     /**
      *
      * @return
@@ -160,5 +167,21 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setInOfficeCounts(Integer inOfficeCounts) {
         this.inOfficeCounts = inOfficeCounts;
+    }
+
+    public List<ProviderDTO> getProviders() {
+        return providers;
+    }
+
+    public void setProviders(List<ProviderDTO> providers) {
+        this.providers = providers;
+    }
+
+    public List<LocationDTO> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<LocationDTO> locations) {
+        this.locations = locations;
     }
 }
