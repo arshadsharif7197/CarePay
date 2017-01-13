@@ -1,8 +1,10 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -31,6 +34,7 @@ public class ResponsibilityDialog extends Dialog {
     private PaymentsModel paymentsModel;
     private int selectedIndex;
 
+
     /**
      * Constructor
      * @param context context
@@ -42,6 +46,7 @@ public class ResponsibilityDialog extends Dialog {
         this.context = context;
         this.paymentsModel = paymentsModel;
         this.selectedIndex = selectedIndex;
+
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -122,7 +127,13 @@ public class ResponsibilityDialog extends Dialog {
             paymentPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
 
+
+                        Intent intent = new Intent();
+                        intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
+                        getContext().startActivity(intent, new Bundle());
+                    }
                 }
             });
 
