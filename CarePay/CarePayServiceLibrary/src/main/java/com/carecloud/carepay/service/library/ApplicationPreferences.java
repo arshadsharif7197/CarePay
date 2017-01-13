@@ -3,6 +3,8 @@ package com.carecloud.carepay.service.library;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+
 
 /**
  * Created by Jahirul Bhuiyan on 9/6/2016.
@@ -53,5 +55,8 @@ public class ApplicationPreferences {
         return sharedPreferences.getString(key, CarePayConstants.DEFAULT_STRING_PREFERENCES);
     }
 
-
+    public void saveObjectToSharedPreference(String key, Object object){
+        editor.putString(key, new Gson().toJson(object));
+        editor.apply();
+    }
 }

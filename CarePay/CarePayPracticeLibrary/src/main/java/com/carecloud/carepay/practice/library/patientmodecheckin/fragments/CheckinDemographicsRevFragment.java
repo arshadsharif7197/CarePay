@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -488,6 +489,9 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
             Gson gson = new Gson();
             String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
             TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+            ApplicationPreferences.Instance.saveObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+                    demographicDTO.getPayload().getDemographics().getPayload().getAddress());
+
             WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
 
         } else if (view == updateInformationUpdate) {

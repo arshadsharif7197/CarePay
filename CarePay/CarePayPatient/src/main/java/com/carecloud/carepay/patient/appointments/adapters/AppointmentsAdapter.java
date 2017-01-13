@@ -417,7 +417,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     @Override
     public void onRefreshAppointmentList(AppointmentDTO appointmentDTO) {
         int index = appointmentItems.indexOf(appointmentDTO);
-        appointmentItems.remove(appointmentDTO);
         appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
         appointmentItems.set(index, appointmentDTO);
         notifyDataSetChanged();

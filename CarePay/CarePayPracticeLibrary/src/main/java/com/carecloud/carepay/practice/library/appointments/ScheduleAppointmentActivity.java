@@ -75,18 +75,22 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         int viewId = view.getId();
 
         if (viewId == R.id.provider_logout) {
-            Map<String, String> headers = new HashMap<>();
-            headers.put("x-api-key", HttpConstants.getApiStartKey());
-
-            Map<String, String> query = new HashMap<>();
-            query.put("transition", "true");
-
-            WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
-                    .getTransitions().getLogout(), logOutCall, query, headers);
+            logout();
         } else if (viewId == R.id.btnHome) {
             //WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
             // .getTransitions().getAuthenticate(), homeCall);
         }
+    }
+
+    public void logout(){
+        Map<String, String> headers = new HashMap<>();
+        headers.put("x-api-key", HttpConstants.getApiStartKey());
+
+        Map<String, String> query = new HashMap<>();
+        query.put("transition", "true");
+
+        WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
+                .getTransitions().getLogout(), logOutCall, query, headers);
     }
 
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {

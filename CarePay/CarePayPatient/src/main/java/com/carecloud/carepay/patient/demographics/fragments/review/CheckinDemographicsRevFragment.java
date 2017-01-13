@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -485,12 +487,14 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
             Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
             header.put("transition", "true");
-            header.put("username_patient", "rgirase@carecloud.com");
-            header.put("username", "practice@cc.com");
+            //header.put("username_patient", "rgirase@carecloud.com");
+            //header.put("username", "practice@cc.com");
 
             Gson gson = new Gson();
             String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
             TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+            ApplicationPreferences.Instance.saveObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+                    demographicDTO.getPayload().getDemographics().getPayload().getAddress());
             WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
 
         } else if (view == updateInformationUpdate) {
