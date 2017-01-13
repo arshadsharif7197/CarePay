@@ -7,27 +7,38 @@ import com.google.gson.annotations.SerializedName;
 
 public class LocationIndexDTO {
 
-    @SerializedName("SOUTH MEDICAL CENTER")
+    @SerializedName("name")
     @Expose
-    private List<String> sOUTHMEDICALCENTER = null;
-    @SerializedName("MAIN MEDICAL CENTER")
+    private String name;
+    @SerializedName("id")
     @Expose
-    private List<String> mAINMEDICALCENTER = null;
+    private String id;
+    @SerializedName("patient_ids")
+    @Expose
+    private List<String> patientIds = null;
 
-    public List<String> getSOUTHMEDICALCENTER() {
-        return sOUTHMEDICALCENTER;
+    public String getName() {
+        return name;
     }
 
-    public void setSOUTHMEDICALCENTER(List<String> sOUTHMEDICALCENTER) {
-        this.sOUTHMEDICALCENTER = sOUTHMEDICALCENTER;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public List<String> getMAINMEDICALCENTER() {
-        return mAINMEDICALCENTER;
+    public String getId() {
+        return id;
     }
 
-    public void setMAINMEDICALCENTER(List<String> mAINMEDICALCENTER) {
-        this.mAINMEDICALCENTER = mAINMEDICALCENTER;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<String> getPatientIds() {
+        return patientIds;
+    }
+
+    public void setPatientIds(List<String> patientIds) {
+        this.patientIds = patientIds;
     }
 
 }

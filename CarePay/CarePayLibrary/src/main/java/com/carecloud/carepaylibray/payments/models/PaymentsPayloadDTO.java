@@ -31,10 +31,10 @@ public class PaymentsPayloadDTO implements Serializable {
 
     @SerializedName("provider_index")
     @Expose
-    private ProviderIndexDTO providerIndex;
+    private List<ProviderIndexDTO> providerIndex;
     @SerializedName("location_index")
     @Expose
-    private LocationIndexDTO locationIndex;
+    private List<LocationIndexDTO> locationIndex;
     @SerializedName("in_office_counts")
     @Expose
     private Integer inOfficeCounts;
@@ -138,19 +138,19 @@ public class PaymentsPayloadDTO implements Serializable {
         this.patientBalances = patientBalances;
     }
 
-    public ProviderIndexDTO getProviderIndex() {
+    public List<ProviderIndexDTO> getProviderIndex() {
         return providerIndex;
     }
 
-    public void setProviderIndex(ProviderIndexDTO providerIndex) {
+    public void setProviderIndex(List<ProviderIndexDTO> providerIndex) {
         this.providerIndex = providerIndex;
     }
 
-    public LocationIndexDTO getLocationIndex() {
+    public List<LocationIndexDTO> getLocationIndex() {
         return locationIndex;
     }
 
-    public void setLocationIndex(LocationIndexDTO locationIndex) {
+    public void setLocationIndex(List<LocationIndexDTO> locationIndex) {
         this.locationIndex = locationIndex;
     }
 

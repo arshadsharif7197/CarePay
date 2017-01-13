@@ -172,7 +172,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void setAppointmentCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
         HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = practiceHomeScreenPayloadDTO.getAppointmentCounts();
         if (homeScreenAppointmentCountsDTO != null) {
-            int checkinCounter = homeScreenAppointmentCountsDTO.getCheckingInCount();
+            int checkinCounter = homeScreenAppointmentCountsDTO.getCheckingInCount() != null? homeScreenAppointmentCountsDTO.getCheckingInCount(): 0 ;
             checkedInCounterTextview.setText(String.valueOf(checkinCounter));
         }
     }
